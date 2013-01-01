@@ -1,0 +1,910 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\core">
+      <UniqueIdentifier>{c4a9b3d5-b036-4b4b-baad-0325ff68d696}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\core">
+      <UniqueIdentifier>{5860e8b4-6e42-4110-a163-b26228fd8c20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\core\geom">
+      <UniqueIdentifier>{989bd5ee-4f7d-4d98-982e-c0975959c78a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\core\geom">
+      <UniqueIdentifier>{829aeac4-4c83-441f-92ab-927985423d93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\core\game">
+      <UniqueIdentifier>{9a433766-bc34-4799-b284-25ef5738f602}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\core\game">
+      <UniqueIdentifier>{8fa9c2fd-dcd8-45e1-86d0-112c9754b9f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\core\gui">
+      <UniqueIdentifier>{a8044a2e-6ad1-431d-a929-691e78fce6cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\core\gui">
+      <UniqueIdentifier>{e4e633d3-b621-4fee-b21c-63c1e1693a61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\core\game\map">
+      <UniqueIdentifier>{2de0c01e-9817-4a84-b87c-66b9fb235ad3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\core\game\map">
+      <UniqueIdentifier>{b382e702-8543-4df1-bf09-9fb9ca27754a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\core\util">
+      <UniqueIdentifier>{c51170b6-3bce-4aae-a77d-f63f0b72477f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\core\util">
+      <UniqueIdentifier>{02e20efa-bacd-4ff8-b188-8336cf32b0d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\client">
+      <UniqueIdentifier>{06d4c744-5aef-4f1a-891b-af33ef5bfa9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\client">
+      <UniqueIdentifier>{7eaf3dc4-df9c-4f20-8867-037347c3ce1f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\client\game">
+      <UniqueIdentifier>{42f0631b-7e40-48f0-8fdf-ba13eb74f233}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\client\game">
+      <UniqueIdentifier>{fe883968-9d8e-4829-872a-c6a5c5f8da31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\client\game\dev">
+      <UniqueIdentifier>{3472a1a4-7a8e-4cbc-8e47-32b005b4b82f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\client\audio">
+      <UniqueIdentifier>{91000172-5748-4c5a-9ab1-718c03a37496}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\client\audio">
+      <UniqueIdentifier>{9a9f2490-075b-45de-99bb-0261dc1d8f0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\gme">
+      <UniqueIdentifier>{f3b8989c-3184-4731-a332-a31a1fda124c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\gme">
+      <UniqueIdentifier>{9abe4b57-0674-44e5-a966-7a8c2b78f7fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\core\math">
+      <UniqueIdentifier>{efe4abe2-0db5-43a9-a84d-52330a68cb65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\client\gui">
+      <UniqueIdentifier>{fe9282bf-cae1-49b9-ac8a-48d690b5a945}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\client\gui">
+      <UniqueIdentifier>{aa266eaa-5e06-4c06-8dfe-5301ff0d6925}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\client\game\objects">
+      <UniqueIdentifier>{8602634b-66e2-4a99-bab7-a57d1bb23305}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\client\game\objects">
+      <UniqueIdentifier>{42218aaa-63aa-4d8b-bd37-ebb1d9ed6fa2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\core\util\exception">
+      <UniqueIdentifier>{be15cf28-6334-497a-8657-66b6ca19de7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\core\game\map\camera">
+      <UniqueIdentifier>{d2213e23-6ef2-4cad-9ce2-8a0dd6e9ad0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\core\game\map\camera">
+      <UniqueIdentifier>{d2264459-a7f5-43b0-9093-19556d219d9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\core\math">
+      <UniqueIdentifier>{82202aad-69f3-4348-a269-c46da2c11a36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\client\scripting">
+      <UniqueIdentifier>{f0fa4184-d076-4be1-965c-5e8730ea7bea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\client\scripting">
+      <UniqueIdentifier>{f4d24612-cd61-41ca-b67f-cb971493eb7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\test">
+      <UniqueIdentifier>{55df8b1f-1651-4386-ba2e-f96ce1faf2ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\test">
+      <UniqueIdentifier>{026640d5-c6cd-4abd-984f-af9925094291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\client\game\objects\effects">
+      <UniqueIdentifier>{ef058430-069f-4c9d-8d74-1aba6add5f18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\client\game\objects\effects">
+      <UniqueIdentifier>{e3e5a2aa-7af6-4028-98d9-e8737919f7fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\core\util\exception">
+      <UniqueIdentifier>{95bbe1fe-28fb-4ccb-8554-138b5b21921d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Content">
+      <UniqueIdentifier>{69cf44f6-386f-421d-817b-0ed3c37faea9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\client\game\objects\controllers">
+      <UniqueIdentifier>{cc0b222a-fabc-443f-8e6e-517f6f3f0517}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\client\game\objects\controllers">
+      <UniqueIdentifier>{1c4f06e9-2dc5-49af-be1a-2f649ea641f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\client\game\objects\brains">
+      <UniqueIdentifier>{a365b7ad-7875-4da3-aaa2-6ec657c888cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\client\game\objects\brains">
+      <UniqueIdentifier>{d6cb6afd-dd6b-49e4-83e0-4706504c8894}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\physfs">
+      <UniqueIdentifier>{713fcba8-6be7-4bf5-abee-daa99d6d8767}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\physfs">
+      <UniqueIdentifier>{dd1faee7-39d7-433c-a35a-1b5cfe3a1261}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\hikari\core\geom\Rectangle2D.hpp">
+      <Filter>Header Files\core\geom</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\Hikari.hpp">
+      <Filter>Header Files\core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\Platform.hpp">
+      <Filter>Header Files\core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\game\GameController.hpp">
+      <Filter>Header Files\core\game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\game\GameState.hpp">
+      <Filter>Header Files\core\game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\game\GameControllerException.hpp">
+      <Filter>Header Files\core\game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\game\map\MapRenderer.hpp">
+      <Filter>Header Files\core\game\map</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\game\map\MapLoader.hpp">
+      <Filter>Header Files\core\game\map</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\util\StringUtils.hpp">
+      <Filter>Header Files\core\util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\Client.hpp">
+      <Filter>Header Files\client</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\util\PhysFS.hpp">
+      <Filter>Header Files\core\util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\util\PhysFSUtils.hpp">
+      <Filter>Header Files\core\util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\gui\ImageFont.hpp">
+      <Filter>Header Files\core\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\game\AnimationLoader.hpp">
+      <Filter>Header Files\core\game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\game\SpriteAnimator.hpp">
+      <Filter>Header Files\core\game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\util\ResourceCache.hpp">
+      <Filter>Header Files\core\util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\IntroState.hpp">
+      <Filter>Header Files\client\game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\TitleState.hpp">
+      <Filter>Header Files\client\game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\GuiTestState.hpp">
+      <Filter>Header Files\client\game\dev</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\MapTestState.hpp">
+      <Filter>Header Files\client\game\dev</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\SpriteTestState.hpp">
+      <Filter>Header Files\client\game\dev</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\StageSelectState.hpp">
+      <Filter>Header Files\client\game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\GamePlayState.hpp">
+      <Filter>Header Files\client\game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\PasswordState.hpp">
+      <Filter>Header Files\client\game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\OptionsState.hpp">
+      <Filter>Header Files\client\game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\WeaponGetState.hpp">
+      <Filter>Header Files\client\game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\EndingState.hpp">
+      <Filter>Header Files\client\game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\util\ImageCache.hpp">
+      <Filter>Header Files\core\util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\audio\NSFSoundStream.hpp">
+      <Filter>Header Files\client\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\contrib\gme\blargg_config.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\contrib\gme\Blip_Buffer.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\contrib\gme\Data_Reader.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\contrib\gme\Effects_Buffer.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\contrib\gme\gme.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\contrib\gme\Gme_File.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\contrib\gme\Multi_Buffer.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\contrib\gme\Music_Emu.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\contrib\gme\Nes_Apu.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\contrib\gme\Nes_Cpu.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\contrib\gme\nes_cpu_io.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\contrib\gme\Nes_Fme7_Apu.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\contrib\gme\Nes_Namco_Apu.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\contrib\gme\Nes_Oscs.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\contrib\gme\Nes_Vrc6_Apu.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\contrib\gme\Nsf_Emu.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\contrib\gme\Nsfe_Emu.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\game\map\Map.hpp">
+      <Filter>Header Files\core\game\map</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\game\Animation.hpp">
+      <Filter>Header Files\core\game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\game\Animator.hpp">
+      <Filter>Header Files\core\game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\game\map\Room.hpp">
+      <Filter>Header Files\core\game\map</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\RealTimeInput.hpp">
+      <Filter>Header Files\client\game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\Input.hpp">
+      <Filter>Header Files\client\game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\KeyboardInput.hpp">
+      <Filter>Header Files\client\game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\game\map\Tileset.hpp">
+      <Filter>Header Files\core\game\map</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\game\map\RoomTransition.hpp">
+      <Filter>Header Files\core\game\map</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\math\FixedPoint.hpp">
+      <Filter>Header Files\core\math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\game\map\TilesetLoader.hpp">
+      <Filter>Header Files\core\game\map</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\gui\Widget.hpp">
+      <Filter>Header Files\client\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\gui\EnergyMeter.hpp">
+      <Filter>Header Files\client\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\geom\Point2D.hpp">
+      <Filter>Header Files\core\geom</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\objects\Hero.hpp">
+      <Filter>Header Files\client\game\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\objects\GameObject.hpp">
+      <Filter>Header Files\client\game\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\gui\BossMenu.hpp">
+      <Filter>Header Files\client\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\game\AnimationFrame.hpp">
+      <Filter>Header Files\core\game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\geom\BoundingBox.hpp">
+      <Filter>Header Files\core\geom</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\util\TilesetCache.hpp">
+      <Filter>Header Files\core\util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\util\ServiceLocator.hpp">
+      <Filter>Header Files\core\util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\util\JsonUtils.hpp">
+      <Filter>Header Files\core\util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\util\exception\ServiceNotRegisteredException.hpp">
+      <Filter>Header Files\core\util\exception</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\gui\CommandConsole.hpp">
+      <Filter>Header Files\client\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\GameProgress.hpp">
+      <Filter>Header Files\client\game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\game\TileAnimator.hpp">
+      <Filter>Header Files\core\game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\game\map\camera\CameraStrategy.hpp">
+      <Filter>Header Files\core\game\map\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\game\map\camera\FollowingCameraStrategy.hpp">
+      <Filter>Header Files\core\game\map\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\game\map\Camera.hpp">
+      <Filter>Header Files\core\game\map\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\audio\AudioService.hpp">
+      <Filter>Header Files\client\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\math\RetroVector.hpp">
+      <Filter>Header Files\core\math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\GameWorld.hpp">
+      <Filter>Header Files\client\game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\Direction.hpp">
+      <Filter>Header Files\client\game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\GOCreationParameters.hpp">
+      <Filter>Header Files\client\game\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\Services.hpp">
+      <Filter>Header Files\client\game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\objects\ScriptBrain.hpp">
+      <Filter>Header Files\client\game\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\util\RedirectStream.hpp">
+      <Filter>Header Files\core\util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\game\AnimationPlaybackException.hpp">
+      <Filter>Header Files\core\game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\game\AnimationSet.hpp">
+      <Filter>Header Files\core\game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\objects\RockmanHero.hpp">
+      <Filter>Header Files\client\game\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\geom\Vector2D.hpp">
+      <Filter>Header Files\core\geom</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\test\core\geom\Vector2DTests.hpp">
+      <Filter>Header Files\test</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\geom\AABB.hpp">
+      <Filter>Header Files\core\geom</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\objects\MovableObject.hpp">
+      <Filter>Header Files\client\game\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\geom\RectangleAABB.hpp">
+      <Filter>Header Files\core\geom</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\game\map\TileCollisionResolver.hpp">
+      <Filter>Header Files\core\game\map</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\game\AABBCollision.hpp">
+      <Filter>Header Files\core\game</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\objects\Entity.hpp">
+      <Filter>Header Files\client\game\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\Effect.hpp">
+      <Filter>Header Files\client\game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\objects\effects\NothingEffect.hpp">
+      <Filter>Header Files\client\game\objects\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\objects\CollectableItem.hpp">
+      <Filter>Header Files\client\game\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\game\CollisionResolver.hpp">
+      <Filter>Header Files\core\game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\game\TileMapCollisionResolver.hpp">
+      <Filter>Header Files\core\game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\game\CollisionInfo.hpp">
+      <Filter>Header Files\core\game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\game\Direction.hpp">
+      <Filter>Header Files\core\game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\game\Movable.hpp">
+      <Filter>Header Files\core\game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\geom\AABBCollisionInfo.hpp">
+      <Filter>Header Files\core\geom</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\util\exception\HikariException.hpp">
+      <Filter>Header Files\core\util\exception</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\util\Cloneable.hpp">
+      <Filter>Header Files\core\util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\util\Log.hpp">
+      <Filter>Header Files\core\util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\math\MathUtils.hpp">
+      <Filter>Header Files\core\math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\math\Constants.hpp">
+      <Filter>Header Files\core\math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\util\Service.hpp">
+      <Filter>Header Files\core\util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\CommandProcessor.hpp">
+      <Filter>Header Files\client</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\util\HashedString.hpp">
+      <Filter>Header Files\core\util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\game\Updatable.hpp">
+      <Filter>Header Files\core\game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\objects\Spawner.hpp">
+      <Filter>Header Files\client\game\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\util\TeeStream.hpp">
+      <Filter>Source Files\core\util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\util\Timer.hpp">
+      <Filter>Header Files\core\util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\objects\Enemy.hpp">
+      <Filter>Header Files\client\game\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\objects\EnemyBrain.hpp">
+      <Filter>Header Files\client\game\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\util\ReferenceWrapper.hpp">
+      <Filter>Header Files\core\util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\objects\controllers\HeroActionController.hpp">
+      <Filter>Header Files\client\game\objects\controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\objects\controllers\PlayerInputHeroActionController.hpp">
+      <Filter>Header Files\client\game\objects\controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\objects\brains\OctopusBatteryBrain.hpp">
+      <Filter>Header Files\client\game\objects\brains</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\math\Vector2.hpp">
+      <Filter>Header Files\core\math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\objects\brains\TellyBrain.hpp">
+      <Filter>Header Files\client\game\objects\brains</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\game\CollisionDetector.hpp">
+      <Filter>Header Files\core\game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\objects\brains\ScriptedEnemyBrain.hpp">
+      <Filter>Header Files\client\game\objects\brains</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\objects\effects\ScriptedEffect.hpp">
+      <Filter>Header Files\client\game\objects\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\scripting\SquirrelService.hpp">
+      <Filter>Header Files\client\scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="..\contrib\physfs-stream\physfs\ifile_stream.hpp">
+      <Filter>Header Files\physfs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\contrib\physfs-stream\physfs\ifile_streambuf.hpp">
+      <Filter>Header Files\physfs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\contrib\physfs-stream\physfs\ofile_stream.hpp">
+      <Filter>Header Files\physfs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\contrib\physfs-stream\physfs\ofile_streambuf.hpp">
+      <Filter>Header Files\physfs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\contrib\physfs-stream\physfs\physfs_file_system.hpp">
+      <Filter>Header Files\physfs</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\util\FileSystem.hpp">
+      <Filter>Header Files\core\util</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\hikari\core\Hikari.cpp">
+      <Filter>Source Files\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\core\game\GameControllerException.cpp">
+      <Filter>Source Files\core\game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\core\game\map\MapRenderer.cpp">
+      <Filter>Source Files\core\game\map</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\core\game\GameController.cpp">
+      <Filter>Source Files\core\game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\core\game\map\MapLoader.cpp">
+      <Filter>Source Files\core\game\map</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\core\util\StringUtils.cpp">
+      <Filter>Source Files\core\util</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\Client.cpp">
+      <Filter>Source Files\client</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\MapTestState.cpp">
+      <Filter>Source Files\client\game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\core\util\PhysFS.cpp">
+      <Filter>Source Files\core\util</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\core\util\PhysFSUtils.cpp">
+      <Filter>Source Files\core\util</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\core\gui\ImageFont.cpp">
+      <Filter>Source Files\core\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\GuiTestState.cpp">
+      <Filter>Source Files\client\game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\core\game\AnimationLoader.cpp">
+      <Filter>Source Files\core\game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\core\game\SpriteAnimator.cpp">
+      <Filter>Source Files\core\game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\SpriteTestState.cpp">
+      <Filter>Source Files\client\game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\core\util\ImageCache.cpp">
+      <Filter>Source Files\core\util</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\audio\NSFSoundStream.cpp">
+      <Filter>Source Files\client\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\contrib\gme\Blip_Buffer.cpp">
+      <Filter>Source Files\gme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\contrib\gme\Classic_Emu.cpp">
+      <Filter>Source Files\gme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\contrib\gme\Data_Reader.cpp">
+      <Filter>Source Files\gme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\contrib\gme\Effects_Buffer.cpp">
+      <Filter>Source Files\gme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\contrib\gme\gme.cpp">
+      <Filter>Source Files\gme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\contrib\gme\Gme_File.cpp">
+      <Filter>Source Files\gme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\contrib\gme\Multi_Buffer.cpp">
+      <Filter>Source Files\gme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\contrib\gme\Music_Emu.cpp">
+      <Filter>Source Files\gme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\contrib\gme\Nes_Apu.cpp">
+      <Filter>Source Files\gme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\contrib\gme\Nes_Cpu.cpp">
+      <Filter>Source Files\gme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\contrib\gme\Nes_Fme7_Apu.cpp">
+      <Filter>Source Files\gme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\contrib\gme\Nes_Namco_Apu.cpp">
+      <Filter>Source Files\gme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\contrib\gme\Nes_Oscs.cpp">
+      <Filter>Source Files\gme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\contrib\gme\Nes_Vrc6_Apu.cpp">
+      <Filter>Source Files\gme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\contrib\gme\Nsf_Emu.cpp">
+      <Filter>Source Files\gme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\contrib\gme\Nsfe_Emu.cpp">
+      <Filter>Source Files\gme</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\core\game\map\Map.cpp">
+      <Filter>Source Files\core\game\map</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\core\game\Animation.cpp">
+      <Filter>Source Files\core\game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\core\game\Animator.cpp">
+      <Filter>Source Files\core\game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\core\game\map\Room.cpp">
+      <Filter>Source Files\core\game\map</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\StageSelectState.cpp">
+      <Filter>Source Files\client\game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\RealTimeInput.cpp">
+      <Filter>Source Files\client\game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\Input.cpp">
+      <Filter>Source Files\client\game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\KeyboardInput.cpp">
+      <Filter>Source Files\client\game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\core\game\map\Tileset.cpp">
+      <Filter>Source Files\core\game\map</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\core\game\map\RoomTransition.cpp">
+      <Filter>Source Files\core\game\map</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\core\game\map\TilesetLoader.cpp">
+      <Filter>Source Files\core\game\map</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\gui\EnergyMeter.cpp">
+      <Filter>Source Files\client\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\gui\Widget.cpp">
+      <Filter>Source Files\client\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\objects\GameObject.cpp">
+      <Filter>Source Files\client\game\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\core\game\AnimationFrame.cpp">
+      <Filter>Source Files\core\game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\core\game\BoundingBox.cpp">
+      <Filter>Source Files\core\geom</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\core\util\TilesetCache.cpp">
+      <Filter>Source Files\core\util</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\gui\CommandConsole.cpp">
+      <Filter>Source Files\client\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\GamePlayState.cpp">
+      <Filter>Source Files\client\game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\core\util\JsonUtil.cpp">
+      <Filter>Source Files\core\util</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\GameProgress.cpp">
+      <Filter>Source Files\client\game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\core\game\TileAnimator.cpp">
+      <Filter>Source Files\core\game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\core\game\map\Camera.cpp">
+      <Filter>Source Files\core\game\map\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\audio\AudioService.cpp">
+      <Filter>Source Files\client\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\core\math\RetroVector.cpp">
+      <Filter>Source Files\core\math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\GameWorld.cpp">
+      <Filter>Source Files\client\game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\objects\ScriptBrain.cpp">
+      <Filter>Source Files\client\game\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\core\util\RedirectStream.cpp">
+      <Filter>Source Files\core\util</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\core\game\AnimationPlaybackException.cpp">
+      <Filter>Source Files\core\game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\core\game\AnimationSet.cpp">
+      <Filter>Source Files\core\game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\objects\RockmanHero.cpp">
+      <Filter>Source Files\client\game\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\objects\Hero.cpp">
+      <Filter>Source Files\client\game\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\core\geom\Vector2D.cpp">
+      <Filter>Source Files\core\geom</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\test\core\geom\Vector2DTest.cpp">
+      <Filter>Source Files\test</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\core\geom\AABB.cpp">
+      <Filter>Source Files\core\geom</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\objects\MovableObject.cpp">
+      <Filter>Source Files\client\game\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\core\geom\RectangleAABB.cpp">
+      <Filter>Source Files\core\geom</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\core\game\map\TileCollisionResolver.cpp">
+      <Filter>Source Files\core\game\map</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\core\game\AABBCollision.cpp">
+      <Filter>Source Files\core\game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\objects\Entity.cpp">
+      <Filter>Source Files\client\game\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\Effect.cpp">
+      <Filter>Source Files\client\game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\objects\effects\NothingEffect.cpp">
+      <Filter>Source Files\client\game\objects\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\objects\CollectableItem.cpp">
+      <Filter>Source Files\client\game\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\core\game\TileMapCollisionResolver.cpp">
+      <Filter>Source Files\core\game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\core\game\Direction.cpp">
+      <Filter>Source Files\core\game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\core\game\Movable.cpp">
+      <Filter>Source Files\core\game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\core\game\CollisionInfo.cpp">
+      <Filter>Source Files\core\game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\core\geom\AABBCollisionInfo.cpp">
+      <Filter>Source Files\core\geom</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\core\util\exception\HikariException.cpp">
+      <Filter>Source Files\core\util\exception</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\core\util\exception\ServiceNotRegisteredException.cpp">
+      <Filter>Source Files\core\util\exception</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\CommandProcessor.cpp">
+      <Filter>Source Files\client</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\core\util\HashedString.cpp">
+      <Filter>Source Files\core\util</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\objects\Spawner.cpp">
+      <Filter>Source Files\client\game\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\core\util\Timer.cpp">
+      <Filter>Source Files\core\util</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\objects\Enemy.cpp">
+      <Filter>Source Files\client\game\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\objects\EnemyBrain.cpp">
+      <Filter>Source Files\client\game\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\objects\controllers\PlayerInputHeroActionController.cpp">
+      <Filter>Source Files\client\game\objects\controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\objects\brains\OctopusBatteryBrain.cpp">
+      <Filter>Source Files\client\game\objects\brains</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\objects\brains\TellyBrain.cpp">
+      <Filter>Source Files\client\game\objects\brains</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\objects\brains\ScriptedEnemyBrain.cpp">
+      <Filter>Source Files\client\game\objects\brains</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\scripting\SquirrelService.cpp">
+      <Filter>Source Files\client\scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\core\util\Log.cpp">
+      <Filter>Source Files\core\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\contrib\physfs-stream\physfs\ifile_stream.cpp">
+      <Filter>Source Files\physfs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\contrib\physfs-stream\physfs\ifile_streambuf.cpp">
+      <Filter>Source Files\physfs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\contrib\physfs-stream\physfs\ofile_stream.cpp">
+      <Filter>Source Files\physfs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\contrib\physfs-stream\physfs\ofile_streambuf.cpp">
+      <Filter>Source Files\physfs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\contrib\physfs-stream\physfs\physfs_file_system.cpp">
+      <Filter>Source Files\physfs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\core\util\FileSystem.cpp">
+      <Filter>Source Files\core\util</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="engine.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="resource\hikari.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\content\animation-idle-sample-dev.json">
+      <Filter>Content</Filter>
+    </None>
+    <None Include="..\content\animation-sample-dev.json">
+      <Filter>Content</Filter>
+    </None>
+    <None Include="..\content\animation-sample-red-dev.json">
+      <Filter>Content</Filter>
+    </None>
+    <None Include="..\content\conf.json">
+      <Filter>Content</Filter>
+    </None>
+    <None Include="..\content\game.json">
+      <Filter>Content</Filter>
+    </None>
+    <None Include="..\content\gui-font-shadow.png">
+      <Filter>Content</Filter>
+    </None>
+    <None Include="..\content\map-skull.json">
+      <Filter>Content</Filter>
+    </None>
+    <None Include="..\content\menu-border.png">
+      <Filter>Content</Filter>
+    </None>
+    <None Include="..\content\openal32.dll">
+      <Filter>Content</Filter>
+    </None>
+    <None Include="..\content\test.nsf">
+      <Filter>Content</Filter>
+    </None>
+    <None Include="..\content\tileset-dev.json">
+      <Filter>Content</Filter>
+    </None>
+    <None Include="..\content\tileset-dev.png">
+      <Filter>Content</Filter>
+    </None>
+    <None Include="..\content\tileset-dev.txt">
+      <Filter>Content</Filter>
+    </None>
+    <None Include="..\content\tileset-skull.json">
+      <Filter>Content</Filter>
+    </None>
+  </ItemGroup>
+</Project>

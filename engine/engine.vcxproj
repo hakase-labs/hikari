@@ -1,0 +1,367 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\contrib\physfs-stream\physfs\ifile_stream.cpp" />
+    <ClCompile Include="..\contrib\physfs-stream\physfs\ifile_streambuf.cpp" />
+    <ClCompile Include="..\contrib\physfs-stream\physfs\ofile_stream.cpp" />
+    <ClCompile Include="..\contrib\physfs-stream\physfs\ofile_streambuf.cpp" />
+    <ClCompile Include="..\contrib\physfs-stream\physfs\physfs_file_system.cpp" />
+    <ClCompile Include="src\hikari\client\CommandProcessor.cpp" />
+    <ClCompile Include="src\hikari\client\game\Effect.cpp" />
+    <ClCompile Include="src\hikari\client\game\objects\brains\OctopusBatteryBrain.cpp" />
+    <ClCompile Include="src\hikari\client\game\objects\brains\ScriptedEnemyBrain.cpp" />
+    <ClCompile Include="src\hikari\client\game\objects\brains\TellyBrain.cpp" />
+    <ClCompile Include="src\hikari\client\game\objects\CollectableItem.cpp" />
+    <ClCompile Include="src\hikari\client\game\objects\controllers\PlayerInputHeroActionController.cpp" />
+    <ClCompile Include="src\hikari\client\game\objects\effects\NothingEffect.cpp" />
+    <ClCompile Include="src\hikari\client\game\objects\Enemy.cpp" />
+    <ClCompile Include="src\hikari\client\game\objects\EnemyBrain.cpp" />
+    <ClCompile Include="src\hikari\client\game\objects\Entity.cpp" />
+    <ClCompile Include="src\hikari\client\game\objects\MovableObject.cpp" />
+    <ClCompile Include="src\hikari\client\game\objects\Spawner.cpp" />
+    <ClCompile Include="src\hikari\client\scripting\SquirrelService.cpp" />
+    <ClCompile Include="src\hikari\core\game\AABBCollision.cpp" />
+    <ClCompile Include="src\hikari\core\game\CollisionInfo.cpp" />
+    <ClCompile Include="src\hikari\core\game\Direction.cpp" />
+    <ClCompile Include="src\hikari\core\game\map\TileCollisionResolver.cpp" />
+    <ClCompile Include="src\hikari\core\game\Movable.cpp" />
+    <ClCompile Include="src\hikari\core\game\TileMapCollisionResolver.cpp" />
+    <ClCompile Include="src\hikari\core\geom\AABB.cpp" />
+    <ClCompile Include="src\hikari\core\geom\AABBCollisionInfo.cpp" />
+    <ClCompile Include="src\hikari\core\geom\RectangleAABB.cpp" />
+    <ClCompile Include="src\hikari\core\util\exception\HikariException.cpp" />
+    <ClCompile Include="src\hikari\core\util\exception\ServiceNotRegisteredException.cpp" />
+    <ClCompile Include="src\hikari\core\util\FileSystem.cpp" />
+    <ClCompile Include="src\hikari\core\util\HashedString.cpp" />
+    <ClCompile Include="src\hikari\core\util\Log.cpp" />
+    <ClCompile Include="src\hikari\core\util\Timer.cpp" />
+    <ClCompile Include="src\hikari\test\core\geom\Vector2DTest.cpp" />
+    <ClInclude Include="..\contrib\gme\blargg_config.h" />
+    <ClInclude Include="..\contrib\gme\Blip_Buffer.h" />
+    <ClInclude Include="..\contrib\gme\Data_Reader.h" />
+    <ClInclude Include="..\contrib\gme\Effects_Buffer.h" />
+    <ClInclude Include="..\contrib\gme\gme.h" />
+    <ClInclude Include="..\contrib\gme\Gme_File.h" />
+    <ClInclude Include="..\contrib\gme\Multi_Buffer.h" />
+    <ClInclude Include="..\contrib\gme\Music_Emu.h" />
+    <ClInclude Include="..\contrib\gme\Nes_Apu.h" />
+    <ClInclude Include="..\contrib\gme\Nes_Cpu.h" />
+    <ClInclude Include="..\contrib\gme\nes_cpu_io.h" />
+    <ClInclude Include="..\contrib\gme\Nes_Fme7_Apu.h" />
+    <ClInclude Include="..\contrib\gme\Nes_Namco_Apu.h" />
+    <ClInclude Include="..\contrib\gme\Nes_Oscs.h" />
+    <ClInclude Include="..\contrib\gme\Nes_Vrc6_Apu.h" />
+    <ClInclude Include="..\contrib\gme\Nsfe_Emu.h" />
+    <ClInclude Include="..\contrib\gme\Nsf_Emu.h" />
+    <ClInclude Include="..\contrib\physfs-stream\physfs\ifile_stream.hpp" />
+    <ClInclude Include="..\contrib\physfs-stream\physfs\ifile_streambuf.hpp" />
+    <ClInclude Include="..\contrib\physfs-stream\physfs\ofile_stream.hpp" />
+    <ClInclude Include="..\contrib\physfs-stream\physfs\ofile_streambuf.hpp" />
+    <ClInclude Include="..\contrib\physfs-stream\physfs\physfs_file_system.hpp" />
+    <ClInclude Include="include\hikari\client\audio\AudioService.hpp" />
+    <ClInclude Include="include\hikari\client\audio\NSFSoundStream.hpp" />
+    <ClInclude Include="include\hikari\client\Client.hpp" />
+    <ClInclude Include="include\hikari\client\CommandProcessor.hpp" />
+    <ClInclude Include="include\hikari\client\game\Direction.hpp" />
+    <ClInclude Include="include\hikari\client\game\Effect.hpp" />
+    <ClInclude Include="include\hikari\client\game\EndingState.hpp" />
+    <ClInclude Include="include\hikari\client\game\GamePlayState.hpp" />
+    <ClInclude Include="include\hikari\client\game\GameProgress.hpp" />
+    <ClInclude Include="include\hikari\client\game\GameWorld.hpp" />
+    <ClInclude Include="include\hikari\client\game\GOCreationParameters.hpp" />
+    <ClInclude Include="include\hikari\client\game\GuiTestState.hpp" />
+    <ClInclude Include="include\hikari\client\game\Input.hpp" />
+    <ClInclude Include="include\hikari\client\game\IntroState.hpp" />
+    <ClInclude Include="include\hikari\client\game\KeyboardInput.hpp" />
+    <ClInclude Include="include\hikari\client\game\MapTestState.hpp" />
+    <ClInclude Include="include\hikari\client\game\objects\brains\OctopusBatteryBrain.hpp" />
+    <ClInclude Include="include\hikari\client\game\objects\brains\ScriptedEnemyBrain.hpp" />
+    <ClInclude Include="include\hikari\client\game\objects\brains\TellyBrain.hpp" />
+    <ClInclude Include="include\hikari\client\game\objects\CollectableItem.hpp" />
+    <ClInclude Include="include\hikari\client\game\objects\controllers\HeroActionController.hpp" />
+    <ClInclude Include="include\hikari\client\game\objects\controllers\PlayerInputHeroActionController.hpp" />
+    <ClInclude Include="include\hikari\client\game\objects\effects\NothingEffect.hpp" />
+    <ClInclude Include="include\hikari\client\game\objects\effects\ScriptedEffect.hpp" />
+    <ClInclude Include="include\hikari\client\game\objects\Enemy.hpp" />
+    <ClInclude Include="include\hikari\client\game\objects\EnemyBrain.hpp" />
+    <ClInclude Include="include\hikari\client\game\objects\Entity.hpp" />
+    <ClInclude Include="include\hikari\client\game\objects\GameObject.hpp" />
+    <ClInclude Include="include\hikari\client\game\objects\Hero.hpp" />
+    <ClInclude Include="include\hikari\client\game\objects\MovableObject.hpp" />
+    <ClInclude Include="include\hikari\client\game\objects\RockmanHero.hpp" />
+    <ClInclude Include="include\hikari\client\game\objects\ScriptBrain.hpp" />
+    <ClInclude Include="include\hikari\client\game\objects\Spawner.hpp" />
+    <ClInclude Include="include\hikari\client\game\OptionsState.hpp" />
+    <ClInclude Include="include\hikari\client\game\PasswordState.hpp" />
+    <ClInclude Include="include\hikari\client\game\RealTimeInput.hpp" />
+    <ClInclude Include="include\hikari\client\game\SpriteTestState.hpp" />
+    <ClInclude Include="include\hikari\client\game\StageSelectState.hpp" />
+    <ClInclude Include="include\hikari\client\game\TitleState.hpp" />
+    <ClInclude Include="include\hikari\client\game\WeaponGetState.hpp" />
+    <ClInclude Include="include\hikari\client\gui\BossMenu.hpp" />
+    <ClInclude Include="include\hikari\client\gui\CommandConsole.hpp" />
+    <ClInclude Include="include\hikari\client\gui\EnergyMeter.hpp" />
+    <ClInclude Include="include\hikari\client\gui\Widget.hpp" />
+    <ClInclude Include="include\hikari\client\scripting\SquirrelService.hpp" />
+    <ClInclude Include="include\hikari\client\Services.hpp" />
+    <ClInclude Include="include\hikari\core\game\AABBCollision.hpp" />
+    <ClInclude Include="include\hikari\core\game\Animation.hpp" />
+    <ClInclude Include="include\hikari\core\game\AnimationFrame.hpp" />
+    <ClInclude Include="include\hikari\core\game\AnimationLoader.hpp" />
+    <ClInclude Include="include\hikari\core\game\AnimationPlaybackException.hpp" />
+    <ClInclude Include="include\hikari\core\game\AnimationSet.hpp" />
+    <ClInclude Include="include\hikari\core\game\Animator.hpp" />
+    <ClInclude Include="include\hikari\core\game\CollisionDetector.hpp" />
+    <ClInclude Include="include\hikari\core\game\CollisionInfo.hpp" />
+    <ClInclude Include="include\hikari\core\game\CollisionResolver.hpp" />
+    <ClInclude Include="include\hikari\core\game\Direction.hpp" />
+    <ClInclude Include="include\hikari\core\game\GameController.hpp" />
+    <ClInclude Include="include\hikari\core\game\GameControllerException.hpp" />
+    <ClInclude Include="include\hikari\core\game\GameState.hpp" />
+    <ClInclude Include="include\hikari\core\game\map\Camera.hpp" />
+    <ClInclude Include="include\hikari\core\game\map\camera\CameraStrategy.hpp" />
+    <ClInclude Include="include\hikari\core\game\map\camera\FollowingCameraStrategy.hpp" />
+    <ClInclude Include="include\hikari\core\game\map\Map.hpp" />
+    <ClInclude Include="include\hikari\core\game\map\MapLoader.hpp" />
+    <ClInclude Include="include\hikari\core\game\map\MapRenderer.hpp" />
+    <ClInclude Include="include\hikari\core\game\map\Room.hpp" />
+    <ClInclude Include="include\hikari\core\game\map\RoomTransition.hpp" />
+    <ClInclude Include="include\hikari\core\game\map\TileCollisionResolver.hpp" />
+    <ClInclude Include="include\hikari\core\game\map\Tileset.hpp" />
+    <ClInclude Include="include\hikari\core\game\map\TilesetLoader.hpp" />
+    <ClInclude Include="include\hikari\core\game\Movable.hpp" />
+    <ClInclude Include="include\hikari\core\game\SpriteAnimator.hpp" />
+    <ClInclude Include="include\hikari\core\game\TileAnimator.hpp" />
+    <ClInclude Include="include\hikari\core\game\TileMapCollisionResolver.hpp" />
+    <ClInclude Include="include\hikari\core\game\Updatable.hpp" />
+    <ClInclude Include="include\hikari\core\geom\AABB.hpp" />
+    <ClInclude Include="include\hikari\core\geom\AABBCollisionInfo.hpp" />
+    <ClInclude Include="include\hikari\core\geom\BoundingBox.hpp" />
+    <ClInclude Include="include\hikari\core\geom\Point2D.hpp" />
+    <ClInclude Include="include\hikari\core\geom\Rectangle2D.hpp" />
+    <ClInclude Include="include\hikari\core\geom\RectangleAABB.hpp" />
+    <ClInclude Include="include\hikari\core\geom\Vector2D.hpp" />
+    <ClInclude Include="include\hikari\core\gui\ImageFont.hpp" />
+    <ClInclude Include="include\hikari\core\Hikari.hpp" />
+    <ClInclude Include="include\hikari\core\math\Constants.hpp" />
+    <ClInclude Include="include\hikari\core\math\FixedPoint.hpp" />
+    <ClInclude Include="include\hikari\core\math\MathUtils.hpp" />
+    <ClInclude Include="include\hikari\core\math\RetroVector.hpp" />
+    <ClInclude Include="include\hikari\core\math\Vector2.hpp" />
+    <ClInclude Include="include\hikari\core\Platform.hpp" />
+    <ClInclude Include="include\hikari\core\util\Cloneable.hpp" />
+    <ClInclude Include="include\hikari\core\util\exception\HikariException.hpp" />
+    <ClInclude Include="include\hikari\core\util\exception\ServiceNotRegisteredException.hpp" />
+    <ClInclude Include="include\hikari\core\util\FileSystem.hpp" />
+    <ClInclude Include="include\hikari\core\util\HashedString.hpp" />
+    <ClInclude Include="include\hikari\core\util\ImageCache.hpp" />
+    <ClInclude Include="include\hikari\core\util\JsonUtils.hpp" />
+    <ClInclude Include="include\hikari\core\util\Log.hpp" />
+    <ClInclude Include="include\hikari\core\util\PhysFS.hpp" />
+    <ClInclude Include="include\hikari\core\util\PhysFSUtils.hpp" />
+    <ClInclude Include="include\hikari\core\util\RedirectStream.hpp" />
+    <ClInclude Include="include\hikari\core\util\ReferenceWrapper.hpp" />
+    <ClInclude Include="include\hikari\core\util\ResourceCache.hpp" />
+    <ClInclude Include="include\hikari\core\util\Service.hpp" />
+    <ClInclude Include="include\hikari\core\util\ServiceLocator.hpp" />
+    <ClInclude Include="include\hikari\core\util\StringUtils.hpp" />
+    <ClInclude Include="include\hikari\core\util\TeeStream.hpp" />
+    <ClInclude Include="include\hikari\core\util\TilesetCache.hpp" />
+    <ClCompile Include="src\hikari\client\audio\AudioService.cpp" />
+    <ClCompile Include="src\hikari\client\game\GameWorld.cpp" />
+    <ClCompile Include="src\hikari\client\game\objects\Hero.cpp" />
+    <ClCompile Include="src\hikari\client\game\objects\RockmanHero.cpp" />
+    <ClCompile Include="src\hikari\client\game\objects\ScriptBrain.cpp" />
+    <ClCompile Include="src\hikari\core\game\AnimationPlaybackException.cpp" />
+    <ClCompile Include="src\hikari\core\game\AnimationSet.cpp" />
+    <ClCompile Include="src\hikari\core\game\TileAnimator.cpp">
+      <FileType>CppHeader</FileType>
+    </ClCompile>
+    <ClInclude Include="include\hikari\core\util\Timer.hpp" />
+    <ClInclude Include="include\hikari\test\core\geom\Vector2DTests.hpp" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\contrib\gme\Blip_Buffer.cpp" />
+    <ClCompile Include="..\contrib\gme\Classic_Emu.cpp" />
+    <ClCompile Include="..\contrib\gme\Data_Reader.cpp" />
+    <ClCompile Include="..\contrib\gme\Effects_Buffer.cpp" />
+    <ClCompile Include="..\contrib\gme\gme.cpp" />
+    <ClCompile Include="..\contrib\gme\Gme_File.cpp" />
+    <ClCompile Include="..\contrib\gme\Multi_Buffer.cpp" />
+    <ClCompile Include="..\contrib\gme\Music_Emu.cpp" />
+    <ClCompile Include="..\contrib\gme\Nes_Apu.cpp" />
+    <ClCompile Include="..\contrib\gme\Nes_Cpu.cpp" />
+    <ClCompile Include="..\contrib\gme\Nes_Fme7_Apu.cpp" />
+    <ClCompile Include="..\contrib\gme\Nes_Namco_Apu.cpp" />
+    <ClCompile Include="..\contrib\gme\Nes_Oscs.cpp" />
+    <ClCompile Include="..\contrib\gme\Nes_Vrc6_Apu.cpp" />
+    <ClCompile Include="..\contrib\gme\Nsfe_Emu.cpp" />
+    <ClCompile Include="..\contrib\gme\Nsf_Emu.cpp" />
+    <ClCompile Include="src\hikari\client\audio\NSFSoundStream.cpp" />
+    <ClCompile Include="src\hikari\client\Client.cpp" />
+    <ClCompile Include="src\hikari\client\game\GamePlayState.cpp" />
+    <ClCompile Include="src\hikari\client\game\GameProgress.cpp" />
+    <ClCompile Include="src\hikari\client\game\GuiTestState.cpp" />
+    <ClCompile Include="src\hikari\client\game\Input.cpp" />
+    <ClCompile Include="src\hikari\client\game\KeyboardInput.cpp" />
+    <ClCompile Include="src\hikari\client\game\MapTestState.cpp" />
+    <ClCompile Include="src\hikari\client\game\objects\GameObject.cpp" />
+    <ClCompile Include="src\hikari\client\game\RealTimeInput.cpp" />
+    <ClCompile Include="src\hikari\client\game\SpriteTestState.cpp" />
+    <ClCompile Include="src\hikari\client\game\StageSelectState.cpp" />
+    <ClCompile Include="src\hikari\client\gui\CommandConsole.cpp" />
+    <ClCompile Include="src\hikari\client\gui\EnergyMeter.cpp" />
+    <ClCompile Include="src\hikari\client\gui\Widget.cpp" />
+    <ClCompile Include="src\hikari\core\game\Animation.cpp" />
+    <ClCompile Include="src\hikari\core\game\AnimationFrame.cpp" />
+    <ClCompile Include="src\hikari\core\game\AnimationLoader.cpp" />
+    <ClCompile Include="src\hikari\core\game\Animator.cpp" />
+    <ClCompile Include="src\hikari\core\game\BoundingBox.cpp" />
+    <ClCompile Include="src\hikari\core\game\GameController.cpp" />
+    <ClCompile Include="src\hikari\core\game\GameControllerException.cpp" />
+    <ClCompile Include="src\hikari\core\game\map\Camera.cpp" />
+    <ClCompile Include="src\hikari\core\game\map\Map.cpp" />
+    <ClCompile Include="src\hikari\core\game\map\MapLoader.cpp">
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MultiThreadedDLL</RuntimeLibrary>
+    </ClCompile>
+    <ClCompile Include="src\hikari\core\game\map\MapRenderer.cpp" />
+    <ClCompile Include="src\hikari\core\game\map\Room.cpp" />
+    <ClCompile Include="src\hikari\core\game\map\RoomTransition.cpp" />
+    <ClCompile Include="src\hikari\core\game\map\Tileset.cpp" />
+    <ClCompile Include="src\hikari\core\game\map\TilesetLoader.cpp" />
+    <ClCompile Include="src\hikari\core\game\SpriteAnimator.cpp" />
+    <ClCompile Include="src\hikari\core\geom\Vector2D.cpp" />
+    <ClCompile Include="src\hikari\core\gui\ImageFont.cpp" />
+    <ClCompile Include="src\hikari\core\Hikari.cpp" />
+    <ClCompile Include="src\hikari\core\math\RetroVector.cpp" />
+    <ClCompile Include="src\hikari\core\util\ImageCache.cpp" />
+    <ClCompile Include="src\hikari\core\util\JsonUtil.cpp" />
+    <ClCompile Include="src\hikari\core\util\PhysFS.cpp" />
+    <ClCompile Include="src\hikari\core\util\PhysFSUtils.cpp" />
+    <ClCompile Include="src\hikari\core\util\RedirectStream.cpp" />
+    <ClCompile Include="src\hikari\core\util\StringUtils.cpp" />
+    <ClCompile Include="src\hikari\core\util\TilesetCache.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="engine.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\content\animation-idle-sample-dev.json" />
+    <None Include="..\content\animation-sample-dev.json" />
+    <None Include="..\content\animation-sample-red-dev.json" />
+    <None Include="..\content\conf.json" />
+    <None Include="..\content\game.json" />
+    <None Include="..\content\gui-font-shadow.png" />
+    <None Include="..\content\map-skull.json" />
+    <None Include="..\content\menu-border.png" />
+    <None Include="..\content\openal32.dll" />
+    <None Include="..\content\test.nsf" />
+    <None Include="..\content\tileset-dev.json" />
+    <None Include="..\content\tileset-dev.png" />
+    <None Include="..\content\tileset-dev.txt" />
+    <None Include="..\content\tileset-skull.json" />
+    <None Include="resource\hikari.ico" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{4E92FB0C-82F5-49A4-8CD9-9333868BB767}</ProjectGuid>
+    <RootNamespace>hikari</RootNamespace>
+    <ProjectName>engine</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(ProjectDir)dist\debug\</OutDir>
+    <IntDir>$(ProjectDir)build\debug\</IntDir>
+    <TargetName>$(SolutionName)-$(ProjectName)</TargetName>
+    <CustomBuildAfterTargets>
+    </CustomBuildAfterTargets>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(ProjectDir)dist\release\</OutDir>
+    <IntDir>$(ProjectDir)build\release\</IntDir>
+    <TargetName>$(SolutionName)-$(ProjectName)</TargetName>
+    <EmbedManifest>true</EmbedManifest>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(ProjectDir)include\;$(SolutionDir)contrib\jsoncpp\include\;D:\dev\cpp\libraries\SQUIRREL3\include;D:\dev\cpp\libraries\sqrat-0.8.2\include;$(SolutionDir)contrib\gme\;$(SolutionDir)contrib\physfs\;$(SolutionDir)contrib\physfs-stream\;$(SolutionDir)contrib\sfml\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES;SFML_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>sfml-main-d.lib;sfml-system-s-d.lib;sfml-graphics-s-d.lib;sfml-audio-s-d.lib;sfml-window-s-d.lib;physfs-d.lib;jsoncpp.lib;squirreld.lib;sqstdlibd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(solutionDir)contrib\sfml\build2\lib\Debug\;$(SolutionDir)contrib\jsoncpp\dist\debug\;$(SolutionDir)contrib\physfs\dist\debug\;D:\dev\cpp\libraries\SQUIRREL3\lib</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>libc.lib;libcmt.lib;msvcrt.lib;libcd.lib;libcmtd.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <Profile>true</Profile>
+    </Link>
+    <PostBuildEvent>
+      <Command>$(SolutionDir)post-build.bat "$(SolutionDir)content" "$(ProjectDir)dist\debug" "$(SolutionDir)"</Command>
+    </PostBuildEvent>
+    <CustomBuildStep>
+      <Command>xcopy /S $(SolutionDir)content\*.* $(ProjectDir)dist\debug\ /y</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Message>Copying asset files to output directory...</Message>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>$(ProjectDir)include\;$(SolutionDir)contrib\jsoncpp\include\;$(SolutionDir)contrib\gme\;$(SolutionDir)contrib\physfs\;$(SolutionDir)contrib\physfs-stream\;$(SolutionDir)contrib\sfml\include\;D:\dev\cpp\libraries\SQUIRREL3\include;D:\dev\cpp\libraries\sqrat-0.8.2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>SFML_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>sfml-main.lib;sfml-system-s.lib;sfml-graphics-s.lib;sfml-audio-s.lib;sfml-window-s.lib;physfs.lib;jsoncpp.lib;squirrel.lib;sqstdlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(solutionDir)contrib\sfml\build\lib\Release\;$(SolutionDir)contrib\physfs\dist\release\;$(SolutionDir)contrib\jsoncpp\dist\release\;D:\dev\cpp\libraries\SQUIRREL3\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>libc.lib;libcmt.lib;libcd.lib;libcmtd.lib;msvcrtd.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <SubSystem>Windows</SubSystem>
+      <Profile>true</Profile>
+    </Link>
+    <PostBuildEvent>
+      <Command>$(SolutionDir)post-build.bat "$(SolutionDir)content" "$(ProjectDir)dist\release" "$(SolutionDir)"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
