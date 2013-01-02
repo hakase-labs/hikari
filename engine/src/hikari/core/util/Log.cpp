@@ -27,8 +27,8 @@ namespace hikari {
 
     Log::~Log() {
         os << std::endl;
-        fprintf(stderr, "%s", os.str().c_str());
-        fflush(stderr);
+        fprintf(stdout, "%s", os.str().c_str());
+        fflush(stdout);
     }
 
     const std::string Log::getNowTime() const {

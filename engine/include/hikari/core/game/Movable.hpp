@@ -28,8 +28,6 @@ namespace hikari {
         bool collidesWithWorld;
         bool applyHorizontalVelocity;
         bool applyVerticalVelocity;
-        //std::unique_ptr<CollisionDetector> collisionDetector;
-        //std::unique_ptr<CollisionResolver> collisionResolver;
 
     protected:
         Vector2<float> velocity;
