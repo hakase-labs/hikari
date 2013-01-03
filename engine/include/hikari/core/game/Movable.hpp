@@ -67,7 +67,7 @@ namespace hikari {
         void setVelocity(const float& x, const float& y);
         void setBoundingBox(const BoundingBoxF& boundingBox);
 
-        void setTreatLadderTopAsGround(const bool& treatAsGround);
+        void setTreatLadderTopAsGround(const bool& treatAsGround); 
         void setApplyHorizontalVelocity(const bool& applyVelocity);
         void setApplyVerticalVelocity(const bool& applyVelocity);
 

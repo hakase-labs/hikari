@@ -14,7 +14,7 @@ namespace hikari {
         , tileY(0)
         , correctedX(0)
         , correctedY(0)
-        , tileType(0)
+        , tileType(0) 
     {
 
     }

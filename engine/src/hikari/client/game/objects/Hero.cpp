@@ -153,7 +153,7 @@ namespace hikari {
                     auto tileX = (static_cast<int>(topLeft.getX()) / 16) * 16;
                     auto overlap = std::abs(realX - tileX - 16);
 
-                    // ladderPositionX = (((static_cast<int>(topRight.getX()) / 16) - 1) * 16 ) + (body.getBoundingBox().getWidth() / 2);
+                    //// ladderPositionX = (((static_cast<int>(topRight.getX()) / 16) - 1) * 16 ) + (body.getBoundingBox().getWidth() / 2);
                     if(overlap >= 4) {
                         ladderPositionX = tileX + static_cast<int>(body.getBoundingBox().getWidth() / 2);
                         isTouchingLadder = true;
