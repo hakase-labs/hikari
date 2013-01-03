@@ -66,7 +66,7 @@ _ReSharper*/
 
 #Hikari Specific Ignores
 content/
-contrib/
+contrib/*
 !contrib/SQUIRREL3/
 doc/
 tools/
