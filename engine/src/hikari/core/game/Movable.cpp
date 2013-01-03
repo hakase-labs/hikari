@@ -25,6 +25,7 @@ namespace hikari {
         , onGroundLastFrame(false)
         , affectedByGravity(true)
         , collidesWithWorld(true)
+        , treatLadderTopAsGround(true)
         , applyHorizontalVelocity(true)
         , applyVerticalVelocity(true)
         , collisionCallback()
@@ -40,6 +41,7 @@ namespace hikari {
         , onGroundLastFrame(false)
         , affectedByGravity(true)
         , collidesWithWorld(true)
+        , treatLadderTopAsGround(true)
         , applyHorizontalVelocity(true)
         , applyVerticalVelocity(true)
         , collisionCallback()
@@ -114,6 +116,7 @@ namespace hikari {
 
     void Movable::checkCollision(const float& dt) {
         collisionInfo.clear();
+        collisionInfo.treatLadderTopAsGround = this->treatLadderTopAsGround;
 
         preCheckCollision();
 
@@ -244,6 +247,10 @@ namespace hikari {
 
     void Movable::setBoundingBox(const BoundingBoxF& boundingBox) {
         this->boundingBox = boundingBox;
+    }
+
+    void Movable::setTreatLadderTopAsGround(const bool& treatAsGround) {
+        this->treatLadderTopAsGround = treatAsGround;
     }
 
     void Movable::setApplyHorizontalVelocity(const bool& applyVelocity) {

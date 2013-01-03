@@ -121,14 +121,14 @@ namespace hikari {
             auto touchingTopLeft = ((tlAttr != Room::NO_TILE) && (tlAttr & TileAttribute::LADDER) == TileAttribute::LADDER);
             auto touchingBottomLeft = ((blAttr != Room::NO_TILE) && (blAttr & TileAttribute::LADDER) == TileAttribute::LADDER);
             auto touchingBottomRight = ((brAttr != Room::NO_TILE) && (brAttr & TileAttribute::LADDER) == TileAttribute::LADDER);
-            auto touchingFeetLeft = ((feetLeftAttr != Room::NO_TILE) && (feetLeftAttr & TileAttribute::LADDER) == TileAttribute::LADDER);
-            auto touchingFeetRight = ((feetRightAttr != Room::NO_TILE) && (feetRightAttr & TileAttribute::LADDER) == TileAttribute::LADDER);
+            auto touchingFeetLeft = ((feetLeftAttr != Room::NO_TILE) && (feetLeftAttr & TileAttribute::LADDER_TOP) == TileAttribute::LADDER_TOP);
+            auto touchingFeetRight = ((feetRightAttr != Room::NO_TILE) && (feetRightAttr & TileAttribute::LADDER_TOP) == TileAttribute::LADDER_TOP);
             auto touchingBodyOnLadder = ((posAttr != Room::NO_TILE) && (posAttr & TileAttribute::LADDER) == TileAttribute::LADDER);
             auto touchingLadderTop = ((posAttr != Room::NO_TILE) && (posAttr & TileAttribute::LADDER_TOP) == TileAttribute::LADDER_TOP); 
 
             isTouchingLadderWithFeet = touchingFeetLeft || touchingFeetRight;
 
-            if(touchingBodyOnLadder|| touchingTopRight || touchingBottomRight || touchingTopLeft || touchingBottomLeft) {
+            if(touchingBodyOnLadder|| touchingTopRight || touchingBottomRight || touchingTopLeft || touchingBottomLeft || isTouchingLadderWithFeet) {
                 if(touchingBodyOnLadder) {
                     isTouchingLadder = true;
                 }
@@ -145,8 +145,6 @@ namespace hikari {
 
                         // std::cout << "Overlap Right: " << overlap << std::endl;
                     }
-
-                    
                 }
 
                 if(touchingTopLeft || touchingBottomLeft || touchingFeetLeft) {
@@ -183,10 +181,12 @@ namespace hikari {
          if(actionController) {
             if(actionController->shouldMoveUp()) {
                 if(isTouchingLadder && !isOnLadder) {
-                    changeMobilityState(std::unique_ptr<MobilityState>(new ClimbingMobilityState(this)));
+                    if(!isTouchingLadderWithFeet) {
+                        changeMobilityState(std::unique_ptr<MobilityState>(new ClimbingMobilityState(this)));
+                    }
                 }
             } else if(actionController->shouldMoveDown()) {
-                if(isTouchingLadder && !isOnLadder && !body.isOnGround()) { 
+                if(isTouchingLadder && !isOnLadder && (!body.isOnGround() || isTouchingLadderWithFeet)) { 
                     changeMobilityState(std::unique_ptr<MobilityState>(new ClimbingMobilityState(this)));
                 }
             }
@@ -910,15 +910,19 @@ namespace hikari {
         hero->setVelocityX(0.0f);
         hero->setPosition(static_cast<float>(hero->ladderPositionX), hero->getPosition().getY());
         hero->body.setGravitated(false);
+        hero->body.setTreatLadderTopAsGround(false);
     }
 
     void Hero::ClimbingMobilityState::exit() {
         hero->isOnLadder = false;
         hero->body.setGravitated(true);
+        hero->body.setTreatLadderTopAsGround(true);
         hero->getAnimationPlayer()->unpause();
     }
 
     void Hero::ClimbingMobilityState::update(const float & dt) {
+        hero->body.setTreatLadderTopAsGround(false);
+
         if(hero->actionController) {
             auto const * controller = hero->actionController.get();
 
@@ -971,13 +975,13 @@ namespace hikari {
             // Can jump (amd fall down) from ladders
             
 
-            if(hero->body.isOnGround()) {
+            if(hero->body.isOnGround() && !hero->isTouchingLadderWithFeet) {
                 hero->changeMobilityState(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
                 return;
             }
 
             // Can reach the top of a ladder and not be climbing anymore
-            if(!hero->isTouchingLadder) {
+            if(!hero->isTouchingLadder && !hero->isTouchingLadderWithFeet) {
                 if(controller->shouldMoveDown()) {
                     hero->isFalling = true;
                     hero->changeMobilityState(std::unique_ptr<MobilityState>(new AirbornMobilityState(hero)));

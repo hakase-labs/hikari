@@ -88,7 +88,7 @@ namespace hikari {
 
                     // Here we check for ladder tops as well as solid ground.
                     // Ladder tops are only "solid" if you're falling "down" on them.
-                    if(tileIsSolid(currentTile) || (tileIsLadderTop(currentTile) && directionY == Directions::Down)) {
+                    if(tileIsSolid(currentTile) || (collisionInfo.treatLadderTopAsGround && tileIsLadderTop(currentTile) && directionY == Directions::Down)) {
                         collisionInfo.isCollisionY = true;
                         collisionInfo.tileX = tileX;
                         collisionInfo.tileY = tileY;
