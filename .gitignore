@@ -24,6 +24,7 @@
 *.vssscc
 *_i.c
 *_p.c
+*.dsw
 *.ncb
 *.suo
 *.tlb
@@ -66,5 +67,6 @@ _ReSharper*/
 #Hikari Specific Ignores
 content/
 contrib/
+!contrib/SQUIRREL3/
 doc/
 tools/
