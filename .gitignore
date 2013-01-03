@@ -68,5 +68,6 @@ _ReSharper*/
 content/
 contrib/*
 !contrib/SQUIRREL3/
+!contrib/sqrat-0.8.2/
 doc/
 tools/

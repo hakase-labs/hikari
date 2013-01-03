@@ -1,0 +1,11 @@
+--- gtest-1.3.0/msvc/gtest.vcproj 2011-08-13 12:09:59.358923800 +0200
++++ gtest-1.3.0/msvc/gtest.vcproj 2011-08-13 11:55:28.924923800 +0200
+@@ -23,7 +23,7 @@
+            IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
+            ConfigurationType="4"
+            InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+-            CharacterSet="1"
++            CharacterSet="2"
+            >
+            <Tool
+                Name="VCPreBuildEventTool"

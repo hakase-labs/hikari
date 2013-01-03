@@ -1,0 +1,11 @@
+--- sqratthread/sqratthread.vcproj 2011-08-13 12:10:00.355923800 +0200
++++ sqratthread/sqratthread.vcproj 2011-08-13 11:56:04.824923800 +0200
+@@ -23,7 +23,7 @@
+            OutputDirectory="$(SolutionDir)$(PlatformName)\$(ConfigurationName)"
+            IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
+            ConfigurationType="2"
+-            CharacterSet="1"
++            CharacterSet="2"
+            >
+            <Tool
+                Name="VCPreBuildEventTool"
