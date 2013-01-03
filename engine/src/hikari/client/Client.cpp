@@ -214,16 +214,16 @@ int main(int argc, char** argv) {
         controller.addState(mapTestState->getName(), mapTestState);
         controller.addState(guiTestState->getName(), guiTestState);
         controller.addState(spriteTestState->getName(), spriteTestState);
-        controller.addState(stageSelectState->getName(), stageSelectState);
+        controller.addState(stageSelectState->getName(), stageSelectState); 
         controller.addState(gamePlayState->getName(), gamePlayState);
 
         controller.setState(game.get("initial-state", "default").asString());
 
         NSFSoundStream sound(2046);
-        sound.open("assets/sound/mm3-redone.nsf"); 
-        sound.setCurrentTrack(0);
+        sound.open("assets/sound/mega-man-3-nes-[NSF-ID2016].nsf"); 
+        sound.setCurrentTrack(9);
         sound.stop();
-        // sound.play();
+        sound.play();
 
         //
         // Register some commands

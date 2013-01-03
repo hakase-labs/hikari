@@ -1,0 +1,278 @@
+--- /tmp/tmp.20828.100	2010-10-10 18:49:50.555842117 -0700
++++ include/sqrat/sqratFunction.h	2010-09-14 20:47:37.071294022 -0700
+@@ -267,6 +267,126 @@
+ 			return ret;
+ 		}
+ 
++		template <class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10>
++		R Evaluate(A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10) {
++			sq_pushobject(vm, obj);
++			sq_pushobject(vm, env);
++
++			PushVar(vm, a1);
++			PushVar(vm, a2);
++			PushVar(vm, a3);
++			PushVar(vm, a4);
++			PushVar(vm, a5);
++			PushVar(vm, a6);
++			PushVar(vm, a7);
++			PushVar(vm, a8);
++			PushVar(vm, a9);
++			PushVar(vm, a10);
++
++			sq_call(vm, 11, true, ErrorHandling::IsEnabled());
++			R ret = Var<R>(vm, -1).value;
++			sq_pop(vm, 2);
++			return ret;
++		}
++
++		template <class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11>
++		R Evaluate(A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10, A11 a11) {
++			sq_pushobject(vm, obj);
++			sq_pushobject(vm, env);
++
++			PushVar(vm, a1);
++			PushVar(vm, a2);
++			PushVar(vm, a3);
++			PushVar(vm, a4);
++			PushVar(vm, a5);
++			PushVar(vm, a6);
++			PushVar(vm, a7);
++			PushVar(vm, a8);
++			PushVar(vm, a9);
++			PushVar(vm, a10);
++			PushVar(vm, a11);
++
++			sq_call(vm, 12, true, ErrorHandling::IsEnabled());
++			R ret = Var<R>(vm, -1).value;
++			sq_pop(vm, 2);
++			return ret;
++		}
++
++		template <class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11, class A12>
++		R Evaluate(A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10, A11 a11, A12 a12) {
++			sq_pushobject(vm, obj);
++			sq_pushobject(vm, env);
++
++			PushVar(vm, a1);
++			PushVar(vm, a2);
++			PushVar(vm, a3);
++			PushVar(vm, a4);
++			PushVar(vm, a5);
++			PushVar(vm, a6);
++			PushVar(vm, a7);
++			PushVar(vm, a8);
++			PushVar(vm, a9);
++			PushVar(vm, a10);
++			PushVar(vm, a11);
++			PushVar(vm, a12);
++
++			sq_call(vm, 13, true, ErrorHandling::IsEnabled());
++			R ret = Var<R>(vm, -1).value;
++			sq_pop(vm, 2);
++			return ret;
++		}
++
++		template <class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11, class A12, class A13>
++		R Evaluate(A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10, A11 a11, A12 a12, A13 a13) {
++			sq_pushobject(vm, obj);
++			sq_pushobject(vm, env);
++
++			PushVar(vm, a1);
++			PushVar(vm, a2);
++			PushVar(vm, a3);
++			PushVar(vm, a4);
++			PushVar(vm, a5);
++			PushVar(vm, a6);
++			PushVar(vm, a7);
++			PushVar(vm, a8);
++			PushVar(vm, a9);
++			PushVar(vm, a10);
++			PushVar(vm, a11);
++			PushVar(vm, a12);
++			PushVar(vm, a13);
++
++			sq_call(vm, 14, true, ErrorHandling::IsEnabled());
++			R ret = Var<R>(vm, -1).value;
++			sq_pop(vm, 2);
++			return ret;
++		}
++
++		template <class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11, class A12, class A13, class A14>
++		R Evaluate(A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10, A11 a11, A12 a12, A13 a13, A14 a14) {
++			sq_pushobject(vm, obj);
++			sq_pushobject(vm, env);
++
++			PushVar(vm, a1);
++			PushVar(vm, a2);
++			PushVar(vm, a3);
++			PushVar(vm, a4);
++			PushVar(vm, a5);
++			PushVar(vm, a6);
++			PushVar(vm, a7);
++			PushVar(vm, a8);
++			PushVar(vm, a9);
++			PushVar(vm, a10);
++			PushVar(vm, a11);
++			PushVar(vm, a12);
++			PushVar(vm, a13);
++			PushVar(vm, a14);
++
++			sq_call(vm, 15, true, ErrorHandling::IsEnabled());
++			R ret = Var<R>(vm, -1).value;
++			sq_pop(vm, 2);
++			return ret;
++		}
++
+ 		//
+ 		// void returns
+ 		//
+@@ -414,6 +534,116 @@
+ 			sq_call(vm, 10, false, ErrorHandling::IsEnabled());
+ 			sq_pop(vm, 1);
+ 		}
++
++		template <class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10>
++		void Execute(A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10) {
++			sq_pushobject(vm, obj);
++			sq_pushobject(vm, env);
++
++			PushVar(vm, a1);
++			PushVar(vm, a2);
++			PushVar(vm, a3);
++			PushVar(vm, a4);
++			PushVar(vm, a5);
++			PushVar(vm, a6);
++			PushVar(vm, a7);
++			PushVar(vm, a8);
++			PushVar(vm, a9);
++			PushVar(vm, a10);
++
++			sq_call(vm, 11, false, ErrorHandling::IsEnabled());
++			sq_pop(vm, 1);
++		}
++
++		template <class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11>
++		void Execute(A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10, A11 a11) {
++			sq_pushobject(vm, obj);
++			sq_pushobject(vm, env);
++
++			PushVar(vm, a1);
++			PushVar(vm, a2);
++			PushVar(vm, a3);
++			PushVar(vm, a4);
++			PushVar(vm, a5);
++			PushVar(vm, a6);
++			PushVar(vm, a7);
++			PushVar(vm, a8);
++			PushVar(vm, a9);
++			PushVar(vm, a10);
++			PushVar(vm, a11);
++
++			sq_call(vm, 12, false, ErrorHandling::IsEnabled());
++			sq_pop(vm, 1);
++		}
++
++		template <class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11, class A12>
++		void Execute(A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10, A11 a11, A12 a12) {
++			sq_pushobject(vm, obj);
++			sq_pushobject(vm, env);
++
++			PushVar(vm, a1);
++			PushVar(vm, a2);
++			PushVar(vm, a3);
++			PushVar(vm, a4);
++			PushVar(vm, a5);
++			PushVar(vm, a6);
++			PushVar(vm, a7);
++			PushVar(vm, a8);
++			PushVar(vm, a9);
++			PushVar(vm, a10);
++			PushVar(vm, a11);
++			PushVar(vm, a12);
++
++			sq_call(vm, 13, false, ErrorHandling::IsEnabled());
++			sq_pop(vm, 1);
++		}
++
++		template <class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11, class A12, class A13>
++		void Execute(A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10, A11 a11, A12 a12, A13 a13) {
++			sq_pushobject(vm, obj);
++			sq_pushobject(vm, env);
++
++			PushVar(vm, a1);
++			PushVar(vm, a2);
++			PushVar(vm, a3);
++			PushVar(vm, a4);
++			PushVar(vm, a5);
++			PushVar(vm, a6);
++			PushVar(vm, a7);
++			PushVar(vm, a8);
++			PushVar(vm, a9);
++			PushVar(vm, a10);
++			PushVar(vm, a11);
++			PushVar(vm, a12);
++			PushVar(vm, a13);
++
++			sq_call(vm, 14, false, ErrorHandling::IsEnabled());
++			sq_pop(vm, 1);
++		}
++
++		template <class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11, class A12, class A13, class A14>
++		void Execute(A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10, A11 a11, A12 a12, A13 a13, A14 a14) {
++			sq_pushobject(vm, obj);
++			sq_pushobject(vm, env);
++
++			PushVar(vm, a1);
++			PushVar(vm, a2);
++			PushVar(vm, a3);
++			PushVar(vm, a4);
++			PushVar(vm, a5);
++			PushVar(vm, a6);
++			PushVar(vm, a7);
++			PushVar(vm, a8);
++			PushVar(vm, a9);
++			PushVar(vm, a10);
++			PushVar(vm, a11);
++			PushVar(vm, a12);
++			PushVar(vm, a13);
++			PushVar(vm, a14);
++
++			sq_call(vm, 15, false, ErrorHandling::IsEnabled());
++			sq_pop(vm, 1);
++		}
+ 		
+ 		//
+ 		// Operator overloads for ease of use (calls Execute)
+@@ -468,6 +698,31 @@
+ 		void operator()(A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9) {
+ 			Execute(a1, a2, a3, a4, a5, a6, a7, a8, a9);
+ 		}
++
++		template <class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10>
++		void operator()(A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10) {
++			Execute(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10);
++		}
++
++		template <class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11>
++		void operator()(A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10, A11 a11) {
++			Execute(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11);
++		}
++
++		template <class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11, class A12>
++		void operator()(A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10, A11 a11, A12 a12) {
++			Execute(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12);
++		}
++
++		template <class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11, class A12, class A13>
++		void operator()(A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10, A11 a11, A12 a12, A13 a13) {
++			Execute(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13);
++		}
++
++		template <class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11, class A12, class A13, class A14>
++		void operator()(A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10, A11 a11, A12 a12, A13 a13, A14 a14) {
++			Execute(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14);
++		}
+ 	};
+ 
+ 	//

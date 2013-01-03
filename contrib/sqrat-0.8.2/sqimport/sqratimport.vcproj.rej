@@ -1,0 +1,11 @@
+--- sqimport/sqratimport.vcproj 2011-08-13 12:09:59.962923800 +0200
++++ sqimport/sqratimport.vcproj 2011-08-13 11:55:51.691923800 +0200
+@@ -23,7 +23,7 @@
+            OutputDirectory="$(SolutionDir)$(PlatformName)\$(ConfigurationName)"
+            IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
+            ConfigurationType="4"
+-            CharacterSet="1"
++            CharacterSet="2"
+            >
+            <Tool
+                Name="VCPreBuildEventTool"

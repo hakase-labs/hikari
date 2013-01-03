@@ -400,12 +400,12 @@ namespace hikari {
         );
         */
 
-        if(item->isActive()) {
-            item->render(target);
-        }
+        //if(item->isActive()) {
+        //    item->render(target);
+        //}
 
         // Put old view back
-        target.setView(oldView);
+        target.setView(oldView); 
 
         /*if(cameraFollowingPlayer) {
             font->renderText(target, "FOLLOWING", 8, 64, sf::Color::White);
