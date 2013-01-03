@@ -124,7 +124,7 @@ namespace hikari {
             auto touchingFeetLeft = ((feetLeftAttr != Room::NO_TILE) && (feetLeftAttr & TileAttribute::LADDER_TOP) == TileAttribute::LADDER_TOP);
             auto touchingFeetRight = ((feetRightAttr != Room::NO_TILE) && (feetRightAttr & TileAttribute::LADDER_TOP) == TileAttribute::LADDER_TOP);
             auto touchingBodyOnLadder = ((posAttr != Room::NO_TILE) && (posAttr & TileAttribute::LADDER) == TileAttribute::LADDER);
-            auto touchingLadderTop = ((posAttr != Room::NO_TILE) && (posAttr & TileAttribute::LADDER_TOP) == TileAttribute::LADDER_TOP); 
+            auto touchingLadderTop = ((posAttr != Room::NO_TILE) && (posAttr & TileAttribute::LADDER_TOP) == TileAttribute::LADDER_TOP);
 
             isTouchingLadderWithFeet = touchingFeetLeft || touchingFeetRight;
 

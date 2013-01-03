@@ -84,7 +84,7 @@ namespace hikari {
             Sqrat::RootTable().Bind(
                 "Enemy", 
                 Sqrat::Class<Enemy>()
-                    .Prop<const float>("velocityX", &Enemy::getVelocityX, &Enemy::setVelocityX)
+                    .Prop<const float>("velocityX", &Enemy::getVelocityX, &Enemy::setVelocityX) 
                     .Prop<const float>("velocityY", &Enemy::getVelocityY, &Enemy::setVelocityY)
                     .Prop<const bool>("isActive", &Enemy::isActive, &Enemy::setActive)
                     .Prop<const bool>("isGravitated", &Enemy::isGravitated, &Enemy::setGravitated)
