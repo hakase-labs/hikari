@@ -7,7 +7,7 @@ namespace hikari {
 
     class CollisionInfo {
     public:
-        bool treatLadderTopAsGround;
+        bool treatLadderTopAsGround; 
         bool isCollisionX;
         bool isCollisionY;
         int worldX;
