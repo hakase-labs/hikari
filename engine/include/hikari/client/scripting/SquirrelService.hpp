@@ -28,6 +28,8 @@ namespace hikari {
         SquirrelService(const SQInteger initialStackSize);
         virtual ~SquirrelService();
 
+        const HSQUIRRELVM getVmInstance();
+
         void runScriptFile(const std::string & fileName);
         void runScriptString(const std::string & scriptString);
         void collectGarbage();

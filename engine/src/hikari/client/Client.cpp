@@ -11,7 +11,6 @@
 #include <hikari/client/game/SpriteTestState.hpp>
 #include <hikari/client/audio/AudioService.hpp> 
 #include <hikari/client/gui/CommandConsole.hpp>
-// #include <hikari/client/scripting/LuaState.hpp>
 #include <hikari/client/scripting/SquirrelService.hpp>
 #include <hikari/client/Services.hpp>
 
@@ -104,7 +103,7 @@ int main(int argc, char** argv) {
     using std::shared_ptr;
     using namespace hikari;
 
-    std::freopen("stdout.txt", "w", stdout);
+    //std::freopen("stdout.txt", "w", stdout);
 
     ::hikari::Log::setReportingLevel(debug2);
 
@@ -160,7 +159,6 @@ int main(int argc, char** argv) {
             new AudioService(game["assets"]["audio"])
         );
         auto squirrelService = std::make_shared<SquirrelService>(1024);
-        // shared_ptr<LuaState> scriptingService(new LuaState());
 
         squirrelService->runScriptString("::print(\"Squirrel Service works!\");");
 
@@ -201,7 +199,8 @@ int main(int argc, char** argv) {
             mapName, 
             tileSet,
             imageCache,
-            guiFont
+            guiFont,
+            services
         );
 
         mapTestState->setRenderWindow(&window);

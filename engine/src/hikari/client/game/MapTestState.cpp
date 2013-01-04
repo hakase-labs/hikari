@@ -1,7 +1,10 @@
 #include <hikari/client/game/MapTestState.hpp>
 #include <hikari/client/game/RealTimeInput.hpp>
+#include <hikari/client/Services.hpp>
+#include <hikari/client/scripting/SquirrelService.hpp>
 #include <hikari/core/util/PhysFS.hpp>
 #include <hikari/core/util/PhysFSUtils.hpp>
+#include <hikari/core/util/ServiceLocator.hpp>
 #include <hikari/core/util/StringUtils.hpp>
 #include <SFML/Window/Event.hpp>
 #include <json/reader.h>
@@ -23,6 +26,7 @@
 #include <hikari/client/game/objects/brains/ScriptedEnemyBrain.hpp>
 #include <hikari/client/game/objects/CollectableItem.hpp>
 #include <hikari/client/game/objects/effects/NothingEffect.hpp>
+#include <hikari/client/game/objects/effects/ScriptedEffect.hpp>
 #include <hikari/core/game/Movable.hpp>
 #include <hikari/core/game/TileMapCollisionResolver.hpp>
 #include <hikari/core/util/ReferenceWrapper.hpp>
@@ -30,14 +34,6 @@
 #include <hikari/client/game/objects/controllers/PlayerInputHeroActionController.hpp>
 
 namespace hikari {
-
-    static void printfunc(HSQUIRRELVM v, const SQChar *s, ...) {
-        va_list vl;
-        va_start(vl, s);
-        vprintf(s, vl);
-        va_end(vl);
-        printf("\n");
-    }
 
     class ImageCache;
 
@@ -52,7 +48,8 @@ namespace hikari {
             const std::string &mapFile, 
             const std::string &tileFile, 
             const std::shared_ptr<ImageCache> &imageCache, 
-            const std::shared_ptr<ImageFont> &font)
+            const std::shared_ptr<ImageFont> &font,
+            ServiceLocator &services)
         : name(name)
         , mapLoader(mapLoader)
         , renderer(currentRoom, tiles)
@@ -77,6 +74,7 @@ namespace hikari {
         , playFieldZoom(1.0f)
         , renderWindow(nullptr)
     {
+        squirrel = services.locateService<SquirrelService>(Services::SCRIPTING);
             loadMap(mapFile);
 
             renderer.setTileData(tiles); // TODO: This should be in a different method
@@ -92,8 +90,6 @@ namespace hikari {
 
             transitionFrames = 0;
             jumpIterations = 0;
-
-            checkCollisions = true;
 
             retroGravity = RetroVector(0, 0x40);
             retroPositionY = RetroVector(0, 0);
@@ -117,17 +113,6 @@ namespace hikari {
             sprite.setTexture(spriteImage);
             sprite.setPosition(100.0f, 100.0f);
             animationPlayer.setAnimation(animations->get("idle"));
-
-            item.reset(new CollectableItem(7, currentRoom, std::make_shared<NothingEffect>()));
-            item->setAnimationSet(AnimationLoader::loadSet("assets/animations/items.json"));
-            item->setSpriteTexture(enemySprite);
-            item->changeAnimation("e-tank");
-            item->setPosition(45.0f, 45.0f);
-            item->setAgeless(true);
-
-            BoundingBoxF itemBounds = BoundingBoxF(45.0f, 16.0f, 16.0f, 16.0f);
-
-            item->setBoundingBox(itemBounds);
 
             setupHero();
             setupEnemy();
@@ -154,13 +139,11 @@ namespace hikari {
             en5->setDirection(Directions::Up);
             en5->setPosition(200, 120);
 
-            //enemies.push_back(en1);
-            //enemies.push_back(en2);
-            //enemies.push_back(en3);
-            //enemies.push_back(en4);
-            //enemies.push_back(en5);
-
-            auto clone = item->clone();
+            enemies.push_back(en1);
+           // enemies.push_back(en2);
+            enemies.push_back(en3);
+            enemies.push_back(en4);
+            enemies.push_back(en5);
 
             spawnerMarker.setFillColor(sf::Color(255, 0, 255, 128));
             spawnerMarker.setOutlineColor(sf::Color::White);
@@ -179,53 +162,29 @@ namespace hikari {
             cameraViewportOutline.setOutlineColor(cameraOutlineColor);
             cameraViewportOutline.setOutlineThickness(3.0f);
             cameraViewportOutline.setFillColor(sf::Color::Transparent);
-
-            v = sq_open(1024);
-            sq_setprintfunc(v, printfunc, printfunc);
-   
-            sq_pushroottable(v);
-            sqstd_register_mathlib(v); 
-            sq_pop(v, 1);
-
-            Sqrat::DefaultVM::Set(v);
-
-            Sqrat::ConstTable().Enum("Directions", Sqrat::Enumeration()
-                .Const("None", Directions::None)
-                .Const("Up", Directions::Up)
-                .Const("Right", Directions::Right)
-                .Const("Down", Directions::Down)
-                .Const("Left", Directions::Left));
-
-            Sqrat::Table utilsTable;
-            utilsTable.Func("getOppositeDirection", &Directions::opposite);
-            Sqrat::RootTable().Bind("Utils", utilsTable);
-
-            Sqrat::RootTable().Bind(
-                "Enemy", 
-                Sqrat::Class<Enemy>()
-                    .Prop<const float>("velocityX", &Enemy::getVelocityX, &Enemy::setVelocityX)
-                    .Prop<const float>("velocityY", &Enemy::getVelocityY, &Enemy::setVelocityY)
-                    .Prop<const bool>("isActive", &Enemy::isActive, &Enemy::setActive)
-                    .Prop<const bool>("isGravitated", &Enemy::isGravitated, &Enemy::setGravitated)
-                    .Prop<const bool>("isObstacle", &Enemy::isObstacle, &Enemy::setObstacle)
-                    .Prop<const Direction>("direction", &Enemy::getDirection, &Enemy::setDirection)
-                    .Func("changeAnimation", &Enemy::changeAnimation)
-                    .GlobalFunc("getX", &EntityHelpers::getX)
-                    .GlobalFunc("getY", &EntityHelpers::getY)
-                    .GlobalFunc("setX", &EntityHelpers::setX)
-                    .GlobalFunc("setY", &EntityHelpers::setY)
-            );
             
             std::vector<std::string> scriptFiles;
+            scriptFiles.push_back("assets/scripts/EffectBase.nut");
             scriptFiles.push_back("EnemyBehavior.nut");
             scriptFiles.push_back("TellyBehavior.nut");
             scriptFiles.push_back("OctopusBatteryEnemyBehavior.nut");
             
-            std::for_each(std::begin(scriptFiles), std::end(scriptFiles), [](const std::string & scriptFileName) {
-                Sqrat::Script script;
-                script.CompileFile(scriptFileName);
-                script.Run();
+            std::for_each(std::begin(scriptFiles), std::end(scriptFiles), [this](const std::string & scriptFileName) {
+                squirrel->runScriptFile(scriptFileName);
             });
+
+            item.reset(new CollectableItem(7, currentRoom, std::make_shared<ScriptedEffect>(*squirrel, "EffectBase")));
+            item->setAnimationSet(AnimationLoader::loadSet("assets/animations/items.json"));
+            item->setSpriteTexture(enemySprite);
+            item->changeAnimation("e-tank");
+            item->setPosition(45.0f, 45.0f);
+            item->setAgeless(true);
+
+            BoundingBoxF itemBounds = BoundingBoxF(45.0f, 16.0f, 16.0f, 16.0f);
+
+            item->setBoundingBox(itemBounds);
+
+            auto clone = item->clone();
             
             auto en6 = spawnEnemy("scripted-octopusbattery");
             en6->setDirection(Directions::Up);
@@ -239,16 +198,13 @@ namespace hikari {
 
             scriptFiles.clear();
             scriptFiles.push_back("TellyBehaviorOverrides.nut");
-            std::for_each(std::begin(scriptFiles), std::end(scriptFiles), [](const std::string & scriptFileName) {
-                Sqrat::Script script;
-                script.CompileFile(scriptFileName);
-                script.Run();
+            std::for_each(std::begin(scriptFiles), std::end(scriptFiles), [this](const std::string & scriptFileName) {
+                squirrel->runScriptFile(scriptFileName);
             });
     }
 
     MapTestState::~MapTestState() {
         enemies.clear();
-        sq_close(v);
     }
 
     void MapTestState::loadMap(const std::string &mapFile) {
@@ -261,7 +217,6 @@ namespace hikari {
     }
 
     void MapTestState::initializeCamera() {
-        //camera.setBoundary(map->getRoomRect(currentRoom->getId()));
         camera.setBoundary(currentRoom->getCameraBounds());
         camera.lockHorizontal(true);
         camera.lockVertical(true);
@@ -269,9 +224,8 @@ namespace hikari {
 
     void MapTestState::handleEvent(sf::Event &event) {
         if((event.type == sf::Event::KeyPressed) && event.key.code == sf::Keyboard::Return) {
-            //checkCollisions = !checkCollisions;
             std::cout << "Collecting garbage..." << std::endl;
-            sq_collectgarbage(v);
+            squirrel->collectGarbage();
         }
 
         if(event.type == sf::Event::MouseButtonPressed) {
@@ -349,9 +303,9 @@ namespace hikari {
         }
 
         hero->render(target);
-        // enemy->render(target);
+        enemy->render(target);
         
-        /*
+        
         std::for_each(
             enemies.begin(), 
             enemies.end(), 
@@ -361,9 +315,9 @@ namespace hikari {
                 ReferenceWrapper<sf::RenderTarget>(target)
             )
         );
-        */
+        
 
-        /*
+        
         std::for_each(
             currentRoom->getSpawners().begin(),
             currentRoom->getSpawners().end(),
@@ -389,8 +343,8 @@ namespace hikari {
                 target.draw(transitionMarker); 
             }
         );
-        */
-        /*
+        
+        
         std::for_each(
             enemies.begin(), 
             enemies.end(),
@@ -398,11 +352,11 @@ namespace hikari {
                 en->render(target);
             }
         );
-        */
+        
 
-        //if(item->isActive()) {
-        //    item->render(target);
-        //}
+        if(item->isActive()) {
+          item->render(target);
+        }
 
         // Put old view back
         target.setView(oldView); 
@@ -476,9 +430,6 @@ namespace hikari {
                 .SetValue("heroY", playerPosition.getY());
 
             item->update(dt);
-            
-            doHeroLogic();
-            heroTeleportTimer.update(dt);
             hero->update(dt);
 
             std::for_each(
@@ -744,124 +695,6 @@ namespace hikari {
         }
     }
 
-    void MapTestState::checkAndResolveCollision() {
-        sf::Vector2f position = logicalCursor.getPosition();
-        sf::Vector2f newPosition = position;
-        const sf::Vector2f& size = sf::Vector2f(16.0f, 22.0f);
-        int tileX = 0;
-        int tileY = 0;
-
-        // X-axis first
-        if(velocity.x > 0) {
-            if(checkCollisionVertical(
-                static_cast<int>(position.x + velocity.x + size.x),    // right side
-                static_cast<int>(position.y),
-                static_cast<int>(position.y + size.y - 1),
-                tileX)) {
-                    position.x = static_cast<float>(
-                        (tileX * tiles->getTileSize())) - size.x;
-
-                    velocity.x = 0;
-            }
-        } else if(velocity.x < 0) {
-            if(checkCollisionVertical(
-                static_cast<int>(position.x + velocity.x),    // left side
-                static_cast<int>(position.y),
-                static_cast<int>(position.y + size.y - 1),
-                tileX)) {
-                    position.x = static_cast<float>(
-                        ((tileX + 1) * tiles->getTileSize()));
-
-                    velocity.x = 0;
-            }
-        }
-
-        // Y-axis second
-        if(velocity.y > 0) {
-            grounded = false;
-            falling = !grounded;
-            // Collision with ground
-            if(checkCollisionHorizontal(
-                static_cast<int>(position.x),
-                static_cast<int>(position.y + velocity.y + size.y),    // bottom side
-                static_cast<int>(position.x + size.x - 1),
-                tileY)) {
-                    float fraction = position.y - static_cast<float>(static_cast<int>(position.y));
-                    position.y = static_cast<float>(
-                        ((tileY) * tiles->getTileSize())) - size.y + fraction;
-
-                    velocity.y = 0.0f;
-                    retroVelocityY = RetroVector();
-                    grounded = true;
-                    falling = !grounded;
-            }
-        } else if(velocity.y < 0) {
-            grounded = false;
-            falling = false;
-
-            // Collision on top
-            if(checkCollisionHorizontal(
-                static_cast<int>(position.x),
-                static_cast<int>(position.y + velocity.y),    // top side
-                static_cast<int>(position.x + size.x - 1),
-                tileY)) {
-                    float fraction = position.y - static_cast<float>(static_cast<int>(position.y));
-                    position.y = static_cast<float>(
-                        ((tileY + 1) * tiles->getTileSize())) + fraction;
-
-                    velocity.y = 0.0f;
-                    retroVelocityY = RetroVector();
-                    grounded = true;
-                    falling = false;
-            }
-        }
-
-        logicalCursor.setPosition(position);
-    }
-
-    bool MapTestState::checkCollisionHorizontal(const int &x, const int &y, const int &sx, int &tileCoordY) {
-        int tileXPixels = x - (x % tiles->getTileSize());
-        int tileX = tileXPixels / tiles->getTileSize();
-
-        tileCoordY = y / tiles->getTileSize();
-
-        while(tileXPixels <= sx) {
-            const int& tileAttr = currentRoom->getAttributeAt(tileX, tileCoordY);
-
-            if(tileAttr != Room::NO_TILE) {
-                if((tileAttr & TileAttribute::SOLID) == TileAttribute::SOLID) {
-                    return true;
-                }
-            }
-
-            tileX++;
-            tileXPixels += tiles->getTileSize();
-        }
-
-        return false;
-    }
-
-    bool MapTestState::checkCollisionVertical(const int &x, const int &y, const int &sy, int &tileCoordX) {
-        int tileYPixels = y - (y % tiles->getTileSize());
-        int tileY = tileYPixels / tiles->getTileSize();
-
-        tileCoordX = x / tiles->getTileSize();
-
-        while(tileYPixels <= sy) {
-            const int& tileAttr = currentRoom->getAttributeAt(tileCoordX, tileY);
-            if(tileAttr != Room::NO_TILE) {
-                if((tileAttr & TileAttribute::SOLID) == TileAttribute::SOLID) {
-                    return true;
-                }
-            }
-
-            tileY++;
-            tileYPixels += tiles->getTileSize();
-        }
-
-        return false;
-    }
-
     void MapTestState::setupHero() {
         auto heroAnimationSet = AnimationLoader::loadSet("assets/animations/rockman-32.json");
         
@@ -876,27 +709,6 @@ namespace hikari {
         hero->changeAnimation("idle");
         hero->setPosition(100.0f, 100.0f);
         hero->setActionController(std::make_shared<PlayerInputHeroActionController>(input));
-    }
-
-    void MapTestState::doHeroLogic() {
-        // 
-        // Animation state selection
-        //
-        if(input->isDown(Input::BUTTON_LEFT) || input->isDown(Input::BUTTON_RIGHT)) {
-           // hero->setCurrentAnimation(hero->getAnimationSet()->get("running"));
-        } else {
-            if(input->wasReleased(Input::BUTTON_LEFT) || input->wasReleased(Input::BUTTON_RIGHT)) {
-                //hero->setCurrentAnimation(hero->getAnimationSet()->get("idle"));
-            }
-        }
-
-        if(input->isDown(Input::BUTTON_LEFT)) {
-            // hero->setDirection(Directions::Left);
-        }
-
-        if(input->isDown(Input::BUTTON_RIGHT)) {
-            // hero->setDirection(Directions::Right);
-        }
     }
 
     void MapTestState::setupEnemy() {
@@ -958,7 +770,7 @@ namespace hikari {
             instance->setGravitated(false);
             instance->setPhasing(false);
 
-            auto enemyBrain = std::make_shared<ScriptedEnemyBrain>(v, "TellyEnemyBehavior");
+            auto enemyBrain = std::make_shared<ScriptedEnemyBrain>(*squirrel, "TellyEnemyBehavior");
             instance->setBrain(enemyBrain);
             instance->setDirection(Directions::Down);
 
@@ -993,12 +805,12 @@ namespace hikari {
             instance->setCurrentAnimation(enemyAnimationSet->get("idle"));
             instance->setGravitated(false);
 
-            auto enemyBrain = std::make_shared<ScriptedEnemyBrain>(v, "OctopusBatteryEnemyBehavior");
+            auto enemyBrain = std::make_shared<ScriptedEnemyBrain>(*squirrel, "OctopusBatteryEnemyBehavior");
             instance->setBrain(enemyBrain);
             instance->setDirection(Directions::Down);
         }
 
-        return instance;
+        return instance; 
     }
 
     void MapTestState::setupItem() {

@@ -854,6 +854,9 @@
     <ClCompile Include="src\hikari\core\util\FileSystem.cpp">
       <Filter>Source Files\core\util</Filter>
     </ClCompile>
+    <ClCompile Include="src\hikari\client\game\objects\effects\ScriptedEffect.cpp">
+      <Filter>Source Files\client\game\objects\effects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="engine.rc">
