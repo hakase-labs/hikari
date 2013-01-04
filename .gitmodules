@@ -1,0 +1,3 @@
+[submodule "contrib/physfs-stream"]
+	path = contrib/physfs-stream
+	url = https://github.com/hakase-labs/physfs-stream.git
