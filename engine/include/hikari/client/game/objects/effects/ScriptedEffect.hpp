@@ -10,16 +10,23 @@
 
 namespace hikari {
 
+    class SquirrelService;
+
     class ScriptedEffect : public Effect {
     private:
+        static const char * FUNCTION_NAME_APPLY;
+        static const char * FUNCTION_NAME_UNAPPLY;
+        static const char * BASE_CLASS_NAME;
+
+    private:
         HSQUIRRELVM vm;
-        std::string scriptClassName;
+        std::string effectClassName;
         Sqrat::Object instance;
         Sqrat::Function proxyApply;
         Sqrat::Function proxyUnapply;
 
     public:
-        ScriptedEffect();
+        ScriptedEffect(SquirrelService& service, const std::string& effectClassName);
         ScriptedEffect(const ScriptedEffect &proto);
         virtual std::shared_ptr<Effect> clone() const;
         virtual ~ScriptedEffect();

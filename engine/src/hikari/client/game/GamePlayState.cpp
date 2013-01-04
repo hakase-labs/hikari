@@ -27,8 +27,6 @@
 #include <SFML/Graphics/View.hpp>
 #include <SFML/Window/Event.hpp>
 
-// #include <oolua.h>
-
 #include <memory>
 #include <string>
 

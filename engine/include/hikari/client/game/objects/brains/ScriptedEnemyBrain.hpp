@@ -10,6 +10,8 @@
 
 namespace hikari {
 
+    class SquirrelService;
+
     class ScriptedEnemyBrain : public EnemyBrain {
     private:
         HSQUIRRELVM vm;
@@ -24,7 +26,7 @@ namespace hikari {
         std::vector<sf::Time> updateSamples;
 
     public:
-        ScriptedEnemyBrain(HSQUIRRELVM vm, const std::string& scriptClassName);
+        ScriptedEnemyBrain(SquirrelService& service, const std::string& scriptClassName);
         virtual ~ScriptedEnemyBrain();
 
         virtual void attach(Enemy* host);

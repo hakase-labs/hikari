@@ -1,13 +1,17 @@
 #include <hikari/client/game/objects/brains/ScriptedEnemyBrain.hpp>
+#include <hikari/client/scripting/SquirrelService.hpp>
+
+#include <hikari/core/util/Log.hpp>
+
 #include <algorithm>
 
 namespace hikari {
 
-    ScriptedEnemyBrain::ScriptedEnemyBrain(HSQUIRRELVM vm, const std::string& scriptClassName)
-        : vm(vm)
+    ScriptedEnemyBrain::ScriptedEnemyBrain(SquirrelService& squirrel, const std::string& scriptClassName)
+        : vm(squirrel.getVmInstance())
         , scriptClassName(scriptClassName)
     {
-        std::cout << "ScriptedEnemyBrain::ScriptedEnemyBrain()" << std::endl;
+        HIKARI_LOG(debug2) << "ScriptedEnemyBrain::ScriptedEnemyBrain()";
 
         try {
             Sqrat::Function constructor(Sqrat::RootTable(vm), scriptClassName.c_str());
@@ -21,13 +25,13 @@ namespace hikari {
                     proxyUpdate = Sqrat::Function(instance, "update");
                     proxyHandleWorldCollision = Sqrat::Function(instance, "handleWorldCollision");
                 } else {
-                    std::cout << "Constructor for '" << scriptClassName << "' did not return the correct object type." << std::endl;
+                    HIKARI_LOG(debug2) << "Constructor for '" << scriptClassName << "' did not return the correct object type.";
                 }
             } else {
-                std::cout << "Could not find a constructor for '" << scriptClassName << "'." << std::endl;
+                HIKARI_LOG(debug2) << "Could not find a constructor for '" << scriptClassName << "'.";
             }
         } catch(Sqrat::Exception squirrelException) {
-            std::cout << "Could not create an instance of '" << scriptClassName << "'. Reason: " << squirrelException.Message() << std::endl;
+            HIKARI_LOG(debug1) << "Could not create an instance of '" << scriptClassName << "'. Reason: " << squirrelException.Message();
         }
     }
 
@@ -56,24 +60,9 @@ namespace hikari {
     }
 
     void ScriptedEnemyBrain::update(const float& dt) {
-        //updateTimer.restart();
         if(!proxyUpdate.IsNull()) {
             proxyUpdate.Execute(dt);
         }
-        //updateSamples.push_back(updateTimer.getElapsedTime());
-
-        /*if(updateSamples.size() >= 4000) {
-            signed long long totalTime = 0;
-
-            std::for_each(updateSamples.begin(), updateSamples.end(), [&](const sf::Time & t){
-                totalTime += t.asMicroseconds();
-            });
-
-            double averageTime = (static_cast<double>(totalTime) / static_cast<double>(updateSamples.size()));
-
-            std::cout << "Total time:   " << totalTime << "ms.\n";
-            std::cout << "Average time: " << averageTime << "ms" << std::endl;
-        }*/
     }
 
 } // hikari

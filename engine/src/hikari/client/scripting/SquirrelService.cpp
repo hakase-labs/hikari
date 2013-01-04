@@ -106,6 +106,10 @@ namespace hikari {
         }
     }
 
+    const HSQUIRRELVM SquirrelService::getVmInstance() {
+        return vm;
+    }
+
     void SquirrelService::runScriptFile(const std::string & fileName) {
         if(vm) {
             auto fileContents = FileSystem::readFileAsString(fileName);
@@ -120,6 +124,7 @@ namespace hikari {
 
     void SquirrelService::runScriptString(const std::string & scriptString) {
         if(vm) {
+            // TODO: See if the Sqrat::Script object can be used here; what is its internal object referring to?
             Sqrat::Script script;
             script.CompileString(scriptString);
             script.Run();
