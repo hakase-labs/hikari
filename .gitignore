@@ -69,7 +69,8 @@ content/
 contrib/*
 !contrib/sfml
 !contrib/squirrel3
-!contrib/sqrat*
+!contrib/sqrat
+!contrib/physfs
 !contrib/physfs-stream
 doc/
 tools/
