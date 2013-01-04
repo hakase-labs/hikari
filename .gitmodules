@@ -4,3 +4,6 @@
 [submodule "contrib/squirrel3"]
 	path = contrib/squirrel3
 	url = https://github.com/hakase-labs/squirrel3.git
+[submodule "contrib/sfml"]
+	path = contrib/sfml
+	url = https://github.com/hakase-labs/sfml.git
