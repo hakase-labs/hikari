@@ -24,6 +24,7 @@
     <ClCompile Include="src\hikari\client\game\objects\CollectableItem.cpp" />
     <ClCompile Include="src\hikari\client\game\objects\controllers\PlayerInputHeroActionController.cpp" />
     <ClCompile Include="src\hikari\client\game\objects\effects\NothingEffect.cpp" />
+    <ClCompile Include="src\hikari\client\game\objects\effects\ScriptedEffect.cpp" />
     <ClCompile Include="src\hikari\client\game\objects\Enemy.cpp" />
     <ClCompile Include="src\hikari\client\game\objects\EnemyBrain.cpp" />
     <ClCompile Include="src\hikari\client\game\objects\Entity.cpp" />

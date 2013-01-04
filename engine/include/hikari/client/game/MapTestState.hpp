@@ -11,7 +11,6 @@
 #include <hikari/core/game/map/TilesetLoader.hpp>
 #include <hikari/core/game/map/MapLoader.hpp>
 #include <hikari/core/gui/ImageFont.hpp>
-//#include <hikari/core/math/FixedPoint.hpp>
 #include <hikari/core/math/RetroVector.hpp>
 #include <hikari/client/game/objects/MovableObject.hpp>
 #include <hikari/core/game/AnimationLoader.hpp>
@@ -41,6 +40,8 @@ namespace sf {
 
 namespace hikari {
 
+    class ServiceLocator;
+    class SquirrelService;
     class TileMapCollisionResolver;
     class CollectableItem;
     class RealTimeInput;
@@ -50,18 +51,17 @@ namespace hikari {
 
     class MapTestState : public GameState {
     private:
-        HSQUIRRELVM v;
+        std::shared_ptr<SquirrelService> squirrel;
         std::string name;
-        std::shared_ptr<hikari::MapLoader> mapLoader;
-        //hikari::TilesetLoader tilesetLoader;
-        hikari::TileDataPtr tiles;
+        std::shared_ptr<MapLoader> mapLoader;
+        TileDataPtr tiles;
         
-        std::shared_ptr<hikari::Map> map;
-        hikari::RoomPtr currentRoom;
-        hikari::RoomPtr nextRoom;
-        hikari::MapRenderer renderer;
+        std::shared_ptr<Map> map;
+        RoomPtr currentRoom;
+        RoomPtr nextRoom;
+        MapRenderer renderer;
         sf::View view;
-        hikari::Camera camera;
+        Camera camera;
         std::shared_ptr<hikari::ImageFont> font;
         std::shared_ptr<hikari::RealTimeInput> input;
 
@@ -79,9 +79,6 @@ namespace hikari {
         SpriteAnimator animationPlayer;
 
         sf::Vector2f velocity;
-        //hikari::FixedPoint fixedGravity;
-        //hikari::FixedPoint fixedVelocityX;
-        //hikari::FixedPoint fixedVelocityY;
 
         hikari::RetroVector retroGravity;
         hikari::RetroVector retroPositionY;
@@ -102,7 +99,6 @@ namespace hikari {
 
         sf::RectangleShape cameraViewportOutline;
 
-        Timer heroTeleportTimer;
         GameWorld world;
 
         sf::RenderWindow * renderWindow;
@@ -139,13 +135,7 @@ namespace hikari {
 
         void initializeCamera();
 
-        bool checkCollisions;
-        void checkAndResolveCollision();
-        bool checkCollisionHorizontal(const int &x, const int &y, const int &sx, int &tileCoordY);
-        bool checkCollisionVertical(const int &x, const int &y, const int &sy, int &tileCoordX);
-
         void setupHero();
-        void doHeroLogic();
 
         void setupEnemy();
         std::shared_ptr<Enemy> spawnEnemy(const std::string& type);
@@ -158,7 +148,8 @@ namespace hikari {
             const std::string &mapFile, 
             const std::string &tileFile, 
             const std::shared_ptr<hikari::ImageCache> &imageCache, 
-            const std::shared_ptr<hikari::ImageFont> &font);
+            const std::shared_ptr<hikari::ImageFont> &font,
+            ServiceLocator &services);
         virtual ~MapTestState();
 
         virtual void handleEvent(sf::Event &event);
