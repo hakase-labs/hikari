@@ -7,3 +7,6 @@
 [submodule "contrib/sfml"]
 	path = contrib/sfml
 	url = https://github.com/hakase-labs/sfml.git
+[submodule "contrib/sqrat"]
+	path = contrib/sqrat
+	url = https://github.com/hakase-labs/sqrat
