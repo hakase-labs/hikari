@@ -317,13 +317,13 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)include\;$(SolutionDir)contrib\jsoncpp\include\;$(SolutionDir)contrib\SQUIRREL3\include\;$(SolutionDir)contrib\sqrat-0.8.2\include\;$(SolutionDir)contrib\gme\;$(SolutionDir)contrib\physfs\;$(SolutionDir)contrib\physfs-stream\;$(SolutionDir)contrib\sfml\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include\;$(SolutionDir)contrib\jsoncpp\include\;$(SolutionDir)contrib\squirrel3\include\;$(SolutionDir)contrib\sqrat-0.8.2\include\;$(SolutionDir)contrib\gme\;$(SolutionDir)contrib\physfs\;$(SolutionDir)contrib\physfs-stream\;$(SolutionDir)contrib\sfml\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES;SFML_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>sfml-main-d.lib;sfml-system-s-d.lib;sfml-graphics-s-d.lib;sfml-audio-s-d.lib;sfml-window-s-d.lib;physfs-d.lib;jsoncpp.lib;squirreld.lib;sqstdlibd.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(solutionDir)contrib\sfml\build2\lib\Debug\;$(SolutionDir)contrib\jsoncpp\dist\debug\;$(SolutionDir)contrib\physfs\dist\debug\;$(SolutionDir)contrib\SQUIRREL3\lib\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(solutionDir)contrib\sfml\build2\lib\Debug\;$(SolutionDir)contrib\jsoncpp\dist\debug\;$(SolutionDir)contrib\physfs\dist\debug\;$(SolutionDir)contrib\squirrel3\lib\</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>libc.lib;libcmt.lib;msvcrt.lib;libcd.lib;libcmtd.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <Profile>true</Profile>
     </Link>
@@ -343,7 +343,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(ProjectDir)include\;$(SolutionDir)contrib\jsoncpp\include\;$(SolutionDir)contrib\gme\;$(SolutionDir)contrib\physfs\;$(SolutionDir)contrib\physfs-stream\;$(SolutionDir)contrib\sfml\include\;$(SolutionDir)contrib\SQUIRREL3\include\;$(SolutionDir)contrib\sqrat-0.8.2\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include\;$(SolutionDir)contrib\jsoncpp\include\;$(SolutionDir)contrib\gme\;$(SolutionDir)contrib\physfs\;$(SolutionDir)contrib\physfs-stream\;$(SolutionDir)contrib\sfml\include\;$(SolutionDir)contrib\squirrel3\include\;$(SolutionDir)contrib\sqrat-0.8.2\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>SFML_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
@@ -352,7 +352,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>sfml-main.lib;sfml-system-s.lib;sfml-graphics-s.lib;sfml-audio-s.lib;sfml-window-s.lib;physfs.lib;jsoncpp.lib;squirrel.lib;sqstdlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(solutionDir)contrib\sfml\build\lib\Release\;$(SolutionDir)contrib\physfs\dist\release\;$(SolutionDir)contrib\jsoncpp\dist\release\;$(SolutionDir)contrib\SQUIRREL3\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(solutionDir)contrib\sfml\build\lib\Release\;$(SolutionDir)contrib\physfs\dist\release\;$(SolutionDir)contrib\jsoncpp\dist\release\;$(SolutionDir)contrib\squirrel3\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>libc.lib;libcmt.lib;libcd.lib;libcmtd.lib;msvcrtd.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <SubSystem>Windows</SubSystem>
       <Profile>true</Profile>

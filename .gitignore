@@ -67,7 +67,9 @@ _ReSharper*/
 #Hikari Specific Ignores
 content/
 contrib/*
-!contrib/SQUIRREL3/
-!contrib/sqrat-0.8.2/
+!contrib/sfml
+!contrib/squirrel3
+!contrib/sqrat-0.8.2
+!contrib/physfs-stream
 doc/
 tools/
