@@ -10,3 +10,6 @@
 [submodule "contrib/sqrat"]
 	path = contrib/sqrat
 	url = https://github.com/hakase-labs/sqrat
+[submodule "contrib/physfs"]
+	path = contrib/physfs
+	url = https://github.com/hakase-labs/physfs
