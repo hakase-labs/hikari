@@ -1,3 +1,6 @@
 [submodule "contrib/physfs-stream"]
 	path = contrib/physfs-stream
 	url = https://github.com/hakase-labs/physfs-stream.git
+[submodule "contrib/squirrel3"]
+	path = contrib/squirrel3
+	url = https://github.com/hakase-labs/squirrel3.git
