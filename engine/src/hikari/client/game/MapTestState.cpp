@@ -737,7 +737,7 @@ namespace hikari {
 
     Vector2<float> MapTestState::screenCoordToWorldCoord(const float & x, const float & y) {
         if(renderWindow) { 
-            auto convertedCoords = renderWindow->convertCoords(sf::Vector2i(static_cast<int>(x), static_cast<int>(y)), camera.getPixelAlignedView());
+            auto convertedCoords = renderWindow->mapPixelToCoords(sf::Vector2i(static_cast<int>(x), static_cast<int>(y)), camera.getPixelAlignedView());
             return Vector2<float>(convertedCoords.x, convertedCoords.y);
         } else {
             return Vector2<float>(0.0f, 0.0f);
