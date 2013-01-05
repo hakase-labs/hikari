@@ -95,332 +95,113 @@ namespace hikari {
     }
     
     void Hero::update(const float &dt) {
-        // Do global updating...
-        ladderPositionX = 0;
-        isTouchingLadder = false;
-        isTouchingLadderTop = false;
-        isTouchingLadderWithFeet = false;
+        if(room) {
+            // Do global updating...
+            ladderPositionX = 0;
+            isTouchingLadder = false;
+            isTouchingLadderTop = false;
+            isTouchingLadderWithFeet = false;
 
-        // Check to see if we're touching a ladder
-        {
-            auto bbox = this->getBoundingBox();
-            auto topRight = bbox.getTopRight();
-            auto topLeft = bbox.getTopLeft();
-            auto bottomLeft = bbox.getBottomLeft();
-            auto bottomRight = bbox.getBottomRight();
+            // Check to see if we're touching a ladder
+            {
+                auto bbox = this->getBoundingBox();
+                auto topRight = bbox.getTopRight();
+                auto topLeft = bbox.getTopLeft();
+                auto bottomLeft = bbox.getBottomLeft();
+                auto bottomRight = bbox.getBottomRight();
 
-            auto trAttr = room->getAttributeAt(static_cast<int>(topRight.getX() - 1)    / 16, static_cast<int>(topRight.getY()   ) / 16);
-            auto tlAttr = room->getAttributeAt(static_cast<int>(topLeft.getX())     / 16, static_cast<int>(topLeft.getY()    ) / 16);
-            auto blAttr = room->getAttributeAt(static_cast<int>(bottomLeft.getX())  / 16, static_cast<int>(bottomLeft.getY() - 1) / 16);
-            auto brAttr = room->getAttributeAt(static_cast<int>(bottomRight.getX() - 1) / 16, static_cast<int>(bottomRight.getY() - 1) / 16);
-            auto feetLeftAttr = room->getAttributeAt(static_cast<int>(bottomLeft.getX())  / 16, static_cast<int>(bottomLeft.getY()) / 16);
-            auto feetRightAttr = room->getAttributeAt(static_cast<int>(bottomRight.getX() - 1) / 16, static_cast<int>(bottomRight.getY()) / 16);
-            auto posAttr = room->getAttributeAt(static_cast<int>(getPosition().getX()) / 16, static_cast<int>(getPosition().getY()) / 16);
+                auto trAttr = room->getAttributeAt(static_cast<int>(topRight.getX() - 1)    / 16, static_cast<int>(topRight.getY()   ) / 16);
+                auto tlAttr = room->getAttributeAt(static_cast<int>(topLeft.getX())     / 16, static_cast<int>(topLeft.getY()    ) / 16);
+                auto blAttr = room->getAttributeAt(static_cast<int>(bottomLeft.getX())  / 16, static_cast<int>(bottomLeft.getY() - 1) / 16);
+                auto brAttr = room->getAttributeAt(static_cast<int>(bottomRight.getX() - 1) / 16, static_cast<int>(bottomRight.getY() - 1) / 16);
+                auto feetLeftAttr = room->getAttributeAt(static_cast<int>(bottomLeft.getX())  / 16, static_cast<int>(bottomLeft.getY()) / 16);
+                auto feetRightAttr = room->getAttributeAt(static_cast<int>(bottomRight.getX() - 1) / 16, static_cast<int>(bottomRight.getY()) / 16);
+                auto posAttr = room->getAttributeAt(static_cast<int>(getPosition().getX()) / 16, static_cast<int>(getPosition().getY()) / 16);
 
-            auto touchingTopRight = ((trAttr != Room::NO_TILE) && (trAttr & TileAttribute::LADDER) == TileAttribute::LADDER);
-            auto touchingTopLeft = ((tlAttr != Room::NO_TILE) && (tlAttr & TileAttribute::LADDER) == TileAttribute::LADDER);
-            auto touchingBottomLeft = ((blAttr != Room::NO_TILE) && (blAttr & TileAttribute::LADDER) == TileAttribute::LADDER);
-            auto touchingBottomRight = ((brAttr != Room::NO_TILE) && (brAttr & TileAttribute::LADDER) == TileAttribute::LADDER);
-            auto touchingFeetLeft = ((feetLeftAttr != Room::NO_TILE) && (feetLeftAttr & TileAttribute::LADDER_TOP) == TileAttribute::LADDER_TOP);
-            auto touchingFeetRight = ((feetRightAttr != Room::NO_TILE) && (feetRightAttr & TileAttribute::LADDER_TOP) == TileAttribute::LADDER_TOP);
-            auto touchingBodyOnLadder = ((posAttr != Room::NO_TILE) && (posAttr & TileAttribute::LADDER) == TileAttribute::LADDER);
-            auto touchingLadderTop = ((posAttr != Room::NO_TILE) && (posAttr & TileAttribute::LADDER_TOP) == TileAttribute::LADDER_TOP);
+                auto touchingTopRight = ((trAttr != Room::NO_TILE) && (trAttr & TileAttribute::LADDER) == TileAttribute::LADDER);
+                auto touchingTopLeft = ((tlAttr != Room::NO_TILE) && (tlAttr & TileAttribute::LADDER) == TileAttribute::LADDER);
+                auto touchingBottomLeft = ((blAttr != Room::NO_TILE) && (blAttr & TileAttribute::LADDER) == TileAttribute::LADDER);
+                auto touchingBottomRight = ((brAttr != Room::NO_TILE) && (brAttr & TileAttribute::LADDER) == TileAttribute::LADDER);
+                auto touchingFeetLeft = ((feetLeftAttr != Room::NO_TILE) && (feetLeftAttr & TileAttribute::LADDER_TOP) == TileAttribute::LADDER_TOP);
+                auto touchingFeetRight = ((feetRightAttr != Room::NO_TILE) && (feetRightAttr & TileAttribute::LADDER_TOP) == TileAttribute::LADDER_TOP);
+                auto touchingBodyOnLadder = ((posAttr != Room::NO_TILE) && (posAttr & TileAttribute::LADDER) == TileAttribute::LADDER);
+                auto touchingLadderTop = ((posAttr != Room::NO_TILE) && (posAttr & TileAttribute::LADDER_TOP) == TileAttribute::LADDER_TOP);
 
-            isTouchingLadderWithFeet = touchingFeetLeft || touchingFeetRight;
+                isTouchingLadderWithFeet = touchingFeetLeft || touchingFeetRight;
 
-            if(touchingBodyOnLadder|| touchingTopRight || touchingBottomRight || touchingTopLeft || touchingBottomLeft || isTouchingLadderWithFeet) {
-                if(touchingBodyOnLadder) {
-                    isTouchingLadder = true;
-                }
-
-                if(touchingTopRight || touchingBottomRight || touchingFeetRight) {
-                    // Determine the overlap amount rightward
-                    auto realX = static_cast<int>(topRight.getX());
-                    auto tileX = (static_cast<int>(topRight.getX()) / 16) * 16;
-                    auto overlap = std::abs(realX - tileX);
-
-                    if(overlap >= 4) {
-                        ladderPositionX = tileX + static_cast<int>(body.getBoundingBox().getWidth() / 2);
+                if(touchingBodyOnLadder|| touchingTopRight || touchingBottomRight || touchingTopLeft || touchingBottomLeft || isTouchingLadderWithFeet) {
+                    if(touchingBodyOnLadder) {
                         isTouchingLadder = true;
-
-                        // std::cout << "Overlap Right: " << overlap << std::endl;
-                    }
-                }
-
-                if(touchingTopLeft || touchingBottomLeft || touchingFeetLeft) {
-                    // Determine the overlap leftward
-                    auto realX = static_cast<int>(topLeft.getX());
-                    auto tileX = (static_cast<int>(topLeft.getX()) / 16) * 16;
-                    auto overlap = std::abs(realX - tileX - 16);
-
-                    //// ladderPositionX = (((static_cast<int>(topRight.getX()) / 16) - 1) * 16 ) + (body.getBoundingBox().getWidth() / 2);
-                    if(overlap >= 4) {
-                        ladderPositionX = tileX + static_cast<int>(body.getBoundingBox().getWidth() / 2);
-                        isTouchingLadder = true;
-
-                        // std::cout << "Overlap Left: " << overlap << std::endl;
-                    }
-                }
-
-                if(touchingLadderTop) {
-                    // Find overlap 
-                    unsigned char ladderTopOverlap = (static_cast<int>(getPosition().getY()) % 16);
-
-                    if(ladderTopOverlap <= 8) {
-                        isTouchingLadderTop = true;
                     }
 
-                    // std::cout << "Ladder top overlap: " << static_cast<int>(ladderTopOverlap) << std::endl;
+                    if(touchingTopRight || touchingBottomRight || touchingFeetRight) {
+                        // Determine the overlap amount rightward
+                        auto realX = static_cast<int>(topRight.getX());
+                        auto tileX = (static_cast<int>(topRight.getX()) / 16) * 16;
+                        auto overlap = std::abs(realX - tileX);
+
+                        if(overlap >= 4) {
+                            ladderPositionX = tileX + static_cast<int>(body.getBoundingBox().getWidth() / 2);
+                            isTouchingLadder = true;
+
+                            // std::cout << "Overlap Right: " << overlap << std::endl;
+                        }
+                    }
+
+                    if(touchingTopLeft || touchingBottomLeft || touchingFeetLeft) {
+                        // Determine the overlap leftward
+                        auto realX = static_cast<int>(topLeft.getX());
+                        auto tileX = (static_cast<int>(topLeft.getX()) / 16) * 16;
+                        auto overlap = std::abs(realX - tileX - 16);
+
+                        //// ladderPositionX = (((static_cast<int>(topRight.getX()) / 16) - 1) * 16 ) + (body.getBoundingBox().getWidth() / 2);
+                        if(overlap >= 4) {
+                            ladderPositionX = tileX + static_cast<int>(body.getBoundingBox().getWidth() / 2);
+                            isTouchingLadder = true;
+
+                            // std::cout << "Overlap Left: " << overlap << std::endl;
+                        }
+                    }
+
+                    if(touchingLadderTop) {
+                        // Find overlap 
+                        unsigned char ladderTopOverlap = (static_cast<int>(getPosition().getY()) % 16);
+
+                        if(ladderTopOverlap <= 8) {
+                            isTouchingLadderTop = true;
+                        }
+
+                        // std::cout << "Ladder top overlap: " << static_cast<int>(ladderTopOverlap) << std::endl;
+                    }
+                } else {
+                    isTouchingLadder = false;
+                    isOnLadder = false;
                 }
-            } else {
-                isTouchingLadder = false;
-                isOnLadder = false;
             }
-        }
 
-         if(actionController) {
-            if(actionController->shouldMoveUp()) {
-                if(isTouchingLadder && !isOnLadder) {
-                    if(!isTouchingLadderWithFeet) {
+            if(actionController) {
+                if(actionController->shouldMoveUp()) {
+                    if(isTouchingLadder && !isOnLadder) {
+                        if(!isTouchingLadderWithFeet) {
+                            changeMobilityState(std::unique_ptr<MobilityState>(new ClimbingMobilityState(this)));
+                        }
+                    }
+                } else if(actionController->shouldMoveDown()) {
+                    if(isTouchingLadder && !isOnLadder && (!body.isOnGround() || isTouchingLadderWithFeet)) { 
                         changeMobilityState(std::unique_ptr<MobilityState>(new ClimbingMobilityState(this)));
                     }
                 }
-            } else if(actionController->shouldMoveDown()) {
-                if(isTouchingLadder && !isOnLadder && (!body.isOnGround() || isTouchingLadderWithFeet)) { 
-                    changeMobilityState(std::unique_ptr<MobilityState>(new ClimbingMobilityState(this)));
-                }
             }
-         }
 
-         if(shootingState) {
-             shootingState->update(dt);
-         }
+            if(shootingState) {
+                shootingState->update(dt);
+            }
 
-        // Do mobility updating...
-        if(mobilityState) {
-            mobilityState->update(dt);
-        }
-        /*
-        isAirborn = !body.isOnGround();
-        isJumping = isAirborn && getVelocityY() > 0;
-        isFalling = isAirborn && !isJumping;
-
-        setVelocityX(0);
-
-        int ladderPositionX = 0;
-
-        isTouchingLadder = false;
-
-        bool isAtTopOfLadder = false;
-        
-        // Check to see if we're touching a ladder
-        {
-            auto bbox = this->getBoundingBox();
-            auto topRight = bbox.getTopRight();
-            auto topLeft = bbox.getTopLeft();
-            auto bottomLeft = bbox.getBottomLeft();
-            auto bottomRight = bbox.getBottomRight();
-
-            auto trAttr = room->getAttributeAt(static_cast<int>(topRight.getX() - 1)    / 16, static_cast<int>(topRight.getY()   ) / 16);
-            auto tlAttr = room->getAttributeAt(static_cast<int>(topLeft.getX())     / 16, static_cast<int>(topLeft.getY()    ) / 16);
-            auto blAttr = room->getAttributeAt(static_cast<int>(bottomLeft.getX())  / 16, static_cast<int>(bottomLeft.getY() - 1) / 16);
-            auto brAttr = room->getAttributeAt(static_cast<int>(bottomRight.getX() - 1) / 16, static_cast<int>(bottomRight.getY() - 1) / 16);
-            auto posAttr = room->getAttributeAt(static_cast<int>(getPosition().getX()) / 16, static_cast<int>(getPosition().getY()) / 16);
-
-            auto touchingTopRight = ((trAttr != Room::NO_TILE) && (trAttr & TileAttribute::LADDER) == TileAttribute::LADDER);
-            auto touchingTopLeft = ((tlAttr != Room::NO_TILE) && (tlAttr & TileAttribute::LADDER) == TileAttribute::LADDER);
-            auto touchingBottomLeft = ((blAttr != Room::NO_TILE) && (blAttr & TileAttribute::LADDER) == TileAttribute::LADDER);
-            auto touchingBottomRight = ((brAttr != Room::NO_TILE) && (brAttr & TileAttribute::LADDER) == TileAttribute::LADDER);
-            auto touchingBodyOnLadder = ((posAttr != Room::NO_TILE) && (posAttr & TileAttribute::LADDER) == TileAttribute::LADDER);
-            auto touchingLadderTop = ((posAttr != Room::NO_TILE) && (posAttr & TileAttribute::LADDER_TOP) == TileAttribute::LADDER_TOP);
-
-            if(touchingBodyOnLadder|| touchingTopRight || touchingBottomRight || touchingTopLeft || touchingBottomLeft) {
-                if(touchingBodyOnLadder) {
-                    isTouchingLadder = true;
-                }
-
-                if(touchingTopRight || touchingBottomRight) {
-                    // Determine the overlap amount rightward
-                    auto realX = static_cast<int>(topRight.getX());
-                    auto tileX = (static_cast<int>(topRight.getX()) / 16) * 16;
-                    auto overlap = std::abs(realX - tileX);
-
-                    if(overlap >= 4) {
-                        ladderPositionX = tileX + static_cast<int>(body.getBoundingBox().getWidth() / 2);
-                        isTouchingLadder = true;
-
-                        // std::cout << "Overlap Right: " << overlap << std::endl;
-                    }
-
-                    
-                }
-
-                if(touchingTopLeft || touchingBottomLeft) {
-                    // Determine the overlap leftward
-                    auto realX = static_cast<int>(topLeft.getX());
-                    auto tileX = (static_cast<int>(topLeft.getX()) / 16) * 16;
-                    auto overlap = std::abs(realX - tileX - 16);
-
-                    // ladderPositionX = (((static_cast<int>(topRight.getX()) / 16) - 1) * 16 ) + (body.getBoundingBox().getWidth() / 2);
-                    if(overlap >= 4) {
-                        ladderPositionX = tileX + static_cast<int>(body.getBoundingBox().getWidth() / 2);
-                        isTouchingLadder = true;
-
-                        // std::cout << "Overlap Left: " << overlap << std::endl;
-                    }
-                }
-
-                if(touchingLadderTop) {
-                    // Find overlap 
-                    unsigned char ladderTopOverlap = (static_cast<int>(getPosition().getY()) % 16);
-
-                    if(ladderTopOverlap <= 8) {
-                        isAtTopOfLadder = true;
-                    }
-
-                    // std::cout << "Ladder top overlap: " << static_cast<int>(ladderTopOverlap) << std::endl;
-                }
-            } else {
-                isTouchingLadder = false;
-                isOnLadder = false;
+            // Do mobility updating...
+            if(mobilityState) {
+                mobilityState->update(dt);
             }
         }
-
-        if(isAirborn && !isOnLadder) {
-            this->changeAnimation("jumping");
-            if(getVelocityY() > 0) {
-                this->countDecendingFrames++;
-            } else if(getVelocityY() < 0) {
-                this->countAscendingFrames++;
-            }
-
-            isFullyAccelerated = true;
-        }
-
-        if(actionController) {
-            if(actionController->shouldMoveUp()) {
-                if(isTouchingLadder) {
-                    std::cout << "I should climb this ladder!" << std::endl;
-                    this->setPosition(static_cast<float>(ladderPositionX), getPosition().getY());
-                    this->isOnLadder = true;
-                }
-            }
-
-            body.setGravitated(!isOnLadder);
-
-            if(isOnLadder) {
-                setVelocityY(0);
-                this->getAnimationPlayer()->pause();
-
-                if(isAtTopOfLadder) {
-                    this->changeAnimation("climbing-top");
-                }
-
-                if(actionController->shouldMoveUp()) {
-                    this->changeAnimation("climbing");
-                    setVelocityY(-walkVelocity.getX());
-                    this->getAnimationPlayer()->unpause();
-                } else if(actionController->shouldMoveDown()) {
-                    this->changeAnimation("climbing");
-                    setVelocityY(walkVelocity.getX());
-                    this->getAnimationPlayer()->unpause();
-                }
-            } else {
-                if(actionController->shouldMoveRight() && actionController->shouldMoveLeft()) {
-                    setVelocityX(0);
-                    isFullyAccelerated = false;
-                    accelerationDelay = 0;
-                    this->changeAnimation("idle");
-                    this->getAnimationPlayer()->unpause();
-                } else if(actionController->shouldMoveRight() || actionController->shouldMoveLeft()) {
-                    if(!isAirborn) {
-                        this->changeAnimation("running");
-                        this->getAnimationPlayer()->unpause();
-                    }
-
-                    if(actionController->shouldMoveRight()) {
-                        setDirection(Directions::Right);
-                        setVelocityX(walkVelocity.getX());
-                    } else if(actionController->shouldMoveLeft()) {
-                        setDirection(Directions::Left);
-                        setVelocityX(-walkVelocity.getX());                    
-                    }
-
-                    //
-                    // Handle stopped -> moving acceleration
-                    //
-                    //if(!isAirborn && accelerationDelay == 0.0f) {
-                    //    // Move normally for one frame
-                    //    body.setApplyHorizontalVelocity(true);
-                    //    accelerationDelay += dt;
-                    //} else if(!isAirborn && accelerationDelay <= accelerationDelayThreshold) {
-                    //    std::cout << "Waiting to accellerate! " << accelerationDelay << std::endl;
-                    //    body.setApplyHorizontalVelocity(false);
-                    //    accelerationDelay += dt;
-                    //} else {
-                    //    // We're fully accelerated now
-                    //    body.setApplyHorizontalVelocity(true);
-                    //}
-                    if(!isFullyAccelerated) {
-                        body.setApplyHorizontalVelocity(accelerationDelay == 0.0f);
-
-                        std::cout << "Waiting to accelerate! " << accelerationDelay << std::endl;
-
-                        isFullyAccelerated = !(accelerationDelay <= accelerationDelayThreshold);
-                        accelerationDelay += dt;
-                    } else {
-                        body.setApplyHorizontalVelocity(true);
-                    }
-                } else {
-                    this->getAnimationPlayer()->unpause();
-                    accelerationDelay = 0.0f;
-
-                    // If you're on the ground and not moving left or right
-                    if(!isAirborn) {
-                        isFullyAccelerated = false;
-                        this->changeAnimation("idle");
-                    }
-                }
-            }
-            
-
-            //if(actionController->shouldMoveDown()) {
-            //    std::cout << "I should move down!" << std::endl;
-            //}
-
-            //if(actionController->shouldMoveLeft()) {
-            //    std::cout << "I should move left!" << std::endl;
-            //}
-
-            //if(actionController->shouldChargeWeapon()) {
-            //    std::cout << "I should charge  my weapon!" << std::endl;
-            //}
-
-            //if(actionController->shouldJump()) {
-            //    std::cout << "I should jump!" << std::endl;
-            //}
-
-            //if(actionController->shouldShootWeapon()) {
-            //    std::cout << "I should shoot my weapon!" << std::endl;
-            //}
-
-            
-            if(actionController->shouldJump() && canJump()) {
-                std::cout << "I'm gonna jump!" << std::endl;
-                performJump();
-            }
-
-            if(actionController->shouldSlide() && !isAirborn && !isOnLadder) {
-                std::cout << "I should slide!" << std::endl;
-                performSlide();
-            }
-        }
-        
-        if(isJumping) {
-            // std::cout << "v=\t" << getVelocityY() << std::endl;
-        }
-
-        */
 
         Entity::update(dt);
     }

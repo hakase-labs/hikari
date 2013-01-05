@@ -30,10 +30,14 @@ namespace hikari {
     class ImageFont;
     class MapLoader;
     class ServiceLocator;
+    class ImageCache;
     class SquirrelService;
+    class RealTimeInput;
     class Room;
     class Map;
     class MapRenderer;
+    class Hero;
+    class TileMapCollisionResolver;
 
     class GamePlayState : public GameState {
 
@@ -43,12 +47,15 @@ namespace hikari {
         std::string name;
         std::shared_ptr<GameProgress> gameProgress;
         std::shared_ptr<ImageFont> guiFont;
+        std::shared_ptr<ImageCache> imageCache;
+        std::shared_ptr<RealTimeInput> userInput;
         std::shared_ptr<SquirrelService> scriptEnv;
         std::map< std::string, std::shared_ptr<Map> > maps;
-        typedef std::map< std::string, std::shared_ptr<Map> >::iterator MapIterator;
 
+        std::shared_ptr<TileMapCollisionResolver> collisionResolver;
         std::shared_ptr<Map> currentMap;
         std::shared_ptr<Room> currentRoom;
+        std::shared_ptr<Hero> hero;
 
         GameWorld world;
         Camera camera;
@@ -65,13 +72,14 @@ namespace hikari {
         //
         // Resource Management
         //
-        void loadMaps(const std::shared_ptr<MapLoader> &mapLoader, const Json::Value &params);
+        void loadAllMaps(const std::shared_ptr<MapLoader> &mapLoader, const Json::Value &params);
 
         //
         // Gameplay Mechanics
         //
         std::unique_ptr<SubState> subState;
         void changeSubState(std::unique_ptr<SubState> & newSubState);
+        void changeCurrentRoom(const std::shared_ptr<Room>& newCurrentRoom);
 
         /**
             Starts the current stage from the beginning.

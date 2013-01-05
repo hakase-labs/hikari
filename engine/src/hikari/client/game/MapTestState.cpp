@@ -119,32 +119,6 @@ namespace hikari {
 
             world.setPlayer(hero);
 
-            auto en1 = spawnEnemy("telly");
-            en1->setDirection(Directions::Left);
-            en1->setPosition(32, 36);
-
-            //auto en2 = spawnEnemy();
-            //en2->setDirection(Directions::Left);
-            //en2->setPosition(200, 32);
-
-            auto en3 = spawnEnemy("telly");
-            en3->setDirection(Directions::Right);
-            en3->setPosition(100, 64);
-
-            auto en4 = spawnEnemy("octopus-battery");
-            en4->setDirection(Directions::Right);
-            en4->setPosition(184, 152);
-
-            auto en5 = spawnEnemy("octopus-battery"); 
-            en5->setDirection(Directions::Up);
-            en5->setPosition(200, 120);
-
-            enemies.push_back(en1);
-           // enemies.push_back(en2);
-            enemies.push_back(en3);
-            enemies.push_back(en4);
-            enemies.push_back(en5);
-
             spawnerMarker.setFillColor(sf::Color(255, 0, 255, 128));
             spawnerMarker.setOutlineColor(sf::Color::White);
             spawnerMarker.setOutlineThickness(1.0f);
@@ -193,8 +167,13 @@ namespace hikari {
             
             auto en7 = spawnEnemy("scripted-telly");
             en7->setDirection(Directions::Up);
-            en7->setPosition(184, 120);
+            en7->setPosition(16*12, 16*66);
             enemies.push_back(en7);
+
+            auto en8 = spawnEnemy("scripted-telly");
+            en8->setDirection(Directions::Up);
+            en8->setPosition(16*10, 16*70);
+            enemies.push_back(en8);
 
             scriptFiles.clear();
             scriptFiles.push_back("TellyBehaviorOverrides.nut");
