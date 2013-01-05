@@ -18,11 +18,6 @@ namespace hikari {
     GameWorld::~GameWorld() {
         // no-op
     }
-
-    int GameWorld::spawnObject(int type) {
-        //HIKARI_LOG(debug) << "Spawning object 42... ";
-        return 42;
-    }
         
     void GameWorld::render(sf::RenderTarget &target) {
 

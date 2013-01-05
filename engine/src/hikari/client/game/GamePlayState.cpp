@@ -1,6 +1,10 @@
 #include <hikari/client/game/GamePlayState.hpp>
 #include <hikari/client/game/GameProgress.hpp>
 #include <hikari/client/game/GameWorld.hpp>
+#include <hikari/client/game/RealTimeInput.hpp>
+#include <hikari/client/game/objects/GameObject.hpp>
+#include <hikari/client/game/objects/Hero.hpp>
+#include <hikari/client/game/objects/controllers/PlayerInputHeroActionController.hpp>
 #include <hikari/client/scripting/SquirrelService.hpp>
 
 #include <hikari/client/game/objects/GameObject.hpp>
@@ -8,11 +12,15 @@
 #include <hikari/client/game/objects/ScriptBrain.hpp>
 #include <hikari/client/Services.hpp>
 
+#include <hikari/core/game/AnimationSet.hpp>
+#include <hikari/core/game/AnimationLoader.hpp>
+#include <hikari/core/game/TileMapCollisionResolver.hpp>
 #include <hikari/core/game/map/MapLoader.hpp>
 #include <hikari/core/game/map/MapRenderer.hpp>
 #include <hikari/core/game/map/Room.hpp>
 #include <hikari/core/game/map/RoomTransition.hpp>
 #include <hikari/core/gui/ImageFont.hpp>
+#include <hikari/core/util/ImageCache.hpp>
 #include <hikari/core/util/JsonUtils.hpp>
 #include <hikari/core/util/PhysFS.hpp>
 #include <hikari/core/util/PhysFSUtils.hpp>
@@ -36,32 +44,37 @@ namespace hikari {
         : name(name)
         , gameProgress(services.locateService<GameProgress>(Services::GAMEPROGRESS))
         , guiFont(services.locateService<ImageFont>(Services::GUIFONT))
+        , imageCache(services.locateService<ImageCache>(Services::IMAGECACHE))
         , scriptEnv(services.locateService<SquirrelService>(Services::SCRIPTING))
+        , userInput(new RealTimeInput())
         , isViewingMenu(false)
         , subState(nullptr)
         , mapRenderer(new MapRenderer(nullptr, nullptr))
         , currentMap(nullptr)
         , currentRoom(nullptr)
+        , collisionResolver(new TileMapCollisionResolver())
         , camera(Rectangle2D<float>(0.0f, 0.0f, 256.0f, 240.0f))
         , world()
     {
-        loadMaps(services.locateService<MapLoader>(hikari::Services::MAPLOADER), params);
-        /*
-        auto go1 = std::make_shared<GameObject>(8905);
-        auto go2 = std::make_shared<GameObject>(1001);
+        loadAllMaps(services.locateService<MapLoader>(hikari::Services::MAPLOADER), params);
 
-        ScriptBrain scriptBrain1(*scriptEnv, "assets/scripts/testbrain.lua");
-        scriptBrain1.registerObject(*go1);
+        //
+        // Create/configure Rockman
+        //
+        auto heroId = GameObject::generateObjectId();
+        auto heroAnimationSet = AnimationLoader::loadSet("assets/animations/rockman-32.json");
+        auto heroSpriteSheet = imageCache->get(heroAnimationSet->getImageFileName());
 
-        ScriptBrain scriptBrain2(*scriptEnv, "assets/scripts/testbrain.lua");
-        scriptBrain2.registerObject(*go2);
+        hero = std::make_shared<Hero>(heroId, nullptr);
+        hero->setActive(true);
+        hero->setAnimationSet(heroAnimationSet);
+        hero->setSpriteTexture(*heroSpriteSheet);
+        hero->setBoundingBox(BoundingBoxF(0, 0, 16, 24).setOrigin(8, 20));
+        hero->changeAnimation("idle");
+        hero->setPosition(100.0f, 100.0f);
+        hero->setActionController(std::make_shared<PlayerInputHeroActionController>(userInput));
 
-        go1->brain = scriptBrain1;
-        go2->brain = scriptBrain2;
-
-        world.queueObjectAddition(go1);
-        world.queueObjectAddition(go2);
-        */
+        world.setPlayer(hero);
 
         subState.reset(new ReadySubState(this));
         subState->enter();
@@ -70,7 +83,6 @@ namespace hikari {
     void GamePlayState::handleEvent(sf::Event &event) {
         if((event.type == sf::Event::KeyPressed) && event.key.code == sf::Keyboard::Return) {
             isViewingMenu = !isViewingMenu;
-            //scriptEnv->runChunk("print(\"running chunk from game state!\")");
         }
 
         if((event.type == sf::Event::KeyPressed) && event.key.code == sf::Keyboard::BackSpace) {
@@ -89,34 +101,25 @@ namespace hikari {
     }
 
     bool GamePlayState::update(const float &dt) {
+        userInput->update();
+
         if(subState) {
             subState->update(dt);
         }
 
-        mapRenderer->setCullRegion(camera.getBoundary());
-        
         return false;
     }
 
     void GamePlayState::onEnter() {
         startStage();
 
+        Movable::setCollisionResolver(collisionResolver);
+        Movable::setGravity(0.25f);
+
         // Determine which stage we're on and set that to the current level...
         currentMap = maps.at("map-test.json");
 
-        if(currentMap != nullptr) {
-            currentRoom = currentMap->getRoom(0);
-
-            if(currentRoom != nullptr) {
-                camera.setBoundary(currentRoom->getCameraBounds());
-                camera.lockVertical(true);
-                camera.lockHorizontal(true);
-                camera.lookAt(0, 0);
-                mapRenderer->setRoom(currentRoom);
-                mapRenderer->setTileData(currentMap->getTileset());
-                mapRenderer->setCullRegion(camera.getBoundary());
-            }
-        }
+        changeCurrentRoom(currentMap->getRoom(0));
     }
 
     void GamePlayState::onExit() { }
@@ -135,7 +138,29 @@ namespace hikari {
         }
     }
 
-    void GamePlayState::loadMaps(const std::shared_ptr<MapLoader> &mapLoader, const Json::Value &params) {
+    void GamePlayState::changeCurrentRoom(const std::shared_ptr<Room>& newCurrentRoom) {
+        currentRoom = newCurrentRoom;
+
+        if(currentRoom) {
+            // Make camera aware of new room boundaries
+            camera.setBoundary(currentRoom->getCameraBounds());
+            camera.lockVertical(true);
+            camera.lockHorizontal(true);
+
+            // Make renderer cull from the new room
+            mapRenderer->setRoom(currentRoom);
+            mapRenderer->setTileData(currentMap->getTileset());
+            mapRenderer->setCullRegion(camera.getBoundary());
+
+            // Make sure we detect collisions in this room
+            collisionResolver->setRoom(currentRoom);
+
+            // Let Rockman know where he is too
+            hero->setRoom(currentRoom);
+        }
+    }
+
+    void GamePlayState::loadAllMaps(const std::shared_ptr<MapLoader> &mapLoader, const Json::Value &params) {
         try {
             std::string stagesDirectory = params["assets"]["stages"].asString();
 
@@ -179,15 +204,7 @@ namespace hikari {
     }
 
     void GamePlayState::startStage() {
-        // Start music
-        // Show "READY"
-        
-        // Call playerBirth();
         playerBirth();
-
-        // Show hero
-        // Show game objects
-        // Enable player controls
     }
 
     void GamePlayState::restartStage() {
@@ -213,26 +230,29 @@ namespace hikari {
     void GamePlayState::checkCollisionWithTransition() { }
 
     void GamePlayState::renderMap(sf::RenderTarget &target) const {
-        auto oldView = target.getView();
-        
-        target.setView(camera.getPixelAlignedView());
+        const auto& oldView = target.getDefaultView();
+        auto newView = camera.getPixelAlignedView();
+        target.setView(newView);
+
+        mapRenderer->setRoom(currentRoom);
         mapRenderer->render(target);
 
         target.setView(oldView);
     }
 
     void GamePlayState::renderEntities(sf::RenderTarget &target) const {
-        auto oldView = target.getView();
-        
-        target.setView(camera.getPixelAlignedView());
+        const auto& oldView = target.getDefaultView();
+        auto newView = camera.getPixelAlignedView();
+        target.setView(newView);
 
         // Render the entities here...
+        hero->render(target);
 
         target.setView(oldView);
     }
 
     void GamePlayState::renderHud(sf::RenderTarget &target) const {
-        //guiFont->renderText(target, "HUD", 72, 32);
+        guiFont->renderText(target, "HUD", 72, 32);
 
         if(isViewingMenu) {
             //guiFont->renderText(target, "MENU", 72, 40);
@@ -378,7 +398,11 @@ namespace hikari {
     }
 
     void GamePlayState::TeleportSubState::update(const float & dt) {
+        auto& camera = gamePlayState->camera;
+        auto& hero = gamePlayState->hero;
+        auto& heroPosition = hero->getPosition();
 
+        camera.lookAt(heroPosition.getX(), heroPosition.getY());
     }
 
     void GamePlayState::TeleportSubState::render(sf::RenderTarget &target) {
@@ -407,21 +431,32 @@ namespace hikari {
     }
 
     void GamePlayState::PlayingSubState::update(const float & dt) {
+        gamePlayState->world.update(dt);
 
+        if(gamePlayState->hero) {
+            gamePlayState->hero->update(dt);
+        }
+
+        auto& camera = gamePlayState->camera;
+        auto& hero = gamePlayState->hero;
+        const auto& heroPosition = hero->getPosition();
+        auto& renderer = gamePlayState->mapRenderer;
+
+        camera.lookAt(heroPosition.getX(), heroPosition.getY());
+
+        const auto cameraView = camera.getView();
+        const auto cameraX  = static_cast<int>(cameraView.getX());
+        const auto cameraWidth = static_cast<int>(cameraView.getWidth());
+        const auto cameraY   = static_cast<int>(cameraView.getY());
+        const auto cameraHeight = static_cast<int>(cameraView.getHeight());
+
+        renderer->setCullRegion(Rectangle2D<int>(cameraX, cameraY, cameraWidth, cameraHeight));
     }
 
     void GamePlayState::PlayingSubState::render(sf::RenderTarget &target) {
         gamePlayState->renderMap(target);
         gamePlayState->renderEntities(target);
         gamePlayState->renderHud(target);
-
-        int line;
-        MapIterator index;
-        MapIterator end;
-        
-        for(line = 0, index = gamePlayState->maps.begin(), end = gamePlayState->maps.end(); index != end; index++, line++) {
-            gamePlayState->guiFont->renderText(target, (*index).first, 8, ((line * 8) + 48));
-        }
     }
 
     //

@@ -33,8 +33,6 @@ namespace hikari {
         GameWorld();
         virtual ~GameWorld();
 
-        int spawnObject(int type);
-
         void queueObjectAddition(const std::shared_ptr<GameObject> &obj);
         void queueObjectRemoval(const std::shared_ptr<GameObject> &obj);
 
