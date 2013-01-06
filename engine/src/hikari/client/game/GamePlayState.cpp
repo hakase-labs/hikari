@@ -10,6 +10,7 @@
 #include <hikari/client/game/objects/GameObject.hpp>
 #include <hikari/client/game/objects/RockmanHero.hpp>
 #include <hikari/client/game/objects/ScriptBrain.hpp>
+#include <hikari/client/gui/EnergyMeter.hpp>
 #include <hikari/client/Services.hpp>
 
 #include <hikari/core/game/AnimationSet.hpp>
@@ -55,8 +56,41 @@ namespace hikari {
         , collisionResolver(new TileMapCollisionResolver())
         , camera(Rectangle2D<float>(0.0f, 0.0f, 256.0f, 240.0f))
         , world()
+        , leftBar(sf::Vector2f(8.0f, 240.0f))
+        , drawBossEnergyMeter(false)
+        , drawHeroEnergyMeter(false)
+        , drawWeaponEnergyMeter(false)
+        , drawInfamousBlackBar(false)
     {
         loadAllMaps(services.locateService<MapLoader>(hikari::Services::MAPLOADER), params);
+
+        //
+        // Create/configure GUI
+        //
+        auto energyMeterTexture = imageCache->get("assets/images/health-meter.png");
+
+        sf::Sprite energyMeterSprite(*energyMeterTexture);
+        energyMeterSprite.setTextureRect(sf::IntRect(0, 0, 8, 56));
+
+        hudBossEnergyMeter = std::make_shared<EnergyMeter>(energyMeterSprite, 56.0f);
+        hudBossEnergyMeter->setMaximumValue(56.0f);
+        hudBossEnergyMeter->setValue(56.0f);
+        hudBossEnergyMeter->setFillColor(sf::Color::Black);
+        hudBossEnergyMeter->setPosition(sf::Vector2i(40, 25));
+
+        hudHeroEnergyMeter = std::make_shared<EnergyMeter>(energyMeterSprite, 56.0f);
+        hudHeroEnergyMeter->setMaximumValue(56.0f);
+        hudHeroEnergyMeter->setValue(56.0f);
+        hudHeroEnergyMeter->setFillColor(sf::Color::Black);
+        hudHeroEnergyMeter->setPosition(sf::Vector2i(24, 25));
+
+        hudCurrentWeaponMeter = std::make_shared<EnergyMeter>(energyMeterSprite, 56.0f);
+        hudCurrentWeaponMeter->setMaximumValue(56.0f);
+        hudCurrentWeaponMeter->setValue(56.0f);
+        hudCurrentWeaponMeter->setFillColor(sf::Color::Black);
+        hudCurrentWeaponMeter->setPosition(sf::Vector2i(16, 25));
+
+        leftBar.setFillColor(sf::Color::Black);
 
         //
         // Create/configure Rockman
@@ -97,6 +131,10 @@ namespace hikari {
 
         if(subState) {
             subState->render(target);
+        }
+
+        if(drawInfamousBlackBar) {
+            target.draw(leftBar);
         }
     }
 
@@ -252,8 +290,20 @@ namespace hikari {
     }
 
     void GamePlayState::renderHud(sf::RenderTarget &target) const {
-        guiFont->renderText(target, "HUD", 72, 32);
+        // guiFont->renderText(target, "HUD", 72, 32);
 
+        if(drawBossEnergyMeter) {
+            hudBossEnergyMeter->render(target);
+        }
+
+        if(drawHeroEnergyMeter) {
+             hudHeroEnergyMeter->render(target);
+        }
+
+        if(drawWeaponEnergyMeter) {
+            hudCurrentWeaponMeter->render(target);
+        }
+        
         if(isViewingMenu) {
             //guiFont->renderText(target, "MENU", 72, 40);
         }
@@ -424,6 +474,8 @@ namespace hikari {
 
     void GamePlayState::PlayingSubState::enter() {
         std::cout << "PlayingSubState::enter()" << std::endl;
+
+        gamePlayState->drawHeroEnergyMeter = true;
     }
 
     void GamePlayState::PlayingSubState::exit() {
@@ -444,7 +496,7 @@ namespace hikari {
 
         camera.lookAt(heroPosition.getX(), heroPosition.getY());
 
-        const auto cameraView = camera.getView();
+        const auto& cameraView = camera.getView();
         const auto cameraX  = static_cast<int>(cameraView.getX());
         const auto cameraWidth = static_cast<int>(cameraView.getWidth());
         const auto cameraY   = static_cast<int>(cameraView.getY());
