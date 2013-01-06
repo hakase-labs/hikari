@@ -62,8 +62,14 @@ namespace hikari {
         std::unique_ptr<MapRenderer> mapRenderer;
 
         // Gui
-        std::shared_ptr<EnergyMeter> hudPlayerEnergyMeter;
+        bool drawBossEnergyMeter;
+        bool drawHeroEnergyMeter;
+        bool drawWeaponEnergyMeter;
+        bool drawInfamousBlackBar;
+        std::shared_ptr<EnergyMeter> hudBossEnergyMeter;
+        std::shared_ptr<EnergyMeter> hudHeroEnergyMeter;
         std::shared_ptr<EnergyMeter> hudCurrentWeaponMeter;
+        sf::RectangleShape leftBar;
         sf::View view;
 
         // Gameplay Flags
