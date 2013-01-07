@@ -5,36 +5,56 @@ namespace hikari {
     
     const float EnergyMeter::HORIZONTAL_ROTATION_ANGLE = 270.0f;
     const float EnergyMeter::VERTICAL_ROTATION_ANGLE = 0.0f;
+    const float EnergyMeter::HIGHLIGHT_OFFSET_X = 3.0f;
+
+    const sf::Color EnergyMeter::DEFAULT_FILL_COLOR = sf::Color(0, 0, 0, 255);
+    const sf::Color EnergyMeter::DEFAULT_PRIMARY_COLOR = sf::Color(252, 216, 168, 255);
+    const sf::Color EnergyMeter::DEFAULT_SECONDARY_COLOR = sf::Color(255, 255, 255, 255);
 
     const int EnergyMeter::HORIZONTAL_ORIENTATION = 0;
     const int EnergyMeter::VERTICAL_ORIENTATION = 1;
 
     EnergyMeter::EnergyMeter(const sf::Sprite &overlay, const float &maximumValue)
-        : overlay(overlay)
+        : orientation(-1)
+        , overlay(overlay)
         , maximumValue(maximumValue)
         , value(maximumValue)
-        , fillColor(sf::Color::Black)
-        , primaryColor(sf::Color(252, 216, 168, 255))
-        , secondaryColor(sf::Color::White)
+        , fillColor(DEFAULT_FILL_COLOR)
+        , primaryColor(DEFAULT_PRIMARY_COLOR)
+        , secondaryColor(DEFAULT_SECONDARY_COLOR)
     {
         setVisible(true);
-        setFillColor(fillColor);
 
-        foreground.setPosition(overlay.getPosition());
-        foreground.setSize(sf::Vector2f(overlay.getLocalBounds().width, overlay.getLocalBounds().height));
-        foreground.setFillColor(fillColor);
+        foreground.setSize(
+            sf::Vector2f(
+                overlay.getLocalBounds().width, 
+                overlay.getLocalBounds().height
+            )
+        );
 
-        primaryBackground.setPosition(foreground.getPosition());
         primaryBackground.setSize(foreground.getSize());
-        primaryBackground.setFillColor(primaryColor);
 
-        secondaryBackground.setPosition(foreground.getPosition().x + 3, foreground.getPosition().y);
-        secondaryBackground.setSize(sf::Vector2f(2.0f, foreground.getSize().y));
-        secondaryBackground.setFillColor(secondaryColor);  
+        secondaryBackground.setSize(
+            sf::Vector2f(
+                2.0f,
+                foreground.getSize().y
+            )
+        );
 
-        updateFill();
+        setFillColor(fillColor);
+        setPrimaryColor(primaryColor);
+        setSecondaryColor(secondaryColor); 
+
+        setPosition(
+            sf::Vector2i(
+                static_cast<int>(overlay.getPosition().x),
+                static_cast<int>(overlay.getPosition().y)
+            )
+        );
 
         setOrientation(VERTICAL_ORIENTATION);
+
+        updateFill();
     }
 
     void EnergyMeter::updateFill() {
@@ -55,18 +75,37 @@ namespace hikari {
             const sf::Vector2f bgSize(overlay.getLocalBounds().width, overlay.getLocalBounds().height);
             const sf::Vector2f bgPosition = overlay.getPosition();
 
-            // Rotates around top left corner. It makes sense.
-            overlay.setOrigin(0.0f, bgSize.y);
+            overlay.setOrigin(bgSize.x, 0.0f);
             overlay.setRotation(HORIZONTAL_ROTATION_ANGLE);
-            foreground.setOrigin(0.0f, 0.0f);
+
+            foreground.setOrigin(bgSize.x, 0.0f);
             foreground.setRotation(HORIZONTAL_ROTATION_ANGLE);
-            foreground.setPosition(bgPosition.x + bgSize.y, bgPosition.y);
+            foreground.setPosition(bgPosition.x, bgPosition.y);
+
+            primaryBackground.setOrigin(bgSize.x, 0.0f);
+            primaryBackground.setRotation(HORIZONTAL_ROTATION_ANGLE);
+            primaryBackground.setPosition(bgPosition.x, bgPosition.y);
+
+            secondaryBackground.setOrigin(bgSize.x - HIGHLIGHT_OFFSET_X, 0.0f);
+            secondaryBackground.setRotation(HORIZONTAL_ROTATION_ANGLE);
+            secondaryBackground.setPosition(bgPosition.x, bgPosition.y);
         } else if(orientation == VERTICAL_ORIENTATION) {
+            const sf::Vector2f bgPosition = overlay.getPosition();
+
             overlay.setOrigin(0.0f, 0.0f);
             overlay.setRotation(VERTICAL_ROTATION_ANGLE);
+
             foreground.setOrigin(0.0f, 0.0f);
             foreground.setRotation(VERTICAL_ROTATION_ANGLE);
-            foreground.setPosition(overlay.getPosition());
+            foreground.setPosition(bgPosition);
+
+            primaryBackground.setOrigin(0.0f, 0.0f);
+            primaryBackground.setRotation(VERTICAL_ROTATION_ANGLE);
+            primaryBackground.setPosition(bgPosition);
+
+            secondaryBackground.setOrigin(-HIGHLIGHT_OFFSET_X, 0.0f);
+            secondaryBackground.setRotation(VERTICAL_ROTATION_ANGLE);
+            secondaryBackground.setPosition(bgPosition);
         }
     }
 
@@ -75,7 +114,7 @@ namespace hikari {
         overlay.setPosition(static_cast<float>(newPosition.x), static_cast<float>(newPosition.y));
         foreground.setPosition(static_cast<float>(newPosition.x), static_cast<float>(newPosition.y));
         primaryBackground.setPosition(foreground.getPosition());
-        secondaryBackground.setPosition(foreground.getPosition().x + 3, foreground.getPosition().y);
+        secondaryBackground.setPosition(foreground.getPosition().x, foreground.getPosition().y);
     }
 
     const float& EnergyMeter::getValue() const {
