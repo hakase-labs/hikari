@@ -15,8 +15,12 @@ namespace hikari {
         float value;
         float maximumValue;
         int orientation;
-        sf::Sprite background;
+        sf::Sprite overlay;
+        sf::RectangleShape primaryBackground;
+        sf::RectangleShape secondaryBackground;
         sf::RectangleShape foreground;
+        sf::Color primaryColor;
+        sf::Color secondaryColor;
         sf::Color fillColor;
 
         void updateFill();
@@ -26,7 +30,7 @@ namespace hikari {
         static const int HORIZONTAL_ORIENTATION;
         static const int VERTICAL_ORIENTATION;
 
-        EnergyMeter(const sf::Sprite &background, const float &maximumValue);
+        EnergyMeter(const sf::Sprite &overlay, const float &maximumValue);
         virtual ~EnergyMeter() {}
 
         void setOrientation(const int &orientation);
@@ -35,11 +39,15 @@ namespace hikari {
         const float& getValue() const;
         const float& getMaximumValue() const;
         const sf::Color& getFillColor() const;
+        const sf::Color& getPrimaryColor() const;
+        const sf::Color& getSecondaryColor() const;
         const int& getOrientation() const;
 
         void setValue(const float &newValue);
         void setMaximumValue(const float &newValue);
         void setFillColor(const sf::Color &newColor);
+        void setPrimaryColor(const sf::Color &newColor);
+        void setSecondaryColor(const sf::Color &newColor);
 
         virtual void render(sf::RenderTarget &target);
         virtual void update(const float &delta);
