@@ -74,7 +74,7 @@ namespace hikari {
 
         hudBossEnergyMeter = std::make_shared<EnergyMeter>(energyMeterSprite, 56.0f);
         hudBossEnergyMeter->setMaximumValue(56.0f);
-        hudBossEnergyMeter->setValue(56.0f);
+        hudBossEnergyMeter->setValue(46.0f);
         hudBossEnergyMeter->setFillColor(sf::Color(21, 95, 217));
         hudBossEnergyMeter->setPrimaryColor(sf::Color(100, 176, 255));
         hudBossEnergyMeter->setSecondaryColor(sf::Color(255, 255, 255));
@@ -83,13 +83,11 @@ namespace hikari {
         hudHeroEnergyMeter = std::make_shared<EnergyMeter>(energyMeterSprite, 56.0f);
         hudHeroEnergyMeter->setMaximumValue(56.0f);
         hudHeroEnergyMeter->setValue(56.0f);
-        hudHeroEnergyMeter->setFillColor(sf::Color::Black);
         hudHeroEnergyMeter->setPosition(sf::Vector2i(24, 25));
 
         hudCurrentWeaponMeter = std::make_shared<EnergyMeter>(energyMeterSprite, 56.0f);
         hudCurrentWeaponMeter->setMaximumValue(56.0f);
         hudCurrentWeaponMeter->setValue(56.0f);
-        hudCurrentWeaponMeter->setFillColor(sf::Color::Black);
         hudCurrentWeaponMeter->setPosition(sf::Vector2i(16, 25));
 
         leftBar.setFillColor(sf::Color::Black);

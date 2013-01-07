@@ -222,7 +222,7 @@ int main(int argc, char** argv) {
         sound.open("assets/sound/mega-man-3-nes-[NSF-ID2016].nsf"); 
         sound.setCurrentTrack(9);
         sound.stop();
-        sound.play();
+        // sound.play();
 
         //
         // Register some commands
