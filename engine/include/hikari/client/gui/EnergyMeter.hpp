@@ -2,6 +2,7 @@
 #define HIKARI_CORE_GUI_ENERGYMETER
 
 #include <hikari/client/gui/Widget.hpp>
+#include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/Image.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/Sprite.hpp>
@@ -12,9 +13,12 @@ namespace hikari {
     private:
         static const float HORIZONTAL_ROTATION_ANGLE;
         static const float VERTICAL_ROTATION_ANGLE;
+        static const float HIGHLIGHT_OFFSET_X;
+
         float value;
         float maximumValue;
         int orientation;
+
         sf::Sprite overlay;
         sf::RectangleShape primaryBackground;
         sf::RectangleShape secondaryBackground;
@@ -29,6 +33,10 @@ namespace hikari {
     public:
         static const int HORIZONTAL_ORIENTATION;
         static const int VERTICAL_ORIENTATION;
+
+        static const sf::Color DEFAULT_FILL_COLOR;
+        static const sf::Color DEFAULT_PRIMARY_COLOR;
+        static const sf::Color DEFAULT_SECONDARY_COLOR;
 
         EnergyMeter(const sf::Sprite &overlay, const float &maximumValue);
         virtual ~EnergyMeter() {}
