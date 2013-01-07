@@ -57,7 +57,7 @@ namespace hikari {
         , camera(Rectangle2D<float>(0.0f, 0.0f, 256.0f, 240.0f))
         , world()
         , leftBar(sf::Vector2f(8.0f, 240.0f))
-        , drawBossEnergyMeter(false)
+        , drawBossEnergyMeter(true)
         , drawHeroEnergyMeter(false)
         , drawWeaponEnergyMeter(false)
         , drawInfamousBlackBar(false)
@@ -67,7 +67,7 @@ namespace hikari {
         //
         // Create/configure GUI
         //
-        auto energyMeterTexture = imageCache->get("assets/images/health-meter.png");
+        auto energyMeterTexture = imageCache->get("assets/images/meter-overlay.png");
 
         sf::Sprite energyMeterSprite(*energyMeterTexture);
         energyMeterSprite.setTextureRect(sf::IntRect(0, 0, 8, 56));
@@ -75,7 +75,9 @@ namespace hikari {
         hudBossEnergyMeter = std::make_shared<EnergyMeter>(energyMeterSprite, 56.0f);
         hudBossEnergyMeter->setMaximumValue(56.0f);
         hudBossEnergyMeter->setValue(56.0f);
-        hudBossEnergyMeter->setFillColor(sf::Color::Black);
+        hudBossEnergyMeter->setFillColor(sf::Color(21, 95, 217));
+        hudBossEnergyMeter->setPrimaryColor(sf::Color(100, 176, 255));
+        hudBossEnergyMeter->setSecondaryColor(sf::Color(255, 255, 255));
         hudBossEnergyMeter->setPosition(sf::Vector2i(40, 25));
 
         hudHeroEnergyMeter = std::make_shared<EnergyMeter>(energyMeterSprite, 56.0f);
@@ -410,7 +412,7 @@ namespace hikari {
 
         // The "READY" sequence is 76 frames long, ~1.2666 seconds.
         if(timer >= (76.0f * (1.0f/60.0f))) {
-            gamePlayState->changeSubState(std::unique_ptr<SubState>(new PlayingSubState(gamePlayState)));
+            gamePlayState->changeSubState(std::unique_ptr<SubState>(new TeleportSubState(gamePlayState)));
         }
     }
 
@@ -432,19 +434,19 @@ namespace hikari {
     GamePlayState::TeleportSubState::TeleportSubState(GamePlayState * gamePlayState)
         : SubState(gamePlayState)
     {
-
+        std::cout << "TeleportSubState()" << std::endl;
     }
 
     GamePlayState::TeleportSubState::~TeleportSubState() {
-        
+        std::cout << "~TeleportSubState()" << std::endl;
     };
 
     void GamePlayState::TeleportSubState::enter() {
-
+        std::cout << "TeleportSubState::enter()" << std::endl;
     }
 
     void GamePlayState::TeleportSubState::exit() {
-
+        std::cout << "TeleportSubState::exit()" << std::endl;
     }
 
     void GamePlayState::TeleportSubState::update(const float & dt) {
@@ -453,6 +455,8 @@ namespace hikari {
         auto& heroPosition = hero->getPosition();
 
         camera.lookAt(heroPosition.getX(), heroPosition.getY());
+
+        gamePlayState->changeSubState(std::unique_ptr<SubState>(new PlayingSubState(gamePlayState)));
     }
 
     void GamePlayState::TeleportSubState::render(sf::RenderTarget &target) {
