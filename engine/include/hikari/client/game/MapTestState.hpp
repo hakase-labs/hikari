@@ -13,6 +13,7 @@
 #include <hikari/core/gui/ImageFont.hpp>
 #include <hikari/core/math/RetroVector.hpp>
 #include <hikari/client/game/objects/MovableObject.hpp>
+#include <hikari/client/game/objects/ItemFactory.hpp>
 #include <hikari/core/game/AnimationLoader.hpp>
 #include <hikari/core/game/AnimationSet.hpp>
 #include <hikari/core/game/Animation.hpp>
@@ -51,6 +52,7 @@ namespace hikari {
 
     class MapTestState : public GameState {
     private:
+        std::shared_ptr<ItemFactory> itemFactory;
         std::shared_ptr<SquirrelService> squirrel;
         std::string name;
         std::shared_ptr<MapLoader> mapLoader;
