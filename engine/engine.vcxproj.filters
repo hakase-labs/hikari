@@ -552,6 +552,9 @@
     <ClInclude Include="include\hikari\client\game\objects\ItemFactory.hpp">
       <Filter>Header Files\client\game\objects</Filter>
     </ClInclude>
+    <ClInclude Include="include\hikari\core\util\AnimationSetCache.hpp">
+      <Filter>Header Files\core\util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\hikari\core\Hikari.cpp">
@@ -862,6 +865,9 @@
     </ClCompile>
     <ClCompile Include="src\hikari\client\game\objects\ItemFactory.cpp">
       <Filter>Source Files\client\game\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\core\util\AnimationSetCache.cpp">
+      <Filter>Source Files\core\util</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
