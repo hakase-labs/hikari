@@ -28,6 +28,7 @@
     <ClCompile Include="src\hikari\client\game\objects\Enemy.cpp" />
     <ClCompile Include="src\hikari\client\game\objects\EnemyBrain.cpp" />
     <ClCompile Include="src\hikari\client\game\objects\Entity.cpp" />
+    <ClCompile Include="src\hikari\client\game\objects\ItemFactory.cpp" />
     <ClCompile Include="src\hikari\client\game\objects\MovableObject.cpp" />
     <ClCompile Include="src\hikari\client\game\objects\Spawner.cpp" />
     <ClCompile Include="src\hikari\client\scripting\SquirrelService.cpp" />
@@ -98,6 +99,7 @@
     <ClInclude Include="include\hikari\client\game\objects\Entity.hpp" />
     <ClInclude Include="include\hikari\client\game\objects\GameObject.hpp" />
     <ClInclude Include="include\hikari\client\game\objects\Hero.hpp" />
+    <ClInclude Include="include\hikari\client\game\objects\ItemFactory.hpp" />
     <ClInclude Include="include\hikari\client\game\objects\MovableObject.hpp" />
     <ClInclude Include="include\hikari\client\game\objects\RockmanHero.hpp" />
     <ClInclude Include="include\hikari\client\game\objects\ScriptBrain.hpp" />

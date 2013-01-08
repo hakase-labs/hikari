@@ -75,6 +75,9 @@ namespace hikari {
         , renderWindow(nullptr)
     {
         squirrel = services.locateService<SquirrelService>(Services::SCRIPTING);
+
+        itemFactory = std::make_shared<ItemFactory>(imageCache, squirrel);
+
             loadMap(mapFile);
 
             renderer.setTileData(tiles); // TODO: This should be in a different method
@@ -147,10 +150,13 @@ namespace hikari {
                 squirrel->runScriptFile(scriptFileName);
             });
 
-            item.reset(new CollectableItem(7, currentRoom, std::make_shared<ScriptedEffect>(*squirrel, "EffectBase")));
-            item->setAnimationSet(AnimationLoader::loadSet("assets/animations/items.json"));
-            item->setSpriteTexture(enemySprite);
-            item->changeAnimation("e-tank");
+            item = itemFactory->createItem("extraLife");
+
+            //item.reset(new CollectableItem(7, currentRoom, std::make_shared<ScriptedEffect>(*squirrel, "EffectBase")));
+            //item->setAnimationSet(AnimationLoader::loadSet("assets/animations/items.json"));
+            //item->setSpriteTexture(enemySprite);
+            //item->changeAnimation("e-tank");
+            item->setRoom(currentRoom);
             item->setPosition(45.0f, 45.0f);
             item->setAgeless(true);
 
