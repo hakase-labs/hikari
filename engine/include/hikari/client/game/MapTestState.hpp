@@ -43,6 +43,7 @@ namespace hikari {
 
     class ServiceLocator;
     class SquirrelService;
+    class AnimationSetCache;
     class TileMapCollisionResolver;
     class CollectableItem;
     class RealTimeInput;
@@ -54,6 +55,7 @@ namespace hikari {
     private:
         std::shared_ptr<ItemFactory> itemFactory;
         std::shared_ptr<SquirrelService> squirrel;
+        std::shared_ptr<AnimationSetCache> animationSetCache;
         std::string name;
         std::shared_ptr<MapLoader> mapLoader;
         TileDataPtr tiles;

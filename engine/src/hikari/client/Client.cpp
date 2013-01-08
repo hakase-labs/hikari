@@ -24,6 +24,7 @@
 #include <hikari/core/game/map/TilesetLoader.hpp>
 #include <hikari/core/util/StringUtils.hpp>
 #include <hikari/core/util/TilesetCache.hpp>
+#include <hikari/core/util/AnimationSetCache.hpp>
 #include <hikari/core/game/map/MapLoader.hpp>
 #include <hikari/client/audio/NSFSoundStream.hpp>
 #include <hikari/core/geom/Rectangle2D.hpp>
@@ -150,6 +151,7 @@ int main(int argc, char** argv) {
         bool showFPS = config.get("showfps", false).asBool();
 
         auto imageCache = std::make_shared<ImageCache>(ImageCache::NO_SMOOTHING, ImageCache::USE_MASKING);
+        auto animationSetCache = std::make_shared<AnimationSetCache>();
         shared_ptr<AnimationLoader> animationLoader(new AnimationLoader());
         shared_ptr<TilesetLoader> tilesetLoader(new TilesetLoader(imageCache, animationLoader));
         shared_ptr<TilesetCache> tilesetCache(new TilesetCache(tilesetLoader));
@@ -166,6 +168,7 @@ int main(int argc, char** argv) {
         services.registerService(Services::AUDIO, audioService);
         services.registerService(Services::GAMEPROGRESS, gameProgress);
         services.registerService(Services::IMAGECACHE, imageCache);
+        services.registerService("AnimationSetCache", animationSetCache);
         services.registerService(Services::MAPLOADER, mapLoader);
         services.registerService(Services::SCRIPTING, squirrelService);
 

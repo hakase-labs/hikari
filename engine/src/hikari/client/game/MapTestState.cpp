@@ -33,6 +33,8 @@
 
 #include <hikari/client/game/objects/controllers/PlayerInputHeroActionController.hpp>
 
+#include <hikari/core/util/AnimationSetCache.hpp>
+
 namespace hikari {
 
     class ImageCache;
@@ -62,10 +64,6 @@ namespace hikari {
         , velocity(0.0f, 0.0f)
         , logicalCursor()
         , renderedCursor()
-        , animations(AnimationLoader::loadSet("assets/animations/heroes.json"))
-        , idleAnimation(animations->get("idle"))
-        , runningAnimation(animations->get("running"))
-        , redRunningAnimation(animations->get("idle"))
         , animationPlayer(sprite)
         , collisionResolver(new TileMapCollisionResolver()) 
         , movable(new Movable())
@@ -75,8 +73,13 @@ namespace hikari {
         , renderWindow(nullptr)
     {
         squirrel = services.locateService<SquirrelService>(Services::SCRIPTING);
+        animationSetCache = services.locateService<AnimationSetCache>("AnimationSetCache");
 
         itemFactory = std::make_shared<ItemFactory>(imageCache, squirrel);
+        animations = animationSetCache->get("assets/animations/heroes.json");
+        idleAnimation = animations->get("idle");
+        runningAnimation = animations->get("running");
+        redRunningAnimation = animations->get("idle");
 
             loadMap(mapFile);
 
@@ -105,10 +108,10 @@ namespace hikari {
 
             Entity ent = Entity(1, currentRoom);
 
-            auto enemyAnimations = AnimationLoader::loadSet("assets/animations/enemies.json");
+            auto enemyAnimations = animationSetCache->get("assets/animations/enemies.json");
             auto enemySprite = sf::Texture();
 
-            PhysFSUtils::loadImage(AnimationLoader::loadSet("assets/animations/items.json")->getImageFileName(), enemySprite);
+            PhysFSUtils::loadImage(animationSetCache->get("assets/animations/items.json")->getImageFileName(), enemySprite);
             enemySprite.setSmooth(false);
 
             PhysFSUtils::loadImage(animations->getImageFileName(), spriteImage);
@@ -681,7 +684,7 @@ namespace hikari {
     }
 
     void MapTestState::setupHero() {
-        auto heroAnimationSet = AnimationLoader::loadSet("assets/animations/rockman-32.json");
+        auto heroAnimationSet = animationSetCache->get("assets/animations/rockman-32.json");
         
         sf::Texture spriteSheet;
         PhysFSUtils::loadImage(heroAnimationSet->getImageFileName(), spriteSheet);
@@ -697,7 +700,7 @@ namespace hikari {
     }
 
     void MapTestState::setupEnemy() {
-        auto enemyAnimationSet = AnimationLoader::loadSet("assets/animations/enemies.json");
+        auto enemyAnimationSet = animationSetCache->get("assets/animations/enemies.json");
         sf::Texture enemySprites;
 
         PhysFSUtils::loadImage(enemyAnimationSet->getImageFileName(), enemySprites);
@@ -721,7 +724,7 @@ namespace hikari {
 
         if(type == "telly") {
 
-            auto enemyAnimationSet = AnimationLoader::loadSet("assets/animations/telly.json");
+            auto enemyAnimationSet = animationSetCache->get("assets/animations/telly.json");
             sf::Texture enemySprites;
 
             PhysFSUtils::loadImage(enemyAnimationSet->getImageFileName(), enemySprites);
@@ -741,7 +744,7 @@ namespace hikari {
 
         } else if(type == "scripted-telly") {
 
-            auto enemyAnimationSet = AnimationLoader::loadSet("assets/animations/telly.json");
+            auto enemyAnimationSet = animationSetCache->get("assets/animations/telly.json");
             sf::Texture enemySprites;
 
             PhysFSUtils::loadImage(enemyAnimationSet->getImageFileName(), enemySprites);
@@ -760,7 +763,7 @@ namespace hikari {
             instance->setDirection(Directions::Down);
 
         } else if(type == "octopus-battery") {
-            auto enemyAnimationSet = AnimationLoader::loadSet("assets/animations/enemies.json");
+            auto enemyAnimationSet = animationSetCache->get("assets/animations/enemies.json");
             sf::Texture enemySprites;
 
             PhysFSUtils::loadImage(enemyAnimationSet->getImageFileName(), enemySprites);
@@ -777,7 +780,7 @@ namespace hikari {
             instance->setBrain(enemyBrain);
             instance->setDirection(Directions::Down);
         } else if(type == "scripted-octopusbattery") {
-            auto enemyAnimationSet = AnimationLoader::loadSet("assets/animations/enemies.json");
+            auto enemyAnimationSet = animationSetCache->get("assets/animations/enemies.json");
             sf::Texture enemySprites;
 
             PhysFSUtils::loadImage(enemyAnimationSet->getImageFileName(), enemySprites);
