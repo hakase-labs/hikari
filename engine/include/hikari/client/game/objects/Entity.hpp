@@ -44,6 +44,7 @@ namespace hikari {
 
         sf::RectangleShape boxOutline;
         sf::RectangleShape boxPosition;
+        
         Direction direction;
 
         /// Flag to use in determining if this object acts like an obstacle
@@ -56,6 +57,7 @@ namespace hikari {
 
     protected:
         Movable body;
+        std::shared_ptr<Room> room;
         sf::Sprite& getSprite();
 
         virtual void renderEntity(sf::RenderTarget &target);
@@ -80,6 +82,9 @@ namespace hikari {
 
         void setDirection(const Direction& dir);
         const Direction getDirection() const;
+
+        void setRoom(const std::shared_ptr<Room>& newRoom);
+        const std::shared_ptr<Room>& getRoom() const;
 
         void setVelocityX(const float &vx);
         const float getVelocityX() const;

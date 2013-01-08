@@ -37,7 +37,6 @@ namespace hikari {
         Vector2<float> slideVelocity;
         Vector2<float> hurtVelocity;
         std::shared_ptr<HeroActionController> actionController;
-        std::shared_ptr<Room> room;
 
         std::unique_ptr<MobilityState> mobilityState;
         std::unique_ptr<ShootingState> shootingState;
@@ -162,9 +161,6 @@ namespace hikari {
     public:
         Hero(const int& id, std::shared_ptr<Room> room);
         virtual ~Hero();
-
-        const std::shared_ptr<Room>& getRoom() const;
-        void setRoom(const std::shared_ptr<Room>& room);
 
         const std::shared_ptr<HeroActionController>& getActionController() const;
         void setActionController(const std::shared_ptr<HeroActionController>& actionController);
