@@ -77,36 +77,45 @@ namespace hikari {
     }
 
     RoomPtr MapLoader::constructRoom(const Json::Value &json, const int &gridSize) const {
-        int id = json[PROPERTY_NAME_ROOM_ID].asInt();
-        int x = json[PROPERTY_NAME_ROOM_X].asInt();
-        int y = json[PROPERTY_NAME_ROOM_Y].asInt();
-        int width = json[PROPERTY_NAME_ROOM_WIDTH].asInt();
-        int height = json[PROPERTY_NAME_ROOM_HEIGHT].asInt();
+        int id              = json[PROPERTY_NAME_ROOM_ID].asInt();
+        int x               = json[PROPERTY_NAME_ROOM_X].asInt();
+        int y               = json[PROPERTY_NAME_ROOM_Y].asInt();
+        int width           = json[PROPERTY_NAME_ROOM_WIDTH].asInt();
+        int height          = json[PROPERTY_NAME_ROOM_HEIGHT].asInt();
         int transitionCount = json[PROPERTY_NAME_ROOM_TRANSITIONS].size();
-        int enemyCount = json[PROPERTY_NAME_ROOM_ENEMIES].size();
-        int itemCount = json[PROPERTY_NAME_ROOM_ITEMS].size();
+        int enemyCount      = json[PROPERTY_NAME_ROOM_ENEMIES].size();
+        int itemCount       = json[PROPERTY_NAME_ROOM_ITEMS].size();
         
         Rectangle2D<int> cameraBounds = constructCameraBounds(json[PROPERTY_NAME_ROOM_CAMERABOUNDS], x, y, gridSize);
 
+        //
+        // Store tiles and attributes
+        //
         std::vector<int> tile(width * height, 0);
+        std::vector<int> attr(width * height, 0);
+
+        auto tileArray = json[PROPERTY_NAME_ROOM_TILE];
+        auto attrArray = json[PROPERTY_NAME_ROOM_TILEATTRIBUTES];
+
         for(int ty = 0; ty < height; ++ty) {
             for(int tx = 0; tx < width; ++tx) {
-                tile[tx + (ty * width)] = json[PROPERTY_NAME_ROOM_TILE][tx + (ty * width)].asInt();
+                int offset = tx + (ty * width);
+                tile[offset] = tileArray[offset].asInt();
+                attr[offset] = attrArray[offset].asInt();
             }
         }
 
-        std::vector<int> attr(width * height, 0);
-        for(int ay = 0; ay < height; ++ay) {
-            for(int ax = 0; ax < width; ++ax) {
-                attr[ax + (ay * width)] = json[PROPERTY_NAME_ROOM_TILEATTRIBUTES][ax + (ay * width)].asInt();
-            }
-        }
-
+        //
+        // Construct spawners
+        //
         std::vector<std::shared_ptr<Spawner>> spawners;
+
+        auto spawnerArray = json[PROPERTY_NAME_ROOM_ENEMIES];
+
         if(enemyCount > 0) {
             HIKARI_LOG(debug) << "Found " << enemyCount << " enemy declarations.";
             for(int enemyIndex = 0; enemyIndex < enemyCount; ++enemyIndex) {
-                spawners.push_back(constructSpawner(json[PROPERTY_NAME_ROOM_ENEMIES][enemyIndex]));
+                spawners.push_back(constructSpawner(spawnerArray[enemyIndex]));
             }
         }
         
@@ -126,20 +135,22 @@ namespace hikari {
     }
 
     const SpawnerPtr MapLoader::constructSpawner(const Json::Value &json) const {
-        auto type        = json[PROPERTY_NAME_ROOM_ENEMIES_TYPE].asString();
+        auto type         = json[PROPERTY_NAME_ROOM_ENEMIES_TYPE].asString();
         auto x            = json[PROPERTY_NAME_ROOM_ENEMIES_POSITION_X].asInt();
         auto y            = json[PROPERTY_NAME_ROOM_ENEMIES_POSITION_Y].asInt();
         auto dirString    = json[PROPERTY_NAME_ROOM_ENEMIES_DIRECTION].asString();
-        auto spawner    = std::make_shared<Spawner>();
+        auto spawner      = std::make_shared<Spawner>();
         auto direction    = (dirString == "Up" ? Directions::Up : 
-                            (dirString == "Right" ? Directions::Right : 
-                                (dirString == "Down" ? Directions::Down : 
-                                    (dirString == "Left" ? Directions::Left : 
-                                        Directions::None))));
+                                (dirString == "Right" ? Directions::Right : 
+                                    (dirString == "Down" ? Directions::Down : 
+                                        (dirString == "Left" ? Directions::Left : 
+                                            Directions::None)
+                                        )
+                                    )
+                                );
 
         spawner->setPosition(Vector2D(static_cast<float>(x), static_cast<float>(y)));
         spawner->setDirection(direction);
-        // spawner->setEntity(...);
 
         return spawner;
     }
