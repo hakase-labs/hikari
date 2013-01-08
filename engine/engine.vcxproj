@@ -41,6 +41,7 @@
     <ClCompile Include="src\hikari\core\geom\AABB.cpp" />
     <ClCompile Include="src\hikari\core\geom\AABBCollisionInfo.cpp" />
     <ClCompile Include="src\hikari\core\geom\RectangleAABB.cpp" />
+    <ClCompile Include="src\hikari\core\util\AnimationSetCache.cpp" />
     <ClCompile Include="src\hikari\core\util\exception\HikariException.cpp" />
     <ClCompile Include="src\hikari\core\util\exception\ServiceNotRegisteredException.cpp" />
     <ClCompile Include="src\hikari\core\util\FileSystem.cpp" />
@@ -162,6 +163,7 @@
     <ClInclude Include="include\hikari\core\math\RetroVector.hpp" />
     <ClInclude Include="include\hikari\core\math\Vector2.hpp" />
     <ClInclude Include="include\hikari\core\Platform.hpp" />
+    <ClInclude Include="include\hikari\core\util\AnimationSetCache.hpp" />
     <ClInclude Include="include\hikari\core\util\Cloneable.hpp" />
     <ClInclude Include="include\hikari\core\util\exception\HikariException.hpp" />
     <ClInclude Include="include\hikari\core\util\exception\ServiceNotRegisteredException.hpp" />
