@@ -549,6 +549,9 @@
     <ClInclude Include="include\hikari\core\util\FileSystem.hpp">
       <Filter>Header Files\core\util</Filter>
     </ClInclude>
+    <ClInclude Include="include\hikari\client\game\objects\ItemFactory.hpp">
+      <Filter>Header Files\client\game\objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\hikari\core\Hikari.cpp">
@@ -856,6 +859,9 @@
     </ClCompile>
     <ClCompile Include="src\hikari\client\game\objects\effects\ScriptedEffect.cpp">
       <Filter>Source Files\client\game\objects\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\objects\ItemFactory.cpp">
+      <Filter>Source Files\client\game\objects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

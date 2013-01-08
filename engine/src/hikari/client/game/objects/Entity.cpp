@@ -15,6 +15,7 @@ namespace hikari {
 
     Entity::Entity(const int& id, std::shared_ptr<Room> room)
         : GameObject(id)
+        , room(room)
         , spawnPosition()
         , spriteTexture()
         , sprite(spriteTexture)
@@ -128,6 +129,14 @@ namespace hikari {
         } else {
             getSprite().setScale(std::abs(spriteScale.x), spriteScale.y); // TODO: support flipping more that 1x scale
         }
+    }
+
+    void Entity::setRoom(const std::shared_ptr<Room>& newRoom) {
+        room = newRoom;
+    }
+
+    const std::shared_ptr<Room>& Entity::getRoom() const {
+        return room;
     }
 
     const Direction Entity::getDirection() const {

@@ -13,3 +13,6 @@
 [submodule "contrib/physfs"]
 	path = contrib/physfs
 	url = https://github.com/hakase-labs/physfs
+[submodule "contrib/jsoncpp"]
+	path = contrib/jsoncpp
+	url = https://github.com/hakase-labs/jsoncpp

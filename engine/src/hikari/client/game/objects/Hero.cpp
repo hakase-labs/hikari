@@ -22,7 +22,6 @@ namespace hikari {
         , mobilityState(nullptr)
         , shootingState(nullptr)
         , actionController(nullptr)
-        , room(room)
     {
         body.setGravitated(true);
         body.setHasWorldCollision(true);
@@ -76,14 +75,6 @@ namespace hikari {
 
     Hero::~Hero() {
 
-    }
-
-    const std::shared_ptr<Room>& Hero::getRoom() const {
-        return room;
-    }
-
-    void Hero::setRoom(const std::shared_ptr<Room>& room) {
-        this->room = room;
     }
 
     const std::shared_ptr<HeroActionController>& Hero::getActionController() const {
