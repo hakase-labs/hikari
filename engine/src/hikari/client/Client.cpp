@@ -3,6 +3,7 @@
 #include <hikari/core/util/PhysFS.hpp>
 #include <hikari/core/game/GameController.hpp>
 
+#include <hikari/client/ClientConfig.hpp>
 #include <hikari/client/game/GameProgress.hpp>
 #include <hikari/client/game/GamePlayState.hpp>
 #include <hikari/client/game/StageSelectState.hpp>
@@ -104,10 +105,9 @@ int main(int argc, char** argv) {
     using std::shared_ptr;
     using namespace hikari;
 
-    //std::freopen("stdout.txt", "w", stdout);
-
     ::hikari::Log::setReportingLevel(debug2);
 
+    /*
     HIKARI_LOG(fatal) << "I totally logged this!";
     HIKARI_LOG(error) << "I totally logged this!";
     HIKARI_LOG(warning) << "I totally logged this!";
@@ -117,6 +117,7 @@ int main(int argc, char** argv) {
     HIKARI_LOG(debug2) << "I totally logged this!";
     HIKARI_LOG(debug3) << "I totally logged this!";
     HIKARI_LOG(debug4) << "I totally logged this!";
+    */
 
     initLogging(argc, argv);
 
@@ -141,6 +142,8 @@ int main(int argc, char** argv) {
         
         initConfiguration("conf.json", config);
         initGame("game.json", game);
+
+        ClientConfig clientConfig(config);
 
         // Create and initialize the timing and video systems
         sf::Clock clock;
