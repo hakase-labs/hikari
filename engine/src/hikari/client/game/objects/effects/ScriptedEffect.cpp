@@ -14,6 +14,23 @@ namespace hikari {
     {
         HIKARI_LOG(debug2) << "ScriptedEffect::ScriptedEffect()";
 
+        bindScriptClassInstance();
+    }
+
+    ScriptedEffect::ScriptedEffect(const ScriptedEffect &proto) 
+        : vm(proto.vm)
+        , effectClassName(proto.effectClassName)
+    {
+        HIKARI_LOG(debug2) << "ScriptedEffect::ScriptedEffect(const ScriptedEffect &proto) Copy Constructed!";
+
+        bindScriptClassInstance();
+    }
+    
+    bool ScriptedEffect::bindScriptClassInstance() {
+        if(effectClassName.empty()) {
+            return false;
+        }
+
         try {
             Sqrat::Function constructor(Sqrat::RootTable(vm), effectClassName.c_str());
 
@@ -32,13 +49,8 @@ namespace hikari {
         } catch(Sqrat::Exception squirrelException) {
             HIKARI_LOG(debug1) << "Could not create an instance of '" << effectClassName << "'. Reason: " << squirrelException.Message();
         }
-    }
 
-    ScriptedEffect::ScriptedEffect(const ScriptedEffect &proto) 
-        : vm(proto.vm)
-        , effectClassName(proto.effectClassName)
-    {
-        HIKARI_LOG(debug2) << "ScriptedEffect::ScriptedEffect(const ScriptedEffect &proto) Copy Constructed!";
+        return true;
     }
 
     std::shared_ptr<Effect> ScriptedEffect::clone() const {

@@ -25,6 +25,8 @@ namespace hikari {
         Sqrat::Function proxyApply;
         Sqrat::Function proxyUnapply;
 
+        bool bindScriptClassInstance();
+
     public:
         ScriptedEffect(SquirrelService& service, const std::string& effectClassName);
         ScriptedEffect(const ScriptedEffect &proto);
