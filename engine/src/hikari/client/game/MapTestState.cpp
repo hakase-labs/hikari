@@ -75,7 +75,7 @@ namespace hikari {
         squirrel = services.locateService<SquirrelService>(Services::SCRIPTING);
         animationSetCache = services.locateService<AnimationSetCache>("AnimationSetCache");
 
-        itemFactory = std::make_shared<ItemFactory>(imageCache, squirrel);
+        itemFactory = std::make_shared<ItemFactory>(animationSetCache, imageCache, squirrel);
         animations = animationSetCache->get("assets/animations/heroes.json");
         idleAnimation = animations->get("idle");
         runningAnimation = animations->get("running");

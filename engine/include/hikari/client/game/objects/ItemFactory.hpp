@@ -6,6 +6,7 @@
 
 namespace hikari {
 
+    class AnimationSetCache;
     class CollectableItem;
     class ImageCache;
     class SquirrelService;
@@ -15,6 +16,7 @@ namespace hikari {
         //
         // Fields
         //
+        std::shared_ptr<AnimationSetCache> animationSetCache;
         std::shared_ptr<ImageCache> imageCache;
         std::shared_ptr<SquirrelService> squirrel;
 
@@ -32,7 +34,7 @@ namespace hikari {
         //
         // Constructor
         //
-        ItemFactory(const std::shared_ptr<ImageCache>& imageCache, const std::shared_ptr<SquirrelService>& squirrel);
+        ItemFactory(const std::shared_ptr<AnimationSetCache>& animationSetCache, const std::shared_ptr<ImageCache>& imageCache, const std::shared_ptr<SquirrelService>& squirrel);
 
         //
         // Methods
