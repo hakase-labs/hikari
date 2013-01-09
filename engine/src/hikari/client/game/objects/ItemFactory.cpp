@@ -18,6 +18,8 @@ namespace hikari {
         , squirrel(squirrel)
     {
         squirrel->runScriptFile("assets/scripts/EffectBase.nut");
+        squirrel->runScriptFile("assets/scripts/effects/ExtraLifeEffect.nut");
+        squirrel->runScriptFile("assets/scripts/effects/AddETankEffect.nut");
     }
 
     std::shared_ptr<CollectableItem> ItemFactory::createItem(const std::string& itemType) {
@@ -39,9 +41,9 @@ namespace hikari {
     }
 
     std::shared_ptr<CollectableItem> ItemFactory::createETank() {
-        auto item = std::make_shared<CollectableItem>(GameObject::generateObjectId(), nullptr, std::make_shared<ScriptedEffect>(*squirrel, "EffectBase"));
+        auto effect = std::make_shared<ScriptedEffect>(*squirrel, "AddETankEffect");
+        auto item = std::make_shared<CollectableItem>(GameObject::generateObjectId(), nullptr, effect);
 
-        // TODO: This is wrong for sure; need an AnimationCache to load these X_X
         item->setAnimationSet(animationSetCache->get("assets/animations/items.json"));
         item->setSpriteTexture(*imageCache->get("assets/images/sp-collectables.png"));
         item->changeAnimation("e-tank");
@@ -51,9 +53,9 @@ namespace hikari {
     }
 
     std::shared_ptr<CollectableItem> ItemFactory::createExtraLife() {
-        auto item = std::make_shared<CollectableItem>(GameObject::generateObjectId(), nullptr, std::make_shared<ScriptedEffect>(*squirrel, "EffectBase"));
+        auto effect = std::make_shared<ScriptedEffect>(*squirrel, "ExtraLifeEffect");
+        auto item = std::make_shared<CollectableItem>(GameObject::generateObjectId(), nullptr, effect);
 
-        // TODO: This is wrong for sure; need an AnimationCache to load these X_X
         item->setAnimationSet(animationSetCache->get("assets/animations/items.json"));
         item->setSpriteTexture(*imageCache->get("assets/images/sp-collectables.png"));
         item->changeAnimation("extra-life-rockman");

@@ -162,7 +162,7 @@ int main(int argc, char** argv) {
         );
         auto squirrelService = std::make_shared<SquirrelService>(1024);
 
-        squirrelService->runScriptString("::print(\"Squirrel Service works!\");");
+        squirrelService->runScriptFile("assets/scripts/Environment.nut");
 
         ServiceLocator services;
         services.registerService(Services::AUDIO, audioService);
