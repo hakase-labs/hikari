@@ -77,6 +77,15 @@ namespace hikari {
                 .Const("Down", Directions::Down)
                 .Const("Left", Directions::Left)
             );
+
+            //
+            // Utility bindings
+            //
+            Sqrat::RootTable().Bind(
+                "Utils", 
+                Sqrat::Table()
+                    .Func("getOppositeDirection", &Directions::opposite)
+            );
             
             //
             // Class bindings
@@ -96,13 +105,6 @@ namespace hikari {
                     .GlobalFunc("setX", &EntityHelpers::setX)
                     .GlobalFunc("setY", &EntityHelpers::setY)
             );
-
-            //
-            // Utility bindings
-            //
-            Sqrat::Table utils;
-            utils.Func("getOppositeDirection", &Directions::opposite);
-            Sqrat::RootTable().Bind("Utils", utils);
         }
     }
 
