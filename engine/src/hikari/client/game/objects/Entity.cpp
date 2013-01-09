@@ -78,6 +78,7 @@ namespace hikari {
 
     void Entity::setSpriteTexture(const sf::Texture& newTexture) {
         spriteTexture = newTexture;
+        sprite.setTexture(getSpriteTexture());
     }
 
     void Entity::setSprite(const sf::Sprite& newSprite) {

@@ -7,12 +7,14 @@
 
 #include <hikari/core/game/AnimationLoader.hpp>
 #include <hikari/core/game/map/Room.hpp>
+#include <hikari/core/util/AnimationSetCache.hpp>
 #include <hikari/core/util/ImageCache.hpp>
 
 namespace hikari {
 
-    ItemFactory::ItemFactory(const std::shared_ptr<ImageCache>& imageCache, const std::shared_ptr<SquirrelService>& squirrel)
-        : imageCache(imageCache)
+    ItemFactory::ItemFactory(const std::shared_ptr<AnimationSetCache>& animationSetCache, const std::shared_ptr<ImageCache>& imageCache, const std::shared_ptr<SquirrelService>& squirrel)
+        : animationSetCache(animationSetCache)
+        , imageCache(imageCache)
         , squirrel(squirrel)
     {
         squirrel->runScriptFile("assets/scripts/EffectBase.nut");
@@ -40,7 +42,7 @@ namespace hikari {
         auto item = std::make_shared<CollectableItem>(GameObject::generateObjectId(), nullptr, std::make_shared<ScriptedEffect>(*squirrel, "EffectBase"));
 
         // TODO: This is wrong for sure; need an AnimationCache to load these X_X
-        item->setAnimationSet(AnimationLoader::loadSet("assets/animations/items.json"));
+        item->setAnimationSet(animationSetCache->get("assets/animations/items.json"));
         item->setSpriteTexture(*imageCache->get("assets/images/sp-collectables.png"));
         item->changeAnimation("e-tank");
         item->setAgeless(true);
@@ -52,7 +54,7 @@ namespace hikari {
         auto item = std::make_shared<CollectableItem>(GameObject::generateObjectId(), nullptr, std::make_shared<ScriptedEffect>(*squirrel, "EffectBase"));
 
         // TODO: This is wrong for sure; need an AnimationCache to load these X_X
-        item->setAnimationSet(AnimationLoader::loadSet("assets/animations/items.json"));
+        item->setAnimationSet(animationSetCache->get("assets/animations/items.json"));
         item->setSpriteTexture(*imageCache->get("assets/images/sp-collectables.png"));
         item->changeAnimation("extra-life-rockman");
         item->setAgeless(true);

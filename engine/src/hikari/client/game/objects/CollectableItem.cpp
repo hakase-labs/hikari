@@ -108,10 +108,10 @@ namespace hikari {
         if(isActive()) {
             Entity::update(dt);
 
-            setAge(getAge() + dt);
+            if(!isAgeless()) {
+                setAge(getAge() + dt);
 
-            if(getAge() >= getMaximumAge()) {
-                if(!isAgeless()) {
+                if(getAge() >= getMaximumAge()) {
                     onDeath();
                 }
             }
