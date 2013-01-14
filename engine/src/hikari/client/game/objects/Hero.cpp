@@ -13,7 +13,7 @@ namespace hikari {
         , isStanding(false)
         , isWalking(false)
         , isSliding(false)
-        , inInTunnel(false)
+        , isInTunnel(false)
         , isJumping(false)
         , isFalling(false)
         , isAirborn(false)
@@ -180,13 +180,13 @@ namespace hikari {
                 const int endingX = body.getBoundingBox().getRight();
                 const int y = body.getBoundingBox().getTop() - 1;
 
-                inInTunnel = false;
+                isInTunnel = false;
 
                 for(int x = startingX; x <= endingX; x += 16) { // Not sure about the <= here, but need to check the last pixel too
                     auto attribute = room->getAttributeAt(x / 16, y / 16); // Check 1 pix "above" the box
 
                     if((attribute != Room::NO_TILE) && (attribute & TileAttribute::SOLID) == TileAttribute::SOLID) {
-                        inInTunnel = true;
+                        isInTunnel = true;
                         break;
                     }
                 }
@@ -216,7 +216,7 @@ namespace hikari {
             }
         }
 
-        if(inInTunnel) {
+        if(isInTunnel) {
             std::cout << "In a tunnel!" << std::endl;
         }
 
@@ -549,7 +549,7 @@ namespace hikari {
         hero->setBoundingBox(restoredBoundingBox);
 
         hero->isSliding = false;
-        hero->inInTunnel = false;
+        hero->isInTunnel = false;
     }
 
     void Hero::SlidingMobilityState::update(const float & dt) {
@@ -561,7 +561,7 @@ namespace hikari {
             //    return;
             //}
 
-            if(hero->inInTunnel || (slideDuration < slideDurationThreshold && (controller->shouldSlide() || !controller->shouldStopSliding()))) {
+            if(hero->isInTunnel || (slideDuration < slideDurationThreshold && (controller->shouldSlide() || !controller->shouldStopSliding()))) {
                 if(controller->shouldMoveLeft()) {
                     hero->setDirection(Directions::Left);
                 }
