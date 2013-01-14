@@ -151,7 +151,7 @@ int main(int argc, char** argv) {
         sf::RenderWindow window;
 
         //window.show(false);
-        bool showFPS = config.get("showfps", false).asBool();
+        bool showFPS = clientConfig.isFpsDisplayEnabled();
 
         auto imageCache = std::make_shared<ImageCache>(ImageCache::NO_SMOOTHING, ImageCache::USE_MASKING);
         auto animationSetCache = std::make_shared<AnimationSetCache>();
@@ -163,7 +163,7 @@ int main(int argc, char** argv) {
         shared_ptr<AudioService> audioService(
             new AudioService(game["assets"]["audio"])
         );
-        auto squirrelService = std::make_shared<SquirrelService>(1024);
+        auto squirrelService = std::make_shared<SquirrelService>(clientConfig.getScriptingStackSize());
 
         squirrelService->runScriptFile("assets/scripts/Environment.nut");
 
@@ -254,7 +254,7 @@ int main(int argc, char** argv) {
 
         window.create(videoMode, APPLICATION_TITLE);
         window.setActive(true);
-        window.setVerticalSyncEnabled(config.get("vsync", true).asBool());
+        window.setVerticalSyncEnabled(clientConfig.isVsyncEnabled());
         window.setKeyRepeatEnabled(false);
 
         // Game loop

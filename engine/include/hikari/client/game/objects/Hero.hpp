@@ -16,6 +16,8 @@ namespace hikari {
         bool isStopping;
         bool isStanding;
         bool isWalking;
+        bool isSliding;
+        bool inInTunnel;
         bool isJumping;
         bool isFalling;
         bool isAirborn;
