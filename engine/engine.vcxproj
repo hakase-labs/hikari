@@ -16,6 +16,7 @@
     <ClCompile Include="..\contrib\physfs-stream\physfs\ofile_stream.cpp" />
     <ClCompile Include="..\contrib\physfs-stream\physfs\ofile_streambuf.cpp" />
     <ClCompile Include="..\contrib\physfs-stream\physfs\physfs_file_system.cpp" />
+    <ClCompile Include="src\hikari\client\ClientConfig.cpp" />
     <ClCompile Include="src\hikari\client\CommandProcessor.cpp" />
     <ClCompile Include="src\hikari\client\game\Effect.cpp" />
     <ClCompile Include="src\hikari\client\game\objects\brains\OctopusBatteryBrain.cpp" />
@@ -74,6 +75,7 @@
     <ClInclude Include="include\hikari\client\audio\AudioService.hpp" />
     <ClInclude Include="include\hikari\client\audio\NSFSoundStream.hpp" />
     <ClInclude Include="include\hikari\client\Client.hpp" />
+    <ClInclude Include="include\hikari\client\ClientConfig.hpp" />
     <ClInclude Include="include\hikari\client\CommandProcessor.hpp" />
     <ClInclude Include="include\hikari\client\game\Direction.hpp" />
     <ClInclude Include="include\hikari\client\game\Effect.hpp" />

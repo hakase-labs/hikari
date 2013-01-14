@@ -3,6 +3,7 @@
 #include <hikari/core/util/PhysFS.hpp>
 #include <hikari/core/game/GameController.hpp>
 
+#include <hikari/client/ClientConfig.hpp>
 #include <hikari/client/game/GameProgress.hpp>
 #include <hikari/client/game/GamePlayState.hpp>
 #include <hikari/client/game/StageSelectState.hpp>
@@ -104,10 +105,9 @@ int main(int argc, char** argv) {
     using std::shared_ptr;
     using namespace hikari;
 
-    //std::freopen("stdout.txt", "w", stdout);
-
     ::hikari::Log::setReportingLevel(debug2);
 
+    /*
     HIKARI_LOG(fatal) << "I totally logged this!";
     HIKARI_LOG(error) << "I totally logged this!";
     HIKARI_LOG(warning) << "I totally logged this!";
@@ -117,6 +117,7 @@ int main(int argc, char** argv) {
     HIKARI_LOG(debug2) << "I totally logged this!";
     HIKARI_LOG(debug3) << "I totally logged this!";
     HIKARI_LOG(debug4) << "I totally logged this!";
+    */
 
     initLogging(argc, argv);
 
@@ -142,13 +143,15 @@ int main(int argc, char** argv) {
         initConfiguration("conf.json", config);
         initGame("game.json", game);
 
+        ClientConfig clientConfig(config);
+
         // Create and initialize the timing and video systems
         sf::Clock clock;
         sf::VideoMode videoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP);
         sf::RenderWindow window;
 
         //window.show(false);
-        bool showFPS = config.get("showfps", false).asBool();
+        bool showFPS = clientConfig.isFpsDisplayEnabled();
 
         auto imageCache = std::make_shared<ImageCache>(ImageCache::NO_SMOOTHING, ImageCache::USE_MASKING);
         auto animationSetCache = std::make_shared<AnimationSetCache>();
@@ -160,7 +163,7 @@ int main(int argc, char** argv) {
         shared_ptr<AudioService> audioService(
             new AudioService(game["assets"]["audio"])
         );
-        auto squirrelService = std::make_shared<SquirrelService>(1024);
+        auto squirrelService = std::make_shared<SquirrelService>(clientConfig.getScriptingStackSize());
 
         squirrelService->runScriptFile("assets/scripts/Environment.nut");
 
@@ -251,7 +254,7 @@ int main(int argc, char** argv) {
 
         window.create(videoMode, APPLICATION_TITLE);
         window.setActive(true);
-        window.setVerticalSyncEnabled(config.get("vsync", true).asBool());
+        window.setVerticalSyncEnabled(clientConfig.isVsyncEnabled());
         window.setKeyRepeatEnabled(false);
 
         // Game loop
