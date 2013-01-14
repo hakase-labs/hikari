@@ -555,6 +555,9 @@
     <ClInclude Include="include\hikari\core\util\AnimationSetCache.hpp">
       <Filter>Header Files\core\util</Filter>
     </ClInclude>
+    <ClInclude Include="include\hikari\client\ClientConfig.hpp">
+      <Filter>Header Files\client</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\hikari\core\Hikari.cpp">
@@ -868,6 +871,9 @@
     </ClCompile>
     <ClCompile Include="src\hikari\core\util\AnimationSetCache.cpp">
       <Filter>Source Files\core\util</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\ClientConfig.cpp">
+      <Filter>Source Files\client</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -12,6 +12,8 @@ namespace hikari {
         , isStopping(false)
         , isStanding(false)
         , isWalking(false)
+        , isSliding(false)
+        , isInTunnel(false)
         , isJumping(false)
         , isFalling(false)
         , isAirborn(false)
@@ -170,6 +172,26 @@ namespace hikari {
                 }
             }
 
+            //
+            // Check if we're in a tunnel
+            //
+            if(isSliding) {
+                const int startingX = body.getBoundingBox().getLeft();
+                const int endingX = body.getBoundingBox().getRight();
+                const int y = body.getBoundingBox().getTop() - 1;
+
+                isInTunnel = false;
+
+                for(int x = startingX; x <= endingX; x += 16) { // Not sure about the <= here, but need to check the last pixel too
+                    auto attribute = room->getAttributeAt(x / 16, y / 16); // Check 1 pix "above" the box
+
+                    if((attribute != Room::NO_TILE) && (attribute & TileAttribute::SOLID) == TileAttribute::SOLID) {
+                        isInTunnel = true;
+                        break;
+                    }
+                }
+            }
+
             if(actionController) {
                 if(actionController->shouldMoveUp()) {
                     if(isTouchingLadder && !isOnLadder) {
@@ -192,6 +214,10 @@ namespace hikari {
             if(mobilityState) {
                 mobilityState->update(dt);
             }
+        }
+
+        if(isInTunnel) {
+            std::cout << "In a tunnel!" << std::endl;
         }
 
         Entity::update(dt);
@@ -264,6 +290,8 @@ namespace hikari {
                     changeAnimation("running");
                 }
             }
+        } else if(isSliding) {
+
         }
     }
 
@@ -496,13 +524,14 @@ namespace hikari {
 
         hero->changeAnimation("sliding");
         hero->isFullyAccelerated = true;
+        hero->isSliding = true;
         hero->body.setApplyHorizontalVelocity(true);
         hero->body.setApplyVerticalVelocity(true);
 
         oldBoundingBox = hero->getBoundingBox();
 
         BoundingBoxF newBoundingBox(oldBoundingBox);
-        newBoundingBox.setHeight(15.0f);
+        newBoundingBox.setHeight(16.0f);
         newBoundingBox.setWidth(16.0f);
         newBoundingBox.setOrigin(8.0f, 14.0f);
         newBoundingBox.setBottom(oldBoundingBox.getBottom());
@@ -518,6 +547,9 @@ namespace hikari {
         restoredBoundingBox.setPosition(currentBoundingBox.getPosition());
 
         hero->setBoundingBox(restoredBoundingBox);
+
+        hero->isSliding = false;
+        hero->isInTunnel = false;
     }
 
     void Hero::SlidingMobilityState::update(const float & dt) {
@@ -529,7 +561,7 @@ namespace hikari {
             //    return;
             //}
 
-            if(slideDuration < slideDurationThreshold && (controller->shouldSlide() || !controller->shouldStopSliding())) {
+            if(hero->isInTunnel || (slideDuration < slideDurationThreshold && (controller->shouldSlide() || !controller->shouldStopSliding()))) {
                 if(controller->shouldMoveLeft()) {
                     hero->setDirection(Directions::Left);
                 }
