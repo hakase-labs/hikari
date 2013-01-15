@@ -89,6 +89,8 @@ namespace hikari {
     
     void Hero::update(const float &dt) {
         if(room) {
+            const int gridSize = room->getGridSize();
+
             // Do global updating...
             ladderPositionX = 0;
             isTouchingLadder = false;
@@ -103,13 +105,13 @@ namespace hikari {
                 auto bottomLeft = bbox.getBottomLeft();
                 auto bottomRight = bbox.getBottomRight();
 
-                auto trAttr = room->getAttributeAt(static_cast<int>(topRight.getX() - 1)    / 16, static_cast<int>(topRight.getY()   ) / 16);
-                auto tlAttr = room->getAttributeAt(static_cast<int>(topLeft.getX())     / 16, static_cast<int>(topLeft.getY()    ) / 16);
-                auto blAttr = room->getAttributeAt(static_cast<int>(bottomLeft.getX())  / 16, static_cast<int>(bottomLeft.getY() - 1) / 16);
-                auto brAttr = room->getAttributeAt(static_cast<int>(bottomRight.getX() - 1) / 16, static_cast<int>(bottomRight.getY() - 1) / 16);
-                auto feetLeftAttr = room->getAttributeAt(static_cast<int>(bottomLeft.getX())  / 16, static_cast<int>(bottomLeft.getY()) / 16);
-                auto feetRightAttr = room->getAttributeAt(static_cast<int>(bottomRight.getX() - 1) / 16, static_cast<int>(bottomRight.getY()) / 16);
-                auto posAttr = room->getAttributeAt(static_cast<int>(getPosition().getX()) / 16, static_cast<int>(getPosition().getY()) / 16);
+                auto trAttr = room->getAttributeAt(static_cast<int>(topRight.getX() - 1)    / gridSize, static_cast<int>(topRight.getY()   ) / gridSize);
+                auto tlAttr = room->getAttributeAt(static_cast<int>(topLeft.getX())     / gridSize, static_cast<int>(topLeft.getY()    ) / gridSize);
+                auto blAttr = room->getAttributeAt(static_cast<int>(bottomLeft.getX())  / gridSize, static_cast<int>(bottomLeft.getY() - 1) / gridSize);
+                auto brAttr = room->getAttributeAt(static_cast<int>(bottomRight.getX() - 1) / gridSize, static_cast<int>(bottomRight.getY() - 1) / gridSize);
+                auto feetLeftAttr = room->getAttributeAt(static_cast<int>(bottomLeft.getX())  / gridSize, static_cast<int>(bottomLeft.getY()) / gridSize);
+                auto feetRightAttr = room->getAttributeAt(static_cast<int>(bottomRight.getX() - 1) / gridSize, static_cast<int>(bottomRight.getY()) / gridSize);
+                auto posAttr = room->getAttributeAt(static_cast<int>(getPosition().getX()) / gridSize, static_cast<int>(getPosition().getY()) / gridSize);
 
                 auto touchingTopRight = ((trAttr != Room::NO_TILE) && (trAttr & TileAttribute::LADDER) == TileAttribute::LADDER);
                 auto touchingTopLeft = ((tlAttr != Room::NO_TILE) && (tlAttr & TileAttribute::LADDER) == TileAttribute::LADDER);
@@ -130,11 +132,11 @@ namespace hikari {
                     if(touchingTopRight || touchingBottomRight || touchingFeetRight) {
                         // Determine the overlap amount rightward
                         auto realX = static_cast<int>(topRight.getX());
-                        auto tileX = (static_cast<int>(topRight.getX()) / 16) * 16;
+                        auto tileX = (static_cast<int>(topRight.getX()) / gridSize) * gridSize;
                         auto overlap = std::abs(realX - tileX);
 
                         if(overlap >= 4) {
-                            ladderPositionX = tileX + static_cast<int>(body.getBoundingBox().getWidth() / 2);
+                            ladderPositionX = tileX + static_cast<int>(bbox.getWidth() / 2);
                             isTouchingLadder = true;
 
                             // std::cout << "Overlap Right: " << overlap << std::endl;
@@ -144,12 +146,12 @@ namespace hikari {
                     if(touchingTopLeft || touchingBottomLeft || touchingFeetLeft) {
                         // Determine the overlap leftward
                         auto realX = static_cast<int>(topLeft.getX());
-                        auto tileX = (static_cast<int>(topLeft.getX()) / 16) * 16;
-                        auto overlap = std::abs(realX - tileX - 16);
+                        auto tileX = (static_cast<int>(topLeft.getX()) / gridSize) * gridSize;
+                        auto overlap = std::abs(realX - tileX - gridSize);
 
-                        //// ladderPositionX = (((static_cast<int>(topRight.getX()) / 16) - 1) * 16 ) + (body.getBoundingBox().getWidth() / 2);
+                        //// ladderPositionX = (((static_cast<int>(topRight.getX()) / gridSize) - 1) * gridSize ) + (bbox.getWidth() / 2);
                         if(overlap >= 4) {
-                            ladderPositionX = tileX + static_cast<int>(body.getBoundingBox().getWidth() / 2);
+                            ladderPositionX = tileX + static_cast<int>(bbox.getWidth() / 2);
                             isTouchingLadder = true;
 
                             // std::cout << "Overlap Left: " << overlap << std::endl;
@@ -158,7 +160,7 @@ namespace hikari {
 
                     if(touchingLadderTop) {
                         // Find overlap 
-                        unsigned char ladderTopOverlap = (static_cast<int>(getPosition().getY()) % 16);
+                        unsigned char ladderTopOverlap = (static_cast<int>(getPosition().getY()) % gridSize);
 
                         if(ladderTopOverlap <= 8) {
                             isTouchingLadderTop = true;
@@ -176,14 +178,15 @@ namespace hikari {
             // Check if we're in a tunnel
             //
             if(isSliding) {
-                const int startingX = body.getBoundingBox().getLeft();
-                const int endingX = body.getBoundingBox().getRight();
-                const int y = body.getBoundingBox().getTop() - 1;
+                const auto & bbox   = body.getBoundingBox();
+                const int startingX = static_cast<int>(bbox.getLeft());
+                const int endingX   = static_cast<int>(bbox.getRight());
+                const int y         = static_cast<int>(bbox.getTop()) - 1; // Subtract 1 to test the tile directly *above* Rockman
 
                 isInTunnel = false;
 
-                for(int x = startingX; x <= endingX; x += 16) { // Not sure about the <= here, but need to check the last pixel too
-                    auto attribute = room->getAttributeAt(x / 16, y / 16); // Check 1 pix "above" the box
+                for(int x = startingX; x <= endingX; x += gridSize) { // Not sure about the <= here, but need to check the last pixel too
+                    auto attribute = room->getAttributeAt(x / gridSize, y / gridSize);
 
                     if((attribute != Room::NO_TILE) && (attribute & TileAttribute::SOLID) == TileAttribute::SOLID) {
                         isInTunnel = true;
@@ -216,10 +219,6 @@ namespace hikari {
             }
         }
 
-        if(isInTunnel) {
-            std::cout << "In a tunnel!" << std::endl;
-        }
-
         Entity::update(dt);
     }
 
@@ -228,7 +227,7 @@ namespace hikari {
     }
 
     bool Hero::canSlide() {
-        return !isAirborn; /* TODO: Check if currently sliding too */
+        return !isAirborn &&; /* TODO: Check if currently sliding too */
     }
 
     void Hero::performJump() {

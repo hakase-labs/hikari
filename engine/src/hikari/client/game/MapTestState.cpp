@@ -554,6 +554,7 @@ namespace hikari {
         movable->setBoundingBox(playerBounds);
 
         hero->setRoom(currentRoom);
+        hero->setPosition((currentRoom->getX() * 16) + 40, (currentRoom->getY() * 16) + 30);
         //renderedCursor = sf::Shape::Rectangle(0.0f, 0.0f, 14.0f, 22.0f, sf::Color(0, 255, 255, 128));
     }
 
