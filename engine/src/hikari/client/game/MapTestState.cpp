@@ -410,8 +410,6 @@ namespace hikari {
                 // hero->setVelocityX(RetroVector(0x01, 0x4C).toFloat()/* * 60.0f */);
             }
 
-            collisionObject->setVelocityX(velocity.x/* * 60 */);
-
             auto playerPosition = world.getPlayerPosition();
             Sqrat::RootTable()
                 .SetValue("heroX", playerPosition.getX())
@@ -541,11 +539,6 @@ namespace hikari {
     }
 
     void MapTestState::onEnter() {
-        collisionObject.reset( new MovableObject(0, currentRoom) );
-        collisionObject->setCenter(Vector2D(64.0f, 64.0f));
-        collisionObject->setHalfExtents(Vector2D(5.0f, 11.0f));
-
-        MovableObject::setGravity(0.25f/* * 60.0f */);
         Movable::setGravity(0.25f/* * 60.0f */);
         Movable::setCollisionResolver(collisionResolver);
 
@@ -671,7 +664,6 @@ namespace hikari {
         currentRoom.swap(nextRoom);
         //camera.setBoundary(map->getRoomRect(currentRoom->getId()));
         camera.setBoundary(currentRoom->getCameraBounds());
-        collisionObject->setRoom(currentRoom);
         hero->setRoom(currentRoom);
     }
 
