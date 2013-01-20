@@ -9,14 +9,20 @@ namespace sf {
 }
 
 namespace hikari {
+namespace gui {
 
     class Widget {
     private:
         int id;
         bool visible;
         sf::Vector2i position;
+
+        std::weak_ptr<Widget> parent;
     public:
         virtual ~Widget() {}
+
+        const std::weak_ptr<Widget> & getParent() const;
+        void setParent(const std::weak_ptr<Widget> & newParent);
 
         virtual const sf::Vector2i& getPosition() const;
         virtual void setPosition(const sf::Vector2i &newPosition);
@@ -30,6 +36,7 @@ namespace hikari {
 
     typedef std::shared_ptr<Widget> WidgetPtr;
 
-}
+} // hikari::gui
+} // hikari
 
 #endif // HIKARI_CORE_GUI_WIDGET

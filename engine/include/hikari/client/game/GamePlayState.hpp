@@ -25,7 +25,10 @@ namespace Json {
 
 namespace hikari {
 
-    class EnergyMeter;
+    namespace gui {
+        class EnergyMeter;
+    }
+
     class GameProgress;
     class ImageFont;
     class MapLoader;
@@ -61,14 +64,17 @@ namespace hikari {
         Camera camera;
         std::unique_ptr<MapRenderer> mapRenderer;
 
+        // Entity debugging markers
+        sf::RectangleShape spawnerMarker;
+
         // Gui
         bool drawBossEnergyMeter;
         bool drawHeroEnergyMeter;
         bool drawWeaponEnergyMeter;
         bool drawInfamousBlackBar;
-        std::shared_ptr<EnergyMeter> hudBossEnergyMeter;
-        std::shared_ptr<EnergyMeter> hudHeroEnergyMeter;
-        std::shared_ptr<EnergyMeter> hudCurrentWeaponMeter;
+        std::shared_ptr<gui::EnergyMeter> hudBossEnergyMeter;
+        std::shared_ptr<gui::EnergyMeter> hudHeroEnergyMeter;
+        std::shared_ptr<gui::EnergyMeter> hudCurrentWeaponMeter;
         sf::RectangleShape leftBar;
         sf::View view;
 

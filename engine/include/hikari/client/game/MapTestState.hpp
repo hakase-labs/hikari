@@ -12,7 +12,6 @@
 #include <hikari/core/game/map/MapLoader.hpp>
 #include <hikari/core/gui/ImageFont.hpp>
 #include <hikari/core/math/RetroVector.hpp>
-#include <hikari/client/game/objects/MovableObject.hpp>
 #include <hikari/client/game/objects/ItemFactory.hpp>
 #include <hikari/core/game/AnimationLoader.hpp>
 #include <hikari/core/game/AnimationSet.hpp>
@@ -90,7 +89,6 @@ namespace hikari {
         hikari::RetroVector retroVelocityX;
         hikari::RetroVector retroJumpVelocity;
 
-        std::shared_ptr<hikari::MovableObject> collisionObject;
         std::shared_ptr<hikari::CollectableItem> item;
 
         std::shared_ptr<TileMapCollisionResolver> collisionResolver;

@@ -17,9 +17,7 @@ namespace hikari {
         , imageCache(imageCache)
         , squirrel(squirrel)
     {
-        squirrel->runScriptFile("assets/scripts/EffectBase.nut");
-        squirrel->runScriptFile("assets/scripts/effects/ExtraLifeEffect.nut");
-        squirrel->runScriptFile("assets/scripts/effects/AddETankEffect.nut");
+         
     }
 
     std::shared_ptr<CollectableItem> ItemFactory::createItem(const std::string& itemType) {

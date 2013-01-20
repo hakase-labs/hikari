@@ -14,6 +14,8 @@ namespace hikari {
 
     class ImageFont;
 
+namespace gui {
+
     class CommandConsole : public Widget {
     private:
         enum ConsoleState {
@@ -50,6 +52,7 @@ namespace hikari {
         virtual void update(const float &delta);
     };
 
+} // hikari::gui
 } // hikari
 
 #endif // HIKARI_CLIENT_GUI_COMMANDCONSOLE

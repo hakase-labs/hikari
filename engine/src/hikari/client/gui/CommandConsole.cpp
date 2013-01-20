@@ -2,6 +2,7 @@
 #include <hikari/core/gui/ImageFont.hpp>
 
 namespace hikari {
+namespace gui {
 
     CommandConsole::CommandConsole(const std::shared_ptr<hikari::ImageFont> &font)
         : font(font)
@@ -93,4 +94,5 @@ namespace hikari {
         }
     }
 
+} 
 }

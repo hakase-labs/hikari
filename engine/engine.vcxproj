@@ -30,18 +30,12 @@
     <ClCompile Include="src\hikari\client\game\objects\EnemyBrain.cpp" />
     <ClCompile Include="src\hikari\client\game\objects\Entity.cpp" />
     <ClCompile Include="src\hikari\client\game\objects\ItemFactory.cpp" />
-    <ClCompile Include="src\hikari\client\game\objects\MovableObject.cpp" />
     <ClCompile Include="src\hikari\client\game\objects\Spawner.cpp" />
     <ClCompile Include="src\hikari\client\scripting\SquirrelService.cpp" />
-    <ClCompile Include="src\hikari\core\game\AABBCollision.cpp" />
     <ClCompile Include="src\hikari\core\game\CollisionInfo.cpp" />
     <ClCompile Include="src\hikari\core\game\Direction.cpp" />
-    <ClCompile Include="src\hikari\core\game\map\TileCollisionResolver.cpp" />
     <ClCompile Include="src\hikari\core\game\Movable.cpp" />
     <ClCompile Include="src\hikari\core\game\TileMapCollisionResolver.cpp" />
-    <ClCompile Include="src\hikari\core\geom\AABB.cpp" />
-    <ClCompile Include="src\hikari\core\geom\AABBCollisionInfo.cpp" />
-    <ClCompile Include="src\hikari\core\geom\RectangleAABB.cpp" />
     <ClCompile Include="src\hikari\core\util\AnimationSetCache.cpp" />
     <ClCompile Include="src\hikari\core\util\exception\HikariException.cpp" />
     <ClCompile Include="src\hikari\core\util\exception\ServiceNotRegisteredException.cpp" />
@@ -103,7 +97,6 @@
     <ClInclude Include="include\hikari\client\game\objects\GameObject.hpp" />
     <ClInclude Include="include\hikari\client\game\objects\Hero.hpp" />
     <ClInclude Include="include\hikari\client\game\objects\ItemFactory.hpp" />
-    <ClInclude Include="include\hikari\client\game\objects\MovableObject.hpp" />
     <ClInclude Include="include\hikari\client\game\objects\RockmanHero.hpp" />
     <ClInclude Include="include\hikari\client\game\objects\ScriptBrain.hpp" />
     <ClInclude Include="include\hikari\client\game\objects\Spawner.hpp" />
@@ -120,7 +113,6 @@
     <ClInclude Include="include\hikari\client\gui\Widget.hpp" />
     <ClInclude Include="include\hikari\client\scripting\SquirrelService.hpp" />
     <ClInclude Include="include\hikari\client\Services.hpp" />
-    <ClInclude Include="include\hikari\core\game\AABBCollision.hpp" />
     <ClInclude Include="include\hikari\core\game\Animation.hpp" />
     <ClInclude Include="include\hikari\core\game\AnimationFrame.hpp" />
     <ClInclude Include="include\hikari\core\game\AnimationLoader.hpp" />
@@ -142,7 +134,6 @@
     <ClInclude Include="include\hikari\core\game\map\MapRenderer.hpp" />
     <ClInclude Include="include\hikari\core\game\map\Room.hpp" />
     <ClInclude Include="include\hikari\core\game\map\RoomTransition.hpp" />
-    <ClInclude Include="include\hikari\core\game\map\TileCollisionResolver.hpp" />
     <ClInclude Include="include\hikari\core\game\map\Tileset.hpp" />
     <ClInclude Include="include\hikari\core\game\map\TilesetLoader.hpp" />
     <ClInclude Include="include\hikari\core\game\Movable.hpp" />
@@ -150,12 +141,9 @@
     <ClInclude Include="include\hikari\core\game\TileAnimator.hpp" />
     <ClInclude Include="include\hikari\core\game\TileMapCollisionResolver.hpp" />
     <ClInclude Include="include\hikari\core\game\Updatable.hpp" />
-    <ClInclude Include="include\hikari\core\geom\AABB.hpp" />
-    <ClInclude Include="include\hikari\core\geom\AABBCollisionInfo.hpp" />
     <ClInclude Include="include\hikari\core\geom\BoundingBox.hpp" />
     <ClInclude Include="include\hikari\core\geom\Point2D.hpp" />
     <ClInclude Include="include\hikari\core\geom\Rectangle2D.hpp" />
-    <ClInclude Include="include\hikari\core\geom\RectangleAABB.hpp" />
     <ClInclude Include="include\hikari\core\geom\Vector2D.hpp" />
     <ClInclude Include="include\hikari\core\gui\ImageFont.hpp" />
     <ClInclude Include="include\hikari\core\Hikari.hpp" />
@@ -234,7 +222,6 @@
     <ClCompile Include="src\hikari\core\game\AnimationFrame.cpp" />
     <ClCompile Include="src\hikari\core\game\AnimationLoader.cpp" />
     <ClCompile Include="src\hikari\core\game\Animator.cpp" />
-    <ClCompile Include="src\hikari\core\game\BoundingBox.cpp" />
     <ClCompile Include="src\hikari\core\game\GameController.cpp" />
     <ClCompile Include="src\hikari\core\game\GameControllerException.cpp" />
     <ClCompile Include="src\hikari\core\game\map\Camera.cpp" />

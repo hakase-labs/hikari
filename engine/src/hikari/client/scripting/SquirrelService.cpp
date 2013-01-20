@@ -68,42 +68,54 @@ namespace hikari {
             Sqrat::DefaultVM::Set(vm);
 
             //
+            // Globals
+            //
+            auto hikariTable = Sqrat::Table();
+            auto internalTable = Sqrat::Table();
+
+            internalTable.Func(_SC("readFileAsString"), FileSystem::readFileAsString);
+
+            hikariTable.Bind(_SC("internal"), internalTable);
+
+            Sqrat::RootTable().Bind(_SC("hikari"), hikariTable);
+
+            //
             // Constant/Enum bindings
             //
-            Sqrat::ConstTable().Enum("Directions", Sqrat::Enumeration()
-                .Const("None", Directions::None)
-                .Const("Up", Directions::Up)
-                .Const("Right", Directions::Right)
-                .Const("Down", Directions::Down)
-                .Const("Left", Directions::Left)
+            Sqrat::ConstTable().Enum(_SC("Directions"), Sqrat::Enumeration()
+                .Const(_SC("None"), Directions::None)
+                .Const(_SC("Up"), Directions::Up)
+                .Const(_SC("Right"), Directions::Right)
+                .Const(_SC("Down"), Directions::Down)
+                .Const(_SC("Left"), Directions::Left)
             );
 
             //
             // Utility bindings
             //
             Sqrat::RootTable().Bind(
-                "Utils", 
+                _SC("Utils"), 
                 Sqrat::Table()
-                    .Func("getOppositeDirection", &Directions::opposite)
+                    .Func(_SC("getOppositeDirection"), &Directions::opposite)
             );
             
             //
             // Class bindings
             //
             Sqrat::RootTable().Bind(
-                "Enemy", 
+                _SC("Enemy"), 
                 Sqrat::Class<Enemy>()
-                    .Prop<const float>("velocityX", &Enemy::getVelocityX, &Enemy::setVelocityX) 
-                    .Prop<const float>("velocityY", &Enemy::getVelocityY, &Enemy::setVelocityY)
-                    .Prop<const bool>("isActive", &Enemy::isActive, &Enemy::setActive)
-                    .Prop<const bool>("isGravitated", &Enemy::isGravitated, &Enemy::setGravitated)
-                    .Prop<const bool>("isObstacle", &Enemy::isObstacle, &Enemy::setObstacle)
-                    .Prop<const Direction>("direction", &Enemy::getDirection, &Enemy::setDirection)
-                    .Func("changeAnimation", &Enemy::changeAnimation)
-                    .GlobalFunc("getX", &EntityHelpers::getX)
-                    .GlobalFunc("getY", &EntityHelpers::getY)
-                    .GlobalFunc("setX", &EntityHelpers::setX)
-                    .GlobalFunc("setY", &EntityHelpers::setY)
+                    .Prop<const float>(_SC("velocityX"), &Enemy::getVelocityX, &Enemy::setVelocityX) 
+                    .Prop<const float>(_SC("velocityY"), &Enemy::getVelocityY, &Enemy::setVelocityY)
+                    .Prop<const bool>(_SC("isActive"), &Enemy::isActive, &Enemy::setActive)
+                    .Prop<const bool>(_SC("isGravitated"), &Enemy::isGravitated, &Enemy::setGravitated)
+                    .Prop<const bool>(_SC("isObstacle"), &Enemy::isObstacle, &Enemy::setObstacle)
+                    .Prop<const Direction>(_SC("direction"), &Enemy::getDirection, &Enemy::setDirection)
+                    .Func(_SC("changeAnimation"), &Enemy::changeAnimation)
+                    .GlobalFunc(_SC("getX"), &EntityHelpers::getX)
+                    .GlobalFunc(_SC("getY"), &EntityHelpers::getY)
+                    .GlobalFunc(_SC("setX"), &EntityHelpers::setX)
+                    .GlobalFunc(_SC("setY"), &EntityHelpers::setY)
             );
         }
     }

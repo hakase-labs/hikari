@@ -8,6 +8,7 @@
 #include <SFML/Graphics/Sprite.hpp>
 
 namespace hikari {
+namespace gui {
 
     class EnergyMeter : public Widget {
     private:
@@ -61,6 +62,7 @@ namespace hikari {
         virtual void update(const float &delta);
     };
 
-}
+} // hikari::gui
+} // hikari
 
 #endif // HIKARI_CORE_GUI_WIDGET

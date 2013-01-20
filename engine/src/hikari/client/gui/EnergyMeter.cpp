@@ -2,7 +2,8 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 
 namespace hikari {
-    
+namespace gui {
+
     const float EnergyMeter::HORIZONTAL_ROTATION_ANGLE = 270.0f;
     const float EnergyMeter::VERTICAL_ROTATION_ANGLE = 0.0f;
     const float EnergyMeter::HIGHLIGHT_OFFSET_X = 3.0f;
@@ -191,4 +192,5 @@ namespace hikari {
 
     }
 
+} // hikari::gui
 } // hikari
