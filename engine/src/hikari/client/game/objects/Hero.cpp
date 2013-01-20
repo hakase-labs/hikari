@@ -227,7 +227,7 @@ namespace hikari {
     }
 
     bool Hero::canSlide() {
-        return !isAirborn &&; /* TODO: Check if currently sliding too */
+        return !isAirborn; /* TODO: Check if currently sliding too */
     }
 
     void Hero::performJump() {
