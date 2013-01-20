@@ -41,6 +41,8 @@
 
 namespace hikari {
 
+    using gui::EnergyMeter;
+
     GamePlayState::GamePlayState(const std::string &name, const Json::Value &params, ServiceLocator &services)
         : name(name)
         , gameProgress(services.locateService<GameProgress>(Services::GAMEPROGRESS))

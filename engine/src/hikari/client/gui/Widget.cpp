@@ -1,6 +1,7 @@
 #include <hikari/client/gui/Widget.hpp>
 
 namespace hikari {
+namespace gui {
 
     const sf::Vector2i& Widget::getPosition() const {
         return position;
@@ -18,4 +19,5 @@ namespace hikari {
         visible = isVisible;
     }
 
-}
+} // hikari::gui
+} // hikari

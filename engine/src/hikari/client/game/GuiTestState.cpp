@@ -7,6 +7,8 @@
 
 namespace hikari {
 
+    using gui::EnergyMeter;
+
     GuiTestState::GuiTestState(const std::string &name, const std::shared_ptr<hikari::ImageFont> &font)
         : name(name)
         , font(font) {
@@ -17,7 +19,7 @@ namespace hikari {
             sf::Sprite meterSprite(energyMeterImage);
             meterSprite.setTextureRect(sf::IntRect(0, 0, 8, 56));
 
-            energyMeter.reset(new hikari::EnergyMeter(meterSprite, 56.0f));
+            energyMeter.reset(new EnergyMeter(meterSprite, 56.0f));
             energyMeter->setValue(54.0f);
             energyMeter->setFillColor(sf::Color::Black);
             energyMeter->setPosition(sf::Vector2i(80, 100));

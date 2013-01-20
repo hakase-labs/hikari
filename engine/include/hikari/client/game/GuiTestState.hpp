@@ -19,7 +19,7 @@ namespace hikari {
         std::string name;
         sf::Texture energyMeterImage;
         std::shared_ptr<hikari::ImageFont> font;
-        std::shared_ptr<hikari::EnergyMeter> energyMeter;
+        std::shared_ptr<hikari::gui::EnergyMeter> energyMeter;
         float ups;
     
     public:

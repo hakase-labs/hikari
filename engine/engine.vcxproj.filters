@@ -411,21 +411,6 @@
     <ClInclude Include="include\hikari\test\core\geom\Vector2DTests.hpp">
       <Filter>Header Files\test</Filter>
     </ClInclude>
-    <ClInclude Include="include\hikari\core\geom\AABB.hpp">
-      <Filter>Header Files\core\geom</Filter>
-    </ClInclude>
-    <ClInclude Include="include\hikari\client\game\objects\MovableObject.hpp">
-      <Filter>Header Files\client\game\objects</Filter>
-    </ClInclude>
-    <ClInclude Include="include\hikari\core\geom\RectangleAABB.hpp">
-      <Filter>Header Files\core\geom</Filter>
-    </ClInclude>
-    <ClInclude Include="include\hikari\core\game\map\TileCollisionResolver.hpp">
-      <Filter>Header Files\core\game\map</Filter>
-    </ClInclude>
-    <ClInclude Include="include\hikari\core\game\AABBCollision.hpp">
-      <Filter>Header Files\core\game</Filter>
-    </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -455,9 +440,6 @@
     </ClInclude>
     <ClInclude Include="include\hikari\core\game\Movable.hpp">
       <Filter>Header Files\core\game</Filter>
-    </ClInclude>
-    <ClInclude Include="include\hikari\core\geom\AABBCollisionInfo.hpp">
-      <Filter>Header Files\core\geom</Filter>
     </ClInclude>
     <ClInclude Include="include\hikari\core\util\exception\HikariException.hpp">
       <Filter>Header Files\core\util\exception</Filter>
@@ -704,9 +686,6 @@
     <ClCompile Include="src\hikari\core\game\AnimationFrame.cpp">
       <Filter>Source Files\core\game</Filter>
     </ClCompile>
-    <ClCompile Include="src\hikari\core\game\BoundingBox.cpp">
-      <Filter>Source Files\core\geom</Filter>
-    </ClCompile>
     <ClCompile Include="src\hikari\core\util\TilesetCache.cpp">
       <Filter>Source Files\core\util</Filter>
     </ClCompile>
@@ -761,21 +740,6 @@
     <ClCompile Include="src\hikari\test\core\geom\Vector2DTest.cpp">
       <Filter>Source Files\test</Filter>
     </ClCompile>
-    <ClCompile Include="src\hikari\core\geom\AABB.cpp">
-      <Filter>Source Files\core\geom</Filter>
-    </ClCompile>
-    <ClCompile Include="src\hikari\client\game\objects\MovableObject.cpp">
-      <Filter>Source Files\client\game\objects</Filter>
-    </ClCompile>
-    <ClCompile Include="src\hikari\core\geom\RectangleAABB.cpp">
-      <Filter>Source Files\core\geom</Filter>
-    </ClCompile>
-    <ClCompile Include="src\hikari\core\game\map\TileCollisionResolver.cpp">
-      <Filter>Source Files\core\game\map</Filter>
-    </ClCompile>
-    <ClCompile Include="src\hikari\core\game\AABBCollision.cpp">
-      <Filter>Source Files\core\game</Filter>
-    </ClCompile>
     <ClCompile Include="src\hikari\client\game\objects\Entity.cpp">
       <Filter>Source Files\client\game\objects</Filter>
     </ClCompile>
@@ -799,9 +763,6 @@
     </ClCompile>
     <ClCompile Include="src\hikari\core\game\CollisionInfo.cpp">
       <Filter>Source Files\core\game</Filter>
-    </ClCompile>
-    <ClCompile Include="src\hikari\core\geom\AABBCollisionInfo.cpp">
-      <Filter>Source Files\core\geom</Filter>
     </ClCompile>
     <ClCompile Include="src\hikari\core\util\exception\HikariException.cpp">
       <Filter>Source Files\core\util\exception</Filter>

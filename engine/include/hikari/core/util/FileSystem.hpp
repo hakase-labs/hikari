@@ -17,7 +17,7 @@ namespace hikari {
         };
 
         static std::unique_ptr<std::istream> openFile(const std::string & fileName, OpenMode::Type openMode = OpenMode::Read);
-
+        
         static const std::string readFileAsString(const std::string & fileName);
     };
 
