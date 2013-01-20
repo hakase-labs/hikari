@@ -107,18 +107,6 @@ int main(int argc, char** argv) {
 
     ::hikari::Log::setReportingLevel(debug2);
 
-    /*
-    HIKARI_LOG(fatal) << "I totally logged this!";
-    HIKARI_LOG(error) << "I totally logged this!";
-    HIKARI_LOG(warning) << "I totally logged this!";
-    HIKARI_LOG(info) << "I totally logged this!";
-    HIKARI_LOG(debug) << "I totally logged this!";
-    HIKARI_LOG(debug1) << "I totally logged this!";
-    HIKARI_LOG(debug2) << "I totally logged this!";
-    HIKARI_LOG(debug3) << "I totally logged this!";
-    HIKARI_LOG(debug4) << "I totally logged this!";
-    */
-
     initLogging(argc, argv);
 
     try {
@@ -166,6 +154,7 @@ int main(int argc, char** argv) {
         auto squirrelService = std::make_shared<SquirrelService>(clientConfig.getScriptingStackSize());
 
         squirrelService->runScriptFile("assets/scripts/Environment.nut");
+        squirrelService->runScriptFile("assets/scripts/Bootstrap.nut");
 
         ServiceLocator services;
         services.registerService(Services::AUDIO, audioService);
@@ -188,7 +177,7 @@ int main(int argc, char** argv) {
         // Make the GUI a service.
         services.registerService(Services::GUIFONT, guiFont);
 
-        CommandConsole console(guiFont);
+        gui::CommandConsole console(guiFont);
 
         // Create and initialize the game controller and game states
         // This need to be a factory or something that can be determined
@@ -228,7 +217,6 @@ int main(int argc, char** argv) {
         sound.open("assets/sound/mega-man-3-nes-[NSF-ID2016].nsf"); 
         sound.setCurrentTrack(9);
         sound.stop();
-        // sound.play();
 
         //
         // Register some commands
@@ -312,9 +300,9 @@ int main(int argc, char** argv) {
                                     quit = true;
                                 } else {
                                     try {
-                                        //controller.setState(console.getCommandBuffer());
                                         cp.processCommand(console.getCommandBuffer());
                                     } catch(std::exception &ex) {
+                                        HIKARI_LOG(debug1) << "Exception while proccessing console command: " << ex.what();
                                         console.setCommandBuffer("BAD COMMAND");
                                     }
                                 }
@@ -361,15 +349,11 @@ int main(int argc, char** argv) {
                 guiFont->renderText(window, "FPS:", 8, 8);
                 guiFont->renderText(window, StringUtils::toString<float>(fps), 40, 8);
             }
-
-            //guiFont->renderText(window, StringUtils::toString<float>(speedMultiplier), 200, 16);
             
             console.render(window);
 
             window.display();
         }
-
-        //sound.stop();
 
         PhysFS::deinit();
 
