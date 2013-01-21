@@ -55,8 +55,6 @@
 
 namespace hikari {
     Client::Client(int argc, char** argv) {
-        initializeLogging();
-        initializeVirtualFileSystem();
         initializeServices();
 
         // loadConfiguration("", config);
@@ -79,21 +77,7 @@ namespace hikari {
 
     }
 
-    void Client::initializeLogging() {
-        // TODO: Create logging tee buffer and stuff to stdout + file
-
-        #ifdef _DEBUG
-        ::hikari::Log::setReportingLevel(debug4);
-        #else
-        ::hikari::Log::setReportingLevel(info);
-        #endif
-    }
-
     void Client::initializeServices() {
-
-    }
-
-    void Client::initializeVirtualFileSystem() {
 
     }
 
@@ -133,25 +117,21 @@ int main(int argc, char** argv) {
 
         ClientConfig clientConfig(config);
 
-        // Create and initialize the timing and video systems
         sf::Clock clock;
         sf::VideoMode videoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP);
         sf::RenderWindow window;
 
-        //window.show(false);
         bool showFPS = clientConfig.isFpsDisplayEnabled();
 
-        auto imageCache = std::make_shared<ImageCache>(ImageCache::NO_SMOOTHING, ImageCache::USE_MASKING);
+        auto imageCache        = std::make_shared<ImageCache>(ImageCache::NO_SMOOTHING, ImageCache::USE_MASKING);
         auto animationSetCache = std::make_shared<AnimationSetCache>();
-        shared_ptr<AnimationLoader> animationLoader(new AnimationLoader());
-        shared_ptr<TilesetLoader> tilesetLoader(new TilesetLoader(imageCache, animationLoader));
-        shared_ptr<TilesetCache> tilesetCache(new TilesetCache(tilesetLoader));
-        shared_ptr<MapLoader> mapLoader(new MapLoader(tilesetCache));
-        shared_ptr<GameProgress> gameProgress(new GameProgress());
-        shared_ptr<AudioService> audioService(
-            new AudioService(game["assets"]["audio"])
-        );
-        auto squirrelService = std::make_shared<SquirrelService>(clientConfig.getScriptingStackSize());
+        auto animationLoader   = std::make_shared<AnimationLoader>();
+        auto tilesetLoader     = std::make_shared<TilesetLoader>(imageCache, animationLoader);
+        auto tilesetCache      = std::make_shared<TilesetCache>(tilesetLoader);
+        auto mapLoader         = std::make_shared<MapLoader>(tilesetCache);
+        auto gameProgress      = std::make_shared<GameProgress>();
+        auto audioService      = std::make_shared<AudioService>(game["assets"]["audio"]);
+        auto squirrelService   = std::make_shared<SquirrelService>(clientConfig.getScriptingStackSize());
 
         squirrelService->runScriptFile("assets/scripts/Environment.nut");
         squirrelService->runScriptFile("assets/scripts/Bootstrap.nut");

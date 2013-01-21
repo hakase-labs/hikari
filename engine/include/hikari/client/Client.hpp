@@ -23,10 +23,7 @@ namespace hikari {
     class Client {
     private:
         void initializeGame();
-        void initializeLogging(); 
         void initializeServices();
-        void initializeVirtualFileSystem();
-        
         void loadConfiguration(const std::string& fileName, Json::Value& value);
 
     public:
