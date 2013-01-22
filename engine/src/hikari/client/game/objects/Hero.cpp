@@ -245,7 +245,7 @@ namespace hikari {
         std::cout << "Started sliding!" << std::endl;
     }
 
-    void Hero::changeMobilityState(std::unique_ptr<MobilityState> & newState) {
+    void Hero::changeMobilityState(std::unique_ptr<MobilityState> && newState) {
         if(newState) {
             if(mobilityState) {
                 mobilityState->exit();
@@ -255,7 +255,7 @@ namespace hikari {
         }
     }
 
-    void Hero::changeShootingState(std::unique_ptr<ShootingState> & newState) {
+    void Hero::changeShootingState(std::unique_ptr<ShootingState> && newState) {
         if(newState) {
             if(shootingState) {
                 shootingState->exit();
