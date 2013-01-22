@@ -72,7 +72,7 @@ namespace hikari {
     }
 
     template <typename U> 
-    std::ostream &operator<<(std::ostream &stream, const Point2D<U> &rect)
+    std::ostream &operator<<(std::ostream &stream, const Point2D<U> &point)
     {
         stream << "(";
         stream << point.getX();
