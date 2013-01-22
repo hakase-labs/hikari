@@ -67,6 +67,7 @@ _ReSharper*/
 #Hikari Specific Ignores
 content/
 contrib/*
+!contrib/gme
 !contrib/guichan
 !contrib/guichan-hakase
 !contrib/guichan-sfml
