@@ -24,7 +24,7 @@ namespace hikari {
         }
 
         animationMap.insert(
-            std::make_pair<std::string, AnimationPtr>(name, animation)
+            std::make_pair(name, animation)
         );
 
         return true;
