@@ -2,7 +2,7 @@
 #define HIKARI_CORE_UTIL_HIKARIEXCEPTION
 
 #include <hikari/core/Platform.hpp>
-#include <exception>
+#include <stdexcept>
 #include <string>
 
 namespace hikari {
