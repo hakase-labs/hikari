@@ -56,8 +56,8 @@ namespace hikari {
         void performJump();
         void performSlide();
 
-        void changeMobilityState(std::unique_ptr<MobilityState> & newState);
-        void changeShootingState(std::unique_ptr<ShootingState> & newState);
+        void changeMobilityState(std::unique_ptr<MobilityState> && newState);
+        void changeShootingState(std::unique_ptr<ShootingState> && newState);
 
         void chooseAnimation();
 

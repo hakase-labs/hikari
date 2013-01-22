@@ -33,17 +33,6 @@ namespace hikari {
             return t;
         }
 
-        template<>
-        static inline float fromString(const std::string &str) {
-            return std::stof(str);
-        }
-
-        template<>
-        static inline double fromString(const std::string &str) {
-            return std::stod(str);
-        }
-
-
         // trim from start
         static inline std::string ltrim(std::string s);
 
@@ -53,6 +42,16 @@ namespace hikari {
         // trim from both ends
         static std::string trim(std::string s);
     };
+
+    template<>
+    inline float StringUtils::fromString(const std::string &str) {
+        return std::stof(str);
+    }
+
+    template<>
+    inline double StringUtils::fromString(const std::string &str) {
+        return std::stod(str);
+    }
 
 } // hikari
 

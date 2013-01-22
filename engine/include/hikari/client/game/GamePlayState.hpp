@@ -90,7 +90,7 @@ namespace hikari {
         // Gameplay Mechanics
         //
         std::unique_ptr<SubState> subState;
-        void changeSubState(std::unique_ptr<SubState> & newSubState);
+        void changeSubState(std::unique_ptr<SubState> && newSubState);
         void changeCurrentRoom(const std::shared_ptr<Room>& newCurrentRoom);
 
         /**
