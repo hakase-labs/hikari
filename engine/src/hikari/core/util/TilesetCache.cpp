@@ -23,7 +23,7 @@ namespace hikari {
             ss << "I/O Problem while loading tileset data from ";
             ss << fileName;
 
-            throw std::exception(ss.str().c_str());
+            throw std::runtime_error(ss.str().c_str());
         }
 
         Json::Reader reader;
@@ -38,7 +38,7 @@ namespace hikari {
             ss << "\", error(s): \n";
             ss << reader.getFormatedErrorMessages();
 
-            throw std::exception(ss.str().c_str());
+            throw std::runtime_error(ss.str().c_str());
         }
 
         return loader->loadFromJson(root);
