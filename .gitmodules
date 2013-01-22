@@ -19,3 +19,6 @@
 [submodule "contrib/guichan-hakase"]
 	path = contrib/guichan-hakase
 	url = https://github.com/hakase-labs/guichan-hakase.git
+[submodule "contrib/gme"]
+	path = contrib/gme
+	url = https://github.com/hakase-labs/gme.git
