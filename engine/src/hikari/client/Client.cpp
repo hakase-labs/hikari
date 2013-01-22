@@ -55,10 +55,8 @@
 
 namespace hikari {
     Client::Client(int argc, char** argv) {
+        loadConfiguration("conf.json", clientConfigJson);
         initializeServices();
-
-        // loadConfiguration("", config);
-
         initializeGame();
     }
 
@@ -73,12 +71,49 @@ namespace hikari {
         return EXIT_SUCCESS;
     }
 
+    void Client::loadConfiguration(const std::string& fileName, Json::Value& value) {
+        HIKARI_LOG(debug) << "Loading configuration file...";
+
+        auto fs = FileSystem::openFile(fileName);
+        Json::Reader reader;
+
+        bool success = reader.parse(*fs, value, false);
+
+        if(success) {
+            clientConfig = ClientConfig(value);
+        } else {
+            HIKARI_LOG(info) << "Configuration file could not be found or was corrupt, using defaults.";
+        }
+    }
+
     void Client::initializeGame() {
 
     }
 
     void Client::initializeServices() {
+        auto animationSetCache = std::make_shared<AnimationSetCache>();
+        auto animationLoader   = std::make_shared<AnimationLoader>();
+        auto audioService      = std::make_shared<AudioService>(gameConfigJson["assets"]["audio"]);
+        auto gameProgress      = std::make_shared<GameProgress>();
+        auto imageCache        = std::make_shared<ImageCache>(ImageCache::NO_SMOOTHING, ImageCache::USE_MASKING);
+        auto tilesetLoader     = std::make_shared<TilesetLoader>(imageCache, animationLoader);
+        auto tilesetCache      = std::make_shared<TilesetCache>(tilesetLoader);
+        auto mapLoader         = std::make_shared<MapLoader>(tilesetCache);
+        auto squirrelService   = std::make_shared<SquirrelService>(clientConfig.getScriptingStackSize());
+        auto guiFont           = std::make_shared<ImageFont>(
+            imageCache->get("assets/images/gui-font.png"), 
+            " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz", 
+            8,
+            8
+        );
 
+        services.registerService(Services::AUDIO,             audioService);
+        services.registerService(Services::GAMEPROGRESS,      gameProgress);
+        services.registerService(Services::IMAGECACHE,        imageCache);
+        services.registerService(Services::ANIMATIONSETCACHE, animationSetCache);
+        services.registerService(Services::MAPLOADER,         mapLoader);
+        services.registerService(Services::SCRIPTING,         squirrelService);
+        services.registerService(Services::GUIFONT,           guiFont);    
     }
 
 } // hikari
@@ -132,30 +167,24 @@ int main(int argc, char** argv) {
         auto gameProgress      = std::make_shared<GameProgress>();
         auto audioService      = std::make_shared<AudioService>(game["assets"]["audio"]);
         auto squirrelService   = std::make_shared<SquirrelService>(clientConfig.getScriptingStackSize());
+        auto guiFont           = std::make_shared<ImageFont>(
+            imageCache->get("assets/images/gui-font.png"), 
+            " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz", 
+            8,
+            8
+        );
+
+        ServiceLocator services;
+        services.registerService(Services::AUDIO,             audioService);
+        services.registerService(Services::GAMEPROGRESS,      gameProgress);
+        services.registerService(Services::IMAGECACHE,        imageCache);
+        services.registerService(Services::ANIMATIONSETCACHE, animationSetCache);
+        services.registerService(Services::MAPLOADER,         mapLoader);
+        services.registerService(Services::SCRIPTING,         squirrelService);
+        services.registerService(Services::GUIFONT,           guiFont);
 
         squirrelService->runScriptFile("assets/scripts/Environment.nut");
         squirrelService->runScriptFile("assets/scripts/Bootstrap.nut");
-
-        ServiceLocator services;
-        services.registerService(Services::AUDIO, audioService);
-        services.registerService(Services::GAMEPROGRESS, gameProgress);
-        services.registerService(Services::IMAGECACHE, imageCache);
-        services.registerService("AnimationSetCache", animationSetCache);
-        services.registerService(Services::MAPLOADER, mapLoader);
-        services.registerService(Services::SCRIPTING, squirrelService);
-
-        shared_ptr<ImageFont> guiFont(
-            new ImageFont(
-                imageCache->get("assets/images/gui-font.png"), 
-                " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz", 
-                8,
-                8
-            )
-        );
-
-        // TODO: Remove this as a shared "service", it belongs in the GUI.
-        // Make the GUI a service.
-        services.registerService(Services::GUIFONT, guiFont);
 
         gui::CommandConsole console(guiFont);
 
@@ -166,7 +195,6 @@ int main(int argc, char** argv) {
 
         std::string mapName = game["states"]["maptest"]["mapname"].asString();
         std::string tileSet = game["states"]["maptest"]["tileset"].asString();
-        
         
         auto mapTestState = std::make_shared<MapTestState>(
             "maptest", 

@@ -16,3 +16,6 @@
 [submodule "contrib/jsoncpp"]
 	path = contrib/jsoncpp
 	url = https://github.com/hakase-labs/jsoncpp
+[submodule "contrib/guichan-hakase"]
+	path = contrib/guichan-hakase
+	url = https://github.com/hakase-labs/guichan-hakase.git
