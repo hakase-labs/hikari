@@ -5,6 +5,7 @@
 #include <hikari/core/util/Log.hpp>
 #include <hikari/core/util/exception/HikariException.hpp>
 #include <hikari/core/util/exception/ServiceNotRegisteredException.hpp>
+#include <map>
 #include <memory>
 #include <stdexcept>
 #include <string>

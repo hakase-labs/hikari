@@ -19,6 +19,7 @@ namespace Services {
     const static std::string MAPLOADER = "MapLoader";
     const static std::string SCRIPTING = "Scripting";
     const static std::string GUIFONT = "GuiFont";
+    const static std::string ANIMATIONSETCACHE = "AnimationSetCache";
 
 } // hikari::direction
 } // hikari

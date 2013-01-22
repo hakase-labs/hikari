@@ -21,7 +21,7 @@ namespace hikari {
             ss << fileName;
             ss << "\"";
 
-            throw std::exception(ss.str().c_str());
+            throw std::runtime_error(ss.str().c_str());
         }
 
         bool success = reader.parse(*fs, root);
@@ -34,7 +34,7 @@ namespace hikari {
             ss << "\". ";
             ss << reader.getFormatedErrorMessages();
 
-            throw std::exception(ss.str().c_str());
+            throw std::runtime_error(ss.str().c_str());
         }
 
         return root;

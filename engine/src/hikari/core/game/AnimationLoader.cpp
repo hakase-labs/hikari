@@ -37,7 +37,7 @@ namespace hikari {
             Json::Value root = JsonUtils::loadJson(fileName);
             return loadFromJson(root);
         } else {
-            throw std::exception("Animation loading failed. The file cannot be found.");
+            throw std::runtime_error("Animation loading failed. The file cannot be found.");
         }
     }
 
@@ -84,7 +84,7 @@ namespace hikari {
 
             return resultSet;
         } else {
-            throw std::exception("Animation loading failed. The file cannot be found.");
+            throw std::runtime_error("Animation loading failed. The file cannot be found.");
         }
     }
 
@@ -137,61 +137,14 @@ namespace hikari {
 
                 return std::shared_ptr<Animation>(new Animation(frames, repeat, keyframe, syncGroup));
             } else {
-                throw std::exception("Problem loading animation from JSON: the animation has no frames.");
+                throw std::runtime_error("Problem loading animation from JSON: the animation has no frames.");
             }
         } else {
             std::stringstream ss;
             ss << "Problem while parsing animation data from JSON.\n";
 
-            throw std::exception(ss.str().c_str());
+            throw std::runtime_error(ss.str().c_str());
         }
     }
-    /*
-    std::shared_ptr<Animation> AnimationLoader::loadFromJsonObject(const Json::Value &json) {
-        bool repeat = json.get(PROPERTY_REPEAT, false).asBool();
-
-        unsigned int keyframe = json.get(
-            PROPERTY_KEYFRAME, 
-            Animation::ANIMATION_BEGINNING_FRAME_INDEX
-        ).asInt();
-
-        unsigned int syncGroup = json.get(
-            PROPERTY_SYNCGROUP, 
-            Animation::ANIMATION_DEFAULT_SYNC_GROUP
-        ).asInt();
-
-        unsigned int numFrames = json[PROPERTY_FRAMES].size();
-
-        if(numFrames > 0) {
-            FrameList frames;
-            for(unsigned int i = 0; i < numFrames; ++i) {
-                const Json::Value jsonFrame = json[PROPERTY_FRAMES][i];
-
-                Rectangle2D<int> rectangle;
-                rectangle.setX(jsonFrame.get(PROPERTY_FRAME_X, 0).asInt());
-                rectangle.setY(jsonFrame.get(PROPERTY_FRAME_Y, 0).asInt());
-                rectangle.setWidth(jsonFrame.get(PROPERTY_FRAME_WIDTH, 0).asInt());
-                rectangle.setHeight(jsonFrame.get(PROPERTY_FRAME_HEIGHT, 0).asInt());
-
-                float length = static_cast<float>
-                    (jsonFrame.get(PROPERTY_FRAME_LENGTH, 0.0f).asDouble());
-
-                Point2D<int> hotspot(
-                    jsonFrame.get(PROPERTY_FRAME_HOTSPOT_X, 0).asInt(), 
-                    jsonFrame.get(PROPERTY_FRAME_HOTSPOT_Y, 0).asInt()
-                );
-
-                frames.push_back(Frame(rectangle, length, hotspot));
-            }                
-
-            return std::shared_ptr<Animation>
-                (new Animation(frames, repeat, keyframe, syncGroup));
-        } else {
-            throw std::exception("Problem loading animation from JSON; the animation has no frames.");
-        }
-
-        return std::shared_ptr<Animation>();
-    }
-    */
 
 } // hikari
