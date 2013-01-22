@@ -260,10 +260,10 @@ namespace hikari {
 
     template <typename T>
     std::ostream &operator<<(std::ostream &stream, const Vector2<T> &vector) {
-        stream << "("
-        stream << point.getX();
+        stream << "(";
+        stream << vector.getX();
         stream << ", ";
-        stream << point.getY();
+        stream << vector.getY();
         stream << ")";
         return stream;
     }
