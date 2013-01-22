@@ -168,7 +168,7 @@ namespace hikari {
         return name;
     }
 
-    void GamePlayState::changeSubState(std::unique_ptr<SubState> & newSubState) {
+    void GamePlayState::changeSubState(std::unique_ptr<SubState> && newSubState) {
         if(newSubState) {
             if(subState) {
                 subState->exit();
