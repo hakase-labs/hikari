@@ -13,7 +13,7 @@ namespace hikari {
     class HIKARI_API GameControllerException : public std::runtime_error {
     public:
         explicit GameControllerException(const std::string& what);
-        virtual ~GameControllerException() throw();
+        virtual ~GameControllerException() throw() { };
     };
 
 } // hikari
