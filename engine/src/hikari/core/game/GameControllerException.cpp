@@ -7,6 +7,4 @@ namespace hikari {
         
     }
 
-    GameControllerException::~GameControllerException() { }
-
 } // hikari
