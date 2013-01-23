@@ -321,10 +321,10 @@ namespace hikari {
             currentRoom->getTransitions().begin(),
             currentRoom->getTransitions().end(),
             [&](const RoomTransition& transition) {
-                auto x = (transition.getX() + currentRoom->getX()) * map->getGridSize();
-                auto y = (transition.getY() + currentRoom->getY()) * map->getGridSize();
-                auto width = transition.getWidth() * map->getGridSize();
-                auto height = transition.getHeight() * map->getGridSize();
+                auto x = static_cast<float>((transition.getX() + currentRoom->getX()) * map->getGridSize());
+                auto y = static_cast<float>((transition.getY() + currentRoom->getY()) * map->getGridSize());
+                auto width = static_cast<float>(transition.getWidth() * map->getGridSize());
+                auto height = static_cast<float>(transition.getHeight() * map->getGridSize());
 
                 transitionMarker.setPosition(x, y);
                 transitionMarker.setSize(sf::Vector2f(width, height));
@@ -547,7 +547,7 @@ namespace hikari {
         movable->setBoundingBox(playerBounds);
 
         hero->setRoom(currentRoom);
-        hero->setPosition((currentRoom->getX() * 16) + 40, (currentRoom->getY() * 16) + 30);
+        hero->setPosition(static_cast<float>((currentRoom->getX() * 16) + 40), static_cast<float>((currentRoom->getY() * 16) + 30));
         //renderedCursor = sf::Shape::Rectangle(0.0f, 0.0f, 14.0f, 22.0f, sf::Color(0, 255, 255, 128));
     }
 

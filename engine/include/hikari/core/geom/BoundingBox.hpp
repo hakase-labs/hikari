@@ -143,7 +143,19 @@ namespace hikari {
         //
         // Utilities
         //
-        friend std::ostream &operator<<(std::ostream &stream, const BoundingBox &box);
+        friend std::ostream &operator<<(std::ostream &stream, const BoundingBox &box) {
+            stream << "[";
+            stream << box.getTop();
+            stream << ", ";
+            stream << box.getRight();
+            stream << ", ";
+            stream << box.getBottom();
+            stream << ", ";
+            stream << box.getLeft();
+            stream << "]";
+
+            return stream;
+        }
     };
 
 
@@ -296,21 +308,6 @@ namespace hikari {
     bool BoundingBox<T>::contains(const T& x, const T& y) const {
         return (x >= getLeft() && x <= getRight() && 
                 y >= getTop() && y <= getBottom());
-    }
-
-    template <typename T>
-    std::ostream &operator<<(std::ostream &stream, const BoundingBox<T> &box) {
-        stream << "[";
-        stream << box.getTop();
-        stream << ", ";
-        stream << box.getRight();
-        stream << ", ";
-        stream << box.getBottom();
-        stream << ", ";
-        stream << box.getLeft();
-        stream << "]";
-
-        return stream;
     }
 
     typedef BoundingBox<float> BoundingBoxF;

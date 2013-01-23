@@ -98,7 +98,6 @@
     <ClInclude Include="include\hikari\client\game\objects\Hero.hpp" />
     <ClInclude Include="include\hikari\client\game\objects\ItemFactory.hpp" />
     <ClInclude Include="include\hikari\client\game\objects\RockmanHero.hpp" />
-    <ClInclude Include="include\hikari\client\game\objects\ScriptBrain.hpp" />
     <ClInclude Include="include\hikari\client\game\objects\Spawner.hpp" />
     <ClInclude Include="include\hikari\client\game\OptionsState.hpp" />
     <ClInclude Include="include\hikari\client\game\PasswordState.hpp" />
@@ -175,8 +174,6 @@
     <ClCompile Include="src\hikari\client\audio\AudioService.cpp" />
     <ClCompile Include="src\hikari\client\game\GameWorld.cpp" />
     <ClCompile Include="src\hikari\client\game\objects\Hero.cpp" />
-    <ClCompile Include="src\hikari\client\game\objects\RockmanHero.cpp" />
-    <ClCompile Include="src\hikari\client\game\objects\ScriptBrain.cpp" />
     <ClCompile Include="src\hikari\core\game\AnimationPlaybackException.cpp" />
     <ClCompile Include="src\hikari\core\game\AnimationSet.cpp" />
     <ClCompile Include="src\hikari\core\game\TileAnimator.cpp">

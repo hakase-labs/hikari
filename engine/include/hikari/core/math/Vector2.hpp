@@ -52,32 +52,15 @@ namespace hikari {
         const T dot(const Vector2& rhs) const;
 
         Vector2 abs() const;
-        /*
-        Vector2 unit() const;
-
-        Vector2 min(const Vector2& rhs) const;
-        Vector2& minInto(const Vector2& rhs);
-        Vector2 max(const Vector2& rhs) const;
-        Vector2& maxInto(const Vector2& rhs);
-
-        Vector2 clamp(const Vector2& min, const Vector2& max) const;
-        Vector2& clampTo(const Vector2& min, const Vector2& max);
-
-        Vector2& clone(const Vector2& source);
-
-        Vector2 floor() const;
-        Vector2& floorTo();
-
-        Vector2 perpendicular() const;
-
-        static Vector2 fromAngle(const T& angleInRadians);
-        T toAngle() const;
-
-        Vector2& clear();
-
-        Vector2 getMajorAxis() const;
-        */
-        friend std::ostream &operator<<(std::ostream &stream, const Vector2 &vector);
+        
+        friend std::ostream &operator<<(std::ostream &stream, const Vector2 &vector) {
+            stream << "(";
+            stream << vector.getX();
+            stream << ", ";
+            stream << vector.getY();
+            stream << ")";
+            return stream;
+        }
     };
 
     template <typename T>
@@ -258,91 +241,6 @@ namespace hikari {
         );
     }
 
-    template <typename T>
-    std::ostream &operator<<(std::ostream &stream, const Vector2<T> &vector) {
-        stream << "(";
-        stream << vector.getX();
-        stream << ", ";
-        stream << vector.getY();
-        stream << ")";
-        return stream;
-    }
-        
-        /*
-        Vector2<T> Vector2<T>::unit() const {
-
-        }
-
-        Vector2<T> Vector2::min(const Vector2& rhs) const {
-
-        }
-
-        Vector2<T>& Vector2::minInto(const Vector2& rhs) {
-
-        }
-
-        Vector2<T> Vector2::max(const Vector2& rhs) const {
-
-        }
-
-        Vector2<T>& Vector2::maxInto(const Vector2& rhs) {
-
-        }
-
-
-        Vector2<T> Vector2::clamp(const Vector2& min, const Vector2& max) const {
-
-        }
-
-        Vector2<T>& Vector2::clampTo(const Vector2& min, const Vector2& max) {
-
-        }
-
-
-        Vector2<T>& Vector2::clone(const Vector2& source) {
-
-        }
-
-
-        Vector2<T> Vector2::floor() const {
-
-        }
-
-        Vector2<T>& Vector2::floorTo() {
-
-        }
-
-
-        Vector2<T> Vector2::perpendicular() const {
-
-        }
-
-
-        static Vector2<T> Vector2::fromAngle(const T& angleInRadians) {
-
-        }
-
-        T Vector2::toAngle() const {
-
-        }
-
-
-        Vector2<T>& Vector2::clear() {
-
-        }
-
-
-        Vector2<T> Vector2::getMajorAxis() const {
-
-        }
-
-
-        friend std::ostream &operator<<(std::ostream &stream, const Vector2<T> &vector) {
-
-        }
-        */
-//    };
-    
 } // hikari
 
 #endif // HIKARI_CORE_GEOM_VECTOR2

@@ -23,8 +23,14 @@ namespace hikari {
         void setX(const T &x);
         void setY(const T &y);
 
-        template <typename U> 
-        friend std::ostream &operator<<(std::ostream &stream, const Point2D<U> &rect);
+        friend std::ostream &operator<<(std::ostream &stream, const Point2D<T> &point) {
+            stream << "(";
+            stream << point.getX();
+            stream << ", ";
+            stream << point.getY();
+            stream << ")";
+            return stream;
+        }
     };
 
     //
@@ -71,16 +77,6 @@ namespace hikari {
         y = newY;
     }
 
-    template <typename U> 
-    std::ostream &operator<<(std::ostream &stream, const Point2D<U> &point)
-    {
-        stream << "(";
-        stream << point.getX();
-        stream << ", ";
-        stream << point.getY();
-        stream << ")";
-        return stream;
-    }
 }
 
 #endif // HIKARI_CORE_GEOM_POINT2D
