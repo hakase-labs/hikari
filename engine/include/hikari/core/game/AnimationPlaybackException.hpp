@@ -13,7 +13,7 @@ namespace hikari {
     class HIKARI_API AnimationPlaybackException : public std::runtime_error {
     public:
         explicit AnimationPlaybackException(const std::string& what);
-        virtual ~AnimationPlaybackException() throw();
+        virtual ~AnimationPlaybackException() throw() { }
     };
 
 } // hikari
