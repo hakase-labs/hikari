@@ -13,7 +13,7 @@ namespace hikari {
     class HIKARI_API HikariException : public std::runtime_error {
     public:
         explicit HikariException(const std::string& message);
-        virtual ~HikariException() { }
+        virtual ~HikariException() throw() { }
     };
 
 } // hikari
