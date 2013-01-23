@@ -390,9 +390,6 @@
     <ClInclude Include="include\hikari\client\Services.hpp">
       <Filter>Header Files\client\game</Filter>
     </ClInclude>
-    <ClInclude Include="include\hikari\client\game\objects\ScriptBrain.hpp">
-      <Filter>Header Files\client\game\objects</Filter>
-    </ClInclude>
     <ClInclude Include="include\hikari\core\util\RedirectStream.hpp">
       <Filter>Header Files\core\util</Filter>
     </ClInclude>
@@ -713,9 +710,6 @@
     <ClCompile Include="src\hikari\client\game\GameWorld.cpp">
       <Filter>Source Files\client\game</Filter>
     </ClCompile>
-    <ClCompile Include="src\hikari\client\game\objects\ScriptBrain.cpp">
-      <Filter>Source Files\client\game\objects</Filter>
-    </ClCompile>
     <ClCompile Include="src\hikari\core\util\RedirectStream.cpp">
       <Filter>Source Files\core\util</Filter>
     </ClCompile>
@@ -724,9 +718,6 @@
     </ClCompile>
     <ClCompile Include="src\hikari\core\game\AnimationSet.cpp">
       <Filter>Source Files\core\game</Filter>
-    </ClCompile>
-    <ClCompile Include="src\hikari\client\game\objects\RockmanHero.cpp">
-      <Filter>Source Files\client\game\objects</Filter>
     </ClCompile>
     <ClCompile Include="src\hikari\client\game\objects\Hero.cpp">
       <Filter>Source Files\client\game\objects</Filter>
