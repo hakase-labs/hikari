@@ -9,7 +9,7 @@ namespace hikari {
     class HIKARI_API ServiceNotRegisteredException : public HikariException {
     public:
         explicit ServiceNotRegisteredException(const std::string& messages);
-        virtual ~ServiceNotRegisteredException() { }
+        virtual ~ServiceNotRegisteredException() throw() { }
     };
 
 } // hikari

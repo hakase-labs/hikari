@@ -8,8 +8,6 @@
 #include <hikari/client/scripting/SquirrelService.hpp>
 
 #include <hikari/client/game/objects/GameObject.hpp>
-#include <hikari/client/game/objects/RockmanHero.hpp>
-#include <hikari/client/game/objects/ScriptBrain.hpp>
 #include <hikari/client/gui/EnergyMeter.hpp>
 #include <hikari/client/Services.hpp>
 
