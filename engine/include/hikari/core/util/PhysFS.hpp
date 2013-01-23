@@ -10,8 +10,6 @@ extern "C"
 #include <vector>
 #include <stdexcept>
 
-#include <boost/iostreams/stream.hpp>
-
 #include <physfs/ifile_stream.hpp>
 
 namespace PhysFS

@@ -659,9 +659,6 @@
     <ClCompile Include="src\hikari\client\game\RealTimeInput.cpp">
       <Filter>Source Files\client\game</Filter>
     </ClCompile>
-    <ClCompile Include="src\hikari\client\game\Input.cpp">
-      <Filter>Source Files\client\game</Filter>
-    </ClCompile>
     <ClCompile Include="src\hikari\client\game\KeyboardInput.cpp">
       <Filter>Source Files\client\game</Filter>
     </ClCompile>

@@ -9,12 +9,14 @@ namespace hikari {
     public:
         typedef int Button;
 
-        static const Button BUTTON_UP = (1 << 0);
-        static const Button BUTTON_RIGHT = (1 << 1);
-        static const Button BUTTON_DOWN = (1 << 2);
-        static const Button BUTTON_LEFT = (1 << 3);
-        static const Button BUTTON_SHOOT = (1 << 4);
-        static const Button BUTTON_JUMP = (1 << 5);
+        enum Constants {
+            BUTTON_UP = (1 << 0),
+            BUTTON_RIGHT = (1 << 1),
+            BUTTON_DOWN = (1 << 2),
+            BUTTON_LEFT = (1 << 3),
+            BUTTON_SHOOT = (1 << 4),
+            BUTTON_JUMP = (1 << 5)
+        };
 
         virtual ~Input() { }
         

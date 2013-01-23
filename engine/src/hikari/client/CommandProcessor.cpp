@@ -61,7 +61,7 @@ namespace hikari {
 
         if(commandSearch == handlers.end()) {
             handlers.insert(
-                std::make_pair<std::string, CommandHandler>(commandName, handler));
+                std::make_pair(commandName, handler));
         } else {
             throw HikariException("A handler is already registered for the command \"" + commandName + "\". Unregister the existing handler before registering another.");
         }
