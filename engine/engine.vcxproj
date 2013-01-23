@@ -208,7 +208,6 @@
     <ClCompile Include="src\hikari\client\game\GamePlayState.cpp" />
     <ClCompile Include="src\hikari\client\game\GameProgress.cpp" />
     <ClCompile Include="src\hikari\client\game\GuiTestState.cpp" />
-    <ClCompile Include="src\hikari\client\game\Input.cpp" />
     <ClCompile Include="src\hikari\client\game\KeyboardInput.cpp" />
     <ClCompile Include="src\hikari\client\game\MapTestState.cpp" />
     <ClCompile Include="src\hikari\client\game\objects\GameObject.cpp" />
