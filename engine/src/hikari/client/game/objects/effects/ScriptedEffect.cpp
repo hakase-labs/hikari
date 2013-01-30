@@ -35,7 +35,7 @@ namespace hikari {
             Sqrat::Function constructor(Sqrat::RootTable(vm), effectClassName.c_str());
 
             if(!constructor.IsNull()) {
-                    instance = constructor.Evaluate<Sqrat::Object>();
+                instance = constructor.Evaluate<Sqrat::Object>();
 
                 if(!instance.IsNull()) {
                     proxyApply = Sqrat::Function(instance, FUNCTION_NAME_APPLY);
