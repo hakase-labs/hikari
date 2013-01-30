@@ -41,6 +41,28 @@ namespace hikari {
             std::bind(&Entity::handleCollision, this, std::placeholders::_1, std::placeholders::_2));
     }
 
+    Entity::Entity(const Entity& proto)
+        : GameObject(GameObject::generateObjectId())
+        , room(proto.room)
+        , spawnPosition(proto.spawnPosition)
+        , spriteTexture(proto.spriteTexture)
+        , sprite(spriteTexture)
+        , animationSet(proto.animationSet)
+        , currentAnimation(proto.currentAnimation)
+        , animationPlayer(new SpriteAnimator(sprite))
+        , boxOutline(proto.boxOutline)
+        , boxPosition(proto.boxPosition)
+        , direction(proto.direction)
+        , currentAnimationName(proto.currentAnimationName)
+    {
+        HIKARI_LOG(debug2) << "Entity copy constructor!" << std::endl;
+
+        body = proto.body;
+
+        body.setCollisionCallback(
+            std::bind(&Entity::handleCollision, this, std::placeholders::_1, std::placeholders::_2));
+    }
+
     Entity::~Entity() {
 
     }
