@@ -34,7 +34,6 @@
 #include <hikari/core/math/RetroVector.hpp>
 #include <hikari/core/math/Vector2.hpp>
 #include <hikari/core/util/RedirectStream.hpp>
-#include <hikari/core/util/TeeStream.hpp>
 #include <hikari/core/util/HashedString.hpp>
 
 #include <hikari/client/CommandProcessor.hpp>
@@ -248,10 +247,33 @@ int main(int argc, char** argv) {
             controller.setState(stateName);
         });
 
-        window.create(videoMode, APPLICATION_TITLE);
+        //
+        // Create our window
+        //
+        window.create(videoMode, APPLICATION_TITLE, sf::Style::Default);
         window.setActive(true);
         window.setVerticalSyncEnabled(clientConfig.isVsyncEnabled());
         window.setKeyRepeatEnabled(false);
+
+        //
+        // Create a "buffer" texture -- this allows us to apply screen-wide shader effects.
+        // This also helps avoid tearing/small geometry gaps when scaling the scren up.
+        //
+        sf::RenderTexture screenBuffer;
+        screenBuffer.create(videoMode.width, videoMode.height);
+
+        //
+        // Use a view to achieve resolution-independent rendering of the "buffer" texture.
+        //
+        sf::View screenBufferView;
+
+        screenBufferView.setSize(
+            static_cast<float>(videoMode.width), 
+            static_cast<float>(videoMode.height));
+
+        screenBufferView.setCenter(
+            static_cast<float>(videoMode.width / 2), 
+            static_cast<float>(videoMode.height / 2));
 
         // Game loop
         float t = 0.0f;
@@ -262,6 +284,7 @@ int main(int argc, char** argv) {
         float accumulator = 0.0f;
 
         bool quit = false;
+        bool fullscreen = false;
         sf::Event event;
 
         while(!quit) {
@@ -285,12 +308,28 @@ int main(int argc, char** argv) {
                     //
                     if((event.type == sf::Event::KeyPressed)) {
 
-                        if(event.key.code == sf::Keyboard::F12) {
+                        if(event.key.code == sf::Keyboard::F7) {
                             speedMultiplier += 0.1f;
                         }
 
-                        if(event.key.code == sf::Keyboard::F11) {
+                        if(event.key.code == sf::Keyboard::F8) {
                             speedMultiplier -= 0.1f;
+                        }
+
+                        if(event.key.code == sf::Keyboard::F11) {
+                            if(fullscreen) {
+                                window.create(videoMode, APPLICATION_TITLE, sf::Style::Default);
+                            } else {
+                                auto modes = sf::VideoMode::getFullscreenModes();
+                                auto fullScreenMode = modes.at(0);
+                                window.create(fullScreenMode, APPLICATION_TITLE, sf::Style::Fullscreen);
+                            }
+
+                            fullscreen = !fullscreen;
+
+                            window.setActive(true);
+                            window.setVerticalSyncEnabled(clientConfig.isVsyncEnabled());
+                            window.setKeyRepeatEnabled(false);
                         }
 
                         if(event.key.code == sf::Keyboard::F1) {
@@ -349,17 +388,25 @@ int main(int argc, char** argv) {
             }
             
             // Render
-            window.clear(sf::Color::Magenta);
-            controller.render(window);
-            window.setView(window.getDefaultView());
+            window.clear(sf::Color::Blue);
+            screenBuffer.clear(sf::Color::Magenta);
+            controller.render(screenBuffer);
+            // screenBuffer.setView(window.getDefaultView());
+            window.setView(screenBufferView);
 
             if(showFPS) {
-                guiFont->renderText(window, "FPS:", 8, 8);
-                guiFont->renderText(window, StringUtils::toString<float>(fps), 40, 8);
+                guiFont->renderText(screenBuffer, "FPS:", 8, 8);
+                guiFont->renderText(screenBuffer, StringUtils::toString<float>(fps), 40, 8);
             }
             
-            console.render(window);
+            console.render(screenBuffer);
 
+            //window.draw(screenBuffer);
+            screenBuffer.display();
+
+            sf::Sprite renderSprite(screenBuffer.getTexture());
+
+            window.draw(renderSprite);
             window.display();
         }
 
