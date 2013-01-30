@@ -1,7 +1,7 @@
 #ifndef HIKARI_CORE_UTIL_STRINGUTILS
 #define HIKARI_CORE_UTIL_STRINGUTILS
 
-#include <hikari/core/Platform.hpp>
+#include "hikari/core/Platform.hpp"
 #include <string>
 #include <sstream>
 #include <stdexcept>

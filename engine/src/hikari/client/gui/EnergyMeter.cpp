@@ -1,4 +1,4 @@
-#include <hikari/client/gui/EnergyMeter.hpp>
+#include "hikari/client/gui/EnergyMeter.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
 
 namespace hikari {

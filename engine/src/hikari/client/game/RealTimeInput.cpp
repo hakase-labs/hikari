@@ -1,4 +1,4 @@
-#include <hikari/client/game/RealTimeInput.hpp>
+#include "hikari/client/game/RealTimeInput.hpp"
 
 namespace hikari {
 

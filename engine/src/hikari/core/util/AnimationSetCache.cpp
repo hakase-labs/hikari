@@ -1,6 +1,6 @@
-#include <hikari/core/util/AnimationSetCache.hpp>
-#include <hikari/core/game/AnimationLoader.hpp>
-#include <hikari/core/util/Log.hpp>
+#include "hikari/core/util/AnimationSetCache.hpp"
+#include "hikari/core/game/AnimationLoader.hpp"
+#include "hikari/core/util/Log.hpp"
 
 namespace hikari {
 

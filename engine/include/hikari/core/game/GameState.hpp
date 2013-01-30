@@ -1,7 +1,7 @@
 #ifndef HIKARI_CORE_GAME_GAMESTATE
 #define HIKARI_CORE_GAME_GAMESTATE
 
-#include <hikari/core/Platform.hpp>
+#include "hikari/core/Platform.hpp"
 #include <string>
 
 namespace sf {

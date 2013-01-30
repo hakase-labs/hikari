@@ -1,8 +1,8 @@
-#include <hikari/client/game/GameWorld.hpp>
-#include <hikari/client/game/objects/GameObject.hpp>
-#include <hikari/client/game/objects/Hero.hpp>
+#include "hikari/client/game/GameWorld.hpp"
+#include "hikari/client/game/objects/GameObject.hpp"
+#include "hikari/client/game/objects/Hero.hpp"
 
-#include <hikari/core/util/Log.hpp>
+#include "hikari/core/util/Log.hpp"
 
 // #include <oolua.h>
 

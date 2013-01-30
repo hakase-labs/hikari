@@ -1,5 +1,5 @@
-#include <hikari/client/gui/CommandConsole.hpp>
-#include <hikari/core/gui/ImageFont.hpp>
+#include "hikari/client/gui/CommandConsole.hpp"
+#include "hikari/core/gui/ImageFont.hpp"
 
 namespace hikari {
 namespace gui {

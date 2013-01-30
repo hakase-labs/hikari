@@ -1,8 +1,8 @@
 #ifndef HIKARI_CORE_GAME_MAP_TILESET
 #define HIKARI_CORE_GAME_MAP_TILESET
 
-#include <hikari/core/Platform.hpp>
-#include <hikari/core/game/TileAnimator.hpp>
+#include "hikari/core/Platform.hpp"
+#include "hikari/core/game/TileAnimator.hpp"
 
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/Graphics/Texture.hpp>

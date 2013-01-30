@@ -1,10 +1,10 @@
 #ifndef HIKARI_CLIENT_GAME_OBJECTS_ENEMYBRAIN
 #define HIKARI_CLIENT_GAME_OBJECTS_ENEMYBRAIN
 
-#include <hikari/client/game/objects/Enemy.hpp>
+#include "hikari/client/game/objects/Enemy.hpp"
 
 /* begin instance-level stuff */
-#include <hikari/core/util/Timer.hpp>
+#include "hikari/core/util/Timer.hpp"
 /* end instance-level stuff */
 
 namespace hikari {

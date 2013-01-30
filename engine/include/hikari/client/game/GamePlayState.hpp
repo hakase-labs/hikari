@@ -1,11 +1,11 @@
 #ifndef HIKARI_CLIENT_GAME_GAMEPLAYSTATE
 #define HIKARI_CLIENT_GAME_GAMEPLAYSTATE
 
-#include <hikari/core/game/GameState.hpp>
-#include <hikari/core/game/map/Camera.hpp>
-#include <hikari/core/game/map/Map.hpp>
+#include "hikari/core/game/GameState.hpp"
+#include "hikari/core/game/map/Camera.hpp"
+#include "hikari/core/game/map/Map.hpp"
 
-#include <hikari/client/game/GameWorld.hpp>
+#include "hikari/client/game/GameWorld.hpp"
 
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/View.hpp>

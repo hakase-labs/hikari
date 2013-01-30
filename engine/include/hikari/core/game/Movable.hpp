@@ -1,11 +1,11 @@
 #ifndef HIKARI_CORE_GAME_MECHANICS
 #define HIKARI_CORE_GAME_MECHANICS
 
-#include <hikari/core/geom/BoundingBox.hpp>
-#include <hikari/core/math/Vector2.hpp>
-#include <hikari/core/math/RetroVector.hpp>
-#include <hikari/core/game/CollisionInfo.hpp>
-#include <hikari/core/game/Direction.hpp>
+#include "hikari/core/geom/BoundingBox.hpp"
+#include "hikari/core/math/Vector2.hpp"
+#include "hikari/core/math/RetroVector.hpp"
+#include "hikari/core/game/CollisionInfo.hpp"
+#include "hikari/core/game/Direction.hpp"
 #include <functional>
 #include <memory>
 

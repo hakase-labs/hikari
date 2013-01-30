@@ -1,6 +1,6 @@
-#include <hikari/test/core/geom/Vector2DTests.hpp>
-#include <hikari/core/geom/Vector2D.hpp>
-#include <hikari/core/util/Log.hpp>
+#include "hikari/test/core/geom/Vector2DTests.hpp"
+#include "hikari/core/geom/Vector2D.hpp"
+#include "hikari/core/util/Log.hpp"
 
 namespace hikari {
 namespace testing {

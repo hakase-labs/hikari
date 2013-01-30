@@ -1,8 +1,8 @@
 #ifndef HIKARI_CLIENT_GAME_OBJECTS_COLLECTABLEITEM
 #define HIKARI_CLIENT_GAME_OBJECTS_COLLECTABLEITEM
 
-#include <hikari/client/game/objects/Entity.hpp>
-#include <hikari/core/util/Cloneable.hpp>
+#include "hikari/client/game/objects/Entity.hpp"
+#include "hikari/core/util/Cloneable.hpp"
 #include <memory>
 // #include <oolua.h>
 

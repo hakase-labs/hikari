@@ -1,7 +1,7 @@
 #ifndef HIKARI_CORE_UTIL_FILESYSTEM
 #define HIKARI_CORE_UTIL_FILESYSTEM
 
-#include <hikari/core/Platform.hpp>
+#include "hikari/core/Platform.hpp"
 #include <memory>
 #include <istream>
 

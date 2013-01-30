@@ -1,7 +1,7 @@
 #ifndef HIKARI_CLIENT_GAME_OBJECTS_EFFECTS_SCRIPTEDEFFECT
 #define HIKARI_CLIENT_GAME_OBJECTS_EFFECTS_SCRIPTEDEFFECT
 
-#include <hikari/client/game/Effect.hpp>
+#include "hikari/client/game/Effect.hpp"
 
 #include <squirrel.h>
 #include <sqrat.h>

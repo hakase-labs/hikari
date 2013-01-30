@@ -1,7 +1,7 @@
 #ifndef HIKARI_CLIENT_GAME_EFFECT
 #define HIKARI_CLIENT_GAME_EFFECT
 
-#include <hikari/core/util/Cloneable.hpp>
+#include "hikari/core/util/Cloneable.hpp"
 #include <memory>
 
 namespace hikari {

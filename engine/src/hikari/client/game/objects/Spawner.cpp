@@ -1,4 +1,4 @@
-#include <hikari/client/game/objects/Spawner.hpp>
+#include "hikari/client/game/objects/Spawner.hpp"
 
 namespace hikari {
 

@@ -1,8 +1,8 @@
 #ifndef HIKARI_CLIENT_GAME_OBJECTS_BRAINS_TELLYBRAIN
 #define HIKARI_CLIENT_GAME_OBJECTS_BRAINS_TELLYBRAIN
 
-#include <hikari/client/game/objects/EnemyBrain.hpp>
-#include <hikari/core/math/Vector2.hpp>
+#include "hikari/client/game/objects/EnemyBrain.hpp"
+#include "hikari/core/math/Vector2.hpp"
 
 namespace hikari {
 

@@ -1,7 +1,7 @@
 #ifndef HIKARI_CLIENT_GAME_GAMEOBJECT
 #define HIKARI_CLIENT_GAME_GAMEOBJECT
 
-#include <hikari/core/game/Updatable.hpp>
+#include "hikari/core/game/Updatable.hpp"
 #include <functional>
 // #include <oolua.h>
 
@@ -54,11 +54,11 @@ namespace hikari {
 //OOLUA_CLASS_END
 
 /*
-//#include <hikari/core/math/FixedPoint.hpp>
-#include <hikari/client/game/GOCreationParameters.hpp>
-#include <hikari/client/game/Direction.hpp>
-#include <hikari/core/geom/Rectangle2D.hpp>
-#include <hikari/core/geom/Point2D.hpp>
+//#include "hikari/core/math/FixedPoint.hpp"
+#include "hikari/client/game/GOCreationParameters.hpp"
+#include "hikari/client/game/Direction.hpp"
+#include "hikari/core/geom/Rectangle2D.hpp"
+#include "hikari/core/geom/Point2D.hpp"
 
 #include <functional>
 #include <oolua.h>

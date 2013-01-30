@@ -1,7 +1,7 @@
 #ifndef HIKARI_CLIENT_GAME_OBJECTS_BRAINS_OCTOPUSBATTERYBRAIN
 #define HIKARI_CLIENT_GAME_OBJECTS_BRAINS_OCTOPUSBATTERYBRAIN
 
-#include <hikari/client/game/objects/EnemyBrain.hpp>
+#include "hikari/client/game/objects/EnemyBrain.hpp"
 
 #include <SFML/System/Clock.hpp>
 #include <SFML/System/Time.hpp>

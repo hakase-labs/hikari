@@ -1,7 +1,7 @@
 #ifndef HIKARI_CORE_UTIL_RESOURCECACHE
 #define HIKARI_CORE_UTIL_RESOURCECACHE
 
-#include <hikari/core/Platform.hpp>
+#include "hikari/core/Platform.hpp"
 
 #include <string>
 #include <stdexcept>

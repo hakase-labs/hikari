@@ -1,8 +1,8 @@
 #ifndef HIKARI_CORE_GAME_GAMEPROGRESS
 #define HIKARI_CORE_GAME_GAMEPROGRESS
 
-#include <hikari/core/Platform.hpp>
-#include <hikari/core/util/Service.hpp>
+#include "hikari/core/Platform.hpp"
+#include "hikari/core/util/Service.hpp"
 
 namespace hikari {
 

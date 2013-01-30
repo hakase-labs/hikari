@@ -1,7 +1,7 @@
-#include <hikari/client/game/objects/Enemy.hpp>
-#include <hikari/client/game/objects/EnemyBrain.hpp>
-#include <hikari/core/game/SpriteAnimator.hpp>
-#include <hikari/core/util/Log.hpp>
+#include "hikari/client/game/objects/Enemy.hpp"
+#include "hikari/client/game/objects/EnemyBrain.hpp"
+#include "hikari/core/game/SpriteAnimator.hpp"
+#include "hikari/core/util/Log.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
 
 namespace hikari {

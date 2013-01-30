@@ -2,10 +2,10 @@
 #ifndef HIKARI_CLIENT_GAME_OBJECTS_ROCKMANHERO
 #define HIKARI_CLIENT_GAME_OBJECTS_ROCKMANHERO
 
-#include <hikari/client/game/objects/Hero.hpp>
-#include <hikari/client/game/Input.hpp>
-#include <hikari/core/game/AnimationSet.hpp>
-#include <hikari/core/game/SpriteAnimator.hpp>
+#include "hikari/client/game/objects/Hero.hpp"
+#include "hikari/client/game/Input.hpp"
+#include "hikari/core/game/AnimationSet.hpp"
+#include "hikari/core/game/SpriteAnimator.hpp"
 
 #include <memory>
 

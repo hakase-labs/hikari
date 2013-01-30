@@ -1,8 +1,8 @@
 #ifndef HIKARI_CLIENT_GAME_STAGESELECTSTATE
 #define HIKARI_CLIENT_GAME_STAGESELECTSTATE
 
-#include <hikari/core/game/GameState.hpp>
-#include <hikari/core/geom/Point2D.hpp>
+#include "hikari/core/game/GameState.hpp"
+#include "hikari/core/geom/Point2D.hpp"
 
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/Sprite.hpp>

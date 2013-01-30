@@ -1,7 +1,7 @@
 #ifndef HIKARI_CLIENT_GUI_COMMANDCONSOLE
 #define HIKARI_CLIENT_GUI_COMMANDCONSOLE
 
-#include <hikari/client/gui/Widget.hpp>
+#include "hikari/client/gui/Widget.hpp"
 
 #include <SFML/Graphics.hpp>
 

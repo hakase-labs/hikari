@@ -1,10 +1,10 @@
 #ifndef HIKARI_CLIENT_GAME_SPRITETESTSTATE
 #define HIKARI_CLIENT_GAME_SPRITETESTSTATE
 
-#include <hikari/core/game/GameState.hpp>
-#include <hikari/core/game/AnimationLoader.hpp>
-#include <hikari/core/game/Animation.hpp>
-#include <hikari/core/game/SpriteAnimator.hpp>
+#include "hikari/core/game/GameState.hpp"
+#include "hikari/core/game/AnimationLoader.hpp"
+#include "hikari/core/game/Animation.hpp"
+#include "hikari/core/game/SpriteAnimator.hpp"
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Sprite.hpp>

@@ -1,4 +1,4 @@
-#include <hikari/core/game/GameControllerException.hpp>
+#include "hikari/core/game/GameControllerException.hpp"
 
 namespace hikari {
 

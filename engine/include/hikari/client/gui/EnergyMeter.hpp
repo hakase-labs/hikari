@@ -1,7 +1,7 @@
 #ifndef HIKARI_CORE_GUI_ENERGYMETER
 #define HIKARI_CORE_GUI_ENERGYMETER
 
-#include <hikari/client/gui/Widget.hpp>
+#include "hikari/client/gui/Widget.hpp"
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/Image.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>

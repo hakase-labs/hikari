@@ -1,4 +1,4 @@
-#include <hikari/core/Hikari.hpp>
+#include "hikari/core/Hikari.hpp"
 
 extern "C"
 {

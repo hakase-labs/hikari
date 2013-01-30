@@ -1,7 +1,7 @@
-#include <hikari/core/util/ImageCache.hpp>
-#include <hikari/core/util/PhysFS.hpp>
-#include <hikari/core/util/PhysFSUtils.hpp>
-#include <hikari/core/util/Log.hpp>
+#include "hikari/core/util/ImageCache.hpp"
+#include "hikari/core/util/PhysFS.hpp"
+#include "hikari/core/util/PhysFSUtils.hpp"
+#include "hikari/core/util/Log.hpp"
 #include <SFML/Graphics/Texture.hpp>
 #include <iostream>
 #include <sstream>

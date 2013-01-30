@@ -1,6 +1,6 @@
-#include <hikari/core/game/GameController.hpp>
-#include <hikari/core/game/GameControllerException.hpp>
-#include <hikari/core/util/Log.hpp>
+#include "hikari/core/game/GameController.hpp"
+#include "hikari/core/game/GameControllerException.hpp"
+#include "hikari/core/util/Log.hpp"
 #include <iostream>
 
 namespace hikari {

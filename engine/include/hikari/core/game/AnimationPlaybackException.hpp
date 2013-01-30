@@ -1,7 +1,7 @@
 #ifndef HIKARI_CORE_GAME_ANIMATIONPLAYBACKEXCEPTION
 #define HIKARI_CORE_GAME_ANIMATIONPLAYBACKEXCEPTION
 
-#include <hikari/core/Platform.hpp>
+#include "hikari/core/Platform.hpp"
 #include <string>
 #include <stdexcept>
 

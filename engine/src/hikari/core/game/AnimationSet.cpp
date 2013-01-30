@@ -1,4 +1,4 @@
-#include <hikari/core/game/AnimationSet.hpp>
+#include "hikari/core/game/AnimationSet.hpp"
 
 namespace hikari {
 

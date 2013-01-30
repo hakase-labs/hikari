@@ -1,4 +1,4 @@
-#include <hikari/core/game/AnimationPlaybackException.hpp>
+#include "hikari/core/game/AnimationPlaybackException.hpp"
 
 namespace hikari {
 

@@ -1,7 +1,7 @@
 #ifndef HIKARI_CORE_UTIL_HIKARIEXCEPTION
 #define HIKARI_CORE_UTIL_HIKARIEXCEPTION
 
-#include <hikari/core/Platform.hpp>
+#include "hikari/core/Platform.hpp"
 #include <stdexcept>
 #include <string>
 

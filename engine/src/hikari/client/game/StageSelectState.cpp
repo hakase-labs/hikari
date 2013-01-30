@@ -1,12 +1,12 @@
-#include <hikari/client/game/StageSelectState.hpp>
-#include <hikari/client/audio/AudioService.hpp>
-#include <hikari/client/game/GameProgress.hpp>
-#include <hikari/client/Services.hpp>
+#include "hikari/client/game/StageSelectState.hpp"
+#include "hikari/client/audio/AudioService.hpp"
+#include "hikari/client/game/GameProgress.hpp"
+#include "hikari/client/Services.hpp"
 
-#include <hikari/core/gui/ImageFont.hpp>
-#include <hikari/core/util/ImageCache.hpp>
-#include <hikari/core/util/StringUtils.hpp>
-#include <hikari/core/util/ServiceLocator.hpp>
+#include "hikari/core/gui/ImageFont.hpp"
+#include "hikari/core/util/ImageCache.hpp"
+#include "hikari/core/util/StringUtils.hpp"
+#include "hikari/core/util/ServiceLocator.hpp"
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Window/Event.hpp>

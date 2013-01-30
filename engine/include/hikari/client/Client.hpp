@@ -1,8 +1,8 @@
 #ifndef HIKARI_CLIENT
 #define HIKARI_CLIENT
 
-#include <hikari/client/ClientConfig.hpp>
-#include <hikari/core/util/ServiceLocator.hpp>
+#include "hikari/client/ClientConfig.hpp"
+#include "hikari/core/util/ServiceLocator.hpp"
 
 #include <json/value.h>
 #include <string>

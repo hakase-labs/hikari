@@ -1,32 +1,32 @@
-#include <hikari/client/game/GamePlayState.hpp>
-#include <hikari/client/game/GameProgress.hpp>
-#include <hikari/client/game/GameWorld.hpp>
-#include <hikari/client/game/RealTimeInput.hpp>
-#include <hikari/client/game/objects/GameObject.hpp>
-#include <hikari/client/game/objects/Hero.hpp>
-#include <hikari/client/game/objects/controllers/PlayerInputHeroActionController.hpp>
-#include <hikari/client/scripting/SquirrelService.hpp>
+#include "hikari/client/game/GamePlayState.hpp"
+#include "hikari/client/game/GameProgress.hpp"
+#include "hikari/client/game/GameWorld.hpp"
+#include "hikari/client/game/RealTimeInput.hpp"
+#include "hikari/client/game/objects/GameObject.hpp"
+#include "hikari/client/game/objects/Hero.hpp"
+#include "hikari/client/game/objects/controllers/PlayerInputHeroActionController.hpp"
+#include "hikari/client/scripting/SquirrelService.hpp"
 
-#include <hikari/client/game/objects/GameObject.hpp>
-#include <hikari/client/gui/EnergyMeter.hpp>
-#include <hikari/client/Services.hpp>
+#include "hikari/client/game/objects/GameObject.hpp"
+#include "hikari/client/gui/EnergyMeter.hpp"
+#include "hikari/client/Services.hpp"
 
-#include <hikari/core/game/AnimationSet.hpp>
-#include <hikari/core/game/AnimationLoader.hpp>
-#include <hikari/core/game/TileMapCollisionResolver.hpp>
-#include <hikari/core/game/map/MapLoader.hpp>
-#include <hikari/core/game/map/MapRenderer.hpp>
-#include <hikari/core/game/map/Room.hpp>
-#include <hikari/core/game/map/RoomTransition.hpp>
-#include <hikari/core/gui/ImageFont.hpp>
-#include <hikari/core/util/ImageCache.hpp>
-#include <hikari/core/util/JsonUtils.hpp>
-#include <hikari/core/util/PhysFS.hpp>
-#include <hikari/core/util/PhysFSUtils.hpp>
-#include <hikari/core/util/ServiceLocator.hpp>
-#include <hikari/core/util/StringUtils.hpp>
+#include "hikari/core/game/AnimationSet.hpp"
+#include "hikari/core/game/AnimationLoader.hpp"
+#include "hikari/core/game/TileMapCollisionResolver.hpp"
+#include "hikari/core/game/map/MapLoader.hpp"
+#include "hikari/core/game/map/MapRenderer.hpp"
+#include "hikari/core/game/map/Room.hpp"
+#include "hikari/core/game/map/RoomTransition.hpp"
+#include "hikari/core/gui/ImageFont.hpp"
+#include "hikari/core/util/ImageCache.hpp"
+#include "hikari/core/util/JsonUtils.hpp"
+#include "hikari/core/util/PhysFS.hpp"
+#include "hikari/core/util/PhysFSUtils.hpp"
+#include "hikari/core/util/ServiceLocator.hpp"
+#include "hikari/core/util/StringUtils.hpp"
 
-#include <hikari/core/util/Log.hpp>
+#include "hikari/core/util/Log.hpp"
 
 #include <json/value.h>
 

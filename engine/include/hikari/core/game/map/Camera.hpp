@@ -1,9 +1,9 @@
 #ifndef HIKARI_CORE_GAME_MAP_CAMERA
 #define HIKARI_CORE_GAME_MAP_CAMERA
 
-#include <hikari/core/Platform.hpp>
-#include <hikari/core/geom/Rectangle2D.hpp>
-#include <hikari/core/geom/Vector2D.hpp>
+#include "hikari/core/Platform.hpp"
+#include "hikari/core/geom/Rectangle2D.hpp"
+#include "hikari/core/geom/Vector2D.hpp"
 #include <SFML/Graphics/View.hpp>
 
 namespace hikari {

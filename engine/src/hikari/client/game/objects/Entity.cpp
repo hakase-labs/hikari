@@ -1,9 +1,9 @@
-#include <hikari/client/game/objects/Entity.hpp>
-#include <hikari/core/game/Animation.hpp>
-#include <hikari/core/game/AnimationSet.hpp>
-#include <hikari/core/game/SpriteAnimator.hpp>
+#include "hikari/client/game/objects/Entity.hpp"
+#include "hikari/core/game/Animation.hpp"
+#include "hikari/core/game/AnimationSet.hpp"
+#include "hikari/core/game/SpriteAnimator.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
-#include <hikari/core/util/Log.hpp>
+#include "hikari/core/util/Log.hpp"
 
 namespace hikari {
 

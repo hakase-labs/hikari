@@ -1,7 +1,7 @@
 #ifndef HIKARI_CLIENT_GAME_OBJECTS_ENEMY
 #define HIKARI_CLIENT_GAME_OBJECTS_ENEMY
 
-#include <hikari/client/game/objects/Entity.hpp>
+#include "hikari/client/game/objects/Entity.hpp"
 #include <memory>
 
 namespace hikari {

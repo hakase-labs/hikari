@@ -1,6 +1,6 @@
-#include <hikari/core/geom/Vector2D.hpp>
-#include <hikari/core/math/Constants.hpp>
-#include <hikari/core/math/MathUtils.hpp>
+#include "hikari/core/geom/Vector2D.hpp"
+#include "hikari/core/math/Constants.hpp"
+#include "hikari/core/math/MathUtils.hpp"
 #include <cmath>
 
 namespace hikari {

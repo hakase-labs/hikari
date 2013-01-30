@@ -1,5 +1,5 @@
-#include <hikari/core/game/SpriteAnimator.hpp>
-#include <hikari/core/game/Animation.hpp>
+#include "hikari/core/game/SpriteAnimator.hpp"
+#include "hikari/core/game/Animation.hpp"
 #include <SFML/Graphics/Sprite.hpp>
 
 namespace hikari {
