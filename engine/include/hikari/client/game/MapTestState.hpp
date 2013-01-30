@@ -101,6 +101,9 @@ namespace hikari {
 
         sf::RectangleShape cameraViewportOutline;
 
+        Vector2<float> currentHeroPosition;
+        Vector2<float> previousHeroPosition;
+
         GameWorld world;
 
         sf::RenderWindow * renderWindow;

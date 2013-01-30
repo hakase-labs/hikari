@@ -368,6 +368,8 @@ namespace hikari {
     }
 
     bool MapTestState::update(const float &dt) {
+        previousHeroPosition = currentHeroPosition;
+
         collisionResolver->setRoom(currentRoom);
 
         input->update();
@@ -418,6 +420,8 @@ namespace hikari {
             item->update(dt);
             hero->update(dt);
 
+            currentHeroPosition = hero->getPosition();
+
             std::for_each(
                 std::begin(enemies), 
                 std::end(enemies), 
@@ -438,13 +442,23 @@ namespace hikari {
             // This adjusts the clipping of the tile renderer
             //
             if(cameraFollowingPlayer) {
-                camera.lookAt(
-                    (hero->getPosition().getX()),
-                    (hero->getPosition().getY())    
-                );
-            }
+                auto diffPosition = currentHeroPosition - previousHeroPosition;
+                const auto & cameraView = camera.getView();
 
-            
+                //
+                // Allow rock to push the camera if he's at least half way into its view
+                // Basically we just check the distance between rock and the edge of the view in the opposite direction
+                //
+                if(hero->getDirection() == Directions::Left) {
+                    if(std::abs(cameraView.getRight() - hero->getPosition().getX()) >= cameraView.getWidth() / 2) {
+                        camera.move(diffPosition.getX(), diffPosition.getY());
+                    }
+                } else if(hero->getDirection() == Directions::Right) {
+                    if(std::abs(cameraView.getLeft() - hero->getPosition().getX()) >= cameraView.getWidth() / 2) {
+                        camera.move(diffPosition.getX(), diffPosition.getY());
+                    }
+                }
+            }
         }
 
         collidingWithTransition = false;
@@ -549,6 +563,8 @@ namespace hikari {
         hero->setRoom(currentRoom);
         hero->setPosition(static_cast<float>((currentRoom->getX() * 16) + 40), static_cast<float>((currentRoom->getY() * 16) + 30));
         //renderedCursor = sf::Shape::Rectangle(0.0f, 0.0f, 14.0f, 22.0f, sf::Color(0, 255, 255, 128));
+
+        currentHeroPosition = hero->getPosition();
     }
 
     void MapTestState::onExit() {
