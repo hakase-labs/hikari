@@ -45,12 +45,12 @@
 
 #include <json/reader.h>
 
-#include <cstdlib>
-#include <iostream>
-#include <fstream>
 #include <algorithm>
-#include <ios>
+#include <cstdlib>
+#include <fstream>
 #include <iomanip>
+#include <ios>
+#include <iostream>
 
 namespace hikari {
     Client::Client(int argc, char** argv) {
