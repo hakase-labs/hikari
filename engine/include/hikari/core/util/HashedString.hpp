@@ -1,7 +1,7 @@
 #ifndef HIKARI_CORE_UTIL_HASHEDSTRING
 #define HIKARI_CORE_UTIL_HASHEDSTRING
 
-#include <hikari/core/Platform.hpp>
+#include "hikari/core/Platform.hpp"
 #include <cstddef>
 #include <string>
 

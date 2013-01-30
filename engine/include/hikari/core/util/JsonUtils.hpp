@@ -1,7 +1,7 @@
 #ifndef HIKARI_CORE_UTIL_JSONUTILS
 #define HIKARI_CORE_UTIL_JSONUTILS
 
-#include <hikari/core/Platform.hpp>
+#include "hikari/core/Platform.hpp"
 #include <json/value.h>
 #include <string>
 

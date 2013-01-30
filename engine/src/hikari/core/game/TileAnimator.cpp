@@ -1,5 +1,5 @@
-#include <hikari/core/game/TileAnimator.hpp>
-#include <hikari/core/game/Animation.hpp>
+#include "hikari/core/game/TileAnimator.hpp"
+#include "hikari/core/game/Animation.hpp"
 
 namespace hikari {
 

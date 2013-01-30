@@ -1,4 +1,4 @@
-#include <hikari/core/game/CollisionInfo.hpp>
+#include "hikari/core/game/CollisionInfo.hpp"
 
 namespace hikari {
     

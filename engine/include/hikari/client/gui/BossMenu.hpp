@@ -1,7 +1,7 @@
 #ifndef HIKARI_CORE_GUI_BOSSMENU
 #define HIKARI_CORE_GUI_BOSSMENU
 
-#include <hikari/client/gui/Widget.hpp>
+#include "hikari/client/gui/Widget.hpp"
 #include <SFML/Graphics/Image.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <vector>

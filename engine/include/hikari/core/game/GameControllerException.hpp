@@ -1,7 +1,7 @@
 #ifndef HIKARI_CORE_GAME_GAMECONTROLLEREXCEPTION
 #define HIKARI_CORE_GAME_GAMECONTROLLEREXCEPTION
 
-#include <hikari/core/Platform.hpp>
+#include "hikari/core/Platform.hpp"
 #include <string>
 #include <stdexcept>
 

@@ -1,6 +1,6 @@
-#include <hikari/core/util/JsonUtils.hpp>
-#include <hikari/core/util/FileSystem.hpp>
-#include <hikari/core/util/PhysFS.hpp>
+#include "hikari/core/util/JsonUtils.hpp"
+#include "hikari/core/util/FileSystem.hpp"
+#include "hikari/core/util/PhysFS.hpp"
 #include <json/reader.h>
 #include <json/value.h>
 #include <sstream>

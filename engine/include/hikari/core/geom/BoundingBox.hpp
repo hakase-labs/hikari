@@ -1,8 +1,8 @@
 #ifndef HIKARI_CORE_GEOM_BOUNDINGBOX_T
 #define HIKARI_CORE_GEOM_BOUNDINGBOX_T
 
-#include <hikari/core/Platform.hpp>
-#include <hikari/core/math/Vector2.hpp>
+#include "hikari/core/Platform.hpp"
+#include "hikari/core/math/Vector2.hpp"
 #include <iostream>
 
 namespace hikari {

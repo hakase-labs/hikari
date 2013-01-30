@@ -1,9 +1,9 @@
 #ifndef HIKARI_CLIENT_GAME_GUITESTSTATE
 #define HIKARI_CLIENT_GAME_GUITESTSTATE
 
-#include <hikari/core/game/GameState.hpp>
-#include <hikari/core/gui/ImageFont.hpp>
-#include <hikari/client/gui/EnergyMeter.hpp>
+#include "hikari/core/game/GameState.hpp"
+#include "hikari/core/gui/ImageFont.hpp"
+#include "hikari/client/gui/EnergyMeter.hpp"
 #include <SFML/Graphics/Texture.hpp>
 #include <memory>
 #include <string>

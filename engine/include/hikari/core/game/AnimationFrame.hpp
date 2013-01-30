@@ -1,9 +1,9 @@
 #ifndef HIKARI_CORE_GAME_ANIMATIONFRAME
 #define HIKARI_CORE_GAME_ANIMATIONFRAME
 
-#include <hikari/core/Platform.hpp>
-#include <hikari/core/geom/Point2D.hpp>
-#include <hikari/core/geom/Rectangle2D.hpp>
+#include "hikari/core/Platform.hpp"
+#include "hikari/core/geom/Point2D.hpp"
+#include "hikari/core/geom/Rectangle2D.hpp"
 
 namespace hikari {
 

@@ -1,4 +1,4 @@
-#include <hikari/core/util/exception/HikariException.hpp>
+#include "hikari/core/util/exception/HikariException.hpp"
 
 namespace hikari {
 

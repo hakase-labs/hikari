@@ -1,8 +1,8 @@
 #ifndef HIKARI_CLIENT_GAME_KEYBOARDINPUT
 #define HIKARI_CLIENT_GAME_KEYBOARDINPUT
 
-#include <hikari/core/Platform.hpp>
-#include <hikari/client/game/Input.hpp>
+#include "hikari/core/Platform.hpp"
+#include "hikari/client/game/Input.hpp"
 #include <SFML/Window/Event.hpp>
 
 namespace hikari {

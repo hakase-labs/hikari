@@ -1,10 +1,10 @@
 #ifndef HIKARI_CORE_UTIL_SERVICELOCATOR
 #define HIKARI_CORE_UTIL_SERVICELOCATOR
 
-#include <hikari/core/Platform.hpp>
-#include <hikari/core/util/Log.hpp>
-#include <hikari/core/util/exception/HikariException.hpp>
-#include <hikari/core/util/exception/ServiceNotRegisteredException.hpp>
+#include "hikari/core/Platform.hpp"
+#include "hikari/core/util/Log.hpp"
+#include "hikari/core/util/exception/HikariException.hpp"
+#include "hikari/core/util/exception/ServiceNotRegisteredException.hpp"
 #include <map>
 #include <memory>
 #include <stdexcept>

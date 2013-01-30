@@ -1,4 +1,4 @@
-#include <hikari/client/ClientConfig.hpp>
+#include "hikari/client/ClientConfig.hpp"
 #include <json/value.h>
 
 namespace hikari {

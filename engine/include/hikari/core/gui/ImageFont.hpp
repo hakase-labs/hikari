@@ -1,8 +1,8 @@
 #ifndef HIKARI_CORE_GUI_IMAGEFONT
 #define HIKARI_CORE_GUI_IMAGEFONT
 
-#include <hikari/core/Platform.hpp>
-#include <hikari/core/util/Service.hpp>
+#include "hikari/core/Platform.hpp"
+#include "hikari/core/util/Service.hpp"
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Rect.hpp>

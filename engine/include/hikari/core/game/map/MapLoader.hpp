@@ -1,10 +1,10 @@
 #ifndef HIKARI_CORE_GAME_MAP_MAPLOADER
 #define HIKARI_CORE_GAME_MAP_MAPLOADER
 
-#include <hikari/core/Platform.hpp>
-#include <hikari/core/geom/Rectangle2D.hpp>
-#include <hikari/core/util/Service.hpp>
-#include <hikari/core/util/TilesetCache.hpp>
+#include "hikari/core/Platform.hpp"
+#include "hikari/core/geom/Rectangle2D.hpp"
+#include "hikari/core/util/Service.hpp"
+#include "hikari/core/util/TilesetCache.hpp"
 
 #include <memory>
 #include <json/value.h>

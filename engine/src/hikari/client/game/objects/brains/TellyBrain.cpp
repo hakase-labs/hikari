@@ -1,5 +1,5 @@
-#include <hikari/client/game/objects/brains/TellyBrain.hpp>
-#include <hikari/client/game/GameWorld.hpp>
+#include "hikari/client/game/objects/brains/TellyBrain.hpp"
+#include "hikari/client/game/GameWorld.hpp"
 
 namespace hikari {
 

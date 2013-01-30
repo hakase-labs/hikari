@@ -1,7 +1,7 @@
 #ifndef HIKARI_CORE_GEOM_RECTANGLE2D
 #define HIKARI_CORE_GEOM_RECTANGLE2D
 
-#include <hikari/core/Platform.hpp>
+#include "hikari/core/Platform.hpp"
 #include <iostream>
 
 namespace hikari {

@@ -1,7 +1,7 @@
 #ifndef HIKARI_CORE_UTIL_LOG
 #define HIKARI_CORE_UTIL_LOG
 
-#include <hikari/core/Platform.hpp>
+#include "hikari/core/Platform.hpp"
 #include <iostream>
 #include <sstream>
 

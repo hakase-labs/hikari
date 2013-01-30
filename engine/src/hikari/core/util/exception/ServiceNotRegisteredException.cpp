@@ -1,4 +1,4 @@
-#include <hikari/core/util/exception/ServiceNotRegisteredException.hpp>
+#include "hikari/core/util/exception/ServiceNotRegisteredException.hpp"
 
 namespace hikari {
 

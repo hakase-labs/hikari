@@ -1,57 +1,56 @@
-#include <hikari/client/Client.hpp>
-#include <hikari/core/Hikari.hpp>
-#include <hikari/core/util/PhysFS.hpp>
-#include <hikari/core/game/GameController.hpp>
+#include "hikari/client/Client.hpp"
+#include "hikari/core/Hikari.hpp"
+#include "hikari/core/util/PhysFS.hpp"
+#include "hikari/core/game/GameController.hpp"
 
-#include <hikari/client/ClientConfig.hpp>
-#include <hikari/client/game/GameProgress.hpp>
-#include <hikari/client/game/GamePlayState.hpp>
-#include <hikari/client/game/StageSelectState.hpp>
-#include <hikari/client/game/MapTestState.hpp>
-#include <hikari/client/game/GuiTestState.hpp>
-#include <hikari/client/game/SpriteTestState.hpp>
-#include <hikari/client/audio/AudioService.hpp> 
-#include <hikari/client/gui/CommandConsole.hpp>
-#include <hikari/client/scripting/SquirrelService.hpp>
-#include <hikari/client/Services.hpp>
+#include "hikari/client/ClientConfig.hpp"
+#include "hikari/client/game/GameProgress.hpp"
+#include "hikari/client/game/GamePlayState.hpp"
+#include "hikari/client/game/StageSelectState.hpp"
+#include "hikari/client/game/MapTestState.hpp"
+#include "hikari/client/game/GuiTestState.hpp"
+#include "hikari/client/game/SpriteTestState.hpp"
+#include "hikari/client/audio/AudioService.hpp" 
+#include "hikari/client/gui/CommandConsole.hpp"
+#include "hikari/client/scripting/SquirrelService.hpp"
+#include "hikari/client/Services.hpp"
 
-#include <hikari/core/util/FileSystem.hpp>
-#include <hikari/core/util/Log.hpp>
-#include <hikari/core/gui/ImageFont.hpp>
-#include <hikari/core/game/map/MapLoader.hpp>
-#include <hikari/core/util/StringUtils.hpp>
-#include <hikari/core/util/ImageCache.hpp>
-#include <hikari/core/game/AnimationLoader.hpp>
-#include <hikari/core/game/map/TilesetLoader.hpp>
-#include <hikari/core/util/StringUtils.hpp>
-#include <hikari/core/util/TilesetCache.hpp>
-#include <hikari/core/util/AnimationSetCache.hpp>
-#include <hikari/core/game/map/MapLoader.hpp>
-#include <hikari/client/audio/NSFSoundStream.hpp>
-#include <hikari/core/geom/Rectangle2D.hpp>
-#include <hikari/core/geom/BoundingBox.hpp>
-#include <hikari/core/util/ServiceLocator.hpp>
-#include <hikari/core/math/RetroVector.hpp>
-#include <hikari/core/math/Vector2.hpp>
-#include <hikari/core/util/RedirectStream.hpp>
-#include <hikari/core/util/TeeStream.hpp>
-#include <hikari/core/util/HashedString.hpp>
+#include "hikari/core/util/FileSystem.hpp"
+#include "hikari/core/util/Log.hpp"
+#include "hikari/core/gui/ImageFont.hpp"
+#include "hikari/core/game/map/MapLoader.hpp"
+#include "hikari/core/util/StringUtils.hpp"
+#include "hikari/core/util/ImageCache.hpp"
+#include "hikari/core/game/AnimationLoader.hpp"
+#include "hikari/core/game/map/TilesetLoader.hpp"
+#include "hikari/core/util/StringUtils.hpp"
+#include "hikari/core/util/TilesetCache.hpp"
+#include "hikari/core/util/AnimationSetCache.hpp"
+#include "hikari/core/game/map/MapLoader.hpp"
+#include "hikari/client/audio/NSFSoundStream.hpp"
+#include "hikari/core/geom/Rectangle2D.hpp"
+#include "hikari/core/geom/BoundingBox.hpp"
+#include "hikari/core/util/ServiceLocator.hpp"
+#include "hikari/core/math/RetroVector.hpp"
+#include "hikari/core/math/Vector2.hpp"
+#include "hikari/core/util/RedirectStream.hpp"
+#include "hikari/core/util/HashedString.hpp"
 
-#include <hikari/client/CommandProcessor.hpp>
+#include "hikari/client/CommandProcessor.hpp"
 
-#include <hikari/core/geom/BoundingBox.hpp>
-#include <hikari/test/core/geom/Vector2DTests.hpp>
+#include "hikari/core/geom/BoundingBox.hpp"
+#include "hikari/test/core/geom/Vector2DTests.hpp"
 
 #include <SFML/Graphics.hpp>
 
 #include <json/reader.h>
 
-#include <cstdlib>
-#include <iostream>
-#include <fstream>
 #include <algorithm>
-#include <ios>
+#include <cstdlib>
+#include <fstream>
 #include <iomanip>
+#include <ios>
+#include <iostream>
 
 namespace hikari {
     Client::Client(int argc, char** argv) {
@@ -248,10 +247,33 @@ int main(int argc, char** argv) {
             controller.setState(stateName);
         });
 
-        window.create(videoMode, APPLICATION_TITLE);
+        //
+        // Create our window
+        //
+        window.create(videoMode, APPLICATION_TITLE, sf::Style::Default);
         window.setActive(true);
         window.setVerticalSyncEnabled(clientConfig.isVsyncEnabled());
         window.setKeyRepeatEnabled(false);
+
+        //
+        // Create a "buffer" texture -- this allows us to apply screen-wide shader effects.
+        // This also helps avoid tearing/small geometry gaps when scaling the scren up.
+        //
+        sf::RenderTexture screenBuffer;
+        screenBuffer.create(videoMode.width, videoMode.height);
+
+        //
+        // Use a view to achieve resolution-independent rendering of the "buffer" texture.
+        //
+        sf::View screenBufferView;
+
+        screenBufferView.setSize(
+            static_cast<float>(videoMode.width), 
+            static_cast<float>(videoMode.height));
+
+        screenBufferView.setCenter(
+            static_cast<float>(videoMode.width / 2), 
+            static_cast<float>(videoMode.height / 2));
 
         // Game loop
         float t = 0.0f;
@@ -262,6 +284,7 @@ int main(int argc, char** argv) {
         float accumulator = 0.0f;
 
         bool quit = false;
+        bool fullscreen = false;
         sf::Event event;
 
         while(!quit) {
@@ -285,12 +308,28 @@ int main(int argc, char** argv) {
                     //
                     if((event.type == sf::Event::KeyPressed)) {
 
-                        if(event.key.code == sf::Keyboard::F12) {
+                        if(event.key.code == sf::Keyboard::F7) {
                             speedMultiplier += 0.1f;
                         }
 
-                        if(event.key.code == sf::Keyboard::F11) {
+                        if(event.key.code == sf::Keyboard::F8) {
                             speedMultiplier -= 0.1f;
+                        }
+
+                        if(event.key.code == sf::Keyboard::F11) {
+                            if(fullscreen) {
+                                window.create(videoMode, APPLICATION_TITLE, sf::Style::Default);
+                            } else {
+                                auto modes = sf::VideoMode::getFullscreenModes();
+                                auto fullScreenMode = modes.at(0);
+                                window.create(fullScreenMode, APPLICATION_TITLE, sf::Style::Fullscreen);
+                            }
+
+                            fullscreen = !fullscreen;
+
+                            window.setActive(true);
+                            window.setVerticalSyncEnabled(clientConfig.isVsyncEnabled());
+                            window.setKeyRepeatEnabled(false);
                         }
 
                         if(event.key.code == sf::Keyboard::F1) {
@@ -349,17 +388,25 @@ int main(int argc, char** argv) {
             }
             
             // Render
-            window.clear(sf::Color::Magenta);
-            controller.render(window);
-            window.setView(window.getDefaultView());
+            window.clear(sf::Color::Blue);
+            screenBuffer.clear(sf::Color::Magenta);
+            controller.render(screenBuffer);
+            // screenBuffer.setView(window.getDefaultView());
+            window.setView(screenBufferView);
 
             if(showFPS) {
-                guiFont->renderText(window, "FPS:", 8, 8);
-                guiFont->renderText(window, StringUtils::toString<float>(fps), 40, 8);
+                guiFont->renderText(screenBuffer, "FPS:", 8, 8);
+                guiFont->renderText(screenBuffer, StringUtils::toString<float>(fps), 40, 8);
             }
             
-            console.render(window);
+            console.render(screenBuffer);
 
+            //window.draw(screenBuffer);
+            screenBuffer.display();
+
+            sf::Sprite renderSprite(screenBuffer.getTexture());
+
+            window.draw(renderSprite);
             window.display();
         }
 

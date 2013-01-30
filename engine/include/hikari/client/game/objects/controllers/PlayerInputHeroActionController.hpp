@@ -1,7 +1,7 @@
 #ifndef HIKARI_CLIENT_GAME_OBJECTS_CONTROLLERS_PLAYERINPUTHEROACTIONCONTROLLER
 #define HIKARI_CLIENT_GAME_OBJECTS_CONTROLLERS_PLAYERINPUTHEROACTIONCONTROLLER
 
-#include <hikari/client/game/objects/controllers/HeroActionController.hpp>
+#include "hikari/client/game/objects/controllers/HeroActionController.hpp"
 #include <memory>
 
 namespace hikari {

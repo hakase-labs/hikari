@@ -1,7 +1,7 @@
 #ifndef HIKARI_CLIENT_GAME_OBJECTS_BRAINS_SCRIPTEDENEMYBRAIN
 #define HIKARI_CLIENT_GAME_OBJECTS_BRAINS_SCRIPTEDENEMYBRAIN
 
-#include <hikari/client/game/objects/EnemyBrain.hpp>
+#include "hikari/client/game/objects/EnemyBrain.hpp"
 #include <squirrel.h>
 #include <sqrat.h>
 

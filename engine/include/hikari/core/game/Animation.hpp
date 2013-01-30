@@ -1,8 +1,8 @@
 #ifndef HIKARI_CORE_GAME_ANIMATION
 #define HIKARI_CORE_GAME_ANIMATION
 
-#include <hikari/core/Platform.hpp>
-#include <hikari/core/game/AnimationFrame.hpp>
+#include "hikari/core/Platform.hpp"
+#include "hikari/core/game/AnimationFrame.hpp"
 #include <vector>
 #include <utility>
 

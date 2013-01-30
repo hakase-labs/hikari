@@ -1,5 +1,5 @@
-#include <hikari/client/game/objects/GameObject.hpp>
-#include <hikari/core/util/Log.hpp>
+#include "hikari/client/game/objects/GameObject.hpp"
+#include "hikari/core/util/Log.hpp"
 // #include <oolua.h>
 
 namespace hikari {
@@ -54,7 +54,7 @@ namespace hikari {
 // }
 
 /*
-#include <hikari/client/game/objects/GameObject.hpp>
+#include "hikari/client/game/objects/GameObject.hpp"
 #include <SFML/Graphics.hpp>
 #include <oolua.h>
 

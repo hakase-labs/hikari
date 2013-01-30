@@ -1,8 +1,8 @@
 #ifndef HIKARI_CLIENT_GAME_MAP_TILEMAPCOLLISIONRESOLVER
 #define HIKARI_CLIENT_GAME_MAP_TILEMAPCOLLISIONRESOLVER
 
-#include <hikari/core/game/CollisionResolver.hpp>
-#include <hikari/core/geom/BoundingBox.hpp>
+#include "hikari/core/game/CollisionResolver.hpp"
+#include "hikari/core/geom/BoundingBox.hpp"
 #include <memory>
 
 namespace hikari {

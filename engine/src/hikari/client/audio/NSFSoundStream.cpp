@@ -1,7 +1,7 @@
-#include <hikari/client/audio/NSFSoundStream.hpp>
-#include <hikari/core/util/FileSystem.hpp>
-#include <hikari/core/util/PhysFS.hpp>
-#include <hikari/core/util/Log.hpp>
+#include "hikari/client/audio/NSFSoundStream.hpp"
+#include "hikari/core/util/FileSystem.hpp"
+#include "hikari/core/util/PhysFS.hpp"
+#include "hikari/core/util/Log.hpp"
 #include <Music_Emu.h>
 #include <gme.h>
 #include <iostream>

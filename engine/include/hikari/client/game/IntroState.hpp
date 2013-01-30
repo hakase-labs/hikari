@@ -1,7 +1,7 @@
 #ifndef HIKARI_CLIENT_GAME_INTROSTATE
 #define HIKARI_CLIENT_GAME_INTROSTATE
 
-#include <hikari/core/game/GameState.hpp>
+#include "hikari/core/game/GameState.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/View.hpp>
 #include <memory>

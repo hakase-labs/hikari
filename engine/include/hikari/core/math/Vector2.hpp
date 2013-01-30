@@ -1,8 +1,8 @@
 #ifndef HIKARI_CORE_GEOM_VECTOR2
 #define HIKARI_CORE_GEOM_VECTOR2
 
-#include <hikari/core/Platform.hpp>
-#include <hikari/core/geom/Point2D.hpp>
+#include "hikari/core/Platform.hpp"
+#include "hikari/core/geom/Point2D.hpp"
 #include <cmath>
 #include <iostream>
 

@@ -1,8 +1,8 @@
 #ifndef HIKARI_CORE_GAME_TILEANIMATOR
 #define HIKARI_CORE_GAME_TILEANIMATOR
 
-#include <hikari/core/Platform.hpp>
-#include <hikari/core/game/Animator.hpp>
+#include "hikari/core/Platform.hpp"
+#include "hikari/core/game/Animator.hpp"
 #include <SFML/Graphics/Rect.hpp>
 #include <vector>
 

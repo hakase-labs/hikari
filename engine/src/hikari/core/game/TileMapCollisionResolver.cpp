@@ -1,8 +1,8 @@
-#include <hikari/core/game/TileMapCollisionResolver.hpp>
-#include <hikari/core/game/CollisionInfo.hpp>
-#include <hikari/core/game/Direction.hpp>
-#include <hikari/core/game/map/Room.hpp>
-#include <hikari/core/game/map/Tileset.hpp>
+#include "hikari/core/game/TileMapCollisionResolver.hpp"
+#include "hikari/core/game/CollisionInfo.hpp"
+#include "hikari/core/game/Direction.hpp"
+#include "hikari/core/game/map/Room.hpp"
+#include "hikari/core/game/map/Tileset.hpp"
 
 namespace hikari {
 

@@ -1,10 +1,10 @@
 #ifndef HIKARI_CLIENT_GAME_OBJECTS_ENTITY
 #define HIKARI_CLIENT_GAME_OBJECTS_ENTITY
 
-#include <hikari/client/game/objects/GameObject.hpp>
-#include <hikari/core/game/Movable.hpp>
-#include <hikari/core/game/Direction.hpp>
-#include <hikari/core/math/Vector2.hpp>
+#include "hikari/client/game/objects/GameObject.hpp"
+#include "hikari/core/game/Movable.hpp"
+#include "hikari/core/game/Direction.hpp"
+#include "hikari/core/math/Vector2.hpp"
 
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Sprite.hpp>

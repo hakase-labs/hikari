@@ -1,4 +1,4 @@
-#include <hikari/client/gui/Widget.hpp>
+#include "hikari/client/gui/Widget.hpp"
 
 namespace hikari {
 namespace gui {

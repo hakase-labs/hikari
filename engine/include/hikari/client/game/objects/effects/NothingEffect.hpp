@@ -1,7 +1,7 @@
 #ifndef HIKARI_CLIENT_GAME_OBJECTS_EFFECTS_NOTHINGEFFECT
 #define HIKARI_CLIENT_GAME_OBJECTS_EFFECTS_NOTHINGEFFECT
 
-#include <hikari/client/game/Effect.hpp>
+#include "hikari/client/game/Effect.hpp"
 #include <memory>
 
 namespace hikari {

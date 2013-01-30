@@ -1,7 +1,7 @@
-#include <hikari/client/game/objects/brains/ScriptedEnemyBrain.hpp>
-#include <hikari/client/scripting/SquirrelService.hpp>
+#include "hikari/client/game/objects/brains/ScriptedEnemyBrain.hpp"
+#include "hikari/client/scripting/SquirrelService.hpp"
 
-#include <hikari/core/util/Log.hpp>
+#include "hikari/core/util/Log.hpp"
 
 #include <algorithm>
 

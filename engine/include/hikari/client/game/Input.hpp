@@ -1,7 +1,7 @@
 #ifndef HIKARI_CLIENT_GAME_INPUT
 #define HIKARI_CLIENT_GAME_INPUT
 
-#include <hikari/core/Platform.hpp>
+#include "hikari/core/Platform.hpp"
 
 namespace hikari {
 

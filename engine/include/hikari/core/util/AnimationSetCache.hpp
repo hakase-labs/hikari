@@ -1,11 +1,11 @@
 #ifndef HIKARI_CORE_UTIL_ANIMATIONSETCACHE
 #define HIKARI_CORE_UTIL_ANIMATIONSETCACHE
 
-#include <hikari/core/Platform.hpp>
-#include <hikari/core/util/ResourceCache.hpp>
-#include <hikari/core/util/Service.hpp>
+#include "hikari/core/Platform.hpp"
+#include "hikari/core/util/ResourceCache.hpp"
+#include "hikari/core/util/Service.hpp"
 
-#include <hikari/core/game/AnimationSet.hpp>
+#include "hikari/core/game/AnimationSet.hpp"
 
 namespace hikari {
 

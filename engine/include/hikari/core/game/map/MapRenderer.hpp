@@ -1,8 +1,8 @@
 #ifndef HIKARI_CORE_GAME_MAP_MAPRENDERER
 #define HIKARI_CORE_GAME_MAP_MAPRENDERER
 
-#include <hikari/core/Platform.hpp>
-#include <hikari/core/geom/Rectangle2D.hpp>
+#include "hikari/core/Platform.hpp"
+#include "hikari/core/geom/Rectangle2D.hpp"
 #include <memory>
 #include <SFML/Graphics/Sprite.hpp>
 
