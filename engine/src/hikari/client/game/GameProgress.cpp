@@ -1,4 +1,4 @@
-#include <hikari/client/game/GameProgress.hpp>
+#include "hikari/client/game/GameProgress.hpp"
 
 #include <algorithm>
 

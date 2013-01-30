@@ -1,9 +1,9 @@
 #ifndef HIKARI_CORE_GEOM_VECTOR2D
 #define HIKARI_CORE_GEOM_VECTOR2D
 
-#include <hikari/core/Platform.hpp>
-#include <hikari/core/geom/Point2D.hpp>
-#include <hikari/core/math/RetroVector.hpp>
+#include "hikari/core/Platform.hpp"
+#include "hikari/core/geom/Point2D.hpp"
+#include "hikari/core/math/RetroVector.hpp"
 #include <iostream>
 
 namespace hikari {

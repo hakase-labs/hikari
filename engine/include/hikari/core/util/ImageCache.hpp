@@ -1,9 +1,9 @@
 #ifndef HIKARI_CORE_UTIL_IMAGECACHE
 #define HIKARI_CORE_UTIL_IMAGECACHE
 
-#include <hikari/core/Platform.hpp>
-#include <hikari/core/util/ResourceCache.hpp>
-#include <hikari/core/util/Service.hpp>
+#include "hikari/core/Platform.hpp"
+#include "hikari/core/util/ResourceCache.hpp"
+#include "hikari/core/util/Service.hpp"
 
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/Texture.hpp>

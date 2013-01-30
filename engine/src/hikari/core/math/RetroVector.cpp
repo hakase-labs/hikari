@@ -1,4 +1,4 @@
-#include <hikari/core/math/RetroVector.hpp>
+#include "hikari/core/math/RetroVector.hpp"
 #include <cmath>
 
 namespace hikari {

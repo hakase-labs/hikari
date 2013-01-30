@@ -1,7 +1,7 @@
 #ifndef HIKARI_CORE_UTIL_TEESTREAM
 #define HIKARI_CORE_UTIL_TEESTREAM
 
-#include <hikari/core/Platform.hpp>
+#include "hikari/core/Platform.hpp"
 #include <iostream>
 #include <fstream>
 #include <streambuf>

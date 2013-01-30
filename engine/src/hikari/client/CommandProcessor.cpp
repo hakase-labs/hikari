@@ -1,6 +1,6 @@
-#include <hikari/client/CommandProcessor.hpp>
-#include <hikari/core/util/StringUtils.hpp>
-#include <hikari/core/util/exception/HikariException.hpp>
+#include "hikari/client/CommandProcessor.hpp"
+#include "hikari/core/util/StringUtils.hpp"
+#include "hikari/core/util/exception/HikariException.hpp"
 #include <sstream>
 #include <algorithm>
 #include <iterator>

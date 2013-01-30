@@ -1,7 +1,7 @@
 #ifndef HIKARI_CORE_GAME_ANIMATOR
 #define HIKARI_CORE_GAME_ANIMATOR
 
-#include <hikari/core/Platform.hpp>
+#include "hikari/core/Platform.hpp"
 #include <memory>
 #include <functional>
 

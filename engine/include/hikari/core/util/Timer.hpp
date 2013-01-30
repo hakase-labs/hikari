@@ -1,8 +1,8 @@
 #ifndef HIKARI_CORE_UTIL_TIMER
 #define HIKARI_CORE_UTIL_TIMER
 
-#include <hikari/core/Platform.hpp>
-#include <hikari/core/game/Updatable.hpp>
+#include "hikari/core/Platform.hpp"
+#include "hikari/core/game/Updatable.hpp"
 #include <functional>
 
 namespace hikari {

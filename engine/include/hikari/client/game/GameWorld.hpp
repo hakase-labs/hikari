@@ -4,9 +4,9 @@
 #include <vector>
 #include <memory>
 #include <queue>
-#include <hikari/core/game/Updatable.hpp>
-#include <hikari/core/math/Vector2.hpp>
-#include <hikari/core/game/Direction.hpp>
+#include "hikari/core/game/Updatable.hpp"
+#include "hikari/core/math/Vector2.hpp"
+#include "hikari/core/game/Direction.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
 
 namespace sf {

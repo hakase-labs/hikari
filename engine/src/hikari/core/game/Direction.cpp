@@ -1,4 +1,4 @@
-#include <hikari/core/game/Direction.hpp>
+#include "hikari/core/game/Direction.hpp"
 
 namespace hikari {
 

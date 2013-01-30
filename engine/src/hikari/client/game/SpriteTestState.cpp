@@ -1,7 +1,7 @@
-#include <hikari/client/game/SpriteTestState.hpp>
-#include <hikari/core/util/PhysFS.hpp>
-#include <hikari/core/util/PhysFSUtils.hpp>
-#include <hikari/core/game/AnimationSet.hpp>
+#include "hikari/client/game/SpriteTestState.hpp"
+#include "hikari/core/util/PhysFS.hpp"
+#include "hikari/core/util/PhysFSUtils.hpp"
+#include "hikari/core/game/AnimationSet.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <iostream>
 

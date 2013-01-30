@@ -1,6 +1,6 @@
 
-#include <hikari/client/game/objects/effects/NothingEffect.hpp>
-#include <hikari/core/util/Log.hpp>
+#include "hikari/client/game/objects/effects/NothingEffect.hpp"
+#include "hikari/core/util/Log.hpp"
 
 namespace hikari {
 

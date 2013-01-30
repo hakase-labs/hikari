@@ -1,8 +1,8 @@
 #ifndef HIKARI_CORE_GAME_ANIMATIONSET
 #define HIKARI_CORE_GAME_ANIMATIONSET
 
-#include <hikari/core/Platform.hpp>
-#include <hikari/core/game/Animation.hpp>
+#include "hikari/core/Platform.hpp"
+#include "hikari/core/game/Animation.hpp"
 #include <memory>
 #include <string>
 #include <unordered_map>

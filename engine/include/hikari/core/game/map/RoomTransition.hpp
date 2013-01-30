@@ -1,7 +1,7 @@
 ﻿#ifndef HIKARI_CORE_GAME_MAP_ROOMTRANSITION
 #define HIKARI_CORE_GAME_MAP_ROOMTRANSITION
 
-#include <hikari/core/Platform.hpp>
+#include "hikari/core/Platform.hpp"
 
 namespace hikari {
     

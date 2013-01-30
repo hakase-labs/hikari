@@ -1,7 +1,7 @@
 #ifndef HIKARI_CLIENT_GAME_PASSWORDSTATE
 #define HIKARI_CLIENT_GAME_PASSWORDSTATE
 
-#include <hikari/core/game/GameState.hpp>
+#include "hikari/core/game/GameState.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/View.hpp>
 #include <json/value.h>

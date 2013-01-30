@@ -1,7 +1,7 @@
 #ifndef HIKARI_CORE_GAME_MAP_CAMERA_CAMERASTRATEGY
 #define HIKARI_CORE_GAME_MAP_CAMERA_CAMERASTRATEGY
 
-#include <hikari/core/Platform.hpp>
+#include "hikari/core/Platform.hpp"
 
 namespace hikari {
 

@@ -1,7 +1,7 @@
 #ifndef HIKARI_CORE_UTIL_CLONEABLE
 #define HIKARI_CORE_UTIL_CLONEABLE
 
-#include <hikari/core/Platform.hpp>
+#include "hikari/core/Platform.hpp"
 #include <memory>
 
 namespace hikari {

@@ -1,7 +1,7 @@
 #ifndef HIKARI_CORE_UTIL_REDIRECTSTREAM
 #define HIKARI_CORE_UTIL_REDIRECTSTREAM
 
-#include <hikari/core/Platform.hpp>
+#include "hikari/core/Platform.hpp"
 #include <iostream>
 
 namespace hikari {

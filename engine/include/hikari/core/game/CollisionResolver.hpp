@@ -1,7 +1,7 @@
 #ifndef HIKARI_CORE_GAME_COLLISIONRESOLVER
 #define HIKARI_CORE_GAME_COLLISIONRESOLVER
 
-#include <hikari/core/game/Direction.hpp>
+#include "hikari/core/game/Direction.hpp"
 
 namespace hikari {
     

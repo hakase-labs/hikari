@@ -1,8 +1,8 @@
 #ifndef HIKARI_CLIENT_AUDIOSERVICE
 #define HIKARI_CLIENT_AUDIOSERVICE
 
-#include <hikari/core/util/Service.hpp>
-#include <hikari/client/audio/NSFSoundStream.hpp>
+#include "hikari/core/util/Service.hpp"
+#include "hikari/client/audio/NSFSoundStream.hpp"
 
 namespace Json {
     class Value;

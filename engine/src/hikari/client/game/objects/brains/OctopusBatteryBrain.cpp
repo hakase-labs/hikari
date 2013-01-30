@@ -1,7 +1,7 @@
-#include <hikari/client/game/objects/brains/OctopusBatteryBrain.hpp>
-#include <hikari/core/game/AnimationSet.hpp>
-#include <hikari/core/math/RetroVector.hpp>
-#include <hikari/core/util/Log.hpp>
+#include "hikari/client/game/objects/brains/OctopusBatteryBrain.hpp"
+#include "hikari/core/game/AnimationSet.hpp"
+#include "hikari/core/math/RetroVector.hpp"
+#include "hikari/core/util/Log.hpp"
 
 namespace hikari {
 

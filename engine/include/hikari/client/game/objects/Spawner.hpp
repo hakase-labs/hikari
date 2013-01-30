@@ -1,9 +1,9 @@
 #ifndef HIKARI_CLIENT_GAME_OBJECTS_SPAWNER
 #define HIKARI_CLIENT_GAME_OBJECTS_SPAWNER
 
-#include <hikari/client/game/objects/GameObject.hpp>
-#include <hikari/core/game/Direction.hpp>
-#include <hikari/core/geom/Vector2D.hpp>
+#include "hikari/client/game/objects/GameObject.hpp"
+#include "hikari/core/game/Direction.hpp"
+#include "hikari/core/geom/Vector2D.hpp"
 
 namespace hikari {
     

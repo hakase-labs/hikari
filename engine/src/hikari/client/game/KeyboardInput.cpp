@@ -1,4 +1,4 @@
-#include <hikari/client/game/KeyboardInput.hpp>
+#include "hikari/client/game/KeyboardInput.hpp"
 
 namespace hikari {
 

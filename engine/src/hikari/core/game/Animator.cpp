@@ -1,6 +1,6 @@
-#include <hikari/core/game/Animator.hpp>
-#include <hikari/core/game/Animation.hpp>
-#include <hikari/core/game/AnimationPlaybackException.hpp>
+#include "hikari/core/game/Animator.hpp"
+#include "hikari/core/game/Animation.hpp"
+#include "hikari/core/game/AnimationPlaybackException.hpp"
 
 namespace hikari {
     

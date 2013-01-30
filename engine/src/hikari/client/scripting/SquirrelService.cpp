@@ -1,9 +1,9 @@
-#include <hikari/client/scripting/SquirrelService.hpp>
-#include <hikari/client/game/objects/Entity.hpp>
-#include <hikari/client/game/objects/Enemy.hpp>
-#include <hikari/core/game/map/Room.hpp>
-#include <hikari/core/game/Direction.hpp>
-#include <hikari/core/util/FileSystem.hpp>
+#include "hikari/client/scripting/SquirrelService.hpp"
+#include "hikari/client/game/objects/Entity.hpp"
+#include "hikari/client/game/objects/Enemy.hpp"
+#include "hikari/core/game/map/Room.hpp"
+#include "hikari/core/game/Direction.hpp"
+#include "hikari/core/util/FileSystem.hpp"
 
 #include <sqrat.h>
 

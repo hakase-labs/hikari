@@ -1,14 +1,14 @@
-#include <hikari/client/game/objects/ItemFactory.hpp>
-#include <hikari/client/game/objects/GameObject.hpp>
-#include <hikari/client/game/objects/CollectableItem.hpp>
-#include <hikari/client/game/objects/effects/NothingEffect.hpp>
-#include <hikari/client/game/objects/effects/ScriptedEffect.hpp>
-#include <hikari/client/scripting/SquirrelService.hpp>
+#include "hikari/client/game/objects/ItemFactory.hpp"
+#include "hikari/client/game/objects/GameObject.hpp"
+#include "hikari/client/game/objects/CollectableItem.hpp"
+#include "hikari/client/game/objects/effects/NothingEffect.hpp"
+#include "hikari/client/game/objects/effects/ScriptedEffect.hpp"
+#include "hikari/client/scripting/SquirrelService.hpp"
 
-#include <hikari/core/game/AnimationLoader.hpp>
-#include <hikari/core/game/map/Room.hpp>
-#include <hikari/core/util/AnimationSetCache.hpp>
-#include <hikari/core/util/ImageCache.hpp>
+#include "hikari/core/game/AnimationLoader.hpp"
+#include "hikari/core/game/map/Room.hpp"
+#include "hikari/core/util/AnimationSetCache.hpp"
+#include "hikari/core/util/ImageCache.hpp"
 
 namespace hikari {
 

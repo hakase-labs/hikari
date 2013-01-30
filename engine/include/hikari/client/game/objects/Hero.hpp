@@ -1,9 +1,9 @@
 #ifndef HIKARI_CLIENT_GAME_OBJECTS_HERO
 #define HIKARI_CLIENT_GAME_OBJECTS_HERO
 
-#include <hikari/client/game/objects/Entity.hpp>
-#include <hikari/client/game/objects/controllers/HeroActionController.hpp>
-#include <hikari/core/math/Vector2.hpp>
+#include "hikari/client/game/objects/Entity.hpp"
+#include "hikari/client/game/objects/controllers/HeroActionController.hpp"
+#include "hikari/core/math/Vector2.hpp"
 #include <memory>
 
 namespace hikari {

@@ -1,10 +1,10 @@
 #ifndef HIKARI_CLIENT_GAME_GOCREATIONPARAMETERS
 #define HIKARI_CLIENT_GAME_GOCREATIONPARAMETERS
 
-#include <hikari/client/game/objects/GameObject.hpp>
-#include <hikari/client/game/Direction.hpp>
+#include "hikari/client/game/objects/GameObject.hpp"
+#include "hikari/client/game/Direction.hpp"
 
-#include <hikari/core/geom/Point2D.hpp>
+#include "hikari/core/geom/Point2D.hpp"
 
 namespace hikari {
 

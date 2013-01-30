@@ -1,6 +1,6 @@
-#include <hikari/client/game/objects/effects/ScriptedEffect.hpp>
-#include <hikari/client/scripting/SquirrelService.hpp>
-#include <hikari/core/util/Log.hpp>
+#include "hikari/client/game/objects/effects/ScriptedEffect.hpp"
+#include "hikari/client/scripting/SquirrelService.hpp"
+#include "hikari/core/util/Log.hpp"
 
 namespace hikari {
 

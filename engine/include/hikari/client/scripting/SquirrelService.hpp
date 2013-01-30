@@ -1,7 +1,7 @@
 #ifndef HIKARI_CLIENT_SCRIPTING_SQUIRRELSERVICE
 #define HIKARI_CLIENT_SCRIPTING_SQUIRRELSERVICE
 
-#include <hikari/core/util/Service.hpp>
+#include "hikari/core/util/Service.hpp"
 
 #include <squirrel.h>
 #include <sqstdmath.h>
