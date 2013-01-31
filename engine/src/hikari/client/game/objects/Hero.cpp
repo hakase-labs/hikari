@@ -106,22 +106,22 @@ namespace hikari {
                 auto bottomLeft = bbox.getBottomLeft();
                 auto bottomRight = bbox.getBottomRight();
 
-                auto trAttr = room->getAttributeAt(static_cast<int>(topRight.getX() - 1)    / gridSize, static_cast<int>(topRight.getY()   ) / gridSize);
-                auto tlAttr = room->getAttributeAt(static_cast<int>(topLeft.getX())     / gridSize, static_cast<int>(topLeft.getY()    ) / gridSize);
-                auto blAttr = room->getAttributeAt(static_cast<int>(bottomLeft.getX())  / gridSize, static_cast<int>(bottomLeft.getY() - 1) / gridSize);
-                auto brAttr = room->getAttributeAt(static_cast<int>(bottomRight.getX() - 1) / gridSize, static_cast<int>(bottomRight.getY() - 1) / gridSize);
-                auto feetLeftAttr = room->getAttributeAt(static_cast<int>(bottomLeft.getX())  / gridSize, static_cast<int>(bottomLeft.getY()) / gridSize);
-                auto feetRightAttr = room->getAttributeAt(static_cast<int>(bottomRight.getX() - 1) / gridSize, static_cast<int>(bottomRight.getY()) / gridSize);
-                auto posAttr = room->getAttributeAt(static_cast<int>(getPosition().getX()) / gridSize, static_cast<int>(getPosition().getY()) / gridSize);
+                auto trAttr        = room->getAttributeAt(static_cast<int>(topRight.getX()    - 1) / gridSize, static_cast<int>(topRight.getY()       ) / gridSize);
+                auto tlAttr        = room->getAttributeAt(static_cast<int>(topLeft.getX()        ) / gridSize, static_cast<int>(topLeft.getY()        ) / gridSize);
+                auto blAttr        = room->getAttributeAt(static_cast<int>(bottomLeft.getX()     ) / gridSize, static_cast<int>(bottomLeft.getY()  - 1) / gridSize);
+                auto brAttr        = room->getAttributeAt(static_cast<int>(bottomRight.getX() - 1) / gridSize, static_cast<int>(bottomRight.getY() - 1) / gridSize);
+                auto feetLeftAttr  = room->getAttributeAt(static_cast<int>(bottomLeft.getX()     ) / gridSize, static_cast<int>(bottomLeft.getY()     ) / gridSize);
+                auto feetRightAttr = room->getAttributeAt(static_cast<int>(bottomRight.getX() - 1) / gridSize, static_cast<int>(bottomRight.getY()    ) / gridSize);
+                auto posAttr       = room->getAttributeAt(static_cast<int>(getPosition().getX()  ) / gridSize, static_cast<int>(getPosition().getY()  ) / gridSize);
 
-                auto touchingTopRight = ((trAttr != Room::NO_TILE) && (trAttr & TileAttribute::LADDER) == TileAttribute::LADDER);
-                auto touchingTopLeft = ((tlAttr != Room::NO_TILE) && (tlAttr & TileAttribute::LADDER) == TileAttribute::LADDER);
-                auto touchingBottomLeft = ((blAttr != Room::NO_TILE) && (blAttr & TileAttribute::LADDER) == TileAttribute::LADDER);
-                auto touchingBottomRight = ((brAttr != Room::NO_TILE) && (brAttr & TileAttribute::LADDER) == TileAttribute::LADDER);
-                auto touchingFeetLeft = ((feetLeftAttr != Room::NO_TILE) && (feetLeftAttr & TileAttribute::LADDER_TOP) == TileAttribute::LADDER_TOP);
-                auto touchingFeetRight = ((feetRightAttr != Room::NO_TILE) && (feetRightAttr & TileAttribute::LADDER_TOP) == TileAttribute::LADDER_TOP);
-                auto touchingBodyOnLadder = ((posAttr != Room::NO_TILE) && (posAttr & TileAttribute::LADDER) == TileAttribute::LADDER);
-                auto touchingLadderTop = ((posAttr != Room::NO_TILE) && (posAttr & TileAttribute::LADDER_TOP) == TileAttribute::LADDER_TOP);
+                auto touchingTopRight =     ((trAttr != Room::NO_TILE)         && TileAttribute::hasAttribute(trAttr,          TileAttribute::LADDER));
+                auto touchingTopLeft =      ((tlAttr != Room::NO_TILE)         && TileAttribute::hasAttribute(tlAttr,          TileAttribute::LADDER));
+                auto touchingBottomLeft =   ((blAttr != Room::NO_TILE)         && TileAttribute::hasAttribute(blAttr,          TileAttribute::LADDER));
+                auto touchingBottomRight =  ((brAttr != Room::NO_TILE)         && TileAttribute::hasAttribute(brAttr,          TileAttribute::LADDER));
+                auto touchingFeetLeft =     ((feetLeftAttr != Room::NO_TILE)   && TileAttribute::hasAttribute(feetLeftAttr,    TileAttribute::LADDER_TOP));
+                auto touchingFeetRight =    ((feetRightAttr != Room::NO_TILE)  && TileAttribute::hasAttribute(feetRightAttr,   TileAttribute::LADDER_TOP));
+                auto touchingBodyOnLadder = ((posAttr != Room::NO_TILE)        && TileAttribute::hasAttribute(posAttr,         TileAttribute::LADDER));
+                auto touchingLadderTop =    ((posAttr != Room::NO_TILE)        && TileAttribute::hasAttribute(posAttr,         TileAttribute::LADDER_TOP));
 
                 isTouchingLadderWithFeet = touchingFeetLeft || touchingFeetRight;
 
@@ -307,7 +307,7 @@ namespace hikari {
         //
         // Check if we hit spikes; if we did then we're dead!
         //
-        if(info.isCollisionY && ((info.tileType & TileAttribute::SPIKE) == TileAttribute::SPIKE)) {
+        if(info.isCollisionY && TileAttribute::hasAttribute(info.tileType, TileAttribute::SPIKE)) {
             HIKARI_LOG(debug4) << "Hit spikes; send kill message!";
         }
     }
