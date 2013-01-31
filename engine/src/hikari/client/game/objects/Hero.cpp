@@ -189,7 +189,7 @@ namespace hikari {
                 for(int x = startingX; x <= endingX; x += gridSize) { // Not sure about the <= here, but need to check the last pixel too
                     auto attribute = room->getAttributeAt(x / gridSize, y / gridSize);
 
-                    if((attribute != Room::NO_TILE) && (attribute & TileAttribute::SOLID) == TileAttribute::SOLID) {
+                    if((attribute != Room::NO_TILE) && TileAttribute::hasAttribute(attribute, TileAttribute::SOLID)) {
                         isInTunnel = true;
                         break;
                     }
