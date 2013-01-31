@@ -349,6 +349,9 @@ namespace hikari {
         // Put old view back
         target.setView(oldView); 
 
+        font->renderText(target, StringUtils::toString<float>(cameraView.getCenter().x - (cameraView.getSize().x / 2)), 8, 24);
+
+
         /*if(cameraFollowingPlayer) {
             font->renderText(target, "FOLLOWING", 8, 64, sf::Color::White);
         } else if(transitioning) {
@@ -442,22 +445,39 @@ namespace hikari {
             // This adjusts the clipping of the tile renderer
             //
             if(cameraFollowingPlayer) {
-                auto diffPosition = currentHeroPosition - previousHeroPosition;
+                
                 const auto & cameraView = camera.getView();
 
                 //
                 // Allow rock to push the camera if he's at least half way into its view
                 // Basically we just check the distance between rock and the edge of the view in the opposite direction
                 //
-                if(hero->getDirection() == Directions::Left) {
-                    if(std::abs(cameraView.getRight() - hero->getPosition().getX()) >= cameraView.getWidth() / 2) {
-                        camera.move(diffPosition.getX(), diffPosition.getY());
-                    }
-                } else if(hero->getDirection() == Directions::Right) {
-                    if(std::abs(cameraView.getLeft() - hero->getPosition().getX()) >= cameraView.getWidth() / 2) {
-                        camera.move(diffPosition.getX(), diffPosition.getY());
-                    }
-                }
+                //if(hero->getDirection() == Directions::Left) {
+                //    if(std::floor(std::abs(cameraView.getRight() - std::floor(hero->getPosition().getX()))) > cameraView.getWidth() / 2) {
+                //        diffPosition += currentHeroPosition - previousHeroPosition;
+
+                //        //if(diffPosition.getX() <= 1.0f) {
+                //            camera.move(diffPosition.getX(), diffPosition.getY());
+                //            diffPosition *= 0.0f;
+                //        //}
+                //    }
+                //} else if(hero->getDirection() == Directions::Right) {
+                //    if(std::floor(std::abs(cameraView.getLeft() - std::floor(hero->getPosition().getX()))) > cameraView.getWidth() / 2) {
+                //        diffPosition += currentHeroPosition - previousHeroPosition;
+
+                //        //if(diffPosition.getX() >= 1.0f) {
+                //            camera.move(diffPosition.getX(), diffPosition.getY());
+                //            diffPosition *= 0.0f;
+                //        //}
+                //    }
+                //}
+
+                //auto diffDist = hero->getDirection() == Directions::Left ? (cameraView.getRight() - hero->getPosition().getX()) : cameraView.getLeft() - hero->getPosition().getX();
+                camera.lookAt(
+                    (hero->getPosition().getX()),
+                    (hero->getPosition().getY())    
+                );
+
             }
         }
 
@@ -533,8 +553,8 @@ namespace hikari {
         tempPos.x = std::floor(tempPos.x + 16.0f);
         tempPos.y = std::floor(tempPos.y + 22.0f + 1.0f); // + 1 puts rock's feet on the first ground pixel
 
-        sprite.setPosition(tempPos);
-        animationPlayer.update(dt);
+        //sprite.setPosition(tempPos);
+        //animationPlayer.update(dt);
 
         // Check to see if we collide with item and apply its effect if we do.
         if(hero->getBoundingBox().intersects(item->getBoundingBox())) {
@@ -565,6 +585,7 @@ namespace hikari {
         //renderedCursor = sf::Shape::Rectangle(0.0f, 0.0f, 14.0f, 22.0f, sf::Color(0, 255, 255, 128));
 
         currentHeroPosition = hero->getPosition();
+        diffPosition.setX(0.0f).setY(0.0f);
     }
 
     void MapTestState::onExit() {
