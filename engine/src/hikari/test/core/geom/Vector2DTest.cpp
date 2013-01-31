@@ -1,5 +1,5 @@
 #include "hikari/test/core/geom/Vector2DTests.hpp"
-#include "hikari/core/geom/Vector2D.hpp"
+#include "hikari/core/math/Vector2.hpp"
 #include "hikari/core/util/Log.hpp"
 
 namespace hikari {
@@ -14,21 +14,21 @@ namespace testing {
 
     void Vector2DTests::testConstructors() {
         HIKARI_LOG(debug) << ">>> Testing constructors";
-        Vector2D vecDefault = Vector2D();
-        HIKARI_LOG(debug) << "Default constructed Vector2D = " << vecDefault;
-        Vector2D vecXandY = Vector2D(1.0f, 2.0f);
-        HIKARI_LOG(debug) << "Argument constructed Vector2D = " << vecXandY;
-        Vector2D vecCopy = Vector2D(vecXandY);
-        HIKARI_LOG(debug) << "Copy constructed Vector2D = " << vecCopy;
+        Vector2<float> vecDefault = Vector2<float>();
+        HIKARI_LOG(debug) << "Default constructed Vector2<float> = " << vecDefault;
+        Vector2<float> vecXandY = Vector2<float>(1.0f, 2.0f);
+        HIKARI_LOG(debug) << "Argument constructed Vector2<float> = " << vecXandY;
+        Vector2<float> vecCopy = Vector2<float>(vecXandY);
+        HIKARI_LOG(debug) << "Copy constructed Vector2<float> = " << vecCopy;
         HIKARI_LOG(debug) << ">>> Finished testing constructors";
     }
 
     void Vector2DTests::testEqualityAndInequality() {
         HIKARI_LOG(debug) << ">>> Testing equality and inequality";
         
-        Vector2D a = Vector2D(1.3f, 4.55f);
-        Vector2D b = Vector2D(1.3f, 4.55f);
-        Vector2D c = Vector2D(1.5f, 12.1f);
+        Vector2<float> a = Vector2<float>(1.3f, 4.55f);
+        Vector2<float> b = Vector2<float>(1.3f, 4.55f);
+        Vector2<float> c = Vector2<float>(1.5f, 12.1f);
 
         HIKARI_LOG(debug) << "a == a = " << (a == a);
         HIKARI_LOG(debug) << "a == b = " << (a == b);

@@ -132,11 +132,11 @@ namespace hikari {
     }
 
     bool TileMapCollisionResolver::tileIsSolid(const int& tileAttribute) const {
-        return (tileAttribute != Room::NO_TILE) && (tileAttribute & TileAttribute::SOLID) == TileAttribute::SOLID;
+        return (tileAttribute != Room::NO_TILE) && TileAttribute::hasAttribute(tileAttribute, TileAttribute::SOLID);
     }
 
     bool TileMapCollisionResolver::tileIsLadderTop(const int& tileAttribute) const {
-        return (tileAttribute != Room::NO_TILE) && (tileAttribute & TileAttribute::LADDER_TOP) == TileAttribute::LADDER_TOP;
+        return (tileAttribute != Room::NO_TILE) && TileAttribute::hasAttribute(tileAttribute, TileAttribute::LADDER_TOP);
     }
 
 } // hikari

@@ -26,6 +26,7 @@ namespace hikari {
 
     public:
         CollectableItem(const int& id, std::shared_ptr<Room> room, std::shared_ptr<Effect> effect);
+        CollectableItem(const CollectableItem &proto);
         virtual ~CollectableItem();
 
         virtual std::shared_ptr<CollectableItem> clone() const;

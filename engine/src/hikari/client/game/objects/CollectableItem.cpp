@@ -18,17 +18,24 @@ namespace hikari {
     {
         body.setGravitated(true);
         body.setHasWorldCollision(true);
+    }
 
-        /*
-        this->collisionCallback = [&](Movable& movable, CollisionInfo& collision) {
-            HIKARI_LOG(info) 
-                << "Movable::collisionCallback "
-                << "(cx? = " << collision.isCollisionX << ", "
-                << "dx = " << (collision.directionX == Directions::Left ? "LEFT" : "RIGHT") << ", "
-                << "cy? = " << collision.isCollisionY << ", "
-                << "dy = " << (collision.directionY == Directions::Up ? "UP" : "DOWN") << ")";
-        };
-        */
+    CollectableItem::CollectableItem(const CollectableItem &proto)
+        : Entity(GameObject::generateObjectId(), nullptr)
+        , effect(proto.effect->clone())
+        , age(0)
+        , maximumAge(proto.maximumAge)
+        , ageless(proto.ageless)
+    {
+        setActive(false);
+        setGravitated(proto.isGravitated());
+        setObstacle(proto.isObstacle());
+        setCurrentAnimation(proto.getCurrentAnimation());
+        setDirection(proto.getDirection());
+        setPhasing(proto.isPhasing());
+        setPosition(proto.getPosition());
+        setBoundingBox(proto.getBoundingBox());
+        setAnimationSet(proto.getAnimationSet());
     }
 
     CollectableItem::~CollectableItem() {
@@ -36,21 +43,7 @@ namespace hikari {
     }
 
     std::shared_ptr<CollectableItem> CollectableItem::clone() const {
-        // Deep copy the effect object
-        //auto clonedEffect = std::make_shared<Effect>(getEffect().get());
-        auto clonedBoundingBox = getBoundingBox();
-
-        auto clone = std::make_shared<CollectableItem>(
-            GameObject::generateObjectId(), nullptr, getEffect()->clone());
-
-    
-        clone->setBoundingBox(clonedBoundingBox);
-        clone->setActive(false);
-        //clone->setGravitated(this->isGravitated());
-        clone->setAgeless(this->isAgeless());
-        clone->setAnimationSet(this->getAnimationSet());
-
-        return clone;
+        return std::shared_ptr<CollectableItem>(new CollectableItem(*this));
     }
 
     const float& CollectableItem::getAge() const {

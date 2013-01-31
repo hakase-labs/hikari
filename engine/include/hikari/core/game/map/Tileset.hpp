@@ -30,6 +30,8 @@ namespace hikari {
             FLIP_VERTICAL = (1 << 6),
             ROTATE_BY_90 = (1 << 7) 
         };
+
+        bool hasAttribute(const int &tile, const TileAttribute &attr);
     }
 
     class HIKARI_API Tileset {
