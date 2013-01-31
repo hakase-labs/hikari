@@ -3,6 +3,7 @@
 #include "hikari/core/math/RetroVector.hpp"
 #include "hikari/core/game/SpriteAnimator.hpp"
 #include "hikari/core/game/map/Tileset.hpp"
+#include "hikari/core/util/Log.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
 
 namespace hikari {
@@ -301,6 +302,13 @@ namespace hikari {
     void Hero::handleCollision(Movable& body, CollisionInfo& info) {
         if(info.isCollisionY && info.directionY == Directions::Down) {
             isAirborn = false;
+        }
+
+        //
+        // Check if we hit spikes; if we did then we're dead!
+        //
+        if(info.isCollisionY && ((info.tileType & TileAttribute::SPIKE) == TileAttribute::SPIKE)) {
+            HIKARI_LOG(debug4) << "Hit spikes; send kill message!";
         }
     }
 
