@@ -126,7 +126,10 @@ int main(int argc, char** argv) {
     ::hikari::Log::setReportingLevel(debug2);
 
     initLogging(argc, argv);
-
+    
+    ::hikari::testing::Vector2DTests vecTests;
+    vecTests.runAllTests();
+    
     try {
 
         CommandProcessor cp;
