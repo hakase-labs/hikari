@@ -12,7 +12,6 @@
 namespace hikari {
 
     class CollisionResolver;
-    class CollisionDetector;
 
     class Movable {
     public:
@@ -32,7 +31,6 @@ namespace hikari {
 
     protected:
         Vector2<float> velocity;
-        Vector2<RetroVector> retroVelocity;
         BoundingBoxF boundingBox;
         CollisionInfo collisionInfo;
 
@@ -53,6 +51,7 @@ namespace hikari {
     public:
         Movable();
         Movable(float width, float height);
+        Movable(const Movable& proto);
         virtual ~Movable();
 
         const bool& isOnGround() const;
@@ -70,9 +69,6 @@ namespace hikari {
         void setTreatLadderTopAsGround(const bool& treatAsGround); 
         void setApplyHorizontalVelocity(const bool& applyVelocity);
         void setApplyVerticalVelocity(const bool& applyVelocity);
-
-        //std::unique_ptr<CollisionDetector> getCollisionDetector() const;
-        //std::unique_ptr<CollisionResolver> getCollisionResolver() const;
 
         void move(const Vector2<float>& position);
         void move(const float& x, const float& y);

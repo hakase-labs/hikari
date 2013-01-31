@@ -49,6 +49,23 @@ namespace hikari {
 
     }
 
+    Movable::Movable(const Movable& proto) 
+        : boundingBox(proto.boundingBox)
+        , velocity(proto.velocity)
+        , collisionInfo(proto.collisionInfo)
+        , onGroundNow(proto.onGroundNow)
+        , onGroundLastFrame(proto.onGroundLastFrame)
+        , affectedByGravity(proto.affectedByGravity)
+        , collidesWithWorld(proto.collidesWithWorld)
+        , treatLadderTopAsGround(proto.treatLadderTopAsGround)
+        , applyHorizontalVelocity(proto.applyHorizontalVelocity)
+        , applyVerticalVelocity(proto.applyVerticalVelocity)
+        , collisionCallback(proto.collisionCallback)
+        , landingCallback(proto.landingCallback)
+    {
+
+    }
+
     Movable::~Movable() {
 
     }
@@ -280,11 +297,6 @@ namespace hikari {
 
     void Movable::update(const float& dt) {
         if(isGravitated()) {
-            /*
-            RetroVector retroVelocity(velocity.getY());
-            RetroVector retroGravity(getGravity());
-            velocity.setY((retroVelocity + retroGravity).toFloat());
-            */
             velocity.setY(velocity.getY() + getGravity());
 
             if(velocity.getY() > (7.0f)) {
@@ -299,7 +311,7 @@ namespace hikari {
         // Integrate the position
         setPosition(
             getPosition().getX() + (applyHorizontalVelocity ? velocity.getX() : 0)/* * dt */, 
-            getPosition().getY() + (applyVerticalVelocity ? velocity.getY() : 0)/* * dt */);
+            getPosition().getY() + (applyVerticalVelocity   ? velocity.getY() : 0)/* * dt */);
     }
 
 } // hikari

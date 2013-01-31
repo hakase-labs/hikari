@@ -66,6 +66,7 @@ namespace hikari {
         static void enableDebug(const bool &debug);
 
         Entity(const int& id, std::shared_ptr<Room> room);
+        Entity(const Entity& proto);
         virtual ~Entity();
 
         sf::Texture& getSpriteTexture();

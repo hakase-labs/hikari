@@ -27,6 +27,7 @@ namespace hikari {
     public:
         BoundingBox(const Vector2<T> &position, const T &width, const T &height);
         BoundingBox(const T &x, const T &y, const T &width, const T &height);
+        BoundingBox(const BoundingBox& proto);
         
         // 
         // Accessors
@@ -174,6 +175,15 @@ namespace hikari {
         , origin(0, 0)
         , width(width)
         , height(height) {
+
+    }
+
+    template <typename T>
+    BoundingBox<T>::BoundingBox(const BoundingBox& proto)
+        : position(proto.position)
+        , origin(proto.origin)
+        , width(proto.width)
+        , height(proto.height) {
 
     }
 
