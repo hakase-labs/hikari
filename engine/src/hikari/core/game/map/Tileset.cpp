@@ -3,6 +3,10 @@
 
 namespace hikari {
 
+    bool TileAttribute::hasAttribute(const int &tile, const TileAttribute &attr) {
+        return ((tile & attr) == attr);
+    }
+
     Tileset::Tileset(
         const std::shared_ptr<sf::Texture> &texture, 
         const size_t& tileSize, 
