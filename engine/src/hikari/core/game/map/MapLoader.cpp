@@ -39,6 +39,9 @@ namespace hikari {
     const char* MapLoader::PROPERTY_NAME_ROOM_ENEMIES_POSITION_Y = "y";
     const char* MapLoader::PROPERTY_NAME_ROOM_ENEMIES_DIRECTION = "direction";
     const char* MapLoader::PROPERTY_NAME_ROOM_ITEMS = "items";
+    const char* MapLoader::PROPERTY_NAME_ROOM_ITEMS_TYPE = "type";
+    const char* MapLoader::PROPERTY_NAME_ROOM_ITEMS_X = "x";
+    const char* MapLoader::PROPERTY_NAME_ROOM_ITEMS_Y = "y";
     const char* MapLoader::PROPERTY_NAME_ROOM_TRANSITIONS = "transitions";
 
     MapLoader::MapLoader(const std::shared_ptr<TilesetCache> &tilesetCache)

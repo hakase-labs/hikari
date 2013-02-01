@@ -46,6 +46,9 @@ namespace hikari {
         static const char* PROPERTY_NAME_ROOM_ENEMIES_POSITION_Y;
         static const char* PROPERTY_NAME_ROOM_ENEMIES_DIRECTION;
         static const char* PROPERTY_NAME_ROOM_ITEMS;
+        static const char* PROPERTY_NAME_ROOM_ITEMS_TYPE;
+        static const char* PROPERTY_NAME_ROOM_ITEMS_X;
+        static const char* PROPERTY_NAME_ROOM_ITEMS_Y;
         static const char* PROPERTY_NAME_ROOM_TRANSITIONS;
 
         std::shared_ptr<TilesetCache> tilesetCache;
