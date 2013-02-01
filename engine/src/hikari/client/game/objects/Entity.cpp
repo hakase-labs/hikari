@@ -1,4 +1,6 @@
 #include "hikari/client/game/objects/Entity.hpp"
+#include "hikari/core/game/map/Room.hpp"
+#include "hikari/core/game/map/Tileset.hpp"
 #include "hikari/core/game/Animation.hpp"
 #include "hikari/core/game/AnimationSet.hpp"
 #include "hikari/core/game/SpriteAnimator.hpp"
@@ -290,6 +292,14 @@ namespace hikari {
 
         void setY(Entity * entity, const float & y) {
             entity->setPosition(entity->getPosition().getX(), y);
+        }
+
+        bool checkIfTileAtPositionHasAttribute(Entity * entity, const int & x, const int & y, const int & attribute) {
+            if(const auto & room = entity->getRoom()) {
+                return TileAttribute::hasAttribute(room->getAttributeAt(x / 16, y / 16), static_cast<TileAttribute::TileAttribute>(attribute));
+            }
+
+            return false;
         }
 
     }

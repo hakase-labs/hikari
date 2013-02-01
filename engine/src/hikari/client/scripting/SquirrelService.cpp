@@ -103,7 +103,7 @@ namespace hikari {
             // Class bindings
             //
             Sqrat::RootTable().Bind(
-                _SC("Enemy"), 
+                _SC("Enemy"),  
                 Sqrat::Class<Enemy>()
                     .Prop<const float>(_SC("velocityX"), &Enemy::getVelocityX, &Enemy::setVelocityX) 
                     .Prop<const float>(_SC("velocityY"), &Enemy::getVelocityY, &Enemy::setVelocityY)
@@ -116,6 +116,7 @@ namespace hikari {
                     .GlobalFunc(_SC("getY"), &EntityHelpers::getY)
                     .GlobalFunc(_SC("setX"), &EntityHelpers::setX)
                     .GlobalFunc(_SC("setY"), &EntityHelpers::setY)
+                    .GlobalFunc(_SC("checkIfTileAtPositionHasAttribute"), &EntityHelpers::checkIfTileAtPositionHasAttribute)
             );
         }
     }
