@@ -41,6 +41,7 @@ namespace hikari {
     class MapRenderer;
     class Hero;
     class TileMapCollisionResolver;
+    class Spawner;
 
     class GamePlayState : public GameState {
 
@@ -59,6 +60,12 @@ namespace hikari {
         std::shared_ptr<Map> currentMap;
         std::shared_ptr<Room> currentRoom;
         std::shared_ptr<Hero> hero;
+
+        //
+        // For keeping track of room objects
+        //
+        std::vector<std::weak_ptr<Spawner>> activeSpawners;
+        std::vector<std::weak_ptr<Spawner>> inactiveSpawners;
 
         GameWorld world;
         Camera camera;
@@ -92,6 +99,17 @@ namespace hikari {
         std::unique_ptr<SubState> subState;
         void changeSubState(std::unique_ptr<SubState> && newSubState);
         void changeCurrentRoom(const std::shared_ptr<Room>& newCurrentRoom);
+
+        /**
+            Creates links to all spawners in a given Room without taking 
+            ownership of them.
+        */
+        void linkSpawners(const std::shared_ptr<Room> & room);
+
+        /**
+            Checks all linked spawners if they should be active or inactive.
+        */
+        void checkSpawners();
 
         /**
             Starts the current stage from the beginning.

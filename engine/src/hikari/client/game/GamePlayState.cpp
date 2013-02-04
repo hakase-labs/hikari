@@ -4,6 +4,7 @@
 #include "hikari/client/game/RealTimeInput.hpp"
 #include "hikari/client/game/objects/GameObject.hpp"
 #include "hikari/client/game/objects/Hero.hpp"
+#include "hikari/client/game/objects/Spawner.hpp"
 #include "hikari/client/game/objects/controllers/PlayerInputHeroActionController.hpp"
 #include "hikari/client/scripting/SquirrelService.hpp"
 
@@ -34,6 +35,7 @@
 #include <SFML/Graphics/View.hpp>
 #include <SFML/Window/Event.hpp>
 
+#include <algorithm>
 #include <memory>
 #include <string>
 
@@ -155,7 +157,7 @@ namespace hikari {
         Movable::setGravity(0.25f);
 
         // Determine which stage we're on and set that to the current level...
-        currentMap = maps.at("map-test.json");
+        currentMap = maps.at("map-test2.json");
 
         changeCurrentRoom(currentMap->getRoom(0));
     }
@@ -193,9 +195,83 @@ namespace hikari {
             // Make sure we detect collisions in this room
             collisionResolver->setRoom(currentRoom);
 
+            // Get links to all spawners from new room
+            linkSpawners(currentRoom);
+            checkSpawners();
+
             // Let Rockman know where he is too
             hero->setRoom(currentRoom);
         }
+    }
+
+    void GamePlayState::linkSpawners(const std::shared_ptr<Room> & room) {
+        if(room) {
+            activeSpawners.clear();
+            inactiveSpawners.clear();
+
+            const auto & spawners = room->getSpawners();
+
+            for(auto spawner = std::begin(spawners), end = std::end(spawners); 
+                    spawner != end; spawner++) {
+                inactiveSpawners.emplace_back(std::weak_ptr<Spawner>(*spawner));
+            }
+        }
+
+        // Sort spawners by X coordinate, ascending
+        std::sort(std::begin(inactiveSpawners), std::end(inactiveSpawners), 
+            [](const std::weak_ptr<Spawner> &a, const std::weak_ptr<Spawner> &b) -> bool {
+                const auto & spawnerA = a.lock();
+                const auto & spawnerB = b.lock();
+                const auto aX = spawnerA->getPosition().getX();
+                const auto bX = spawnerB->getPosition().getX();
+
+                return aX < bX;
+            }
+        );
+
+        std::for_each(
+            std::begin(inactiveSpawners),
+            std::end(inactiveSpawners),
+            [](std::weak_ptr<Spawner> & s) {
+                if(auto ptr = s.lock()) {
+                    ptr->setActive(false);
+                }
+            }
+        );
+    }
+
+    void GamePlayState::checkSpawners() {
+        const auto & cameraView = camera.getView();
+
+        std::for_each(
+            std::begin(inactiveSpawners),
+            std::end(inactiveSpawners),
+            [&cameraView](std::weak_ptr<Spawner> & s) {
+                if(auto spawner = s.lock()) {
+                    const auto & spawnerPosition = spawner->getPosition();
+
+                    // If it's already awake see if it needs to deactivate
+                    // It will need to be deactivated if:
+                    //   1) It's no longer on screen
+                    //   2) It's spawn has died
+                    if(spawner->isActive()) {
+                        if(!cameraView.contains(spawnerPosition.getX(), spawnerPosition.getY())) {
+                            spawner->setActive(false);
+                            HIKARI_LOG(debug3) << "Just put spawner #" << spawner->getId() << " to bed";
+                        }
+                        // TODO: Check for if spawn is dead (messaging?)
+                        // 
+                    } 
+                    // If it's asleep, see if we need to wake it up
+                    else {
+                        if(cameraView.contains(spawnerPosition.getX(), spawnerPosition.getY())) {
+                            spawner->setActive(true);
+                            HIKARI_LOG(debug3) << "Just woke up spawner #" << spawner->getId();
+                        }
+                    }
+                }
+            }
+        );
     }
 
     void GamePlayState::loadAllMaps(const std::shared_ptr<MapLoader> &mapLoader, const Json::Value &params) {
@@ -505,6 +581,8 @@ namespace hikari {
         const auto cameraHeight = static_cast<int>(cameraView.getHeight());
 
         renderer->setCullRegion(Rectangle2D<int>(cameraX, cameraY, cameraWidth, cameraHeight));
+
+        gamePlayState->checkSpawners();
     }
 
     void GamePlayState::PlayingSubState::render(sf::RenderTarget &target) {
