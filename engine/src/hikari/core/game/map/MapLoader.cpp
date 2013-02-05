@@ -39,6 +39,9 @@ namespace hikari {
     const char* MapLoader::PROPERTY_NAME_ROOM_ENEMIES_POSITION_Y = "y";
     const char* MapLoader::PROPERTY_NAME_ROOM_ENEMIES_DIRECTION = "direction";
     const char* MapLoader::PROPERTY_NAME_ROOM_ITEMS = "items";
+    const char* MapLoader::PROPERTY_NAME_ROOM_ITEMS_TYPE = "type";
+    const char* MapLoader::PROPERTY_NAME_ROOM_ITEMS_X = "x";
+    const char* MapLoader::PROPERTY_NAME_ROOM_ITEMS_Y = "y";
     const char* MapLoader::PROPERTY_NAME_ROOM_TRANSITIONS = "transitions";
 
     MapLoader::MapLoader(const std::shared_ptr<TilesetCache> &tilesetCache)
@@ -115,12 +118,17 @@ namespace hikari {
         if(enemyCount > 0) {
             HIKARI_LOG(debug) << "Found " << enemyCount << " enemy declarations.";
             for(int enemyIndex = 0; enemyIndex < enemyCount; ++enemyIndex) {
-                spawners.push_back(constructSpawner(spawnerArray[enemyIndex]));
+                spawners.emplace_back(constructSpawner(spawnerArray[enemyIndex]));
             }
         }
+
+        spawnerArray = json[PROPERTY_NAME_ROOM_ITEMS];
         
         if(itemCount > 0) {
             HIKARI_LOG(debug) << "Found " << itemCount << " item declarations.";
+            for(int itemIndex = 0; itemIndex < itemCount; ++itemIndex) {
+                spawners.emplace_back(constructSpawner(spawnerArray[itemIndex]));
+            }
         }
 
         // Construct transitions
@@ -138,7 +146,7 @@ namespace hikari {
         auto type         = json[PROPERTY_NAME_ROOM_ENEMIES_TYPE].asString();
         auto x            = json[PROPERTY_NAME_ROOM_ENEMIES_POSITION_X].asInt();
         auto y            = json[PROPERTY_NAME_ROOM_ENEMIES_POSITION_Y].asInt();
-        auto dirString    = json[PROPERTY_NAME_ROOM_ENEMIES_DIRECTION].asString();
+        auto dirString    = json.get(PROPERTY_NAME_ROOM_ENEMIES_DIRECTION, "None").asString();
         auto spawner      = std::make_shared<Spawner>();
         auto direction    = (dirString == "Up" ? Directions::Up : 
                                 (dirString == "Right" ? Directions::Right : 

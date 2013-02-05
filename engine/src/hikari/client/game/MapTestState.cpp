@@ -34,6 +34,7 @@
 #include "hikari/client/game/objects/controllers/PlayerInputHeroActionController.hpp"
 
 #include "hikari/core/util/AnimationSetCache.hpp"
+#include "hikari/client/game/objects/ItemFactory.hpp"
 
 namespace hikari {
 
@@ -216,9 +217,23 @@ namespace hikari {
             squirrel->collectGarbage();
         }
 
-        if(event.type == sf::Event::MouseButtonPressed) {
+        if(event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
             auto coords = screenCoordToWorldCoord(static_cast<float>(event.mouseButton.x), static_cast<float>(event.mouseButton.y));
             hero->setPosition(coords);
+        }
+
+        if(event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Right) {
+            auto coords = screenCoordToWorldCoord(static_cast<float>(event.mouseButton.x), static_cast<float>(event.mouseButton.y));
+            //auto item = itemFactory->createItem("extraLife");
+            auto enemy = spawnEnemy("scripted-telly");
+
+            enemy->setPosition(coords);
+            enemy->setDirection(Directions::Up);
+            enemy->setRoom(currentRoom);
+
+            enemies.push_back(enemy);
+
+            
         }
 
         if(event.type == sf::Event::KeyPressed) {
