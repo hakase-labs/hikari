@@ -112,7 +112,7 @@ namespace hikari {
         services.registerService(Services::ANIMATIONSETCACHE, animationSetCache);
         services.registerService(Services::MAPLOADER,         mapLoader);
         services.registerService(Services::SCRIPTING,         squirrelService);
-        services.registerService(Services::GUIFONT,           guiFont);    
+        services.registerService(Services::GUIFONT,           guiFont);     
     }
 
 } // hikari
@@ -123,7 +123,7 @@ int main(int argc, char** argv) {
     using std::shared_ptr;
     using namespace hikari;
 
-    ::hikari::Log::setReportingLevel(debug2);
+    ::hikari::Log::setReportingLevel(debug3);
 
     initLogging(argc, argv);
     

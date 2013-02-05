@@ -185,6 +185,8 @@ namespace hikari {
         void setX(Entity * entity, const float & x);
         void setY(Entity * entity, const float & y);
 
+        bool checkIfTileAtPositionHasAttribute(Entity * entity, const int & x, const int & y, const int & attribute);
+
     } // hikari.EntityHelpers
 
 } // hikari
