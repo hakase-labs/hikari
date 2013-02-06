@@ -4,13 +4,13 @@
 
 namespace hikari {
 
-    GameProgress::GameProgress() 
+    GameProgress::GameProgress()
         : lives(3)
         , eTanks(0)
         , mTanks(0)
         , playerEnergy(GameProgress::MaxEnergy)
+        , currentBoss(0)
         , currentWeapon(0)
-        , currentBoss(0) 
     {
         std::fill(weaponEnergies, weaponEnergies + sizeof(weaponEnergies), 0);
         std::fill(weaponsEnabled, weaponsEnabled + sizeof(weaponsEnabled), false);
@@ -58,7 +58,7 @@ namespace hikari {
     unsigned char GameProgress::getCurrentBoss() const {
         return currentBoss;
     }
-    
+
     unsigned char GameProgress::getCurrentWeapon() const {
         return currentWeapon;
     }

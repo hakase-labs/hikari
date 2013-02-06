@@ -79,7 +79,7 @@ namespace hikari {
 
         friend std::ostream &operator<<(std::ostream &stream, const Vector2D &vector);
     };
-    
+
 } // hikari
 
 #endif // HIKARI_CORE_GEOM_VECTOR2D
