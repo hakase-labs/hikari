@@ -54,38 +54,27 @@ namespace hikari {
         std::shared_ptr<ImageCache> imageCache;
         std::shared_ptr<RealTimeInput> userInput;
         std::shared_ptr<SquirrelService> scriptEnv;
-        std::map< std::string, std::shared_ptr<Map> > maps;
-
         std::shared_ptr<TileMapCollisionResolver> collisionResolver;
         std::shared_ptr<Map> currentMap;
         std::shared_ptr<Room> currentRoom;
         std::shared_ptr<Hero> hero;
-
-        //
-        // For keeping track of room objects
-        //
+        std::shared_ptr<gui::EnergyMeter> hudBossEnergyMeter;
+        std::shared_ptr<gui::EnergyMeter> hudHeroEnergyMeter;
+        std::shared_ptr<gui::EnergyMeter> hudCurrentWeaponMeter;
+        std::unique_ptr<MapRenderer> mapRenderer;
+        std::unique_ptr<SubState> subState;
+        std::map< std::string, std::shared_ptr<Map> > maps;
         std::vector<std::weak_ptr<Spawner>> activeSpawners;
         std::vector<std::weak_ptr<Spawner>> inactiveSpawners;
-
         GameWorld world;
         Camera camera;
-        std::unique_ptr<MapRenderer> mapRenderer;
-
-        // Entity debugging markers
+        sf::View view;
         sf::RectangleShape spawnerMarker;
-
-        // Gui
+        sf::RectangleShape leftBar;
         bool drawBossEnergyMeter;
         bool drawHeroEnergyMeter;
         bool drawWeaponEnergyMeter;
         bool drawInfamousBlackBar;
-        std::shared_ptr<gui::EnergyMeter> hudBossEnergyMeter;
-        std::shared_ptr<gui::EnergyMeter> hudHeroEnergyMeter;
-        std::shared_ptr<gui::EnergyMeter> hudCurrentWeaponMeter;
-        sf::RectangleShape leftBar;
-        sf::View view;
-
-        // Gameplay Flags
         bool isViewingMenu;
 
         //
@@ -96,7 +85,6 @@ namespace hikari {
         //
         // Gameplay Mechanics
         //
-        std::unique_ptr<SubState> subState;
         void changeSubState(std::unique_ptr<SubState> && newSubState);
         void changeCurrentRoom(const std::shared_ptr<Room>& newCurrentRoom);
 
