@@ -112,7 +112,7 @@ namespace hikari {
 
         world.setPlayer(hero);
 
-        subState.reset(new ReadySubState(this));
+        subState.reset(new ReadySubState(*this));
         subState->enter();
     }
 
@@ -123,7 +123,7 @@ namespace hikari {
 
         if((event.type == sf::Event::KeyPressed) && event.key.code == sf::Keyboard::BackSpace) {
             if(subState) {
-                changeSubState(std::unique_ptr<SubState>(new ReadySubState(this)));
+                changeSubState(std::unique_ptr<SubState>(new ReadySubState(*this)));
             }
         }
     }
@@ -164,7 +164,7 @@ namespace hikari {
 
     void GamePlayState::onExit() { }
 
-    const std::string& GamePlayState::getName() const { 
+    const std::string& GamePlayState::getName() const {
         return name;
     }
 
@@ -211,14 +211,14 @@ namespace hikari {
 
             const auto & spawners = room->getSpawners();
 
-            for(auto spawner = std::begin(spawners), end = std::end(spawners); 
+            for(auto spawner = std::begin(spawners), end = std::end(spawners);
                     spawner != end; spawner++) {
                 inactiveSpawners.emplace_back(std::weak_ptr<Spawner>(*spawner));
             }
         }
 
         // Sort spawners by X coordinate, ascending
-        std::sort(std::begin(inactiveSpawners), std::end(inactiveSpawners), 
+        std::sort(std::begin(inactiveSpawners), std::end(inactiveSpawners),
             [](const std::weak_ptr<Spawner> &a, const std::weak_ptr<Spawner> &b) -> bool {
                 const auto & spawnerA = a.lock();
                 const auto & spawnerB = b.lock();
@@ -260,8 +260,8 @@ namespace hikari {
                             HIKARI_LOG(debug3) << "Just put spawner #" << spawner->getId() << " to bed";
                         }
                         // TODO: Check for if spawn is dead (messaging?)
-                        // 
-                    } 
+                        //
+                    }
                     // If it's asleep, see if we need to wake it up
                     else {
                         if(cameraView.contains(spawnerPosition.getX(), spawnerPosition.getY())) {
@@ -379,7 +379,7 @@ namespace hikari {
         if(drawWeaponEnergyMeter) {
             hudCurrentWeaponMeter->render(target);
         }
-        
+
         if(isViewingMenu) {
             //guiFont->renderText(target, "MENU", 72, 40);
         }
@@ -390,7 +390,7 @@ namespace hikari {
     // Definition of sub-states
     // ************************************************************************
 
-    GamePlayState::SubState::SubState(GamePlayState * gamePlayState)
+    GamePlayState::SubState::SubState(GamePlayState & gamePlayState)
         : gamePlayState(gamePlayState)
     {
     }
@@ -398,7 +398,7 @@ namespace hikari {
     //
     // ReadySubState
     //
-    GamePlayState::ReadySubState::ReadySubState(GamePlayState * gamePlayState)
+    GamePlayState::ReadySubState::ReadySubState(GamePlayState & gamePlayState)
         : SubState(gamePlayState)
         , renderReadyText(false)
         , renderFadeOverlay(true)
@@ -406,13 +406,12 @@ namespace hikari {
         , fadeOverlay()
     {
         std::cout << "ReadySubState()" << std::endl;
-        if(gamePlayState) {
-            fadeOverlay.setSize(
-                sf::Vector2f(gamePlayState->camera.getView().getWidth(), gamePlayState->camera.getView().getHeight()));
-            
-            fadeOverlay.setPosition(0.0f, 0.0f);
-            fadeOverlay.setFillColor(sf::Color::Black);
-        }
+
+        fadeOverlay.setSize(
+            sf::Vector2f(gamePlayState.camera.getView().getWidth(), gamePlayState.camera.getView().getHeight()));
+
+        fadeOverlay.setPosition(0.0f, 0.0f);
+        fadeOverlay.setFillColor(sf::Color::Black);
     }
 
     GamePlayState::ReadySubState::~ReadySubState() {
@@ -486,26 +485,26 @@ namespace hikari {
 
         // The "READY" sequence is 76 frames long, ~1.2666 seconds.
         if(timer >= (76.0f * (1.0f/60.0f))) {
-            gamePlayState->changeSubState(std::unique_ptr<SubState>(new TeleportSubState(gamePlayState)));
+            gamePlayState.changeSubState(std::unique_ptr<SubState>(new TeleportSubState(gamePlayState)));
         }
     }
 
     void GamePlayState::ReadySubState::render(sf::RenderTarget &target) {
-        gamePlayState->renderMap(target);
+        gamePlayState.renderMap(target);
 
         if(renderFadeOverlay) {
             target.draw(fadeOverlay);
         }
 
         if(renderReadyText) {
-            gamePlayState->guiFont->renderText(target, "READY", 108, 121);
+            gamePlayState.guiFont->renderText(target, "READY", 108, 121);
         }
     }
 
     //
     // TeleportSubState
     //
-    GamePlayState::TeleportSubState::TeleportSubState(GamePlayState * gamePlayState)
+    GamePlayState::TeleportSubState::TeleportSubState(GamePlayState & gamePlayState)
         : SubState(gamePlayState)
     {
         std::cout << "TeleportSubState()" << std::endl;
@@ -513,7 +512,7 @@ namespace hikari {
 
     GamePlayState::TeleportSubState::~TeleportSubState() {
         std::cout << "~TeleportSubState()" << std::endl;
-    };
+    }
 
     void GamePlayState::TeleportSubState::enter() {
         std::cout << "TeleportSubState::enter()" << std::endl;
@@ -524,23 +523,23 @@ namespace hikari {
     }
 
     void GamePlayState::TeleportSubState::update(const float & dt) {
-        auto& camera = gamePlayState->camera;
-        auto& hero = gamePlayState->hero;
+        auto& camera = gamePlayState.camera;
+        auto& hero = gamePlayState.hero;
         auto& heroPosition = hero->getPosition();
 
         camera.lookAt(heroPosition.getX(), heroPosition.getY());
 
-        gamePlayState->changeSubState(std::unique_ptr<SubState>(new PlayingSubState(gamePlayState)));
+        gamePlayState.changeSubState(std::unique_ptr<SubState>(new PlayingSubState(gamePlayState)));
     }
 
     void GamePlayState::TeleportSubState::render(sf::RenderTarget &target) {
-        gamePlayState->renderMap(target);
+        gamePlayState.renderMap(target);
     }
 
     //
     // PlayingSubState
     //
-    GamePlayState::PlayingSubState::PlayingSubState(GamePlayState * gamePlayState)
+    GamePlayState::PlayingSubState::PlayingSubState(GamePlayState & gamePlayState)
         : SubState(gamePlayState)
     {
         std::cout << "PlayingSubState()" << std::endl;
@@ -553,7 +552,7 @@ namespace hikari {
     void GamePlayState::PlayingSubState::enter() {
         std::cout << "PlayingSubState::enter()" << std::endl;
 
-        gamePlayState->drawHeroEnergyMeter = true;
+        gamePlayState.drawHeroEnergyMeter = true;
     }
 
     void GamePlayState::PlayingSubState::exit() {
@@ -561,16 +560,16 @@ namespace hikari {
     }
 
     void GamePlayState::PlayingSubState::update(const float & dt) {
-        gamePlayState->world.update(dt);
+        gamePlayState.world.update(dt);
 
-        if(gamePlayState->hero) {
-            gamePlayState->hero->update(dt);
+        if(gamePlayState.hero) {
+            gamePlayState.hero->update(dt);
         }
 
-        auto& camera = gamePlayState->camera;
-        auto& hero = gamePlayState->hero;
+        auto& camera = gamePlayState.camera;
+        auto& hero = gamePlayState.hero;
         const auto& heroPosition = hero->getPosition();
-        auto& renderer = gamePlayState->mapRenderer;
+        auto& renderer = gamePlayState.mapRenderer;
 
         camera.lookAt(heroPosition.getX(), heroPosition.getY());
 
@@ -582,26 +581,26 @@ namespace hikari {
 
         renderer->setCullRegion(Rectangle2D<int>(cameraX, cameraY, cameraWidth, cameraHeight));
 
-        gamePlayState->checkSpawners();
+        gamePlayState.checkSpawners();
     }
 
     void GamePlayState::PlayingSubState::render(sf::RenderTarget &target) {
-        gamePlayState->renderMap(target);
-        gamePlayState->renderEntities(target);
-        gamePlayState->renderHud(target);
+        gamePlayState.renderMap(target);
+        gamePlayState.renderEntities(target);
+        gamePlayState.renderHud(target);
     }
 
     //
     // TransitionSubState
     //
-    GamePlayState::TransitionSubState::TransitionSubState(GamePlayState * gamePlayState)
+    GamePlayState::TransitionSubState::TransitionSubState(GamePlayState & gamePlayState)
         : SubState(gamePlayState)
     {
 
     }
 
     GamePlayState::TransitionSubState::~TransitionSubState() {
-    
+
     }
 
     void GamePlayState::TransitionSubState::enter() {

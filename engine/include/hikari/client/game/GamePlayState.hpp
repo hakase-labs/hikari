@@ -101,7 +101,7 @@ namespace hikari {
         void changeCurrentRoom(const std::shared_ptr<Room>& newCurrentRoom);
 
         /**
-            Creates links to all spawners in a given Room without taking 
+            Creates links to all spawners in a given Room without taking
             ownership of them.
         */
         void linkSpawners(const std::shared_ptr<Room> & room);
@@ -141,7 +141,7 @@ namespace hikari {
         void renderMap(sf::RenderTarget &target) const;
         void renderEntities(sf::RenderTarget &target) const;
         void renderHud(sf::RenderTarget &target) const;
-    
+
         /**
          * GamePlayState::SubState encapsulates a part of gameplay that operates
          * independently from others. Some examples of this would be:
@@ -154,8 +154,8 @@ namespace hikari {
          */
         class SubState {
         protected:
-            GamePlayState * gamePlayState;
-            SubState(GamePlayState * gamePlayState);
+            GamePlayState & gamePlayState;
+            SubState(GamePlayState & gamePlayState);
         public:
             virtual ~SubState() { };
             virtual void enter() = 0;
@@ -175,7 +175,7 @@ namespace hikari {
             sf::RectangleShape fadeOverlay;
 
         public:
-            ReadySubState(GamePlayState * gamePlayState);
+            ReadySubState(GamePlayState & gamePlayState);
             virtual ~ReadySubState();
             virtual void enter();
             virtual void exit();
@@ -188,7 +188,7 @@ namespace hikari {
          */
         class TeleportSubState : public SubState {
         public:
-            TeleportSubState(GamePlayState * gamePlayState);
+            TeleportSubState(GamePlayState & gamePlayState);
             virtual ~TeleportSubState();
             virtual void enter();
             virtual void exit();
@@ -201,7 +201,7 @@ namespace hikari {
          */
         class PlayingSubState : public SubState {
         public:
-            PlayingSubState(GamePlayState * gamePlayState);
+            PlayingSubState(GamePlayState & gamePlayState);
             virtual ~PlayingSubState();
             virtual void enter();
             virtual void exit();
@@ -214,7 +214,7 @@ namespace hikari {
          */
         class TransitionSubState : public SubState {
         public:
-            TransitionSubState(GamePlayState * gamePlayState);
+            TransitionSubState(GamePlayState & gamePlayState);
             virtual ~TransitionSubState();
             virtual void enter();
             virtual void exit();

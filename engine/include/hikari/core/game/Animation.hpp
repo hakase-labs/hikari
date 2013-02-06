@@ -6,8 +6,10 @@
 #include <vector>
 #include <utility>
 
-#pragma warning(push)
-#pragma warning(disable:4251)
+#if (_WIN32 && _MSC_VER)
+    #pragma warning(push)
+    #pragma warning(disable:4251)
+#endif
 
 namespace hikari {
 
@@ -23,9 +25,9 @@ namespace hikari {
 
     public:
         Animation(
-            const FrameList &frames, 
-            bool doesRepeat = ANIMATION_DEFAULT_REPEAT_SETTING, 
-            unsigned int keyframe = ANIMATION_BEGINNING_FRAME_INDEX, 
+            const FrameList &frames,
+            bool doesRepeat = ANIMATION_DEFAULT_REPEAT_SETTING,
+            unsigned int keyframe = ANIMATION_BEGINNING_FRAME_INDEX,
             unsigned int syncGroup = ANIMATION_DEFAULT_SYNC_GROUP
         );
 
@@ -42,6 +44,8 @@ namespace hikari {
 
 } // hikari
 
-#pragma warning(pop)
+#if (_WIN32 && _MSC_VER)
+    #pragma warning(pop)
+#endif
 
 #endif // HIKARI_CORE_GAME_ANIMATION

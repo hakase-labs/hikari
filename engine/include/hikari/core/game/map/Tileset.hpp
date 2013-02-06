@@ -13,8 +13,10 @@
 #include <string>
 #include <vector>
 
-#pragma warning(push)
-#pragma warning(disable:4251)
+#if (_WIN32 && _MSC_VER)
+    #pragma warning(push)
+    #pragma warning(disable:4251)
+#endif
 
 namespace hikari {
 
@@ -28,7 +30,7 @@ namespace hikari {
             ABYSS = (1 << 4),
             FLIP_HORIZONTAL = (1 << 5),
             FLIP_VERTICAL = (1 << 6),
-            ROTATE_BY_90 = (1 << 7) 
+            ROTATE_BY_90 = (1 << 7)
         };
 
         bool hasAttribute(const int &tile, const TileAttribute &attr);
@@ -42,8 +44,8 @@ namespace hikari {
         std::shared_ptr<sf::Texture> texture;
     public:
         Tileset(
-            const std::shared_ptr<sf::Texture> &texture, 
-            const size_t& tileSize, 
+            const std::shared_ptr<sf::Texture> &texture,
+            const size_t& tileSize,
             const std::vector<sf::IntRect> &tiles,
             const std::vector<TileAnimator> &tileAnimators
         );
@@ -55,6 +57,8 @@ namespace hikari {
 
 } // hikari
 
-#pragma warning(pop)
+#if (_WIN32 && _MSC_VER)
+    #pragma warning(pop)
+#endif
 
 #endif // HIKARI_CORE_GAME_MAP_TILESET

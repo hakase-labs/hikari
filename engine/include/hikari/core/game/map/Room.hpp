@@ -7,8 +7,10 @@
 #include <memory>
 #include <vector>
 
-#pragma warning(push)
-#pragma warning(disable:4251)
+#if (_WIN32 && _MSC_VER)
+    #pragma warning(push)
+    #pragma warning(disable:4251)
+#endif
 
 namespace hikari {
 
@@ -16,7 +18,7 @@ namespace hikari {
     class Doodad;
     class Enemy;
     class Spawner;
-    
+
     class HIKARI_API Room {
     private:
         int id;
@@ -36,13 +38,13 @@ namespace hikari {
         std::vector<std::shared_ptr<Spawner>> spawners;
 
         const inline bool isInBounds(const int &x, const int &y) const;
-        
+
     public:
         const static int NO_TILE = -1;
 
         Room(const int &id, const int &x, const int &y, const int &width, const int &height, const int &gridSize, const Rectangle2D<int> &cameraBounds,
             const std::vector<int> &tile, const std::vector<int> &attr, const std::vector<RoomTransition> &transitions, const std::vector<std::shared_ptr<Spawner>> &spawners);
-            
+
         const int getId() const;
         const int getX() const;
         const int getY() const;
@@ -58,7 +60,7 @@ namespace hikari {
 
             All positions are relative to the top left corner of the map data,
             where the top left corner is defined as (0, 0).
-            
+
             @param tileX the x-coordinate of the tile to get
             @param tileY the y-coordinate of the tile to get
         */
@@ -70,7 +72,7 @@ namespace hikari {
 
             All positions are relative to the top left corner of the map data,
             where the top left corner is defined as (0, 0).
-            
+
             @param attrX the x-coordinate of the attribute to get
             @param attrY the y-coordinate of the attribute to get
         */
@@ -89,6 +91,8 @@ namespace hikari {
 
 } // hikari
 
-#pragma warning(pop)
+#if (_WIN32 && _MSC_VER)
+    #pragma warning(pop)
+#endif
 
 #endif // HIKARI_CORE_GAME_MAP_ROOM

@@ -7,10 +7,10 @@
 #include "hikari/core/Platform.hpp"
 #include "hikari/core/game/GameState.hpp"
 
-// #include <oolua.h>
-
-#pragma warning(push)
-#pragma warning(disable:4251)
+#if (_WIN32 && _MSC_VER)
+    #pragma warning(push)
+    #pragma warning(disable:4251)
+#endif
 
 namespace sf {
     class RenderTarget;
@@ -53,8 +53,8 @@ namespace hikari {
         void addState(const std::string &name, const StatePtr &state);
 
         /**
-            Immediately trasitions from the current state in to the new state specified 
-            by name. If no state can be identified for the given name an exception will 
+            Immediately trasitions from the current state in to the new state specified
+            by name. If no state can be identified for the given name an exception will
             be thrown.
 
             The name supplied will also be set as the "next" state.
@@ -74,6 +74,8 @@ namespace hikari {
 
 } // hikari
 
-#pragma warning(pop)
+#if (_WIN32 && _MSC_VER)
+    #pragma warning(pop)
+#endif
 
 #endif // HIKARI_CORE_GAME_GAMECONTROLLER

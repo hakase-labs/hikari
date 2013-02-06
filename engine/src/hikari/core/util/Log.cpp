@@ -1,5 +1,6 @@
 #include "hikari/core/util/Log.hpp"
 #include <ctime>
+#include <cstdio>
 #include <iostream>
 
 namespace hikari {

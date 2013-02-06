@@ -43,16 +43,18 @@ namespace hikari {
         static std::string trim(std::string s);
     };
 
+/*
     template<>
     inline float StringUtils::fromString(const std::string &str) {
-        return std::stof(str);
+        // TODO: This is a hack for GCC; need to fix to use std::stof()
+        return static_cast<float>(std::stod(str));
     }
 
     template<>
     inline double StringUtils::fromString(const std::string &str) {
         return std::stod(str);
     }
-
+*/
 } // hikari
 
 #endif // HIKARI_CORE_UTIL_STRINGUTILS
