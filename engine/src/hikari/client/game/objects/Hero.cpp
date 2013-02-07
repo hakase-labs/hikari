@@ -186,13 +186,13 @@ namespace hikari {
 
                 isInTunnel = false;
 
-                for(int x = startingX; x <= endingX; x += gridSize) { // Not sure about the <= here, but need to check the last pixel too
-                    auto attribute = room->getAttributeAt(x / gridSize, y / gridSize);
+                auto topLeftTile = room->getAttributeAt(startingX / gridSize, y / gridSize);
+                auto topRightTile = room->getAttributeAt((endingX - 1) / gridSize, y / gridSize);
 
-                    if((attribute != Room::NO_TILE) && TileAttribute::hasAttribute(attribute, TileAttribute::SOLID)) {
-                        isInTunnel = true;
-                        break;
-                    }
+                // Only check the top left and top right points
+                if((topLeftTile != Room::NO_TILE) && TileAttribute::hasAttribute(topLeftTile, TileAttribute::SOLID)
+                    || (topRightTile != Room::NO_TILE) && TileAttribute::hasAttribute(topRightTile, TileAttribute::SOLID)) {
+                    isInTunnel = true;
                 }
             }
 
