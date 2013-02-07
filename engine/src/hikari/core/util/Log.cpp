@@ -1,5 +1,6 @@
 #include "hikari/core/util/Log.hpp"
 #include <ctime>
+#include <cstdio>
 #include <iostream>
 
 namespace hikari {
@@ -38,7 +39,7 @@ namespace hikari {
         char mbstr[100];
         std::fill_n(mbstr, 100, 0);
 
-#if defined(_WIN32) || defined(__WIN32__)
+#if (_WIN32 && _MSC_VER)
         #pragma warning(push)
         #pragma warning(disable:4996)
         // We disable this warning for portability's sake.
@@ -47,11 +48,9 @@ namespace hikari {
         if(std::strftime(mbstr, 100, "%H:%M:%S", std::localtime(&t))) {
             ss << mbstr;
         }
-
-#if defined(_WIN32) || defined(__WIN32__)
+#if (_WIN32 && _MSC_VER)
         #pragma warning(pop)
 #endif
-
         return ss.str();
     }
 

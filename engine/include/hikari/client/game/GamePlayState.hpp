@@ -54,38 +54,27 @@ namespace hikari {
         std::shared_ptr<ImageCache> imageCache;
         std::shared_ptr<RealTimeInput> userInput;
         std::shared_ptr<SquirrelService> scriptEnv;
-        std::map< std::string, std::shared_ptr<Map> > maps;
-
         std::shared_ptr<TileMapCollisionResolver> collisionResolver;
         std::shared_ptr<Map> currentMap;
         std::shared_ptr<Room> currentRoom;
         std::shared_ptr<Hero> hero;
-
-        //
-        // For keeping track of room objects
-        //
+        std::shared_ptr<gui::EnergyMeter> hudBossEnergyMeter;
+        std::shared_ptr<gui::EnergyMeter> hudHeroEnergyMeter;
+        std::shared_ptr<gui::EnergyMeter> hudCurrentWeaponMeter;
+        std::unique_ptr<MapRenderer> mapRenderer;
+        std::unique_ptr<SubState> subState;
+        std::map< std::string, std::shared_ptr<Map> > maps;
         std::vector<std::weak_ptr<Spawner>> activeSpawners;
         std::vector<std::weak_ptr<Spawner>> inactiveSpawners;
-
         GameWorld world;
         Camera camera;
-        std::unique_ptr<MapRenderer> mapRenderer;
-
-        // Entity debugging markers
+        sf::View view;
         sf::RectangleShape spawnerMarker;
-
-        // Gui
+        sf::RectangleShape leftBar;
         bool drawBossEnergyMeter;
         bool drawHeroEnergyMeter;
         bool drawWeaponEnergyMeter;
         bool drawInfamousBlackBar;
-        std::shared_ptr<gui::EnergyMeter> hudBossEnergyMeter;
-        std::shared_ptr<gui::EnergyMeter> hudHeroEnergyMeter;
-        std::shared_ptr<gui::EnergyMeter> hudCurrentWeaponMeter;
-        sf::RectangleShape leftBar;
-        sf::View view;
-
-        // Gameplay Flags
         bool isViewingMenu;
 
         //
@@ -96,12 +85,11 @@ namespace hikari {
         //
         // Gameplay Mechanics
         //
-        std::unique_ptr<SubState> subState;
         void changeSubState(std::unique_ptr<SubState> && newSubState);
         void changeCurrentRoom(const std::shared_ptr<Room>& newCurrentRoom);
 
         /**
-            Creates links to all spawners in a given Room without taking 
+            Creates links to all spawners in a given Room without taking
             ownership of them.
         */
         void linkSpawners(const std::shared_ptr<Room> & room);
@@ -141,7 +129,7 @@ namespace hikari {
         void renderMap(sf::RenderTarget &target) const;
         void renderEntities(sf::RenderTarget &target) const;
         void renderHud(sf::RenderTarget &target) const;
-    
+
         /**
          * GamePlayState::SubState encapsulates a part of gameplay that operates
          * independently from others. Some examples of this would be:
@@ -154,8 +142,8 @@ namespace hikari {
          */
         class SubState {
         protected:
-            GamePlayState * gamePlayState;
-            SubState(GamePlayState * gamePlayState);
+            GamePlayState & gamePlayState;
+            SubState(GamePlayState & gamePlayState);
         public:
             virtual ~SubState() { };
             virtual void enter() = 0;
@@ -175,7 +163,7 @@ namespace hikari {
             sf::RectangleShape fadeOverlay;
 
         public:
-            ReadySubState(GamePlayState * gamePlayState);
+            ReadySubState(GamePlayState & gamePlayState);
             virtual ~ReadySubState();
             virtual void enter();
             virtual void exit();
@@ -188,7 +176,7 @@ namespace hikari {
          */
         class TeleportSubState : public SubState {
         public:
-            TeleportSubState(GamePlayState * gamePlayState);
+            TeleportSubState(GamePlayState & gamePlayState);
             virtual ~TeleportSubState();
             virtual void enter();
             virtual void exit();
@@ -201,7 +189,7 @@ namespace hikari {
          */
         class PlayingSubState : public SubState {
         public:
-            PlayingSubState(GamePlayState * gamePlayState);
+            PlayingSubState(GamePlayState & gamePlayState);
             virtual ~PlayingSubState();
             virtual void enter();
             virtual void exit();
@@ -214,7 +202,7 @@ namespace hikari {
          */
         class TransitionSubState : public SubState {
         public:
-            TransitionSubState(GamePlayState * gamePlayState);
+            TransitionSubState(GamePlayState & gamePlayState);
             virtual ~TransitionSubState();
             virtual void enter();
             virtual void exit();

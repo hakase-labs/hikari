@@ -1,5 +1,7 @@
 #include "hikari/client/game/objects/Spawner.hpp"
 
+#include "hikari/core/util/Log.hpp"
+
 namespace hikari {
 
     Spawner::Spawner()
@@ -26,4 +28,15 @@ namespace hikari {
         this->position = newPosition;
     }
 
+    void Spawner::onActivated() {
+        GameObject::onActivated();
+
+        HIKARI_LOG(debug3) << "Spawner::onActivated(), id = " << getId();
+    }
+
+    void Spawner::onDeactivated() {
+        GameObject::onDeactivated();
+
+        HIKARI_LOG(debug3) << "Spawner::onDeactivated(), id = " << getId();
+    }
 } // hikari

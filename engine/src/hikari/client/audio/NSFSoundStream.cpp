@@ -8,10 +8,13 @@
 
 namespace hikari {
 
-    NSFSoundStream::NSFSoundStream(std::size_t bufferSize) : 
+    NSFSoundStream::NSFSoundStream(std::size_t bufferSize) :
     sf::SoundStream(),
-    myBufferSize(bufferSize), 
-    myBuffer    (new short[myBufferSize]) 
+    myBufferSize(bufferSize),
+    myBuffer    (new short[myBufferSize]),
+    emu         (nullptr),
+    trackInfo   (nullptr),
+    mutex       ()
     {
         this->stop();
     }
@@ -26,7 +29,7 @@ namespace hikari {
         int length = 0;
         auto fs = FileSystem::openFile(fileName);
 
-            
+
         fs->seekg (0, std::ios::end);
         length = static_cast<int>(fs->tellg());
         fs->seekg (0, std::ios::beg);
@@ -52,21 +55,21 @@ namespace hikari {
                 return false;
                 //throw std::runtime_error("Out of memory");
             }
-            
+
             handleError(emu->set_sample_rate(SAMPLE_RATE));
             handleError(gme_load_data(emu.get(), buffer.get(), length));
         } catch(std::runtime_error& ex) {
             HIKARI_LOG(debug) << ex.what();
             return false;
         }
-        
+
         initialize(2, SAMPLE_RATE);
         setCurrentTrack(0);
 
         /*int count = emu->track_count();
         for(int i = 0; i < count; i++) {
             track_info_t info;
-            
+
             emu->track_info(&info, i);
 
             std::string song(info.song);
@@ -88,10 +91,10 @@ namespace hikari {
         sf::Lock lock(mutex);
         handleError(emu->play(myBufferSize, myBuffer.get()));
 
-        Data.samples   = &myBuffer[0]; 
+        Data.samples   = &myBuffer[0];
         Data.sampleCount = myBufferSize;
 
-        if(!emu->track_ended()) { 
+        if(!emu->track_ended()) {
             return true;
         } else {
             return false;
@@ -126,7 +129,7 @@ namespace hikari {
     const std::string NSFSoundStream::getTrackName() {
         sf::Lock lock(mutex);
         handleError(emu->track_info(trackInfo.get()));
-        return std::string(trackInfo->song); 
+        return std::string(trackInfo->song);
     }
 
     int NSFSoundStream::getVoiceCount() const {

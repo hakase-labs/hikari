@@ -6,7 +6,7 @@ namespace Json {
 }
 
 namespace hikari {
-    
+
     class ClientConfig {
     private:
         static const char* PROPERTY_VSYNC;

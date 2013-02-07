@@ -8,8 +8,10 @@
 
 #include <vector>
 
-#pragma warning(push)
-#pragma warning(disable:4251)
+#if (_WIN32 && _MSC_VER)
+    #pragma warning(push)
+    #pragma warning(disable:4251)
+#endif
 
 namespace hikari {
 
@@ -25,7 +27,7 @@ namespace hikari {
         TileDataPtr tileset;
         std::vector<RoomPtr> rooms;
         std::vector< Rectangle2D<int> > roomRectangles; // stores room locations and dimensions in pixels
-        
+
         /**
             Constructs rectangles that represent the size and location of each
             room in pixels. These rectangles are used to determine which room
@@ -39,7 +41,7 @@ namespace hikari {
         Map(const TileDataPtr &tileset, const int &gridSize, const std::vector<RoomPtr> &rooms);
 
         const TileDataPtr& getTileset() const;
-        
+
         /**
             Gets the size of the grid this map uses in pixels.
         */
@@ -49,12 +51,12 @@ namespace hikari {
             Gets the number of rooms that exist in the map.
         */
         const int getRoomCount() const;
-        
+
         /**
-            Gets a pointer to the map data of the room with a specific index. 
+            Gets a pointer to the map data of the room with a specific index.
             If no room can be found and the specified index, an empty pointer
             is returned.
-            
+
             @param index the index of the room
         */
         const RoomPtr getRoom(int index) const;
@@ -66,10 +68,10 @@ namespace hikari {
             @param index the index of the room
         */
         const Rectangle2D<int>& getRoomRect(int index) const;
-        
+
         /**
-            Finds the room which contains the location (x, y) and returns its 
-            id. If the location (x, y) is not within any of the rooms, -1 is 
+            Finds the room which contains the location (x, y) and returns its
+            id. If the location (x, y) is not within any of the rooms, -1 is
             returned.
         */
         const int getRoomIndexByLocation(int x, int y) const;
@@ -77,6 +79,8 @@ namespace hikari {
 
 } // hikari
 
-#pragma warning(pop)
+#if (_WIN32 && _MSC_VER)
+    #pragma warning(pop)
+#endif
 
 #endif // HIKARI_CORE_GAME_MAP_MAP

@@ -6,11 +6,13 @@
 #include <json/value.h>
 #include <string>
 
-#pragma warning(push)
-#pragma warning(disable:4251)
+#if (_WIN32 && _MSC_VER)
+    #pragma warning(push)
+    #pragma warning(disable:4251)
+#endif
 
 namespace hikari {
-    
+
     class AnimationLoader;
     class ImageCache;
     class Tileset;
@@ -24,7 +26,7 @@ namespace hikari {
         static const char* PROPERTY_NAME_X;
         static const char* PROPERTY_NAME_Y;
         static const char* PROPERTY_NAME_ANIMATION;
-        
+
         std::shared_ptr<AnimationLoader> animationLoader;
         std::shared_ptr<ImageCache> imageCache;
 
@@ -42,6 +44,8 @@ namespace hikari {
 
 } // hikari
 
-#pragma warning(pop)
+#if (_WIN32 && _MSC_VER)
+    #pragma warning(pop)
+#endif
 
 #endif // HIKARI_CORE_GAME_MAP_TILESETLOADER

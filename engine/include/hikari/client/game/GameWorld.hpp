@@ -51,7 +51,7 @@ namespace hikari {
             @return player's currently faced direction
         */
         const Direction getPlayerFacingDirection() const;
-        
+
         void render(sf::RenderTarget &target);
         virtual void update(const float &dt);
     };

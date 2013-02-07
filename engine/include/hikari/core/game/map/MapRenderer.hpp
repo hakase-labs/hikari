@@ -6,8 +6,10 @@
 #include <memory>
 #include <SFML/Graphics/Sprite.hpp>
 
-#pragma warning(push)
-#pragma warning(disable:4251)
+#if (_WIN32 && _MSC_VER)
+    #pragma warning(push)
+    #pragma warning(disable:4251)
+#endif
 
 namespace sf {
     class RenderTarget;
@@ -37,7 +39,7 @@ namespace hikari {
 
     public:
         MapRenderer(const RoomPtr &room, const TileDataPtr &tileData);
-        
+
         void setRoom(const RoomPtr &room);
         RoomPtr getRoom() const;
 
@@ -51,6 +53,8 @@ namespace hikari {
 
 } // hikari
 
-#pragma warning(pop)
+#if (_WIN32 && _MSC_VER)
+    #pragma warning(pop)
+#endif
 
 #endif // HIKARI_CORE_GAME_MAP_MAPRENDERER
