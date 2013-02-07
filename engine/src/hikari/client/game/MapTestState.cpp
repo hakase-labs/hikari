@@ -34,6 +34,7 @@
 #include "hikari/client/game/objects/controllers/PlayerInputHeroActionController.hpp"
 
 #include "hikari/core/util/AnimationSetCache.hpp"
+#include "hikari/core/util/ImageCache.hpp"
 #include "hikari/client/game/objects/ItemFactory.hpp"
 
 namespace hikari {
@@ -60,6 +61,7 @@ namespace hikari {
         , view(sf::FloatRect(0.0f, 0.0f, 256.0f, 240.0f))
         , camera(Rectangle2D<float>(0.0f, 0.0f, 256.0f, 240.0f))
         , cameraViewportOutline(sf::Vector2f(256.0f, 240.0f))
+        , imageCache(imageCache)
         , grounded(false)
         , input(new RealTimeInput())
         , velocity(0.0f, 0.0f)
@@ -727,10 +729,9 @@ namespace hikari {
 
     void MapTestState::setupHero() {
         auto heroAnimationSet = animationSetCache->get("assets/animations/rockman-32.json");
+        auto spriteSheet = imageCache->get(heroAnimationSet->getImageFileName());
 
-        sf::Texture spriteSheet;
-        PhysFSUtils::loadImage(heroAnimationSet->getImageFileName(), spriteSheet);
-        spriteSheet.setSmooth(false);
+        spriteSheet->setSmooth(false);
 
         hero->setActive(true);
         hero->setAnimationSet(heroAnimationSet);
@@ -743,10 +744,9 @@ namespace hikari {
 
     void MapTestState::setupEnemy() {
         auto enemyAnimationSet = animationSetCache->get("assets/animations/enemies.json");
-        sf::Texture enemySprites;
+        auto enemySprites = imageCache->get(enemyAnimationSet->getImageFileName());
 
-        PhysFSUtils::loadImage(enemyAnimationSet->getImageFileName(), enemySprites);
-        enemySprites.setSmooth(false);
+        enemySprites->setSmooth(false);
 
         enemy->setActive(false);
         enemy->setAnimationSet(enemyAnimationSet);
@@ -767,10 +767,9 @@ namespace hikari {
         if(type == "telly") {
 
             auto enemyAnimationSet = animationSetCache->get("assets/animations/telly.json");
-            sf::Texture enemySprites;
+            auto enemySprites = imageCache->get(enemyAnimationSet->getImageFileName());
 
-            PhysFSUtils::loadImage(enemyAnimationSet->getImageFileName(), enemySprites);
-            enemySprites.setSmooth(false);
+            enemySprites->setSmooth(false);
 
             instance->setActive(true);
             instance->setAnimationSet(enemyAnimationSet);
@@ -787,10 +786,9 @@ namespace hikari {
         } else if(type == "scripted-telly") {
 
             auto enemyAnimationSet = animationSetCache->get("assets/animations/telly.json");
-            sf::Texture enemySprites;
+            auto enemySprites = imageCache->get(enemyAnimationSet->getImageFileName());
 
-            PhysFSUtils::loadImage(enemyAnimationSet->getImageFileName(), enemySprites);
-            enemySprites.setSmooth(false);
+            enemySprites->setSmooth(false);
 
             instance->setActive(true);
             instance->setAnimationSet(enemyAnimationSet);
@@ -806,10 +804,9 @@ namespace hikari {
 
         } else if(type == "octopus-battery") {
             auto enemyAnimationSet = animationSetCache->get("assets/animations/enemies.json");
-            sf::Texture enemySprites;
+            auto enemySprites = imageCache->get(enemyAnimationSet->getImageFileName());
 
-            PhysFSUtils::loadImage(enemyAnimationSet->getImageFileName(), enemySprites);
-            enemySprites.setSmooth(false);
+            enemySprites->setSmooth(false);
 
             instance->setActive(true);
             instance->setAnimationSet(enemyAnimationSet);
@@ -823,10 +820,9 @@ namespace hikari {
             instance->setDirection(Directions::Down);
         } else if(type == "scripted-octopusbattery") {
             auto enemyAnimationSet = animationSetCache->get("assets/animations/enemies.json");
-            sf::Texture enemySprites;
+            auto enemySprites = imageCache->get(enemyAnimationSet->getImageFileName());
 
-            PhysFSUtils::loadImage(enemyAnimationSet->getImageFileName(), enemySprites);
-            enemySprites.setSmooth(false);
+            enemySprites->setSmooth(false);
 
             instance->setActive(true);
             instance->setAnimationSet(enemyAnimationSet);

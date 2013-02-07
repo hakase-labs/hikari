@@ -43,7 +43,7 @@ namespace hikari {
         auto item = std::make_shared<CollectableItem>(GameObject::generateObjectId(), nullptr, effect);
 
         item->setAnimationSet(animationSetCache->get("assets/animations/items.json"));
-        item->setSpriteTexture(*imageCache->get("assets/images/sp-collectables.png"));
+        item->setSpriteTexture(imageCache->get("assets/images/sp-collectables.png"));
         item->changeAnimation("e-tank");
         item->setAgeless(true);
 
@@ -55,7 +55,7 @@ namespace hikari {
         auto item = std::make_shared<CollectableItem>(GameObject::generateObjectId(), nullptr, effect);
 
         item->setAnimationSet(animationSetCache->get("assets/animations/items.json"));
-        item->setSpriteTexture(*imageCache->get("assets/images/sp-collectables.png"));
+        item->setSpriteTexture(imageCache->get("assets/images/sp-collectables.png"));
         item->changeAnimation("extra-life-rockman");
         item->setAgeless(true);
 

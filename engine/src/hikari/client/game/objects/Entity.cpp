@@ -20,7 +20,7 @@ namespace hikari {
         , room(room)
         , spawnPosition()
         , spriteTexture()
-        , sprite(spriteTexture)
+        , sprite()
         , animationSet()
         , currentAnimation()
         , animationPlayer(new SpriteAnimator(sprite))
@@ -48,7 +48,7 @@ namespace hikari {
         , room(proto.room)
         , spawnPosition(proto.spawnPosition)
         , spriteTexture(proto.spriteTexture)
-        , sprite(spriteTexture)
+        , sprite()
         , animationSet(proto.animationSet)
         , currentAnimation(proto.currentAnimation)
         , animationPlayer(new SpriteAnimator(sprite))
@@ -63,13 +63,15 @@ namespace hikari {
 
         body.setCollisionCallback(
             std::bind(&Entity::handleCollision, this, std::placeholders::_1, std::placeholders::_2));
+
+        setSpriteTexture(spriteTexture);
     }
 
     Entity::~Entity() {
 
     }
 
-    sf::Texture& Entity::getSpriteTexture() {
+    std::shared_ptr<sf::Texture> Entity::getSpriteTexture() {
         return spriteTexture;
     }
 
@@ -100,9 +102,12 @@ namespace hikari {
         return animationPlayer;
     }
 
-    void Entity::setSpriteTexture(const sf::Texture& newTexture) {
+    void Entity::setSpriteTexture(const std::shared_ptr<sf::Texture> & newTexture) {
         spriteTexture = newTexture;
-        sprite.setTexture(getSpriteTexture());
+
+        if(spriteTexture) {
+            sprite.setTexture(*(getSpriteTexture().get()));
+        }
     }
 
     void Entity::setSprite(const sf::Sprite& newSprite) {
