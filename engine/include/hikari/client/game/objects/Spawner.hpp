@@ -41,6 +41,12 @@ namespace hikari {
             coordinates.
         */
         void setPosition(const Vector2D& newPosition);
+
+        //
+        // GameObject overrides
+        //
+        virtual void onActivated();
+        virtual void onDeactivated();
     };
 
 } // hikari

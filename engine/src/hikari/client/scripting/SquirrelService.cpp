@@ -107,7 +107,7 @@ namespace hikari {
                 Sqrat::Class<Enemy>()
                     .Prop<const float>(_SC("velocityX"), &Enemy::getVelocityX, &Enemy::setVelocityX) 
                     .Prop<const float>(_SC("velocityY"), &Enemy::getVelocityY, &Enemy::setVelocityY)
-                    .Prop<const bool>(_SC("isActive"), &Enemy::isActive, &Enemy::setActive)
+                    .Prop<bool>(_SC("isActive"), &Enemy::isActive, &Enemy::setActive)
                     .Prop<const bool>(_SC("isGravitated"), &Enemy::isGravitated, &Enemy::setGravitated)
                     .Prop<const bool>(_SC("isObstacle"), &Enemy::isObstacle, &Enemy::setObstacle)
                     .Prop<const Direction>(_SC("direction"), &Enemy::getDirection, &Enemy::setDirection)
