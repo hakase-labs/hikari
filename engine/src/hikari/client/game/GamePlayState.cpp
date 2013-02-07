@@ -525,6 +525,18 @@ namespace hikari {
 
     void GamePlayState::TeleportSubState::enter() {
         std::cout << "TeleportSubState::enter()" << std::endl;
+
+        auto& hero = gamePlayState.hero;
+        auto& currentRoom = gamePlayState.currentRoom;
+
+        if(currentRoom) {
+            auto roomPositionX = currentRoom->getX() * currentRoom->getGridSize();
+            auto roomPositionY = currentRoom->getY() * currentRoom->getGridSize();
+
+            // TODO: Get the room's playerSpawn location and use that, noob!
+
+            hero->setPosition(roomPositionX + 128, roomPositionY);
+        }
     }
 
     void GamePlayState::TeleportSubState::exit() {
