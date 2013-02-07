@@ -1,13 +1,16 @@
 #ifndef HIKARI_CLIENT_GAME_GAMEWORLD
 #define HIKARI_CLIENT_GAME_GAMEWORLD
 
-#include <vector>
-#include <memory>
-#include <queue>
 #include "hikari/core/game/Updatable.hpp"
 #include "hikari/core/math/Vector2.hpp"
 #include "hikari/core/game/Direction.hpp"
+
 #include <SFML/Graphics/RenderTarget.hpp>
+
+#include <memory>
+#include <queue>
+#include <unordered_map>
+#include <vector>
 
 namespace sf {
     class RenderTarget;
@@ -24,6 +27,7 @@ namespace hikari {
         std::queue<std::shared_ptr<GameObject>> queuedAdditions;
         std::queue<std::shared_ptr<GameObject>> queuedRemovals;
         std::vector<std::shared_ptr<GameObject>> activeObjects;
+        std::unordered_map<int, std::shared_ptr<GameObject>> objectRegistry;
         bool gravityEnabled;
 
         void processAdditions();
