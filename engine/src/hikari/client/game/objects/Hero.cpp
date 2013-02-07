@@ -31,9 +31,9 @@ namespace hikari {
 
         body.setCollisionCallback(std::bind(&Entity::handleCollision, this, std::placeholders::_1, std::placeholders::_2));
         body.setLandingCallback([this](Movable& movable, CollisionInfo& collisionInfo) {
-            std::cout << "Hero's landing callback executed." << std::endl;
-            std::cout << "y = " << movable.getBoundingBox().getPosition().getY() << std::endl;
-            std::cout << "new_y = " << movable.getBoundingBox().getBottom() << std::endl;
+            //std::cout << "Hero's landing callback executed." << std::endl;
+            //std::cout << "y = " << movable.getBoundingBox().getPosition().getY() << std::endl;
+            //std::cout << "new_y = " << movable.getBoundingBox().getBottom() << std::endl;
             
             // this->changeAnimation("idle");
 
