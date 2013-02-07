@@ -5,8 +5,10 @@
 #include <string>
 #include <stdexcept>
 
-#pragma warning(push)
-#pragma warning(disable:4275)
+#if (_WIN32 && _MSC_VER)
+    #pragma warning(push)
+    #pragma warning(disable:4275)
+#endif
 
 namespace hikari {
 
@@ -18,6 +20,8 @@ namespace hikari {
 
 } // hikari
 
-#pragma warning(pop)
+#if (_WIN32 && _MSC_VER)
+    #pragma warning(pop)
+#endif
 
 #endif // HIKARI_CORE_GAME_ANIMATIONPLAYBACKEXCEPTION

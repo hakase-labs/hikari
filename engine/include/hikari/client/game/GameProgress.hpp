@@ -11,7 +11,7 @@ namespace hikari {
         static const unsigned char NumBosses = 8;
         static const unsigned char NumWeapons = NumBosses + 3; // Need to determine this.
         static const unsigned char MaxEnergy = 52;
-        
+
         unsigned char lives;
         unsigned char eTanks;
         unsigned char mTanks;

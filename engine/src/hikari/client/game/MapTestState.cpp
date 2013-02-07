@@ -46,11 +46,11 @@ namespace hikari {
     const float MapTestState::heroTranslationSpeedY = (21.0f / 80.0f) / (1.0f / 60.0f); // This one too...
 
     MapTestState::MapTestState(
-            const std::string &name, 
+            const std::string &name,
             const std::shared_ptr<MapLoader> &mapLoader,
-            const std::string &mapFile, 
-            const std::string &tileFile, 
-            const std::shared_ptr<ImageCache> &imageCache, 
+            const std::string &mapFile,
+            const std::string &tileFile,
+            const std::shared_ptr<ImageCache> &imageCache,
             const std::shared_ptr<ImageFont> &font,
             ServiceLocator &services)
         : name(name)
@@ -66,7 +66,7 @@ namespace hikari {
         , logicalCursor()
         , renderedCursor()
         , animationPlayer(sprite)
-        , collisionResolver(new TileMapCollisionResolver()) 
+        , collisionResolver(new TileMapCollisionResolver())
         , movable(new Movable())
         , hero(new Hero(GameObject::generateObjectId(), nullptr))
         , enemy(new Enemy(GameObject::generateObjectId(), nullptr))
@@ -104,9 +104,6 @@ namespace hikari {
             retroVelocityX = RetroVector(0, 0);
             retroJumpVelocity = RetroVector(0x04, 0xA5);
 
-            RetroVector zzVelocity = RetroVector(4, 165);
-            RetroVector zzPosition = RetroVector(-81, 140);
-
             Entity ent = Entity(1, currentRoom);
 
             auto enemyAnimations = animationSetCache->get("assets/animations/enemies.json");
@@ -143,13 +140,13 @@ namespace hikari {
             cameraViewportOutline.setOutlineColor(cameraOutlineColor);
             cameraViewportOutline.setOutlineThickness(3.0f);
             cameraViewportOutline.setFillColor(sf::Color::Transparent);
-            
+
             std::vector<std::string> scriptFiles;
             scriptFiles.push_back("assets/scripts/EffectBase.nut");
             scriptFiles.push_back("EnemyBehavior.nut");
             scriptFiles.push_back("TellyBehavior.nut");
             scriptFiles.push_back("OctopusBatteryEnemyBehavior.nut");
-            
+
             std::for_each(std::begin(scriptFiles), std::end(scriptFiles), [this](const std::string & scriptFileName) {
                 squirrel->runScriptFile(scriptFileName);
             });
@@ -169,12 +166,12 @@ namespace hikari {
             item->setBoundingBox(itemBounds);
 
             auto clone = item->clone();
-            
+
             auto en6 = spawnEnemy("scripted-octopusbattery");
             en6->setDirection(Directions::Up);
             en6->setPosition(184, 120);
             enemies.push_back(en6);
-            
+
             auto en7 = spawnEnemy("scripted-telly");
             en7->setDirection(Directions::Up);
             en7->setPosition(16*12, 16*66);
@@ -233,7 +230,7 @@ namespace hikari {
 
             enemies.push_back(enemy);
 
-            
+
         }
 
         if(event.type == sf::Event::KeyPressed) {
@@ -307,20 +304,20 @@ namespace hikari {
 
         hero->render(target);
         enemy->render(target);
-        
-        
+
+
         std::for_each(
-            enemies.begin(), 
-            enemies.end(), 
+            enemies.begin(),
+            enemies.end(),
             std::bind(
-                &Enemy::render, 
-                std::placeholders::_1, 
+                &Enemy::render,
+                std::placeholders::_1,
                 ReferenceWrapper<sf::RenderTarget>(target)
             )
         );
-        
 
-        
+
+
         std::for_each(
             currentRoom->getSpawners().begin(),
             currentRoom->getSpawners().end(),
@@ -328,7 +325,7 @@ namespace hikari {
                 spawnerMarker.setPosition(spawner->getPosition().getX(), spawner->getPosition().getY());
                 spawnerMarker.setOrigin(sf::Vector2f(16.0f, 16.0f));
                 spawnerMarker.setSize(sf::Vector2f(16.0f, 16.0f));
-                target.draw(spawnerMarker); 
+                target.draw(spawnerMarker);
             }
         );
 
@@ -343,26 +340,26 @@ namespace hikari {
 
                 transitionMarker.setPosition(x, y);
                 transitionMarker.setSize(sf::Vector2f(width, height));
-                target.draw(transitionMarker); 
+                target.draw(transitionMarker);
             }
         );
-        
-        
+
+
         std::for_each(
-            enemies.begin(), 
+            enemies.begin(),
             enemies.end(),
             [&target](std::shared_ptr<Enemy>& en){
                 en->render(target);
             }
         );
-        
+
 
         if(item->isActive()) {
           item->render(target);
         }
 
         // Put old view back
-        target.setView(oldView); 
+        target.setView(oldView);
 
         font->renderText(target, StringUtils::toString<float>(cameraView.getCenter().x - (cameraView.getSize().x / 2)), 8, 24);
 
@@ -441,26 +438,26 @@ namespace hikari {
             currentHeroPosition = hero->getPosition();
 
             std::for_each(
-                std::begin(enemies), 
-                std::end(enemies), 
+                std::begin(enemies),
+                std::end(enemies),
                 std::bind(
-                    &GameObject::update, 
-                    std::placeholders::_1, 
+                    &GameObject::update,
+                    std::placeholders::_1,
                     std::cref(dt)
                 )
             );
 
-            world.update(dt); 
+            world.update(dt);
 
             enemy->update(dt);
-            
+
             logicalCursor.move(velocity.x, (velocity.y));
 
             //
             // This adjusts the clipping of the tile renderer
             //
             if(cameraFollowingPlayer) {
-                
+
                 const auto & cameraView = camera.getView();
 
                 //
@@ -490,29 +487,29 @@ namespace hikari {
                 //auto diffDist = hero->getDirection() == Directions::Left ? (cameraView.getRight() - hero->getPosition().getX()) : cameraView.getLeft() - hero->getPosition().getX();
                 camera.lookAt(
                     (hero->getPosition().getX()),
-                    (hero->getPosition().getY())    
+                    (hero->getPosition().getY())
                 );
 
             }
         }
 
         collidingWithTransition = false;
-        
+
         //
         // TODO: This block needs to be methodized / refactored.
         //
         if(!transitioning) {
             // Check if the player contacts any of the transition regions.
-            for(auto it = currentRoom->getTransitions().begin(), 
+            for(auto it = currentRoom->getTransitions().begin(),
                 end = currentRoom->getTransitions().end();
                 it < end;
-                it++) 
+                it++)
             {
                 const RoomTransition& region = *it;
                 int x = static_cast<int>(hero->getPosition().getX()) + 16;
                 int y = static_cast<int>((hero->getPosition().getY())) + 8;
-                
-                // A region's position is relative to the room, so that has to be 
+
+                // A region's position is relative to the room, so that has to be
                 // taken in to account when checking intersection.
                 int regionLeft = ((currentRoom->getX() + region.getX()) * 16);
                 int regionRight = ((currentRoom->getX() + region.getX() + region.getWidth()) * 16);
@@ -522,13 +519,13 @@ namespace hikari {
                 int regionHeight = region.getHeight() * 16;
 
                 BoundingBox<float> transitionBounds(
-                    static_cast<float>(regionLeft), 
-                    static_cast<float>(regionTop), 
-                    static_cast<float>(regionWidth), 
+                    static_cast<float>(regionLeft),
+                    static_cast<float>(regionTop),
+                    static_cast<float>(regionWidth),
                     static_cast<float>(regionHeight));
-            
-                //if(x >= regionLeft && x <= regionRight && 
-                //    y >= regionTop && y <= regionBottom) {           
+
+                //if(x >= regionLeft && x <= regionRight &&
+                //    y >= regionTop && y <= regionBottom) {
 
                 if(transitionBounds.contains(hero->getBoundingBox())) {
                     collidingWithTransition = true;
@@ -537,7 +534,7 @@ namespace hikari {
 
                     transitionDirection = region.getDirection();
                     transitionFrames = 0;
-                     
+
                     HIKARI_LOG(debug) << "Transitioning from room " << currentRoom->getId() << " to room " << region.getToRegion();
                     break;
                 }
@@ -573,7 +570,7 @@ namespace hikari {
 
         // Check to see if we collide with item and apply its effect if we do.
         if(hero->getBoundingBox().intersects(item->getBoundingBox())) {
-            // Have to check if the item is active otherwise the effect could 
+            // Have to check if the item is active otherwise the effect could
             // be applied more that one time.
             if(item->isActive()) {
                 if(auto itemEffect = item->getEffect()) {
@@ -709,7 +706,7 @@ namespace hikari {
     void MapTestState::transitionEnd() {
         transitioning = false;
         cameraFollowingPlayer = true;
-                    
+
         camera.lockVertical(true);
         camera.lockHorizontal(true);
 
@@ -720,7 +717,7 @@ namespace hikari {
     }
 
     Vector2<float> MapTestState::screenCoordToWorldCoord(const float & x, const float & y) {
-        if(renderWindow) { 
+        if(renderWindow) {
             auto convertedCoords = renderWindow->mapPixelToCoords(sf::Vector2i(static_cast<int>(x), static_cast<int>(y)), camera.getPixelAlignedView());
             return Vector2<float>(convertedCoords.x, convertedCoords.y);
         } else {
@@ -730,7 +727,7 @@ namespace hikari {
 
     void MapTestState::setupHero() {
         auto heroAnimationSet = animationSetCache->get("assets/animations/rockman-32.json");
-        
+
         sf::Texture spriteSheet;
         PhysFSUtils::loadImage(heroAnimationSet->getImageFileName(), spriteSheet);
         spriteSheet.setSmooth(false);
@@ -843,7 +840,7 @@ namespace hikari {
             instance->setDirection(Directions::Down);
         }
 
-        return instance; 
+        return instance;
     }
 
     void MapTestState::setupItem() {

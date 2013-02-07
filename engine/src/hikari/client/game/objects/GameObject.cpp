@@ -14,6 +14,7 @@ namespace hikari {
 
     GameObject::GameObject(const int& id)
         : id(id)
+        , active(false)
     {
 
     }
@@ -26,12 +27,28 @@ namespace hikari {
         return id;
     }
 
-    const bool GameObject::isActive() const {
+    bool GameObject::isActive() const {
         return active;
     }
 
     void GameObject::setActive(const bool &active) {
-        this->active = active;
+        if(this->active != active) {
+            this->active = active;
+
+            if(this->active) {
+                onActivated();
+            } else {
+                onDeactivated();
+            }
+        }
+    }
+
+    void GameObject::onActivated() {
+
+    }
+
+    void GameObject::onDeactivated() {
+
     }
 
     void GameObject::update(const float &dt) {

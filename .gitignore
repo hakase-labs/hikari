@@ -64,7 +64,13 @@ _ReSharper*/
 #Test files
 *.testsettings
 
+#Code::Blocks files
+*.cbp
+*.depend
+*.layout
+
 #Hikari Specific Ignores
+codeblocks/
 content/
 contrib/*
 !contrib/gme
