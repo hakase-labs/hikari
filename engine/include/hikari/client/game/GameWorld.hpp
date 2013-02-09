@@ -20,6 +20,11 @@ namespace hikari {
 
     class GameObject;
     class Hero;
+    class CollectableItem;
+    class Doodad;
+    class Enemy;
+    class Particle;
+    class Projectile;
 
     class GameWorld : public Updatable {
     private:
@@ -39,6 +44,12 @@ namespace hikari {
 
         void queueObjectAddition(const std::shared_ptr<GameObject> &obj);
         void queueObjectRemoval(const std::shared_ptr<GameObject> &obj);
+
+        std::shared_ptr<CollectableItem> spawnCollectableItem(const std::string & name /* CollectableItemInstanceConfig instanceConfig */) const;
+        std::shared_ptr<Doodad> spawnDoodad(const std::string & name /* DoodadInstanceConfig instanceConfig */) const;
+        std::shared_ptr<Enemy> spawnEnemy(const std::string & name /* EnemyInstanceConfig instanceConfig */) const;
+        std::shared_ptr<Particle> spawnParticle(const std::string & name /* ParticleInstanceConfig instanceConfig */) const;
+        std::shared_ptr<Projectile> spawnProjectile(const std::string & name /* ProjectileInstanceConfig instanceConfig */) const;
 
         void setPlayer(const std::shared_ptr<Hero>& player);
 
