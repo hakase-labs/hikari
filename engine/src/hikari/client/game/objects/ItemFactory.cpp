@@ -16,6 +16,7 @@ namespace hikari {
         : animationSetCache(animationSetCache)
         , imageCache(imageCache)
         , squirrel(squirrel)
+        , prototypeRegistry()
     {
          
     }
@@ -33,6 +34,12 @@ namespace hikari {
             return createHealthEnergyLarge();
         } else if("healthEnergySmall" == itemType) {
             return createHealthEnergySmall();
+        } else {
+            auto prototype = prototypeRegistry.find(itemType);
+
+            if(prototype != std::end(prototypeRegistry)) {
+                return (*prototype).second->clone();
+            }
         }
 
         return std::shared_ptr<CollectableItem>(nullptr);
@@ -86,5 +93,11 @@ namespace hikari {
         return item;
     }
     
-
+    void ItemFactory::registerPrototype(const std::string & prototypeName, const std::shared_ptr<CollectableItem> & instance) {
+        if(prototypeRegistry.find(prototypeName) == std::end(prototypeRegistry)) {
+            prototypeRegistry.insert(std::make_pair(prototypeName, instance));
+        } else {
+            // Already registered; exception?
+        }
+    }
 } // hikari
