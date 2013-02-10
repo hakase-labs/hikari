@@ -9,8 +9,13 @@
 namespace hikari {
 
     GameWorld::GameWorld() 
-        : gravityEnabled(true)
-        , player(nullptr)
+        : player(nullptr)
+        , queuedAdditions()
+        , queuedRemovals()
+        , activeObjects()
+        , objectRegistry()
+        , gravityEnabled(true)
+        
     {
 
     }
@@ -49,6 +54,7 @@ namespace hikari {
             auto objectToBeAdded = queuedAdditions.front();
 
             activeObjects.push_back(objectToBeAdded);
+            objectRegistry.emplace(std::make_pair(objectToBeAdded->getId(), objectToBeAdded));
 
             queuedAdditions.pop();
         }
@@ -59,7 +65,9 @@ namespace hikari {
             auto objectToBeRemoved = queuedRemovals.front();
             
             activeObjects.erase(
-                std::remove(activeObjects.begin(), activeObjects.end(), objectToBeRemoved));
+                std::remove(std::begin(activeObjects), std::end(activeObjects), objectToBeRemoved));
+
+            objectRegistry.erase(objectToBeRemoved->getId());
             
             queuedRemovals.pop();
         }

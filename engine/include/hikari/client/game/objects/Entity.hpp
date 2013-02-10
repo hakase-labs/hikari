@@ -36,7 +36,7 @@ namespace hikari {
 
         Vector2<float> spawnPosition; // to be removed
 
-        sf::Texture spriteTexture;
+        std::shared_ptr<sf::Texture> spriteTexture;
         sf::Sprite sprite;
         std::shared_ptr<AnimationSet> animationSet;
         std::shared_ptr<Animation> currentAnimation;
@@ -69,12 +69,12 @@ namespace hikari {
         Entity(const Entity& proto);
         virtual ~Entity();
 
-        sf::Texture& getSpriteTexture();
+        std::shared_ptr<sf::Texture> getSpriteTexture();
         std::shared_ptr<AnimationSet> getAnimationSet() const;
         std::shared_ptr<Animation> getCurrentAnimation() const;
         std::shared_ptr<Animator> getAnimationPlayer() const;
 
-        void setSpriteTexture(const sf::Texture& newTexture);
+        void setSpriteTexture(const std::shared_ptr<sf::Texture>& newTexture);
         void setSprite(const sf::Sprite& newSprite);
         void setAnimationSet(std::shared_ptr<AnimationSet> newAnimationSet);
         void setCurrentAnimation(std::shared_ptr<Animation> newAnimation);

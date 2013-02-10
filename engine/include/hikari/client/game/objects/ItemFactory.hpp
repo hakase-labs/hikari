@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <string>
+#include <unordered_map>
 
 namespace hikari {
 
@@ -19,6 +20,8 @@ namespace hikari {
         std::shared_ptr<AnimationSetCache> animationSetCache;
         std::shared_ptr<ImageCache> imageCache;
         std::shared_ptr<SquirrelService> squirrel;
+
+        std::unordered_map<std::string, std::shared_ptr<CollectableItem>> prototypeRegistry;
 
         //
         // Methods
@@ -40,6 +43,8 @@ namespace hikari {
         // Methods
         //
         std::shared_ptr<CollectableItem> createItem(const std::string& itemType);
+
+        void registerPrototype(const std::string & prototypeName, const std::shared_ptr<CollectableItem> & instance);
     };
 
 } // hikari
