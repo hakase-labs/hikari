@@ -113,7 +113,7 @@ namespace hikari {
         hero = std::make_shared<Hero>(heroId, nullptr);
         hero->setActive(true);
         hero->setAnimationSet(heroAnimationSet);
-        hero->setSpriteTexture(*heroSpriteSheet);
+        hero->setSpriteTexture(heroSpriteSheet);
         hero->setBoundingBox(BoundingBoxF(0, 0, 16, 24).setOrigin(8, 20));
         hero->changeAnimation("idle");
         hero->setPosition(100.0f, 100.0f);

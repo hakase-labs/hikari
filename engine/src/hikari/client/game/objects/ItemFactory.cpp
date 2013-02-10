@@ -16,6 +16,7 @@ namespace hikari {
         : animationSetCache(animationSetCache)
         , imageCache(imageCache)
         , squirrel(squirrel)
+        , prototypeRegistry()
     {
          
     }
@@ -33,6 +34,12 @@ namespace hikari {
             return createHealthEnergyLarge();
         } else if("healthEnergySmall" == itemType) {
             return createHealthEnergySmall();
+        } else {
+            auto prototype = prototypeRegistry.find(itemType);
+
+            if(prototype != std::end(prototypeRegistry)) {
+                return (*prototype).second->clone();
+            }
         }
 
         return std::shared_ptr<CollectableItem>(nullptr);
@@ -43,7 +50,7 @@ namespace hikari {
         auto item = std::make_shared<CollectableItem>(GameObject::generateObjectId(), nullptr, effect);
 
         item->setAnimationSet(animationSetCache->get("assets/animations/items.json"));
-        item->setSpriteTexture(*imageCache->get("assets/images/sp-collectables.png"));
+        item->setSpriteTexture(imageCache->get("assets/images/sp-collectables.png"));
         item->changeAnimation("e-tank");
         item->setAgeless(true);
 
@@ -55,7 +62,7 @@ namespace hikari {
         auto item = std::make_shared<CollectableItem>(GameObject::generateObjectId(), nullptr, effect);
 
         item->setAnimationSet(animationSetCache->get("assets/animations/items.json"));
-        item->setSpriteTexture(*imageCache->get("assets/images/sp-collectables.png"));
+        item->setSpriteTexture(imageCache->get("assets/images/sp-collectables.png"));
         item->changeAnimation("extra-life-rockman");
         item->setAgeless(true);
 
@@ -86,5 +93,11 @@ namespace hikari {
         return item;
     }
     
-
+    void ItemFactory::registerPrototype(const std::string & prototypeName, const std::shared_ptr<CollectableItem> & instance) {
+        if(prototypeRegistry.find(prototypeName) == std::end(prototypeRegistry)) {
+            prototypeRegistry.insert(std::make_pair(prototypeName, instance));
+        } else {
+            // Already registered; exception?
+        }
+    }
 } // hikari

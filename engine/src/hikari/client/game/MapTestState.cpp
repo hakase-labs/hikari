@@ -34,6 +34,7 @@
 #include "hikari/client/game/objects/controllers/PlayerInputHeroActionController.hpp"
 
 #include "hikari/core/util/AnimationSetCache.hpp"
+#include "hikari/core/util/ImageCache.hpp"
 #include "hikari/client/game/objects/ItemFactory.hpp"
 
 namespace hikari {
@@ -52,6 +53,7 @@ namespace hikari {
             const std::string &tileFile,
             const std::shared_ptr<ImageCache> &imageCache,
             const std::shared_ptr<ImageFont> &font,
+            const std::weak_ptr<ItemFactory> &itemFactory,
             ServiceLocator &services)
         : name(name)
         , mapLoader(mapLoader)
@@ -60,6 +62,8 @@ namespace hikari {
         , view(sf::FloatRect(0.0f, 0.0f, 256.0f, 240.0f))
         , camera(Rectangle2D<float>(0.0f, 0.0f, 256.0f, 240.0f))
         , cameraViewportOutline(sf::Vector2f(256.0f, 240.0f))
+        , imageCache(imageCache)
+        , itemFactory(itemFactory)
         , grounded(false)
         , input(new RealTimeInput())
         , velocity(0.0f, 0.0f)
@@ -76,7 +80,7 @@ namespace hikari {
         squirrel = services.locateService<SquirrelService>(Services::SCRIPTING);
         animationSetCache = services.locateService<AnimationSetCache>("AnimationSetCache");
 
-        itemFactory = std::make_shared<ItemFactory>(animationSetCache, imageCache, squirrel);
+        // itemFactory = std::make_shared<ItemFactory>(animationSetCache, imageCache, squirrel);
         animations = animationSetCache->get("assets/animations/heroes.json");
         idleAnimation = animations->get("idle");
         runningAnimation = animations->get("running");
@@ -104,7 +108,7 @@ namespace hikari {
             retroVelocityX = RetroVector(0, 0);
             retroJumpVelocity = RetroVector(0x04, 0xA5);
 
-            Entity ent = Entity(1, currentRoom);
+            //Entity ent = Entity(1, currentRoom);
 
             auto enemyAnimations = animationSetCache->get("assets/animations/enemies.json");
             auto enemySprite = sf::Texture();
@@ -151,17 +155,19 @@ namespace hikari {
                 squirrel->runScriptFile(scriptFileName);
             });
 
-            item = itemFactory->createItem("extraLife");
+            item = itemFactory.lock()->createItem("Large Weapon Energy");
 
             //item.reset(new CollectableItem(7, currentRoom, std::make_shared<ScriptedEffect>(*squirrel, "EffectBase")));
             //item->setAnimationSet(AnimationLoader::loadSet("assets/animations/items.json"));
             //item->setSpriteTexture(enemySprite);
             //item->changeAnimation("e-tank");
             item->setRoom(currentRoom);
-            item->setPosition(45.0f, 45.0f);
+            item->setPosition(256.0f + 45.0f, 645.0f);
             item->setAgeless(true);
+            item->setActive(true);
+            item->setGravitated(true);
 
-            BoundingBoxF itemBounds = BoundingBoxF(45.0f, 16.0f, 16.0f, 16.0f);
+            BoundingBoxF itemBounds = BoundingBoxF(256.0f + 65.0f, 645.0f, 16.0f, 16.0f);
 
             item->setBoundingBox(itemBounds);
 
@@ -727,10 +733,9 @@ namespace hikari {
 
     void MapTestState::setupHero() {
         auto heroAnimationSet = animationSetCache->get("assets/animations/rockman-32.json");
+        auto spriteSheet = imageCache->get(heroAnimationSet->getImageFileName());
 
-        sf::Texture spriteSheet;
-        PhysFSUtils::loadImage(heroAnimationSet->getImageFileName(), spriteSheet);
-        spriteSheet.setSmooth(false);
+        spriteSheet->setSmooth(false);
 
         hero->setActive(true);
         hero->setAnimationSet(heroAnimationSet);
@@ -743,10 +748,9 @@ namespace hikari {
 
     void MapTestState::setupEnemy() {
         auto enemyAnimationSet = animationSetCache->get("assets/animations/enemies.json");
-        sf::Texture enemySprites;
+        auto enemySprites = imageCache->get(enemyAnimationSet->getImageFileName());
 
-        PhysFSUtils::loadImage(enemyAnimationSet->getImageFileName(), enemySprites);
-        enemySprites.setSmooth(false);
+        enemySprites->setSmooth(false);
 
         enemy->setActive(false);
         enemy->setAnimationSet(enemyAnimationSet);
@@ -767,10 +771,9 @@ namespace hikari {
         if(type == "telly") {
 
             auto enemyAnimationSet = animationSetCache->get("assets/animations/telly.json");
-            sf::Texture enemySprites;
+            auto enemySprites = imageCache->get(enemyAnimationSet->getImageFileName());
 
-            PhysFSUtils::loadImage(enemyAnimationSet->getImageFileName(), enemySprites);
-            enemySprites.setSmooth(false);
+            enemySprites->setSmooth(false);
 
             instance->setActive(true);
             instance->setAnimationSet(enemyAnimationSet);
@@ -787,10 +790,9 @@ namespace hikari {
         } else if(type == "scripted-telly") {
 
             auto enemyAnimationSet = animationSetCache->get("assets/animations/telly.json");
-            sf::Texture enemySprites;
+            auto enemySprites = imageCache->get(enemyAnimationSet->getImageFileName());
 
-            PhysFSUtils::loadImage(enemyAnimationSet->getImageFileName(), enemySprites);
-            enemySprites.setSmooth(false);
+            enemySprites->setSmooth(false);
 
             instance->setActive(true);
             instance->setAnimationSet(enemyAnimationSet);
@@ -806,10 +808,9 @@ namespace hikari {
 
         } else if(type == "octopus-battery") {
             auto enemyAnimationSet = animationSetCache->get("assets/animations/enemies.json");
-            sf::Texture enemySprites;
+            auto enemySprites = imageCache->get(enemyAnimationSet->getImageFileName());
 
-            PhysFSUtils::loadImage(enemyAnimationSet->getImageFileName(), enemySprites);
-            enemySprites.setSmooth(false);
+            enemySprites->setSmooth(false);
 
             instance->setActive(true);
             instance->setAnimationSet(enemyAnimationSet);
@@ -823,10 +824,9 @@ namespace hikari {
             instance->setDirection(Directions::Down);
         } else if(type == "scripted-octopusbattery") {
             auto enemyAnimationSet = animationSetCache->get("assets/animations/enemies.json");
-            sf::Texture enemySprites;
+            auto enemySprites = imageCache->get(enemyAnimationSet->getImageFileName());
 
-            PhysFSUtils::loadImage(enemyAnimationSet->getImageFileName(), enemySprites);
-            enemySprites.setSmooth(false);
+            enemySprites->setSmooth(false);
 
             instance->setActive(true);
             instance->setAnimationSet(enemyAnimationSet);

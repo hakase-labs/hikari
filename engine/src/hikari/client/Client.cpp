@@ -14,6 +14,12 @@
 #include "hikari/client/gui/CommandConsole.hpp"
 #include "hikari/client/scripting/SquirrelService.hpp"
 #include "hikari/client/Services.hpp"
+#include "hikari/client/game/objects/GameObject.hpp"
+#include "hikari/client/game/objects/CollectableItem.hpp"
+#include "hikari/client/game/Effect.hpp"
+#include "hikari/client/game/objects/effects/NothingEffect.hpp"
+#include "hikari/client/game/objects/effects/ScriptedEffect.hpp"
+#include "hikari/client/game/objects/ItemFactory.hpp"
 
 #include "hikari/core/util/FileSystem.hpp"
 #include "hikari/core/util/Log.hpp"
@@ -175,6 +181,7 @@ int main(int argc, char** argv) {
             8,
             8
         );
+        auto itemFactory       = std::make_shared<ItemFactory>(animationSetCache, imageCache, squirrelService);
 
         ServiceLocator services;
         services.registerService(Services::AUDIO,             audioService);
@@ -187,6 +194,9 @@ int main(int argc, char** argv) {
 
         squirrelService->runScriptFile("assets/scripts/Environment.nut");
         squirrelService->runScriptFile("assets/scripts/Bootstrap.nut");
+
+        // When this runs all of the scripts have to have been run already
+        populateCollectableItemFactory(std::weak_ptr<ItemFactory>(itemFactory), *squirrelService, *animationSetCache, *imageCache);
 
         gui::CommandConsole console(guiFont);
 
@@ -205,6 +215,7 @@ int main(int argc, char** argv) {
             tileSet,
             imageCache,
             guiFont,
+            std::weak_ptr<ItemFactory>(itemFactory),
             services
         );
 
@@ -466,5 +477,79 @@ void initGame(const std::string &fileName, Json::Value &value) {
 
     if(!success) {
         HIKARI_LOG(info) << "Game file could not be found or was corrupt, uh oh!";
+    }
+}
+
+void populateCollectableItemFactory(
+    std::weak_ptr<hikari::ItemFactory> & factory, 
+    hikari::SquirrelService & squirrel, 
+    hikari::AnimationSetCache & animationSetCache, 
+    hikari::ImageCache & imageCache) 
+{
+    using namespace hikari;
+
+    if(auto factoryPtr = factory.lock()) {
+        auto fileContents = FileSystem::openFile("assets/templates/items.json");
+        Json::Value root;
+        Json::Reader reader;
+
+        if(bool success = reader.parse(*fileContents, root, false)) {
+            auto templateCount = root.size();
+
+            /*
+            {
+                "name": "Extra Life",
+                "effect": "AddEtankEffect",
+                "animationSet": "assets/animations/items.json",
+                "animationName": "extra-life-rockman",
+                "boundingBox": {
+                    "width": 14,
+                    "height": 14,
+                    "originX": 7,
+                    "originY": 7
+                },
+                "ageless": false,
+                "lifetime": 3000
+            }
+            */
+
+            for(int i = 0; i < templateCount; ++i) {
+                const auto & templateObject = root[i];
+
+                const auto name              = templateObject["name"].asString();
+                const auto effect            = templateObject["effect"].asString();
+                const auto animationSet      = templateObject["animationSet"].asString();
+                const auto animationName     = templateObject["animationName"].asString();
+                const auto boundingBoxObject = templateObject["boundingBox"];
+                const auto ageless           = templateObject["ageless"].asBool();
+                const auto lifetime          = templateObject["lifetime"].asInt();
+
+                hikari::BoundingBoxF boundingBox(
+                    boundingBoxObject["x"].asDouble(), 
+                    boundingBoxObject["y"].asDouble(), 
+                    boundingBoxObject["width"].asDouble(), 
+                    boundingBoxObject["height"].asDouble()
+                );
+
+                std::shared_ptr<Effect> effectInstance(nullptr);
+
+                if(effect == "" || effect == "NothingEffect") {
+                    effectInstance.reset(new NothingEffect());
+                } else {
+                    effectInstance.reset(new ScriptedEffect(squirrel, effect));
+                } 
+
+                auto item = std::make_shared<CollectableItem>(GameObject::generateObjectId(), nullptr, effectInstance);
+                
+                auto animationSetPtr = animationSetCache.get(animationSet);
+                auto spriteTexture = imageCache.get(animationSetPtr->getImageFileName());
+                item->setAnimationSet(animationSetPtr);
+                item->setSpriteTexture(spriteTexture);
+                item->changeAnimation(animationName);
+                item->setAgeless(ageless);
+
+                factoryPtr->registerPrototype(name, item);
+            }
+        }
     }
 }
