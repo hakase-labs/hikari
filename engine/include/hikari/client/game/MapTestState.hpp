@@ -53,7 +53,7 @@ namespace hikari {
 
     class MapTestState : public GameState {
     private:
-        std::shared_ptr<ItemFactory> itemFactory;
+        std::weak_ptr<ItemFactory> itemFactory;
         std::shared_ptr<SquirrelService> squirrel;
         std::shared_ptr<AnimationSetCache> animationSetCache;
         std::shared_ptr<ImageCache> imageCache;
@@ -157,6 +157,7 @@ namespace hikari {
             const std::string &tileFile, 
             const std::shared_ptr<hikari::ImageCache> &imageCache, 
             const std::shared_ptr<hikari::ImageFont> &font,
+            const std::weak_ptr<ItemFactory> &itemFactory,
             ServiceLocator &services);
         virtual ~MapTestState();
 

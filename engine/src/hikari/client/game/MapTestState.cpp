@@ -53,6 +53,7 @@ namespace hikari {
             const std::string &tileFile,
             const std::shared_ptr<ImageCache> &imageCache,
             const std::shared_ptr<ImageFont> &font,
+            const std::weak_ptr<ItemFactory> &itemFactory,
             ServiceLocator &services)
         : name(name)
         , mapLoader(mapLoader)
@@ -62,6 +63,7 @@ namespace hikari {
         , camera(Rectangle2D<float>(0.0f, 0.0f, 256.0f, 240.0f))
         , cameraViewportOutline(sf::Vector2f(256.0f, 240.0f))
         , imageCache(imageCache)
+        , itemFactory(itemFactory)
         , grounded(false)
         , input(new RealTimeInput())
         , velocity(0.0f, 0.0f)
@@ -78,7 +80,7 @@ namespace hikari {
         squirrel = services.locateService<SquirrelService>(Services::SCRIPTING);
         animationSetCache = services.locateService<AnimationSetCache>("AnimationSetCache");
 
-        itemFactory = std::make_shared<ItemFactory>(animationSetCache, imageCache, squirrel);
+        // itemFactory = std::make_shared<ItemFactory>(animationSetCache, imageCache, squirrel);
         animations = animationSetCache->get("assets/animations/heroes.json");
         idleAnimation = animations->get("idle");
         runningAnimation = animations->get("running");
@@ -106,7 +108,7 @@ namespace hikari {
             retroVelocityX = RetroVector(0, 0);
             retroJumpVelocity = RetroVector(0x04, 0xA5);
 
-            Entity ent = Entity(1, currentRoom);
+            //Entity ent = Entity(1, currentRoom);
 
             auto enemyAnimations = animationSetCache->get("assets/animations/enemies.json");
             auto enemySprite = sf::Texture();
@@ -153,17 +155,19 @@ namespace hikari {
                 squirrel->runScriptFile(scriptFileName);
             });
 
-            item = itemFactory->createItem("extraLife");
+            item = itemFactory.lock()->createItem("Large Weapon Energy");
 
             //item.reset(new CollectableItem(7, currentRoom, std::make_shared<ScriptedEffect>(*squirrel, "EffectBase")));
             //item->setAnimationSet(AnimationLoader::loadSet("assets/animations/items.json"));
             //item->setSpriteTexture(enemySprite);
             //item->changeAnimation("e-tank");
             item->setRoom(currentRoom);
-            item->setPosition(45.0f, 45.0f);
+            item->setPosition(256.0f + 45.0f, 645.0f);
             item->setAgeless(true);
+            item->setActive(true);
+            item->setGravitated(true);
 
-            BoundingBoxF itemBounds = BoundingBoxF(45.0f, 16.0f, 16.0f, 16.0f);
+            BoundingBoxF itemBounds = BoundingBoxF(256.0f + 65.0f, 645.0f, 16.0f, 16.0f);
 
             item->setBoundingBox(itemBounds);
 
