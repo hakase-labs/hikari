@@ -21,7 +21,7 @@ namespace hikari {
     }
 
     CollectableItem::CollectableItem(const CollectableItem &proto)
-        : Entity(GameObject::generateObjectId(), nullptr)
+        : Entity(proto)
         , effect(proto.effect->clone())
         , age(0)
         , maximumAge(proto.maximumAge)
