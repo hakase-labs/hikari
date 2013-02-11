@@ -73,10 +73,12 @@ _ReSharper*/
 codeblocks/
 content/*
 content/assets/*
+content/assets/templates/*
+content/assets/animations/*
 !content/assets/
-!content/assets/templates/*
-!content/assets/templates/items.json
 !content/assets/templates/
+!content/assets/templates/items.json
+!content/assets/animations/
 !content/assets/animations/items.json
 !content/assets/images/sp-collectables.png
 !content/assets/scripts/*
