@@ -35,9 +35,9 @@ void initConfiguration(const std::string &fileName, Json::Value& value);
 void initGame(const std::string &fileName, Json::Value &value);
 
 void populateCollectableItemFactory(
-    std::weak_ptr<hikari::ItemFactory> & factory,
-    hikari::SquirrelService & squirrel, 
-    hikari::AnimationSetCache & animationSetCache, 
+    const std::weak_ptr<hikari::ItemFactory> & factory,
+    hikari::SquirrelService & squirrel,
+    hikari::AnimationSetCache & animationSetCache,
     hikari::ImageCache & imageCache
 );
 

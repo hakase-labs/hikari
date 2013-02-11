@@ -10,7 +10,7 @@
 #include "hikari/client/game/MapTestState.hpp"
 #include "hikari/client/game/GuiTestState.hpp"
 #include "hikari/client/game/SpriteTestState.hpp"
-#include "hikari/client/audio/AudioService.hpp" 
+#include "hikari/client/audio/AudioService.hpp"
 #include "hikari/client/gui/CommandConsole.hpp"
 #include "hikari/client/scripting/SquirrelService.hpp"
 #include "hikari/client/Services.hpp"
@@ -106,8 +106,8 @@ namespace hikari {
         auto mapLoader         = std::make_shared<MapLoader>(tilesetCache);
         auto squirrelService   = std::make_shared<SquirrelService>(clientConfig.getScriptingStackSize());
         auto guiFont           = std::make_shared<ImageFont>(
-            imageCache->get("assets/images/gui-font.png"), 
-            " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz", 
+            imageCache->get("assets/images/gui-font.png"),
+            " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
             8,
             8
         );
@@ -118,7 +118,7 @@ namespace hikari {
         services.registerService(Services::ANIMATIONSETCACHE, animationSetCache);
         services.registerService(Services::MAPLOADER,         mapLoader);
         services.registerService(Services::SCRIPTING,         squirrelService);
-        services.registerService(Services::GUIFONT,           guiFont);     
+        services.registerService(Services::GUIFONT,           guiFont);
     }
 
 } // hikari
@@ -132,10 +132,10 @@ int main(int argc, char** argv) {
     ::hikari::Log::setReportingLevel(debug3);
 
     initLogging(argc, argv);
-    
+
     ::hikari::testing::Vector2DTests vecTests;
     vecTests.runAllTests();
-    
+
     try {
 
         CommandProcessor cp;
@@ -154,7 +154,7 @@ int main(int argc, char** argv) {
 
         Json::Value config;
         Json::Value game;
-        
+
         initConfiguration("conf.json", config);
         initGame("game.json", game);
 
@@ -176,8 +176,8 @@ int main(int argc, char** argv) {
         auto audioService      = std::make_shared<AudioService>(game["assets"]["audio"]);
         auto squirrelService   = std::make_shared<SquirrelService>(clientConfig.getScriptingStackSize());
         auto guiFont           = std::make_shared<ImageFont>(
-            imageCache->get("assets/images/gui-font.png"), 
-            " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz", 
+            imageCache->get("assets/images/gui-font.png"),
+            " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
             8,
             8
         );
@@ -207,11 +207,11 @@ int main(int argc, char** argv) {
 
         std::string mapName = game["states"]["maptest"]["mapname"].asString();
         std::string tileSet = game["states"]["maptest"]["tileset"].asString();
-        
+
         auto mapTestState = std::make_shared<MapTestState>(
-            "maptest", 
+            "maptest",
             mapLoader,
-            mapName, 
+            mapName,
             tileSet,
             imageCache,
             guiFont,
@@ -220,7 +220,7 @@ int main(int argc, char** argv) {
         );
 
         mapTestState->setRenderWindow(&window);
-                
+
         StatePtr guiTestState(new GuiTestState("guitest", guiFont));
         StatePtr spriteTestState(new SpriteTestState("spritetest"));
         StatePtr stageSelectState(new StageSelectState("stageselect", game["states"]["select"], services));
@@ -229,13 +229,13 @@ int main(int argc, char** argv) {
         controller.addState(mapTestState->getName(), mapTestState);
         controller.addState(guiTestState->getName(), guiTestState);
         controller.addState(spriteTestState->getName(), spriteTestState);
-        controller.addState(stageSelectState->getName(), stageSelectState); 
+        controller.addState(stageSelectState->getName(), stageSelectState);
         controller.addState(gamePlayState->getName(), gamePlayState);
 
         controller.setState(game.get("initial-state", "default").asString());
 
         NSFSoundStream sound(2046);
-        sound.open("assets/sound/mega-man-3-nes-[NSF-ID2016].nsf"); 
+        sound.open("assets/sound/mega-man-3-nes-[NSF-ID2016].nsf");
         sound.setCurrentTrack(9);
         sound.stop();
 
@@ -282,11 +282,11 @@ int main(int argc, char** argv) {
         sf::View screenBufferView;
 
         screenBufferView.setSize(
-            static_cast<float>(videoMode.width), 
+            static_cast<float>(videoMode.width),
             static_cast<float>(videoMode.height));
 
         screenBufferView.setCenter(
-            static_cast<float>(videoMode.width / 2), 
+            static_cast<float>(videoMode.width / 2),
             static_cast<float>(videoMode.height / 2));
 
         // Game loop
@@ -381,7 +381,7 @@ int main(int argc, char** argv) {
                             console.setCommandBuffer(console.getCommandBuffer() + letter);
                         } else if(event.text.unicode == 8) {
                             std::string oldBuffer = console.getCommandBuffer();
-                            
+
                             if(oldBuffer.size() > 0) {
                                 oldBuffer.pop_back();
                             }
@@ -389,7 +389,7 @@ int main(int argc, char** argv) {
                             console.setCommandBuffer(oldBuffer);
                         }
                     }
-                    
+
                     if(!console.isOpen()) {
                         controller.handleEvent(event);
                     }
@@ -400,7 +400,7 @@ int main(int argc, char** argv) {
                 accumulator -= dt;
                 t += dt;
             }
-            
+
             // Render
             window.clear(sf::Color::Blue);
             screenBuffer.clear(sf::Color::Magenta);
@@ -412,7 +412,7 @@ int main(int argc, char** argv) {
                 guiFont->renderText(screenBuffer, "FPS:", 8, 8);
                 guiFont->renderText(screenBuffer, StringUtils::toString<float>(fps), 40, 8);
             }
-            
+
             console.render(screenBuffer);
 
             //window.draw(screenBuffer);
@@ -481,10 +481,10 @@ void initGame(const std::string &fileName, Json::Value &value) {
 }
 
 void populateCollectableItemFactory(
-    std::weak_ptr<hikari::ItemFactory> & factory, 
-    hikari::SquirrelService & squirrel, 
-    hikari::AnimationSetCache & animationSetCache, 
-    hikari::ImageCache & imageCache) 
+    const std::weak_ptr<hikari::ItemFactory> & factory,
+    hikari::SquirrelService & squirrel,
+    hikari::AnimationSetCache & animationSetCache,
+    hikari::ImageCache & imageCache)
 {
     using namespace hikari;
 
@@ -493,7 +493,7 @@ void populateCollectableItemFactory(
         Json::Value root;
         Json::Reader reader;
 
-        if(bool success = reader.parse(*fileContents, root, false)) {
+        if(reader.parse(*fileContents, root, false)) {
             auto templateCount = root.size();
 
             /*
@@ -513,7 +513,7 @@ void populateCollectableItemFactory(
             }
             */
 
-            for(int i = 0; i < templateCount; ++i) {
+            for(decltype(templateCount) i = 0; i < templateCount; ++i) {
                 const auto & templateObject = root[i];
 
                 const auto name              = templateObject["name"].asString();
@@ -522,13 +522,13 @@ void populateCollectableItemFactory(
                 const auto animationName     = templateObject["animationName"].asString();
                 const auto boundingBoxObject = templateObject["boundingBox"];
                 const auto ageless           = templateObject["ageless"].asBool();
-                const auto lifetime          = templateObject["lifetime"].asInt();
+                const auto maximumAge        = templateObject["maximumAge"].asInt();
 
                 hikari::BoundingBoxF boundingBox(
-                    boundingBoxObject["x"].asDouble(), 
-                    boundingBoxObject["y"].asDouble(), 
-                    boundingBoxObject["width"].asDouble(), 
-                    boundingBoxObject["height"].asDouble()
+                    static_cast<float>(boundingBoxObject["x"].asDouble()),
+                    static_cast<float>(boundingBoxObject["y"].asDouble()),
+                    static_cast<float>(boundingBoxObject["width"].asDouble()),
+                    static_cast<float>(boundingBoxObject["height"].asDouble())
                 );
 
                 std::shared_ptr<Effect> effectInstance(nullptr);
@@ -537,16 +537,18 @@ void populateCollectableItemFactory(
                     effectInstance.reset(new NothingEffect());
                 } else {
                     effectInstance.reset(new ScriptedEffect(squirrel, effect));
-                } 
+                }
 
                 auto item = std::make_shared<CollectableItem>(GameObject::generateObjectId(), nullptr, effectInstance);
-                
+
                 auto animationSetPtr = animationSetCache.get(animationSet);
                 auto spriteTexture = imageCache.get(animationSetPtr->getImageFileName());
                 item->setAnimationSet(animationSetPtr);
                 item->setSpriteTexture(spriteTexture);
                 item->changeAnimation(animationName);
+                item->setBoundingBox(boundingBox);
                 item->setAgeless(ageless);
+                item->setMaximumAge(maximumAge);
 
                 factoryPtr->registerPrototype(name, item);
             }
