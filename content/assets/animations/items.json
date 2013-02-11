@@ -1,0 +1,320 @@
+{
+	"name": "Collectable Items",
+	"image": "assets/images/sp-collectables.png",
+	"animations": {
+		"e-tank": {
+			"repeat": true,
+			"keyframe": 0,
+			"syncGroup": 0,
+			"frames": [ 
+				{ 
+					"x" : 0, 
+					"y" : 0, 
+					"width" : 16, 
+					"height" : 16, 
+					"hotspotX" : 8, 
+					"hotspotY" : 8, 
+					"length" : 0.1167
+				},
+				{ 
+					"x" : 16, 
+					"y" : 0, 
+					"width" : 16, 
+					"height" : 16, 
+					"hotspotX" : 8, 
+					"hotspotY" : 8, 
+					"length" : 0.1167
+				}
+			]
+		},
+		"m-tank": {
+			"repeat": true,
+			"keyframe": 0,
+			"syncGroup": 0,
+			"frames": [ 
+				{ 
+					"x" : 0, 
+					"y" : 0, 
+					"width" : 16, 
+					"height" : 16, 
+					"hotspotX" : 8, 
+					"hotspotY" : 8, 
+					"length" : 0.1167
+				},
+				{ 
+					"x" : 16, 
+					"y" : 16, 
+					"width" : 16, 
+					"height" : 16, 
+					"hotspotX" : 8, 
+					"hotspotY" : 8, 
+					"length" : 0.1167
+				}
+			]
+		},
+		"mystery-tank-red": {
+			"repeat": true,
+			"keyframe": 0,
+			"syncGroup": 0,
+			"frames": [ 
+				{ 
+					"x" : 32, 
+					"y" : 0, 
+					"width" : 16, 
+					"height" : 16, 
+					"hotspotX" : 8, 
+					"hotspotY" : 8, 
+					"length" : 0.15
+				},
+				{ 
+					"x" : 48, 
+					"y" : 0, 
+					"width" : 16, 
+					"height" : 16, 
+					"hotspotX" : 8, 
+					"hotspotY" : 8, 
+					"length" : 0.15
+				}
+			]
+		},
+		"mystery-tank-pink": {
+			"repeat": true,
+			"keyframe": 0,
+			"syncGroup": 0,
+			"frames": [ 
+				{ 
+					"x" : 64, 
+					"y" : 0, 
+					"width" : 16, 
+					"height" : 16, 
+					"hotspotX" : 8, 
+					"hotspotY" : 8, 
+					"length" : 0.15
+				},
+				{ 
+					"x" : 80, 
+					"y" : 0, 
+					"width" : 16, 
+					"height" : 16, 
+					"hotspotX" : 8, 
+					"hotspotY" : 8, 
+					"length" : 0.15
+				}
+			]
+		},
+		"mystery-tank-green": {
+			"repeat": true,
+			"keyframe": 0,
+			"syncGroup": 0,
+			"frames": [ 
+				{ 
+					"x" : 96, 
+					"y" : 0, 
+					"width" : 16, 
+					"height" : 16, 
+					"hotspotX" : 8, 
+					"hotspotY" : 8, 
+					"length" : 0.15
+				},
+				{ 
+					"x" : 112, 
+					"y" : 0, 
+					"width" : 16, 
+					"height" : 16, 
+					"hotspotX" : 8, 
+					"hotspotY" : 8, 
+					"length" : 0.15
+				}
+			]
+		},
+		"bolt-large": {
+			"repeat": false,
+			"keyframe": 0,
+			"syncGroup": 0,
+			"frames": [ 
+				{ 
+					"x" : 112, 
+					"y" : 20, 
+					"width" : 16, 
+					"height" : 12, 
+					"hotspotX" : 8, 
+					"hotspotY" : 6, 
+					"length" : 0.1 
+				}
+			]
+		},
+		"bolt-small": {
+			"repeat": false,
+			"keyframe": 0,
+			"syncGroup": 0,
+			"frames": [ 
+				{ 
+					"x" : 120, 
+					"y" : 32, 
+					"width" : 8, 
+					"height" : 8, 
+					"hotspotX" : 4, 
+					"hotspotY" : 4, 
+					"length" : 0.1 
+				}
+			]
+		},
+		"weapon-energy-small": {
+			"repeat": true,
+			"keyframe": 0,
+			"syncGroup": 0,
+			"frames": [ 
+				{ 
+					"x" : 32, 
+					"y" : 16, 
+					"width" : 8, 
+					"height" : 8, 
+					"hotspotX" : 4, 
+					"hotspotY" : 4, 
+					"length" : 0.1167
+				},
+				{ 
+					"x" : 32, 
+					"y" : 24, 
+					"width" : 8, 
+					"height" : 8, 
+					"hotspotX" : 4, 
+					"hotspotY" : 4, 
+					"length" : 0.1167
+				}
+			]
+		},
+		"weapon-energy-large": {
+			"repeat": true,
+			"keyframe": 0,
+			"syncGroup": 0,
+			"frames": [ 
+				{ 
+					"x" : 48, 
+					"y" : 20, 
+					"width" : 16, 
+					"height" : 12, 
+					"hotspotX" : 8, 
+					"hotspotY" : 6, 
+					"length" : 0.1167
+				},
+				{ 
+					"x" : 64, 
+					"y" : 20, 
+					"width" : 16, 
+					"height" : 12, 
+					"hotspotX" : 8, 
+					"hotspotY" : 6, 
+					"length" : 0.1167
+				}
+			]
+		},
+		"health-energy-small": {
+			"repeat": true,
+			"keyframe": 0,
+			"syncGroup": 0,
+			"frames": [ 
+				{ 
+					"x" : 40, 
+					"y" : 16, 
+					"width" : 8, 
+					"height" : 8, 
+					"hotspotX" : 4, 
+					"hotspotY" : 4, 
+					"length" : 0.1167
+				},
+				{ 
+					"x" : 40, 
+					"y" : 24, 
+					"width" : 8, 
+					"height" : 8, 
+					"hotspotX" : 4, 
+					"hotspotY" : 4, 
+					"length" : 0.1167
+				}
+			]
+		},
+		"health-energy-large": {
+			"repeat": true,
+			"keyframe": 0,
+			"syncGroup": 0,
+			"frames": [ 
+				{ 
+					"x" : 80, 
+					"y" : 16, 
+					"width" : 16, 
+					"height" : 16, 
+					"hotspotX" : 8, 
+					"hotspotY" : 8, 
+					"length" : 0.1167
+				},
+				{ 
+					"x" : 96, 
+					"y" : 16, 
+					"width" : 16, 
+					"height" : 16, 
+					"hotspotX" : 8, 
+					"hotspotY" : 8, 
+					"length" : 0.1167
+				}
+			]
+		},
+		"extra-life-rockman": {
+			"repeat": false,
+			"keyframe": 0,
+			"syncGroup": 0,
+			"frames": [ 
+				{ 
+					"x" : 0, 
+					"y" : 32, 
+					"width" : 16, 
+					"height" : 16, 
+					"hotspotX" : 8, 
+					"hotspotY" : 8, 
+					"length" : 0.1 
+				}
+			]
+		},
+		"energy-balancer": {
+			"repeat": false,
+			"keyframe": 0,
+			"syncGroup": 0,
+			"frames": [ 
+				{ 
+					"x" : 0, 
+					"y" : 16, 
+					"width" : 16, 
+					"height" : 16, 
+					"hotspotX" : 8, 
+					"hotspotY" : 8, 
+					"length" : 0.1 
+				}
+			]
+		},
+		"wily-skull": {
+			"repeat": true,
+			"keyframe": 0,
+			"syncGroup": 0,
+			"frames": [ 
+				{ 
+					"x" : 16, 
+					"y" : 32, 
+					"width" : 16, 
+					"height" : 16, 
+					"hotspotX" : 8, 
+					"hotspotY" : 8, 
+					"length" : 0.1167
+				},
+				{ 
+					"x" : 32, 
+					"y" : 32, 
+					"width" : 16, 
+					"height" : 16, 
+					"hotspotX" : 8, 
+					"hotspotY" : 8, 
+					"length" : 0.1167
+				}
+			]
+		}
+	}
+}

@@ -155,21 +155,21 @@ namespace hikari {
                 squirrel->runScriptFile(scriptFileName);
             });
 
-            item = itemFactory.lock()->createItem("Large Weapon Energy");
+            item = itemFactory.lock()->createItem("Large Health Energy");
 
             //item.reset(new CollectableItem(7, currentRoom, std::make_shared<ScriptedEffect>(*squirrel, "EffectBase")));
             //item->setAnimationSet(AnimationLoader::loadSet("assets/animations/items.json"));
             //item->setSpriteTexture(enemySprite);
             //item->changeAnimation("e-tank");
             item->setRoom(currentRoom);
-            item->setPosition(256.0f + 45.0f, 645.0f);
+            item->setPosition(256.0f + 65.0f, 645.0f);
             item->setAgeless(true);
             item->setActive(true);
             item->setGravitated(true);
 
-            BoundingBoxF itemBounds = BoundingBoxF(256.0f + 65.0f, 645.0f, 16.0f, 16.0f);
+            //BoundingBoxF itemBounds = BoundingBoxF(256.0f + 65.0f, 645.0f, 16.0f, 16.0f);
 
-            item->setBoundingBox(itemBounds);
+            //item->setBoundingBox(itemBounds);
 
             auto clone = item->clone();
 

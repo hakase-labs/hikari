@@ -71,7 +71,23 @@ _ReSharper*/
 
 #Hikari Specific Ignores
 codeblocks/
-content/
+content/*
+content/assets/*
+content/assets/templates/*
+content/assets/animations/*
+content/assets/images/*
+content/assets/scripts/*
+content/assets/scripts/effects*
+!content/assets/
+!content/assets/templates/
+!content/assets/templates/items.json
+!content/assets/animations/
+!content/assets/animations/items.json
+!content/assets/images/
+!content/assets/images/sp-collectables.png
+!content/assets/scripts/
+!content/assets/scripts/*.nut
+!content/assets/scripts/effects/*.nut
 contrib/*
 !contrib/gme
 !contrib/guichan
