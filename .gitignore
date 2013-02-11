@@ -73,7 +73,7 @@ _ReSharper*/
 codeblocks/
 content/*
 content/assets/*
-!content/assets
+!content/assets/
 content/assets/templates/*
 !content/assets/templates/items.json
 !content/assets/animations/items.json
