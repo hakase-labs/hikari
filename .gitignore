@@ -73,10 +73,9 @@ _ReSharper*/
 codeblocks/
 content/*
 content/assets/*
-content/assets/animations/*
-content/assets/images/*
-content/assets/templates/*
 !content/assets/
+!content/assets/templates/*
+!content/assets/templates/items.json
 !content/assets/templates/
 !content/assets/animations/items.json
 !content/assets/images/sp-collectables.png
