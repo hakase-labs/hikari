@@ -71,11 +71,11 @@ _ReSharper*/
 
 #Hikari Specific Ignores
 codeblocks/
-content/*
-!content/assets/templates/items.json
-!content/assets/animations/items.json
-!content/assets/images/sp-collectables.png
-!content/assets/scripts/*
+/content/*
+!/content/assets/templates/items.json
+!/content/assets/animations/items.json
+!/content/assets/images/sp-collectables.png
+!/content/assets/scripts/*
 contrib/*
 !contrib/gme
 !contrib/guichan
