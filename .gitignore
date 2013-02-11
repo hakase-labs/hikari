@@ -71,7 +71,7 @@ _ReSharper*/
 
 #Hikari Specific Ignores
 codeblocks/
-content/*
+content/
 !content/assets/templates/items.json
 !content/assets/animations/items.json
 !content/assets/images/sp-collectables.png
