@@ -1,0 +1,86 @@
+[
+    {
+        "name": "Extra Life",
+        "effect": "AddETankEffect",
+        "animationSet": "assets/animations/items.json",
+        "animationName": "extra-life-rockman",
+        "boundingBox": {
+            "width": 14,
+            "height": 14,
+            "originX": 7,
+            "originY": 7
+        },
+        "ageless": false,
+        "maximumAge": 3000
+    },
+    {
+        "name": "Large Weapon Energy",
+        "effect": "NothingEffect",
+        "animationSet": "assets/animations/items.json",
+        "animationName": "weapon-energy-large",
+        "boundingBox": {
+            "width": 14,
+            "height": 14,
+            "originX": 7,
+            "originY": 7
+        },
+        "ageless": false,
+        "maximumAge": 3000
+    },
+    {
+        "name": "Small Weapon Energy",
+        "effect": "NothingEffect",
+        "animationSet": "assets/animations/items.json",
+        "animationName": "weapon-energy-small",
+        "boundingBox": {
+            "width": 6,
+            "height": 6,
+            "originX": 3,
+            "originY": 3
+        },
+        "ageless": false,
+        "maximumAge": 3000
+    },
+    {
+        "name": "Large Health Energy",
+        "effect": "",
+        "animationSet": "assets/animations/items.json",
+        "animationName": "health-energy-large",
+        "boundingBox": {
+            "width": 14,
+            "height": 14,
+            "originX": 7,
+            "originY": 7
+        },
+        "ageless": false,
+        "maximumAge": 3000
+    },
+    {
+        "name": "Small Health Energy",
+        "effect": "NothingEffect",
+        "animationSet": "assets/animations/items.json",
+        "animationName": "health-energy-small",
+        "boundingBox": {
+            "width": 6,
+            "height": 6,
+            "originX": 3,
+            "originY": 3
+        },
+        "ageless": false,
+        "maximumAge": 3000
+    },
+    {
+        "name": "Energy Balancer",
+        "effect": "NothingEffect",
+        "animationSet": "assets/animations/items.json",
+        "animationName": "energy-balancer",
+        "boundingBox": {
+            "width": 14,
+            "height": 14,
+            "originX": 7,
+            "originY": 7
+        },
+        "ageless": true,
+        "maximumAge": 3000
+    }
+]
