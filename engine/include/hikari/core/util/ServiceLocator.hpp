@@ -42,7 +42,7 @@ namespace hikari {
         }
 
         template<class T>
-        std::shared_ptr<T> locateService(const std::string &name) {
+        std::weak_ptr<T> locateService(const std::string &name) {
             auto found = services.find(name);
 
             if(found != services.end()) {

@@ -80,7 +80,7 @@ namespace hikari {
         //
         // Resource Management
         //
-        void loadAllMaps(const std::shared_ptr<MapLoader> &mapLoader, const Json::Value &params);
+        void loadAllMaps(const std::weak_ptr<MapLoader> &mapLoader, const Json::Value &params);
 
         //
         // Gameplay Mechanics
