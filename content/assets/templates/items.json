@@ -1,7 +1,7 @@
 [
     {
         "name": "Extra Life",
-        "effect": "AddETankEffect",
+        "effect": "AddExtraLifeEffect",
         "animationSet": "assets/animations/items.json",
         "animationName": "extra-life-rockman",
         "boundingBox": {
@@ -47,10 +47,10 @@
         "animationSet": "assets/animations/items.json",
         "animationName": "health-energy-large",
         "boundingBox": {
-            "width": 14,
-            "height": 14,
-            "originX": 7,
-            "originY": 7
+            "width": 16,
+            "height": 16,
+            "originX": 8,
+            "originY": 8
         },
         "ageless": false,
         "maximumAge": 3000

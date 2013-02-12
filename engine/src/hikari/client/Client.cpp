@@ -496,23 +496,6 @@ void populateCollectableItemFactory(
         if(reader.parse(*fileContents, root, false)) {
             auto templateCount = root.size();
 
-            /*
-            {
-                "name": "Extra Life",
-                "effect": "AddEtankEffect",
-                "animationSet": "assets/animations/items.json",
-                "animationName": "extra-life-rockman",
-                "boundingBox": {
-                    "width": 14,
-                    "height": 14,
-                    "originX": 7,
-                    "originY": 7
-                },
-                "ageless": false,
-                "lifetime": 3000
-            }
-            */
-
             for(decltype(templateCount) i = 0; i < templateCount; ++i) {
                 const auto & templateObject = root[i];
 
@@ -525,10 +508,15 @@ void populateCollectableItemFactory(
                 const auto maximumAge        = templateObject["maximumAge"].asInt();
 
                 hikari::BoundingBoxF boundingBox(
-                    static_cast<float>(boundingBoxObject["x"].asDouble()),
-                    static_cast<float>(boundingBoxObject["y"].asDouble()),
+                    0.0f,
+                    0.0f,
                     static_cast<float>(boundingBoxObject["width"].asDouble()),
                     static_cast<float>(boundingBoxObject["height"].asDouble())
+                );
+
+                boundingBox.setOrigin(
+                    static_cast<float>(boundingBoxObject["originX"].asDouble()),
+                    static_cast<float>(boundingBoxObject["originY"].asDouble())
                 );
 
                 std::shared_ptr<Effect> effectInstance(nullptr);
@@ -536,7 +524,12 @@ void populateCollectableItemFactory(
                 if(effect == "" || effect == "NothingEffect") {
                     effectInstance.reset(new NothingEffect());
                 } else {
-                    effectInstance.reset(new ScriptedEffect(squirrel, effect));
+                    try {
+                        effectInstance.reset(new ScriptedEffect(squirrel, effect));
+                    } catch(std::runtime_error & ex) {
+                        HIKARI_LOG(error) << "Couldn't create scripted effect of type " << effect << ". Falling back to NothingEffect.";
+                        effectInstance.reset(new NothingEffect());
+                    }
                 }
 
                 auto item = std::make_shared<CollectableItem>(GameObject::generateObjectId(), nullptr, effectInstance);
