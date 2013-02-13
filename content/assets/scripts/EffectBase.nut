@@ -1,5 +1,5 @@
 class EffectBase {
-    constructor() {
+    constructor(config = {}) {
         ::print("EffectBase constructor called.");
     }
 
@@ -12,4 +12,4 @@ class EffectBase {
     }
 }
 
-::print("EffectBase.nut executed!");
+// ::print("EffectBase.nut executed!");

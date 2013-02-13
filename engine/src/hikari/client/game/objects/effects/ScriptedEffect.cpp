@@ -13,6 +13,19 @@ namespace hikari {
     ScriptedEffect::ScriptedEffect(SquirrelService& service, const std::string& effectClassName)
         : vm(service.getVmInstance())
         , effectClassName(effectClassName)
+        , config(Sqrat::Table())
+    {
+        HIKARI_LOG(debug2) << "ScriptedEffect::ScriptedEffect()";
+
+        if(!bindScriptClassInstance()) {
+            throw std::runtime_error("ScriptedEffect could not be constructed.");
+        }
+    }
+
+    ScriptedEffect::ScriptedEffect(SquirrelService& service, const std::string& effectClassName, const Sqrat::Table& config)
+        : vm(service.getVmInstance())
+        , effectClassName(effectClassName)
+        , config(config)
     {
         HIKARI_LOG(debug2) << "ScriptedEffect::ScriptedEffect()";
 
@@ -24,6 +37,7 @@ namespace hikari {
     ScriptedEffect::ScriptedEffect(const ScriptedEffect &proto) 
         : vm(proto.vm)
         , effectClassName(proto.effectClassName)
+        , config(proto.config)
     {
         HIKARI_LOG(debug2) << "ScriptedEffect::ScriptedEffect(const ScriptedEffect &proto) Copy Constructed!";
 
@@ -41,8 +55,10 @@ namespace hikari {
             try {
                 Sqrat::Function constructor(Sqrat::RootTable(vm), effectClassName.c_str());
 
-                if(!constructor.IsNull()) {
-                    instance = constructor.Evaluate<Sqrat::Object>();
+                if(!constructor.IsNull()) { 
+                    Sqrat::Object& configRef = config;
+
+                    instance = constructor.Evaluate<Sqrat::Object>(configRef);
 
                     if(!instance.IsNull()) {
                         proxyApply = Sqrat::Function(instance, FUNCTION_NAME_APPLY);

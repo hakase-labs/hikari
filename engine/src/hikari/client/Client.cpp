@@ -501,6 +501,7 @@ void populateCollectableItemFactory(
 
                 const auto name              = templateObject["name"].asString();
                 const auto effect            = templateObject["effect"].asString();
+                const auto effectConfig      = templateObject["effectConfig"];
                 const auto animationSet      = templateObject["animationSet"].asString();
                 const auto animationName     = templateObject["animationName"].asString();
                 const auto boundingBoxObject = templateObject["boundingBox"];
@@ -525,7 +526,29 @@ void populateCollectableItemFactory(
                     effectInstance.reset(new NothingEffect());
                 } else {
                     try {
-                        effectInstance.reset(new ScriptedEffect(squirrel, effect));
+                        Sqrat::Table configTable;
+
+                        if(!effectConfig.isNull()) {
+                            const auto configPropertyNames = effectConfig.getMemberNames();
+
+                            for(auto propName = std::begin(configPropertyNames); propName != std::end(configPropertyNames); std::advance(propName, 1)) {
+                                const auto propValue = effectConfig.get(*propName, Json::Value::null);
+
+                                if(propValue.isBool()) {
+                                    configTable.SetValue((*propName).c_str(), propValue.asBool());
+                                } else if(propValue.isDouble()) {
+                                    configTable.SetValue((*propName).c_str(), propValue.asDouble());
+                                } else if(propValue.isIntegral()) {
+                                    configTable.SetValue((*propName).c_str(), propValue.asInt());
+                                } else if(propValue.isString()) {
+                                    configTable.SetValue((*propName).c_str(), propValue.asString());
+                                } else if(propValue.isNull()) {
+                                    configTable.SetValue((*propName).c_str(), nullptr);
+                                }
+                            }
+                        }
+
+                        effectInstance.reset(new ScriptedEffect(squirrel, effect, configTable));
                     } catch(std::runtime_error & ex) {
                         HIKARI_LOG(error) << "Couldn't create scripted effect of type " << effect << ". Falling back to NothingEffect.";
                         effectInstance.reset(new NothingEffect());

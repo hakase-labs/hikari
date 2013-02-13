@@ -43,7 +43,10 @@
     },
     {
         "name": "Large Health Energy",
-        "effect": "",
+        "effect": "ModifyHealthEffect",
+        "effectConfig": {
+            "amount": 10
+        },
         "animationSet": "assets/animations/items.json",
         "animationName": "health-energy-large",
         "boundingBox": {
@@ -57,7 +60,10 @@
     },
     {
         "name": "Small Health Energy",
-        "effect": "NothingEffect",
+        "effect": "ModifyHealthEffect",
+        "effectConfig": {
+            "amount": 2
+        },
         "animationSet": "assets/animations/items.json",
         "animationName": "health-energy-small",
         "boundingBox": {
