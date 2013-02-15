@@ -87,6 +87,7 @@ content/assets/scripts/effects*
 !content/assets/images/sp-collectables.png
 !content/assets/scripts/
 !content/assets/scripts/*.nut
+!content/assets/scripts/effects/
 !content/assets/scripts/effects/*.nut
 contrib/*
 !contrib/gme

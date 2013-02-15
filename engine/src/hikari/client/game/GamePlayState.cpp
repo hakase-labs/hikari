@@ -283,46 +283,48 @@ namespace hikari {
         );
     }
 
-    void GamePlayState::loadAllMaps(const std::shared_ptr<MapLoader> &mapLoader, const Json::Value &params) {
-        try {
-            std::string stagesDirectory = params["assets"]["stages"].asString();
+    void GamePlayState::loadAllMaps(const std::weak_ptr<MapLoader> &mapLoader, const Json::Value &params) {
+        if(auto mapLoaderPtr = mapLoader.lock()) {
+            try {
+                std::string stagesDirectory = params["assets"]["stages"].asString();
 
-            bool directoryExists = PhysFS::exists(stagesDirectory);
-            bool directoryIsDirectory = PhysFS::isDirectory(stagesDirectory);
+                bool directoryExists = PhysFS::exists(stagesDirectory);
+                bool directoryIsDirectory = PhysFS::isDirectory(stagesDirectory);
 
-            if(directoryExists && directoryIsDirectory) {
-                // Get file listing and load all .json files as maps
-                auto fileListing = PhysFS::getFileListing(stagesDirectory);
+                if(directoryExists && directoryIsDirectory) {
+                    // Get file listing and load all .json files as maps
+                    auto fileListing = PhysFS::getFileListing(stagesDirectory);
 
-                HIKARI_LOG(debug) << "Found " << fileListing.size() << " file(s) in map directory.";
+                    HIKARI_LOG(debug) << "Found " << fileListing.size() << " file(s) in map directory.";
 
-                for(auto index = std::begin(fileListing), end = std::end(fileListing); index != end; index++) {
-                    const auto & fileName = (*index);
-                    const auto & filePath = stagesDirectory + "/" + fileName; // TODO: Handle file paths for real
+                    for(auto index = std::begin(fileListing), end = std::end(fileListing); index != end; index++) {
+                        const auto & fileName = (*index);
+                        const auto & filePath = stagesDirectory + "/" + fileName; // TODO: Handle file paths for real
 
-                    if(StringUtils::endsWith(filePath, ".json")) {
-                        try {
-                            HIKARI_LOG(debug) << "Loading map from \"" << fileName << "\"...";
+                        if(StringUtils::endsWith(filePath, ".json")) {
+                            try {
+                                HIKARI_LOG(debug) << "Loading map from \"" << fileName << "\"...";
 
-                            auto mapJsonObject = JsonUtils::loadJson(filePath);
-                            auto map = mapLoader->loadFromJson(mapJsonObject);
+                                auto mapJsonObject = JsonUtils::loadJson(filePath);
+                                auto map = mapLoaderPtr->loadFromJson(mapJsonObject);
 
-                            if(map) {
-                                maps[fileName] = map;
-                                HIKARI_LOG(debug) << "Successfully loaded map from \"" << fileName << "\".";
-                            } else {
-                                HIKARI_LOG(error) << "Failed to load map from \"" << filePath << "\".";
+                                if(map) {
+                                    maps[fileName] = map;
+                                    HIKARI_LOG(debug) << "Successfully loaded map from \"" << fileName << "\".";
+                                } else {
+                                    HIKARI_LOG(error) << "Failed to load map from \"" << filePath << "\".";
+                                }
+                            } catch(std::exception &ex) {
+                                HIKARI_LOG(error) << "Failed to load map from \"" << filePath << "\". Error: " << ex.what();
                             }
-                        } catch(std::exception &ex) {
-                            HIKARI_LOG(error) << "Failed to load map from \"" << filePath << "\". Error: " << ex.what();
                         }
                     }
+                } else {
+                    HIKARI_LOG(error) << "Failed to load maps! Specified path doesn't exist or isn't a directory.";
                 }
-            } else {
-                HIKARI_LOG(error) << "Failed to load maps! Specified path doesn't exist or isn't a directory.";
+            } catch(std::exception& ex) {
+                HIKARI_LOG(error) << "Failed to load maps! Reason: " << ex.what();
             }
-        } catch(std::exception& ex) {
-            HIKARI_LOG(error) << "Failed to load maps! Reason: " << ex.what();
         }
     }
 

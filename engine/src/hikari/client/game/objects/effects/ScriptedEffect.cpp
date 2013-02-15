@@ -2,6 +2,8 @@
 #include "hikari/client/scripting/SquirrelService.hpp"
 #include "hikari/core/util/Log.hpp"
 
+#include <stdexcept>
+
 namespace hikari {
 
     const char * ScriptedEffect::FUNCTION_NAME_APPLY = "applyEffect";
@@ -11,46 +13,71 @@ namespace hikari {
     ScriptedEffect::ScriptedEffect(SquirrelService& service, const std::string& effectClassName)
         : vm(service.getVmInstance())
         , effectClassName(effectClassName)
+        , config(Sqrat::Table())
     {
         HIKARI_LOG(debug2) << "ScriptedEffect::ScriptedEffect()";
 
-        bindScriptClassInstance();
+        if(!bindScriptClassInstance()) {
+            throw std::runtime_error("ScriptedEffect could not be constructed.");
+        }
+    }
+
+    ScriptedEffect::ScriptedEffect(SquirrelService& service, const std::string& effectClassName, const Sqrat::Table& config)
+        : vm(service.getVmInstance())
+        , effectClassName(effectClassName)
+        , config(config)
+    {
+        HIKARI_LOG(debug2) << "ScriptedEffect::ScriptedEffect()";
+
+        if(!bindScriptClassInstance()) {
+            throw std::runtime_error("ScriptedEffect could not be constructed.");
+        }
     }
 
     ScriptedEffect::ScriptedEffect(const ScriptedEffect &proto) 
         : vm(proto.vm)
         , effectClassName(proto.effectClassName)
+        , config(proto.config)
     {
         HIKARI_LOG(debug2) << "ScriptedEffect::ScriptedEffect(const ScriptedEffect &proto) Copy Constructed!";
 
-        bindScriptClassInstance();
+        if(!bindScriptClassInstance()) {
+            throw std::runtime_error("ScriptedEffect could not be constructed.");
+        }
     }
     
     bool ScriptedEffect::bindScriptClassInstance() {
+        bool isValid = true;
+
         if(effectClassName.empty()) {
-            return false;
-        }
+            isValid = false;
+        } else {
+            try {
+                Sqrat::Function constructor(Sqrat::RootTable(vm), effectClassName.c_str());
 
-        try {
-            Sqrat::Function constructor(Sqrat::RootTable(vm), effectClassName.c_str());
+                if(!constructor.IsNull()) { 
+                    Sqrat::Object& configRef = config;
 
-            if(!constructor.IsNull()) {
-                instance = constructor.Evaluate<Sqrat::Object>();
+                    instance = constructor.Evaluate<Sqrat::Object>(configRef);
 
-                if(!instance.IsNull()) {
-                    proxyApply = Sqrat::Function(instance, FUNCTION_NAME_APPLY);
-                    proxyUnapply = Sqrat::Function(instance, FUNCTION_NAME_UNAPPLY);
+                    if(!instance.IsNull()) {
+                        proxyApply = Sqrat::Function(instance, FUNCTION_NAME_APPLY);
+                        proxyUnapply = Sqrat::Function(instance, FUNCTION_NAME_UNAPPLY);
+                    } else {
+                        isValid = false;
+                        HIKARI_LOG(debug2) << "Constructor for '" << effectClassName << "' did not return the correct object type.";
+                    }
                 } else {
-                    HIKARI_LOG(debug2) << "Constructor for '" << effectClassName << "' did not return the correct object type.";
+                    isValid = false;
+                    HIKARI_LOG(debug2) << "Could not find a constructor for '" << effectClassName << "'.";
                 }
-            } else {
-                HIKARI_LOG(debug2) << "Could not find a constructor for '" << effectClassName << "'.";
+            } catch(Sqrat::Exception squirrelException) {
+                isValid = false;
+                HIKARI_LOG(debug1) << "Could not create an instance of '" << effectClassName << "'. Reason: " << squirrelException.Message();
             }
-        } catch(Sqrat::Exception squirrelException) {
-            HIKARI_LOG(debug1) << "Could not create an instance of '" << effectClassName << "'. Reason: " << squirrelException.Message();
         }
 
-        return true;
+        return isValid;
     }
 
     std::shared_ptr<Effect> ScriptedEffect::clone() const {
