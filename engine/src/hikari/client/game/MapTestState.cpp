@@ -77,8 +77,8 @@ namespace hikari {
         , playFieldZoom(1.0f)
         , renderWindow(nullptr)
     {
-        squirrel = services.locateService<SquirrelService>(Services::SCRIPTING);
-        animationSetCache = services.locateService<AnimationSetCache>("AnimationSetCache");
+        squirrel = std::shared_ptr<SquirrelService>(services.locateService<SquirrelService>(Services::SCRIPTING));
+        animationSetCache = std::shared_ptr<AnimationSetCache>(services.locateService<AnimationSetCache>("AnimationSetCache"));
 
         // itemFactory = std::make_shared<ItemFactory>(animationSetCache, imageCache, squirrel);
         animations = animationSetCache->get("assets/animations/heroes.json");
@@ -171,7 +171,7 @@ namespace hikari {
 
             //item->setBoundingBox(itemBounds);
 
-            auto clone = item->clone();
+            //auto clone = item->clone();
 
             auto en6 = spawnEnemy("scripted-octopusbattery");
             en6->setDirection(Directions::Up);

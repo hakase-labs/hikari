@@ -22,6 +22,7 @@ namespace hikari {
         HSQUIRRELVM vm;
         std::string effectClassName;
         Sqrat::Object instance;
+        Sqrat::Table config;
         Sqrat::Function proxyApply;
         Sqrat::Function proxyUnapply;
 
@@ -29,6 +30,7 @@ namespace hikari {
 
     public:
         ScriptedEffect(SquirrelService& service, const std::string& effectClassName);
+        ScriptedEffect(SquirrelService& service, const std::string& effectClassName, const Sqrat::Table& config);
         ScriptedEffect(const ScriptedEffect &proto);
         virtual std::shared_ptr<Effect> clone() const;
         virtual ~ScriptedEffect();

@@ -110,18 +110,10 @@ namespace hikari {
                 }
             }
         }
-
-        getSprite().setPosition(
-            std::floor(getBoundingBox().getLeft()), 
-            std::floor(getBoundingBox().getTop())
-        );
-
-        getSprite().setOrigin(getBoundingBox().getOrigin().getX(), getBoundingBox().getOrigin().getY());
     }
 
     void CollectableItem::render(sf::RenderTarget &target) {
         Entity::render(target);
-        target.draw(getSprite());
     }
 
     void CollectableItem::reset() {

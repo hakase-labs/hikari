@@ -1,4 +1,23 @@
-::print("Scripting environment is ready.");
+//
+// Global utility belt, "underscore"!
+//
+_ <- { };
+
+///
+/// Fill in a given object with default properties.
+///
+/// @param obj the object to apply defaults to
+/// @param defaults an object that supplies default keys and values
+///
+_.defaults <- function(obj, defaults) {
+    foreach(key, val in defaults) {
+        if(!(key in obj) || obj[key] == null) {
+            obj[key] <- defaults[key];
+        }
+    }
+
+    return obj;
+};
 
 //
 // Table which keeps track of scripts loaded via require(). The keys in this 
@@ -22,6 +41,4 @@ function require(fileName, reload = false) {
     }
 }
 
-require("assets/scripts/TestRequire.nut");
-require("assets/scripts/TestRequire.nut");
-require("assets/scripts/TestRequire.nut");
+::print("Scripting environment is ready.");

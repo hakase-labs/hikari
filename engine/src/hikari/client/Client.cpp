@@ -496,28 +496,12 @@ void populateCollectableItemFactory(
         if(reader.parse(*fileContents, root, false)) {
             auto templateCount = root.size();
 
-            /*
-            {
-                "name": "Extra Life",
-                "effect": "AddEtankEffect",
-                "animationSet": "assets/animations/items.json",
-                "animationName": "extra-life-rockman",
-                "boundingBox": {
-                    "width": 14,
-                    "height": 14,
-                    "originX": 7,
-                    "originY": 7
-                },
-                "ageless": false,
-                "lifetime": 3000
-            }
-            */
-
             for(decltype(templateCount) i = 0; i < templateCount; ++i) {
                 const auto & templateObject = root[i];
 
                 const auto name              = templateObject["name"].asString();
                 const auto effect            = templateObject["effect"].asString();
+                const auto effectConfig      = templateObject["effectConfig"];
                 const auto animationSet      = templateObject["animationSet"].asString();
                 const auto animationName     = templateObject["animationName"].asString();
                 const auto boundingBoxObject = templateObject["boundingBox"];
@@ -525,10 +509,15 @@ void populateCollectableItemFactory(
                 const auto maximumAge        = templateObject["maximumAge"].asInt();
 
                 hikari::BoundingBoxF boundingBox(
-                    static_cast<float>(boundingBoxObject["x"].asDouble()),
-                    static_cast<float>(boundingBoxObject["y"].asDouble()),
+                    0.0f,
+                    0.0f,
                     static_cast<float>(boundingBoxObject["width"].asDouble()),
                     static_cast<float>(boundingBoxObject["height"].asDouble())
+                );
+
+                boundingBox.setOrigin(
+                    static_cast<float>(boundingBoxObject["originX"].asDouble()),
+                    static_cast<float>(boundingBoxObject["originY"].asDouble())
                 );
 
                 std::shared_ptr<Effect> effectInstance(nullptr);
@@ -536,7 +525,34 @@ void populateCollectableItemFactory(
                 if(effect == "" || effect == "NothingEffect") {
                     effectInstance.reset(new NothingEffect());
                 } else {
-                    effectInstance.reset(new ScriptedEffect(squirrel, effect));
+                    try {
+                        Sqrat::Table configTable;
+
+                        if(!effectConfig.isNull()) {
+                            const auto configPropertyNames = effectConfig.getMemberNames();
+
+                            for(auto propName = std::begin(configPropertyNames); propName != std::end(configPropertyNames); std::advance(propName, 1)) {
+                                const auto propValue = effectConfig.get(*propName, Json::Value::null);
+
+                                if(propValue.isBool()) {
+                                    configTable.SetValue((*propName).c_str(), propValue.asBool());
+                                } else if(propValue.isDouble()) {
+                                    configTable.SetValue((*propName).c_str(), propValue.asDouble());
+                                } else if(propValue.isIntegral()) {
+                                    configTable.SetValue((*propName).c_str(), propValue.asInt());
+                                } else if(propValue.isString()) {
+                                    configTable.SetValue((*propName).c_str(), propValue.asString());
+                                } else if(propValue.isNull()) {
+                                    configTable.SetValue((*propName).c_str(), nullptr);
+                                }
+                            }
+                        }
+
+                        effectInstance.reset(new ScriptedEffect(squirrel, effect, configTable));
+                    } catch(std::runtime_error & ex) {
+                        HIKARI_LOG(error) << "Couldn't create scripted effect of type " << effect << ". Falling back to NothingEffect.";
+                        effectInstance.reset(new NothingEffect());
+                    }
                 }
 
                 auto item = std::make_shared<CollectableItem>(GameObject::generateObjectId(), nullptr, effectInstance);
