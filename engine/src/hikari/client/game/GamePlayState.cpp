@@ -9,6 +9,8 @@
 #include "hikari/client/scripting/SquirrelService.hpp"
 
 #include "hikari/client/game/objects/GameObject.hpp"
+#include "hikari/client/game/objects/CollectableItem.hpp"
+#include "hikari/client/game/objects/ItemFactory.hpp"
 #include "hikari/client/gui/EnergyMeter.hpp"
 #include "hikari/client/Services.hpp"
 
@@ -24,6 +26,7 @@
 #include "hikari/core/util/JsonUtils.hpp"
 #include "hikari/core/util/PhysFS.hpp"
 #include "hikari/core/util/PhysFSUtils.hpp"
+#include "hikari/core/util/ReferenceWrapper.hpp"
 #include "hikari/core/util/ServiceLocator.hpp"
 #include "hikari/core/util/StringUtils.hpp"
 
@@ -120,6 +123,9 @@ namespace hikari {
         hero->setActionController(std::make_shared<PlayerInputHeroActionController>(userInput));
 
         world.setPlayer(hero);
+
+        const auto itemFactoryWeak = services.locateService<ItemFactory>("ItemFactory");
+        world.setItemFactory(itemFactoryWeak);
 
         subState.reset(new ReadySubState(*this));
         subState->enter();
@@ -255,7 +261,7 @@ namespace hikari {
         std::for_each(
             std::begin(inactiveSpawners),
             std::end(inactiveSpawners),
-            [&cameraView](std::weak_ptr<Spawner> & s) {
+            [this, &cameraView](std::weak_ptr<Spawner> & s) {
                 if(auto spawner = s.lock()) {
                     const auto & spawnerPosition = spawner->getPosition();
 
@@ -275,6 +281,17 @@ namespace hikari {
                     else {
                         if(cameraView.contains(spawnerPosition.getX(), spawnerPosition.getY())) {
                             spawner->setActive(true);
+
+                            //auto spawnedObject = world.spawnCollectableItem("Large Health Energy");
+
+                            //if(spawnedObject) {
+                            //    spawnedObject->reset();
+                            //    spawnedObject->setPosition(spawner->getPosition().getX(), spawner->getPosition().getY());
+                            //    spawnedObject->setRoom(currentRoom);
+                            //    spawnedObject->setActive(true);
+                            //}
+
+                            //world.queueObjectAddition(spawnedObject);
                             HIKARI_LOG(debug3) << "Just woke up spawner #" << spawner->getId();
                         }
                     }
@@ -372,6 +389,13 @@ namespace hikari {
 
         // Render the entities here...
         hero->render(target);
+
+        const auto & activeItems = world.getActiveItems();
+
+        std::for_each(
+            std::begin(activeItems), 
+            std::end(activeItems), 
+            std::bind(&CollectableItem::render, std::placeholders::_1, ReferenceWrapper<sf::RenderTarget>(target)));
 
         target.setView(oldView);
     }
@@ -585,10 +609,26 @@ namespace hikari {
     void GamePlayState::PlayingSubState::update(const float & dt) {
         gamePlayState.world.update(dt);
 
+        //
+        // Update collectable items
+        //
+        const auto & activeItems = gamePlayState.world.getActiveItems();
+
+        std::for_each(
+            std::begin(activeItems), 
+            std::end(activeItems), 
+            std::bind(&CollectableItem::update, std::placeholders::_1, std::cref(dt)));
+
+        //
+        // Update hero
+        //
         if(gamePlayState.hero) {
             gamePlayState.hero->update(dt);
         }
 
+        //
+        // Move camera to correct place
+        //
         auto& camera = gamePlayState.camera;
         auto& hero = gamePlayState.hero;
         const auto& heroPosition = hero->getPosition();
