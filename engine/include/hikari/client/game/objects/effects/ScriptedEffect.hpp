@@ -29,8 +29,7 @@ namespace hikari {
         bool bindScriptClassInstance();
 
     public:
-        ScriptedEffect(SquirrelService& service, const std::string& effectClassName);
-        ScriptedEffect(SquirrelService& service, const std::string& effectClassName, const Sqrat::Table& config);
+        ScriptedEffect(SquirrelService& service, const std::string& effectClassName, const Sqrat::Table& config = Sqrat::Table());
         ScriptedEffect(const ScriptedEffect &proto);
         virtual std::shared_ptr<Effect> clone() const;
         virtual ~ScriptedEffect();
