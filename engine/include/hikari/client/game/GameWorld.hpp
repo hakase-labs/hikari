@@ -23,15 +23,22 @@ namespace hikari {
     class CollectableItem;
     class Doodad;
     class Enemy;
+    class ItemFactory;
     class Particle;
     class Projectile;
 
     class GameWorld : public Updatable {
     private:
         std::shared_ptr<Hero> player;
+        std::weak_ptr<ItemFactory> itemFactory;
         std::queue<std::shared_ptr<GameObject>> queuedAdditions;
         std::queue<std::shared_ptr<GameObject>> queuedRemovals;
         std::vector<std::shared_ptr<GameObject>> activeObjects;
+
+        std::queue<std::shared_ptr<CollectableItem>> queuedItemAdditions;
+        std::queue<std::shared_ptr<CollectableItem>> queuedItemRemovals;
+        std::vector<std::shared_ptr<CollectableItem>> activeItems;
+
         std::unordered_map<int, std::shared_ptr<GameObject>> objectRegistry;
         bool gravityEnabled;
 
@@ -42,14 +49,21 @@ namespace hikari {
         GameWorld();
         virtual ~GameWorld();
 
+        void setItemFactory(const std::weak_ptr<ItemFactory> & itemFactory);
+
         void queueObjectAddition(const std::shared_ptr<GameObject> &obj);
+        void queueObjectAddition(const std::shared_ptr<CollectableItem> &obj);
+
         void queueObjectRemoval(const std::shared_ptr<GameObject> &obj);
+        void queueObjectRemoval(const std::shared_ptr<CollectableItem> &obj);
 
         std::shared_ptr<CollectableItem> spawnCollectableItem(const std::string & name /* CollectableItemInstanceConfig instanceConfig */) const;
         std::shared_ptr<Doodad> spawnDoodad(const std::string & name /* DoodadInstanceConfig instanceConfig */) const;
         std::shared_ptr<Enemy> spawnEnemy(const std::string & name /* EnemyInstanceConfig instanceConfig */) const;
         std::shared_ptr<Particle> spawnParticle(const std::string & name /* ParticleInstanceConfig instanceConfig */) const;
         std::shared_ptr<Projectile> spawnProjectile(const std::string & name /* ProjectileInstanceConfig instanceConfig */) const;
+
+        const std::vector<std::shared_ptr<CollectableItem>> & getActiveItems() const;
 
         void setPlayer(const std::shared_ptr<Hero>& player);
 
