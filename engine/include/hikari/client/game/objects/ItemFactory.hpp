@@ -5,6 +5,8 @@
 #include <string>
 #include <unordered_map>
 
+#include "hikari/core/util/Service.hpp"
+
 namespace hikari {
 
     class AnimationSetCache;
@@ -12,7 +14,7 @@ namespace hikari {
     class ImageCache;
     class SquirrelService;
 
-    class ItemFactory {
+    class ItemFactory : public Service {
     private:
         //
         // Fields
@@ -38,6 +40,7 @@ namespace hikari {
         // Constructor
         //
         ItemFactory(const std::shared_ptr<AnimationSetCache>& animationSetCache, const std::shared_ptr<ImageCache>& imageCache, const std::shared_ptr<SquirrelService>& squirrel);
+        virtual ~ItemFactory();
 
         //
         // Methods
