@@ -90,15 +90,26 @@ namespace hikari {
     }
 
     void GameWorld::processRemovals() {
-        while(!queuedItemRemovals.empty()) {
+        while(!queuedRemovals.empty()) {
             auto objectToBeRemoved = queuedRemovals.front();
+            
+            activeObjects.erase(
+                std::remove(std::begin(activeObjects), std::end(activeObjects), objectToBeRemoved));
+
+            objectRegistry.erase(objectToBeRemoved->getId());
+            
+            queuedRemovals.pop();
+        }
+
+        while(!queuedItemRemovals.empty()) {
+            auto objectToBeRemoved = queuedItemRemovals.front();
             
             activeItems.erase(
                 std::remove(std::begin(activeItems), std::end(activeItems), objectToBeRemoved));
 
             objectRegistry.erase(objectToBeRemoved->getId());
             
-            queuedRemovals.pop();
+            queuedItemRemovals.pop();
         }
     }
 
