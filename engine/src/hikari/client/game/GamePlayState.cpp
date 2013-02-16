@@ -11,6 +11,7 @@
 #include "hikari/client/game/objects/GameObject.hpp"
 #include "hikari/client/game/objects/CollectableItem.hpp"
 #include "hikari/client/game/objects/ItemFactory.hpp"
+#include "hikari/client/game/Effect.hpp"
 #include "hikari/client/gui/EnergyMeter.hpp"
 #include "hikari/client/Services.hpp"
 
@@ -282,16 +283,16 @@ namespace hikari {
                         if(cameraView.contains(spawnerPosition.getX(), spawnerPosition.getY())) {
                             spawner->setActive(true);
 
-                            //auto spawnedObject = world.spawnCollectableItem("Large Health Energy");
+                            auto spawnedObject = world.spawnCollectableItem("Large Health Energy");
 
-                            //if(spawnedObject) {
-                            //    spawnedObject->reset();
-                            //    spawnedObject->setPosition(spawner->getPosition().getX(), spawner->getPosition().getY());
-                            //    spawnedObject->setRoom(currentRoom);
-                            //    spawnedObject->setActive(true);
-                            //}
+                            if(spawnedObject) {
+                                spawnedObject->reset();
+                                spawnedObject->setPosition(spawner->getPosition().getX(), spawner->getPosition().getY());
+                                spawnedObject->setRoom(currentRoom);
+                                spawnedObject->setActive(true);
+                            }
 
-                            //world.queueObjectAddition(spawnedObject);
+                            world.queueObjectAddition(spawnedObject);
                             HIKARI_LOG(debug3) << "Just woke up spawner #" << spawner->getId();
                         }
                     }
@@ -607,6 +608,8 @@ namespace hikari {
     }
 
     void GamePlayState::PlayingSubState::update(const float & dt) {
+        auto& camera = gamePlayState.camera;
+
         gamePlayState.world.update(dt);
 
         //
@@ -617,7 +620,36 @@ namespace hikari {
         std::for_each(
             std::begin(activeItems), 
             std::end(activeItems), 
-            std::bind(&CollectableItem::update, std::placeholders::_1, std::cref(dt)));
+            [this, &camera, &dt](const std::shared_ptr<CollectableItem> & item) {
+                item->update(dt);
+
+                //
+                // Check if we've moved off screen and remove if so
+                //
+                const auto & view = camera.getView();
+                const auto & pos = item->getPosition();
+
+                if(!view.contains(pos.getX(), pos.getY())) {
+                    item->setActive(false);
+                    gamePlayState.world.queueObjectRemoval(item);
+                }
+
+                //
+                // Check if we should be consumed...
+                //
+                const auto & hero = gamePlayState.hero;
+
+                if(hero->getBoundingBox().intersects(item->getBoundingBox())) {
+                    const auto & effect = item->getEffect();
+
+                    if(effect) {
+                        effect->apply();
+                    }
+
+                    item->setActive(false);
+                    gamePlayState.world.queueObjectRemoval(item);
+                }
+        });
 
         //
         // Update hero
@@ -629,7 +661,6 @@ namespace hikari {
         //
         // Move camera to correct place
         //
-        auto& camera = gamePlayState.camera;
         auto& hero = gamePlayState.hero;
         const auto& heroPosition = hero->getPosition();
         auto& renderer = gamePlayState.mapRenderer;
