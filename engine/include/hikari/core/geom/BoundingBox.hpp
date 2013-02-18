@@ -4,6 +4,7 @@
 #include "hikari/core/Platform.hpp"
 #include "hikari/core/math/Vector2.hpp"
 #include <iostream>
+#include <utility>
 
 namespace hikari {
 
@@ -13,7 +14,7 @@ namespace hikari {
         This class provides methods for accessing the coordinates for the edge
         and corner coordinates.
 
-        When possible this class' methods implement a fluent interface and 
+        When possible this class' methods implement a fluent interface and
         allow chaining method calls together.
     */
     template <typename T>
@@ -23,21 +24,27 @@ namespace hikari {
         Vector2<T> origin;
         T width;
         T height;
-        
+
     public:
         BoundingBox(const Vector2<T> &position, const T &width, const T &height);
         BoundingBox(const T &x, const T &y, const T &width, const T &height);
         BoundingBox(const BoundingBox& proto);
-        
-        // 
+
+        BoundingBox & operator = (BoundingBox other);
+        bool operator == (const BoundingBox& rhs) const;
+        bool operator != (const BoundingBox& rhs) const;
+
+        void swap(BoundingBox & other);
+
+        //
         // Accessors
         //
         const Vector2<T>& getPosition() const;
         const Vector2<T>& getOrigin() const;
-        
+
         const T& getWidth() const;
         const T& getHeight() const;
-        
+
         /**
             Gets the y-coordinate that is the top edge of this BoundingBox.
         */
@@ -49,11 +56,11 @@ namespace hikari {
         const T getLeft() const;
 
         /**
-            Gets the x-coordinate that is the sum of the x and width property 
+            Gets the x-coordinate that is the sum of the x and width property
             values of this BoundingBox.
 
-            The value of the right edge represents the x-coordinate of the 
-            first point at the right edge of the rectangle that is not 
+            The value of the right edge represents the x-coordinate of the
+            first point at the right edge of the rectangle that is not
             contained in the rectangle.
 
             @see getLeft
@@ -62,23 +69,23 @@ namespace hikari {
         const T getRight() const;
 
         /**
-            Gets the y-coordinate that is the sum of the y and height property 
+            Gets the y-coordinate that is the sum of the y and height property
             values of this BoundingBox.
 
-            The value of the bottom edge represents the y-coordinate of the 
-            first point at the bottom edge of the rectangle that is not 
+            The value of the bottom edge represents the y-coordinate of the
+            first point at the bottom edge of the rectangle that is not
             contained in the rectangle.
 
             @see getTop
             @see getHeight
         */
         const T getBottom() const;
-        
+
         const Vector2<T> getTopLeft() const;
         const Vector2<T> getTopRight() const;
         const Vector2<T> getBottomLeft() const;
         const Vector2<T> getBottomRight() const;
-        
+
         //
         // Mutators
         //
@@ -86,7 +93,7 @@ namespace hikari {
         BoundingBox& setPosition(const T& x, const T& y);
         BoundingBox& setOrigin(const Vector2<T>& newOrigin);
         BoundingBox& setOrigin(const T& x, const T& y);
-        
+
         BoundingBox& setWidth(const T& newWidth);
         BoundingBox& setHeight(const T& newHeight);
 
@@ -124,7 +131,7 @@ namespace hikari {
 
 
         /**
-            Tests if two BoundingBox objects' areas intersect. 
+            Tests if two BoundingBox objects' areas intersect.
 
             @return true if this BoundingBox's area intersects the argument.
         */
@@ -140,7 +147,7 @@ namespace hikari {
             Tests if a specified coordinate is inside this BoundingBox's area.
         */
         bool contains(const T& x, const T& y) const;
-        
+
         //
         // Utilities
         //
@@ -185,6 +192,33 @@ namespace hikari {
         , width(proto.width)
         , height(proto.height) {
 
+    }
+
+    template <typename T>
+    BoundingBox<T> & BoundingBox<T>::operator = (BoundingBox<T> other) {
+        swap(other);
+        return *this;
+    }
+
+    template <typename T>
+    bool BoundingBox<T>::operator == (const BoundingBox<T>& rhs) const {
+        return (postion == rhs.position && 
+            origin == rhs.origin && 
+            width == rhs.width && 
+            height == rhs.height);
+    }
+
+    template <typename T>
+    bool BoundingBox<T>::operator != (const BoundingBox<T>& rhs) const {
+        return !(*this == rhs);
+    }
+
+    template <typename T>
+    void BoundingBox<T>::swap(BoundingBox<T> & other) {
+        std::swap(position, other.position);
+        std::swap(origin, other.origin);
+        std::swap(width, other.width);
+        std::swap(height, other.height);
     }
 
     template <typename T>
@@ -302,21 +336,21 @@ namespace hikari {
 
     template <typename T>
     bool BoundingBox<T>::intersects(const BoundingBox<T>& other) const {
-        return !(getLeft() > other.getRight() || getRight() < other.getLeft() || 
+        return !(getLeft() > other.getRight() || getRight() < other.getLeft() ||
                 getTop() > other.getBottom() || getBottom() < other.getTop());
     }
 
     template <typename T>
     bool BoundingBox<T>::contains(const BoundingBox<T>& other) const {
-        return (contains(other.getLeft(), other.getTop()) && 
-                contains(other.getRight(), other.getTop()) && 
-                contains(other.getLeft(), other.getBottom()) && 
+        return (contains(other.getLeft(), other.getTop()) &&
+                contains(other.getRight(), other.getTop()) &&
+                contains(other.getLeft(), other.getBottom()) &&
                 contains(other.getRight(), other.getBottom()));
     }
 
     template <typename T>
     bool BoundingBox<T>::contains(const T& x, const T& y) const {
-        return (x >= getLeft() && x <= getRight() && 
+        return (x >= getLeft() && x <= getRight() &&
                 y >= getTop() && y <= getBottom());
     }
 
