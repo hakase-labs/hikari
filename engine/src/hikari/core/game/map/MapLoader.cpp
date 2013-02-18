@@ -157,7 +157,7 @@ namespace hikari {
                                     )
                                 );
 
-        spawner->setPosition(Vector2D(static_cast<float>(x), static_cast<float>(y)));
+        spawner->setPosition(Vector2<float>(static_cast<float>(x), static_cast<float>(y)));
         spawner->setDirection(direction);
 
         return spawner;

@@ -143,7 +143,6 @@
     <ClInclude Include="include\hikari\core\geom\BoundingBox.hpp" />
     <ClInclude Include="include\hikari\core\geom\Point2D.hpp" />
     <ClInclude Include="include\hikari\core\geom\Rectangle2D.hpp" />
-    <ClInclude Include="include\hikari\core\geom\Vector2D.hpp" />
     <ClInclude Include="include\hikari\core\gui\ImageFont.hpp" />
     <ClInclude Include="include\hikari\core\Hikari.hpp" />
     <ClInclude Include="include\hikari\core\math\Constants.hpp" />
@@ -231,7 +230,6 @@
     <ClCompile Include="src\hikari\core\game\map\Tileset.cpp" />
     <ClCompile Include="src\hikari\core\game\map\TilesetLoader.cpp" />
     <ClCompile Include="src\hikari\core\game\SpriteAnimator.cpp" />
-    <ClCompile Include="src\hikari\core\geom\Vector2D.cpp" />
     <ClCompile Include="src\hikari\core\gui\ImageFont.cpp" />
     <ClCompile Include="src\hikari\core\Hikari.cpp" />
     <ClCompile Include="src\hikari\core\math\RetroVector.cpp" />

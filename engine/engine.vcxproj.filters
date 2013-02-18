@@ -402,9 +402,6 @@
     <ClInclude Include="include\hikari\client\game\objects\RockmanHero.hpp">
       <Filter>Header Files\client\game\objects</Filter>
     </ClInclude>
-    <ClInclude Include="include\hikari\core\geom\Vector2D.hpp">
-      <Filter>Header Files\core\geom</Filter>
-    </ClInclude>
     <ClInclude Include="include\hikari\test\core\geom\Vector2DTests.hpp">
       <Filter>Header Files\test</Filter>
     </ClInclude>
@@ -721,9 +718,6 @@
     </ClCompile>
     <ClCompile Include="src\hikari\client\game\objects\Hero.cpp">
       <Filter>Source Files\client\game\objects</Filter>
-    </ClCompile>
-    <ClCompile Include="src\hikari\core\geom\Vector2D.cpp">
-      <Filter>Source Files\core\geom</Filter>
     </ClCompile>
     <ClCompile Include="src\hikari\test\core\geom\Vector2DTest.cpp">
       <Filter>Source Files\test</Filter>
