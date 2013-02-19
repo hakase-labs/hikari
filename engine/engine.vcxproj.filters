@@ -534,6 +534,9 @@
     <ClInclude Include="include\hikari\core\geom\GeometryUtils.hpp">
       <Filter>Header Files\core\geom</Filter>
     </ClInclude>
+    <ClInclude Include="include\hikari\client\game\objects\ItemSpawner.hpp">
+      <Filter>Header Files\client\game\objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\hikari\core\Hikari.cpp">
@@ -817,6 +820,9 @@
     </ClCompile>
     <ClCompile Include="src\hikari\client\ClientConfig.cpp">
       <Filter>Source Files\client</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\objects\ItemSpawner.cpp">
+      <Filter>Source Files\client\game\objects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -228,9 +228,10 @@ namespace hikari {
 
             const auto & spawners = room->getSpawners();
 
-            for(auto spawner = std::begin(spawners), end = std::end(spawners);
-                    spawner != end; spawner++) {
-                inactiveSpawners.emplace_back(std::weak_ptr<Spawner>(*spawner));
+            for(auto spawner = std::begin(spawners), end = std::end(spawners); spawner != end; spawner++) {
+                if(*spawner) {
+                    inactiveSpawners.emplace_back(std::weak_ptr<Spawner>(*spawner));
+                }
             }
         }
 
