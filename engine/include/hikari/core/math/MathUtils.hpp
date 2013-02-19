@@ -23,7 +23,7 @@ namespace math {
         return (number == 0.0f) ? 0.0f : (number < 0.0f) ? -1.0f : 1.0f;
     }
 
-    /*
+    /**
         Returns the sign bit of a number.
 
         @return 0 if number is positive, 1 if number is negative.

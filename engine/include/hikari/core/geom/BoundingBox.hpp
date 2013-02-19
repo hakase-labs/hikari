@@ -96,6 +96,7 @@ namespace hikari {
 
         BoundingBox& setWidth(const T& newWidth);
         BoundingBox& setHeight(const T& newHeight);
+        BoundingBox& setSize(const T& newWidth, const T& newHeight);
 
         /**
             Adjusts the position of the BoundingBox such that its top edge
@@ -202,9 +203,9 @@ namespace hikari {
 
     template <typename T>
     bool BoundingBox<T>::operator == (const BoundingBox<T>& rhs) const {
-        return (postion == rhs.position && 
-            origin == rhs.origin && 
-            width == rhs.width && 
+        return (position == rhs.position &&
+            origin == rhs.origin &&
+            width == rhs.width &&
             height == rhs.height);
     }
 
@@ -308,6 +309,11 @@ namespace hikari {
     BoundingBox<T>& BoundingBox<T>::setHeight(const T& newHeight) {
         height = newHeight;
         return *this;
+    }
+
+    template <typename T>
+    BoundingBox<T>& BoundingBox<T>::setSize(const T& newWidth, const T& newHeight) {
+        return setWidth(newWidth).setHeight(newHeight);
     }
 
     template <typename T>

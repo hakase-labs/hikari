@@ -22,6 +22,7 @@
 #include "hikari/core/game/map/MapRenderer.hpp"
 #include "hikari/core/game/map/Room.hpp"
 #include "hikari/core/game/map/RoomTransition.hpp"
+#include "hikari/core/geom/GeometryUtils.hpp"
 #include "hikari/core/gui/ImageFont.hpp"
 #include "hikari/core/util/ImageCache.hpp"
 #include "hikari/core/util/JsonUtils.hpp"
@@ -562,7 +563,7 @@ namespace hikari {
 
             // TODO: Get the room's playerSpawn location and use that, noob!
 
-            hero->setPosition(roomPositionX + 128, roomPositionY);
+            hero->setPosition(static_cast<float>(roomPositionX + 128), static_cast<float>(roomPositionY));
         }
     }
 
@@ -629,7 +630,7 @@ namespace hikari {
                 const auto & view = camera.getView();
                 const auto & pos = item->getPosition();
 
-                if(!view.contains(pos.getX(), pos.getY())) {
+                if(!geom::intersects(item->getBoundingBox(), view)) {
                     item->setActive(false);
                     gamePlayState.world.queueObjectRemoval(item);
                 }
