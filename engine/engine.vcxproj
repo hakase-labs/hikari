@@ -141,12 +141,12 @@
     <ClInclude Include="include\hikari\core\game\TileMapCollisionResolver.hpp" />
     <ClInclude Include="include\hikari\core\game\Updatable.hpp" />
     <ClInclude Include="include\hikari\core\geom\BoundingBox.hpp" />
+    <ClInclude Include="include\hikari\core\geom\GeometryUtils.hpp" />
     <ClInclude Include="include\hikari\core\geom\Point2D.hpp" />
     <ClInclude Include="include\hikari\core\geom\Rectangle2D.hpp" />
     <ClInclude Include="include\hikari\core\gui\ImageFont.hpp" />
     <ClInclude Include="include\hikari\core\Hikari.hpp" />
     <ClInclude Include="include\hikari\core\math\Constants.hpp" />
-    <ClInclude Include="include\hikari\core\math\FixedPoint.hpp" />
     <ClInclude Include="include\hikari\core\math\MathUtils.hpp" />
     <ClInclude Include="include\hikari\core\math\RetroVector.hpp" />
     <ClInclude Include="include\hikari\core\math\Vector2.hpp" />
