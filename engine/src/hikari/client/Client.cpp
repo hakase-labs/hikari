@@ -188,20 +188,6 @@ int main(int argc, char** argv) {
         // When this runs all of the scripts have to have been run already
         populateCollectableItemFactory(std::weak_ptr<ItemFactory>(itemFactory), *squirrelService, *animationSetCache, *imageCache);
 
-        CommandProcessor cp;
-        cp.registerHandler("echo", [](CommandProcessor::ArgumentList args) {
-            auto begin = std::begin(args);
-            auto end = std::end(args);
-
-            for(; begin != end; begin++) {
-                std::cout << *begin << "\t";
-            }
-        });
-
-        cp.registerHandler("gc", [&squirrelService](CommandProcessor::ArgumentList args) {
-            squirrelService->collectGarbage();
-        });
-
         gui::CommandConsole console(guiFont);
 
         // Create and initialize the game controller and game states
@@ -246,17 +232,46 @@ int main(int argc, char** argv) {
         //
         // Register some commands
         //
-        cp.registerHandler("sound", [&sound](CommandProcessor::ArgumentList args) {
-            const std::string& arg0 = args.at(0);
+        CommandProcessor cp;
+        cp.registerHandler("echo", [](CommandProcessor::ArgumentList args) {
+            auto begin = std::begin(args);
+            auto end = std::end(args);
 
-            if(arg0 == "off") {
-                sound.stop();
-            } else if(arg0 == "on") {
-                sound.play();
-            } else if(arg0 == "next"){
-                sound.setCurrentTrack(sound.getCurrentTrack() + 1);
-            } else if(arg0 == "previous") {
-                sound.setCurrentTrack(sound.getCurrentTrack() - 1);
+            for(; begin != end; begin++) {
+                std::cout << *begin << "\t";
+            }
+        });
+
+        cp.registerHandler("gc", [&squirrelService](CommandProcessor::ArgumentList args) {
+            squirrelService->collectGarbage();
+        });
+
+        cp.registerHandler("sound", [&audioService](CommandProcessor::ArgumentList args) {
+            const auto & arg0 = args.at(0);
+            const auto & arg1 = args.at(1);
+
+            if(arg0 == "music") {
+                if(arg1 == "stop") {
+                    audioService->stopMusic();
+                } else {
+                    try {
+                        auto trackNumber = hikari::StringUtils::fromString<int>(arg1);
+                        audioService->playMusic(trackNumber);
+                    } catch(...) {
+                        HIKARI_LOG(::hikari::error) << "Couldn't play music because of bad track number.";
+                    }
+                }
+            } else if(arg0 == "sample") {
+                if(arg1 == "stop") {
+                    audioService->stopAllSamples();
+                } else {
+                    try {
+                        auto sampleNumber = hikari::StringUtils::fromString<int>(arg1);
+                        audioService->playSample(sampleNumber);
+                    } catch(...) {
+                        HIKARI_LOG(::hikari::error) << "Couldn't sample music because of bad track number.";
+                    }
+                }
             }
         });
 

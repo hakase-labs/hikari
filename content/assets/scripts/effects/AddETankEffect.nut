@@ -7,6 +7,10 @@ class AddETankEffect extends EffectBase {
     function applyEffect() {
         ::print("AddETankEffect::applyEffect called.");
         ::print("You got an E-Tank!");
+
+        if(::sound != null) {
+            ::sound.playSample(20);
+        }
     }
 
     function unapplyEffect() {
