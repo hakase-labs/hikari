@@ -17,7 +17,8 @@ namespace sf {
 }
 
 namespace hikari {
-
+    
+    class Room;
     class GameObject;
     class Hero;
     class CollectableItem;
@@ -30,6 +31,7 @@ namespace hikari {
     class GameWorld : public Updatable {
     private:
         std::shared_ptr<Hero> player;
+        std::shared_ptr<Room> currentRoom;
         std::weak_ptr<ItemFactory> itemFactory;
         std::queue<std::shared_ptr<GameObject>> queuedAdditions;
         std::queue<std::shared_ptr<GameObject>> queuedRemovals;
@@ -48,6 +50,9 @@ namespace hikari {
     public:
         GameWorld();
         virtual ~GameWorld();
+
+        void setCurrentRoom(const std::shared_ptr<Room> & room);
+        const std::shared_ptr<Room> & getCurrentRoom() const;
 
         void setItemFactory(const std::weak_ptr<ItemFactory> & itemFactory);
 
