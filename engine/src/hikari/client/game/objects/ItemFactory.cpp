@@ -13,12 +13,17 @@
 namespace hikari {
 
     ItemFactory::ItemFactory(const std::shared_ptr<AnimationSetCache>& animationSetCache, const std::shared_ptr<ImageCache>& imageCache, const std::shared_ptr<SquirrelService>& squirrel)
-        : animationSetCache(animationSetCache)
+        : Service()
+        , animationSetCache(animationSetCache)
         , imageCache(imageCache)
         , squirrel(squirrel)
         , prototypeRegistry()
     {
          
+    }
+    
+    ItemFactory::~ItemFactory() {
+
     }
 
     std::shared_ptr<CollectableItem> ItemFactory::createItem(const std::string& itemType) {

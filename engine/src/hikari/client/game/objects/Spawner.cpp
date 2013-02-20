@@ -20,11 +20,11 @@ namespace hikari {
         this->direction = direction;
     }
 
-    const Vector2D& Spawner::getPosition() const {
+    const Vector2<float>& Spawner::getPosition() const {
         return position;
     }
 
-    void Spawner::setPosition(const Vector2D& newPosition) {
+    void Spawner::setPosition(const Vector2<float>& newPosition) {
         this->position = newPosition;
     }
 

@@ -3,7 +3,7 @@
 
 #include "hikari/client/game/objects/GameObject.hpp"
 #include "hikari/core/game/Direction.hpp"
-#include "hikari/core/geom/Vector2D.hpp"
+#include "hikari/core/math/Vector2.hpp"
 
 namespace hikari {
     
@@ -14,7 +14,7 @@ namespace hikari {
     class Spawner : public GameObject {
     private:
         Direction direction;
-        Vector2D position;
+        Vector2<float> position;
 
     public:
         Spawner();
@@ -32,7 +32,7 @@ namespace hikari {
 
             @return offspring's spawn position in world coordinates.
         */
-        const Vector2D& getPosition() const;
+        const Vector2<float>& getPosition() const;
 
         /**
             Sets the position where this Spawner's offspring will spawn.
@@ -40,7 +40,7 @@ namespace hikari {
             @param newPosition the offspring's spawn position in world 
             coordinates.
         */
-        void setPosition(const Vector2D& newPosition);
+        void setPosition(const Vector2<float>& newPosition);
 
         //
         // GameObject overrides

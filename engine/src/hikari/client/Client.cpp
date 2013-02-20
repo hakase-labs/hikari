@@ -191,6 +191,7 @@ int main(int argc, char** argv) {
         services.registerService(Services::MAPLOADER,         mapLoader);
         services.registerService(Services::SCRIPTING,         squirrelService);
         services.registerService(Services::GUIFONT,           guiFont);
+        services.registerService("ItemFactory",               itemFactory);
 
         squirrelService->runScriptFile("assets/scripts/Environment.nut");
         squirrelService->runScriptFile("assets/scripts/Bootstrap.nut");

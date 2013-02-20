@@ -51,11 +51,16 @@ namespace hikari {
         static const char* PROPERTY_NAME_ROOM_ITEMS_Y;
         static const char* PROPERTY_NAME_ROOM_TRANSITIONS;
 
+        enum SpawnType {
+            SPAWN_ENEMY = 1,
+            SPAWN_ITEM  = 2
+        };
+
         std::shared_ptr<TilesetCache> tilesetCache;
 
         MapPtr constructMap(const Json::Value &json) const;
         RoomPtr constructRoom(const Json::Value &json, const int &gridSize) const;
-        const SpawnerPtr constructSpawner(const Json::Value &json) const;
+        const SpawnerPtr constructSpawner(const Json::Value &json, const SpawnType &type) const;
         const RoomTransition constructTransition(const Json::Value &json) const;
         const Rectangle2D<int> constructCameraBounds(const Json::Value &json, 
                 const int &roomX, const int &roomY, const int &gridSize) const;

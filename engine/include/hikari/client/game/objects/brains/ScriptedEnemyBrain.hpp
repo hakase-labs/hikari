@@ -17,6 +17,7 @@ namespace hikari {
         HSQUIRRELVM vm;
         std::string scriptClassName;
         Sqrat::Object instance;
+        Sqrat::Table instanceConfig;
         Sqrat::Function proxyAttach;
         Sqrat::Function proxyDetach;
         Sqrat::Function proxyUpdate;
@@ -26,7 +27,7 @@ namespace hikari {
         std::vector<sf::Time> updateSamples;
 
     public:
-        ScriptedEnemyBrain(SquirrelService& service, const std::string& scriptClassName);
+        ScriptedEnemyBrain(SquirrelService& service, const std::string& scriptClassName, const Sqrat::Table& config = Sqrat::Table());
         virtual ~ScriptedEnemyBrain();
 
         virtual void attach(Enemy* host);

@@ -2,12 +2,20 @@
 #include "hikari/core/game/CollisionResolver.hpp"
 #include "hikari/core/geom/Point2D.hpp"
 #include "hikari/core/util/Log.hpp"
+#include "hikari/core/math/MathUtils.hpp"
 
 namespace hikari {
 
     // Static
+    float Movable::maxYVelocity = 7.0f;
+    float Movable::maxXVelocity = 16.0f;
+    float Movable::minYVelocity = -maxYVelocity;
+    float Movable::minXVelocity = -maxXVelocity;
+
     std::shared_ptr<CollisionResolver> Movable::collisionResolver = nullptr;
     float Movable::gravity = 0.0f;
+    int Movable::gravityApplicationCounter = 0;
+    int Movable::gravityApplicationThreshold = 1;
 
     void Movable::setGravity(const float& gravity) {
         Movable::gravity = gravity;
@@ -299,9 +307,11 @@ namespace hikari {
         if(isGravitated()) {
             velocity.setY(velocity.getY() + getGravity());
 
-            if(velocity.getY() > (7.0f)) {
-                velocity.setY(7.0f);
-            }
+            velocity.setY(math::clamp(velocity.getY(), minYVelocity, maxYVelocity));
+
+            //if(velocity.getY() > (7.0f)) {
+            //    velocity.setY(7.0f);
+            //}
         }
 
         if(doesCollideWithWorld()) {

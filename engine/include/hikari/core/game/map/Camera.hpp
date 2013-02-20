@@ -3,7 +3,7 @@
 
 #include "hikari/core/Platform.hpp"
 #include "hikari/core/geom/Rectangle2D.hpp"
-#include "hikari/core/geom/Vector2D.hpp"
+#include "hikari/core/math/Vector2.hpp"
 #include <SFML/Graphics/View.hpp>
 
 namespace hikari {
@@ -31,16 +31,15 @@ namespace hikari {
         void lockHorizontal(bool lock);
         void lockVertical(bool lock);
 
-        void lookAt(const Vector2D& location);
+        void lookAt(const Vector2<float>& location);
         void lookAt(float x, float y);
 
-        void move(const Vector2D &offset);
+        void move(const Vector2<float> &offset);
         void move(float offsetX, float offsetY);
 
     private:
         Rectangle2D<int> boundary;
         Rectangle2D<float> view;
-        //sf::View view;
         bool lockHorizontalMovement;
         bool lockVerticalMovement;
 

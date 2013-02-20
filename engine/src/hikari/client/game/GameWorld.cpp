@@ -1,8 +1,11 @@
 #include "hikari/client/game/GameWorld.hpp"
 #include "hikari/client/game/objects/GameObject.hpp"
+#include "hikari/client/game/objects/CollectableItem.hpp"
 #include "hikari/client/game/objects/Hero.hpp"
+#include "hikari/client/game/objects/ItemFactory.hpp"
 
 #include "hikari/core/util/Log.hpp"
+#include "hikari/core/util/exception/HikariException.hpp"
 
 // #include <oolua.h>
 
@@ -10,9 +13,13 @@ namespace hikari {
 
     GameWorld::GameWorld() 
         : player(nullptr)
+        , itemFactory()
         , queuedAdditions()
         , queuedRemovals()
         , activeObjects()
+        , queuedItemAdditions()
+        , queuedItemRemovals()
+        , activeItems()
         , objectRegistry()
         , gravityEnabled(true)
         
@@ -22,6 +29,10 @@ namespace hikari {
 
     GameWorld::~GameWorld() {
         // no-op
+    }
+
+    void GameWorld::setItemFactory(const std::weak_ptr<ItemFactory> & itemFactory) {
+        this->itemFactory = itemFactory;
     }
         
     void GameWorld::render(sf::RenderTarget &target) {
@@ -33,11 +44,12 @@ namespace hikari {
         processAdditions();
         processRemovals();
         
+        /*
         std::for_each(
             activeObjects.begin(), 
             activeObjects.end(), 
             std::bind(&GameObject::update, std::placeholders::_1, std::cref(dt)));
-
+        */
         //HIKARI_LOG(debug) << "GameWorld::update finish";
     }
 
@@ -45,8 +57,16 @@ namespace hikari {
         queuedAdditions.push(obj);
     }
 
+    void GameWorld::queueObjectAddition(const std::shared_ptr<CollectableItem> &obj) {
+        queuedItemAdditions.push(obj);
+    }
+
     void GameWorld::queueObjectRemoval(const std::shared_ptr<GameObject> &obj) {
         queuedRemovals.push(obj);
+    }
+
+    void GameWorld::queueObjectRemoval(const std::shared_ptr<CollectableItem> &obj) {
+        queuedItemRemovals.push(obj);
     }
 
     void GameWorld::processAdditions() {
@@ -57,6 +77,15 @@ namespace hikari {
             objectRegistry.emplace(std::make_pair(objectToBeAdded->getId(), objectToBeAdded));
 
             queuedAdditions.pop();
+        }
+
+        while(!queuedItemAdditions.empty()) {
+            auto objectToBeAdded = queuedItemAdditions.front();
+
+            activeItems.push_back(objectToBeAdded);
+            objectRegistry.emplace(std::make_pair(objectToBeAdded->getId(), objectToBeAdded));
+
+            queuedItemAdditions.pop();
         }
     }
 
@@ -71,6 +100,33 @@ namespace hikari {
             
             queuedRemovals.pop();
         }
+
+        while(!queuedItemRemovals.empty()) {
+            auto objectToBeRemoved = queuedItemRemovals.front();
+            
+            activeItems.erase(
+                std::remove(std::begin(activeItems), std::end(activeItems), objectToBeRemoved));
+
+            objectRegistry.erase(objectToBeRemoved->getId());
+            
+            queuedItemRemovals.pop();
+        }
+    }
+
+    std::shared_ptr<CollectableItem> GameWorld::spawnCollectableItem(const std::string & name /* CollectableItemInstanceConfig instanceConfig */) const {
+        if(auto itemFactoryPtr = itemFactory.lock()) {
+            try {
+                return itemFactoryPtr->createItem(name);
+            } catch(HikariException & ex) {
+                return std::shared_ptr<CollectableItem>();
+            }
+        }
+
+        return std::shared_ptr<CollectableItem>();
+    }
+
+    const std::vector<std::shared_ptr<CollectableItem>> & GameWorld::getActiveItems() const {
+        return activeItems;
     }
 
     void GameWorld::setPlayer(const std::shared_ptr<Hero>& player) {

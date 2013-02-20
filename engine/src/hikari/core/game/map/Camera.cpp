@@ -75,7 +75,7 @@ namespace hikari {
         updateView();
     }
 
-    void Camera::lookAt(const Vector2D& location) {
+    void Camera::lookAt(const Vector2<float>& location) {
         lookAt(location.getX(), location.getY());
     }
 
@@ -85,7 +85,7 @@ namespace hikari {
         updateView();
     }
 
-    void Camera::move(const Vector2D &offset) {
+    void Camera::move(const Vector2<float> &offset) {
         move(offset.getX(), offset.getY());
     }
 
