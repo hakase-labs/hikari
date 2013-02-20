@@ -1,4 +1,6 @@
 #include "hikari/client/game/objects/ItemSpawner.hpp"
+#include "hikari/client/game/objects/CollectableItem.hpp"
+#include "hikari/client/game/GameWorld.hpp"
 
 #include "hikari/core/util/Log.hpp"
 
@@ -13,6 +15,18 @@ namespace hikari {
 
     ItemSpawner::~ItemSpawner() {
         // No-op
+    }
+
+    void ItemSpawner::performAction(GameWorld & world) {
+        auto spawnedObject = world.spawnCollectableItem(itemName);
+
+        if(spawnedObject) {
+            spawnedObject->reset();
+            spawnedObject->setPosition(getPosition());
+            spawnedObject->setActive(true);
+        }
+
+        world.queueObjectAddition(spawnedObject);
     }
 
     void ItemSpawner::onActivated() {
