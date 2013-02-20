@@ -137,17 +137,6 @@ int main(int argc, char** argv) {
     vecTests.runAllTests();
 
     try {
-
-        CommandProcessor cp;
-        cp.registerHandler("echo", [](CommandProcessor::ArgumentList args) {
-            auto begin = std::begin(args);
-            auto end = std::end(args);
-
-            for(; begin != end; begin++) {
-                std::cout << *begin << "\t";
-            }
-        });
-
         HIKARI_LOG(info) << "Hikari engine v" << hkrHikariVersion() << " started.";
 
         initFileSystem(argc, argv);
@@ -198,6 +187,20 @@ int main(int argc, char** argv) {
 
         // When this runs all of the scripts have to have been run already
         populateCollectableItemFactory(std::weak_ptr<ItemFactory>(itemFactory), *squirrelService, *animationSetCache, *imageCache);
+
+        CommandProcessor cp;
+        cp.registerHandler("echo", [](CommandProcessor::ArgumentList args) {
+            auto begin = std::begin(args);
+            auto end = std::end(args);
+
+            for(; begin != end; begin++) {
+                std::cout << *begin << "\t";
+            }
+        });
+
+        cp.registerHandler("gc", [&squirrelService](CommandProcessor::ArgumentList args) {
+            squirrelService->collectGarbage();
+        });
 
         gui::CommandConsole console(guiFont);
 

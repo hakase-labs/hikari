@@ -2,8 +2,11 @@
 #define HIKARI_CLIENT_GAME_OBJECTS_SPAWNER
 
 #include "hikari/client/game/objects/GameObject.hpp"
+#include "hikari/client/game/GameWorld.hpp"
 #include "hikari/core/game/Direction.hpp"
 #include "hikari/core/math/Vector2.hpp"
+
+#include <memory>
 
 namespace hikari {
     
@@ -41,6 +44,10 @@ namespace hikari {
             coordinates.
         */
         void setPosition(const Vector2<float>& newPosition);
+
+        virtual void performAction(GameWorld & world);
+
+        virtual void attachToInstance(const std::shared_ptr<GameObject> & instance);
 
         //
         // GameObject overrides
