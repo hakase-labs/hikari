@@ -1,5 +1,19 @@
 [
     {
+        "name": "E-Tank",
+        "effect": "AddETankEffect",
+        "animationSet": "assets/animations/items.json",
+        "animationName": "e-tank",
+        "boundingBox": {
+            "width": 14,
+            "height": 14,
+            "originX": 7,
+            "originY": 7
+        },
+        "ageless": false,
+        "maximumAge": 3000
+    },
+    {
         "name": "Extra Life",
         "effect": "AddExtraLifeEffect",
         "animationSet": "assets/animations/items.json",

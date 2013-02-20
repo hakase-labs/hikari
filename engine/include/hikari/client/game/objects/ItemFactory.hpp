@@ -22,18 +22,7 @@ namespace hikari {
         std::shared_ptr<AnimationSetCache> animationSetCache;
         std::shared_ptr<ImageCache> imageCache;
         std::shared_ptr<SquirrelService> squirrel;
-
         std::unordered_map<std::string, std::shared_ptr<CollectableItem>> prototypeRegistry;
-
-        //
-        // Methods
-        //
-        std::shared_ptr<CollectableItem> createETank();
-        std::shared_ptr<CollectableItem> createExtraLife();
-        std::shared_ptr<CollectableItem> createWeaponEnergyLarge();
-        std::shared_ptr<CollectableItem> createWeaponEnergySmall();
-        std::shared_ptr<CollectableItem> createHealthEnergyLarge();
-        std::shared_ptr<CollectableItem> createHealthEnergySmall();
 
     public:
         //
