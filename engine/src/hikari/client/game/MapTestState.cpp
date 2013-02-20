@@ -328,10 +328,12 @@ namespace hikari {
             currentRoom->getSpawners().begin(),
             currentRoom->getSpawners().end(),
             [&](const std::shared_ptr<Spawner>& spawner) {
-                spawnerMarker.setPosition(spawner->getPosition().getX(), spawner->getPosition().getY());
-                spawnerMarker.setOrigin(sf::Vector2f(16.0f, 16.0f));
-                spawnerMarker.setSize(sf::Vector2f(16.0f, 16.0f));
-                target.draw(spawnerMarker);
+                if(spawner) {
+                    spawnerMarker.setPosition(spawner->getPosition().getX(), spawner->getPosition().getY());
+                    spawnerMarker.setOrigin(sf::Vector2f(16.0f, 16.0f));
+                    spawnerMarker.setSize(sf::Vector2f(16.0f, 16.0f));
+                    target.draw(spawnerMarker);
+                }
             }
         );
 
