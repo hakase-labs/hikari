@@ -4,6 +4,7 @@
 #include "hikari/core/game/map/RoomTransition.hpp"
 #include "hikari/core/game/map/Tileset.hpp"
 #include "hikari/client/game/objects/Spawner.hpp"
+#include "hikari/client/game/objects/ItemSpawner.hpp"
 #include "hikari/core/util/StringUtils.hpp"
 #include "hikari/core/util/TilesetCache.hpp"
 #include "hikari/core/util/PhysFS.hpp"
@@ -118,7 +119,7 @@ namespace hikari {
         if(enemyCount > 0) {
             HIKARI_LOG(debug) << "Found " << enemyCount << " enemy declarations.";
             for(int enemyIndex = 0; enemyIndex < enemyCount; ++enemyIndex) {
-                spawners.emplace_back(constructSpawner(spawnerArray[enemyIndex]));
+                spawners.emplace_back(constructSpawner(spawnerArray[enemyIndex], SPAWN_ENEMY));
             }
         }
 
@@ -127,7 +128,7 @@ namespace hikari {
         if(itemCount > 0) {
             HIKARI_LOG(debug) << "Found " << itemCount << " item declarations.";
             for(int itemIndex = 0; itemIndex < itemCount; ++itemIndex) {
-                spawners.emplace_back(constructSpawner(spawnerArray[itemIndex]));
+                spawners.emplace_back(constructSpawner(spawnerArray[itemIndex], SPAWN_ITEM));
             }
         }
 
@@ -142,23 +143,34 @@ namespace hikari {
         return result;
     }
 
-    const SpawnerPtr MapLoader::constructSpawner(const Json::Value &json) const {
-        auto type         = json[PROPERTY_NAME_ROOM_ENEMIES_TYPE].asString();
-        auto x            = json[PROPERTY_NAME_ROOM_ENEMIES_POSITION_X].asInt();
-        auto y            = json[PROPERTY_NAME_ROOM_ENEMIES_POSITION_Y].asInt();
-        auto dirString    = json.get(PROPERTY_NAME_ROOM_ENEMIES_DIRECTION, "None").asString();
-        auto spawner      = std::make_shared<Spawner>();
-        auto direction    = (dirString == "Up" ? Directions::Up : 
-                                (dirString == "Right" ? Directions::Right : 
-                                    (dirString == "Down" ? Directions::Down : 
-                                        (dirString == "Left" ? Directions::Left : 
-                                            Directions::None)
-                                        )
-                                    )
-                                );
+    const SpawnerPtr MapLoader::constructSpawner(const Json::Value &json, const SpawnType &type) const {
+        auto spawner = std::shared_ptr<Spawner>(nullptr);
 
-        spawner->setPosition(Vector2D(static_cast<float>(x), static_cast<float>(y)));
-        spawner->setDirection(direction);
+        switch(type) {
+            case SPAWN_ITEM: 
+            {
+                auto type         = json[PROPERTY_NAME_ROOM_ENEMIES_TYPE].asString();
+                auto x            = json[PROPERTY_NAME_ROOM_ENEMIES_POSITION_X].asInt();
+                auto y            = json[PROPERTY_NAME_ROOM_ENEMIES_POSITION_Y].asInt();
+                auto dirString    = json.get(PROPERTY_NAME_ROOM_ENEMIES_DIRECTION, "None").asString();
+                auto direction    = (dirString == "Up" ? Directions::Up : 
+                                        (dirString == "Right" ? Directions::Right : 
+                                            (dirString == "Down" ? Directions::Down : 
+                                                (dirString == "Left" ? Directions::Left : 
+                                                    Directions::None)
+                                                )
+                                            )
+                                        );
+
+                spawner.reset(new ItemSpawner(type));
+                spawner->setPosition(Vector2<float>(static_cast<float>(x), static_cast<float>(y)));
+                spawner->setDirection(direction);
+
+                return spawner;
+            }
+            default:
+                break;
+        }
 
         return spawner;
     }

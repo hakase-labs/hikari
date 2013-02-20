@@ -18,7 +18,15 @@ namespace hikari {
         typedef std::function<void (Movable&, CollisionInfo&)> CollisionCallback;
     
     private:
+        static float maxYVelocity;
+        static float maxXVelocity;
+        static float minYVelocity;
+        static float minXVelocity;
+
         static float gravity;
+        static int gravityApplicationCounter;   // Used to count how many frames since last gavity application
+        static int gravityApplicationThreshold; // Used to determine when to apply gravity
+
         static std::shared_ptr<CollisionResolver> collisionResolver;
 
         bool onGroundNow;

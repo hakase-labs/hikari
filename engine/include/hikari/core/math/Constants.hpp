@@ -7,8 +7,8 @@ namespace constants {
 
     const float PI = 3.141592654F; /* 3.14159265458979323846 */
 
-}
-}
-}
+} // hikari::math::constants
+} // hikari::math
+} // hikari
 
 #endif // HIKARI_CORE_MATH_CONSTANTS_HPP

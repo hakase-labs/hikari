@@ -41,16 +41,18 @@ namespace hikari {
         , cursorRow(DEFAULT_CURSOR_ROW)
         , cursorColumn(DEFAULT_CURSOR_COLUMN)
     {
-        std::shared_ptr<ImageCache> imageCache = services.locateService<ImageCache>(Services::IMAGECACHE);
+        std::weak_ptr<ImageCache> imageCache = services.locateService<ImageCache>(Services::IMAGECACHE);
 
         // Load sprites from config
         // TODO: This needs to be refactored to be safer and things like that
         // TODO: Need a utility method to load sf:Sprite from JSON
-        background = sf::Sprite(*imageCache->get(params[PROPERTY_BACKGROUND].asString()).get());
-        foreground = sf::Sprite(*imageCache->get(params[PROPERTY_FOREGROUND].asString()).get());
-        cursor = sf::Sprite(*imageCache->get(params[PROPERTY_CURSOR_SPRITE].asString()).get());
-        leftEye = sf::Sprite(*imageCache->get(params[PROPERTY_EYE_SPRITE].asString()).get());
-        rightEye = sf::Sprite(*imageCache->get(params[PROPERTY_EYE_SPRITE].asString()).get());
+        if(auto imageCachePtr = imageCache.lock()) {
+            background = sf::Sprite(*imageCachePtr->get(params[PROPERTY_BACKGROUND].asString()).get());
+            foreground = sf::Sprite(*imageCachePtr->get(params[PROPERTY_FOREGROUND].asString()).get());
+            cursor = sf::Sprite(*imageCachePtr->get(params[PROPERTY_CURSOR_SPRITE].asString()).get());
+            leftEye = sf::Sprite(*imageCachePtr->get(params[PROPERTY_EYE_SPRITE].asString()).get());
+            rightEye = sf::Sprite(*imageCachePtr->get(params[PROPERTY_EYE_SPRITE].asString()).get());
+        }
 
         cursor.setPosition(-100.0f, -100.0f);
 

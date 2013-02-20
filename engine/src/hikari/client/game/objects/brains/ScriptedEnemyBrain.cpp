@@ -7,9 +7,11 @@
 
 namespace hikari {
 
-    ScriptedEnemyBrain::ScriptedEnemyBrain(SquirrelService& squirrel, const std::string& scriptClassName)
+    ScriptedEnemyBrain::ScriptedEnemyBrain(SquirrelService& squirrel, const std::string& scriptClassName, const Sqrat::Table& config)
         : vm(squirrel.getVmInstance())
         , scriptClassName(scriptClassName)
+        , instance()
+        , instanceConfig(vm)
     {
         HIKARI_LOG(debug2) << "ScriptedEnemyBrain::ScriptedEnemyBrain()";
 
@@ -17,7 +19,8 @@ namespace hikari {
             Sqrat::Function constructor(Sqrat::RootTable(vm), scriptClassName.c_str());
 
             if(!constructor.IsNull()) {
-                    instance = constructor.Evaluate<Sqrat::Object>();
+                Sqrat::Object& configRef = instanceConfig;
+                instance = constructor.Evaluate<Sqrat::Object>(configRef);
 
                 if(!instance.IsNull()) {
                     proxyAttach = Sqrat::Function(instance, "attachHost");
@@ -34,7 +37,7 @@ namespace hikari {
             HIKARI_LOG(debug1) << "Could not create an instance of '" << scriptClassName << "'. Reason: " << squirrelException.Message();
         }
     }
-
+    
     ScriptedEnemyBrain::~ScriptedEnemyBrain() {
 
     }

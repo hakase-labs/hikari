@@ -10,18 +10,6 @@ namespace hikari {
     const char * ScriptedEffect::FUNCTION_NAME_UNAPPLY = "unapplyEffect";
     const char * ScriptedEffect::BASE_CLASS_NAME = "EffectBase";
 
-    ScriptedEffect::ScriptedEffect(SquirrelService& service, const std::string& effectClassName)
-        : vm(service.getVmInstance())
-        , effectClassName(effectClassName)
-        , config(Sqrat::Table())
-    {
-        HIKARI_LOG(debug2) << "ScriptedEffect::ScriptedEffect()";
-
-        if(!bindScriptClassInstance()) {
-            throw std::runtime_error("ScriptedEffect could not be constructed.");
-        }
-    }
-
     ScriptedEffect::ScriptedEffect(SquirrelService& service, const std::string& effectClassName, const Sqrat::Table& config)
         : vm(service.getVmInstance())
         , effectClassName(effectClassName)

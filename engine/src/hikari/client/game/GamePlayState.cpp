@@ -9,6 +9,9 @@
 #include "hikari/client/scripting/SquirrelService.hpp"
 
 #include "hikari/client/game/objects/GameObject.hpp"
+#include "hikari/client/game/objects/CollectableItem.hpp"
+#include "hikari/client/game/objects/ItemFactory.hpp"
+#include "hikari/client/game/Effect.hpp"
 #include "hikari/client/gui/EnergyMeter.hpp"
 #include "hikari/client/Services.hpp"
 
@@ -19,11 +22,13 @@
 #include "hikari/core/game/map/MapRenderer.hpp"
 #include "hikari/core/game/map/Room.hpp"
 #include "hikari/core/game/map/RoomTransition.hpp"
+#include "hikari/core/geom/GeometryUtils.hpp"
 #include "hikari/core/gui/ImageFont.hpp"
 #include "hikari/core/util/ImageCache.hpp"
 #include "hikari/core/util/JsonUtils.hpp"
 #include "hikari/core/util/PhysFS.hpp"
 #include "hikari/core/util/PhysFSUtils.hpp"
+#include "hikari/core/util/ReferenceWrapper.hpp"
 #include "hikari/core/util/ServiceLocator.hpp"
 #include "hikari/core/util/StringUtils.hpp"
 
@@ -120,6 +125,9 @@ namespace hikari {
         hero->setActionController(std::make_shared<PlayerInputHeroActionController>(userInput));
 
         world.setPlayer(hero);
+
+        const auto itemFactoryWeak = services.locateService<ItemFactory>("ItemFactory");
+        world.setItemFactory(itemFactoryWeak);
 
         subState.reset(new ReadySubState(*this));
         subState->enter();
@@ -220,9 +228,10 @@ namespace hikari {
 
             const auto & spawners = room->getSpawners();
 
-            for(auto spawner = std::begin(spawners), end = std::end(spawners);
-                    spawner != end; spawner++) {
-                inactiveSpawners.emplace_back(std::weak_ptr<Spawner>(*spawner));
+            for(auto spawner = std::begin(spawners), end = std::end(spawners); spawner != end; spawner++) {
+                if(*spawner) {
+                    inactiveSpawners.emplace_back(std::weak_ptr<Spawner>(*spawner));
+                }
             }
         }
 
@@ -255,7 +264,7 @@ namespace hikari {
         std::for_each(
             std::begin(inactiveSpawners),
             std::end(inactiveSpawners),
-            [&cameraView](std::weak_ptr<Spawner> & s) {
+            [this, &cameraView](std::weak_ptr<Spawner> & s) {
                 if(auto spawner = s.lock()) {
                     const auto & spawnerPosition = spawner->getPosition();
 
@@ -275,6 +284,17 @@ namespace hikari {
                     else {
                         if(cameraView.contains(spawnerPosition.getX(), spawnerPosition.getY())) {
                             spawner->setActive(true);
+
+                            auto spawnedObject = world.spawnCollectableItem("Large Health Energy");
+
+                            if(spawnedObject) {
+                                spawnedObject->reset();
+                                spawnedObject->setPosition(spawner->getPosition().getX(), spawner->getPosition().getY());
+                                spawnedObject->setRoom(currentRoom);
+                                spawnedObject->setActive(true);
+                            }
+
+                            world.queueObjectAddition(spawnedObject);
                             HIKARI_LOG(debug3) << "Just woke up spawner #" << spawner->getId();
                         }
                     }
@@ -372,6 +392,13 @@ namespace hikari {
 
         // Render the entities here...
         hero->render(target);
+
+        const auto & activeItems = world.getActiveItems();
+
+        std::for_each(
+            std::begin(activeItems), 
+            std::end(activeItems), 
+            std::bind(&CollectableItem::render, std::placeholders::_1, ReferenceWrapper<sf::RenderTarget>(target)));
 
         target.setView(oldView);
     }
@@ -537,7 +564,7 @@ namespace hikari {
 
             // TODO: Get the room's playerSpawn location and use that, noob!
 
-            hero->setPosition(roomPositionX + 128, roomPositionY);
+            hero->setPosition(static_cast<float>(roomPositionX + 128), static_cast<float>(roomPositionY));
         }
     }
 
@@ -583,13 +610,59 @@ namespace hikari {
     }
 
     void GamePlayState::PlayingSubState::update(const float & dt) {
+        auto& camera = gamePlayState.camera;
+
         gamePlayState.world.update(dt);
 
+        //
+        // Update collectable items
+        //
+        const auto & activeItems = gamePlayState.world.getActiveItems();
+
+        std::for_each(
+            std::begin(activeItems), 
+            std::end(activeItems), 
+            [this, &camera, &dt](const std::shared_ptr<CollectableItem> & item) {
+                item->update(dt);
+
+                //
+                // Check if we've moved off screen and remove if so
+                //
+                const auto & view = camera.getView();
+                const auto & pos = item->getPosition();
+
+                if(!geom::intersects(item->getBoundingBox(), view)) {
+                    item->setActive(false);
+                    gamePlayState.world.queueObjectRemoval(item);
+                }
+
+                //
+                // Check if we should be consumed...
+                //
+                const auto & hero = gamePlayState.hero;
+
+                if(hero->getBoundingBox().intersects(item->getBoundingBox())) {
+                    const auto & effect = item->getEffect();
+
+                    if(effect) {
+                        effect->apply();
+                    }
+
+                    item->setActive(false);
+                    gamePlayState.world.queueObjectRemoval(item);
+                }
+        });
+
+        //
+        // Update hero
+        //
         if(gamePlayState.hero) {
             gamePlayState.hero->update(dt);
         }
 
-        auto& camera = gamePlayState.camera;
+        //
+        // Move camera to correct place
+        //
         auto& hero = gamePlayState.hero;
         const auto& heroPosition = hero->getPosition();
         auto& renderer = gamePlayState.mapRenderer;
