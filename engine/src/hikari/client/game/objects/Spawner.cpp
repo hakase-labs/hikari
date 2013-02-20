@@ -28,6 +28,14 @@ namespace hikari {
         this->position = newPosition;
     }
 
+    void Spawner::performAction(GameWorld & world) {
+
+    }
+
+    void Spawner::attachToInstance(const std::shared_ptr<GameObject> & instance) {
+
+    }
+
     void Spawner::onActivated() {
         GameObject::onActivated();
 
