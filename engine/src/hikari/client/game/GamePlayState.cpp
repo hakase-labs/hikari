@@ -65,8 +65,7 @@ namespace hikari {
         , mapRenderer(new MapRenderer(nullptr, nullptr))
         , subState(nullptr)
         , maps()
-        , activeSpawners()
-        , inactiveSpawners()
+        , itemSpawners()
         , world()
         , camera(Rectangle2D<float>(0.0f, 0.0f, 256.0f, 240.0f))
         , view()
@@ -212,6 +211,9 @@ namespace hikari {
             // Make sure we detect collisions in this room
             collisionResolver->setRoom(currentRoom);
 
+            // Change the world's "room"
+            world.setCurrentRoom(currentRoom);
+
             // Get links to all spawners from new room
             linkSpawners(currentRoom);
             checkSpawners();
@@ -223,20 +225,19 @@ namespace hikari {
 
     void GamePlayState::linkSpawners(const std::shared_ptr<Room> & room) {
         if(room) {
-            activeSpawners.clear();
-            inactiveSpawners.clear();
+            itemSpawners.clear();
 
             const auto & spawners = room->getSpawners();
 
             for(auto spawner = std::begin(spawners), end = std::end(spawners); spawner != end; spawner++) {
                 if(*spawner) {
-                    inactiveSpawners.emplace_back(std::weak_ptr<Spawner>(*spawner));
+                    itemSpawners.emplace_back(std::weak_ptr<Spawner>(*spawner));
                 }
             }
         }
 
         // Sort spawners by X coordinate, ascending
-        std::sort(std::begin(inactiveSpawners), std::end(inactiveSpawners),
+        std::sort(std::begin(itemSpawners), std::end(itemSpawners),
             [](const std::weak_ptr<Spawner> &a, const std::weak_ptr<Spawner> &b) -> bool {
                 const auto & spawnerA = a.lock();
                 const auto & spawnerB = b.lock();
@@ -248,8 +249,8 @@ namespace hikari {
         );
 
         std::for_each(
-            std::begin(inactiveSpawners),
-            std::end(inactiveSpawners),
+            std::begin(itemSpawners),
+            std::end(itemSpawners),
             [](std::weak_ptr<Spawner> & s) {
                 if(auto ptr = s.lock()) {
                     ptr->setActive(false);
@@ -262,8 +263,8 @@ namespace hikari {
         const auto & cameraView = camera.getView();
 
         std::for_each(
-            std::begin(inactiveSpawners),
-            std::end(inactiveSpawners),
+            std::begin(itemSpawners),
+            std::end(itemSpawners),
             [this, &cameraView](std::weak_ptr<Spawner> & s) {
                 if(auto spawner = s.lock()) {
                     const auto & spawnerPosition = spawner->getPosition();
@@ -284,17 +285,7 @@ namespace hikari {
                     else {
                         if(cameraView.contains(spawnerPosition.getX(), spawnerPosition.getY())) {
                             spawner->setActive(true);
-
-                            auto spawnedObject = world.spawnCollectableItem("Large Health Energy");
-
-                            if(spawnedObject) {
-                                spawnedObject->reset();
-                                spawnedObject->setPosition(spawner->getPosition().getX(), spawner->getPosition().getY());
-                                spawnedObject->setRoom(currentRoom);
-                                spawnedObject->setActive(true);
-                            }
-
-                            world.queueObjectAddition(spawnedObject);
+                            spawner->performAction(world);
                             HIKARI_LOG(debug3) << "Just woke up spawner #" << spawner->getId();
                         }
                     }
