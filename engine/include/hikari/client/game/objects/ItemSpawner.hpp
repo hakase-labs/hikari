@@ -15,6 +15,9 @@ namespace hikari {
         ItemSpawner(const std::string & itemNam);
         virtual ~ItemSpawner();
 
+        virtual void performAction(GameWorld & world);
+        // virtual void attachToInstance(const std::shared_ptr<GameObject> & instance);
+
         //
         // GameObject overrides
         //

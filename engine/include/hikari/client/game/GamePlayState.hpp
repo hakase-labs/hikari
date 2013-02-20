@@ -64,8 +64,7 @@ namespace hikari {
         std::unique_ptr<MapRenderer> mapRenderer;
         std::unique_ptr<SubState> subState;
         std::map< std::string, std::shared_ptr<Map> > maps;
-        std::vector<std::weak_ptr<Spawner>> activeSpawners;
-        std::vector<std::weak_ptr<Spawner>> inactiveSpawners;
+        std::vector<std::weak_ptr<Spawner>> itemSpawners;
         GameWorld world;
         Camera camera;
         sf::View view;

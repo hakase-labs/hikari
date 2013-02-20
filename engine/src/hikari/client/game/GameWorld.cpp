@@ -4,6 +4,7 @@
 #include "hikari/client/game/objects/Hero.hpp"
 #include "hikari/client/game/objects/ItemFactory.hpp"
 
+#include "hikari/core/game/map/Room.hpp"
 #include "hikari/core/util/Log.hpp"
 #include "hikari/core/util/exception/HikariException.hpp"
 
@@ -13,6 +14,7 @@ namespace hikari {
 
     GameWorld::GameWorld() 
         : player(nullptr)
+        , currentRoom(nullptr)
         , itemFactory()
         , queuedAdditions()
         , queuedRemovals()
@@ -29,6 +31,14 @@ namespace hikari {
 
     GameWorld::~GameWorld() {
         // no-op
+    }
+
+    void GameWorld::setCurrentRoom(const std::shared_ptr<Room> & room) {
+        currentRoom = room;
+    }
+
+    const std::shared_ptr<Room> & GameWorld::getCurrentRoom() const {
+        return currentRoom;
     }
 
     void GameWorld::setItemFactory(const std::weak_ptr<ItemFactory> & itemFactory) {
@@ -54,19 +64,35 @@ namespace hikari {
     }
 
     void GameWorld::queueObjectAddition(const std::shared_ptr<GameObject> &obj) {
-        queuedAdditions.push(obj);
+        if(obj) {
+            queuedAdditions.push(obj);
+        } else {
+            HIKARI_LOG(debug) << "Tried to add a null object (game object); ignoring.";
+        }
     }
 
     void GameWorld::queueObjectAddition(const std::shared_ptr<CollectableItem> &obj) {
-        queuedItemAdditions.push(obj);
+        if(obj) {
+            queuedItemAdditions.push(obj);
+        } else {
+            HIKARI_LOG(debug) << "Tried to add a null object (item); ignoring.";
+        }
     }
 
     void GameWorld::queueObjectRemoval(const std::shared_ptr<GameObject> &obj) {
-        queuedRemovals.push(obj);
+        if(obj) {
+            queuedRemovals.push(obj);
+        } else {
+            HIKARI_LOG(debug) << "Tried to remove a null object (game object); ignoring.";
+        }
     }
 
     void GameWorld::queueObjectRemoval(const std::shared_ptr<CollectableItem> &obj) {
-        queuedItemRemovals.push(obj);
+        if(obj) {
+            queuedItemRemovals.push(obj);
+        } else {
+            HIKARI_LOG(debug) << "Tried to remove a null object (game object); ignoring.";
+        }
     }
 
     void GameWorld::processAdditions() {
@@ -84,6 +110,8 @@ namespace hikari {
 
             activeItems.push_back(objectToBeAdded);
             objectRegistry.emplace(std::make_pair(objectToBeAdded->getId(), objectToBeAdded));
+
+            objectToBeAdded->setRoom(getCurrentRoom());
 
             queuedItemAdditions.pop();
         }
