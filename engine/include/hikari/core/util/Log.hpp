@@ -15,17 +15,17 @@ if(level > ::hikari::Log::getReportingLevel()) {} \
 else ::hikari::Log().get(level)
 
     enum TLogLevel {
-        fatal, 
-        error, 
+        fatal,
+        error,
         warning,
-        info, 
-        debug, 
+        info,
+        debug,
         debug1,
-        debug2, 
-        debug3, 
+        debug2,
+        debug3,
         debug4
     };
-    
+
     /*
         Originally adapted from:
         
