@@ -4,6 +4,7 @@
 #include "hikari/core/game/map/Room.hpp"
 #include "hikari/core/game/Direction.hpp"
 #include "hikari/core/util/FileSystem.hpp"
+#include "hikari/core/util/Log.hpp"
 
 #include <sqrat.h>
 
@@ -148,7 +149,8 @@ namespace hikari {
 
     void SquirrelService::collectGarbage() {
         if(vm) {
-            sq_collectgarbage(vm);
+            auto collected = sq_collectgarbage(vm);
+            HIKARI_LOG(info) << "Collected VM garbage; " << collected << " reference cycles.";
         }
     }
 
