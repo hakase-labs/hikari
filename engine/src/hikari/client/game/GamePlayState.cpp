@@ -14,6 +14,7 @@
 #include "hikari/client/game/Effect.hpp"
 #include "hikari/client/gui/EnergyMeter.hpp"
 #include "hikari/client/Services.hpp"
+#include "hikari/client/audio/AudioService.hpp"
 
 #include "hikari/core/game/AnimationSet.hpp"
 #include "hikari/core/game/AnimationLoader.hpp"
@@ -50,6 +51,7 @@ namespace hikari {
 
     GamePlayState::GamePlayState(const std::string &name, const Json::Value &params, ServiceLocator &services)
         : name(name)
+        , audioService(services.locateService<AudioService>(Services::AUDIO))
         , gameProgress(services.locateService<GameProgress>(Services::GAMEPROGRESS))
         , guiFont(services.locateService<ImageFont>(Services::GUIFONT))
         , imageCache(services.locateService<ImageCache>(Services::IMAGECACHE))
@@ -382,8 +384,6 @@ namespace hikari {
         target.setView(newView);
 
         // Render the entities here...
-        hero->render(target);
-
         const auto & activeItems = world.getActiveItems();
 
         std::for_each(
@@ -391,6 +391,10 @@ namespace hikari {
             std::end(activeItems), 
             std::bind(&CollectableItem::render, std::placeholders::_1, ReferenceWrapper<sf::RenderTarget>(target)));
 
+        // Render hero last so he'll be on "top"
+        hero->render(target);
+
+        // Restore UI view
         target.setView(oldView);
     }
 
@@ -458,6 +462,11 @@ namespace hikari {
         overlayColor.a = 0;
 
         fadeOverlay.setFillColor(overlayColor);
+
+        if(auto sound = gamePlayState.audioService.lock()) {
+            // TODO: Obtain the correct MusicId for the level and play that.
+            sound->playMusic(22);
+        }
     }
 
     void GamePlayState::ReadySubState::exit() {
@@ -597,6 +606,12 @@ namespace hikari {
     }
 
     void GamePlayState::PlayingSubState::exit() {
+        if(auto sound = gamePlayState.audioService.lock()) {
+            // Stop music because the only reason we leave this state is because
+            // the player has died or something like that.
+            sound->stopMusic();
+        }
+
         std::cout << "PlayingSubState::exit()" << std::endl;
     }
 

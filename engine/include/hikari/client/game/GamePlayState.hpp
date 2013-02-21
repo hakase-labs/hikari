@@ -29,6 +29,7 @@ namespace hikari {
         class EnergyMeter;
     }
 
+    class AudioService;
     class GameProgress;
     class ImageFont;
     class MapLoader;
@@ -49,6 +50,7 @@ namespace hikari {
 
     private:
         std::string name;
+        std::weak_ptr<AudioService> audioService;
         std::shared_ptr<GameProgress> gameProgress;
         std::shared_ptr<ImageFont> guiFont;
         std::shared_ptr<ImageCache> imageCache;
