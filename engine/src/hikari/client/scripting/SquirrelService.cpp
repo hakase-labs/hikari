@@ -1,4 +1,5 @@
 #include "hikari/client/scripting/SquirrelService.hpp"
+#include "hikari/client/scripting/AudioServiceScriptProxy.hpp"
 #include "hikari/client/game/objects/Entity.hpp"
 #include "hikari/client/game/objects/Enemy.hpp"
 #include "hikari/core/game/map/Room.hpp"
@@ -73,10 +74,25 @@ namespace hikari {
             //
             auto hikariTable = Sqrat::Table();
             auto internalTable = Sqrat::Table();
+            auto audioSystemTable = Sqrat::Table();
 
+            //
+            // Bind "internal" functions (not to be used by end-user scripts)
+            //
             internalTable.Func(_SC("readFileAsString"), FileSystem::readFileAsString);
 
+            //
+            // Bind AudioSystem functions
+            //
+            audioSystemTable.Func(_SC("playMusic"), &AudioServiceScriptProxy::playMusic);
+            audioSystemTable.Func(_SC("stopMusic"), &AudioServiceScriptProxy::stopMusic);
+            audioSystemTable.Func(_SC("playSample"), &AudioServiceScriptProxy::playSample);
+            audioSystemTable.Func(_SC("stopAllSamples"), &AudioServiceScriptProxy::stopAllSamples);
+            audioSystemTable.Func(_SC("isMusicLoaded"), &AudioServiceScriptProxy::isMusicLoaded);
+            audioSystemTable.Func(_SC("isSamplesLoaded"), &AudioServiceScriptProxy::isSamplesLoaded);
+
             hikariTable.Bind(_SC("internal"), internalTable);
+            hikariTable.Bind(_SC("sound"), audioSystemTable);
 
             Sqrat::RootTable().Bind(_SC("hikari"), hikariTable);
 

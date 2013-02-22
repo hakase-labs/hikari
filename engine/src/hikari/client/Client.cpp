@@ -13,6 +13,7 @@
 #include "hikari/client/audio/AudioService.hpp"
 #include "hikari/client/gui/CommandConsole.hpp"
 #include "hikari/client/scripting/SquirrelService.hpp"
+#include "hikari/client/scripting/AudioServiceScriptProxy.hpp"
 #include "hikari/client/Services.hpp"
 #include "hikari/client/game/objects/GameObject.hpp"
 #include "hikari/client/game/objects/CollectableItem.hpp"
@@ -182,6 +183,8 @@ int main(int argc, char** argv) {
         services.registerService(Services::GUIFONT,           guiFont);
         services.registerService("ItemFactory",               itemFactory);
 
+        AudioServiceScriptProxy::setWrappedService(std::weak_ptr<AudioService>(audioService));
+
         squirrelService->runScriptFile("assets/scripts/Environment.nut");
         squirrelService->runScriptFile("assets/scripts/Bootstrap.nut");
 
@@ -223,11 +226,6 @@ int main(int argc, char** argv) {
         controller.addState(gamePlayState->getName(), gamePlayState);
 
         controller.setState(game.get("initial-state", "default").asString());
-
-        NSFSoundStream sound(2046);
-        sound.open("assets/sound/mega-man-3-nes-[NSF-ID2016].nsf");
-        sound.setCurrentTrack(9);
-        sound.stop();
 
         //
         // Register some commands
