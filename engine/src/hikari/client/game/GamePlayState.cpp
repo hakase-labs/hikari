@@ -474,55 +474,57 @@ namespace hikari {
     }
 
     void GamePlayState::ReadySubState::update(const float & dt) {
+        const float frameMs = (1.0f/60.0f);
+
         timer += dt;
 
-        if(timer >= (0.0f * (1.0f/60.0f))) {
+        if(timer >= (0.0f * frameMs)) {
             sf::Color overlayColor = sf::Color(fadeOverlay.getFillColor());
             overlayColor.a = 255 - 255 / 4;
 
             fadeOverlay.setFillColor(overlayColor);
         }
 
-        if(timer >= (5.0f * (1.0f/60.0f))) {
+        if(timer >= (5.0f * frameMs)) {
             sf::Color overlayColor = sf::Color(fadeOverlay.getFillColor());
             overlayColor.a = 255 - 255 / 2;
 
             fadeOverlay.setFillColor(overlayColor);
         }
 
-        if(timer >= (9.0f * (1.0f/60.0f))) {
+        if(timer >= (9.0f * frameMs)) {
             sf::Color overlayColor = sf::Color(fadeOverlay.getFillColor());
             overlayColor.a = 255 - ((255 / 4) + (255 / 2));
 
             fadeOverlay.setFillColor(overlayColor);
         }
 
-        if(timer >= (13.0f * (1.0f/60.0f))) {
+        if(timer >= (13.0f * frameMs)) {
             renderFadeOverlay = false;
         }
 
-        if(timer >= (24.0f * (1.0f / 60.0f))) {
+        if(timer >= (24.0f * frameMs)) {
             renderReadyText = true;
         }
 
-        if(timer >= ((24.0f + 15.0f) * (1.0f / 60.0f))) {
+        if(timer >= ((24.0f + 15.0f) * frameMs)) {
             renderReadyText = false;
         }
 
-        if(timer >= ((24.0f + 15.0f + 15.0f) * (1.0f / 60.0f))) {
+        if(timer >= ((24.0f + 15.0f + 15.0f) * frameMs)) {
             renderReadyText = true;
         }
 
-        if(timer >= ((24.0f + 15.0f + 15.0f + 15.0f) * (1.0f / 60.0f))) {
+        if(timer >= ((24.0f + 15.0f + 15.0f + 15.0f) * frameMs)) {
             renderReadyText = false;
         }
 
-        if(timer >= ((24.0f + 15.0f + 15.0f + 15.0f + 3.0f) * (1.0f / 60.0f))) {
+        if(timer >= ((24.0f + 15.0f + 15.0f + 15.0f + 3.0f) * frameMs)) {
             renderReadyText = false;
         }
 
         // The "READY" sequence is 76 frames long, ~1.2666 seconds.
-        if(timer >= (76.0f * (1.0f/60.0f))) {
+        if(timer >= (76.0f * frameMs)) {
             gamePlayState.changeSubState(std::unique_ptr<SubState>(new TeleportSubState(gamePlayState)));
         }
     }
