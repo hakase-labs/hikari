@@ -7,6 +7,8 @@ class AddETankEffect extends EffectBase {
     function applyEffect() {
         ::print("AddETankEffect::applyEffect called.");
         ::print("You got an E-Tank!");
+
+        ::hikari.sound.playSample(20);
     }
 
     function unapplyEffect() {
