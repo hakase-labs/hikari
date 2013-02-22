@@ -45,6 +45,7 @@ namespace hikari {
             this->isFalling = false;
             this->isAirborn = false;
 
+            /*
             std::cout << 
                 "Jump information:\n\ttotal: " <<
                 this->countAscendingFrames + this->countDecendingFrames <<
@@ -52,7 +53,8 @@ namespace hikari {
                 this->countAscendingFrames <<
                 "\n\tdecent: " <<
                 this->countDecendingFrames << std::endl;
-             
+            */
+
             this->countAscendingFrames = 0;
             this->countDecendingFrames = 0;
         });

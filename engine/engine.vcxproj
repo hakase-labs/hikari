@@ -32,6 +32,7 @@
     <ClCompile Include="src\hikari\client\game\objects\ItemFactory.cpp" />
     <ClCompile Include="src\hikari\client\game\objects\ItemSpawner.cpp" />
     <ClCompile Include="src\hikari\client\game\objects\Spawner.cpp" />
+    <ClCompile Include="src\hikari\client\scripting\AudioServiceScriptProxy.cpp" />
     <ClCompile Include="src\hikari\client\scripting\SquirrelService.cpp" />
     <ClCompile Include="src\hikari\core\game\CollisionInfo.cpp" />
     <ClCompile Include="src\hikari\core\game\Direction.cpp" />
@@ -112,6 +113,7 @@
     <ClInclude Include="include\hikari\client\gui\CommandConsole.hpp" />
     <ClInclude Include="include\hikari\client\gui\EnergyMeter.hpp" />
     <ClInclude Include="include\hikari\client\gui\Widget.hpp" />
+    <ClInclude Include="include\hikari\client\scripting\AudioServiceScriptProxy.hpp" />
     <ClInclude Include="include\hikari\client\scripting\SquirrelService.hpp" />
     <ClInclude Include="include\hikari\client\Services.hpp" />
     <ClInclude Include="include\hikari\core\game\Animation.hpp" />

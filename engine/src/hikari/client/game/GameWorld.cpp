@@ -146,6 +146,7 @@ namespace hikari {
             try {
                 return itemFactoryPtr->createItem(name);
             } catch(HikariException & ex) {
+                HIKARI_LOG(debug) << ex.what();
                 return std::shared_ptr<CollectableItem>();
             }
         }

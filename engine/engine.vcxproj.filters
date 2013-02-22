@@ -537,6 +537,9 @@
     <ClInclude Include="include\hikari\client\game\objects\ItemSpawner.hpp">
       <Filter>Header Files\client\game\objects</Filter>
     </ClInclude>
+    <ClInclude Include="include\hikari\client\scripting\AudioServiceScriptProxy.hpp">
+      <Filter>Header Files\client\scripting</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\hikari\core\Hikari.cpp">
@@ -823,6 +826,9 @@
     </ClCompile>
     <ClCompile Include="src\hikari\client\game\objects\ItemSpawner.cpp">
       <Filter>Source Files\client\game\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\scripting\AudioServiceScriptProxy.cpp">
+      <Filter>Source Files\client\scripting</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
