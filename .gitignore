@@ -90,6 +90,7 @@ content/assets/scripts/effects*
 !content/assets/scripts/effects/
 !content/assets/scripts/effects/*.nut
 contrib/*
+!contrib/fastdelegate
 !contrib/gme
 !contrib/guichan
 !contrib/guichan-hakase
