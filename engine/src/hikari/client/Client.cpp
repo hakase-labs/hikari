@@ -135,7 +135,6 @@ int main(int argc, char** argv) {
     initLogging(argc, argv);
 
     ::hikari::testing::Vector2DTests vecTests;
-    vecTests.runAllTests();
 
     try {
         HIKARI_LOG(info) << "Hikari engine v" << hkrHikariVersion() << " started.";
