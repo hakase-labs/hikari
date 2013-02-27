@@ -19,6 +19,11 @@
     <ClCompile Include="src\hikari\client\ClientConfig.cpp" />
     <ClCompile Include="src\hikari\client\CommandProcessor.cpp" />
     <ClCompile Include="src\hikari\client\game\Effect.cpp" />
+    <ClCompile Include="src\hikari\client\game\events\BaseEventData.cpp" />
+    <ClCompile Include="src\hikari\client\game\events\EventData.cpp" />
+    <ClCompile Include="src\hikari\client\game\events\EventManager.cpp" />
+    <ClCompile Include="src\hikari\client\game\events\EventManagerImpl.cpp" />
+    <ClCompile Include="src\hikari\client\game\events\TransitionCollisionEventData.cpp" />
     <ClCompile Include="src\hikari\client\game\objects\brains\OctopusBatteryBrain.cpp" />
     <ClCompile Include="src\hikari\client\game\objects\brains\ScriptedEnemyBrain.cpp" />
     <ClCompile Include="src\hikari\client\game\objects\brains\TellyBrain.cpp" />
@@ -76,6 +81,12 @@
     <ClInclude Include="include\hikari\client\game\Direction.hpp" />
     <ClInclude Include="include\hikari\client\game\Effect.hpp" />
     <ClInclude Include="include\hikari\client\game\EndingState.hpp" />
+    <ClInclude Include="include\hikari\client\game\events\BaseEventData.hpp" />
+    <ClInclude Include="include\hikari\client\game\events\EventData.hpp" />
+    <ClInclude Include="include\hikari\client\game\events\EventListenerDelegate.hpp" />
+    <ClInclude Include="include\hikari\client\game\events\EventManager.hpp" />
+    <ClInclude Include="include\hikari\client\game\events\EventManagerImpl.hpp" />
+    <ClInclude Include="include\hikari\client\game\events\TransitionCollisionEventData.hpp" />
     <ClInclude Include="include\hikari\client\game\GamePlayState.hpp" />
     <ClInclude Include="include\hikari\client\game\GameProgress.hpp" />
     <ClInclude Include="include\hikari\client\game\GameWorld.hpp" />
@@ -309,7 +320,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)include\;$(SolutionDir)contrib\jsoncpp\include\;$(SolutionDir)contrib\squirrel3\include\;$(SolutionDir)contrib\sqrat\include\;$(SolutionDir)contrib\gme\;$(SolutionDir)contrib\physfs\;$(SolutionDir)contrib\physfs-stream\;$(SolutionDir)contrib\sfml\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include\;$(SolutionDir)contrib\jsoncpp\include\;$(SolutionDir)contrib\squirrel3\include\;$(SolutionDir)contrib\sqrat\include\;$(SolutionDir)contrib\gme\;$(SolutionDir)contrib\physfs\;$(SolutionDir)contrib\physfs-stream\;$(SolutionDir)contrib\sfml\include\;$(SolutionDir)contrib\fastdelegate\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES;SFML_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -335,7 +346,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(ProjectDir)include\;$(SolutionDir)contrib\jsoncpp\include\;$(SolutionDir)contrib\gme\;$(SolutionDir)contrib\physfs\;$(SolutionDir)contrib\physfs-stream\;$(SolutionDir)contrib\sfml\include\;$(SolutionDir)contrib\squirrel3\include\;$(SolutionDir)contrib\sqrat\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include\;$(SolutionDir)contrib\jsoncpp\include\;$(SolutionDir)contrib\gme\;$(SolutionDir)contrib\physfs\;$(SolutionDir)contrib\physfs-stream\;$(SolutionDir)contrib\sfml\include\;$(SolutionDir)contrib\squirrel3\include\;$(SolutionDir)contrib\sqrat\include\;$(SolutionDir)contrib\fastdelegate\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>SFML_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>

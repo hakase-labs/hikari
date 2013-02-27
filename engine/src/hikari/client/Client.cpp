@@ -48,6 +48,10 @@
 #include "hikari/core/geom/BoundingBox.hpp"
 #include "hikari/test/core/geom/Vector2DTests.hpp"
 
+#include "hikari/client/game/events/EventManager.hpp"
+#include "hikari/client/game/events/EventManagerImpl.hpp"
+#include "hikari/client/game/events/TransitionCollisionEventData.hpp"
+
 #include <SFML/Graphics.hpp>
 
 #include <json/reader.h>
@@ -124,6 +128,10 @@ namespace hikari {
 
 } // hikari
 
+void testFunctionForDelegate(hikari::EventDataPtr data) {
+    std::cout << "Delegated function call worked!" << std::endl;
+}
+
 int main(int argc, char** argv) {
     //_CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 
@@ -134,7 +142,16 @@ int main(int argc, char** argv) {
 
     initLogging(argc, argv);
 
-    ::hikari::testing::Vector2DTests vecTests;
+    //
+    // Do some event processing and testing...
+    //
+    std::unique_ptr<EventManager> eventManager(new EventManagerImpl("global", true));
+
+    auto printDelegate = EventListenerDelegate(&testFunctionForDelegate);
+
+    eventManager->addListener(printDelegate, TransitionCollisionEventData::Type);
+    eventManager->queueEvent(std::make_shared<TransitionCollisionEventData>());
+    eventManager->processEvents();
 
     try {
         HIKARI_LOG(info) << "Hikari engine v" << hkrHikariVersion() << " started.";
