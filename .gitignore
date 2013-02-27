@@ -103,3 +103,5 @@ contrib/*
 !contrib/physfs-stream
 doc/
 tools/
+*.sublime-project
+*.sublime-workspace
