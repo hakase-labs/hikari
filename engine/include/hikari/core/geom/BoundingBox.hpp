@@ -149,6 +149,34 @@ namespace hikari {
         */
         bool contains(const T& x, const T& y) const;
 
+        /**
+         * Determines if this BoundingBox is to the left of another one.
+         * @param  other the BoundingBox to check against
+         * @return       true if this BoundingBox is to the left of other, otherwise false
+         */
+        bool isLeftOf(const BoundingBox& other) const;
+
+        /**
+         * Determines if this BoundingBox is to the right of another one.
+         * @param  other the BoundingBox to check against
+         * @return       true if this BoundingBox is to the right of other, otherwise false
+         */
+        bool isRightOf(const BoundingBox& other) const;
+
+        /**
+         * Determines if this BoundingBox is above another one.
+         * @param  other the BoundingBox to check against
+         * @return       true if this BoundingBox is above other, otherwise false
+         */
+        bool isAbove(const BoundingBox& other) const;
+
+        /**
+         * Determines if this BoundingBox is below another one.
+         * @param  other the BoundingBox to check against
+         * @return       true if this BoundingBox is below other, otherwise false
+         */
+        bool isBelow(const BoundingBox& other) const;
+
         //
         // Utilities
         //
@@ -358,6 +386,26 @@ namespace hikari {
     bool BoundingBox<T>::contains(const T& x, const T& y) const {
         return (x >= getLeft() && x <= getRight() &&
                 y >= getTop() && y <= getBottom());
+    }
+
+    template <typename T>
+    bool BoundingBox<T>::isLeftOf(const BoundingBox<T>& other) const {
+        return getRight() <= other.getLeft();
+    }
+
+    template <typename T>
+	bool BoundingBox<T>::isRightOf(const BoundingBox<T>& other) const {
+        return getLeft() >= other.getRight();
+    }
+
+    template <typename T>
+	bool BoundingBox<T>::isAbove(const BoundingBox<T>& other) const {
+        return getBottom() <= other.getTop();
+    }
+
+    template <typename T>
+	bool BoundingBox<T>::isBelow(const BoundingBox<T>& other) const {
+        return getTop() >= other.getBottom();
     }
 
     typedef BoundingBox<float> BoundingBoxF;

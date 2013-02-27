@@ -145,6 +145,12 @@
     <Filter Include="Header Files\physfs">
       <UniqueIdentifier>{dd1faee7-39d7-433c-a35a-1b5cfe3a1261}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\client\game\events">
+      <UniqueIdentifier>{bcd10963-da44-4ad4-a641-6f70a167295e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\client\game\events">
+      <UniqueIdentifier>{42627cc6-f915-4974-8ead-b6b89dc1cc63}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\hikari\core\geom\Rectangle2D.hpp">
@@ -540,6 +546,24 @@
     <ClInclude Include="include\hikari\client\scripting\AudioServiceScriptProxy.hpp">
       <Filter>Header Files\client\scripting</Filter>
     </ClInclude>
+    <ClInclude Include="include\hikari\client\game\events\BaseEventData.hpp">
+      <Filter>Header Files\client\game\events</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\events\EventData.hpp">
+      <Filter>Header Files\client\game\events</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\events\TransitionCollisionEventData.hpp">
+      <Filter>Header Files\client\game\events</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\events\EventListenerDelegate.hpp">
+      <Filter>Header Files\client\game\events</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\events\EventManager.hpp">
+      <Filter>Header Files\client\game\events</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\events\EventManagerImpl.hpp">
+      <Filter>Header Files\client\game\events</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\hikari\core\Hikari.cpp">
@@ -829,6 +853,21 @@
     </ClCompile>
     <ClCompile Include="src\hikari\client\scripting\AudioServiceScriptProxy.cpp">
       <Filter>Source Files\client\scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\events\BaseEventData.cpp">
+      <Filter>Source Files\client\game\events</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\events\EventData.cpp">
+      <Filter>Source Files\client\game\events</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\events\TransitionCollisionEventData.cpp">
+      <Filter>Source Files\client\game\events</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\events\EventManager.cpp">
+      <Filter>Source Files\client\game\events</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\events\EventManagerImpl.cpp">
+      <Filter>Source Files\client\game\events</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
