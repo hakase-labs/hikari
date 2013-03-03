@@ -459,13 +459,13 @@ namespace hikari {
         renderReadyText = false;
 
         sf::Color overlayColor = sf::Color(fadeOverlay.getFillColor());
-        overlayColor.a = 0;
+        overlayColor.a = 255;
 
         fadeOverlay.setFillColor(overlayColor);
 
         if(auto sound = gamePlayState.audioService.lock()) {
             // TODO: Obtain the correct MusicId for the level and play that.
-            sound->playMusic(22);
+            sound->playMusic(9);
         }
     }
 

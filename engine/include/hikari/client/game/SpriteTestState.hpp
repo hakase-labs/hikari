@@ -13,10 +13,15 @@
 
 namespace hikari {
 
+    class AnimationSetCache;
+    class ImageCache;
+
     class SpriteTestState : public GameState {
     private:
         std::string name;
-        sf::Texture spriteTexture;
+        std::weak_ptr<AnimationSetCache> animationSetCache;
+        std::weak_ptr<ImageCache> imageCache;
+        std::shared_ptr<sf::Texture> spriteTexture;
         sf::Sprite sprite;
         sf::Sprite flippedSprite;
         sf::RectangleShape positionPixel;
@@ -24,7 +29,7 @@ namespace hikari {
         SpriteAnimator animationPlayer;
     
     public:
-        SpriteTestState(const std::string &name);
+        SpriteTestState(const std::string &name, std::weak_ptr<AnimationSetCache> animationSetCache, std::weak_ptr<ImageCache> imageCache);
         
         virtual ~SpriteTestState() {}
 
