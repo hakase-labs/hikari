@@ -34,8 +34,8 @@ namespace hikari {
         virtual ~Animator();
         void rewind();
         void pause();
-        const bool isPaused() const;
         void unpause();
+        const bool isPaused() const;
         virtual void update(float delta);
         void setAnimation(std::shared_ptr<Animation> animation);
         void setAnimationCallback(const AnimationCallback& callback);
