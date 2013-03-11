@@ -68,6 +68,7 @@ namespace hikari {
         , subState(nullptr)
         , maps()
         , itemSpawners()
+        , deactivatedItemSpawners()
         , world()
         , camera(Rectangle2D<float>(0.0f, 0.0f, 256.0f, 240.0f))
         , view()
@@ -254,7 +255,7 @@ namespace hikari {
             std::begin(itemSpawners),
             std::end(itemSpawners),
             [](std::weak_ptr<Spawner> & s) {
-                if(auto ptr = s.lock()) {
+                if(auto ptr = s.lock()) { 
                     ptr->setActive(false);
                 }
             }
@@ -286,9 +287,11 @@ namespace hikari {
                     // If it's asleep, see if we need to wake it up
                     else {
                         if(cameraView.contains(spawnerPosition.getX(), spawnerPosition.getY())) {
-                            spawner->setActive(true);
-                            spawner->performAction(world);
-                            HIKARI_LOG(debug3) << "Just woke up spawner #" << spawner->getId();
+                            //if(std::find(std::begin(deactivatedItemSpawners), std::end(deactivatedItemSpawners), s) == std::end(deactivatedItemSpawners)) {
+                                spawner->setActive(true);
+                                spawner->performAction(world);
+                                HIKARI_LOG(debug3) << "Just woke up spawner #" << spawner->getId();
+                            //}
                         }
                     }
                 }
@@ -459,13 +462,13 @@ namespace hikari {
         renderReadyText = false;
 
         sf::Color overlayColor = sf::Color(fadeOverlay.getFillColor());
-        overlayColor.a = 0;
+        overlayColor.a = 255;
 
         fadeOverlay.setFillColor(overlayColor);
 
         if(auto sound = gamePlayState.audioService.lock()) {
             // TODO: Obtain the correct MusicId for the level and play that.
-            sound->playMusic(22);
+            sound->playMusic(9);
         }
     }
 
@@ -642,6 +645,8 @@ namespace hikari {
                 if(!geom::intersects(item->getBoundingBox(), view)) {
                     item->setActive(false);
                     gamePlayState.world.queueObjectRemoval(item);
+                    // TODO: Handle setting the spawner to deactivated some how...
+                    // gamePlayState.deactivatedItemSpawners.push_back(item);
                 }
 
                 //

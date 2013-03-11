@@ -10,6 +10,7 @@ namespace hikari {
 
     class AnimationSet;
     class Effect;
+    class ItemSpawner;
 
     class CollectableItem : public Entity, public Cloneable<CollectableItem> {
     private:
