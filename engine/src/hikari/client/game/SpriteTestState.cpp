@@ -1,30 +1,38 @@
 #include "hikari/client/game/SpriteTestState.hpp"
 #include "hikari/core/util/PhysFS.hpp"
 #include "hikari/core/util/PhysFSUtils.hpp"
+#include "hikari/core/util/AnimationSetCache.hpp"
+#include "hikari/core/util/ImageCache.hpp"
 #include "hikari/core/game/AnimationSet.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <iostream>
 
 namespace hikari {
 
-    SpriteTestState::SpriteTestState(const std::string &name)
+    SpriteTestState::SpriteTestState(const std::string &name, std::weak_ptr<AnimationSetCache> animationSetCache, std::weak_ptr<ImageCache> imageCache)
         : name(name)
+        , animationSetCache(animationSetCache)
+        , imageCache(imageCache)
         , animationPlayer(sprite)
         , positionPixel(sf::Vector2f(100.0f, 100.0f)) {
             positionPixel.setSize(sf::Vector2f(1.0f, 1.0f));
             positionPixel.setFillColor(sf::Color(255, 255, 255, 128));
 
-            auto animationSet = AnimationLoader::loadSet("assets/animations/heroes.json");
-            animation = animationSet->get("idle");
+            if(auto anims = animationSetCache.lock()) {
+                if(auto images = imageCache.lock()) {
+                    auto animationSet = anims->get("assets/animations/particles.json");
+                    animation = animationSet->get("medium-explosion");
 
-            PhysFSUtils::loadImage("assets/images/rock-test-run.png", spriteTexture);
+                    spriteTexture = images->get(animationSet->getImageFileName());
+                }
+            }
             
-            spriteTexture.setSmooth(false);
-            sprite.setTexture(spriteTexture);
+            spriteTexture->setSmooth(false);
+            sprite.setTexture(*spriteTexture);
             sprite.setPosition(100.0f, 100.0f);
-            sprite.setScale(3.0f, 3.0f);
+            sprite.setScale(1.0f, 1.0f);
 
-            flippedSprite.setTexture(spriteTexture);
+            flippedSprite.setTexture(*spriteTexture);
             flippedSprite.setPosition(100.0f, 100.0f);
             // flippedSprite.FlipX(true);
             flippedSprite.setScale(-1.0f, flippedSprite.getScale().y);
@@ -44,9 +52,9 @@ namespace hikari {
                 flippedSprite.setOrigin(15.0f, 22.0f);
             }
 
-            if(event.key.code == sf::Keyboard::Right) {
-                //sprite.FlipX(false);
-                //flippedSprite.FlipX(true);
+            if(event.key.code == sf::Keyboard::Return) {
+                animationPlayer.rewind();
+                animationPlayer.unpause();
             }
 
             if(event.key.code == sf::Keyboard::Left) {

@@ -128,10 +128,6 @@ namespace hikari {
 
 } // hikari
 
-void testFunctionForDelegate(hikari::EventDataPtr data) {
-    std::cout << "Delegated function call worked!" << std::endl;
-}
-
 int main(int argc, char** argv) {
     //_CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 
@@ -141,17 +137,6 @@ int main(int argc, char** argv) {
     ::hikari::Log::setReportingLevel(debug3);
 
     initLogging(argc, argv);
-
-    //
-    // Do some event processing and testing...
-    //
-    std::unique_ptr<EventManager> eventManager(new EventManagerImpl("global", true));
-
-    auto printDelegate = EventListenerDelegate(&testFunctionForDelegate);
-
-    eventManager->addListener(printDelegate, TransitionCollisionEventData::Type);
-    eventManager->queueEvent(std::make_shared<TransitionCollisionEventData>());
-    eventManager->processEvents();
 
     try {
         HIKARI_LOG(info) << "Hikari engine v" << hkrHikariVersion() << " started.";
@@ -167,6 +152,7 @@ int main(int argc, char** argv) {
         ClientConfig clientConfig(config);
 
         sf::Clock clock;
+
         sf::VideoMode videoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP);
         sf::RenderWindow window;
 
@@ -200,7 +186,7 @@ int main(int argc, char** argv) {
         services.registerService("ItemFactory",               itemFactory);
 
         AudioServiceScriptProxy::setWrappedService(std::weak_ptr<AudioService>(audioService));
-
+        
         squirrelService->runScriptFile("assets/scripts/Environment.nut");
         squirrelService->runScriptFile("assets/scripts/Bootstrap.nut");
 
@@ -214,29 +200,36 @@ int main(int argc, char** argv) {
         // at runtime by user data.
         GameController controller;
 
-        std::string mapName = game["states"]["maptest"]["mapname"].asString();
-        std::string tileSet = game["states"]["maptest"]["tileset"].asString();
+        //std::string mapName = game["states"]["maptest"]["mapname"].asString();
+        //std::string tileSet = game["states"]["maptest"]["tileset"].asString();
 
-        auto mapTestState = std::make_shared<MapTestState>(
-            "maptest",
-            mapLoader,
-            mapName,
-            tileSet,
-            imageCache,
-            guiFont,
-            std::weak_ptr<ItemFactory>(itemFactory),
-            services
+        //auto mapTestState = std::make_shared<MapTestState>(
+        //    "maptest",
+        //    mapLoader,
+        //    mapName,
+        //    tileSet,
+        //    imageCache,
+        //    guiFont,
+        //    std::weak_ptr<ItemFactory>(itemFactory),
+        //    services
+        //);
+
+        //mapTestState->setRenderWindow(&window);
+
+        //StatePtr guiTestState(new GuiTestState("guitest", guiFont));
+        StatePtr spriteTestState(
+            new SpriteTestState(
+                "spritetest", 
+                services.locateService<AnimationSetCache>(Services::ANIMATIONSETCACHE),
+                services.locateService<ImageCache>(Services::IMAGECACHE)
+            )
         );
 
-        mapTestState->setRenderWindow(&window);
-
-        StatePtr guiTestState(new GuiTestState("guitest", guiFont));
-        StatePtr spriteTestState(new SpriteTestState("spritetest"));
         StatePtr stageSelectState(new StageSelectState("stageselect", game["states"]["select"], services));
         StatePtr gamePlayState(new GamePlayState("gameplay", game, services));
 
-        controller.addState(mapTestState->getName(), mapTestState);
-        controller.addState(guiTestState->getName(), guiTestState);
+        //controller.addState(mapTestState->getName(), mapTestState);
+        //controller.addState(guiTestState->getName(), guiTestState);
         controller.addState(spriteTestState->getName(), spriteTestState);
         controller.addState(stageSelectState->getName(), stageSelectState);
         controller.addState(gamePlayState->getName(), gamePlayState);
@@ -438,7 +431,6 @@ int main(int argc, char** argv) {
             window.clear(sf::Color::Blue);
             screenBuffer.clear(sf::Color::Magenta);
             controller.render(screenBuffer);
-            // screenBuffer.setView(window.getDefaultView());
             window.setView(screenBufferView);
 
             if(showFPS) {
@@ -448,7 +440,6 @@ int main(int argc, char** argv) {
 
             console.render(screenBuffer);
 
-            //window.draw(screenBuffer);
             screenBuffer.display();
 
             sf::Sprite renderSprite(screenBuffer.getTexture());

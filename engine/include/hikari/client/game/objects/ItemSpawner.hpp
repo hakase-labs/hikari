@@ -3,20 +3,24 @@
 
 #include "hikari/client/game/objects/Spawner.hpp"
 
+#include <memory>
 #include <string>
 
 namespace hikari {
+
+    class CollectableItem;
     
     class ItemSpawner : public Spawner {
     private:
         std::string itemName;
+        std::weak_ptr<CollectableItem> spawnedItem;
 
     public:
         ItemSpawner(const std::string & itemNam);
         virtual ~ItemSpawner();
 
         virtual void performAction(GameWorld & world);
-        // virtual void attachToInstance(const std::shared_ptr<GameObject> & instance);
+        std::weak_ptr<CollectableItem> getSpawnedItem() const;
 
         //
         // GameObject overrides
