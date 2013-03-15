@@ -20,7 +20,7 @@ namespace hikari {
 
             @param dt the number of seconds to update for
         */
-        virtual void update(const float& dt) = 0;
+        virtual void update(float dt) = 0;
     };
 
 } // hikari

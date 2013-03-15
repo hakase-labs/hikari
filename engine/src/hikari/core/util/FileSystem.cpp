@@ -21,4 +21,24 @@ namespace hikari {
         return result.str();
     }
 
+    bool FileSystem::exists(const std::string& path) {
+        return PhysFS::exists(path);
+    }
+
+    bool FileSystem::isDirectory(const std::string& path) {
+        return PhysFS::isDirectory(path);
+    }
+
+    FileSystem::StringVector FileSystem::enumerateFiles(const std::string& directory) {
+        return PhysFS::enumerateFiles(directory);
+    }
+
+    FileSystem::StringVector FileSystem::getFileListing(const std::string& directory) {
+        return PhysFS::getFileListing(directory);
+    }
+
+    FileSystem::StringVector FileSystem::getDirectoryListing(const std::string& directory) {
+        return PhysFS::getDirListing(directory);
+    }
+
 } // hikari
