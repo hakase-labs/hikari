@@ -74,7 +74,7 @@ namespace hikari {
         return running;
     }
 
-    void Timer::update(const float &dt) {
+    void Timer::update(float dt) {
         if(isRunning()) {
             elapsed += dt;
 

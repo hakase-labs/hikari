@@ -27,8 +27,7 @@
 #include "hikari/core/gui/ImageFont.hpp"
 #include "hikari/core/util/ImageCache.hpp"
 #include "hikari/core/util/JsonUtils.hpp"
-#include "hikari/core/util/PhysFS.hpp"
-#include "hikari/core/util/PhysFSUtils.hpp"
+#include "hikari/core/util/FileSystem.hpp"
 #include "hikari/core/util/ReferenceWrapper.hpp"
 #include "hikari/core/util/ServiceLocator.hpp"
 #include "hikari/core/util/StringUtils.hpp"
@@ -74,7 +73,7 @@ namespace hikari {
         , view()
         , spawnerMarker()
         , leftBar(sf::Vector2f(8.0f, 240.0f))
-        , drawBossEnergyMeter(true)
+        , drawBossEnergyMeter(false)
         , drawHeroEnergyMeter(false)
         , drawWeaponEnergyMeter(false)
         , drawInfamousBlackBar(false)
@@ -170,8 +169,6 @@ namespace hikari {
     }
 
     void GamePlayState::onEnter() {
-        startStage();
-
         Movable::setCollisionResolver(collisionResolver);
         Movable::setGravity(0.25f);
 
@@ -179,6 +176,7 @@ namespace hikari {
         currentMap = maps.at("map-test2.json");
 
         changeCurrentRoom(currentMap->getRoom(0));
+        startStage();
     }
 
     void GamePlayState::onExit() { }
@@ -256,7 +254,7 @@ namespace hikari {
             std::end(itemSpawners),
             [](std::weak_ptr<Spawner> & s) {
                 if(auto ptr = s.lock()) { 
-                    ptr->setActive(false);
+                    ptr->setAwake(false);
                 }
             }
         );
@@ -265,6 +263,10 @@ namespace hikari {
     void GamePlayState::checkSpawners() {
         const auto & cameraView = camera.getView();
 
+        //
+        // This will wake any spawners that are active when they come on screen.
+        // It will also put to sleep any awake spawners when they go off screen.
+        //
         std::for_each(
             std::begin(itemSpawners),
             std::end(itemSpawners),
@@ -272,26 +274,19 @@ namespace hikari {
                 if(auto spawner = s.lock()) {
                     const auto & spawnerPosition = spawner->getPosition();
 
-                    // If it's already awake see if it needs to deactivate
-                    // It will need to be deactivated if:
-                    //   1) It's no longer on screen
-                    //   2) It's spawn has died
                     if(spawner->isActive()) {
-                        if(!cameraView.contains(spawnerPosition.getX(), spawnerPosition.getY())) {
-                            spawner->setActive(false);
-                            HIKARI_LOG(debug3) << "Just put spawner #" << spawner->getId() << " to bed";
+                        if(spawner->isAwake()) {
+                            if(!cameraView.contains(spawnerPosition.getX(), spawnerPosition.getY())) {
+                                spawner->setAwake(false);
+                                HIKARI_LOG(debug3) << "Just put spawner #" << spawner->getId() << " to bed";
+                            }
                         }
-                        // TODO: Check for if spawn is dead (messaging?)
-                        //
-                    }
-                    // If it's asleep, see if we need to wake it up
-                    else {
-                        if(cameraView.contains(spawnerPosition.getX(), spawnerPosition.getY())) {
-                            //if(std::find(std::begin(deactivatedItemSpawners), std::end(deactivatedItemSpawners), s) == std::end(deactivatedItemSpawners)) {
-                                spawner->setActive(true);
+                        else {
+                            if(cameraView.contains(spawnerPosition.getX(), spawnerPosition.getY())) {
+                                spawner->setAwake(true);
                                 spawner->performAction(world);
                                 HIKARI_LOG(debug3) << "Just woke up spawner #" << spawner->getId();
-                            //}
+                            }
                         }
                     }
                 }
@@ -304,12 +299,12 @@ namespace hikari {
             try {
                 std::string stagesDirectory = params["assets"]["stages"].asString();
 
-                bool directoryExists = PhysFS::exists(stagesDirectory);
-                bool directoryIsDirectory = PhysFS::isDirectory(stagesDirectory);
+                bool directoryExists = FileSystem::exists(stagesDirectory);
+                bool directoryIsDirectory = FileSystem::isDirectory(stagesDirectory);
 
                 if(directoryExists && directoryIsDirectory) {
                     // Get file listing and load all .json files as maps
-                    auto fileListing = PhysFS::getFileListing(stagesDirectory);
+                    auto fileListing = FileSystem::getFileListing(stagesDirectory);
 
                     HIKARI_LOG(debug) << "Found " << fileListing.size() << " file(s) in map directory.";
 
@@ -345,7 +340,34 @@ namespace hikari {
     }
 
     void GamePlayState::startStage() {
-        playerBirth();
+        HIKARI_LOG(debug) << "Starting stage.";
+
+        //
+        // Reset all spawners to their original state
+        //
+        if(currentMap) {
+            int numRooms = currentMap->getRoomCount();
+
+            for(int i = 0; i < numRooms; ++i) {
+                auto room = currentMap->getRoom(i);
+
+                HIKARI_LOG(debug) << "Resetting spawners for room " << i << ".";
+
+                if(room) {
+                    auto spawners = room->getSpawners();
+
+                    std::for_each(std::begin(spawners), std::end(spawners), [](std::shared_ptr<Spawner> & spawner) {
+                        if(spawner) {
+                            spawner->setActive(true);
+
+                            //
+                            // TODO: Add logic that disabled already-collected items like magnet-beam, etc.
+                            //
+                        }
+                    });
+                }
+            }
+        }
     }
 
     void GamePlayState::restartStage() {

@@ -40,7 +40,7 @@ namespace hikari {
         return INVALID_ROOM_RECT;
     }
 
-    const int Map::getRoomIndexByLocation(int x, int y) const {
+    const int Map::findRoomIndexByLocation(int x, int y) const {
         int index = 0;
         for(std::vector< Rectangle2D<int> >::const_iterator
             it = roomRectangles.begin(),

@@ -49,7 +49,7 @@ namespace hikari {
 
     }
 
-    void GameWorld::update(const float &dt) {
+    void GameWorld::update(float dt) {
         //HIKARI_LOG(debug) << "GameWorld::update begin; dt = " << dt;
         processAdditions();
         processRemovals();

@@ -22,7 +22,7 @@ namespace hikari {
         Entity::render(target);
     }
 
-    void Enemy::update(const float &dt) {
+    void Enemy::update(float dt) {
         Entity::update(dt);
         
         if(brain) {

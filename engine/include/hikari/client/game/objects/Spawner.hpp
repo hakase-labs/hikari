@@ -18,6 +18,7 @@ namespace hikari {
     private:
         Direction direction;
         Vector2<float> position;
+        bool awake;
 
     public:
         Spawner();
@@ -48,6 +49,12 @@ namespace hikari {
         virtual void performAction(GameWorld & world);
 
         virtual void attachToInstance(const std::shared_ptr<GameObject> & instance);
+
+        bool isAwake() const;
+        void setAwake(bool awake);
+
+        virtual void onWake();
+        virtual void onSleep();
 
         //
         // GameObject overrides

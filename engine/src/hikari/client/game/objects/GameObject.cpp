@@ -12,7 +12,7 @@ namespace hikari {
         return nextId++;
     }
 
-    GameObject::GameObject(const int& id)
+    GameObject::GameObject(int id)
         : id(id)
         , active(false)
     {
@@ -31,7 +31,7 @@ namespace hikari {
         return active;
     }
 
-    void GameObject::setActive(const bool &active) {
+    void GameObject::setActive(bool active) {
         if(this->active != active) {
             this->active = active;
 
@@ -51,7 +51,7 @@ namespace hikari {
 
     }
 
-    void GameObject::update(const float &dt) {
+    void GameObject::update(float dt) {
 
     }
 
