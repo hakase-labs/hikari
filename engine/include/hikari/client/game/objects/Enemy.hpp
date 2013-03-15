@@ -15,13 +15,14 @@ namespace hikari {
         Enemy(const int& id = GameObject::generateObjectId(), std::shared_ptr<Room> room = nullptr);
         virtual ~Enemy();
 
-        virtual void update(const float& dt);
+        virtual void update(float dt);
         virtual void render(sf::RenderTarget &target);
 
         virtual void handleCollision(Movable& body, CollisionInfo& info);
 
         void setBrain(const std::shared_ptr<EnemyBrain> brain);
         const std::shared_ptr<EnemyBrain>& getBrain() const;
+
     };
 
 } // hikari

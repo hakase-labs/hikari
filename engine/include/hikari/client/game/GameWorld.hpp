@@ -87,7 +87,7 @@ namespace hikari {
         const Direction getPlayerFacingDirection() const;
 
         void render(sf::RenderTarget &target);
-        virtual void update(const float &dt);
+        virtual void update(float dt);
     };
 
 }

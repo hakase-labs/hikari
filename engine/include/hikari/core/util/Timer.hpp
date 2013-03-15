@@ -38,7 +38,7 @@ namespace hikari {
 
         const bool isRunning() const;
 
-        virtual void update(const float &dt);
+        virtual void update(float dt);
     };
 
 } // hikari

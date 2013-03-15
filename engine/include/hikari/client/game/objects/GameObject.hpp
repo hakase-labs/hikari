@@ -29,15 +29,15 @@ namespace hikari {
         virtual void onDeactivated();
 
     public:
-        explicit GameObject(const int& id);
+        explicit GameObject(int id);
         virtual ~GameObject();
 
         int getId() const;
         
         bool isActive() const;
-        void setActive(const bool& active);
+        void setActive(bool active);
 
-        virtual void update(const float &dt);
+        virtual void update(float dt);
 
         virtual void reset() {};
     };

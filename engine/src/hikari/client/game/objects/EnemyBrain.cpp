@@ -25,7 +25,7 @@ namespace hikari {
         host = nullptr;
     }
 
-    void EnemyBrain::update(const float& dt) {
+    void EnemyBrain::update(float dt) {
         // Does nothing
     }
 
