@@ -8,6 +8,7 @@ namespace hikari {
         : GameObject(GameObject::generateObjectId())
         , direction(Directions::None)
         , position(0.0f, 0.0f)
+        , awake(false)
     {
 
     }
@@ -34,6 +35,30 @@ namespace hikari {
 
     void Spawner::attachToInstance(const std::shared_ptr<GameObject> & instance) {
 
+    }
+
+    bool Spawner::isAwake() const {
+        return awake;
+    }
+
+    void Spawner::setAwake(bool awake) {
+        if(this->awake != awake) {
+            this->awake = awake;
+
+            if(this->awake) {
+                onWake();
+            } else {
+                onSleep();
+            }
+        }
+    }
+
+    void Spawner::onWake() {
+        HIKARI_LOG(debug3) << "Spawner::onWake(), id = " << getId();
+    }
+
+    void Spawner::onSleep() {
+        HIKARI_LOG(debug3) << "Spawner::onSleep(), id = " << getId();
     }
 
     void Spawner::onActivated() {
