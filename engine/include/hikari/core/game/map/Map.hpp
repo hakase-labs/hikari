@@ -74,7 +74,7 @@ namespace hikari {
             id. If the location (x, y) is not within any of the rooms, -1 is
             returned.
         */
-        const int getRoomIndexByLocation(int x, int y) const;
+        const int findRoomIndexByLocation(int x, int y) const;
     };
 
 } // hikari
