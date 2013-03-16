@@ -6,6 +6,7 @@
 #include "hikari/core/game/map/Map.hpp"
 
 #include "hikari/client/game/GameWorld.hpp"
+#include "hikari/core/game/map/RoomTransition.hpp"
 
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/View.hpp>
@@ -129,6 +130,7 @@ namespace hikari {
         // Rendering
         //
         void renderMap(sf::RenderTarget &target) const;
+        void renderHero(sf::RenderTarget &target) const;
         void renderEntities(sf::RenderTarget &target) const;
         void renderHud(sf::RenderTarget &target) const;
 
@@ -203,8 +205,24 @@ namespace hikari {
          * Sequence where hero transitions between rooms.
          */
         class TransitionSubState : public SubState {
+        private:
+            static const float transitionSpeedX;
+            static const float transitionSpeedY;
+            static const float heroTranslationSpeedX;
+            static const float heroTranslationSpeedY;
+
+            float transitionEndX;
+            float transitionEndY;
+            int transitionFrames;
+            bool transitionFinished;
+
+            RoomTransition transition;
+            Rectangle2D<int> nextRoomCullRegion;
+            std::shared_ptr<Room> nextRoom;
+
+            std::shared_ptr<Room> findNextRoom() const;
         public:
-            TransitionSubState(GamePlayState & gamePlayState);
+            TransitionSubState(GamePlayState & gamePlayState, RoomTransition transition);
             virtual ~TransitionSubState();
             virtual void enter();
             virtual void exit();

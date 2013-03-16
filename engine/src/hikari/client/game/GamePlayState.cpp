@@ -403,6 +403,18 @@ namespace hikari {
         target.setView(oldView);
     }
 
+    void GamePlayState::renderHero(sf::RenderTarget &target) const {
+        const auto& oldView = target.getDefaultView();
+        auto newView = camera.getPixelAlignedView();
+        target.setView(newView);
+
+        // Render hero last so he'll be on "top"
+        hero->render(target);
+
+        // Restore UI view
+        target.setView(oldView);
+    }
+
     void GamePlayState::renderEntities(sf::RenderTarget &target) const {
         const auto& oldView = target.getDefaultView();
         auto newView = camera.getPixelAlignedView();
@@ -415,9 +427,6 @@ namespace hikari {
             std::begin(activeItems), 
             std::end(activeItems), 
             std::bind(&CollectableItem::render, std::placeholders::_1, ReferenceWrapper<sf::RenderTarget>(target)));
-
-        // Render hero last so he'll be on "top"
-        hero->render(target);
 
         // Restore UI view
         target.setView(oldView);
@@ -633,12 +642,6 @@ namespace hikari {
     }
 
     void GamePlayState::PlayingSubState::exit() {
-        if(auto sound = gamePlayState.audioService.lock()) {
-            // Stop music because the only reason we leave this state is because
-            // the player has died or something like that.
-            sound->stopMusic();
-        }
-
         std::cout << "PlayingSubState::exit()" << std::endl;
     }
 
@@ -713,21 +716,101 @@ namespace hikari {
         renderer->setCullRegion(Rectangle2D<int>(cameraX, cameraY, cameraWidth, cameraHeight));
 
         gamePlayState.checkSpawners();
+
+        //
+        // Check if hero has touched any transitions
+        //
+        auto & currentRoom = gamePlayState.currentRoom;
+        auto & currentRoomTransitions = currentRoom->getTransitions();
+
+        for(auto transitionIt = currentRoomTransitions.begin(), end = currentRoomTransitions.end(); transitionIt != end; transitionIt++) {
+            const RoomTransition& transition = *transitionIt;
+
+            int regionLeft   = ((currentRoom->getX() + transition.getX()) * 16);
+            int regionRight  = ((currentRoom->getX() + transition.getX() + transition.getWidth()) * 16);
+            int regionTop    = ((currentRoom->getY() + transition.getY()) * 16);
+            int regionBottom = ((currentRoom->getY() + transition.getY() + transition.getHeight()) * 16);
+            int regionWidth  = transition.getWidth() * 16;
+            int regionHeight = transition.getHeight() * 16;
+
+            BoundingBox<float> transitionBounds(
+                static_cast<float>(regionLeft),
+                static_cast<float>(regionTop),
+                static_cast<float>(regionWidth),
+                static_cast<float>(regionHeight)
+            );
+
+            if(transitionBounds.contains(hero->getBoundingBox())) {
+                HIKARI_LOG(debug) << "Transitioning from room " << currentRoom->getId() << " to room " << transition.getToRegion();
+                gamePlayState.changeSubState(std::unique_ptr<SubState>(new TransitionSubState(gamePlayState, transition)));
+                break;
+            }
+        }
     }
 
     void GamePlayState::PlayingSubState::render(sf::RenderTarget &target) {
         gamePlayState.renderMap(target);
         gamePlayState.renderEntities(target);
+        gamePlayState.renderHero(target);
         gamePlayState.renderHud(target);
     }
 
     //
     // TransitionSubState
     //
-    GamePlayState::TransitionSubState::TransitionSubState(GamePlayState & gamePlayState)
-        : SubState(gamePlayState)
-    {
 
+    const float GamePlayState::TransitionSubState::transitionSpeedX = 4.0f / (1.0f / 60.0f);
+    const float GamePlayState::TransitionSubState::transitionSpeedY = 3.0f / (1.0f / 60.0f);
+    const float GamePlayState::TransitionSubState::heroTranslationSpeedX = (51.0f / 64.0f) / (1.0f / 60.0f);
+    const float GamePlayState::TransitionSubState::heroTranslationSpeedY = (21.0f / 80.0f) / (1.0f / 60.0f);
+
+    GamePlayState::TransitionSubState::TransitionSubState(GamePlayState & gamePlayState, RoomTransition transition)
+        : SubState(gamePlayState)
+        , transitionEndX(0.0f)
+        , transitionEndY(0.0f)
+        , transitionFrames(0)
+        , transitionFinished(false)
+        , transition(transition)
+        , nextRoomCullRegion()
+        , nextRoom(nullptr)
+    {
+        auto & camera = gamePlayState.camera;
+
+        nextRoom = findNextRoom();
+
+        if(nextRoom) {
+            nextRoomCullRegion.setWidth(camera.getView().getWidth());
+            nextRoomCullRegion.setHeight(camera.getView().getHeight());
+
+            switch(transition.getDirection()) {
+                case RoomTransition::DirectionUp:
+                    camera.lockVertical(false);
+                    transitionEndY = static_cast<float>(nextRoom->getCameraBounds().getBottom() - camera.getView().getHeight());
+                    break;
+                case RoomTransition::DirectionForward:
+                    camera.lockHorizontal(false);
+                    transitionEndX = static_cast<float>(nextRoom->getCameraBounds().getLeft());
+                    break;
+                case RoomTransition::DirectionDown:
+                    camera.lockVertical(false);
+                    transitionEndY = static_cast<float>(nextRoom->getCameraBounds().getTop());
+                    break;
+                case RoomTransition::DirectionBackward:
+                    camera.lockHorizontal(false);
+                    transitionEndX = static_cast<float>(nextRoom->getCameraBounds().getRight() - camera.getView().getWidth());
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            // This is an error case; there was no next room to go to.
+            HIKARI_LOG(error) << "Tried to transition to non-existent room #" << transition.getToRegion();
+            transitionFinished = true;
+        }        
+    }
+
+    std::shared_ptr<Room> GamePlayState::TransitionSubState::findNextRoom() const {
+        return gamePlayState.currentMap->getRoom(transition.getToRegion());
     }
 
     GamePlayState::TransitionSubState::~TransitionSubState() {
@@ -735,19 +818,130 @@ namespace hikari {
     }
 
     void GamePlayState::TransitionSubState::enter() {
+        HIKARI_LOG(debug) << "TransitionSubState::enter()";
 
+        auto & camera = gamePlayState.camera;
+
+        switch(transition.getDirection()) {
+            case RoomTransition::DirectionUp:
+                camera.lockVertical(false);
+                break;
+            case RoomTransition::DirectionForward:
+                camera.lockHorizontal(false);
+                break;
+            case RoomTransition::DirectionDown:
+                camera.lockVertical(false);
+                break;
+            case RoomTransition::DirectionBackward:
+                camera.lockHorizontal(false);
+                break;
+            default:
+                break;
+        }
     }
 
     void GamePlayState::TransitionSubState::exit() {
+        HIKARI_LOG(debug) << "TransitionSubState::exit()";
+        
+        auto & camera = gamePlayState.camera;
 
+        camera.lockVertical(true);
+        camera.lockHorizontal(true);
+
+        gamePlayState.changeCurrentRoom(nextRoom);
     }
 
     void GamePlayState::TransitionSubState::update(const float & dt) {
+        auto & camera = gamePlayState.camera;
+        auto & hero = gamePlayState.hero;
 
+        float camY = camera.getY();
+        float camX = camera.getX();
+
+        switch(transition.getDirection()) {
+            case RoomTransition::DirectionUp:
+                if(camY > transitionEndY) {
+                    camera.move(0.0f, -transitionSpeedY * dt);
+                    transitionFrames++;
+
+                    auto heroTranslateY = -heroTranslationSpeedY * dt;
+                    hero->setPosition(hero->getPosition().getX(), hero->getPosition().getY() + heroTranslateY);
+                    hero->getAnimationPlayer()->update(dt);
+                } else {
+                    transitionFinished = true;
+                }
+                break;
+            case RoomTransition::DirectionForward:
+                camera.lockHorizontal(false);
+                if(camX < transitionEndX) {
+                    camera.move(transitionSpeedX * dt, 0.0f);
+                    transitionFrames++;
+
+                    auto heroTranslateX = heroTranslationSpeedX * dt;
+                    hero->setPosition(hero->getPosition().getX() + heroTranslateX, hero->getPosition().getY());
+                    hero->getAnimationPlayer()->update(dt);
+                } else {
+                    transitionFinished = true;
+                }
+                break;
+            case RoomTransition::DirectionDown:
+                camera.lockVertical(false);
+                if(camY < transitionEndY) {
+                    camera.move(0.0f, transitionSpeedY * dt);
+                    transitionFrames++;
+
+                    auto heroTranslateY = heroTranslationSpeedY * dt;
+                    hero->setPosition(hero->getPosition().getX(), hero->getPosition().getY() + heroTranslateY);
+                    hero->getAnimationPlayer()->update(dt);
+                } else {
+                    transitionFinished = true;
+                }
+                break;
+            case RoomTransition::DirectionBackward:
+                camera.lockHorizontal(false);
+                if(camX > transitionEndX) {
+                    camera.move(-transitionSpeedX * dt, 0.0f);
+                    transitionFrames++;
+
+                    auto heroTranslateX = -heroTranslationSpeedX * dt;
+                    hero->setPosition(hero->getPosition().getX() + heroTranslateX, hero->getPosition().getY());
+                    hero->getAnimationPlayer()->update(dt);
+                } else {
+                    transitionFinished = true;
+                }
+                break;
+            default:
+                transitionFinished = true;
+                break;
+        }
+
+        if(transitionFinished) {
+            gamePlayState.changeSubState(std::unique_ptr<SubState>(new PlayingSubState(gamePlayState)));
+        }
     }
 
     void GamePlayState::TransitionSubState::render(sf::RenderTarget &target) {
+        gamePlayState.renderMap(target);
 
+        if(nextRoom) {
+            const auto & oldView = target.getDefaultView();
+            const auto & cameraView = gamePlayState.camera.getView();
+            const auto & newView = gamePlayState.camera.getPixelAlignedView();
+
+            nextRoomCullRegion.setX(cameraView.getX());
+            nextRoomCullRegion.setY(cameraView.getY());
+
+            target.setView(newView);
+            gamePlayState.mapRenderer->setRoom(nextRoom);
+            gamePlayState.mapRenderer->setCullRegion(nextRoomCullRegion);
+            gamePlayState.mapRenderer->render(target);
+            target.setView(oldView);
+
+            gamePlayState.mapRenderer->setRoom(gamePlayState.currentRoom);
+        }
+
+        gamePlayState.renderHero(target);
+        gamePlayState.renderHud(target);
     }
 
 } // hikari
