@@ -80,7 +80,7 @@ namespace hikari {
         return MapPtr(new Map(tileset, gridSize, rooms));
     }
 
-    RoomPtr MapLoader::constructRoom(const Json::Value &json, const int &gridSize) const {
+    RoomPtr MapLoader::constructRoom(const Json::Value &json, int gridSize) const {
         int id              = json[PROPERTY_NAME_ROOM_ID].asInt();
         int x               = json[PROPERTY_NAME_ROOM_X].asInt();
         int y               = json[PROPERTY_NAME_ROOM_Y].asInt();
@@ -132,7 +132,9 @@ namespace hikari {
             }
         }
 
+        //
         // Construct transitions
+        //
         std::vector<RoomTransition> transitions;
         for(int i = 0; i < transitionCount; ++i) {
             transitions.push_back(constructTransition(json[PROPERTY_NAME_ROOM_TRANSITIONS][i]));
@@ -143,7 +145,7 @@ namespace hikari {
         return result;
     }
 
-    const SpawnerPtr MapLoader::constructSpawner(const Json::Value &json, const SpawnType &type) const {
+    const SpawnerPtr MapLoader::constructSpawner(const Json::Value &json, SpawnType type) const {
         auto spawner = std::shared_ptr<Spawner>(nullptr);
 
         switch(type) {
@@ -207,7 +209,7 @@ namespace hikari {
     }
 
     const Rectangle2D<int> MapLoader::constructCameraBounds(const Json::Value &json, 
-            const int &roomX, const int &roomY, const int &gridSize) const {
+            int roomX, int roomY, int gridSize) const {
         int x = (roomX + json[PROPERTY_NAME_ROOM_CAMERABOUNDS_X].asInt()) * gridSize;
         int y = (roomY + json[PROPERTY_NAME_ROOM_CAMERABOUNDS_Y].asInt()) * gridSize;
         int width = json[PROPERTY_NAME_ROOM_CAMERABOUNDS_WIDTH].asInt() * gridSize;
