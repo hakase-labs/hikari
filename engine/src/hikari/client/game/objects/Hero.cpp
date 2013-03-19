@@ -31,12 +31,6 @@ namespace hikari {
 
         body.setCollisionCallback(std::bind(&Entity::handleCollision, this, std::placeholders::_1, std::placeholders::_2));
         body.setLandingCallback([this](Movable& movable, CollisionInfo& collisionInfo) {
-            //std::cout << "Hero's landing callback executed." << std::endl;
-            //std::cout << "y = " << movable.getBoundingBox().getPosition().getY() << std::endl;
-            //std::cout << "new_y = " << movable.getBoundingBox().getBottom() << std::endl;
-            
-            // this->changeAnimation("idle");
-
             if(actionController->shouldMoveRight() || actionController->shouldMoveLeft()) {
                 this->isFullyAccelerated = true;
             }
@@ -44,16 +38,6 @@ namespace hikari {
             this->isJumping = false;
             this->isFalling = false;
             this->isAirborn = false;
-
-            /*
-            std::cout << 
-                "Jump information:\n\ttotal: " <<
-                this->countAscendingFrames + this->countDecendingFrames <<
-                "\n\tascent: " << 
-                this->countAscendingFrames <<
-                "\n\tdecent: " <<
-                this->countDecendingFrames << std::endl;
-            */
 
             this->countAscendingFrames = 0;
             this->countDecendingFrames = 0;
