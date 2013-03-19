@@ -72,12 +72,19 @@ namespace hikari {
         , camera(Rectangle2D<float>(0.0f, 0.0f, 256.0f, 240.0f))
         , view()
         , spawnerMarker()
+        , transitionMarker()
         , leftBar(sf::Vector2f(8.0f, 240.0f))
+        , menuPlaceholder(sf::Vector2f(240.0f, 224.0f))
         , drawBossEnergyMeter(false)
         , drawHeroEnergyMeter(false)
         , drawWeaponEnergyMeter(false)
         , drawInfamousBlackBar(false)
         , isViewingMenu(false)
+        , startRoomIndex(0)
+        , midpointRoomIndex(0)
+        , bossCorridorRoomIndex(0)
+        , hasReachedMidpoint(false)
+        , hasReachedBossCorridor(false)
     {
         loadAllMaps(services.locateService<MapLoader>(hikari::Services::MAPLOADER), params);
 
@@ -108,6 +115,9 @@ namespace hikari {
         hudCurrentWeaponMeter->setPosition(sf::Vector2i(16, 25));
 
         leftBar.setFillColor(sf::Color::Black);
+
+        menuPlaceholder.setPosition(8.0f, 8.0f);
+        menuPlaceholder.setFillColor(sf::Color(66, 66, 66, 128));
 
         //
         // Create/configure Rockman
@@ -147,8 +157,6 @@ namespace hikari {
     }
 
     void GamePlayState::render(sf::RenderTarget &target) {
-        target.clear(sf::Color(255, 0, 255, 255));
-
         if(subState) {
             subState->render(target);
         }
@@ -162,7 +170,9 @@ namespace hikari {
         userInput->update();
 
         if(subState) {
-            subState->update(dt);
+            if(!isViewingMenu) {
+                subState->update(dt);
+            }
         }
 
         return false;
@@ -359,6 +369,7 @@ namespace hikari {
                     std::for_each(std::begin(spawners), std::end(spawners), [](std::shared_ptr<Spawner> & spawner) {
                         if(spawner) {
                             spawner->setActive(true);
+                            spawner->setAwake(false);
 
                             //
                             // TODO: Add logic that disabled already-collected items like magnet-beam, etc.
@@ -449,6 +460,7 @@ namespace hikari {
 
         if(isViewingMenu) {
             //guiFont->renderText(target, "MENU", 72, 40);
+            target.draw(menuPlaceholder);
         }
     }
 
@@ -500,6 +512,25 @@ namespace hikari {
         if(auto sound = gamePlayState.audioService.lock()) {
             // TODO: Obtain the correct MusicId for the level and play that.
             sound->playMusic(9);
+        }
+
+        if(gamePlayState.currentRoom) {
+            Point2D<int> spawnPosition = gamePlayState.currentRoom->getHeroSpawnPosition();
+            
+            gamePlayState.camera.lookAt(
+                static_cast<float>(spawnPosition.getX()), 
+                static_cast<float>(spawnPosition.getY())
+            );
+
+            auto& renderer = gamePlayState.mapRenderer;
+
+            const auto& cameraView  = gamePlayState.camera.getView();
+            const auto cameraX      = static_cast<int>(cameraView.getX());
+            const auto cameraWidth  = static_cast<int>(cameraView.getWidth());
+            const auto cameraY      = static_cast<int>(cameraView.getY());
+            const auto cameraHeight = static_cast<int>(cameraView.getHeight());
+
+            renderer->setCullRegion(Rectangle2D<int>(cameraX, cameraY, cameraWidth, cameraHeight));
         }
     }
 
@@ -779,8 +810,8 @@ namespace hikari {
         nextRoom = findNextRoom();
 
         if(nextRoom) {
-            nextRoomCullRegion.setWidth(camera.getView().getWidth());
-            nextRoomCullRegion.setHeight(camera.getView().getHeight());
+            nextRoomCullRegion.setWidth(static_cast<int>(camera.getView().getWidth()));
+            nextRoomCullRegion.setHeight(static_cast<int>(camera.getView().getHeight()));
 
             switch(transition.getDirection()) {
                 case RoomTransition::DirectionUp:
@@ -928,8 +959,8 @@ namespace hikari {
             const auto & cameraView = gamePlayState.camera.getView();
             const auto & newView = gamePlayState.camera.getPixelAlignedView();
 
-            nextRoomCullRegion.setX(cameraView.getX());
-            nextRoomCullRegion.setY(cameraView.getY());
+            nextRoomCullRegion.setX(static_cast<int>(cameraView.getX()));
+            nextRoomCullRegion.setY(static_cast<int>(cameraView.getY()));
 
             target.setView(newView);
             gamePlayState.mapRenderer->setRoom(nextRoom);
