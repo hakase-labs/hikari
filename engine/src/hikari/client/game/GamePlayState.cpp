@@ -150,9 +150,9 @@ namespace hikari {
         }
 
         if((event.type == sf::Event::KeyPressed) && event.key.code == sf::Keyboard::BackSpace) {
-            if(subState) {
-                changeSubState(std::unique_ptr<SubState>(new ReadySubState(*this)));
-            }
+            //if(subState) {
+                restartStage();
+            //}
         }
     }
 
@@ -185,7 +185,6 @@ namespace hikari {
         // Determine which stage we're on and set that to the current level...
         currentMap = maps.at("map-test2.json");
 
-        changeCurrentRoom(currentMap->getRoom(0));
         startStage();
     }
 
@@ -209,6 +208,14 @@ namespace hikari {
         currentRoom = newCurrentRoom;
 
         if(currentRoom) {
+            if(currentMap->getMidpointRoom() == currentRoom) {
+                hasReachedMidpoint = true;
+            }
+
+            if(currentMap->getBossCorridorRoom() == currentRoom) {
+                hasReachedBossCorridor = true;
+            }
+
             // Make camera aware of new room boundaries
             camera.setBoundary(currentRoom->getCameraBounds());
             camera.lockVertical(true);
@@ -378,11 +385,28 @@ namespace hikari {
                     });
                 }
             }
+
+            hasReachedMidpoint = false;
+            hasReachedBossCorridor = false;
+            changeCurrentRoom(currentMap->getStartingRoom());
         }
+
+        restartStage();
     }
 
     void GamePlayState::restartStage() {
+        if(currentMap) {
+            // Boss corridor has highest priority
+            if(hasReachedBossCorridor) {
+                changeCurrentRoom(currentMap->getBossCorridorRoom());
+            } else if(hasReachedMidpoint) {
+                changeCurrentRoom(currentMap->getMidpointRoom());
+            } else {
+                changeCurrentRoom(currentMap->getStartingRoom());
+            }
+        }
 
+        changeSubState(std::unique_ptr<SubState>(new ReadySubState(*this)));
     }
 
     void GamePlayState::endStage() {
@@ -516,6 +540,8 @@ namespace hikari {
 
         if(gamePlayState.currentRoom) {
             Point2D<int> spawnPosition = gamePlayState.currentRoom->getHeroSpawnPosition();
+            spawnPosition.setX(spawnPosition.getX() + gamePlayState.currentRoom->getBounds().getX());
+            spawnPosition.setY(spawnPosition.getY() + gamePlayState.currentRoom->getBounds().getY());
             
             gamePlayState.camera.lookAt(
                 static_cast<float>(spawnPosition.getX()), 
@@ -626,12 +652,13 @@ namespace hikari {
         auto& currentRoom = gamePlayState.currentRoom;
 
         if(currentRoom) {
-            auto roomPositionX = currentRoom->getX() * currentRoom->getGridSize();
-            auto roomPositionY = currentRoom->getY() * currentRoom->getGridSize();
+            Point2D<int> spawnPosition = gamePlayState.currentRoom->getHeroSpawnPosition();
+            spawnPosition.setX(spawnPosition.getX() + gamePlayState.currentRoom->getBounds().getX());
+            spawnPosition.setY(spawnPosition.getY() + gamePlayState.currentRoom->getBounds().getY());
 
             // TODO: Get the room's playerSpawn location and use that, noob!
 
-            hero->setPosition(static_cast<float>(roomPositionX + 128), static_cast<float>(roomPositionY));
+            hero->setPosition(static_cast<float>(spawnPosition.getX()), static_cast<float>(spawnPosition.getY()));
         }
     }
 
