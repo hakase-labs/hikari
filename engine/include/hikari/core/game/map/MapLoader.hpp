@@ -27,9 +27,16 @@ namespace hikari {
         static const char* PROPERTY_NAME_TILESET;
         static const char* PROPERTY_NAME_ROOMS;
         static const char* PROPERTY_NAME_GRIDSIZE;
+        static const char* PROPERTY_NAME_SPECIAL_ROOMS;
+        static const char* PROPERTY_NAME_SPECIAL_ROOM_STARTING;
+        static const char* PROPERTY_NAME_SPECIAL_ROOM_MIDPOINT;
+        static const char* PROPERTY_NAME_SPECIAL_ROOM_BOSS_CORRIDOR;
+        static const char* PROPERTY_NAME_SPECIAL_ROOM_BOSS_CHAMBER;
         static const char* PROPERTY_NAME_ROOM_ID;
         static const char* PROPERTY_NAME_ROOM_X;
         static const char* PROPERTY_NAME_ROOM_Y;
+        static const char* PROPERTY_NAME_ROOM_HERO_SPAWN_X;
+        static const char* PROPERTY_NAME_ROOM_HERO_SPAWN_Y;
         static const char* PROPERTY_NAME_ROOM_WIDTH;
         static const char* PROPERTY_NAME_ROOM_HEIGHT;
         static const char* PROPERTY_NAME_ROOM_CAMERABOUNDS;
@@ -50,6 +57,9 @@ namespace hikari {
         static const char* PROPERTY_NAME_ROOM_ITEMS_X;
         static const char* PROPERTY_NAME_ROOM_ITEMS_Y;
         static const char* PROPERTY_NAME_ROOM_TRANSITIONS;
+
+        static const int DEFAULT_HERO_SPAWN_X;
+        static const int DEFAULT_HERO_SPAWN_Y;
 
         enum SpawnType {
             SPAWN_ENEMY = 1,

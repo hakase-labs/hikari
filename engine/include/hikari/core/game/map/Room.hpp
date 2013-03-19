@@ -3,6 +3,7 @@
 
 #include "hikari/core/Platform.hpp"
 #include "hikari/core/game/map/RoomTransition.hpp"
+#include "hikari/core/geom/Point2D.hpp"
 #include "hikari/core/geom/Rectangle2D.hpp"
 #include <memory>
 #include <vector>
@@ -27,6 +28,7 @@ namespace hikari {
         int width;
         int height;
         int gridSize;
+        Point2D<int> heroSpawnPosition;
         Rectangle2D<int> bounds;
         Rectangle2D<int> cameraBounds;
         std::vector<int> tile;
@@ -42,7 +44,7 @@ namespace hikari {
     public:
         const static int NO_TILE = -1;
 
-        Room(const int &id, const int &x, const int &y, const int &width, const int &height, const int &gridSize, const Rectangle2D<int> &cameraBounds,
+        Room(const int &id, const int &x, const int &y, const int &width, const int &height, const int &gridSize, const Point2D<int> &heroSpawnPosition, const Rectangle2D<int> &cameraBounds,
             const std::vector<int> &tile, const std::vector<int> &attr, const std::vector<RoomTransition> &transitions, const std::vector<std::shared_ptr<Spawner>> &spawners);
 
         const int getId() const;
@@ -53,6 +55,7 @@ namespace hikari {
         const int getGridSize() const;
         const Rectangle2D<int>& getBounds() const;
         const Rectangle2D<int>& getCameraBounds() const;
+        const Point2D<int>& getHeroSpawnPosition() const;
 
         /**
             Gets the tile located at the position (tileX, tileY). If the

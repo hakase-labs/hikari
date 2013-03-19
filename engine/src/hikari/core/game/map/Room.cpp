@@ -3,7 +3,7 @@
 namespace hikari {
 
     Room::Room(const int &id, const int &x, const int &y, 
-        const int &width, const int &height, const int &gridSize, const Rectangle2D<int> &cameraBounds,
+        const int &width, const int &height, const int &gridSize, const Point2D<int> &heroSpawnPosition, const Rectangle2D<int> &cameraBounds,
         const std::vector<int> &tile, const std::vector<int> &attr, const std::vector<RoomTransition> &transitions, const std::vector<std::shared_ptr<Spawner>> &spawners)
         : id(id)
         , x(x)
@@ -11,6 +11,7 @@ namespace hikari {
         , width(width)
         , height(height)
         , gridSize(gridSize)
+        , heroSpawnPosition(heroSpawnPosition)
         , bounds(x * gridSize, y * gridSize, width * gridSize, height * gridSize)
         , cameraBounds(cameraBounds)
         , tile(tile)
@@ -41,7 +42,7 @@ namespace hikari {
 
     const int Room::getHeight() const {
         return height;
-    }
+    } 
 
     const int Room::getGridSize() const {
         return gridSize;
@@ -53,6 +54,10 @@ namespace hikari {
 
     const Rectangle2D<int>& Room::getCameraBounds() const {
         return cameraBounds;
+    }
+
+    const Point2D<int>& Room::getHeroSpawnPosition() const {
+        return heroSpawnPosition;
     }
 
     const int Room::getTileAt(int tileX, int tileY) const {

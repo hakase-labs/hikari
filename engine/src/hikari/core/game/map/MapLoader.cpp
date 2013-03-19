@@ -21,9 +21,16 @@ namespace hikari {
     const char* MapLoader::PROPERTY_NAME_TILESET = "tileset";
     const char* MapLoader::PROPERTY_NAME_GRIDSIZE = "gridsize";
     const char* MapLoader::PROPERTY_NAME_ROOMS = "rooms";
+    const char* MapLoader::PROPERTY_NAME_SPECIAL_ROOMS = "specialRooms";
+    const char* MapLoader::PROPERTY_NAME_SPECIAL_ROOM_STARTING = "starting";
+    const char* MapLoader::PROPERTY_NAME_SPECIAL_ROOM_MIDPOINT = "midpoint";
+    const char* MapLoader::PROPERTY_NAME_SPECIAL_ROOM_BOSS_CORRIDOR = "bossCorridor";
+    const char* MapLoader::PROPERTY_NAME_SPECIAL_ROOM_BOSS_CHAMBER = "bossChamber";
     const char* MapLoader::PROPERTY_NAME_ROOM_ID = "id";
     const char* MapLoader::PROPERTY_NAME_ROOM_X = "x";
     const char* MapLoader::PROPERTY_NAME_ROOM_Y = "y";
+    const char* MapLoader::PROPERTY_NAME_ROOM_HERO_SPAWN_X = "heroSpawnX";
+    const char* MapLoader::PROPERTY_NAME_ROOM_HERO_SPAWN_Y = "heroSpawnY";
     const char* MapLoader::PROPERTY_NAME_ROOM_WIDTH = "width";
     const char* MapLoader::PROPERTY_NAME_ROOM_HEIGHT = "height";
     const char* MapLoader::PROPERTY_NAME_ROOM_CAMERABOUNDS = "cameraBounds";
@@ -44,6 +51,9 @@ namespace hikari {
     const char* MapLoader::PROPERTY_NAME_ROOM_ITEMS_X = "x";
     const char* MapLoader::PROPERTY_NAME_ROOM_ITEMS_Y = "y";
     const char* MapLoader::PROPERTY_NAME_ROOM_TRANSITIONS = "transitions";
+
+    const int MapLoader::DEFAULT_HERO_SPAWN_X = 0;
+    const int MapLoader::DEFAULT_HERO_SPAWN_Y = 0;
 
     MapLoader::MapLoader(const std::shared_ptr<TilesetCache> &tilesetCache)
         : tilesetCache(tilesetCache) {
@@ -77,7 +87,24 @@ namespace hikari {
             rooms.push_back(constructRoom(json[PROPERTY_NAME_ROOMS][i], gridSize));
         }
 
-        return MapPtr(new Map(tileset, gridSize, rooms));
+        //
+        // Determine special room indicies
+        //
+        int startingRoomIndex = 0;
+        int midpointRoomIndex = 0;
+        int bossCorridorIndex = 0;
+        int bossChamberIndex  = 0;
+
+        auto specialRoomIndicies = json[PROPERTY_NAME_SPECIAL_ROOMS];
+
+        if(!specialRoomIndicies.isNull()) {
+            startingRoomIndex = specialRoomIndicies.get(PROPERTY_NAME_SPECIAL_ROOM_STARTING,      0).asInt();
+            midpointRoomIndex = specialRoomIndicies.get(PROPERTY_NAME_SPECIAL_ROOM_MIDPOINT,      0).asInt();
+            bossCorridorIndex = specialRoomIndicies.get(PROPERTY_NAME_SPECIAL_ROOM_BOSS_CORRIDOR, 0).asInt();
+            bossChamberIndex  = specialRoomIndicies.get(PROPERTY_NAME_SPECIAL_ROOM_BOSS_CHAMBER,  0).asInt();
+        }
+
+        return MapPtr(new Map(tileset, gridSize, rooms, startingRoomIndex, midpointRoomIndex, bossCorridorIndex, bossChamberIndex));
     }
 
     RoomPtr MapLoader::constructRoom(const Json::Value &json, int gridSize) const {
@@ -86,10 +113,13 @@ namespace hikari {
         int y               = json[PROPERTY_NAME_ROOM_Y].asInt();
         int width           = json[PROPERTY_NAME_ROOM_WIDTH].asInt();
         int height          = json[PROPERTY_NAME_ROOM_HEIGHT].asInt();
+        int heroSpawnX      = json.get(PROPERTY_NAME_ROOM_HERO_SPAWN_X, DEFAULT_HERO_SPAWN_X).asInt();
+        int heroSpawnY      = json.get(PROPERTY_NAME_ROOM_HERO_SPAWN_Y, DEFAULT_HERO_SPAWN_Y).asInt();
         int transitionCount = json[PROPERTY_NAME_ROOM_TRANSITIONS].size();
         int enemyCount      = json[PROPERTY_NAME_ROOM_ENEMIES].size();
         int itemCount       = json[PROPERTY_NAME_ROOM_ITEMS].size();
         
+        Point2D<int> heroSpawnPosition = Point2D<int>(heroSpawnX, heroSpawnY);
         Rectangle2D<int> cameraBounds = constructCameraBounds(json[PROPERTY_NAME_ROOM_CAMERABOUNDS], x, y, gridSize);
 
         //
@@ -140,7 +170,7 @@ namespace hikari {
             transitions.push_back(constructTransition(json[PROPERTY_NAME_ROOM_TRANSITIONS][i]));
         }
 
-        RoomPtr result(new Room(id, x, y, width, height, gridSize, cameraBounds, tile, attr, transitions, spawners));
+        RoomPtr result(new Room(id, x, y, width, height, gridSize, heroSpawnPosition, cameraBounds, tile, attr, transitions, spawners));
 
         return result;
     }
