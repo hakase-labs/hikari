@@ -8,8 +8,8 @@
 
 namespace hikari {
 
-    Hero::Hero(const int &id, std::shared_ptr<Room> room) 
-        : Entity(id, room) 
+    Hero::Hero(const int &id, std::shared_ptr<Room> room)
+        : Entity(id, room)
         , isStopping(false)
         , isStanding(false)
         , isWalking(false)
@@ -73,7 +73,7 @@ namespace hikari {
     void Hero::setActionController(const std::shared_ptr<HeroActionController>& actionController) {
         this->actionController = actionController;
     }
-    
+
     void Hero::update(const float &dt) {
         if(room) {
             const int gridSize = room->getGridSize();
@@ -146,7 +146,7 @@ namespace hikari {
                     }
 
                     if(touchingLadderTop) {
-                        // Find overlap 
+                        // Find overlap
                         unsigned char ladderTopOverlap = (static_cast<int>(getPosition().getY()) % gridSize);
 
                         if(ladderTopOverlap <= 8) {
@@ -176,8 +176,8 @@ namespace hikari {
                 auto topRightTile = room->getAttributeAt((endingX - 1) / gridSize, y / gridSize);
 
                 // Only check the top left and top right points
-                if((topLeftTile != Room::NO_TILE) && TileAttribute::hasAttribute(topLeftTile, TileAttribute::SOLID)
-                    || (topRightTile != Room::NO_TILE) && TileAttribute::hasAttribute(topRightTile, TileAttribute::SOLID)) {
+                if(((topLeftTile != Room::NO_TILE) && TileAttribute::hasAttribute(topLeftTile, TileAttribute::SOLID))
+                    || ((topRightTile != Room::NO_TILE) && TileAttribute::hasAttribute(topRightTile, TileAttribute::SOLID))) {
                     isInTunnel = true;
                 }
             }
@@ -190,7 +190,7 @@ namespace hikari {
                         }
                     }
                 } else if(actionController->shouldMoveDown()) {
-                    if(isTouchingLadder && !isOnLadder && (!body.isOnGround() || isTouchingLadderWithFeet)) { 
+                    if(isTouchingLadder && !isOnLadder && (!body.isOnGround() || isTouchingLadderWithFeet)) {
                         changeMobilityState(std::unique_ptr<MobilityState>(new ClimbingMobilityState(this)));
                     }
                 }
@@ -264,7 +264,7 @@ namespace hikari {
                     changeAnimation("standing");
                 }
             }
-        } 
+        }
         // Walking animations
         else if(isWalking) {
             if(!isFullyAccelerated) {
@@ -301,7 +301,7 @@ namespace hikari {
     //
     // MobilityState
     //
-    Hero::MobilityState::MobilityState(Hero * hero) 
+    Hero::MobilityState::MobilityState(Hero * hero)
         : hero(hero)
     {
 
@@ -351,7 +351,7 @@ namespace hikari {
                 //hero->changeAnimation("idle");
                 hero->chooseAnimation();
             }
-            
+
             // Disappearing blocks, moving platform, who knows...
             if(!hero->body.isOnGround()) {
                 hero->changeMobilityState(std::unique_ptr<MobilityState>(new AirbornMobilityState(hero)));
@@ -416,11 +416,11 @@ namespace hikari {
                     hero->setDirection(Directions::Left);
                     hero->setVelocityX(-(hero->walkVelocity.getX()));
                 }
-            
+
                 if(controller->shouldMoveRight() && !controller->shouldMoveLeft()) {
                     hero->setDirection(Directions::Right);
                     hero->setVelocityX(hero->walkVelocity.getX());
-                } 
+                }
 
                 // Handle direction switching (reset acceleration)
                 if(hero->getDirection() != lastDirection) {
@@ -452,7 +452,7 @@ namespace hikari {
                     hero->chooseAnimation();
                 }
             }
-            
+
             //
             // Other state conditions
             //
@@ -507,7 +507,7 @@ namespace hikari {
     {
         //std::cout << "SlidingMobilityState()" << std::endl;
     }
-     
+
     Hero::SlidingMobilityState::~SlidingMobilityState() {
         //std::cout << "~SlidingMobilityState()" << std::endl;
     }
@@ -558,13 +558,13 @@ namespace hikari {
                 if(controller->shouldMoveLeft()) {
                     hero->setDirection(Directions::Left);
                 }
-            
+
                 if(controller->shouldMoveRight()) {
                     hero->setDirection(Directions::Right);
-                } 
+                }
 
                 auto const direction = hero->getDirection();
-                
+
                 if(direction == Directions::Left) {
                     hero->setVelocityX(-(hero->slideVelocity.getX()));
                 } else {
@@ -582,7 +582,7 @@ namespace hikari {
                         hero->isFullyAccelerated = true;
                         hero->changeMobilityState(std::unique_ptr<MobilityState>(new WalkingMobilityState(hero)));
                         return;
-                } 
+                }
 
                 if(hero->canJump() && controller->shouldJump()) {
                     hero->changeMobilityState(std::unique_ptr<MobilityState>(new AirbornMobilityState(hero)));
@@ -684,7 +684,7 @@ namespace hikari {
         }
     }
 
-    Hero::ClimbingMobilityState::ClimbingMobilityState(Hero * hero) 
+    Hero::ClimbingMobilityState::ClimbingMobilityState(Hero * hero)
         : MobilityState(hero)
     {
 
@@ -770,7 +770,7 @@ namespace hikari {
             // If you're not shooting then you can't change directions left/right
 
             // Can jump (amd fall down) from ladders
-            
+
 
             if(hero->body.isOnGround() && !hero->isTouchingLadderWithFeet) {
                 hero->changeMobilityState(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
