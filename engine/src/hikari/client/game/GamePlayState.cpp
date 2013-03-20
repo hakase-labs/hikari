@@ -535,7 +535,7 @@ namespace hikari {
 
         if(auto sound = gamePlayState.audioService.lock()) {
             // TODO: Obtain the correct MusicId for the level and play that.
-            sound->playMusic(9);
+            //sound->playMusic(9);
         }
 
         if(gamePlayState.currentRoom) {
@@ -785,9 +785,7 @@ namespace hikari {
             const RoomTransition& transition = *transitionIt;
 
             int regionLeft   = ((currentRoom->getX() + transition.getX()) * 16);
-            int regionRight  = ((currentRoom->getX() + transition.getX() + transition.getWidth()) * 16);
             int regionTop    = ((currentRoom->getY() + transition.getY()) * 16);
-            int regionBottom = ((currentRoom->getY() + transition.getY() + transition.getHeight()) * 16);
             int regionWidth  = transition.getWidth() * 16;
             int regionHeight = transition.getHeight() * 16;
 
