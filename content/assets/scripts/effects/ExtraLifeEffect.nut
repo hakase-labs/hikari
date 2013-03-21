@@ -1,15 +1,15 @@
 class ExtraLifeEffect extends EffectBase {
     constructor(config = { }) {
         base.constructor(config);
-        ::print("ExtraLifeEffect constructor called.");
+        ::log("ExtraLifeEffect constructor called.");
     }
 
     function applyEffect() {
-        ::print("ExtraLifeEffect::applyEffect called.");
-        ::print("You got an extra life!");
+        ::log("ExtraLifeEffect::applyEffect called.");
+        ::log("You got an extra life!");
     }
 
     function unapplyEffect() {
-        ::print("ExtraLifeEffect::unapplyEffect called.");
+        ::log("ExtraLifeEffect::unapplyEffect called.");
     }
 }

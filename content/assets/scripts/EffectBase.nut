@@ -1,15 +1,15 @@
 class EffectBase {
     constructor(config = {}) {
-        ::print("EffectBase constructor called.");
+        ::log("EffectBase constructor called.");
     }
 
     function applyEffect() {
-        ::print("EffectBase::applyEffect called.");
+        ::log("EffectBase::applyEffect called.");
     }
 
     function unapplyEffect() {
-        ::print("EffectBase::unapplyEffect called.");
+        ::log("EffectBase::unapplyEffect called.");
     }
 }
 
-// ::print("EffectBase.nut executed!");
+// ::log("EffectBase.nut executed!");
