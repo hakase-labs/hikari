@@ -14,6 +14,7 @@ namespace hikari {
     private:
         static void squirrelPrintFunction(HSQUIRRELVM vm, const SQChar *s, ...);
         static void squirrelErrorFunction(HSQUIRRELVM vm, const SQChar *s, ...);
+        static void squirrelLoggingProxyFunction(const std::string & message);
 
         SQInteger initialStackSize;
         HSQUIRRELVM vm;

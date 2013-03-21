@@ -62,6 +62,8 @@ namespace hikari {
             return "ERROR";
         case warning:
             return "WARNING";
+        case script:
+            return "SCRIPT";
         case info:
             return "INFO";
         case debug:

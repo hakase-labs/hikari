@@ -30,6 +30,10 @@ namespace hikari {
         printf("\n");
     }
 
+    void SquirrelService::squirrelLoggingProxyFunction(const std::string & message) {
+        HIKARI_LOG(script) << message;
+    }
+
     SquirrelService::SquirrelService(const SQInteger initialStackSize = 1024)
         : Service()
         , initialStackSize(initialStackSize)
@@ -77,18 +81,19 @@ namespace hikari {
             auto audioSystemTable = Sqrat::Table();
 
             //
-            // Bind "internal" functions (not to be used by end-user scripts)
+            // Bind "internal" functions (not to be used directly by end-user scripts)
             //
-            internalTable.Func(_SC("readFileAsString"), FileSystem::readFileAsString);
+            internalTable.Func(_SC("log"),              &squirrelLoggingProxyFunction);
+            internalTable.Func(_SC("readFileAsString"), &FileSystem::readFileAsString);
 
             //
             // Bind AudioSystem functions
             //
-            audioSystemTable.Func(_SC("playMusic"), &AudioServiceScriptProxy::playMusic);
-            audioSystemTable.Func(_SC("stopMusic"), &AudioServiceScriptProxy::stopMusic);
-            audioSystemTable.Func(_SC("playSample"), &AudioServiceScriptProxy::playSample);
-            audioSystemTable.Func(_SC("stopAllSamples"), &AudioServiceScriptProxy::stopAllSamples);
-            audioSystemTable.Func(_SC("isMusicLoaded"), &AudioServiceScriptProxy::isMusicLoaded);
+            audioSystemTable.Func(_SC("playMusic"),       &AudioServiceScriptProxy::playMusic);
+            audioSystemTable.Func(_SC("stopMusic"),       &AudioServiceScriptProxy::stopMusic);
+            audioSystemTable.Func(_SC("playSample"),      &AudioServiceScriptProxy::playSample);
+            audioSystemTable.Func(_SC("stopAllSamples"),  &AudioServiceScriptProxy::stopAllSamples);
+            audioSystemTable.Func(_SC("isMusicLoaded"),   &AudioServiceScriptProxy::isMusicLoaded);
             audioSystemTable.Func(_SC("isSamplesLoaded"), &AudioServiceScriptProxy::isSamplesLoaded);
 
             hikariTable.Bind(_SC("internal"), internalTable);
