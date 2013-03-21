@@ -21,8 +21,6 @@
 #include "hikari/client/game/objects/Hero.hpp"
 #include "hikari/client/game/objects/Enemy.hpp"
 #include "hikari/client/game/objects/EnemyBrain.hpp"
-#include "hikari/client/game/objects/brains/OctopusBatteryBrain.hpp"
-#include "hikari/client/game/objects/brains/TellyBrain.hpp"
 #include "hikari/client/game/objects/brains/ScriptedEnemyBrain.hpp"
 #include "hikari/client/game/objects/CollectableItem.hpp"
 #include "hikari/client/game/objects/effects/NothingEffect.hpp"
@@ -123,7 +121,7 @@ namespace hikari {
             animationPlayer.setAnimation(animations->get("idle"));
 
             setupHero();
-            setupEnemy();
+            // setupEnemy();
 
             world.setPlayer(hero);
 
@@ -188,11 +186,11 @@ namespace hikari {
             en8->setPosition(16*10, 16*70);
             enemies.push_back(en8);
 
-            scriptFiles.clear();
-            scriptFiles.push_back("TellyBehaviorOverrides.nut");
-            std::for_each(std::begin(scriptFiles), std::end(scriptFiles), [this](const std::string & scriptFileName) {
-                squirrel->runScriptFile(scriptFileName);
-            });
+            //scriptFiles.clear();
+            //scriptFiles.push_back("TellyBehaviorOverrides.nut");
+            //std::for_each(std::begin(scriptFiles), std::end(scriptFiles), [this](const std::string & scriptFileName) {
+            //    squirrel->runScriptFile(scriptFileName);
+            //});
     }
 
     MapTestState::~MapTestState() {
@@ -749,6 +747,7 @@ namespace hikari {
     }
 
     void MapTestState::setupEnemy() {
+        /*
         auto enemyAnimationSet = animationSetCache->get("assets/animations/enemies.json");
         auto enemySprites = imageCache->get(enemyAnimationSet->getImageFileName());
 
@@ -765,31 +764,13 @@ namespace hikari {
         auto enemyBrain = std::make_shared<EnemyBrain>();
         enemy->setBrain(enemyBrain);
         enemy->setDirection(Directions::Down);
+        */
     }
 
-    std::shared_ptr<Enemy> MapTestState::spawnEnemy(const std::string& type) {
+    std::shared_ptr<Enemy> MapTestState::spawnEnemy(const std::string& type) { 
         auto instance = std::make_shared<Enemy>(GameObject::generateObjectId(), nullptr);
 
-        if(type == "telly") {
-
-            auto enemyAnimationSet = animationSetCache->get("assets/animations/telly.json");
-            auto enemySprites = imageCache->get(enemyAnimationSet->getImageFileName());
-
-            enemySprites->setSmooth(false);
-
-            instance->setActive(true);
-            instance->setAnimationSet(enemyAnimationSet);
-            instance->setSpriteTexture(enemySprites);
-            instance->setBoundingBox(BoundingBoxF(0, 0, 14, 14).setOrigin(7, 7));
-            instance->setCurrentAnimation(enemyAnimationSet->get("idle"));
-            instance->setGravitated(false);
-            instance->setPhasing(false);
-
-            auto enemyBrain = std::make_shared<TellyBrain>(&world);
-            instance->setBrain(enemyBrain);
-            instance->setDirection(Directions::Down);
-
-        } else if(type == "scripted-telly") {
+        if(type == "scripted-telly") {
 
             auto enemyAnimationSet = animationSetCache->get("assets/animations/telly.json");
             auto enemySprites = imageCache->get(enemyAnimationSet->getImageFileName());
@@ -808,22 +789,6 @@ namespace hikari {
             instance->setBrain(enemyBrain);
             instance->setDirection(Directions::Down);
 
-        } else if(type == "octopus-battery") {
-            auto enemyAnimationSet = animationSetCache->get("assets/animations/enemies.json");
-            auto enemySprites = imageCache->get(enemyAnimationSet->getImageFileName());
-
-            enemySprites->setSmooth(false);
-
-            instance->setActive(true);
-            instance->setAnimationSet(enemyAnimationSet);
-            instance->setSpriteTexture(enemySprites);
-            instance->setBoundingBox(BoundingBoxF(0, 0, 14, 14).setOrigin(7, 7));
-            instance->setCurrentAnimation(enemyAnimationSet->get("idle"));
-            instance->setGravitated(false);
-
-            auto enemyBrain = std::make_shared<OctopusBatteryBrain>();
-            instance->setBrain(enemyBrain);
-            instance->setDirection(Directions::Down);
         } else if(type == "scripted-octopusbattery") {
             auto enemyAnimationSet = animationSetCache->get("assets/animations/enemies.json");
             auto enemySprites = imageCache->get(enemyAnimationSet->getImageFileName());
