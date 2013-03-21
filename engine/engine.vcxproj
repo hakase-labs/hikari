@@ -24,9 +24,7 @@
     <ClCompile Include="src\hikari\client\game\events\EventManager.cpp" />
     <ClCompile Include="src\hikari\client\game\events\EventManagerImpl.cpp" />
     <ClCompile Include="src\hikari\client\game\events\TransitionCollisionEventData.cpp" />
-    <ClCompile Include="src\hikari\client\game\objects\brains\OctopusBatteryBrain.cpp" />
     <ClCompile Include="src\hikari\client\game\objects\brains\ScriptedEnemyBrain.cpp" />
-    <ClCompile Include="src\hikari\client\game\objects\brains\TellyBrain.cpp" />
     <ClCompile Include="src\hikari\client\game\objects\CollectableItem.cpp" />
     <ClCompile Include="src\hikari\client\game\objects\controllers\PlayerInputHeroActionController.cpp" />
     <ClCompile Include="src\hikari\client\game\objects\effects\NothingEffect.cpp" />
@@ -96,9 +94,7 @@
     <ClInclude Include="include\hikari\client\game\IntroState.hpp" />
     <ClInclude Include="include\hikari\client\game\KeyboardInput.hpp" />
     <ClInclude Include="include\hikari\client\game\MapTestState.hpp" />
-    <ClInclude Include="include\hikari\client\game\objects\brains\OctopusBatteryBrain.hpp" />
     <ClInclude Include="include\hikari\client\game\objects\brains\ScriptedEnemyBrain.hpp" />
-    <ClInclude Include="include\hikari\client\game\objects\brains\TellyBrain.hpp" />
     <ClInclude Include="include\hikari\client\game\objects\CollectableItem.hpp" />
     <ClInclude Include="include\hikari\client\game\objects\controllers\HeroActionController.hpp" />
     <ClInclude Include="include\hikari\client\game\objects\controllers\PlayerInputHeroActionController.hpp" />
