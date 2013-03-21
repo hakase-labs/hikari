@@ -13,14 +13,12 @@ namespace hikari {
     class ItemSpawner : public Spawner {
     private:
         std::string itemName;
-        std::weak_ptr<CollectableItem> spawnedItem;
 
     public:
         ItemSpawner(const std::string & itemNam);
         virtual ~ItemSpawner();
 
         virtual void performAction(GameWorld & world);
-        std::weak_ptr<CollectableItem> getSpawnedItem() const;
 
         //
         // GameObject overrides

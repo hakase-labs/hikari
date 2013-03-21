@@ -11,17 +11,17 @@ class ModifyHealthEffect extends EffectBase {
 
         amount = config.amount;
 
-        ::print("ModifyHealthEffect constructor called.");
+        ::log("ModifyHealthEffect constructor called.");
     }
 
     function applyEffect() {
-        ::print("ModifyHealthEffect::applyEffect called.");
-        ::print("You life was modified by " + amount + "!");
+        ::log("ModifyHealthEffect::applyEffect called.");
+        ::log("You life was modified by " + amount + "!");
     }
 
     function unapplyEffect() {
-        ::print("ModifyHealthEffect::unapplyEffect called.");
+        ::log("ModifyHealthEffect::unapplyEffect called.");
     }
 }
 
-::print("ModifyHealthEffect processed!");
+::log("ModifyHealthEffect processed!");

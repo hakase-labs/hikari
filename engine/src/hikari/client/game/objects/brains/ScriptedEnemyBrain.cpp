@@ -39,10 +39,12 @@ namespace hikari {
     }
     
     ScriptedEnemyBrain::~ScriptedEnemyBrain() {
-
+        HIKARI_LOG(debug2) << "DETROYED ScriptedEnemyBrain::ScriptedEnemyBrain()";
     }
 
     void ScriptedEnemyBrain::attach(Enemy* host) {
+        EnemyBrain::attach(host);
+
         if(!proxyAttach.IsNull()) {
             proxyAttach.Execute(host);
         }
@@ -62,7 +64,7 @@ namespace hikari {
         }
     }
 
-    void ScriptedEnemyBrain::update(const float& dt) {
+    void ScriptedEnemyBrain::update(float dt) {
         if(!proxyUpdate.IsNull()) {
             proxyUpdate.Execute(dt);
         }

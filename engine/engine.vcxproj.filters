@@ -489,14 +489,8 @@
     <ClInclude Include="include\hikari\client\game\objects\controllers\PlayerInputHeroActionController.hpp">
       <Filter>Header Files\client\game\objects\controllers</Filter>
     </ClInclude>
-    <ClInclude Include="include\hikari\client\game\objects\brains\OctopusBatteryBrain.hpp">
-      <Filter>Header Files\client\game\objects\brains</Filter>
-    </ClInclude>
     <ClInclude Include="include\hikari\core\math\Vector2.hpp">
       <Filter>Header Files\core\math</Filter>
-    </ClInclude>
-    <ClInclude Include="include\hikari\client\game\objects\brains\TellyBrain.hpp">
-      <Filter>Header Files\client\game\objects\brains</Filter>
     </ClInclude>
     <ClInclude Include="include\hikari\core\game\CollisionDetector.hpp">
       <Filter>Header Files\core\game</Filter>
@@ -802,12 +796,6 @@
     </ClCompile>
     <ClCompile Include="src\hikari\client\game\objects\controllers\PlayerInputHeroActionController.cpp">
       <Filter>Source Files\client\game\objects\controllers</Filter>
-    </ClCompile>
-    <ClCompile Include="src\hikari\client\game\objects\brains\OctopusBatteryBrain.cpp">
-      <Filter>Source Files\client\game\objects\brains</Filter>
-    </ClCompile>
-    <ClCompile Include="src\hikari\client\game\objects\brains\TellyBrain.cpp">
-      <Filter>Source Files\client\game\objects\brains</Filter>
     </ClCompile>
     <ClCompile Include="src\hikari\client\game\objects\brains\ScriptedEnemyBrain.cpp">
       <Filter>Source Files\client\game\objects\brains</Filter>

@@ -9,7 +9,6 @@ namespace hikari {
     ItemSpawner::ItemSpawner(const std::string & itemName)
         : Spawner()
         , itemName(itemName)
-        , spawnedItem()
     {
 
     }
@@ -25,15 +24,9 @@ namespace hikari {
             spawnedObject->reset();
             spawnedObject->setPosition(getPosition());
             spawnedObject->setActive(true);
-
-            spawnedItem = std::weak_ptr<CollectableItem>(spawnedObject);
         }
 
         world.queueObjectAddition(spawnedObject);
-    }
-
-    std::weak_ptr<CollectableItem> ItemSpawner::getSpawnedItem() const {
-        return spawnedItem;
     }
 
     void ItemSpawner::onActivated() {

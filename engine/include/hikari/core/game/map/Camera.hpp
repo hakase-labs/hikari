@@ -38,8 +38,8 @@ namespace hikari {
         void move(float offsetX, float offsetY);
 
     private:
-        Rectangle2D<int> boundary;
         Rectangle2D<float> view;
+        Rectangle2D<int> boundary;
         bool lockHorizontalMovement;
         bool lockVerticalMovement;
 

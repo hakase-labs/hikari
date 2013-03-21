@@ -17,6 +17,7 @@ namespace hikari {
         Vector2();
         Vector2(T x, T y);
         Vector2(const Vector2<T>& copy);
+        Vector2(Point2D<T> copy);
         
         const T getX() const;
         const T getY() const;
@@ -80,6 +81,13 @@ namespace hikari {
     template <typename T>
     Vector2<T>::Vector2(const Vector2<T>& copy) 
         : point(copy.point)
+    {
+
+    }
+
+    template <typename T>
+    Vector2<T>::Vector2(Point2D<T> copy) 
+        : point(copy)
     {
 
     }
