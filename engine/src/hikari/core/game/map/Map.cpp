@@ -6,15 +6,20 @@ namespace hikari {
 
     const Rectangle2D<int> Map::INVALID_ROOM_RECT = Rectangle2D<int>();
 
-    Map::Map(const TileDataPtr &tileset, const int &gridSize, const std::vector<RoomPtr> &rooms)
+    Map::Map(const TileDataPtr &tileset, const int &gridSize, const std::vector<RoomPtr> &rooms,
+            unsigned int startingRoomIndex, unsigned int midpointRoomIndex, unsigned int bossCorridorRoomIndex, unsigned int bossChamberRoomIndex)
         : gridSize(gridSize)
+        , startingRoomIndex(startingRoomIndex)
+        , midpointRoomIndex(midpointRoomIndex)
+        , bossCorridorRoomIndex(bossCorridorRoomIndex)
+        , bossChamberRoomIndex(bossChamberRoomIndex)
         , tileset(tileset)
         , rooms(rooms) 
     {
         constructRoomRects();
     }
 
-    const TileDataPtr& Map::getTileset() const {
+    TileDataPtr Map::getTileset() const {
         return tileset;
     }
 
@@ -22,11 +27,27 @@ namespace hikari {
         return gridSize;
     }
 
+    RoomPtr Map::getStartingRoom() const {
+        return getRoom(startingRoomIndex);
+    }
+
+    RoomPtr Map::getMidpointRoom() const {
+        return getRoom(midpointRoomIndex);
+    }
+
+    RoomPtr Map::getBossCorridorRoom() const {
+        return getRoom(bossCorridorRoomIndex);
+    }
+
+    RoomPtr Map::getBossChamberRoom() const {
+        return getRoom(bossChamberRoomIndex);
+    }
+
     const int Map::getRoomCount() const {
         return rooms.size();
     }
 
-    const RoomPtr Map::getRoom(int index) const {
+    const RoomPtr Map::getRoom(unsigned int index) const {
         if(index >= 0 && index < getRoomCount()) {
             return rooms.at(index);
         }

@@ -41,4 +41,11 @@ function require(fileName, reload = false) {
     }
 }
 
+//
+// Logs a message to the console
+//
+function log(message) {
+    ::hikari.internal.log(message);
+}
+
 ::print("Scripting environment is ready.");

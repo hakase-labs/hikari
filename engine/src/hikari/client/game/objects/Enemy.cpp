@@ -14,6 +14,16 @@ namespace hikari {
         body.setHasWorldCollision(true);
     }
 
+    Enemy::Enemy(const Enemy& proto)
+        : Entity(proto)
+        , brain(nullptr)
+    {
+        body.setGravitated(true);
+        body.setHasWorldCollision(true);
+
+        HIKARI_LOG(debug3) << "Enemy copy constructed!";
+    }
+
     Enemy::~Enemy() {
 
     }

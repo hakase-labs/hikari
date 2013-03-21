@@ -200,21 +200,21 @@ int main(int argc, char** argv) {
         // at runtime by user data.
         GameController controller;
 
-        //std::string mapName = game["states"]["maptest"]["mapname"].asString();
-        //std::string tileSet = game["states"]["maptest"]["tileset"].asString();
+        std::string mapName = game["states"]["maptest"]["mapname"].asString();
+        std::string tileSet = game["states"]["maptest"]["tileset"].asString();
 
-        //auto mapTestState = std::make_shared<MapTestState>(
-        //    "maptest",
-        //    mapLoader,
-        //    mapName,
-        //    tileSet,
-        //    imageCache,
-        //    guiFont,
-        //    std::weak_ptr<ItemFactory>(itemFactory),
-        //    services
-        //);
+        auto mapTestState = std::make_shared<MapTestState>(
+            "maptest",
+            mapLoader,
+            mapName,
+            tileSet,
+            imageCache,
+            guiFont,
+            std::weak_ptr<ItemFactory>(itemFactory),
+            services
+        );
 
-        //mapTestState->setRenderWindow(&window);
+        mapTestState->setRenderWindow(&window);
 
         //StatePtr guiTestState(new GuiTestState("guitest", guiFont));
         StatePtr spriteTestState(
@@ -228,7 +228,7 @@ int main(int argc, char** argv) {
         StatePtr stageSelectState(new StageSelectState("stageselect", game["states"]["select"], services));
         StatePtr gamePlayState(new GamePlayState("gameplay", game, services));
 
-        //controller.addState(mapTestState->getName(), mapTestState);
+        controller.addState(mapTestState->getName(), mapTestState);
         //controller.addState(guiTestState->getName(), guiTestState);
         controller.addState(spriteTestState->getName(), spriteTestState);
         controller.addState(stageSelectState->getName(), stageSelectState);

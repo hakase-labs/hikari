@@ -18,6 +18,7 @@ else ::hikari::Log().get(level)
         fatal,
         error,
         warning,
+        script,
         info,
         debug,
         debug1,

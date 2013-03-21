@@ -35,7 +35,7 @@ namespace hikari {
 
         virtual void handleCollision(Movable& body, CollisionInfo& info);
 
-        virtual void update(const float& dt);
+        virtual void update(float dt);
     };
 
 } // hikari
