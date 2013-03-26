@@ -15,7 +15,7 @@
     },
     {
         "name": "Extra Life",
-        "effect": "AddExtraLifeEffect",
+        "effect": "ExtraLifeEffect",
         "animationSet": "assets/animations/items.json",
         "animationName": "extra-life-rockman",
         "boundingBox": {
