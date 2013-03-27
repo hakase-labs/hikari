@@ -276,9 +276,13 @@ namespace hikari {
                     changeAnimation("running");
                 }
             }
-        } else if(isSliding) {
-
-        } else if(isAirborn) {
+        }
+        // Sliding
+        else if(isSliding) {
+            changeAnimation("sliding");
+        }
+        // Falling or Jumping
+        else if(isAirborn) {
             if(isShooting) {
                 changeAnimation("jumping-shooting");
             } else {
@@ -323,24 +327,17 @@ namespace hikari {
     Hero::IdleMobilityState::IdleMobilityState(Hero * hero)
         : MobilityState(hero)
     {
-        // std::cout << "IdleMobilityState()" << std::endl;
+
     }
 
     Hero::IdleMobilityState::~IdleMobilityState() {
-        // std::cout << "~IdleMobilityState()" << std::endl;
+
     }
 
     void Hero::IdleMobilityState::enter() {
         hero->isStanding = true;
         hero->isFullyAccelerated = false;
-
-        //if(hero->isStopping) {
-        //    hero->changeAnimation("running-stopping");
-        //} else {
-        //    hero->changeAnimation("idle");
-        //}
         hero->chooseAnimation();
-
         hero->setVelocityX(0.0f);
     }
 
@@ -354,7 +351,6 @@ namespace hikari {
 
             if(hero->isStopping) {
                 hero->isStopping = false;
-                //hero->changeAnimation("idle");
                 hero->chooseAnimation();
             }
 
@@ -439,22 +435,14 @@ namespace hikari {
                 if(!hero->isFullyAccelerated) {
                     hero->body.setApplyHorizontalVelocity(accelerationDelay == 0);
 
-                    // std::cout << "Waiting to accelerate! " << accelerationDelay << std::endl;
-
                     hero->isFullyAccelerated = !(accelerationDelay < accelerationDelayThreshold);
                     accelerationDelay += 1; // dt;
 
                     std::cout << "Accellerating..." << std::endl;
 
-                    //hero->changeAnimation("running-accelerating");
                     hero->chooseAnimation();
                 } else {
                     hero->body.setApplyHorizontalVelocity(true);
-                    //if(hero->isShooting) {
-                    //    hero->changeAnimation("running-shooting");
-                    //} else {
-                    //    hero->changeAnimation("running");
-                    //}
                     hero->chooseAnimation();
                 }
             }
@@ -467,7 +455,6 @@ namespace hikari {
             if(controller->shouldMoveLeft() && controller->shouldMoveRight()) {
                 if(!isDecelerating) {
                     isDecelerating = true;
-                    // std::cout << "Decelerating for 1 frame..." << std::endl;
                 } else {
                     hero->isStopping = true;
                     hero->changeMobilityState(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
@@ -479,7 +466,6 @@ namespace hikari {
             if(!controller->shouldMoveLeft() && !controller->shouldMoveRight()){
                 if(!isDecelerating) {
                     isDecelerating = true;
-                    // std::cout << "Decelerating for 1 frame..." << std::endl;
                 } else {
                     hero->isStopping = true;
                     hero->changeMobilityState(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
@@ -511,17 +497,17 @@ namespace hikari {
         , slideDuration(0.0f)
         , slideDurationThreshold(1.0f / 60.0f * 19.0f) // 19 frames, 0.3166 seconds
     {
-        //std::cout << "SlidingMobilityState()" << std::endl;
+
     }
 
     Hero::SlidingMobilityState::~SlidingMobilityState() {
-        //std::cout << "~SlidingMobilityState()" << std::endl;
+
     }
 
     void Hero::SlidingMobilityState::enter() {
         slideDuration = 0.0f;
 
-        hero->changeAnimation("sliding");
+        hero->chooseAnimation();
         hero->isFullyAccelerated = true;
         hero->isSliding = true;
         hero->body.setApplyHorizontalVelocity(true);
@@ -555,11 +541,6 @@ namespace hikari {
         slideDuration += dt;
 
         if(auto const * controller = hero->actionController.get()) {
-            //if(slideDuration >= slideDurationThreshold || controller->shouldStopSliding()) {
-            //    hero->changeMobilityState(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
-            //    return;
-            //}
-
             if(hero->isInTunnel || (slideDuration < slideDurationThreshold && (controller->shouldSlide() || !controller->shouldStopSliding()))) {
                 if(controller->shouldMoveLeft()) {
                     hero->setDirection(Directions::Left);
@@ -613,11 +594,11 @@ namespace hikari {
     Hero::AirbornMobilityState::AirbornMobilityState(Hero * hero)
         : MobilityState(hero)
     {
-        //std::cout << "AirbornMobilityState()" << std::endl;
+
     }
 
     Hero::AirbornMobilityState::~AirbornMobilityState() {
-        //std::cout << "~AirbornMobilityState()" << std::endl;
+
     }
 
     void Hero::AirbornMobilityState::enter() {
@@ -629,10 +610,8 @@ namespace hikari {
             if(controller->shouldJump() && !hero->isFalling) {
                 hero->setVelocityY(hero->jumpVelocity.getY());
                 hero->isJumping = true;
-                //std::cout << "I'm jumping." << std::endl;
             } else if(!hero->body.isOnGround()) {
                 hero->isFalling = true;
-                //std::cout << "I'm falling." << std::endl;
             }
         }
 
@@ -671,13 +650,9 @@ namespace hikari {
                 hero->isJumping = false;
                 hero->isFalling = true;
                 hero->setVelocityY(hero->suddenFallVelocity.getY());
-
-                //std::cout << "I should stop jumping; starting to fall." << std::endl;
             }
 
             if(hero->body.isOnGround()) {
-                //std::cout << "I was jumping but now I'm on the ground. I landed." << std::endl;
-
                 if(controller->shouldMoveLeft() || controller->shouldMoveRight()) {
                     hero->isFullyAccelerated = true;
                     hero->changeMobilityState(std::unique_ptr<MobilityState>(new WalkingMobilityState(hero)));
