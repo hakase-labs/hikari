@@ -92,22 +92,22 @@ namespace hikari {
                 auto bottomLeft = bbox.getBottomLeft();
                 auto bottomRight = bbox.getBottomRight();
 
-                auto trAttr        = room->getAttributeAt(static_cast<int>(topRight.getX()    - 1) / gridSize, static_cast<int>(topRight.getY()       ) / gridSize);
-                auto tlAttr        = room->getAttributeAt(static_cast<int>(topLeft.getX()        ) / gridSize, static_cast<int>(topLeft.getY()        ) / gridSize);
-                auto blAttr        = room->getAttributeAt(static_cast<int>(bottomLeft.getX()     ) / gridSize, static_cast<int>(bottomLeft.getY()  - 1) / gridSize);
-                auto brAttr        = room->getAttributeAt(static_cast<int>(bottomRight.getX() - 1) / gridSize, static_cast<int>(bottomRight.getY() - 1) / gridSize);
-                auto feetLeftAttr  = room->getAttributeAt(static_cast<int>(bottomLeft.getX()     ) / gridSize, static_cast<int>(bottomLeft.getY()     ) / gridSize);
-                auto feetRightAttr = room->getAttributeAt(static_cast<int>(bottomRight.getX() - 1) / gridSize, static_cast<int>(bottomRight.getY()    ) / gridSize);
-                auto posAttr       = room->getAttributeAt(static_cast<int>(getPosition().getX()  ) / gridSize, static_cast<int>(getPosition().getY()  ) / gridSize);
+                int trAttr        = room->getAttributeAt(static_cast<int>(topRight.getX()    - 1) / gridSize, static_cast<int>(topRight.getY()       ) / gridSize);
+                int tlAttr        = room->getAttributeAt(static_cast<int>(topLeft.getX()        ) / gridSize, static_cast<int>(topLeft.getY()        ) / gridSize);
+                int blAttr        = room->getAttributeAt(static_cast<int>(bottomLeft.getX()     ) / gridSize, static_cast<int>(bottomLeft.getY()  - 1) / gridSize);
+                int brAttr        = room->getAttributeAt(static_cast<int>(bottomRight.getX() - 1) / gridSize, static_cast<int>(bottomRight.getY() - 1) / gridSize);
+                int feetLeftAttr  = room->getAttributeAt(static_cast<int>(bottomLeft.getX()     ) / gridSize, static_cast<int>(bottomLeft.getY()     ) / gridSize);
+                int feetRightAttr = room->getAttributeAt(static_cast<int>(bottomRight.getX() - 1) / gridSize, static_cast<int>(bottomRight.getY()    ) / gridSize);
+                int posAttr       = room->getAttributeAt(static_cast<int>(getPosition().getX()  ) / gridSize, static_cast<int>(getPosition().getY()  ) / gridSize);
 
-                auto touchingTopRight =     ((trAttr != Room::NO_TILE)         && TileAttribute::hasAttribute(trAttr,          TileAttribute::LADDER));
-                auto touchingTopLeft =      ((tlAttr != Room::NO_TILE)         && TileAttribute::hasAttribute(tlAttr,          TileAttribute::LADDER));
-                auto touchingBottomLeft =   ((blAttr != Room::NO_TILE)         && TileAttribute::hasAttribute(blAttr,          TileAttribute::LADDER));
-                auto touchingBottomRight =  ((brAttr != Room::NO_TILE)         && TileAttribute::hasAttribute(brAttr,          TileAttribute::LADDER));
-                auto touchingFeetLeft =     ((feetLeftAttr != Room::NO_TILE)   && TileAttribute::hasAttribute(feetLeftAttr,    TileAttribute::LADDER_TOP));
-                auto touchingFeetRight =    ((feetRightAttr != Room::NO_TILE)  && TileAttribute::hasAttribute(feetRightAttr,   TileAttribute::LADDER_TOP));
-                auto touchingBodyOnLadder = ((posAttr != Room::NO_TILE)        && TileAttribute::hasAttribute(posAttr,         TileAttribute::LADDER));
-                auto touchingLadderTop =    ((posAttr != Room::NO_TILE)        && TileAttribute::hasAttribute(posAttr,         TileAttribute::LADDER_TOP));
+                bool touchingTopRight =     ((trAttr != Room::NO_TILE)         && TileAttribute::hasAttribute(trAttr,          TileAttribute::LADDER));
+                bool touchingTopLeft =      ((tlAttr != Room::NO_TILE)         && TileAttribute::hasAttribute(tlAttr,          TileAttribute::LADDER));
+                bool touchingBottomLeft =   ((blAttr != Room::NO_TILE)         && TileAttribute::hasAttribute(blAttr,          TileAttribute::LADDER));
+                bool touchingBottomRight =  ((brAttr != Room::NO_TILE)         && TileAttribute::hasAttribute(brAttr,          TileAttribute::LADDER));
+                bool touchingFeetLeft =     ((feetLeftAttr != Room::NO_TILE)   && TileAttribute::hasAttribute(feetLeftAttr,    TileAttribute::LADDER_TOP));
+                bool touchingFeetRight =    ((feetRightAttr != Room::NO_TILE)  && TileAttribute::hasAttribute(feetRightAttr,   TileAttribute::LADDER_TOP));
+                bool touchingBodyOnLadder = ((posAttr != Room::NO_TILE)        && TileAttribute::hasAttribute(posAttr,         TileAttribute::LADDER));
+                bool touchingLadderTop =    ((posAttr != Room::NO_TILE)        && TileAttribute::hasAttribute(posAttr,         TileAttribute::LADDER_TOP));
 
                 isTouchingLadderWithFeet = touchingFeetLeft || touchingFeetRight;
 
@@ -118,9 +118,9 @@ namespace hikari {
 
                     if(touchingTopRight || touchingBottomRight || touchingFeetRight) {
                         // Determine the overlap amount rightward
-                        auto realX = static_cast<int>(topRight.getX());
-                        auto tileX = (static_cast<int>(topRight.getX()) / gridSize) * gridSize;
-                        auto overlap = std::abs(realX - tileX);
+                        int realX = static_cast<int>(topRight.getX());
+                        int tileX = (static_cast<int>(topRight.getX()) / gridSize) * gridSize;
+                        int overlap = std::abs(realX - tileX);
 
                         if(overlap >= 4) {
                             ladderPositionX = tileX + static_cast<int>(bbox.getWidth() / 2);
@@ -132,9 +132,9 @@ namespace hikari {
 
                     if(touchingTopLeft || touchingBottomLeft || touchingFeetLeft) {
                         // Determine the overlap leftward
-                        auto realX = static_cast<int>(topLeft.getX());
-                        auto tileX = (static_cast<int>(topLeft.getX()) / gridSize) * gridSize;
-                        auto overlap = std::abs(realX - tileX - gridSize);
+                        int realX = static_cast<int>(topLeft.getX());
+                        int tileX = (static_cast<int>(topLeft.getX()) / gridSize) * gridSize;
+                        int overlap = std::abs(realX - tileX - gridSize);
 
                         //// ladderPositionX = (((static_cast<int>(topRight.getX()) / gridSize) - 1) * gridSize ) + (bbox.getWidth() / 2);
                         if(overlap >= 4) {
@@ -172,8 +172,8 @@ namespace hikari {
 
                 isInTunnel = false;
 
-                auto topLeftTile = room->getAttributeAt(startingX / gridSize, y / gridSize);
-                auto topRightTile = room->getAttributeAt((endingX - 1) / gridSize, y / gridSize);
+                int topLeftTile = room->getAttributeAt(startingX / gridSize, y / gridSize);
+                int topRightTile = room->getAttributeAt((endingX - 1) / gridSize, y / gridSize);
 
                 // Only check the top left and top right points
                 if(((topLeftTile != Room::NO_TILE) && TileAttribute::hasAttribute(topLeftTile, TileAttribute::SOLID))
@@ -278,6 +278,12 @@ namespace hikari {
             }
         } else if(isSliding) {
 
+        } else if(isAirborn) {
+            if(isShooting) {
+                changeAnimation("jumping-shooting");
+            } else {
+                changeAnimation("jumping");
+            }
         }
     }
 
@@ -623,14 +629,14 @@ namespace hikari {
             if(controller->shouldJump() && !hero->isFalling) {
                 hero->setVelocityY(hero->jumpVelocity.getY());
                 hero->isJumping = true;
-                std::cout << "I'm jumping." << std::endl;
+                //std::cout << "I'm jumping." << std::endl;
             } else if(!hero->body.isOnGround()) {
                 hero->isFalling = true;
-                std::cout << "I'm falling." << std::endl;
+                //std::cout << "I'm falling." << std::endl;
             }
         }
 
-        hero->changeAnimation("jumping");
+        hero->chooseAnimation();
     }
 
     void Hero::AirbornMobilityState::exit() {
@@ -666,11 +672,11 @@ namespace hikari {
                 hero->isFalling = true;
                 hero->setVelocityY(hero->suddenFallVelocity.getY());
 
-                std::cout << "I should stop jumping; starting to fall." << std::endl;
+                //std::cout << "I should stop jumping; starting to fall." << std::endl;
             }
 
             if(hero->body.isOnGround()) {
-                std::cout << "I was jumping but now I'm on the ground. I landed." << std::endl;
+                //std::cout << "I was jumping but now I'm on the ground. I landed." << std::endl;
 
                 if(controller->shouldMoveLeft() || controller->shouldMoveRight()) {
                     hero->isFullyAccelerated = true;
