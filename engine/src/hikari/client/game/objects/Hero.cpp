@@ -507,7 +507,9 @@ namespace hikari {
     void Hero::SlidingMobilityState::enter() {
         slideDuration = 0.0f;
 
-        hero->chooseAnimation();
+        hero->isWalking = false;
+        hero->isStanding = false;
+        hero->isAirborn = false;
         hero->isFullyAccelerated = true;
         hero->isSliding = true;
         hero->body.setApplyHorizontalVelocity(true);
@@ -522,6 +524,8 @@ namespace hikari {
         newBoundingBox.setBottom(oldBoundingBox.getBottom());
 
         hero->setBoundingBox(newBoundingBox);
+
+        hero->chooseAnimation();
     }
 
     void Hero::SlidingMobilityState::exit() {
