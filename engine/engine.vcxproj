@@ -32,6 +32,7 @@
     <ClCompile Include="src\hikari\client\game\objects\Enemy.cpp" />
     <ClCompile Include="src\hikari\client\game\objects\EnemyBrain.cpp" />
     <ClCompile Include="src\hikari\client\game\objects\Entity.cpp" />
+    <ClCompile Include="src\hikari\client\game\objects\FactoryHelpers.cpp" />
     <ClCompile Include="src\hikari\client\game\objects\ItemFactory.cpp" />
     <ClCompile Include="src\hikari\client\game\objects\ItemSpawner.cpp" />
     <ClCompile Include="src\hikari\client\game\objects\Spawner.cpp" />
@@ -103,6 +104,7 @@
     <ClInclude Include="include\hikari\client\game\objects\Enemy.hpp" />
     <ClInclude Include="include\hikari\client\game\objects\EnemyBrain.hpp" />
     <ClInclude Include="include\hikari\client\game\objects\Entity.hpp" />
+    <ClInclude Include="include\hikari\client\game\objects\FactoryHelpers.hpp" />
     <ClInclude Include="include\hikari\client\game\objects\GameObject.hpp" />
     <ClInclude Include="include\hikari\client\game\objects\Hero.hpp" />
     <ClInclude Include="include\hikari\client\game\objects\ItemFactory.hpp" />

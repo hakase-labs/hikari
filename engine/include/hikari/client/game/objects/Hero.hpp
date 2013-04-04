@@ -13,20 +13,22 @@ namespace hikari {
         class MobilityState;
         class ShootingState;
 
-        bool isStopping;
-        bool isStanding;
-        bool isWalking;
-        bool isSliding;
-        bool isInTunnel;
-        bool isJumping;
-        bool isFalling;
-        bool isAirborn;
-        bool isOnLadder;
-        bool isTouchingLadder;
-        bool isTouchingLadderTop;
-        bool isTouchingLadderWithFeet;
-        bool isFullyAccelerated;
-        bool isShooting;
+        bool isDecelerating;            // Currently running but need to stop
+        bool isStanding;                // Standing idle
+        bool isWalking;                 // Moving left or right on purpose
+        bool isSliding;                 // Currently engaged in a slide
+        bool isInTunnel;                // Surrounded by solid surface (sliding in a narrow space)
+        bool isJumping;                 // Moving upward with no solid ground underneath
+        bool isFalling;                 // Falling with no solid ground underneath
+        bool isAirborn;                 // In air; falling or jumping
+        bool isOnLadder;                // Mounted on a ladder (climbing)
+        bool isTouchingLadder;          // Touching a ladder with any part of the body
+        bool isTouchingLadderTop;       // Colliding with a "ladder top"
+        bool isTouchingLadderWithFeet;  // Feet are standing on top of a ladder
+        bool isFullyAccelerated;        // Moving at full speed horizontally
+        bool isShooting;                // Shooting a weapon
+        bool isTeleporting;             // Teleporting from sky
+        bool isMorphing;                // Morphing from teleport to other state
         int countAscendingFrames;
         int countDecendingFrames;
         int accelerationDelay;
@@ -70,6 +72,18 @@ namespace hikari {
             virtual void enter() = 0;
             virtual void exit() = 0;
             virtual void update(const float & dt) = 0;
+        };
+
+        class TeleportingMobilityState : public MobilityState {
+        private:
+            float morphingLimit;
+            float morphingCounter;
+        public:
+            TeleportingMobilityState(Hero * hero);
+            virtual ~TeleportingMobilityState();
+            virtual void enter();
+            virtual void exit();
+            virtual void update(const float & dt);
         };
 
         class IdleMobilityState : public MobilityState {
@@ -166,6 +180,9 @@ namespace hikari {
 
         const std::shared_ptr<HeroActionController>& getActionController() const;
         void setActionController(const std::shared_ptr<HeroActionController>& actionController);
+
+        void performTeleport();
+        void performMorph();
 
         virtual void update(const float& dt);
         virtual void render(sf::RenderTarget &target);

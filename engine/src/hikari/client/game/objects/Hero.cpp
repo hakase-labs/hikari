@@ -1,4 +1,5 @@
 #include "hikari/client/game/objects/Hero.hpp"
+#include "hikari/core/game/Animation.hpp"
 #include "hikari/core/game/map/Room.hpp"
 #include "hikari/core/math/RetroVector.hpp"
 #include "hikari/core/game/SpriteAnimator.hpp"
@@ -10,7 +11,7 @@ namespace hikari {
 
     Hero::Hero(const int &id, std::shared_ptr<Room> room)
         : Entity(id, room)
-        , isStopping(false)
+        , isDecelerating(false)
         , isStanding(false)
         , isWalking(false)
         , isSliding(false)
@@ -21,6 +22,9 @@ namespace hikari {
         , isOnLadder(false)
         , isTouchingLadder(false)
         , isTouchingLadderWithFeet(false)
+        , isFullyAccelerated(false)
+        , isShooting(false)
+        , isTeleporting(false)
         , ladderPositionX(0)
         , mobilityState(nullptr)
         , shootingState(nullptr)
@@ -92,22 +96,22 @@ namespace hikari {
                 auto bottomLeft = bbox.getBottomLeft();
                 auto bottomRight = bbox.getBottomRight();
 
-                auto trAttr        = room->getAttributeAt(static_cast<int>(topRight.getX()    - 1) / gridSize, static_cast<int>(topRight.getY()       ) / gridSize);
-                auto tlAttr        = room->getAttributeAt(static_cast<int>(topLeft.getX()        ) / gridSize, static_cast<int>(topLeft.getY()        ) / gridSize);
-                auto blAttr        = room->getAttributeAt(static_cast<int>(bottomLeft.getX()     ) / gridSize, static_cast<int>(bottomLeft.getY()  - 1) / gridSize);
-                auto brAttr        = room->getAttributeAt(static_cast<int>(bottomRight.getX() - 1) / gridSize, static_cast<int>(bottomRight.getY() - 1) / gridSize);
-                auto feetLeftAttr  = room->getAttributeAt(static_cast<int>(bottomLeft.getX()     ) / gridSize, static_cast<int>(bottomLeft.getY()     ) / gridSize);
-                auto feetRightAttr = room->getAttributeAt(static_cast<int>(bottomRight.getX() - 1) / gridSize, static_cast<int>(bottomRight.getY()    ) / gridSize);
-                auto posAttr       = room->getAttributeAt(static_cast<int>(getPosition().getX()  ) / gridSize, static_cast<int>(getPosition().getY()  ) / gridSize);
+                int trAttr        = room->getAttributeAt(static_cast<int>(topRight.getX()    - 1) / gridSize, static_cast<int>(topRight.getY()       ) / gridSize);
+                int tlAttr        = room->getAttributeAt(static_cast<int>(topLeft.getX()        ) / gridSize, static_cast<int>(topLeft.getY()        ) / gridSize);
+                int blAttr        = room->getAttributeAt(static_cast<int>(bottomLeft.getX()     ) / gridSize, static_cast<int>(bottomLeft.getY()  - 1) / gridSize);
+                int brAttr        = room->getAttributeAt(static_cast<int>(bottomRight.getX() - 1) / gridSize, static_cast<int>(bottomRight.getY() - 1) / gridSize);
+                int feetLeftAttr  = room->getAttributeAt(static_cast<int>(bottomLeft.getX()     ) / gridSize, static_cast<int>(bottomLeft.getY()     ) / gridSize);
+                int feetRightAttr = room->getAttributeAt(static_cast<int>(bottomRight.getX() - 1) / gridSize, static_cast<int>(bottomRight.getY()    ) / gridSize);
+                int posAttr       = room->getAttributeAt(static_cast<int>(getPosition().getX()  ) / gridSize, static_cast<int>(getPosition().getY()  ) / gridSize);
 
-                auto touchingTopRight =     ((trAttr != Room::NO_TILE)         && TileAttribute::hasAttribute(trAttr,          TileAttribute::LADDER));
-                auto touchingTopLeft =      ((tlAttr != Room::NO_TILE)         && TileAttribute::hasAttribute(tlAttr,          TileAttribute::LADDER));
-                auto touchingBottomLeft =   ((blAttr != Room::NO_TILE)         && TileAttribute::hasAttribute(blAttr,          TileAttribute::LADDER));
-                auto touchingBottomRight =  ((brAttr != Room::NO_TILE)         && TileAttribute::hasAttribute(brAttr,          TileAttribute::LADDER));
-                auto touchingFeetLeft =     ((feetLeftAttr != Room::NO_TILE)   && TileAttribute::hasAttribute(feetLeftAttr,    TileAttribute::LADDER_TOP));
-                auto touchingFeetRight =    ((feetRightAttr != Room::NO_TILE)  && TileAttribute::hasAttribute(feetRightAttr,   TileAttribute::LADDER_TOP));
-                auto touchingBodyOnLadder = ((posAttr != Room::NO_TILE)        && TileAttribute::hasAttribute(posAttr,         TileAttribute::LADDER));
-                auto touchingLadderTop =    ((posAttr != Room::NO_TILE)        && TileAttribute::hasAttribute(posAttr,         TileAttribute::LADDER_TOP));
+                bool touchingTopRight =     ((trAttr != Room::NO_TILE)         && TileAttribute::hasAttribute(trAttr,          TileAttribute::LADDER));
+                bool touchingTopLeft =      ((tlAttr != Room::NO_TILE)         && TileAttribute::hasAttribute(tlAttr,          TileAttribute::LADDER));
+                bool touchingBottomLeft =   ((blAttr != Room::NO_TILE)         && TileAttribute::hasAttribute(blAttr,          TileAttribute::LADDER));
+                bool touchingBottomRight =  ((brAttr != Room::NO_TILE)         && TileAttribute::hasAttribute(brAttr,          TileAttribute::LADDER));
+                bool touchingFeetLeft =     ((feetLeftAttr != Room::NO_TILE)   && TileAttribute::hasAttribute(feetLeftAttr,    TileAttribute::LADDER_TOP));
+                bool touchingFeetRight =    ((feetRightAttr != Room::NO_TILE)  && TileAttribute::hasAttribute(feetRightAttr,   TileAttribute::LADDER_TOP));
+                bool touchingBodyOnLadder = ((posAttr != Room::NO_TILE)        && TileAttribute::hasAttribute(posAttr,         TileAttribute::LADDER));
+                bool touchingLadderTop =    ((posAttr != Room::NO_TILE)        && TileAttribute::hasAttribute(posAttr,         TileAttribute::LADDER_TOP));
 
                 isTouchingLadderWithFeet = touchingFeetLeft || touchingFeetRight;
 
@@ -118,9 +122,9 @@ namespace hikari {
 
                     if(touchingTopRight || touchingBottomRight || touchingFeetRight) {
                         // Determine the overlap amount rightward
-                        auto realX = static_cast<int>(topRight.getX());
-                        auto tileX = (static_cast<int>(topRight.getX()) / gridSize) * gridSize;
-                        auto overlap = std::abs(realX - tileX);
+                        int realX = static_cast<int>(topRight.getX());
+                        int tileX = (static_cast<int>(topRight.getX()) / gridSize) * gridSize;
+                        int overlap = std::abs(realX - tileX);
 
                         if(overlap >= 4) {
                             ladderPositionX = tileX + static_cast<int>(bbox.getWidth() / 2);
@@ -132,9 +136,9 @@ namespace hikari {
 
                     if(touchingTopLeft || touchingBottomLeft || touchingFeetLeft) {
                         // Determine the overlap leftward
-                        auto realX = static_cast<int>(topLeft.getX());
-                        auto tileX = (static_cast<int>(topLeft.getX()) / gridSize) * gridSize;
-                        auto overlap = std::abs(realX - tileX - gridSize);
+                        int realX = static_cast<int>(topLeft.getX());
+                        int tileX = (static_cast<int>(topLeft.getX()) / gridSize) * gridSize;
+                        int overlap = std::abs(realX - tileX - gridSize);
 
                         //// ladderPositionX = (((static_cast<int>(topRight.getX()) / gridSize) - 1) * gridSize ) + (bbox.getWidth() / 2);
                         if(overlap >= 4) {
@@ -172,8 +176,8 @@ namespace hikari {
 
                 isInTunnel = false;
 
-                auto topLeftTile = room->getAttributeAt(startingX / gridSize, y / gridSize);
-                auto topRightTile = room->getAttributeAt((endingX - 1) / gridSize, y / gridSize);
+                int topLeftTile = room->getAttributeAt(startingX / gridSize, y / gridSize);
+                int topRightTile = room->getAttributeAt((endingX - 1) / gridSize, y / gridSize);
 
                 // Only check the top left and top right points
                 if(((topLeftTile != Room::NO_TILE) && TileAttribute::hasAttribute(topLeftTile, TileAttribute::SOLID))
@@ -228,6 +232,14 @@ namespace hikari {
         }
     }
 
+    void Hero::performTeleport() {
+        changeMobilityState(std::unique_ptr<MobilityState>(new TeleportingMobilityState(this)));
+    }
+
+    void Hero::performMorph() {
+        isMorphing = true;
+    }
+
     void Hero::performSlide() {
         std::cout << "Started sliding!" << std::endl;
     }
@@ -253,31 +265,49 @@ namespace hikari {
     }
 
     void Hero::chooseAnimation() {
-        // Idle animations
-        if(isStanding) {
-            if(isStopping) {
-                changeAnimation("running-stopping");
+        if(isTeleporting) {
+            if(isMorphing) {
+                changeAnimation("morphing");
             } else {
-                if(isShooting) {
-                    changeAnimation("standing-shooting");
+                changeAnimation("teleporting");
+            }
+        } else {
+            // Idle animations
+            if(isStanding) {
+                if(isDecelerating) {
+                    changeAnimation("running-stopping");
                 } else {
-                    changeAnimation("standing");
+                    if(isShooting) {
+                        changeAnimation("standing-shooting");
+                    } else {
+                        changeAnimation("standing");
+                    }
                 }
             }
-        }
-        // Walking animations
-        else if(isWalking) {
-            if(!isFullyAccelerated) {
-                changeAnimation("running-accelerating");
-            } else {
-                if(isShooting) {
-                    changeAnimation("running-shooting");
+            // Walking animations
+            else if(isWalking) {
+                if(!isFullyAccelerated) {
+                    changeAnimation("running-accelerating");
                 } else {
-                    changeAnimation("running");
+                    if(isShooting) {
+                        changeAnimation("running-shooting");
+                    } else {
+                        changeAnimation("running");
+                    }
                 }
             }
-        } else if(isSliding) {
-
+            // Sliding
+            else if(isSliding) {
+                changeAnimation("sliding");
+            }
+            // Falling or Jumping
+            else if(isAirborn) {
+                if(isShooting) {
+                    changeAnimation("jumping-shooting");
+                } else {
+                    changeAnimation("jumping");
+                }
+            }
         }
     }
 
@@ -312,29 +342,66 @@ namespace hikari {
     }
 
     //
+    // TeleportingMobilityState
+    //
+    Hero::TeleportingMobilityState::TeleportingMobilityState(Hero * hero)
+        : MobilityState(hero)
+        , morphingLimit(0.2167f) // ~13 frames
+        , morphingCounter(0.0f)
+    {
+
+    }
+
+    Hero::TeleportingMobilityState::~TeleportingMobilityState() {
+
+    }
+
+    void Hero::TeleportingMobilityState::enter() {
+        hero->isTeleporting = true;
+        hero->isMorphing = false;
+        hero->chooseAnimation();
+        hero->setVelocityX(0.0f);
+        hero->setVelocityY(0.0f);
+    }
+
+    void Hero::TeleportingMobilityState::exit() {
+        hero->isTeleporting = false;
+        hero->isMorphing = false;
+    }
+
+    void Hero::TeleportingMobilityState::update(const float & dt) {
+        if(hero->isMorphing) {
+            if(morphingCounter == 0.0f) {
+                hero->chooseAnimation();
+            }
+
+            morphingCounter += dt;
+
+            if(morphingCounter >= morphingLimit) {
+                // Time to change!
+                hero->changeMobilityState(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
+                // Emit event or play a sound
+            }
+        }
+    }
+
+    //
     // IdleMobilityState
     //
     Hero::IdleMobilityState::IdleMobilityState(Hero * hero)
         : MobilityState(hero)
     {
-        // std::cout << "IdleMobilityState()" << std::endl;
+
     }
 
     Hero::IdleMobilityState::~IdleMobilityState() {
-        // std::cout << "~IdleMobilityState()" << std::endl;
+
     }
 
     void Hero::IdleMobilityState::enter() {
         hero->isStanding = true;
         hero->isFullyAccelerated = false;
-
-        //if(hero->isStopping) {
-        //    hero->changeAnimation("running-stopping");
-        //} else {
-        //    hero->changeAnimation("idle");
-        //}
         hero->chooseAnimation();
-
         hero->setVelocityX(0.0f);
     }
 
@@ -346,9 +413,8 @@ namespace hikari {
         if(hero->actionController) {
             auto const * controller = hero->actionController.get();
 
-            if(hero->isStopping) {
-                hero->isStopping = false;
-                //hero->changeAnimation("idle");
+            if(hero->isDecelerating) {
+                hero->isDecelerating = false;
                 hero->chooseAnimation();
             }
 
@@ -397,7 +463,7 @@ namespace hikari {
         hero->isWalking = true;
         hero->isAirborn = false;
         hero->isStanding = false;
-        hero->isStopping = false;
+        hero->isDecelerating = false;
         isDecelerating = false;
     }
 
@@ -433,22 +499,14 @@ namespace hikari {
                 if(!hero->isFullyAccelerated) {
                     hero->body.setApplyHorizontalVelocity(accelerationDelay == 0);
 
-                    // std::cout << "Waiting to accelerate! " << accelerationDelay << std::endl;
-
                     hero->isFullyAccelerated = !(accelerationDelay < accelerationDelayThreshold);
                     accelerationDelay += 1; // dt;
 
                     std::cout << "Accellerating..." << std::endl;
 
-                    //hero->changeAnimation("running-accelerating");
                     hero->chooseAnimation();
                 } else {
                     hero->body.setApplyHorizontalVelocity(true);
-                    //if(hero->isShooting) {
-                    //    hero->changeAnimation("running-shooting");
-                    //} else {
-                    //    hero->changeAnimation("running");
-                    //}
                     hero->chooseAnimation();
                 }
             }
@@ -461,9 +519,8 @@ namespace hikari {
             if(controller->shouldMoveLeft() && controller->shouldMoveRight()) {
                 if(!isDecelerating) {
                     isDecelerating = true;
-                    // std::cout << "Decelerating for 1 frame..." << std::endl;
                 } else {
-                    hero->isStopping = true;
+                    hero->isDecelerating = true;
                     hero->changeMobilityState(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
                     return;
                 }
@@ -473,9 +530,8 @@ namespace hikari {
             if(!controller->shouldMoveLeft() && !controller->shouldMoveRight()){
                 if(!isDecelerating) {
                     isDecelerating = true;
-                    // std::cout << "Decelerating for 1 frame..." << std::endl;
                 } else {
-                    hero->isStopping = true;
+                    hero->isDecelerating = true;
                     hero->changeMobilityState(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
                     return;
                 }
@@ -505,17 +561,19 @@ namespace hikari {
         , slideDuration(0.0f)
         , slideDurationThreshold(1.0f / 60.0f * 19.0f) // 19 frames, 0.3166 seconds
     {
-        //std::cout << "SlidingMobilityState()" << std::endl;
+
     }
 
     Hero::SlidingMobilityState::~SlidingMobilityState() {
-        //std::cout << "~SlidingMobilityState()" << std::endl;
+
     }
 
     void Hero::SlidingMobilityState::enter() {
         slideDuration = 0.0f;
 
-        hero->changeAnimation("sliding");
+        hero->isWalking = false;
+        hero->isStanding = false;
+        hero->isAirborn = false;
         hero->isFullyAccelerated = true;
         hero->isSliding = true;
         hero->body.setApplyHorizontalVelocity(true);
@@ -530,6 +588,8 @@ namespace hikari {
         newBoundingBox.setBottom(oldBoundingBox.getBottom());
 
         hero->setBoundingBox(newBoundingBox);
+
+        hero->chooseAnimation();
     }
 
     void Hero::SlidingMobilityState::exit() {
@@ -549,11 +609,6 @@ namespace hikari {
         slideDuration += dt;
 
         if(auto const * controller = hero->actionController.get()) {
-            //if(slideDuration >= slideDurationThreshold || controller->shouldStopSliding()) {
-            //    hero->changeMobilityState(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
-            //    return;
-            //}
-
             if(hero->isInTunnel || (slideDuration < slideDurationThreshold && (controller->shouldSlide() || !controller->shouldStopSliding()))) {
                 if(controller->shouldMoveLeft()) {
                     hero->setDirection(Directions::Left);
@@ -572,7 +627,7 @@ namespace hikari {
                 }
             } else {
                 if(!controller->shouldMoveLeft() && !controller->shouldMoveRight()){
-                    hero->isStopping = true;
+                    hero->isDecelerating = true;
                     hero->changeMobilityState(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
                     return;
                 }
@@ -594,7 +649,7 @@ namespace hikari {
                     return;
                 }
 
-                hero->isStopping = true;
+                hero->isDecelerating = true;
                 hero->changeMobilityState(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
                 return;
             }
@@ -607,11 +662,11 @@ namespace hikari {
     Hero::AirbornMobilityState::AirbornMobilityState(Hero * hero)
         : MobilityState(hero)
     {
-        //std::cout << "AirbornMobilityState()" << std::endl;
+
     }
 
     Hero::AirbornMobilityState::~AirbornMobilityState() {
-        //std::cout << "~AirbornMobilityState()" << std::endl;
+
     }
 
     void Hero::AirbornMobilityState::enter() {
@@ -623,14 +678,12 @@ namespace hikari {
             if(controller->shouldJump() && !hero->isFalling) {
                 hero->setVelocityY(hero->jumpVelocity.getY());
                 hero->isJumping = true;
-                std::cout << "I'm jumping." << std::endl;
             } else if(!hero->body.isOnGround()) {
                 hero->isFalling = true;
-                std::cout << "I'm falling." << std::endl;
             }
         }
 
-        hero->changeAnimation("jumping");
+        hero->chooseAnimation();
     }
 
     void Hero::AirbornMobilityState::exit() {
@@ -665,13 +718,9 @@ namespace hikari {
                 hero->isJumping = false;
                 hero->isFalling = true;
                 hero->setVelocityY(hero->suddenFallVelocity.getY());
-
-                std::cout << "I should stop jumping; starting to fall." << std::endl;
             }
 
             if(hero->body.isOnGround()) {
-                std::cout << "I was jumping but now I'm on the ground. I landed." << std::endl;
-
                 if(controller->shouldMoveLeft() || controller->shouldMoveRight()) {
                     hero->isFullyAccelerated = true;
                     hero->changeMobilityState(std::unique_ptr<MobilityState>(new WalkingMobilityState(hero)));
@@ -701,7 +750,7 @@ namespace hikari {
         hero->isFullyAccelerated = false;
         hero->isJumping = false;
         hero->isStanding = false;
-        hero->isStopping = false;
+        hero->isDecelerating = false;
         hero->isWalking = false;
 
         hero->setVelocityX(0.0f);

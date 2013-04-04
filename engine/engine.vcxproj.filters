@@ -558,6 +558,9 @@
     <ClInclude Include="include\hikari\client\game\events\EventManagerImpl.hpp">
       <Filter>Header Files\client\game\events</Filter>
     </ClInclude>
+    <ClInclude Include="include\hikari\client\game\objects\FactoryHelpers.hpp">
+      <Filter>Header Files\client\game\objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\hikari\core\Hikari.cpp">
@@ -856,6 +859,9 @@
     </ClCompile>
     <ClCompile Include="src\hikari\client\game\events\EventManagerImpl.cpp">
       <Filter>Source Files\client\game\events</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\objects\FactoryHelpers.cpp">
+      <Filter>Source Files\client\game\objects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
