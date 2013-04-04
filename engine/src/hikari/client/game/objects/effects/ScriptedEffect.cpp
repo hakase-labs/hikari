@@ -30,7 +30,7 @@ namespace hikari {
         HIKARI_LOG(debug2) << "ScriptedEffect::ScriptedEffect(const ScriptedEffect &proto) Copy Constructed!";
 
         if(!bindScriptClassInstance()) {
-            throw std::runtime_error("ScriptedEffect could not be constructed.");
+            throw std::runtime_error("ScriptedEffect could not be constructed, could not bind to a class instance of type " + effectClassName);
         }
     }
     

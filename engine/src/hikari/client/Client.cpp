@@ -21,6 +21,7 @@
 #include "hikari/client/game/objects/effects/NothingEffect.hpp"
 #include "hikari/client/game/objects/effects/ScriptedEffect.hpp"
 #include "hikari/client/game/objects/ItemFactory.hpp"
+#include "hikari/client/game/objects/FactoryHelpers.hpp"
 
 #include "hikari/core/util/FileSystem.hpp"
 #include "hikari/core/util/Log.hpp"
@@ -134,7 +135,7 @@ int main(int argc, char** argv) {
     using std::shared_ptr;
     using namespace hikari;
 
-    ::hikari::Log::setReportingLevel(debug3);
+    ::hikari::Log::setReportingLevel(debug4);
 
     initLogging(argc, argv);
 
@@ -183,7 +184,7 @@ int main(int argc, char** argv) {
         services.registerService(Services::MAPLOADER,         mapLoader);
         services.registerService(Services::SCRIPTING,         squirrelService);
         services.registerService(Services::GUIFONT,           guiFont);
-        services.registerService("ItemFactory",               itemFactory);
+        services.registerService(Services::ITEMFACTORY,       itemFactory);
 
         AudioServiceScriptProxy::setWrappedService(std::weak_ptr<AudioService>(audioService));
         
@@ -191,7 +192,7 @@ int main(int argc, char** argv) {
         squirrelService->runScriptFile("assets/scripts/Bootstrap.nut");
 
         // When this runs all of the scripts have to have been run already
-        populateCollectableItemFactory(std::weak_ptr<ItemFactory>(itemFactory), *squirrelService, *animationSetCache, *imageCache);
+        FactoryHelpers::populateCollectableItemFactory("assets/templates/items.json", std::weak_ptr<ItemFactory>(itemFactory), services);
 
         gui::CommandConsole console(guiFont);
 
@@ -501,97 +502,5 @@ void initGame(const std::string &fileName, Json::Value &value) {
 
     if(!success) {
         HIKARI_LOG(info) << "Game file could not be found or was corrupt, uh oh!";
-    }
-}
-
-void populateCollectableItemFactory(
-    const std::weak_ptr<hikari::ItemFactory> & factory,
-    hikari::SquirrelService & squirrel,
-    hikari::AnimationSetCache & animationSetCache,
-    hikari::ImageCache & imageCache)
-{
-    using namespace hikari;
-
-    if(auto factoryPtr = factory.lock()) {
-        auto fileContents = FileSystem::openFile("assets/templates/items.json");
-        Json::Value root;
-        Json::Reader reader;
-
-        if(reader.parse(*fileContents, root, false)) {
-            auto templateCount = root.size();
-
-            for(decltype(templateCount) i = 0; i < templateCount; ++i) {
-                const auto & templateObject = root[i];
-
-                const auto name              = templateObject["name"].asString();
-                const auto effect            = templateObject["effect"].asString();
-                const auto effectConfig      = templateObject["effectConfig"];
-                const auto animationSet      = templateObject["animationSet"].asString();
-                const auto animationName     = templateObject["animationName"].asString();
-                const auto boundingBoxObject = templateObject["boundingBox"];
-                const auto ageless           = templateObject["ageless"].asBool();
-                const auto maximumAge        = templateObject["maximumAge"].asInt();
-
-                hikari::BoundingBoxF boundingBox(
-                    0.0f,
-                    0.0f,
-                    static_cast<float>(boundingBoxObject["width"].asDouble()),
-                    static_cast<float>(boundingBoxObject["height"].asDouble())
-                );
-
-                boundingBox.setOrigin(
-                    static_cast<float>(boundingBoxObject["originX"].asDouble()),
-                    static_cast<float>(boundingBoxObject["originY"].asDouble())
-                );
-
-                std::shared_ptr<Effect> effectInstance(nullptr);
-
-                if(effect == "" || effect == "NothingEffect") {
-                    effectInstance.reset(new NothingEffect());
-                } else {
-                    try {
-                        Sqrat::Table configTable;
-
-                        if(!effectConfig.isNull()) {
-                            const auto configPropertyNames = effectConfig.getMemberNames();
-
-                            for(auto propName = std::begin(configPropertyNames); propName != std::end(configPropertyNames); std::advance(propName, 1)) {
-                                const auto propValue = effectConfig.get(*propName, Json::Value::null);
-
-                                if(propValue.isBool()) {
-                                    configTable.SetValue((*propName).c_str(), propValue.asBool());
-                                } else if(propValue.isDouble()) {
-                                    configTable.SetValue((*propName).c_str(), propValue.asDouble());
-                                } else if(propValue.isIntegral()) {
-                                    configTable.SetValue((*propName).c_str(), propValue.asInt());
-                                } else if(propValue.isString()) {
-                                    configTable.SetValue((*propName).c_str(), propValue.asString());
-                                } else if(propValue.isNull()) {
-                                    configTable.SetValue((*propName).c_str(), nullptr);
-                                }
-                            }
-                        }
-
-                        effectInstance.reset(new ScriptedEffect(squirrel, effect, configTable));
-                    } catch(std::runtime_error & ex) {
-                        HIKARI_LOG(error) << "Couldn't create scripted effect of type " << effect << ". Falling back to NothingEffect.";
-                        effectInstance.reset(new NothingEffect());
-                    }
-                }
-
-                auto item = std::make_shared<CollectableItem>(GameObject::generateObjectId(), nullptr, effectInstance);
-
-                auto animationSetPtr = animationSetCache.get(animationSet);
-                auto spriteTexture = imageCache.get(animationSetPtr->getImageFileName());
-                item->setAnimationSet(animationSetPtr);
-                item->setSpriteTexture(spriteTexture);
-                item->changeAnimation(animationName);
-                item->setBoundingBox(boundingBox);
-                item->setAgeless(ageless);
-                item->setMaximumAge(maximumAge);
-
-                factoryPtr->registerPrototype(name, item);
-            }
-        }
     }
 }

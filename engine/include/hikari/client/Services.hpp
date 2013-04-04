@@ -1,6 +1,8 @@
 #ifndef HIKARI_CLIENT_SERVICES
 #define HIKARI_CLIENT_SERVICES
 
+#include <string>
+
 namespace hikari {
 namespace Services {
 
@@ -20,6 +22,7 @@ namespace Services {
     const static std::string SCRIPTING = "Scripting";
     const static std::string GUIFONT = "GuiFont";
     const static std::string ANIMATIONSETCACHE = "AnimationSetCache";
+    const static std::string ITEMFACTORY = "ItemFactory";
 
 } // hikari::direction
 } // hikari

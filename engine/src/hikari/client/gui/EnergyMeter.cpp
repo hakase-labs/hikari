@@ -28,7 +28,7 @@ namespace gui {
 
         foreground.setSize(
             sf::Vector2f(
-                overlay.getLocalBounds().width, 
+                overlay.getLocalBounds().width,
                 overlay.getLocalBounds().height
             )
         );
@@ -44,7 +44,7 @@ namespace gui {
 
         setFillColor(fillColor);
         setPrimaryColor(primaryColor);
-        setSecondaryColor(secondaryColor); 
+        setSecondaryColor(secondaryColor);
 
         setPosition(
             sf::Vector2i(
@@ -181,7 +181,7 @@ namespace gui {
             target.draw(primaryBackground);
             target.draw(secondaryBackground);
             target.draw(overlay);
-            
+
             if(getValue() < getMaximumValue()) {
                 target.draw(foreground);
             }
