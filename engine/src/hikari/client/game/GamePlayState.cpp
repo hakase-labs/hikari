@@ -637,6 +637,8 @@ namespace hikari {
     //
     GamePlayState::TeleportSubState::TeleportSubState(GamePlayState & gamePlayState)
         : SubState(gamePlayState)
+        , startingPoint()
+        , targetPoint()
     {
         std::cout << "TeleportSubState()" << std::endl;
     }
@@ -656,9 +658,25 @@ namespace hikari {
             spawnPosition.setX(spawnPosition.getX() + gamePlayState.currentRoom->getBounds().getX());
             spawnPosition.setY(spawnPosition.getY() + gamePlayState.currentRoom->getBounds().getY());
 
-            // TODO: Get the room's playerSpawn location and use that, noob!
+            targetPoint
+                .setX(spawnPosition.getX())
+                .setY(spawnPosition.getY());
 
-            hero->setPosition(static_cast<float>(spawnPosition.getX()), static_cast<float>(spawnPosition.getY()));
+            auto heroPosition = hero->getPosition();
+
+            // Move hero to correct X coordinate
+            hero->setPosition(targetPoint.getX(), heroPosition.getY());
+
+            heroPosition = hero->getPosition();
+
+            // Move camera so we can calculate correct Y offset
+            Camera & camera = gamePlayState.camera;
+            camera.lookAt(targetPoint.getX(), targetPoint.getY());
+
+            float topOfCameraY = camera.getView().getTop();
+
+            hero->setPosition(heroPosition.getX(), topOfCameraY - hero->getBoundingBox().getHeight());
+            hero->performTeleport();
         }
     }
 
@@ -671,13 +689,20 @@ namespace hikari {
         auto& hero = gamePlayState.hero;
         auto& heroPosition = hero->getPosition();
 
-        camera.lookAt(heroPosition.getX(), heroPosition.getY());
+        //camera.lookAt(heroPosition.getX(), heroPosition.getY());
 
-        gamePlayState.changeSubState(std::unique_ptr<SubState>(new PlayingSubState(gamePlayState)));
+        if(heroPosition.getY() < targetPoint.getY()) {
+            float deltaY = std::min(16.0f, std::abs(targetPoint.getY() - heroPosition.getY()));
+            hero->setPosition(heroPosition.getX(), heroPosition.getY() + deltaY);
+        } else {
+            hero->performMorph();
+            gamePlayState.changeSubState(std::unique_ptr<SubState>(new PlayingSubState(gamePlayState)));
+        }
     }
 
     void GamePlayState::TeleportSubState::render(sf::RenderTarget &target) {
         gamePlayState.renderMap(target);
+        gamePlayState.renderHero(target);
     }
 
     //

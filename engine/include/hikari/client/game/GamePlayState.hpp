@@ -186,6 +186,9 @@ namespace hikari {
          * Teleporting sequence, in our out of the screen.
          */
         class TeleportSubState : public SubState {
+        private:
+            Vector2<float> startingPoint;
+            Vector2<float> targetPoint;
         public:
             TeleportSubState(GamePlayState & gamePlayState);
             virtual ~TeleportSubState();

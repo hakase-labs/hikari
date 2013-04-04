@@ -1,4 +1,5 @@
 #include "hikari/client/game/objects/Hero.hpp"
+#include "hikari/core/game/Animation.hpp"
 #include "hikari/core/game/map/Room.hpp"
 #include "hikari/core/math/RetroVector.hpp"
 #include "hikari/core/game/SpriteAnimator.hpp"
@@ -10,7 +11,7 @@ namespace hikari {
 
     Hero::Hero(const int &id, std::shared_ptr<Room> room)
         : Entity(id, room)
-        , isStopping(false)
+        , isDecelerating(false)
         , isStanding(false)
         , isWalking(false)
         , isSliding(false)
@@ -21,6 +22,9 @@ namespace hikari {
         , isOnLadder(false)
         , isTouchingLadder(false)
         , isTouchingLadderWithFeet(false)
+        , isFullyAccelerated(false)
+        , isShooting(false)
+        , isTeleporting(false)
         , ladderPositionX(0)
         , mobilityState(nullptr)
         , shootingState(nullptr)
@@ -228,6 +232,14 @@ namespace hikari {
         }
     }
 
+    void Hero::performTeleport() {
+        changeMobilityState(std::unique_ptr<MobilityState>(new TeleportingMobilityState(this)));
+    }
+
+    void Hero::performMorph() {
+        isMorphing = true;
+    }
+
     void Hero::performSlide() {
         std::cout << "Started sliding!" << std::endl;
     }
@@ -253,40 +265,48 @@ namespace hikari {
     }
 
     void Hero::chooseAnimation() {
-        // Idle animations
-        if(isStanding) {
-            if(isStopping) {
-                changeAnimation("running-stopping");
+        if(isTeleporting) {
+            if(isMorphing) {
+                changeAnimation("morphing");
             } else {
-                if(isShooting) {
-                    changeAnimation("standing-shooting");
+                changeAnimation("teleporting");
+            }
+        } else {
+            // Idle animations
+            if(isStanding) {
+                if(isDecelerating) {
+                    changeAnimation("running-stopping");
                 } else {
-                    changeAnimation("standing");
+                    if(isShooting) {
+                        changeAnimation("standing-shooting");
+                    } else {
+                        changeAnimation("standing");
+                    }
                 }
             }
-        }
-        // Walking animations
-        else if(isWalking) {
-            if(!isFullyAccelerated) {
-                changeAnimation("running-accelerating");
-            } else {
-                if(isShooting) {
-                    changeAnimation("running-shooting");
+            // Walking animations
+            else if(isWalking) {
+                if(!isFullyAccelerated) {
+                    changeAnimation("running-accelerating");
                 } else {
-                    changeAnimation("running");
+                    if(isShooting) {
+                        changeAnimation("running-shooting");
+                    } else {
+                        changeAnimation("running");
+                    }
                 }
             }
-        }
-        // Sliding
-        else if(isSliding) {
-            changeAnimation("sliding");
-        }
-        // Falling or Jumping
-        else if(isAirborn) {
-            if(isShooting) {
-                changeAnimation("jumping-shooting");
-            } else {
-                changeAnimation("jumping");
+            // Sliding
+            else if(isSliding) {
+                changeAnimation("sliding");
+            }
+            // Falling or Jumping
+            else if(isAirborn) {
+                if(isShooting) {
+                    changeAnimation("jumping-shooting");
+                } else {
+                    changeAnimation("jumping");
+                }
             }
         }
     }
@@ -322,6 +342,50 @@ namespace hikari {
     }
 
     //
+    // TeleportingMobilityState
+    //
+    Hero::TeleportingMobilityState::TeleportingMobilityState(Hero * hero)
+        : MobilityState(hero)
+        , morphingLimit(0.2167f) // ~13 frames
+        , morphingCounter(0.0f)
+    {
+
+    }
+
+    Hero::TeleportingMobilityState::~TeleportingMobilityState() {
+
+    }
+
+    void Hero::TeleportingMobilityState::enter() {
+        hero->isTeleporting = true;
+        hero->isMorphing = false;
+        hero->chooseAnimation();
+        hero->setVelocityX(0.0f);
+        hero->setVelocityY(0.0f);
+    }
+
+    void Hero::TeleportingMobilityState::exit() {
+        hero->isTeleporting = false;
+        hero->isMorphing = false;
+    }
+
+    void Hero::TeleportingMobilityState::update(const float & dt) {
+        if(hero->isMorphing) {
+            if(morphingCounter == 0.0f) {
+                hero->chooseAnimation();
+            }
+
+            morphingCounter += dt;
+
+            if(morphingCounter >= morphingLimit) {
+                // Time to change!
+                hero->changeMobilityState(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
+                // Emit event or play a sound
+            }
+        }
+    }
+
+    //
     // IdleMobilityState
     //
     Hero::IdleMobilityState::IdleMobilityState(Hero * hero)
@@ -349,8 +413,8 @@ namespace hikari {
         if(hero->actionController) {
             auto const * controller = hero->actionController.get();
 
-            if(hero->isStopping) {
-                hero->isStopping = false;
+            if(hero->isDecelerating) {
+                hero->isDecelerating = false;
                 hero->chooseAnimation();
             }
 
@@ -399,7 +463,7 @@ namespace hikari {
         hero->isWalking = true;
         hero->isAirborn = false;
         hero->isStanding = false;
-        hero->isStopping = false;
+        hero->isDecelerating = false;
         isDecelerating = false;
     }
 
@@ -456,7 +520,7 @@ namespace hikari {
                 if(!isDecelerating) {
                     isDecelerating = true;
                 } else {
-                    hero->isStopping = true;
+                    hero->isDecelerating = true;
                     hero->changeMobilityState(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
                     return;
                 }
@@ -467,7 +531,7 @@ namespace hikari {
                 if(!isDecelerating) {
                     isDecelerating = true;
                 } else {
-                    hero->isStopping = true;
+                    hero->isDecelerating = true;
                     hero->changeMobilityState(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
                     return;
                 }
@@ -563,7 +627,7 @@ namespace hikari {
                 }
             } else {
                 if(!controller->shouldMoveLeft() && !controller->shouldMoveRight()){
-                    hero->isStopping = true;
+                    hero->isDecelerating = true;
                     hero->changeMobilityState(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
                     return;
                 }
@@ -585,7 +649,7 @@ namespace hikari {
                     return;
                 }
 
-                hero->isStopping = true;
+                hero->isDecelerating = true;
                 hero->changeMobilityState(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
                 return;
             }
@@ -686,7 +750,7 @@ namespace hikari {
         hero->isFullyAccelerated = false;
         hero->isJumping = false;
         hero->isStanding = false;
-        hero->isStopping = false;
+        hero->isDecelerating = false;
         hero->isWalking = false;
 
         hero->setVelocityX(0.0f);
