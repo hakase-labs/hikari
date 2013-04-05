@@ -132,7 +132,7 @@ namespace hikari {
                             ladderPositionX = tileX + static_cast<int>(bbox.getWidth() / 2);
                             isTouchingLadder = true;
 
-                            // std::cout << "Overlap Right: " << overlap << std::endl;
+                            // HIKARI_LOG(debug4) << "Overlap Right: " << overlap;
                         }
                     }
 
@@ -147,7 +147,7 @@ namespace hikari {
                             ladderPositionX = tileX + static_cast<int>(bbox.getWidth() / 2);
                             isTouchingLadder = true;
 
-                            // std::cout << "Overlap Left: " << overlap << std::endl;
+                            // HIKARI_LOG(debug4) << "Overlap Left: " << overlap;
                         }
                     }
 
@@ -159,7 +159,7 @@ namespace hikari {
                             isTouchingLadderTop = true;
                         }
 
-                        // std::cout << "Ladder top overlap: " << static_cast<int>(ladderTopOverlap) << std::endl;
+                        // HIKARI_LOG(debug4) << "Ladder top overlap: " << static_cast<int>(ladderTopOverlap);
                     }
                 } else {
                     isTouchingLadder = false;
@@ -244,10 +244,10 @@ namespace hikari {
         if(isOnLadder) {
             isOnLadder = false;
             setVelocityY(0);
-            std::cout << "Started fall form ladder at " << getPosition().getY() << std::endl;
+            HIKARI_LOG(debug4) << "Started fall form ladder at " << getPosition().getY();
         } else {
             setVelocityY(jumpVelocity.getY());
-            std::cout << "Started jump at " << getPosition().getY() << std::endl;
+            HIKARI_LOG(debug4) << "Started jump at " << getPosition().getY();
         }
     }
 
@@ -260,7 +260,7 @@ namespace hikari {
     }
 
     void Hero::performSlide() {
-        std::cout << "Started sliding!" << std::endl;
+        HIKARI_LOG(debug4) << "Started sliding!";
     }
 
     void Hero::changeMobilityState(std::unique_ptr<MobilityState> && newState) {
@@ -488,11 +488,11 @@ namespace hikari {
         , isDecelerating(false)
         , lastDirection(Directions::None)
     {
-        // std::cout << "WalkingMobilityState()" << std::endl;
+        // HIKARI_LOG(debug4) << "WalkingMobilityState()";
     }
 
     Hero::WalkingMobilityState::~WalkingMobilityState() {
-        // std::cout << "~WalkingMobilityState()" << std::endl;
+        // HIKARI_LOG(debug4) << "~WalkingMobilityState()";
     }
 
     void Hero::WalkingMobilityState::enter() {
@@ -538,7 +538,7 @@ namespace hikari {
                     hero.isFullyAccelerated = !(accelerationDelay < accelerationDelayThreshold);
                     accelerationDelay += 1; // dt;
 
-                    std::cout << "Accellerating..." << std::endl;
+                    HIKARI_LOG(debug4) << "Accellerating...";
 
                     hero.chooseAnimation();
                 } else {
@@ -839,7 +839,7 @@ namespace hikari {
                     int newY = newBottom;// + offsetPixels.getY();
                     hero.body.setPosition(positionPixels.getX(), static_cast<float>(newY));
                     hero.body.setOnGround(true);
-                    //std::cout << "new y = " << newY << std::endl;
+                    // HIKARI_LOG(debug4) << "new y = " << newY;
                 }
             } else if(controller->shouldMoveDown()) {
                 if(hero.isTouchingLadderTop) {
@@ -910,7 +910,7 @@ namespace hikari {
         hero.isShooting = true;
         cooldown = (15.0f * (1.0f / 60.0f)); // this should actually be the weapon's cooldown...
         cooldownTimer = cooldown;
-        std::cout << "Shooting now!" << std::endl;
+        HIKARI_LOG(debug4) << "Shooting now!";
         hero.chooseAnimation();
     }
 
@@ -950,7 +950,7 @@ namespace hikari {
 
     void Hero::NotShootingState::enter() {
         hero.isShooting = false;
-        std::cout << "Not shooting!" << std::endl;
+        HIKARI_LOG(debug4) << "Not shooting!";
         hero.chooseAnimation();
     }
 
