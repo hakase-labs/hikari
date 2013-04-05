@@ -43,7 +43,9 @@ namespace hikari {
         std::shared_ptr<HeroActionController> actionController;
 
         std::unique_ptr<MobilityState> mobilityState;
+        std::unique_ptr<MobilityState> nextMobilityState;
         std::unique_ptr<ShootingState> shootingState;
+        std::unique_ptr<ShootingState> nextShootingState;
 
         /**
             Determines whether the Hero can jump right now or not.
@@ -59,7 +61,9 @@ namespace hikari {
         void performSlide();
 
         void changeMobilityState(std::unique_ptr<MobilityState> && newState);
+        void requestMobilityStateChange(std::unique_ptr<MobilityState> && newState);
         void changeShootingState(std::unique_ptr<ShootingState> && newState);
+        void requestShootingStateChange(std::unique_ptr<ShootingState> && newState);
 
         void chooseAnimation();
 
@@ -68,10 +72,14 @@ namespace hikari {
             MobilityState(Hero * hero);
             Hero * hero;
         public:
+            enum StateChangeAction {
+                CONTINUE,
+                NEXT
+            };
             virtual ~MobilityState();
             virtual void enter() = 0;
             virtual void exit() = 0;
-            virtual void update(const float & dt) = 0;
+            virtual StateChangeAction update(const float & dt) = 0;
         };
 
         class TeleportingMobilityState : public MobilityState {
@@ -83,7 +91,7 @@ namespace hikari {
             virtual ~TeleportingMobilityState();
             virtual void enter();
             virtual void exit();
-            virtual void update(const float & dt);
+            virtual StateChangeAction update(const float & dt);
         };
 
         class IdleMobilityState : public MobilityState {
@@ -92,7 +100,7 @@ namespace hikari {
             virtual ~IdleMobilityState();
             virtual void enter();
             virtual void exit();
-            virtual void update(const float & dt);
+            virtual StateChangeAction update(const float & dt);
         };
 
         class WalkingMobilityState : public MobilityState {
@@ -106,7 +114,7 @@ namespace hikari {
             virtual ~WalkingMobilityState();
             virtual void enter();
             virtual void exit();
-            virtual void update(const float & dt);
+            virtual StateChangeAction update(const float & dt);
         };
 
         class SlidingMobilityState : public MobilityState {
@@ -119,7 +127,7 @@ namespace hikari {
             virtual ~SlidingMobilityState();
             virtual void enter();
             virtual void exit();
-            virtual void update(const float & dt);
+            virtual StateChangeAction update(const float & dt);
         };
 
         class AirbornMobilityState : public MobilityState {
@@ -128,7 +136,7 @@ namespace hikari {
             virtual ~AirbornMobilityState();
             virtual void enter();
             virtual void exit();
-            virtual void update(const float & dt);
+            virtual StateChangeAction update(const float & dt);
         };
 
         class ClimbingMobilityState : public MobilityState {
@@ -137,7 +145,7 @@ namespace hikari {
             virtual ~ClimbingMobilityState();
             virtual void enter();
             virtual void exit();
-            virtual void update(const float & dt);
+            virtual StateChangeAction update(const float & dt);
         };
 
         class ShootingState {
@@ -146,10 +154,14 @@ namespace hikari {
             ShootingState(Hero & hero);
 
         public:
+            enum StateChangeAction {
+                CONTINUE,
+                NEXT
+            };
             virtual ~ShootingState();
             virtual void enter() = 0;
             virtual void exit() = 0;
-            virtual void update(const float & dt) = 0;
+            virtual StateChangeAction update(const float & dt) = 0;
         };
 
         class IsShootingState : public ShootingState {
@@ -162,7 +174,7 @@ namespace hikari {
             virtual ~IsShootingState();
             virtual void enter();
             virtual void exit();
-            virtual void update(const float & dt);
+            virtual StateChangeAction update(const float & dt);
         };
 
         class NotShootingState : public ShootingState {
@@ -171,7 +183,7 @@ namespace hikari {
             virtual ~NotShootingState();
             virtual void enter();
             virtual void exit();
-            virtual void update(const float & dt);
+            virtual StateChangeAction update(const float & dt);
         };
 
     public:

@@ -26,9 +26,11 @@ namespace hikari {
         , isShooting(false)
         , isTeleporting(false)
         , ladderPositionX(0)
-        , mobilityState(nullptr)
-        , shootingState(nullptr)
         , actionController(nullptr)
+        , mobilityState(nullptr)
+        , nextMobilityState(nullptr)
+        , shootingState(nullptr)
+        , nextShootingState(nullptr) 
     {
         body.setGravitated(true);
         body.setHasWorldCollision(true);
@@ -200,13 +202,30 @@ namespace hikari {
                 }
             }
 
+            //
+            // State machine updates
+            //
+
             if(shootingState) {
-                shootingState->update(dt);
+                // Handle state change request actions...
+                ShootingState::StateChangeAction action = shootingState->update(dt);
+
+                if(ShootingState::NEXT == action) {
+                    if(nextShootingState) {
+                        changeShootingState(std::move(nextShootingState));
+                    }
+                }
             }
 
-            // Do mobility updating...
             if(mobilityState) {
-                mobilityState->update(dt);
+                // Handle state change request actions...
+                MobilityState::StateChangeAction action = mobilityState->update(dt);
+
+                if(MobilityState::NEXT == action) {
+                    if(nextMobilityState) {
+                        changeMobilityState(std::move(nextMobilityState));
+                    }
+                }
             }
         }
 
@@ -261,6 +280,18 @@ namespace hikari {
             }
             shootingState = std::move(newState);
             shootingState->enter();
+        }
+    }
+
+    void Hero::requestMobilityStateChange(std::unique_ptr<MobilityState> && newState) {
+        if(newState) {
+            nextMobilityState = std::move(newState);
+        }
+    }
+
+    void Hero::requestShootingStateChange(std::unique_ptr<ShootingState> && newState) {
+        if(newState) {
+            nextShootingState = std::move(newState);
         }
     }
 
@@ -369,7 +400,7 @@ namespace hikari {
         hero->isMorphing = false;
     }
 
-    void Hero::TeleportingMobilityState::update(const float & dt) {
+    Hero::MobilityState::StateChangeAction Hero::TeleportingMobilityState::update(const float & dt) {
         if(hero->isMorphing) {
             if(morphingCounter == 0.0f) {
                 hero->chooseAnimation();
@@ -379,10 +410,13 @@ namespace hikari {
 
             if(morphingCounter >= morphingLimit) {
                 // Time to change!
-                hero->changeMobilityState(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
+                hero->requestMobilityStateChange(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
                 // Emit event or play a sound
+                return MobilityState::NEXT;
             }
         }
+
+        return MobilityState::CONTINUE;
     }
 
     //
@@ -409,7 +443,7 @@ namespace hikari {
         hero->isStanding = false;
     }
 
-    void Hero::IdleMobilityState::update(const float & dt) {
+    Hero::MobilityState::StateChangeAction Hero::IdleMobilityState::update(const float & dt) {
         if(hero->actionController) {
             auto const * controller = hero->actionController.get();
 
@@ -420,26 +454,28 @@ namespace hikari {
 
             // Disappearing blocks, moving platform, who knows...
             if(!hero->body.isOnGround()) {
-                hero->changeMobilityState(std::unique_ptr<MobilityState>(new AirbornMobilityState(hero)));
-                return;
+                hero->requestMobilityStateChange(std::unique_ptr<MobilityState>(new AirbornMobilityState(hero)));
+                return MobilityState::NEXT;
             } else {
                 if((controller->shouldMoveLeft() && !controller->shouldMoveRight())
                     || (controller->shouldMoveRight() && !controller->shouldMoveLeft())) {
-                    hero->changeMobilityState(std::unique_ptr<MobilityState>(new WalkingMobilityState(hero)));
-                    return;
+                    hero->requestMobilityStateChange(std::unique_ptr<MobilityState>(new WalkingMobilityState(hero)));
+                    return MobilityState::NEXT;
                 }
 
                 if(controller->shouldSlide() && hero->canSlide()) {
-                    hero->changeMobilityState(std::unique_ptr<MobilityState>(new SlidingMobilityState(hero)));
-                    return;
+                    hero->requestMobilityStateChange(std::unique_ptr<MobilityState>(new SlidingMobilityState(hero)));
+                    return MobilityState::NEXT;
                 }
 
                 if(hero->canJump() && controller->shouldJump()) {
-                    hero->changeMobilityState(std::unique_ptr<MobilityState>(new AirbornMobilityState(hero)));
-                    return;
+                    hero->requestMobilityStateChange(std::unique_ptr<MobilityState>(new AirbornMobilityState(hero)));
+                    return MobilityState::NEXT;
                 }
             }
         }
+
+        return MobilityState::CONTINUE;
     }
 
     //
@@ -471,7 +507,7 @@ namespace hikari {
         hero->isWalking = false;
     }
 
-    void Hero::WalkingMobilityState::update(const float & dt) {
+    Hero::MobilityState::StateChangeAction Hero::WalkingMobilityState::update(const float & dt) {
         if(hero->actionController) {
             auto const * controller = hero->actionController.get();
 
@@ -521,8 +557,8 @@ namespace hikari {
                     isDecelerating = true;
                 } else {
                     hero->isDecelerating = true;
-                    hero->changeMobilityState(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
-                    return;
+                    hero->requestMobilityStateChange(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
+                    return MobilityState::NEXT;
                 }
             }
 
@@ -532,27 +568,29 @@ namespace hikari {
                     isDecelerating = true;
                 } else {
                     hero->isDecelerating = true;
-                    hero->changeMobilityState(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
-                    return;
+                    hero->requestMobilityStateChange(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
+                    return MobilityState::NEXT;
                 }
             }
 
             if(controller->shouldSlide() && hero->canSlide()) {
-                hero->changeMobilityState(std::unique_ptr<MobilityState>(new SlidingMobilityState(hero)));
-                return;
+                hero->requestMobilityStateChange(std::unique_ptr<MobilityState>(new SlidingMobilityState(hero)));
+                return MobilityState::NEXT;
             }
 
             // Trying to jump so go ahead and jump.
             if(hero->canJump() && controller->shouldJump()) {
-                hero->changeMobilityState(std::unique_ptr<MobilityState>(new AirbornMobilityState(hero)));
-                return;
+                hero->requestMobilityStateChange(std::unique_ptr<MobilityState>(new AirbornMobilityState(hero)));
+                return MobilityState::NEXT;
             }
 
             if(!hero->body.isOnGround()) {
-                hero->changeMobilityState(std::unique_ptr<MobilityState>(new AirbornMobilityState(hero)));
-                return;
+                hero->requestMobilityStateChange(std::unique_ptr<MobilityState>(new AirbornMobilityState(hero)));
+                return MobilityState::NEXT;
             }
         }
+
+        return MobilityState::CONTINUE;
     }
 
     Hero::SlidingMobilityState::SlidingMobilityState(Hero * hero)
@@ -605,7 +643,7 @@ namespace hikari {
         hero->isInTunnel = false;
     }
 
-    void Hero::SlidingMobilityState::update(const float & dt) {
+    Hero::MobilityState::StateChangeAction Hero::SlidingMobilityState::update(const float & dt) {
         slideDuration += dt;
 
         if(auto const * controller = hero->actionController.get()) {
@@ -628,32 +666,34 @@ namespace hikari {
             } else {
                 if(!controller->shouldMoveLeft() && !controller->shouldMoveRight()){
                     hero->isDecelerating = true;
-                    hero->changeMobilityState(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
-                    return;
+                    hero->requestMobilityStateChange(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
+                    return MobilityState::NEXT;
                 }
 
                 if((controller->shouldMoveLeft() && !controller->shouldMoveRight())
                     || (controller->shouldMoveRight() && !controller->shouldMoveLeft())) {
                         hero->isFullyAccelerated = true;
-                        hero->changeMobilityState(std::unique_ptr<MobilityState>(new WalkingMobilityState(hero)));
-                        return;
+                        hero->requestMobilityStateChange(std::unique_ptr<MobilityState>(new WalkingMobilityState(hero)));
+                        return MobilityState::NEXT;
                 }
 
                 if(hero->canJump() && controller->shouldJump()) {
-                    hero->changeMobilityState(std::unique_ptr<MobilityState>(new AirbornMobilityState(hero)));
-                    return;
+                    hero->requestMobilityStateChange(std::unique_ptr<MobilityState>(new AirbornMobilityState(hero)));
+                    return MobilityState::NEXT;
                 }
 
                 if(!hero->body.isOnGround()) {
-                    hero->changeMobilityState(std::unique_ptr<MobilityState>(new AirbornMobilityState(hero)));
-                    return;
+                    hero->requestMobilityStateChange(std::unique_ptr<MobilityState>(new AirbornMobilityState(hero)));
+                    return MobilityState::NEXT;
                 }
 
                 hero->isDecelerating = true;
-                hero->changeMobilityState(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
-                return;
+                hero->requestMobilityStateChange(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
+                return MobilityState::NEXT;
             }
         }
+
+        return MobilityState::CONTINUE;
     }
 
     //
@@ -690,7 +730,7 @@ namespace hikari {
         hero->isJumping = false;
     }
 
-    void Hero::AirbornMobilityState::update(const float & dt) {
+    Hero::MobilityState::StateChangeAction Hero::AirbornMobilityState::update(const float & dt) {
         if(hero->actionController) {
             auto const * controller = hero->actionController.get();
 
@@ -723,14 +763,16 @@ namespace hikari {
             if(hero->body.isOnGround()) {
                 if(controller->shouldMoveLeft() || controller->shouldMoveRight()) {
                     hero->isFullyAccelerated = true;
-                    hero->changeMobilityState(std::unique_ptr<MobilityState>(new WalkingMobilityState(hero)));
-                    return;
+                    hero->requestMobilityStateChange(std::unique_ptr<MobilityState>(new WalkingMobilityState(hero)));
+                    return MobilityState::NEXT;
                 } else {
-                    hero->changeMobilityState(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
-                    return;
+                    hero->requestMobilityStateChange(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
+                    return MobilityState::NEXT;
                 }
             }
         }
+
+        return MobilityState::CONTINUE;
     }
 
     Hero::ClimbingMobilityState::ClimbingMobilityState(Hero * hero)
@@ -766,7 +808,7 @@ namespace hikari {
         hero->getAnimationPlayer()->unpause();
     }
 
-    void Hero::ClimbingMobilityState::update(const float & dt) {
+    Hero::MobilityState::StateChangeAction Hero::ClimbingMobilityState::update(const float & dt) {
         hero->body.setTreatLadderTopAsGround(false);
 
         if(hero->actionController) {
@@ -811,8 +853,8 @@ namespace hikari {
                 // If you're holding up or down the jump button is ignored
                 // So that's why it's at the end of this if/else branch
                 hero->isFalling = true;
-                hero->changeMobilityState(std::unique_ptr<MobilityState>(new AirbornMobilityState(hero)));
-                return;
+                hero->requestMobilityStateChange(std::unique_ptr<MobilityState>(new AirbornMobilityState(hero)));
+                return MobilityState::NEXT;
             }
 
             // Only change directions if you're shooting
@@ -822,22 +864,24 @@ namespace hikari {
 
 
             if(hero->body.isOnGround() && !hero->isTouchingLadderWithFeet) {
-                hero->changeMobilityState(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
-                return;
+                hero->requestMobilityStateChange(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
+                return MobilityState::NEXT;
             }
 
             // Can reach the top of a ladder and not be climbing anymore
             if(!hero->isTouchingLadder && !hero->isTouchingLadderWithFeet) {
                 if(controller->shouldMoveDown()) {
                     hero->isFalling = true;
-                    hero->changeMobilityState(std::unique_ptr<MobilityState>(new AirbornMobilityState(hero)));
-                    return;
+                    hero->requestMobilityStateChange(std::unique_ptr<MobilityState>(new AirbornMobilityState(hero)));
+                    return MobilityState::NEXT;
                 }
 
-                hero->changeMobilityState(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
-                return;
+                hero->requestMobilityStateChange(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
+                return MobilityState::NEXT;
             }
         }
+
+        return MobilityState::CONTINUE;
     }
 
 
@@ -874,7 +918,7 @@ namespace hikari {
 
     }
 
-    void Hero::IsShootingState::update(const float & dt) {
+    Hero::ShootingState::StateChangeAction Hero::IsShootingState::update(const float & dt) {
         cooldownTimer -= dt;
 
         if(hero.actionController) {
@@ -887,9 +931,11 @@ namespace hikari {
         }
 
         if(cooldownTimer <= 0.0f) {
-            hero.changeShootingState(std::unique_ptr<ShootingState>(new NotShootingState(hero)));
-            return;
+            hero.requestShootingStateChange(std::unique_ptr<ShootingState>(new NotShootingState(hero)));
+            return ShootingState::NEXT;
         }
+
+        return ShootingState::CONTINUE;
     }
 
     Hero::NotShootingState::NotShootingState(Hero & hero)
@@ -912,14 +958,17 @@ namespace hikari {
 
     }
 
-    void Hero::NotShootingState::update(const float & dt) {
+    Hero::ShootingState::StateChangeAction Hero::NotShootingState::update(const float & dt) {
         if(hero.actionController) {
             auto const * controller = hero.actionController.get();
 
             if(controller->shouldShootWeapon()) {
-                hero.changeShootingState(std::unique_ptr<ShootingState>(new IsShootingState(hero)));
+                hero.requestShootingStateChange(std::unique_ptr<ShootingState>(new IsShootingState(hero)));
+                return ShootingState::NEXT;
             }
         }
+
+        return ShootingState::CONTINUE;
     }
 
 } // hikari
