@@ -349,6 +349,11 @@ int main(int argc, char** argv) {
                     //
                     if((event.type == sf::Event::KeyPressed)) {
 
+                        if(event.key.code == sf::Keyboard::F2) {
+                            sf::Image screenShotBuffer = screenBuffer.getTexture().copyToImage();
+                            screenShotBuffer.saveToFile("screenshot.png");
+                        }
+
                         if(event.key.code == sf::Keyboard::F7) {
                             speedMultiplier += 0.1f;
                         }
