@@ -69,8 +69,8 @@ namespace hikari {
 
         class MobilityState {
         protected:
-            MobilityState(Hero * hero);
-            Hero * hero;
+            MobilityState(Hero & hero);
+            Hero & hero;
         public:
             enum StateChangeAction {
                 CONTINUE,
@@ -87,7 +87,7 @@ namespace hikari {
             float morphingLimit;
             float morphingCounter;
         public:
-            TeleportingMobilityState(Hero * hero);
+            TeleportingMobilityState(Hero & hero);
             virtual ~TeleportingMobilityState();
             virtual void enter();
             virtual void exit();
@@ -96,7 +96,7 @@ namespace hikari {
 
         class IdleMobilityState : public MobilityState {
         public:
-            IdleMobilityState(Hero * hero);
+            IdleMobilityState(Hero & hero);
             virtual ~IdleMobilityState();
             virtual void enter();
             virtual void exit();
@@ -110,7 +110,7 @@ namespace hikari {
             bool isDecelerating;
             Direction lastDirection;
         public:
-            WalkingMobilityState(Hero * hero);
+            WalkingMobilityState(Hero & hero);
             virtual ~WalkingMobilityState();
             virtual void enter();
             virtual void exit();
@@ -123,7 +123,7 @@ namespace hikari {
             float slideDurationThreshold;
             BoundingBoxF oldBoundingBox;
         public:
-            SlidingMobilityState(Hero * hero);
+            SlidingMobilityState(Hero & hero);
             virtual ~SlidingMobilityState();
             virtual void enter();
             virtual void exit();
@@ -132,7 +132,7 @@ namespace hikari {
 
         class AirbornMobilityState : public MobilityState {
         public:
-            AirbornMobilityState(Hero * hero);
+            AirbornMobilityState(Hero & hero);
             virtual ~AirbornMobilityState();
             virtual void enter();
             virtual void exit();
@@ -141,7 +141,7 @@ namespace hikari {
 
         class ClimbingMobilityState : public MobilityState {
         public:
-            ClimbingMobilityState(Hero * hero);
+            ClimbingMobilityState(Hero & hero);
             virtual ~ClimbingMobilityState();
             virtual void enter();
             virtual void exit();
