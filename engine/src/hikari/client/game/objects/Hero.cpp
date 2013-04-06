@@ -4,7 +4,7 @@
 #include "hikari/client/game/objects/HeroTeleportingMobilityState.hpp"
 #include "hikari/core/game/Animation.hpp"
 #include "hikari/core/game/map/Room.hpp"
-#include "hikari/core/math/RetroVector.hpp"
+#include "hikari/core/math/NESNumber.hpp"
 #include "hikari/core/game/SpriteAnimator.hpp"
 #include "hikari/core/game/map/Tileset.hpp"
 #include "hikari/core/util/Log.hpp"
@@ -54,11 +54,11 @@ namespace hikari {
 #endif // HIKARI_DEBUG_HERO_PHYSICS
         });
 
-        walkVelocity = Vector2<float>(RetroVector(0x01, 0x4C).toFloat(), 0.0f);
+        walkVelocity = Vector2<float>(NESNumber(0x01, 0x4C).toFloat(), 0.0f);
         climbVelocity = Vector2<float>(walkVelocity.getY(), walkVelocity.getX()); // Climbs at same speed as he walks
-        jumpVelocity = Vector2<float>(0.0f, -(RetroVector(0x04, 0xA5) + RetroVector(0, 0x40) + RetroVector(0, 0x40)).toFloat());
-        suddenFallVelocity = Vector2<float>(0.0f, RetroVector(0, 0x80).toFloat());
-        slideVelocity = Vector2<float>(RetroVector(0x02, 0x80).toFloat(), 0.0f);
+        jumpVelocity = Vector2<float>(0.0f, -(NESNumber(0x04, 0xA5) + NESNumber(0, 0x40) + NESNumber(0, 0x40)).toFloat());
+        suddenFallVelocity = Vector2<float>(0.0f, NESNumber(0, 0x80).toFloat());
+        slideVelocity = Vector2<float>(NESNumber(0x02, 0x80).toFloat(), 0.0f);
         hurtVelocity = Vector2<float>();
 
         accelerationDelay = 0;

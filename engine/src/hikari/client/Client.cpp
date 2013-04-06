@@ -39,7 +39,7 @@
 #include "hikari/core/geom/Rectangle2D.hpp"
 #include "hikari/core/geom/BoundingBox.hpp"
 #include "hikari/core/util/ServiceLocator.hpp"
-#include "hikari/core/math/RetroVector.hpp"
+#include "hikari/core/math/NESNumber.hpp"
 #include "hikari/core/math/Vector2.hpp"
 #include "hikari/core/util/RedirectStream.hpp"
 #include "hikari/core/util/HashedString.hpp"

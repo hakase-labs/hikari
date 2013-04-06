@@ -100,11 +100,11 @@ namespace hikari {
             transitionFrames = 0;
             jumpIterations = 0;
 
-            retroGravity = RetroVector(0, 0x40);
-            retroPositionY = RetroVector(0, 0);
-            retroVelocityY = RetroVector(0, 0);
-            retroVelocityX = RetroVector(0, 0);
-            retroJumpVelocity = RetroVector(0x04, 0xA5);
+            retroGravity = NESNumber(0, 0x40);
+            retroPositionY = NESNumber(0, 0);
+            retroVelocityY = NESNumber(0, 0);
+            retroVelocityX = NESNumber(0, 0);
+            retroJumpVelocity = NESNumber(0x04, 0xA5);
 
             //Entity ent = Entity(1, currentRoom);
 
@@ -408,29 +408,29 @@ namespace hikari {
             retroVelocityX.setHigh(0);
             retroVelocityX.setLow(0);
             retroVelocityY -= retroGravity;
-            retroVelocityY = std::max(retroVelocityY, RetroVector(-7, 0));
-            retroVelocityY = std::min(retroVelocityY, RetroVector(7, 0));
+            retroVelocityY = std::max(retroVelocityY, NESNumber(-7, 0));
+            retroVelocityY = std::min(retroVelocityY, NESNumber(7, 0));
 
             if(input->isDown(Input::BUTTON_LEFT)) {
                 velocity.x = -1.296875f;
-                //retroVelocityX = RetroVector::fromFloat(-1.296875f);
-                retroVelocityX = -RetroVector(0x01, 0x4C);
+                //retroVelocityX = NESNumber::fromFloat(-1.296875f);
+                retroVelocityX = -NESNumber(0x01, 0x4C);
                 //sprite.FlipX(true);
                 sprite.setScale(-1.0f, sprite.getScale().y);
 
                 // movable->setVelocity(-1.296875f/* * 60.0f */, movable->getVelocity().getY());
-                // hero->setVelocityX(-(RetroVector(0x01, 0x4C).toFloat())/* * 60.0f */);
+                // hero->setVelocityX(-(NESNumber(0x01, 0x4C).toFloat())/* * 60.0f */);
             }
 
             if(input->isDown(Input::BUTTON_RIGHT)) {
                 velocity.x = 1.296875f;
-                //retroVelocityX = RetroVector::fromFloat(1.296875f);
-                retroVelocityX = RetroVector(0x01, 0x4C);
+                //retroVelocityX = NESNumber::fromFloat(1.296875f);
+                retroVelocityX = NESNumber(0x01, 0x4C);
                 //sprite.FlipX(false);
                 sprite.setScale(1.0f, sprite.getScale().y);
 
                 // movable->setVelocity(1.296875f/* * 60.0f */, movable->getVelocity().getY());
-                // hero->setVelocityX(RetroVector(0x01, 0x4C).toFloat()/* * 60.0f */);
+                // hero->setVelocityX(NESNumber(0x01, 0x4C).toFloat()/* * 60.0f */);
             }
 
             auto playerPosition = world.getPlayerPosition();

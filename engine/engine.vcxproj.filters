@@ -381,9 +381,6 @@
     <ClInclude Include="include\hikari\client\audio\AudioService.hpp">
       <Filter>Header Files\client\audio</Filter>
     </ClInclude>
-    <ClInclude Include="include\hikari\core\math\RetroVector.hpp">
-      <Filter>Header Files\core\math</Filter>
-    </ClInclude>
     <ClInclude Include="include\hikari\client\game\GameWorld.hpp">
       <Filter>Header Files\client\game</Filter>
     </ClInclude>
@@ -585,6 +582,9 @@
     <ClInclude Include="include\hikari\client\game\objects\HeroTeleportingMobilityState.hpp">
       <Filter>Header Files\client\game\objects\hero</Filter>
     </ClInclude>
+    <ClInclude Include="include\hikari\core\math\NESNumber.hpp">
+      <Filter>Header Files\core\math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\hikari\core\Hikari.cpp">
@@ -752,9 +752,6 @@
     <ClCompile Include="src\hikari\client\audio\AudioService.cpp">
       <Filter>Source Files\client\audio</Filter>
     </ClCompile>
-    <ClCompile Include="src\hikari\core\math\RetroVector.cpp">
-      <Filter>Source Files\core\math</Filter>
-    </ClCompile>
     <ClCompile Include="src\hikari\client\game\GameWorld.cpp">
       <Filter>Source Files\client\game</Filter>
     </ClCompile>
@@ -904,6 +901,9 @@
     </ClCompile>
     <ClCompile Include="src\hikari\client\game\objects\HeroTeleportingMobilityState.cpp">
       <Filter>Source Files\client\game\objects\hero</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\core\math\NESNumber.cpp">
+      <Filter>Source Files\core\math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

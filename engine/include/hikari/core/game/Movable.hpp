@@ -3,7 +3,7 @@
 
 #include "hikari/core/geom/BoundingBox.hpp"
 #include "hikari/core/math/Vector2.hpp"
-#include "hikari/core/math/RetroVector.hpp"
+#include "hikari/core/math/NESNumber.hpp"
 #include "hikari/core/game/CollisionInfo.hpp"
 #include "hikari/core/game/Direction.hpp"
 #include <functional>

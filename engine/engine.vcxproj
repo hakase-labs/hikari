@@ -173,7 +173,7 @@
     <ClInclude Include="include\hikari\core\Hikari.hpp" />
     <ClInclude Include="include\hikari\core\math\Constants.hpp" />
     <ClInclude Include="include\hikari\core\math\MathUtils.hpp" />
-    <ClInclude Include="include\hikari\core\math\RetroVector.hpp" />
+    <ClInclude Include="include\hikari\core\math\NESNumber.hpp" />
     <ClInclude Include="include\hikari\core\math\Vector2.hpp" />
     <ClInclude Include="include\hikari\core\Platform.hpp" />
     <ClInclude Include="include\hikari\core\util\AnimationSetCache.hpp" />
@@ -257,7 +257,7 @@
     <ClCompile Include="src\hikari\core\game\SpriteAnimator.cpp" />
     <ClCompile Include="src\hikari\core\gui\ImageFont.cpp" />
     <ClCompile Include="src\hikari\core\Hikari.cpp" />
-    <ClCompile Include="src\hikari\core\math\RetroVector.cpp" />
+    <ClCompile Include="src\hikari\core\math\NESNumber.cpp" />
     <ClCompile Include="src\hikari\core\util\ImageCache.cpp" />
     <ClCompile Include="src\hikari\core\util\JsonUtil.cpp" />
     <ClCompile Include="src\hikari\core\util\PhysFS.cpp" />
