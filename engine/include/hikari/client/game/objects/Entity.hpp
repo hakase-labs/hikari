@@ -30,25 +30,26 @@ namespace hikari {
         An Entity has a logical and a rendered component. Most objects are
         subclasses of Entity.
     */
-    class Entity : /* public Movable, */ public GameObject {
+    class Entity : public GameObject {
     private:
         static bool debug;
 
-        Vector2<float> spawnPosition; // to be removed
-
         std::shared_ptr<sf::Texture> spriteTexture;
         sf::Sprite sprite;
+
         std::shared_ptr<AnimationSet> animationSet;
         std::shared_ptr<Animation> currentAnimation;
         std::shared_ptr<Animator> animationPlayer;
 
+        #ifdef HIKARI_DEBUG_ENTITIES
         sf::RectangleShape boxOutline;
         sf::RectangleShape boxPosition;
-        
+        #endif // HIKARI_DEBUG_ENTITIES
+
         Direction direction;
 
         /// Flag to use in determining if this object acts like an obstacle
-        bool obstacle;
+        bool obstacleFlag;
 
         std::string currentAnimationName;
 

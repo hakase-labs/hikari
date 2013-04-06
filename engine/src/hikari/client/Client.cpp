@@ -362,6 +362,14 @@ int main(int argc, char** argv) {
                             speedMultiplier -= 0.1f;
                         }
 
+                        if(event.key.code == sf::Keyboard::Num5) {
+                            Entity::enableDebug(true);
+                        }
+
+                        if(event.key.code == sf::Keyboard::Num6) {
+                            Entity::enableDebug(false);
+                        }
+
                         if(event.key.code == sf::Keyboard::F11) {
                             if(fullscreen) {
                                 window.create(videoMode, APPLICATION_TITLE, sf::Style::Default);
