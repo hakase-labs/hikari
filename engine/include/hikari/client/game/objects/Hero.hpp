@@ -11,6 +11,12 @@ namespace hikari {
     class Hero : public Entity {
     private:
         class MobilityState;
+        class TeleportingMobilityState; // Sublass of MobilityState
+        class IdleMobilityState;        // Sublass of MobilityState
+        class WalkingMobilityState;     // Sublass of MobilityState
+        class SlidingMobilityState;     // Sublass of MobilityState
+        class AirbornMobilityState;     // Sublass of MobilityState
+        class ClimbingMobilityState;    // Sublass of MobilityState
         class ShootingState;
 
         bool isDecelerating;            // Currently running but need to stop
@@ -60,11 +66,57 @@ namespace hikari {
         void performJump();
         void performSlide();
 
+        /**
+         * Changes from the current mobility state to another. Before changing,
+         * the current state's exit() method will be called. After changing, the
+         * new state's enter() method will be called.
+         *
+         * The change happens immediately.
+         * 
+         * @param newState a pointer to a new MobilityState
+         */
         void changeMobilityState(std::unique_ptr<MobilityState> && newState);
+
+        /**
+         * Enqueues a new MobilityState to change to. When the state machine gets
+         * the signal to change states then the most recently-enqueued state will
+         * be changed to.
+         *
+         * To change states the current MobilityState::update must return a
+         * MobilityState::NEXT value.
+         * 
+         * @param newState a pointer to a new MobilityState to enqueue
+         */
         void requestMobilityStateChange(std::unique_ptr<MobilityState> && newState);
+
+        /**
+         * Changes from the current shooting state to another. Before changing,
+         * the current state's exit() method will be called. After changing, the
+         * new state's enter() method will be called.
+         *
+         * The change happens immediately.
+         * 
+         * @param newState a pointer to a new ShootingState
+         */
         void changeShootingState(std::unique_ptr<ShootingState> && newState);
+
+        /**
+         * Enqueues a new ShootingState to change to. When the state machine gets
+         * the signal to change states then the most recently-enqueued state will
+         * be changed to.
+         *
+         * To change states the current ShootingState::update must return a
+         * ShootingState::NEXT value.
+         * 
+         * @param newState a pointer to a new ShootingState to enqueue
+         */
         void requestShootingStateChange(std::unique_ptr<ShootingState> && newState);
 
+        /**
+         * Changes the hero's animation based on internal state variables. Rather
+         * than explicitly changing animations from each state, just make a call
+         * to this method and the correct animation will be determined and used.
+         */
         void chooseAnimation();
 
         class MobilityState {
@@ -80,72 +132,6 @@ namespace hikari {
             virtual void enter() = 0;
             virtual void exit() = 0;
             virtual StateChangeAction update(const float & dt) = 0;
-        };
-
-        class TeleportingMobilityState : public MobilityState {
-        private:
-            float morphingLimit;
-            float morphingCounter;
-        public:
-            TeleportingMobilityState(Hero & hero);
-            virtual ~TeleportingMobilityState();
-            virtual void enter();
-            virtual void exit();
-            virtual StateChangeAction update(const float & dt);
-        };
-
-        class IdleMobilityState : public MobilityState {
-        public:
-            IdleMobilityState(Hero & hero);
-            virtual ~IdleMobilityState();
-            virtual void enter();
-            virtual void exit();
-            virtual StateChangeAction update(const float & dt);
-        };
-
-        class WalkingMobilityState : public MobilityState {
-        private:
-            int accelerationDelay;
-            int accelerationDelayThreshold;
-            bool isDecelerating;
-            Direction lastDirection;
-        public:
-            WalkingMobilityState(Hero & hero);
-            virtual ~WalkingMobilityState();
-            virtual void enter();
-            virtual void exit();
-            virtual StateChangeAction update(const float & dt);
-        };
-
-        class SlidingMobilityState : public MobilityState {
-        private:
-            float slideDuration;
-            float slideDurationThreshold;
-            BoundingBoxF oldBoundingBox;
-        public:
-            SlidingMobilityState(Hero & hero);
-            virtual ~SlidingMobilityState();
-            virtual void enter();
-            virtual void exit();
-            virtual StateChangeAction update(const float & dt);
-        };
-
-        class AirbornMobilityState : public MobilityState {
-        public:
-            AirbornMobilityState(Hero & hero);
-            virtual ~AirbornMobilityState();
-            virtual void enter();
-            virtual void exit();
-            virtual StateChangeAction update(const float & dt);
-        };
-
-        class ClimbingMobilityState : public MobilityState {
-        public:
-            ClimbingMobilityState(Hero & hero);
-            virtual ~ClimbingMobilityState();
-            virtual void enter();
-            virtual void exit();
-            virtual StateChangeAction update(const float & dt);
         };
 
         class ShootingState {

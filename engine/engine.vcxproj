@@ -33,6 +33,12 @@
     <ClCompile Include="src\hikari\client\game\objects\EnemyBrain.cpp" />
     <ClCompile Include="src\hikari\client\game\objects\Entity.cpp" />
     <ClCompile Include="src\hikari\client\game\objects\FactoryHelpers.cpp" />
+    <ClCompile Include="src\hikari\client\game\objects\HeroAirbornMobilityState.cpp" />
+    <ClCompile Include="src\hikari\client\game\objects\HeroClimbingMobilityState.cpp" />
+    <ClCompile Include="src\hikari\client\game\objects\HeroIdleMobilityState.cpp" />
+    <ClCompile Include="src\hikari\client\game\objects\HeroSlidingMobilityState.cpp" />
+    <ClCompile Include="src\hikari\client\game\objects\HeroTeleportingMobilityState.cpp" />
+    <ClCompile Include="src\hikari\client\game\objects\HeroWalkingMobilityState.cpp" />
     <ClCompile Include="src\hikari\client\game\objects\ItemFactory.cpp" />
     <ClCompile Include="src\hikari\client\game\objects\ItemSpawner.cpp" />
     <ClCompile Include="src\hikari\client\game\objects\Spawner.cpp" />
@@ -107,6 +113,12 @@
     <ClInclude Include="include\hikari\client\game\objects\FactoryHelpers.hpp" />
     <ClInclude Include="include\hikari\client\game\objects\GameObject.hpp" />
     <ClInclude Include="include\hikari\client\game\objects\Hero.hpp" />
+    <ClInclude Include="include\hikari\client\game\objects\HeroAirbornMobilityState.hpp" />
+    <ClInclude Include="include\hikari\client\game\objects\HeroClimbingMobilityState.hpp" />
+    <ClInclude Include="include\hikari\client\game\objects\HeroIdleMobilityState.hpp" />
+    <ClInclude Include="include\hikari\client\game\objects\HeroSlidingMobilityState.hpp" />
+    <ClInclude Include="include\hikari\client\game\objects\HeroTeleportingMobilityState.hpp" />
+    <ClInclude Include="include\hikari\client\game\objects\HeroWalkingMobilityState.hpp" />
     <ClInclude Include="include\hikari\client\game\objects\ItemFactory.hpp" />
     <ClInclude Include="include\hikari\client\game\objects\ItemSpawner.hpp" />
     <ClInclude Include="include\hikari\client\game\objects\RockmanHero.hpp" />

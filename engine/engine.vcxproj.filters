@@ -151,6 +151,12 @@
     <Filter Include="Header Files\client\game\events">
       <UniqueIdentifier>{42627cc6-f915-4974-8ead-b6b89dc1cc63}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\client\game\objects\hero">
+      <UniqueIdentifier>{f54212a4-4bdb-47c9-915a-6ff77ff4bc8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\client\game\objects\hero">
+      <UniqueIdentifier>{7640f2d1-f7f6-4dcd-983f-057e103b1a58}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\hikari\core\geom\Rectangle2D.hpp">
@@ -329,9 +335,6 @@
     </ClInclude>
     <ClInclude Include="include\hikari\core\geom\Point2D.hpp">
       <Filter>Header Files\core\geom</Filter>
-    </ClInclude>
-    <ClInclude Include="include\hikari\client\game\objects\Hero.hpp">
-      <Filter>Header Files\client\game\objects</Filter>
     </ClInclude>
     <ClInclude Include="include\hikari\client\game\objects\GameObject.hpp">
       <Filter>Header Files\client\game\objects</Filter>
@@ -561,6 +564,27 @@
     <ClInclude Include="include\hikari\client\game\objects\FactoryHelpers.hpp">
       <Filter>Header Files\client\game\objects</Filter>
     </ClInclude>
+    <ClInclude Include="include\hikari\client\game\objects\Hero.hpp">
+      <Filter>Header Files\client\game\objects\hero</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\objects\HeroWalkingMobilityState.hpp">
+      <Filter>Header Files\client\game\objects\hero</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\objects\HeroAirbornMobilityState.hpp">
+      <Filter>Header Files\client\game\objects\hero</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\objects\HeroClimbingMobilityState.hpp">
+      <Filter>Header Files\client\game\objects\hero</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\objects\HeroIdleMobilityState.hpp">
+      <Filter>Header Files\client\game\objects\hero</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\objects\HeroSlidingMobilityState.hpp">
+      <Filter>Header Files\client\game\objects\hero</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\objects\HeroTeleportingMobilityState.hpp">
+      <Filter>Header Files\client\game\objects\hero</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\hikari\core\Hikari.cpp">
@@ -743,9 +767,6 @@
     <ClCompile Include="src\hikari\core\game\AnimationSet.cpp">
       <Filter>Source Files\core\game</Filter>
     </ClCompile>
-    <ClCompile Include="src\hikari\client\game\objects\Hero.cpp">
-      <Filter>Source Files\client\game\objects</Filter>
-    </ClCompile>
     <ClCompile Include="src\hikari\test\core\geom\Vector2DTest.cpp">
       <Filter>Source Files\test</Filter>
     </ClCompile>
@@ -862,6 +883,27 @@
     </ClCompile>
     <ClCompile Include="src\hikari\client\game\objects\FactoryHelpers.cpp">
       <Filter>Source Files\client\game\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\objects\Hero.cpp">
+      <Filter>Source Files\client\game\objects\hero</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\objects\HeroWalkingMobilityState.cpp">
+      <Filter>Source Files\client\game\objects\hero</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\objects\HeroAirbornMobilityState.cpp">
+      <Filter>Source Files\client\game\objects\hero</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\objects\HeroClimbingMobilityState.cpp">
+      <Filter>Source Files\client\game\objects\hero</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\objects\HeroIdleMobilityState.cpp">
+      <Filter>Source Files\client\game\objects\hero</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\objects\HeroSlidingMobilityState.cpp">
+      <Filter>Source Files\client\game\objects\hero</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\objects\HeroTeleportingMobilityState.cpp">
+      <Filter>Source Files\client\game\objects\hero</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
