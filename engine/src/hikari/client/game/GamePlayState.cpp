@@ -659,8 +659,8 @@ namespace hikari {
             spawnPosition.setY(spawnPosition.getY() + gamePlayState.currentRoom->getBounds().getY());
 
             targetPoint
-                .setX(spawnPosition.getX())
-                .setY(spawnPosition.getY());
+                .setX(static_cast<float>(spawnPosition.getX()))
+                .setY(static_cast<float>(spawnPosition.getY()));
 
             auto heroPosition = hero->getPosition();
 

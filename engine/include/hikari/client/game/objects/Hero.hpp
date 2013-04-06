@@ -18,6 +18,8 @@ namespace hikari {
         class AirbornMobilityState;     // Sublass of MobilityState
         class ClimbingMobilityState;    // Sublass of MobilityState
         class ShootingState;
+        class IsShootingState;          // Sublcass of ShootingState
+        class NotShootingState;         // Sublcass of ShootingState
 
         bool isDecelerating;            // Currently running but need to stop
         bool isStanding;                // Standing idle
@@ -35,17 +37,22 @@ namespace hikari {
         bool isShooting;                // Shooting a weapon
         bool isTeleporting;             // Teleporting from sky
         bool isMorphing;                // Morphing from teleport to other state
+
+#ifdef HIKARI_DEBUG_HERO_PHYSICS
         int countAscendingFrames;
         int countDecendingFrames;
+#endif // HIKARI_DEBUG_HERO_PHYSICS
         int accelerationDelay;
         int accelerationDelayThreshold;
         int ladderPositionX;
+
         Vector2<float> walkVelocity;
         Vector2<float> jumpVelocity;
         Vector2<float> climbVelocity;
         Vector2<float> suddenFallVelocity;
         Vector2<float> slideVelocity;
         Vector2<float> hurtVelocity;
+
         std::shared_ptr<HeroActionController> actionController;
 
         std::unique_ptr<MobilityState> mobilityState;

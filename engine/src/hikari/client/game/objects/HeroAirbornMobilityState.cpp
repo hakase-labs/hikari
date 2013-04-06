@@ -50,11 +50,13 @@ namespace hikari {
                 hero.setVelocityX(0.0f);
             }
 
+#ifdef HIKARI_DEBUG_HERO_PHYSICS
             if(hero.getVelocityY() > 0) {
                 hero.countDecendingFrames++;
             } else if(hero.getVelocityY() < 0) {
                 hero.countAscendingFrames++;
             }
+#endif // HIKARI_DEBUG_HERO_PHYSICS
 
             //
             // Other state conditions

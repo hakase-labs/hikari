@@ -48,8 +48,10 @@ namespace hikari {
             this->isFalling = false;
             this->isAirborn = false;
 
+#ifdef HIKARI_DEBUG_HERO_PHYSICS
             this->countAscendingFrames = 0;
             this->countDecendingFrames = 0;
+#endif // HIKARI_DEBUG_HERO_PHYSICS
         });
 
         walkVelocity = Vector2<float>(RetroVector(0x01, 0x4C).toFloat(), 0.0f);
@@ -61,9 +63,10 @@ namespace hikari {
 
         accelerationDelay = 0;
         accelerationDelayThreshold = 6;
-
+#ifdef HIKARI_DEBUG_HERO_PHYSICS
         this->countAscendingFrames = 0;
         this->countDecendingFrames = 0;
+#endif // HIKARI_DEBUG_HERO_PHYSICS
 
         isFullyAccelerated = false;
 
