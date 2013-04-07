@@ -257,7 +257,9 @@
     <ClCompile Include="src\hikari\core\game\SpriteAnimator.cpp" />
     <ClCompile Include="src\hikari\core\gui\ImageFont.cpp" />
     <ClCompile Include="src\hikari\core\Hikari.cpp" />
-    <ClCompile Include="src\hikari\core\math\NESNumber.cpp" />
+    <ClCompile Include="src\hikari\core\math\NESNumber.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">EnableAllWarnings</WarningLevel>
+    </ClCompile>
     <ClCompile Include="src\hikari\core\util\ImageCache.cpp" />
     <ClCompile Include="src\hikari\core\util\JsonUtil.cpp" />
     <ClCompile Include="src\hikari\core\util\PhysFS.cpp" />
@@ -328,7 +330,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(ProjectDir)include\;$(SolutionDir)contrib\jsoncpp\include\;$(SolutionDir)contrib\squirrel3\include\;$(SolutionDir)contrib\sqrat\include\;$(SolutionDir)contrib\gme\;$(SolutionDir)contrib\physfs\;$(SolutionDir)contrib\physfs-stream\;$(SolutionDir)contrib\sfml\include\;$(SolutionDir)contrib\fastdelegate\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES;SFML_STATIC;HIKARI_DEBUG_ENTITIES;%(PreprocessorDefinitions)</PreprocessorDefinitions>

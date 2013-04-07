@@ -14,7 +14,8 @@ namespace hikari {
         std::vector<sf::IntRect> &tiles;
 
     public:
-        TileAnimator(std::vector<sf::IntRect> &tiles, const unsigned int& tileIndex);
+        TileAnimator(std::vector<sf::IntRect> &tiles, unsigned int tileIndex);
+        TileAnimator& operator=(const TileAnimator & other);
         const int& getUpdatedTileIndex() const;
         virtual ~TileAnimator() { }
         virtual void update(float delta);

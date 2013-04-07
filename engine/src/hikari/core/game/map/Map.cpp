@@ -23,7 +23,7 @@ namespace hikari {
         return tileset;
     }
 
-    const int Map::getGridSize() const {
+    unsigned int Map::getGridSize() const {
         return gridSize;
     }
 
@@ -43,7 +43,7 @@ namespace hikari {
         return getRoom(bossChamberRoomIndex);
     }
 
-    const int Map::getRoomCount() const {
+    unsigned int Map::getRoomCount() const {
         return rooms.size();
     }
 
@@ -54,14 +54,14 @@ namespace hikari {
         return RoomPtr();
     }
 
-    const Rectangle2D<int>& Map::getRoomRect(int index) const {
+    const Rectangle2D<int>& Map::getRoomRect(unsigned int index) const {
         if(index >= 0 && index < getRoomCount()) {
             return roomRectangles.at(index);
         }
         return INVALID_ROOM_RECT;
     }
 
-    const int Map::findRoomIndexByLocation(int x, int y) const {
+    unsigned int Map::findRoomIndexByLocation(int x, int y) const {
         int index = 0;
         for(std::vector< Rectangle2D<int> >::const_iterator
             it = roomRectangles.begin(),
