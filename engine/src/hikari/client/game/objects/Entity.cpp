@@ -172,6 +172,14 @@ namespace hikari {
         return room;
     }
 
+    void Entity::setWorld(const std::weak_ptr<GameWorld>& worldRef) {
+        world = worldRef;
+    }
+
+    const std::weak_ptr<GameWorld>& Entity::getWorld() const {
+        return world;
+    }
+
     const Direction Entity::getDirection() const {
         return this->direction;
     }
