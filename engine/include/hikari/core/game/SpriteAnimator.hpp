@@ -19,7 +19,7 @@ namespace hikari {
         sf::IntRect sourceRectangle;
 
     public:
-        SpriteAnimator(sf::Sprite &sprite);
+        SpriteAnimator(sf::Sprite &sprite); 
         virtual ~SpriteAnimator();
         void setInvertXOffset(const bool& flip);
         void setInvertYOffset(const bool& flip);
