@@ -89,7 +89,7 @@ namespace hikari {
         void setLandingCallback(const CollisionCallback& callback);
         void setCollisionCallback(const CollisionCallback& callback);
 
-        virtual void update(const float& dt);
+        virtual void update(float dt);
 
         static std::shared_ptr<CollisionResolver> getCollisionResolver();
         static void setCollisionResolver(std::shared_ptr<CollisionResolver> resolver);

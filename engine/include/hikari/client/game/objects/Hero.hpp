@@ -189,7 +189,7 @@ namespace hikari {
         void performTeleport();
         void performMorph();
 
-        virtual void update(const float& dt);
+        virtual void update(float dt);
         virtual void render(sf::RenderTarget &target);
         virtual void handleCollision(Movable& body, CollisionInfo& info);
     };

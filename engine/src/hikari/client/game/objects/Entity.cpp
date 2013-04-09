@@ -244,7 +244,7 @@ namespace hikari {
 
     }
 
-    void Entity::update(const float& dt) {
+    void Entity::update(float dt) {
         body.update(dt);
 
         animationPlayer->update(dt);

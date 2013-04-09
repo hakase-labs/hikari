@@ -86,7 +86,7 @@ namespace hikari {
         this->actionController = actionController;
     }
 
-    void Hero::update(const float &dt) {
+    void Hero::update(float dt) {
         if(room) {
             const int gridSize = room->getGridSize();
 

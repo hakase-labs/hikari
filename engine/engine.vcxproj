@@ -330,7 +330,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <WarningLevel>Level4</WarningLevel>
+      <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(ProjectDir)include\;$(SolutionDir)contrib\jsoncpp\include\;$(SolutionDir)contrib\squirrel3\include\;$(SolutionDir)contrib\sqrat\include\;$(SolutionDir)contrib\gme\;$(SolutionDir)contrib\physfs\;$(SolutionDir)contrib\physfs-stream\;$(SolutionDir)contrib\sfml\include\;$(SolutionDir)contrib\fastdelegate\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES;SFML_STATIC;HIKARI_DEBUG_ENTITIES;%(PreprocessorDefinitions)</PreprocessorDefinitions>

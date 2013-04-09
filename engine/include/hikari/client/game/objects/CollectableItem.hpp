@@ -47,7 +47,7 @@ namespace hikari {
         virtual void onWake();
         virtual void onSleep();
 
-        virtual void update(const float& dt);
+        virtual void update(float dt);
         virtual void render(sf::RenderTarget &target);
         virtual void reset();
     };
