@@ -2,6 +2,7 @@
 #define HIKARI_CLIENT_GAME_OBJECTS_ENTITY
 
 #include "hikari/client/game/objects/GameObject.hpp"
+#include "hikari/client/game/objects/Faction.hpp"
 #include "hikari/core/game/Movable.hpp"
 #include "hikari/core/game/Direction.hpp"
 #include "hikari/core/math/Vector2.hpp"
@@ -50,8 +51,9 @@ namespace hikari {
         #endif // HIKARI_DEBUG_ENTITIES
 
         Direction direction;
+        Faction::Type faction;
 
-        /// Flag to use in determining if this object acts like an obstacle
+        // Flag to use in determining if this object acts like an obstacle
         bool obstacleFlag;
 
         std::string currentAnimationName;
@@ -87,6 +89,9 @@ namespace hikari {
 
         void setDirection(const Direction& dir);
         const Direction getDirection() const;
+
+        void setFaction(Faction::Type newFaction);
+        Faction::Type getFaction() const;
 
         void setRoom(const std::shared_ptr<Room>& newRoom);
         const std::shared_ptr<Room>& getRoom() const;

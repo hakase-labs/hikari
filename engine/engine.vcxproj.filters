@@ -246,57 +246,6 @@
     <ClInclude Include="include\hikari\client\audio\NSFSoundStream.hpp">
       <Filter>Header Files\client\audio</Filter>
     </ClInclude>
-    <ClInclude Include="..\contrib\gme\blargg_config.h">
-      <Filter>Header Files\gme</Filter>
-    </ClInclude>
-    <ClInclude Include="..\contrib\gme\Blip_Buffer.h">
-      <Filter>Header Files\gme</Filter>
-    </ClInclude>
-    <ClInclude Include="..\contrib\gme\Data_Reader.h">
-      <Filter>Header Files\gme</Filter>
-    </ClInclude>
-    <ClInclude Include="..\contrib\gme\Effects_Buffer.h">
-      <Filter>Header Files\gme</Filter>
-    </ClInclude>
-    <ClInclude Include="..\contrib\gme\gme.h">
-      <Filter>Header Files\gme</Filter>
-    </ClInclude>
-    <ClInclude Include="..\contrib\gme\Gme_File.h">
-      <Filter>Header Files\gme</Filter>
-    </ClInclude>
-    <ClInclude Include="..\contrib\gme\Multi_Buffer.h">
-      <Filter>Header Files\gme</Filter>
-    </ClInclude>
-    <ClInclude Include="..\contrib\gme\Music_Emu.h">
-      <Filter>Header Files\gme</Filter>
-    </ClInclude>
-    <ClInclude Include="..\contrib\gme\Nes_Apu.h">
-      <Filter>Header Files\gme</Filter>
-    </ClInclude>
-    <ClInclude Include="..\contrib\gme\Nes_Cpu.h">
-      <Filter>Header Files\gme</Filter>
-    </ClInclude>
-    <ClInclude Include="..\contrib\gme\nes_cpu_io.h">
-      <Filter>Header Files\gme</Filter>
-    </ClInclude>
-    <ClInclude Include="..\contrib\gme\Nes_Fme7_Apu.h">
-      <Filter>Header Files\gme</Filter>
-    </ClInclude>
-    <ClInclude Include="..\contrib\gme\Nes_Namco_Apu.h">
-      <Filter>Header Files\gme</Filter>
-    </ClInclude>
-    <ClInclude Include="..\contrib\gme\Nes_Oscs.h">
-      <Filter>Header Files\gme</Filter>
-    </ClInclude>
-    <ClInclude Include="..\contrib\gme\Nes_Vrc6_Apu.h">
-      <Filter>Header Files\gme</Filter>
-    </ClInclude>
-    <ClInclude Include="..\contrib\gme\Nsf_Emu.h">
-      <Filter>Header Files\gme</Filter>
-    </ClInclude>
-    <ClInclude Include="..\contrib\gme\Nsfe_Emu.h">
-      <Filter>Header Files\gme</Filter>
-    </ClInclude>
     <ClInclude Include="include\hikari\core\game\map\Map.hpp">
       <Filter>Header Files\core\game\map</Filter>
     </ClInclude>
@@ -585,6 +534,72 @@
     <ClInclude Include="include\hikari\core\math\NESNumber.hpp">
       <Filter>Header Files\core\math</Filter>
     </ClInclude>
+    <ClInclude Include="include\hikari\client\game\objects\Faction.hpp">
+      <Filter>Header Files\client\game\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\gme-nes\Nsfe_Emu.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\gme-nes\Nsf_Emu.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\gme-nes\Nes_Vrc6_Apu.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\gme-nes\Nes_Oscs.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\gme-nes\Nes_Namco_Apu.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\gme-nes\Nes_Fme7_Apu.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\gme-nes\nes_cpu_io.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\gme-nes\Nes_Cpu.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\gme-nes\Nes_Apu.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\gme-nes\Music_Emu.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\gme-nes\Multi_Buffer.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\gme-nes\Gme_File.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\gme-nes\gme.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\gme-nes\Effects_Buffer.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\gme-nes\Data_Reader.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\gme-nes\Blip_Buffer.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\gme-nes\blargg_source.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\gme-nes\blargg_endian.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\gme-nes\blargg_config.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\gme-nes\blargg_common.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\gme-nes\M3u_Playlist.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\hikari\core\Hikari.cpp">
@@ -637,54 +652,6 @@
     </ClCompile>
     <ClCompile Include="src\hikari\client\audio\NSFSoundStream.cpp">
       <Filter>Source Files\client\audio</Filter>
-    </ClCompile>
-    <ClCompile Include="..\contrib\gme\Blip_Buffer.cpp">
-      <Filter>Source Files\gme</Filter>
-    </ClCompile>
-    <ClCompile Include="..\contrib\gme\Classic_Emu.cpp">
-      <Filter>Source Files\gme</Filter>
-    </ClCompile>
-    <ClCompile Include="..\contrib\gme\Data_Reader.cpp">
-      <Filter>Source Files\gme</Filter>
-    </ClCompile>
-    <ClCompile Include="..\contrib\gme\Effects_Buffer.cpp">
-      <Filter>Source Files\gme</Filter>
-    </ClCompile>
-    <ClCompile Include="..\contrib\gme\gme.cpp">
-      <Filter>Source Files\gme</Filter>
-    </ClCompile>
-    <ClCompile Include="..\contrib\gme\Gme_File.cpp">
-      <Filter>Source Files\gme</Filter>
-    </ClCompile>
-    <ClCompile Include="..\contrib\gme\Multi_Buffer.cpp">
-      <Filter>Source Files\gme</Filter>
-    </ClCompile>
-    <ClCompile Include="..\contrib\gme\Music_Emu.cpp">
-      <Filter>Source Files\gme</Filter>
-    </ClCompile>
-    <ClCompile Include="..\contrib\gme\Nes_Apu.cpp">
-      <Filter>Source Files\gme</Filter>
-    </ClCompile>
-    <ClCompile Include="..\contrib\gme\Nes_Cpu.cpp">
-      <Filter>Source Files\gme</Filter>
-    </ClCompile>
-    <ClCompile Include="..\contrib\gme\Nes_Fme7_Apu.cpp">
-      <Filter>Source Files\gme</Filter>
-    </ClCompile>
-    <ClCompile Include="..\contrib\gme\Nes_Namco_Apu.cpp">
-      <Filter>Source Files\gme</Filter>
-    </ClCompile>
-    <ClCompile Include="..\contrib\gme\Nes_Oscs.cpp">
-      <Filter>Source Files\gme</Filter>
-    </ClCompile>
-    <ClCompile Include="..\contrib\gme\Nes_Vrc6_Apu.cpp">
-      <Filter>Source Files\gme</Filter>
-    </ClCompile>
-    <ClCompile Include="..\contrib\gme\Nsf_Emu.cpp">
-      <Filter>Source Files\gme</Filter>
-    </ClCompile>
-    <ClCompile Include="..\contrib\gme\Nsfe_Emu.cpp">
-      <Filter>Source Files\gme</Filter>
     </ClCompile>
     <ClCompile Include="src\hikari\core\game\map\Map.cpp">
       <Filter>Source Files\core\game\map</Filter>
@@ -904,6 +871,57 @@
     </ClCompile>
     <ClCompile Include="src\hikari\core\math\NESNumber.cpp">
       <Filter>Source Files\core\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\gme-nes\Blip_Buffer.cpp">
+      <Filter>Source Files\gme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\gme-nes\Data_Reader.cpp">
+      <Filter>Source Files\gme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\gme-nes\Effects_Buffer.cpp">
+      <Filter>Source Files\gme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\gme-nes\gme.cpp">
+      <Filter>Source Files\gme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\gme-nes\Gme_File.cpp">
+      <Filter>Source Files\gme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\gme-nes\Multi_Buffer.cpp">
+      <Filter>Source Files\gme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\gme-nes\Music_Emu.cpp">
+      <Filter>Source Files\gme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\gme-nes\Nes_Apu.cpp">
+      <Filter>Source Files\gme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\gme-nes\Nes_Cpu.cpp">
+      <Filter>Source Files\gme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\gme-nes\Nes_Fme7_Apu.cpp">
+      <Filter>Source Files\gme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\gme-nes\Nes_Namco_Apu.cpp">
+      <Filter>Source Files\gme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\gme-nes\Nes_Oscs.cpp">
+      <Filter>Source Files\gme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\gme-nes\Nes_Vrc6_Apu.cpp">
+      <Filter>Source Files\gme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\gme-nes\Nsf_Emu.cpp">
+      <Filter>Source Files\gme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\gme-nes\Nsfe_Emu.cpp">
+      <Filter>Source Files\gme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\gme-nes\Classic_Emu.cpp">
+      <Filter>Source Files\gme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\gme-nes\M3u_Playlist.cpp">
+      <Filter>Source Files\gme</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
