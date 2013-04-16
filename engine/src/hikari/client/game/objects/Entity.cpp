@@ -26,6 +26,7 @@ namespace hikari {
         , currentAnimation()
         , animationPlayer(new SpriteAnimator(sprite))
         , direction(Directions::None)
+        , faction(Faction::World)
         , currentAnimationName("")
     {
         reset();
@@ -53,6 +54,7 @@ namespace hikari {
         , currentAnimation(proto.currentAnimation)
         , animationPlayer(new SpriteAnimator(sprite))
         , direction(proto.direction)
+        , faction(proto.faction)
         , currentAnimationName(proto.currentAnimationName)
     {
         HIKARI_LOG(debug2) << "Entity copy constructor!" << std::endl;
@@ -162,6 +164,14 @@ namespace hikari {
         } else {
             getSprite().setScale(std::abs(spriteScale.x), spriteScale.y);
         }
+    }
+
+    void Entity::setFaction(Faction::Type newFaction) {
+        faction = newFaction;
+    }
+
+    Faction::Type Entity::getFaction() const {
+        return faction;
     }
 
     void Entity::setRoom(const std::shared_ptr<Room>& newRoom) {

@@ -675,6 +675,7 @@ namespace hikari {
 
             float topOfCameraY = camera.getView().getTop();
 
+            // Move hero to correct Y coordinate
             hero->setPosition(heroPosition.getX(), topOfCameraY - hero->getBoundingBox().getHeight());
             hero->performTeleport();
         }

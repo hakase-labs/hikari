@@ -16,6 +16,23 @@
     <ClCompile Include="..\contrib\physfs-stream\physfs\ofile_stream.cpp" />
     <ClCompile Include="..\contrib\physfs-stream\physfs\ofile_streambuf.cpp" />
     <ClCompile Include="..\contrib\physfs-stream\physfs\physfs_file_system.cpp" />
+    <ClCompile Include="..\extlibs\gme-nes\Blip_Buffer.cpp" />
+    <ClCompile Include="..\extlibs\gme-nes\Classic_Emu.cpp" />
+    <ClCompile Include="..\extlibs\gme-nes\Data_Reader.cpp" />
+    <ClCompile Include="..\extlibs\gme-nes\Effects_Buffer.cpp" />
+    <ClCompile Include="..\extlibs\gme-nes\gme.cpp" />
+    <ClCompile Include="..\extlibs\gme-nes\Gme_File.cpp" />
+    <ClCompile Include="..\extlibs\gme-nes\M3u_Playlist.cpp" />
+    <ClCompile Include="..\extlibs\gme-nes\Multi_Buffer.cpp" />
+    <ClCompile Include="..\extlibs\gme-nes\Music_Emu.cpp" />
+    <ClCompile Include="..\extlibs\gme-nes\Nes_Apu.cpp" />
+    <ClCompile Include="..\extlibs\gme-nes\Nes_Cpu.cpp" />
+    <ClCompile Include="..\extlibs\gme-nes\Nes_Fme7_Apu.cpp" />
+    <ClCompile Include="..\extlibs\gme-nes\Nes_Namco_Apu.cpp" />
+    <ClCompile Include="..\extlibs\gme-nes\Nes_Oscs.cpp" />
+    <ClCompile Include="..\extlibs\gme-nes\Nes_Vrc6_Apu.cpp" />
+    <ClCompile Include="..\extlibs\gme-nes\Nsfe_Emu.cpp" />
+    <ClCompile Include="..\extlibs\gme-nes\Nsf_Emu.cpp" />
     <ClCompile Include="src\hikari\client\ClientConfig.cpp" />
     <ClCompile Include="src\hikari\client\CommandProcessor.cpp" />
     <ClCompile Include="src\hikari\client\game\Effect.cpp" />
@@ -56,28 +73,32 @@
     <ClCompile Include="src\hikari\core\util\Log.cpp" />
     <ClCompile Include="src\hikari\core\util\Timer.cpp" />
     <ClCompile Include="src\hikari\test\core\geom\Vector2DTest.cpp" />
-    <ClInclude Include="..\contrib\gme\blargg_config.h" />
-    <ClInclude Include="..\contrib\gme\Blip_Buffer.h" />
-    <ClInclude Include="..\contrib\gme\Data_Reader.h" />
-    <ClInclude Include="..\contrib\gme\Effects_Buffer.h" />
-    <ClInclude Include="..\contrib\gme\gme.h" />
-    <ClInclude Include="..\contrib\gme\Gme_File.h" />
-    <ClInclude Include="..\contrib\gme\Multi_Buffer.h" />
-    <ClInclude Include="..\contrib\gme\Music_Emu.h" />
-    <ClInclude Include="..\contrib\gme\Nes_Apu.h" />
-    <ClInclude Include="..\contrib\gme\Nes_Cpu.h" />
-    <ClInclude Include="..\contrib\gme\nes_cpu_io.h" />
-    <ClInclude Include="..\contrib\gme\Nes_Fme7_Apu.h" />
-    <ClInclude Include="..\contrib\gme\Nes_Namco_Apu.h" />
-    <ClInclude Include="..\contrib\gme\Nes_Oscs.h" />
-    <ClInclude Include="..\contrib\gme\Nes_Vrc6_Apu.h" />
-    <ClInclude Include="..\contrib\gme\Nsfe_Emu.h" />
-    <ClInclude Include="..\contrib\gme\Nsf_Emu.h" />
     <ClInclude Include="..\contrib\physfs-stream\physfs\ifile_stream.hpp" />
     <ClInclude Include="..\contrib\physfs-stream\physfs\ifile_streambuf.hpp" />
     <ClInclude Include="..\contrib\physfs-stream\physfs\ofile_stream.hpp" />
     <ClInclude Include="..\contrib\physfs-stream\physfs\ofile_streambuf.hpp" />
     <ClInclude Include="..\contrib\physfs-stream\physfs\physfs_file_system.hpp" />
+    <ClInclude Include="..\extlibs\gme-nes\blargg_common.h" />
+    <ClInclude Include="..\extlibs\gme-nes\blargg_config.h" />
+    <ClInclude Include="..\extlibs\gme-nes\blargg_endian.h" />
+    <ClInclude Include="..\extlibs\gme-nes\blargg_source.h" />
+    <ClInclude Include="..\extlibs\gme-nes\Blip_Buffer.h" />
+    <ClInclude Include="..\extlibs\gme-nes\Data_Reader.h" />
+    <ClInclude Include="..\extlibs\gme-nes\Effects_Buffer.h" />
+    <ClInclude Include="..\extlibs\gme-nes\gme.h" />
+    <ClInclude Include="..\extlibs\gme-nes\Gme_File.h" />
+    <ClInclude Include="..\extlibs\gme-nes\M3u_Playlist.h" />
+    <ClInclude Include="..\extlibs\gme-nes\Multi_Buffer.h" />
+    <ClInclude Include="..\extlibs\gme-nes\Music_Emu.h" />
+    <ClInclude Include="..\extlibs\gme-nes\Nes_Apu.h" />
+    <ClInclude Include="..\extlibs\gme-nes\Nes_Cpu.h" />
+    <ClInclude Include="..\extlibs\gme-nes\nes_cpu_io.h" />
+    <ClInclude Include="..\extlibs\gme-nes\Nes_Fme7_Apu.h" />
+    <ClInclude Include="..\extlibs\gme-nes\Nes_Namco_Apu.h" />
+    <ClInclude Include="..\extlibs\gme-nes\Nes_Oscs.h" />
+    <ClInclude Include="..\extlibs\gme-nes\Nes_Vrc6_Apu.h" />
+    <ClInclude Include="..\extlibs\gme-nes\Nsfe_Emu.h" />
+    <ClInclude Include="..\extlibs\gme-nes\Nsf_Emu.h" />
     <ClInclude Include="include\hikari\client\audio\AudioService.hpp" />
     <ClInclude Include="include\hikari\client\audio\NSFSoundStream.hpp" />
     <ClInclude Include="include\hikari\client\Client.hpp" />
@@ -110,6 +131,7 @@
     <ClInclude Include="include\hikari\client\game\objects\Enemy.hpp" />
     <ClInclude Include="include\hikari\client\game\objects\EnemyBrain.hpp" />
     <ClInclude Include="include\hikari\client\game\objects\Entity.hpp" />
+    <ClInclude Include="include\hikari\client\game\objects\Faction.hpp" />
     <ClInclude Include="include\hikari\client\game\objects\FactoryHelpers.hpp" />
     <ClInclude Include="include\hikari\client\game\objects\GameObject.hpp" />
     <ClInclude Include="include\hikari\client\game\objects\Hero.hpp" />
@@ -208,22 +230,6 @@
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\contrib\gme\Blip_Buffer.cpp" />
-    <ClCompile Include="..\contrib\gme\Classic_Emu.cpp" />
-    <ClCompile Include="..\contrib\gme\Data_Reader.cpp" />
-    <ClCompile Include="..\contrib\gme\Effects_Buffer.cpp" />
-    <ClCompile Include="..\contrib\gme\gme.cpp" />
-    <ClCompile Include="..\contrib\gme\Gme_File.cpp" />
-    <ClCompile Include="..\contrib\gme\Multi_Buffer.cpp" />
-    <ClCompile Include="..\contrib\gme\Music_Emu.cpp" />
-    <ClCompile Include="..\contrib\gme\Nes_Apu.cpp" />
-    <ClCompile Include="..\contrib\gme\Nes_Cpu.cpp" />
-    <ClCompile Include="..\contrib\gme\Nes_Fme7_Apu.cpp" />
-    <ClCompile Include="..\contrib\gme\Nes_Namco_Apu.cpp" />
-    <ClCompile Include="..\contrib\gme\Nes_Oscs.cpp" />
-    <ClCompile Include="..\contrib\gme\Nes_Vrc6_Apu.cpp" />
-    <ClCompile Include="..\contrib\gme\Nsfe_Emu.cpp" />
-    <ClCompile Include="..\contrib\gme\Nsf_Emu.cpp" />
     <ClCompile Include="src\hikari\client\audio\NSFSoundStream.cpp" />
     <ClCompile Include="src\hikari\client\Client.cpp" />
     <ClCompile Include="src\hikari\client\game\GamePlayState.cpp" />
@@ -332,7 +338,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)include\;$(SolutionDir)contrib\jsoncpp\include\;$(SolutionDir)contrib\squirrel3\include\;$(SolutionDir)contrib\sqrat\include\;$(SolutionDir)contrib\gme\;$(SolutionDir)contrib\physfs\;$(SolutionDir)contrib\physfs-stream\;$(SolutionDir)contrib\sfml\include\;$(SolutionDir)contrib\fastdelegate\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include\;$(SolutionDir)contrib\jsoncpp\include\;$(SolutionDir)contrib\squirrel3\include\;$(SolutionDir)contrib\sqrat\include\;$(SolutionDir)extlibs\gme-nes\;$(SolutionDir)contrib\physfs\;$(SolutionDir)contrib\physfs-stream\;$(SolutionDir)contrib\sfml\include\;$(SolutionDir)contrib\fastdelegate\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES;SFML_STATIC;HIKARI_DEBUG_ENTITIES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -358,7 +364,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(ProjectDir)include\;$(SolutionDir)contrib\jsoncpp\include\;$(SolutionDir)contrib\gme\;$(SolutionDir)contrib\physfs\;$(SolutionDir)contrib\physfs-stream\;$(SolutionDir)contrib\sfml\include\;$(SolutionDir)contrib\squirrel3\include\;$(SolutionDir)contrib\sqrat\include\;$(SolutionDir)contrib\fastdelegate\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include\;$(SolutionDir)contrib\jsoncpp\include\;$(SolutionDir)extlibs\gme-nes\;$(SolutionDir)contrib\physfs\;$(SolutionDir)contrib\physfs-stream\;$(SolutionDir)contrib\sfml\include\;$(SolutionDir)contrib\squirrel3\include\;$(SolutionDir)contrib\sqrat\include\;$(SolutionDir)contrib\fastdelegate\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>SFML_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
