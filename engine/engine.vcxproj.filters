@@ -157,6 +157,12 @@
     <Filter Include="Source Files\client\game\objects\hero">
       <UniqueIdentifier>{7640f2d1-f7f6-4dcd-983f-057e103b1a58}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\jsoncpp">
+      <UniqueIdentifier>{a1a0df70-8dc0-45ae-abd7-1367e1cf62ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\jsoncpp">
+      <UniqueIdentifier>{02a12a68-76f6-4187-aaed-33ed83477029}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\hikari\core\geom\Rectangle2D.hpp">
@@ -600,6 +606,33 @@
     <ClInclude Include="..\extlibs\gme-nes\M3u_Playlist.h">
       <Filter>Header Files\gme</Filter>
     </ClInclude>
+    <ClInclude Include="..\extlibs\jsoncpp\include\json\autolink.h">
+      <Filter>Header Files\jsoncpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\jsoncpp\include\json\config.h">
+      <Filter>Header Files\jsoncpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\jsoncpp\include\json\features.h">
+      <Filter>Header Files\jsoncpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\jsoncpp\include\json\forwards.h">
+      <Filter>Header Files\jsoncpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\jsoncpp\include\json\json.h">
+      <Filter>Header Files\jsoncpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\jsoncpp\include\json\reader.h">
+      <Filter>Header Files\jsoncpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\jsoncpp\include\json\value.h">
+      <Filter>Header Files\jsoncpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\jsoncpp\include\json\writer.h">
+      <Filter>Header Files\jsoncpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\jsoncpp\src\json_batchallocator.h">
+      <Filter>Source Files\jsoncpp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\hikari\core\Hikari.cpp">
@@ -923,6 +956,15 @@
     <ClCompile Include="..\extlibs\gme-nes\M3u_Playlist.cpp">
       <Filter>Source Files\gme</Filter>
     </ClCompile>
+    <ClCompile Include="..\extlibs\jsoncpp\src\json_reader.cpp">
+      <Filter>Source Files\jsoncpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\jsoncpp\src\json_value.cpp">
+      <Filter>Source Files\jsoncpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\jsoncpp\src\json_writer.cpp">
+      <Filter>Source Files\jsoncpp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="engine.rc">
@@ -974,6 +1016,15 @@
     </None>
     <None Include="..\content\tileset-skull.json">
       <Filter>Content</Filter>
+    </None>
+    <None Include="..\extlibs\jsoncpp\src\json_internalarray.inl">
+      <Filter>Source Files\jsoncpp</Filter>
+    </None>
+    <None Include="..\extlibs\jsoncpp\src\json_internalmap.inl">
+      <Filter>Source Files\jsoncpp</Filter>
+    </None>
+    <None Include="..\extlibs\jsoncpp\src\json_valueiterator.inl">
+      <Filter>Source Files\jsoncpp</Filter>
     </None>
   </ItemGroup>
 </Project>

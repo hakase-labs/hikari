@@ -33,6 +33,9 @@
     <ClCompile Include="..\extlibs\gme-nes\Nes_Vrc6_Apu.cpp" />
     <ClCompile Include="..\extlibs\gme-nes\Nsfe_Emu.cpp" />
     <ClCompile Include="..\extlibs\gme-nes\Nsf_Emu.cpp" />
+    <ClCompile Include="..\extlibs\jsoncpp\src\json_reader.cpp" />
+    <ClCompile Include="..\extlibs\jsoncpp\src\json_value.cpp" />
+    <ClCompile Include="..\extlibs\jsoncpp\src\json_writer.cpp" />
     <ClCompile Include="src\hikari\client\ClientConfig.cpp" />
     <ClCompile Include="src\hikari\client\CommandProcessor.cpp" />
     <ClCompile Include="src\hikari\client\game\Effect.cpp" />
@@ -99,6 +102,15 @@
     <ClInclude Include="..\extlibs\gme-nes\Nes_Vrc6_Apu.h" />
     <ClInclude Include="..\extlibs\gme-nes\Nsfe_Emu.h" />
     <ClInclude Include="..\extlibs\gme-nes\Nsf_Emu.h" />
+    <ClInclude Include="..\extlibs\jsoncpp\include\json\autolink.h" />
+    <ClInclude Include="..\extlibs\jsoncpp\include\json\config.h" />
+    <ClInclude Include="..\extlibs\jsoncpp\include\json\features.h" />
+    <ClInclude Include="..\extlibs\jsoncpp\include\json\forwards.h" />
+    <ClInclude Include="..\extlibs\jsoncpp\include\json\json.h" />
+    <ClInclude Include="..\extlibs\jsoncpp\include\json\reader.h" />
+    <ClInclude Include="..\extlibs\jsoncpp\include\json\value.h" />
+    <ClInclude Include="..\extlibs\jsoncpp\include\json\writer.h" />
+    <ClInclude Include="..\extlibs\jsoncpp\src\json_batchallocator.h" />
     <ClInclude Include="include\hikari\client\audio\AudioService.hpp" />
     <ClInclude Include="include\hikari\client\audio\NSFSoundStream.hpp" />
     <ClInclude Include="include\hikari\client\Client.hpp" />
@@ -292,6 +304,9 @@
     <None Include="..\content\tileset-dev.png" />
     <None Include="..\content\tileset-dev.txt" />
     <None Include="..\content\tileset-skull.json" />
+    <None Include="..\extlibs\jsoncpp\src\json_internalarray.inl" />
+    <None Include="..\extlibs\jsoncpp\src\json_internalmap.inl" />
+    <None Include="..\extlibs\jsoncpp\src\json_valueiterator.inl" />
     <None Include="resource\hikari.ico" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -338,13 +353,13 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)include\;$(SolutionDir)contrib\jsoncpp\include\;$(SolutionDir)contrib\squirrel3\include\;$(SolutionDir)contrib\sqrat\include\;$(SolutionDir)extlibs\gme-nes\;$(SolutionDir)contrib\physfs\;$(SolutionDir)contrib\physfs-stream\;$(SolutionDir)contrib\sfml\include\;$(SolutionDir)contrib\fastdelegate\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include\;$(SolutionDir)extlibs\jsoncpp\include\;$(SolutionDir)contrib\squirrel3\include\;$(SolutionDir)contrib\sqrat\include\;$(SolutionDir)extlibs\gme-nes\;$(SolutionDir)contrib\physfs\;$(SolutionDir)contrib\physfs-stream\;$(SolutionDir)contrib\sfml\include\;$(SolutionDir)contrib\fastdelegate\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES;SFML_STATIC;HIKARI_DEBUG_ENTITIES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>sfml-main-d.lib;sfml-system-s-d.lib;sfml-graphics-s-d.lib;sfml-audio-s-d.lib;sfml-window-s-d.lib;physfs-d.lib;jsoncpp.lib;squirreld.lib;sqstdlibd.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(solutionDir)contrib\sfml\lib\Debug\;$(SolutionDir)contrib\jsoncpp\dist\debug\;$(SolutionDir)contrib\physfs\dist\debug\;$(SolutionDir)contrib\squirrel3\lib\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>sfml-main-d.lib;sfml-system-s-d.lib;sfml-graphics-s-d.lib;sfml-audio-s-d.lib;sfml-window-s-d.lib;physfs-d.lib;squirreld.lib;sqstdlibd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(solutionDir)contrib\sfml\lib\Debug\;$(SolutionDir)contrib\physfs\dist\debug\;$(SolutionDir)contrib\squirrel3\lib\</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>libc.lib;libcmt.lib;msvcrt.lib;libcd.lib;libcmtd.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <Profile>true</Profile>
     </Link>
@@ -364,7 +379,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(ProjectDir)include\;$(SolutionDir)contrib\jsoncpp\include\;$(SolutionDir)extlibs\gme-nes\;$(SolutionDir)contrib\physfs\;$(SolutionDir)contrib\physfs-stream\;$(SolutionDir)contrib\sfml\include\;$(SolutionDir)contrib\squirrel3\include\;$(SolutionDir)contrib\sqrat\include\;$(SolutionDir)contrib\fastdelegate\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include\;$(SolutionDir)extlibs\jsoncpp\include\;$(SolutionDir)extlibs\gme-nes\;$(SolutionDir)contrib\physfs\;$(SolutionDir)contrib\physfs-stream\;$(SolutionDir)contrib\sfml\include\;$(SolutionDir)contrib\squirrel3\include\;$(SolutionDir)contrib\sqrat\include\;$(SolutionDir)contrib\fastdelegate\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>SFML_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
@@ -372,8 +387,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>sfml-main.lib;sfml-system-s.lib;sfml-graphics-s.lib;sfml-audio-s.lib;sfml-window-s.lib;physfs.lib;jsoncpp.lib;squirrel.lib;sqstdlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(solutionDir)contrib\sfml\lib\Release\;$(SolutionDir)contrib\physfs\dist\release\;$(SolutionDir)contrib\jsoncpp\dist\release\;$(SolutionDir)contrib\squirrel3\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>sfml-main.lib;sfml-system-s.lib;sfml-graphics-s.lib;sfml-audio-s.lib;sfml-window-s.lib;physfs.lib;squirrel.lib;sqstdlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(solutionDir)contrib\sfml\lib\Release\;$(SolutionDir)contrib\physfs\dist\release\;$(SolutionDir)contrib\squirrel3\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>libc.lib;libcmt.lib;libcd.lib;libcmtd.lib;msvcrtd.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <SubSystem>Windows</SubSystem>
       <Profile>true</Profile>
