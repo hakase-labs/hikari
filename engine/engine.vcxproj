@@ -353,7 +353,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)include\;$(SolutionDir)extlibs\jsoncpp\include\;$(SolutionDir)contrib\squirrel3\include\;$(SolutionDir)contrib\sqrat\include\;$(SolutionDir)extlibs\gme-nes\;$(SolutionDir)contrib\physfs\;$(SolutionDir)contrib\physfs-stream\;$(SolutionDir)contrib\sfml\include\;$(SolutionDir)contrib\fastdelegate\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include\;$(SolutionDir)extlibs\jsoncpp\include\;$(SolutionDir)contrib\squirrel3\include\;$(SolutionDir)contrib\sqrat\include\;$(SolutionDir)extlibs\gme-nes\;$(SolutionDir)contrib\physfs\;$(SolutionDir)contrib\physfs-stream\;$(SolutionDir)contrib\sfml\include\;$(SolutionDir)extlibs\fastdelegate\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES;SFML_STATIC;HIKARI_DEBUG_ENTITIES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -379,7 +379,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(ProjectDir)include\;$(SolutionDir)extlibs\jsoncpp\include\;$(SolutionDir)extlibs\gme-nes\;$(SolutionDir)contrib\physfs\;$(SolutionDir)contrib\physfs-stream\;$(SolutionDir)contrib\sfml\include\;$(SolutionDir)contrib\squirrel3\include\;$(SolutionDir)contrib\sqrat\include\;$(SolutionDir)contrib\fastdelegate\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include\;$(SolutionDir)extlibs\jsoncpp\include\;$(SolutionDir)extlibs\gme-nes\;$(SolutionDir)contrib\physfs\;$(SolutionDir)contrib\physfs-stream\;$(SolutionDir)contrib\sfml\include\;$(SolutionDir)contrib\squirrel3\include\;$(SolutionDir)contrib\sqrat\include\;$(SolutionDir)extlibs\fastdelegate\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>SFML_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
