@@ -148,7 +148,20 @@ set( INCLUDE_DIRS
 
 include_directories( ${INCLUDE_DIRS} )
 
-add_executable( hikari
-    ${HIKARI_SOURCE_FILES}
-    ${INCLUDE_DIRS}
-)
+add_executable( hikari ${HIKARI_SOURCE_FILES} ${INCLUDE_DIRS} )
+
+#
+# We want to link statically on Windows
+#
+if(WIN32)
+    set(SFML_STATIC_LIBRARIES TRUE)
+endif(WIN32)
+
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
+
+find_package(SFML 2 COMPONENTS system window graphics audio REQUIRED)
+
+if(SFML_FOUND)
+    include_directories( ${SFML_INCLUDE_DIR} )
+    target_link_libraries( hikari ${SFML_LIBRARIES} )
+endif(SFML_FOUND)
