@@ -1,0 +1,647 @@
+--- /tmp/tmp.20828.113	2010-10-10 18:49:50.627842776 -0700
++++ include/sqrat/sqratMemberMethods.h	2010-09-21 22:05:15.705650852 -0700
+@@ -475,6 +475,304 @@
+ 			PushVar(vm, ret);
+ 			return 1;
+ 		}
++		
++
++		// Arg Count 10
++		template <class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10>
++		static SQInteger Func10(HSQUIRRELVM vm) {
++			typedef R (C::*M)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10);
++			M* methodPtr;
++			sq_getuserdata(vm, -1, (SQUserPointer*)&methodPtr, NULL);
++			M method = *methodPtr;
++			
++			C* ptr = NULL;
++			sq_getinstanceup(vm, 1, (SQUserPointer*)&ptr, NULL);
++
++			R ret = (ptr->*method)(
++				Var<A1>(vm, 2).value,
++				Var<A2>(vm, 3).value,
++				Var<A3>(vm, 4).value,
++				Var<A4>(vm, 5).value,
++				Var<A5>(vm, 6).value,
++				Var<A6>(vm, 7).value,
++				Var<A7>(vm, 8).value,
++				Var<A8>(vm, 9).value,
++				Var<A9>(vm, 10).value,
++				Var<A10>(vm, 11).value
++				);
++
++			PushVar(vm, ret);
++			return 1;
++		}
++		
++		template <class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10>
++		static SQInteger Func10C(HSQUIRRELVM vm) {
++			typedef R (C::*M)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10) const;
++			M* methodPtr;
++			sq_getuserdata(vm, -1, (SQUserPointer*)&methodPtr, NULL);
++			M method = *methodPtr;
++			
++			C* ptr = NULL;
++			sq_getinstanceup(vm, 1, (SQUserPointer*)&ptr, NULL);
++
++			R ret = (ptr->*method)(
++				Var<A1>(vm, 2).value,
++				Var<A2>(vm, 3).value,
++				Var<A3>(vm, 4).value,
++				Var<A4>(vm, 5).value,
++				Var<A5>(vm, 6).value,
++				Var<A6>(vm, 7).value,
++				Var<A7>(vm, 8).value,
++				Var<A8>(vm, 9).value,
++				Var<A9>(vm, 10).value,
++				Var<A10>(vm, 11).value
++				);
++
++			PushVar(vm, ret);
++			return 1;
++		}
++		
++
++		// Arg Count 11
++		template <class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11>
++		static SQInteger Func11(HSQUIRRELVM vm) {
++			typedef R (C::*M)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11);
++			M* methodPtr;
++			sq_getuserdata(vm, -1, (SQUserPointer*)&methodPtr, NULL);
++			M method = *methodPtr;
++			
++			C* ptr = NULL;
++			sq_getinstanceup(vm, 1, (SQUserPointer*)&ptr, NULL);
++
++			R ret = (ptr->*method)(
++				Var<A1>(vm, 2).value,
++				Var<A2>(vm, 3).value,
++				Var<A3>(vm, 4).value,
++				Var<A4>(vm, 5).value,
++				Var<A5>(vm, 6).value,
++				Var<A6>(vm, 7).value,
++				Var<A7>(vm, 8).value,
++				Var<A8>(vm, 9).value,
++				Var<A9>(vm, 10).value,
++				Var<A10>(vm, 11).value,
++				Var<A11>(vm, 12).value
++				);
++
++			PushVar(vm, ret);
++			return 1;
++		}
++		
++		template <class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11>
++		static SQInteger Func11C(HSQUIRRELVM vm) {
++			typedef R (C::*M)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11) const;
++			M* methodPtr;
++			sq_getuserdata(vm, -1, (SQUserPointer*)&methodPtr, NULL);
++			M method = *methodPtr;
++			
++			C* ptr = NULL;
++			sq_getinstanceup(vm, 1, (SQUserPointer*)&ptr, NULL);
++
++			R ret = (ptr->*method)(
++				Var<A1>(vm, 2).value,
++				Var<A2>(vm, 3).value,
++				Var<A3>(vm, 4).value,
++				Var<A4>(vm, 5).value,
++				Var<A5>(vm, 6).value,
++				Var<A6>(vm, 7).value,
++				Var<A7>(vm, 8).value,
++				Var<A8>(vm, 9).value,
++				Var<A9>(vm, 10).value,
++				Var<A10>(vm, 11).value,
++				Var<A11>(vm, 12).value
++				);
++
++			PushVar(vm, ret);
++			return 1;
++		}
++		
++
++		// Arg Count 12
++		template <class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11, class A12>
++		static SQInteger Func12(HSQUIRRELVM vm) {
++			typedef R (C::*M)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12);
++			M* methodPtr;
++			sq_getuserdata(vm, -1, (SQUserPointer*)&methodPtr, NULL);
++			M method = *methodPtr;
++			
++			C* ptr = NULL;
++			sq_getinstanceup(vm, 1, (SQUserPointer*)&ptr, NULL);
++
++			R ret = (ptr->*method)(
++				Var<A1>(vm, 2).value,
++				Var<A2>(vm, 3).value,
++				Var<A3>(vm, 4).value,
++				Var<A4>(vm, 5).value,
++				Var<A5>(vm, 6).value,
++				Var<A6>(vm, 7).value,
++				Var<A7>(vm, 8).value,
++				Var<A8>(vm, 9).value,
++				Var<A9>(vm, 10).value,
++				Var<A10>(vm, 11).value,
++				Var<A11>(vm, 12).value,
++				Var<A12>(vm, 13).value
++				);
++
++			PushVar(vm, ret);
++			return 1;
++		}
++		
++		template <class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11, class A12>
++		static SQInteger Func12C(HSQUIRRELVM vm) {
++			typedef R (C::*M)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12) const;
++			M* methodPtr;
++			sq_getuserdata(vm, -1, (SQUserPointer*)&methodPtr, NULL);
++			M method = *methodPtr;
++			
++			C* ptr = NULL;
++			sq_getinstanceup(vm, 1, (SQUserPointer*)&ptr, NULL);
++
++			R ret = (ptr->*method)(
++				Var<A1>(vm, 2).value,
++				Var<A2>(vm, 3).value,
++				Var<A3>(vm, 4).value,
++				Var<A4>(vm, 5).value,
++				Var<A5>(vm, 6).value,
++				Var<A6>(vm, 7).value,
++				Var<A7>(vm, 8).value,
++				Var<A8>(vm, 9).value,
++				Var<A9>(vm, 10).value,
++				Var<A10>(vm, 11).value,
++				Var<A11>(vm, 12).value,
++				Var<A12>(vm, 13).value
++				);
++
++			PushVar(vm, ret);
++			return 1;
++		}
++		
++		// Arg Count 13
++		template <class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11, class A12, class A13>
++		static SQInteger Func13(HSQUIRRELVM vm) {
++			typedef R (C::*M)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13);
++			M* methodPtr;
++			sq_getuserdata(vm, -1, (SQUserPointer*)&methodPtr, NULL);
++			M method = *methodPtr;
++			
++			C* ptr = NULL;
++			sq_getinstanceup(vm, 1, (SQUserPointer*)&ptr, NULL);
++
++			R ret = (ptr->*method)(
++				Var<A1>(vm, 2).value,
++				Var<A2>(vm, 3).value,
++				Var<A3>(vm, 4).value,
++				Var<A4>(vm, 5).value,
++				Var<A5>(vm, 6).value,
++				Var<A6>(vm, 7).value,
++				Var<A7>(vm, 8).value,
++				Var<A8>(vm, 9).value,
++				Var<A9>(vm, 10).value,
++				Var<A10>(vm, 11).value,
++				Var<A11>(vm, 12).value,
++				Var<A12>(vm, 13).value,
++				Var<A13>(vm, 14).value
++				);
++
++			PushVar(vm, ret);
++			return 1;
++		}
++		
++		template <class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11, class A12, class A13>
++		static SQInteger Func13C(HSQUIRRELVM vm) {
++			typedef R (C::*M)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13) const;
++			M* methodPtr;
++			sq_getuserdata(vm, -1, (SQUserPointer*)&methodPtr, NULL);
++			M method = *methodPtr;
++			
++			C* ptr = NULL;
++			sq_getinstanceup(vm, 1, (SQUserPointer*)&ptr, NULL);
++
++			R ret = (ptr->*method)(
++				Var<A1>(vm, 2).value,
++				Var<A2>(vm, 3).value,
++				Var<A3>(vm, 4).value,
++				Var<A4>(vm, 5).value,
++				Var<A5>(vm, 6).value,
++				Var<A6>(vm, 7).value,
++				Var<A7>(vm, 8).value,
++				Var<A8>(vm, 9).value,
++				Var<A9>(vm, 10).value,
++				Var<A10>(vm, 11).value,
++				Var<A11>(vm, 12).value,
++				Var<A12>(vm, 13).value,
++				Var<A13>(vm, 14).value
++				);
++
++			PushVar(vm, ret);
++			return 1;
++		}
++		
++		// Arg Count 14
++		template <class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11, class A12, class A13, class A14>
++		static SQInteger Func14(HSQUIRRELVM vm) {
++			typedef R (C::*M)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14);
++			M* methodPtr;
++			sq_getuserdata(vm, -1, (SQUserPointer*)&methodPtr, NULL);
++			M method = *methodPtr;
++			
++			C* ptr = NULL;
++			sq_getinstanceup(vm, 1, (SQUserPointer*)&ptr, NULL);
++
++			R ret = (ptr->*method)(
++				Var<A1>(vm, 2).value,
++				Var<A2>(vm, 3).value,
++				Var<A3>(vm, 4).value,
++				Var<A4>(vm, 5).value,
++				Var<A5>(vm, 6).value,
++				Var<A6>(vm, 7).value,
++				Var<A7>(vm, 8).value,
++				Var<A8>(vm, 9).value,
++				Var<A9>(vm, 10).value,
++				Var<A10>(vm, 11).value,
++				Var<A11>(vm, 12).value,
++				Var<A12>(vm, 13).value,
++				Var<A13>(vm, 14).value,
++				Var<A14>(vm, 15).value
++				);
++
++			PushVar(vm, ret);
++			return 1;
++		}
++		
++		template <class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11, class A12, class A13, class A14>
++		static SQInteger Func14C(HSQUIRRELVM vm) {
++			typedef R (C::*M)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14) const;
++			M* methodPtr;
++			sq_getuserdata(vm, -1, (SQUserPointer*)&methodPtr, NULL);
++			M method = *methodPtr;
++			
++			C* ptr = NULL;
++			sq_getinstanceup(vm, 1, (SQUserPointer*)&ptr, NULL);
++
++			R ret = (ptr->*method)(
++				Var<A1>(vm, 2).value,
++				Var<A2>(vm, 3).value,
++				Var<A3>(vm, 4).value,
++				Var<A4>(vm, 5).value,
++				Var<A5>(vm, 6).value,
++				Var<A6>(vm, 7).value,
++				Var<A7>(vm, 8).value,
++				Var<A8>(vm, 9).value,
++				Var<A9>(vm, 10).value,
++				Var<A10>(vm, 11).value,
++				Var<A11>(vm, 12).value,
++				Var<A12>(vm, 13).value,
++				Var<A13>(vm, 14).value,
++				Var<A14>(vm, 15).value
++				);
++
++			PushVar(vm, ret);
++			return 1;
++		}
+ 	};
+ 	
+ 	//
+@@ -879,6 +1177,281 @@
+ 				);
+ 			return 0;
+ 		}
++
++		// Arg Count 10
++		template <class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10>
++		static SQInteger Func10(HSQUIRRELVM vm) {
++			typedef void (C::*M)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10);
++			M* methodPtr;
++			sq_getuserdata(vm, -1, (SQUserPointer*)&methodPtr, NULL);
++			M method = *methodPtr;
++
++			C* ptr = NULL;
++			sq_getinstanceup(vm, 1, (SQUserPointer*)&ptr, NULL);
++
++			(ptr->*method)(
++				Var<A1>(vm, 2).value,
++				Var<A2>(vm, 3).value,
++				Var<A3>(vm, 4).value,
++				Var<A4>(vm, 5).value,
++				Var<A5>(vm, 6).value,
++				Var<A6>(vm, 7).value,
++				Var<A7>(vm, 8).value,
++				Var<A8>(vm, 9).value,
++				Var<A9>(vm, 10).value,
++				Var<A10>(vm, 11).value
++				);
++			return 0;
++		}
++		
++		template <class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10>
++		static SQInteger Func10C(HSQUIRRELVM vm) {
++			typedef void (C::*M)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10) const;
++			M* methodPtr;
++			sq_getuserdata(vm, -1, (SQUserPointer*)&methodPtr, NULL);
++			M method = *methodPtr;
++
++			C* ptr = NULL;
++			sq_getinstanceup(vm, 1, (SQUserPointer*)&ptr, NULL);
++
++			(ptr->*method)(
++				Var<A1>(vm, 2).value,
++				Var<A2>(vm, 3).value,
++				Var<A3>(vm, 4).value,
++				Var<A4>(vm, 5).value,
++				Var<A5>(vm, 6).value,
++				Var<A6>(vm, 7).value,
++				Var<A7>(vm, 8).value,
++				Var<A8>(vm, 9).value,
++				Var<A9>(vm, 10).value,
++				Var<A10>(vm, 11).value
++				);
++			return 0;
++		}
++
++		// Arg Count 11
++		template <class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11>
++		static SQInteger Func11(HSQUIRRELVM vm) {
++			typedef void (C::*M)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11);
++			M* methodPtr;
++			sq_getuserdata(vm, -1, (SQUserPointer*)&methodPtr, NULL);
++			M method = *methodPtr;
++
++			C* ptr = NULL;
++			sq_getinstanceup(vm, 1, (SQUserPointer*)&ptr, NULL);
++
++			(ptr->*method)(
++				Var<A1>(vm, 2).value,
++				Var<A2>(vm, 3).value,
++				Var<A3>(vm, 4).value,
++				Var<A4>(vm, 5).value,
++				Var<A5>(vm, 6).value,
++				Var<A6>(vm, 7).value,
++				Var<A7>(vm, 8).value,
++				Var<A8>(vm, 9).value,
++				Var<A9>(vm, 10).value,
++				Var<A10>(vm, 11).value,
++				Var<A11>(vm, 12).value
++				);
++			return 0;
++		}
++		
++		template <class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11>
++		static SQInteger Func11C(HSQUIRRELVM vm) {
++			typedef void (C::*M)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11) const;
++			M* methodPtr;
++			sq_getuserdata(vm, -1, (SQUserPointer*)&methodPtr, NULL);
++			M method = *methodPtr;
++
++			C* ptr = NULL;
++			sq_getinstanceup(vm, 1, (SQUserPointer*)&ptr, NULL);
++
++			(ptr->*method)(
++				Var<A1>(vm, 2).value,
++				Var<A2>(vm, 3).value,
++				Var<A3>(vm, 4).value,
++				Var<A4>(vm, 5).value,
++				Var<A5>(vm, 6).value,
++				Var<A6>(vm, 7).value,
++				Var<A7>(vm, 8).value,
++				Var<A8>(vm, 9).value,
++				Var<A9>(vm, 10).value,
++				Var<A10>(vm, 11).value,
++				Var<A10>(vm, 12).value
++				);
++			return 0;
++		}
++
++		// Arg Count 12
++		template <class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11, class A12>
++		static SQInteger Func12(HSQUIRRELVM vm) {
++			typedef void (C::*M)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12);
++			M* methodPtr;
++			sq_getuserdata(vm, -1, (SQUserPointer*)&methodPtr, NULL);
++			M method = *methodPtr;
++
++			C* ptr = NULL;
++			sq_getinstanceup(vm, 1, (SQUserPointer*)&ptr, NULL);
++
++			(ptr->*method)(
++				Var<A1>(vm, 2).value,
++				Var<A2>(vm, 3).value,
++				Var<A3>(vm, 4).value,
++				Var<A4>(vm, 5).value,
++				Var<A5>(vm, 6).value,
++				Var<A6>(vm, 7).value,
++				Var<A7>(vm, 8).value,
++				Var<A8>(vm, 9).value,
++				Var<A9>(vm, 10).value,
++				Var<A10>(vm, 11).value,
++				Var<A11>(vm, 12).value,
++				Var<A12>(vm, 13).value
++				);
++			return 0;
++		}
++		
++		template <class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11, class A12>
++		static SQInteger Func12C(HSQUIRRELVM vm) {
++			typedef void (C::*M)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12) const;
++			M* methodPtr;
++			sq_getuserdata(vm, -1, (SQUserPointer*)&methodPtr, NULL);
++			M method = *methodPtr;
++
++			C* ptr = NULL;
++			sq_getinstanceup(vm, 1, (SQUserPointer*)&ptr, NULL);
++
++			(ptr->*method)(
++				Var<A1>(vm, 2).value,
++				Var<A2>(vm, 3).value,
++				Var<A3>(vm, 4).value,
++				Var<A4>(vm, 5).value,
++				Var<A5>(vm, 6).value,
++				Var<A6>(vm, 7).value,
++				Var<A7>(vm, 8).value,
++				Var<A8>(vm, 9).value,
++				Var<A9>(vm, 10).value,
++				Var<A10>(vm, 11).value,
++				Var<A11>(vm, 12).value,
++				Var<A12>(vm, 13).value
++				);
++			return 0;
++		}
++
++		// Arg Count 13
++		template <class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11, class A12, class A13>
++		static SQInteger Func13(HSQUIRRELVM vm) {
++			typedef void (C::*M)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13);
++			M* methodPtr;
++			sq_getuserdata(vm, -1, (SQUserPointer*)&methodPtr, NULL);
++			M method = *methodPtr;
++
++			C* ptr = NULL;
++			sq_getinstanceup(vm, 1, (SQUserPointer*)&ptr, NULL);
++
++			(ptr->*method)(
++				Var<A1>(vm, 2).value,
++				Var<A2>(vm, 3).value,
++				Var<A3>(vm, 4).value,
++				Var<A4>(vm, 5).value,
++				Var<A5>(vm, 6).value,
++				Var<A6>(vm, 7).value,
++				Var<A7>(vm, 8).value,
++				Var<A8>(vm, 9).value,
++				Var<A9>(vm, 10).value,
++				Var<A10>(vm, 11).value,
++				Var<A11>(vm, 12).value,
++				Var<A12>(vm, 13).value,
++				Var<A13>(vm, 14).value
++				);
++			return 0;
++		}
++		
++		template <class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11, class A12, class A13>
++		static SQInteger Func13C(HSQUIRRELVM vm) {
++			typedef void (C::*M)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13) const;
++			M* methodPtr;
++			sq_getuserdata(vm, -1, (SQUserPointer*)&methodPtr, NULL);
++			M method = *methodPtr;
++
++			C* ptr = NULL;
++			sq_getinstanceup(vm, 1, (SQUserPointer*)&ptr, NULL);
++
++			(ptr->*method)(
++				Var<A1>(vm, 2).value,
++				Var<A2>(vm, 3).value,
++				Var<A3>(vm, 4).value,
++				Var<A4>(vm, 5).value,
++				Var<A5>(vm, 6).value,
++				Var<A6>(vm, 7).value,
++				Var<A7>(vm, 8).value,
++				Var<A8>(vm, 9).value,
++				Var<A9>(vm, 10).value,
++				Var<A10>(vm, 11).value,
++				Var<A11>(vm, 12).value,
++				Var<A12>(vm, 13).value,
++				Var<A13>(vm, 14).value
++				);
++			return 0;
++		}
++
++		// Arg Count 14
++		template <class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11, class A12, class A13, class A14>
++		static SQInteger Func14(HSQUIRRELVM vm) {
++			typedef void (C::*M)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14);
++			M* methodPtr;
++			sq_getuserdata(vm, -1, (SQUserPointer*)&methodPtr, NULL);
++			M method = *methodPtr;
++
++			C* ptr = NULL;
++			sq_getinstanceup(vm, 1, (SQUserPointer*)&ptr, NULL);
++
++			(ptr->*method)(
++				Var<A1>(vm, 2).value,
++				Var<A2>(vm, 3).value,
++				Var<A3>(vm, 4).value,
++				Var<A4>(vm, 5).value,
++				Var<A5>(vm, 6).value,
++				Var<A6>(vm, 7).value,
++				Var<A7>(vm, 8).value,
++				Var<A8>(vm, 9).value,
++				Var<A9>(vm, 10).value,
++				Var<A10>(vm, 11).value,
++				Var<A11>(vm, 12).value,
++				Var<A12>(vm, 13).value,
++				Var<A13>(vm, 14).value,
++				Var<A14>(vm, 15).value
++				);
++			return 0;
++		}
++		
++		template <class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11, class A12, class A13, class A14>
++		static SQInteger Func14C(HSQUIRRELVM vm) {
++			typedef void (C::*M)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14) const;
++			M* methodPtr;
++			sq_getuserdata(vm, -1, (SQUserPointer*)&methodPtr, NULL);
++			M method = *methodPtr;
++
++			C* ptr = NULL;
++			sq_getinstanceup(vm, 1, (SQUserPointer*)&ptr, NULL);
++
++			(ptr->*method)(
++				Var<A1>(vm, 2).value,
++				Var<A2>(vm, 3).value,
++				Var<A3>(vm, 4).value,
++				Var<A4>(vm, 5).value,
++				Var<A5>(vm, 6).value,
++				Var<A6>(vm, 7).value,
++				Var<A7>(vm, 8).value,
++				Var<A8>(vm, 9).value,
++				Var<A9>(vm, 10).value,
++				Var<A10>(vm, 11).value,
++				Var<A11>(vm, 12).value,
++				Var<A12>(vm, 13).value,
++				Var<A13>(vm, 14).value,
++				Var<A14>(vm, 15).value
++				);
++			return 0;
++		}
+ 	};
+ 	
+ 
+@@ -996,6 +1569,57 @@
+ 		return &SqMember<C, R>::template Func9C<A1, A2, A3, A4, A5, A6, A7, A8, A9>;
+ 	}
+ 
++    // Arg Count 10
++	template <class C, class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10>
++	inline SQFUNCTION SqMemberFunc(R (C::*method)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10)) {
++		return &SqMember<C, R>::template Func10<A1, A2, A3, A4, A5, A6, A7, A8, A9, A10>;
++	}
++	
++	template <class C, class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10>
++	inline SQFUNCTION SqMemberFunc(R (C::*method)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10) const) {
++		return &SqMember<C, R>::template Func10C<A1, A2, A3, A4, A5, A6, A7, A8, A9, A10>;
++	}
++    // Arg Count 11
++	template <class C, class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11>
++	inline SQFUNCTION SqMemberFunc(R (C::*method)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11)) {
++		return &SqMember<C, R>::template Func11<A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11>;
++	}
++	
++	template <class C, class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11>
++	inline SQFUNCTION SqMemberFunc(R (C::*method)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11) const) {
++		return &SqMember<C, R>::template Func11C<A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11>;
++	}
++    // Arg Count 12
++	template <class C, class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11, class A12>
++	inline SQFUNCTION SqMemberFunc(R (C::*method)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)) {
++		return &SqMember<C, R>::template Func12<A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12>;
++	}
++	
++	template <class C, class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11, class A12>
++	inline SQFUNCTION SqMemberFunc(R (C::*method)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12) const) {
++		return &SqMember<C, R>::template Func12C<A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12>;
++	}
++    // Arg Count 13
++	template <class C, class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11, class A12, class A13>
++	inline SQFUNCTION SqMemberFunc(R (C::*method)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13)) {
++		return &SqMember<C, R>::template Func13<A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13>;
++	}
++	
++	template <class C, class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11, class A12, class A13>
++	inline SQFUNCTION SqMemberFunc(R (C::*method)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13) const) {
++		return &SqMember<C, R>::template Func13C<A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13>;
++	}
++    // Arg Count 14
++	template <class C, class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11, class A12, class A13, class A14>
++	inline SQFUNCTION SqMemberFunc(R (C::*method)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14)) {
++		return &SqMember<C, R>::template Func14<A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14>;
++	}
++	
++	template <class C, class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11, class A12, class A13, class A14>
++	inline SQFUNCTION SqMemberFunc(R (C::*method)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14) const) {
++		return &SqMember<C, R>::template Func14C<A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14>;
++	}
++
+ 	//
+ 	// Variable Get
+ 	//
