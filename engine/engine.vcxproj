@@ -62,6 +62,7 @@
     <ClCompile Include="src\hikari\client\game\objects\ItemFactory.cpp" />
     <ClCompile Include="src\hikari\client\game\objects\ItemSpawner.cpp" />
     <ClCompile Include="src\hikari\client\game\objects\Spawner.cpp" />
+    <ClCompile Include="src\hikari\client\game\Weapon.cpp" />
     <ClCompile Include="src\hikari\client\scripting\AudioServiceScriptProxy.cpp" />
     <ClCompile Include="src\hikari\client\scripting\SquirrelService.cpp" />
     <ClCompile Include="src\hikari\core\game\CollisionInfo.cpp" />
@@ -163,6 +164,7 @@
     <ClInclude Include="include\hikari\client\game\SpriteTestState.hpp" />
     <ClInclude Include="include\hikari\client\game\StageSelectState.hpp" />
     <ClInclude Include="include\hikari\client\game\TitleState.hpp" />
+    <ClInclude Include="include\hikari\client\game\Weapon.hpp" />
     <ClInclude Include="include\hikari\client\game\WeaponGetState.hpp" />
     <ClInclude Include="include\hikari\client\gui\BossMenu.hpp" />
     <ClInclude Include="include\hikari\client\gui\CommandConsole.hpp" />

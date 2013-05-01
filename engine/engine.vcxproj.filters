@@ -633,6 +633,9 @@
     <ClInclude Include="..\extlibs\jsoncpp\src\json_batchallocator.h">
       <Filter>Source Files\jsoncpp</Filter>
     </ClInclude>
+    <ClInclude Include="include\hikari\client\game\Weapon.hpp">
+      <Filter>Header Files\client\game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\hikari\core\Hikari.cpp">
@@ -964,6 +967,9 @@
     </ClCompile>
     <ClCompile Include="..\extlibs\jsoncpp\src\json_writer.cpp">
       <Filter>Source Files\jsoncpp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\Weapon.cpp">
+      <Filter>Header Files\core\game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
