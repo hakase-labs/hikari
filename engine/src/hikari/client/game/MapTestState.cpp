@@ -145,9 +145,9 @@ namespace hikari {
 
             std::vector<std::string> scriptFiles;
             scriptFiles.push_back("assets/scripts/EffectBase.nut");
-            scriptFiles.push_back("EnemyBehavior.nut");
-            scriptFiles.push_back("TellyBehavior.nut");
-            scriptFiles.push_back("OctopusBatteryEnemyBehavior.nut");
+            scriptFiles.push_back("assets/scripts/behaviors/EnemyBehavior.nut");
+            scriptFiles.push_back("assets/scripts/behaviors/TellyBehavior.nut");
+            scriptFiles.push_back("assets/scripts/behaviors/OctopusBatteryEnemyBehavior.nut");
 
             std::for_each(std::begin(scriptFiles), std::end(scriptFiles), [this](const std::string & scriptFileName) {
                 squirrel->runScriptFile(scriptFileName);

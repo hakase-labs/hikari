@@ -87,6 +87,8 @@ content/assets/scripts/effects*
 !content/assets/images/sp-collectables.png
 !content/assets/scripts/
 !content/assets/scripts/*.nut
+!content/assets/scripts/behaviors/
+!content/assets/scripts/behaviors/*.nut
 !content/assets/scripts/effects/
 !content/assets/scripts/effects/*.nut
 contrib/*
@@ -102,6 +104,7 @@ contrib/*
 !contrib/physfs
 !contrib/physfs-stream
 doc/
+junk/
 tools/
 *.sublime-project
 *.sublime-workspace
