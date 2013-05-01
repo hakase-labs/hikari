@@ -72,6 +72,8 @@ _ReSharper*/
 #Hikari Specific Ignores
 codeblocks/
 content/*
+!content/conf.json
+!content/game.json
 content/assets/*
 content/assets/templates/*
 content/assets/animations/*
