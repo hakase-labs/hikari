@@ -28,6 +28,8 @@ set( JSONCPP_SOURCE_FILES
     ${JSONCPP_DIR}/src/json_writer.cpp
 )
 
+set( PHYSFS_DIR "${PROJECT_SOURCE_DIR}/contrib/physfs" )
+
 set( PHYSFS_STREAM_DIR "${PROJECT_SOURCE_DIR}/extlibs/physfs-stream" )
 set( PHYSFS_SOURCE_FILES
     ${PHYSFS_STREAM_DIR}/physfs/ifile_stream.cpp
@@ -35,6 +37,33 @@ set( PHYSFS_SOURCE_FILES
     ${PHYSFS_STREAM_DIR}/physfs/ofile_stream.cpp
     ${PHYSFS_STREAM_DIR}/physfs/ofile_streambuf.cpp
     ${PHYSFS_STREAM_DIR}/physfs/physfs_file_system.cpp
+)
+
+set( SQUIRREL_DIR "${PROJECT_SOURCE_DIR}/extlibs/squirrel" )
+set( SQUIRREL_FILES
+    # Squirrel core
+    ${SQUIRREL_DIR}/squirrel/sqapi.cpp
+    ${SQUIRREL_DIR}/squirrel/sqbaselib.cpp
+    ${SQUIRREL_DIR}/squirrel/sqclass.cpp
+    ${SQUIRREL_DIR}/squirrel/sqcompiler.cpp
+    ${SQUIRREL_DIR}/squirrel/sqdebug.cpp
+    ${SQUIRREL_DIR}/squirrel/sqfuncstate.cpp
+    ${SQUIRREL_DIR}/squirrel/sqlexer.cpp
+    ${SQUIRREL_DIR}/squirrel/sqmem.cpp
+    ${SQUIRREL_DIR}/squirrel/sqobject.cpp
+    ${SQUIRREL_DIR}/squirrel/sqstate.cpp
+    ${SQUIRREL_DIR}/squirrel/sqtable.cpp
+    ${SQUIRREL_DIR}/squirrel/sqvm.cpp
+
+    # Squirrel standard library
+    ${SQUIRREL_DIR}/sqstdlib/sqstdaux.cpp
+    ${SQUIRREL_DIR}/sqstdlib/sqstdblob.cpp
+    ${SQUIRREL_DIR}/sqstdlib/sqstdio.cpp
+    ${SQUIRREL_DIR}/sqstdlib/sqstdmath.cpp
+    ${SQUIRREL_DIR}/sqstdlib/sqstdrex.cpp
+    ${SQUIRREL_DIR}/sqstdlib/sqstdstream.cpp
+    ${SQUIRREL_DIR}/sqstdlib/sqstdstring.cpp
+    ${SQUIRREL_DIR}/sqstdlib/sqstdsystem.cpp
 )
 
 set( SQRAT_DIR "${PROJECT_SOURCE_DIR}/extlibs/sqrat" )
@@ -133,6 +162,7 @@ set( HIKARI_SOURCE_FILES
     ${GME_SOURCE_FILES}
     ${JSONCPP_SOURCE_FILES}
     ${PHYSFS_SOURCE_FILES}
+    ${SQUIRREL_FILES}
     ${ENGINE_SOURCE_FILES}
 )
 
@@ -141,7 +171,11 @@ set( INCLUDE_DIRS
     ${GME_DIR}
     ${JSONCPP_DIR}/include
     ${JSONCPP_DIR}/src
+    ${PHYSFS_DIR}
     ${PHYSFS_STREAM_DIR}
+    ${SQUIRREL_DIR}/include
+    ${SQUIRREL_DIR}/squirrel
+    ${SQUIRREL_DIR}/sqstdlib
     ${SQRAT_DIR}/include
     ${FASTDELEGATE_DIR}
 )
@@ -157,11 +191,16 @@ if(WIN32)
     set(SFML_STATIC_LIBRARIES TRUE)
 endif(WIN32)
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
-
 find_package(SFML 2 COMPONENTS system window graphics audio REQUIRED)
 
 if(SFML_FOUND)
     include_directories( ${SFML_INCLUDE_DIR} )
     target_link_libraries( hikari ${SFML_LIBRARIES} )
 endif(SFML_FOUND)
+
+find_package(PhysFS REQUIRED)
+
+if(PHYSFS_FOUND)
+    include_directories( ${PHYSFS_INCLUDE_DIR} )
+    target_link_libraries( hikari ${PHYSFS_LIBRARY} )
+endif(PHYSFS_FOUND)
