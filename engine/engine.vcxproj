@@ -36,6 +36,26 @@
     <ClCompile Include="..\extlibs\jsoncpp\src\json_reader.cpp" />
     <ClCompile Include="..\extlibs\jsoncpp\src\json_value.cpp" />
     <ClCompile Include="..\extlibs\jsoncpp\src\json_writer.cpp" />
+    <ClCompile Include="..\extlibs\squirrel\sqstdlib\sqstdaux.cpp" />
+    <ClCompile Include="..\extlibs\squirrel\sqstdlib\sqstdblob.cpp" />
+    <ClCompile Include="..\extlibs\squirrel\sqstdlib\sqstdio.cpp" />
+    <ClCompile Include="..\extlibs\squirrel\sqstdlib\sqstdmath.cpp" />
+    <ClCompile Include="..\extlibs\squirrel\sqstdlib\sqstdrex.cpp" />
+    <ClCompile Include="..\extlibs\squirrel\sqstdlib\sqstdstream.cpp" />
+    <ClCompile Include="..\extlibs\squirrel\sqstdlib\sqstdstring.cpp" />
+    <ClCompile Include="..\extlibs\squirrel\sqstdlib\sqstdsystem.cpp" />
+    <ClCompile Include="..\extlibs\squirrel\squirrel\sqapi.cpp" />
+    <ClCompile Include="..\extlibs\squirrel\squirrel\sqbaselib.cpp" />
+    <ClCompile Include="..\extlibs\squirrel\squirrel\sqclass.cpp" />
+    <ClCompile Include="..\extlibs\squirrel\squirrel\sqcompiler.cpp" />
+    <ClCompile Include="..\extlibs\squirrel\squirrel\sqdebug.cpp" />
+    <ClCompile Include="..\extlibs\squirrel\squirrel\sqfuncstate.cpp" />
+    <ClCompile Include="..\extlibs\squirrel\squirrel\sqlexer.cpp" />
+    <ClCompile Include="..\extlibs\squirrel\squirrel\sqmem.cpp" />
+    <ClCompile Include="..\extlibs\squirrel\squirrel\sqobject.cpp" />
+    <ClCompile Include="..\extlibs\squirrel\squirrel\sqstate.cpp" />
+    <ClCompile Include="..\extlibs\squirrel\squirrel\sqtable.cpp" />
+    <ClCompile Include="..\extlibs\squirrel\squirrel\sqvm.cpp" />
     <ClCompile Include="src\hikari\client\ClientConfig.cpp" />
     <ClCompile Include="src\hikari\client\CommandProcessor.cpp" />
     <ClCompile Include="src\hikari\client\game\Effect.cpp" />
@@ -62,6 +82,7 @@
     <ClCompile Include="src\hikari\client\game\objects\ItemFactory.cpp" />
     <ClCompile Include="src\hikari\client\game\objects\ItemSpawner.cpp" />
     <ClCompile Include="src\hikari\client\game\objects\Spawner.cpp" />
+    <ClCompile Include="src\hikari\client\game\Weapon.cpp" />
     <ClCompile Include="src\hikari\client\scripting\AudioServiceScriptProxy.cpp" />
     <ClCompile Include="src\hikari\client\scripting\SquirrelService.cpp" />
     <ClCompile Include="src\hikari\core\game\CollisionInfo.cpp" />
@@ -111,6 +132,31 @@
     <ClInclude Include="..\extlibs\jsoncpp\include\json\value.h" />
     <ClInclude Include="..\extlibs\jsoncpp\include\json\writer.h" />
     <ClInclude Include="..\extlibs\jsoncpp\src\json_batchallocator.h" />
+    <ClInclude Include="..\extlibs\squirrel\include\sqstdaux.h" />
+    <ClInclude Include="..\extlibs\squirrel\include\sqstdblob.h" />
+    <ClInclude Include="..\extlibs\squirrel\include\sqstdio.h" />
+    <ClInclude Include="..\extlibs\squirrel\include\sqstdmath.h" />
+    <ClInclude Include="..\extlibs\squirrel\include\sqstdstring.h" />
+    <ClInclude Include="..\extlibs\squirrel\include\sqstdsystem.h" />
+    <ClInclude Include="..\extlibs\squirrel\include\squirrel.h" />
+    <ClInclude Include="..\extlibs\squirrel\sqstdlib\sqstdblobimpl.h" />
+    <ClInclude Include="..\extlibs\squirrel\sqstdlib\sqstdstream.h" />
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqarray.h" />
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqclass.h" />
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqclosure.h" />
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqcompiler.h" />
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqfuncproto.h" />
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqfuncstate.h" />
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqlexer.h" />
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqobject.h" />
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqopcodes.h" />
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqpcheader.h" />
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqstate.h" />
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqstring.h" />
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqtable.h" />
+    <ClInclude Include="..\extlibs\squirrel\squirrel\squserdata.h" />
+    <ClInclude Include="..\extlibs\squirrel\squirrel\squtils.h" />
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqvm.h" />
     <ClInclude Include="include\hikari\client\audio\AudioService.hpp" />
     <ClInclude Include="include\hikari\client\audio\NSFSoundStream.hpp" />
     <ClInclude Include="include\hikari\client\Client.hpp" />
@@ -163,6 +209,7 @@
     <ClInclude Include="include\hikari\client\game\SpriteTestState.hpp" />
     <ClInclude Include="include\hikari\client\game\StageSelectState.hpp" />
     <ClInclude Include="include\hikari\client\game\TitleState.hpp" />
+    <ClInclude Include="include\hikari\client\game\Weapon.hpp" />
     <ClInclude Include="include\hikari\client\game\WeaponGetState.hpp" />
     <ClInclude Include="include\hikari\client\gui\BossMenu.hpp" />
     <ClInclude Include="include\hikari\client\gui\CommandConsole.hpp" />
@@ -353,13 +400,13 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)include\;$(SolutionDir)extlibs\jsoncpp\include\;$(SolutionDir)contrib\squirrel3\include\;$(SolutionDir)contrib\sqrat\include\;$(SolutionDir)extlibs\gme-nes\;$(SolutionDir)contrib\physfs\;$(SolutionDir)contrib\physfs-stream\;$(SolutionDir)contrib\sfml\include\;$(SolutionDir)extlibs\fastdelegate\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include\;$(SolutionDir)contrib\sfml\include\;$(SolutionDir)contrib\physfs\;$(SolutionDir)extlibs\jsoncpp\include\;$(SolutionDir)extlibs\squirrel\include\;$(SolutionDir)extlibs\squirrel\sqstdlib\;$(SolutionDir)extlibs\squirrel\squirrel\;$(SolutionDir)extlibs\sqrat\include\;$(SolutionDir)extlibs\gme-nes\;$(SolutionDir)extlibs\physfs-stream\;$(SolutionDir)extlibs\fastdelegate\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES;SFML_STATIC;HIKARI_DEBUG_ENTITIES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>sfml-main-d.lib;sfml-system-s-d.lib;sfml-graphics-s-d.lib;sfml-audio-s-d.lib;sfml-window-s-d.lib;physfs-d.lib;squirreld.lib;sqstdlibd.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(solutionDir)contrib\sfml\lib\Debug\;$(SolutionDir)contrib\physfs\dist\debug\;$(SolutionDir)contrib\squirrel3\lib\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>sfml-main-d.lib;sfml-system-s-d.lib;sfml-graphics-s-d.lib;sfml-audio-s-d.lib;sfml-window-s-d.lib;physfs-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(solutionDir)contrib\sfml\lib\Debug\;$(SolutionDir)contrib\physfs\dist\debug\</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>libc.lib;libcmt.lib;msvcrt.lib;libcd.lib;libcmtd.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <Profile>true</Profile>
     </Link>

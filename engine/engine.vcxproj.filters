@@ -163,6 +163,24 @@
     <Filter Include="Source Files\jsoncpp">
       <UniqueIdentifier>{02a12a68-76f6-4187-aaed-33ed83477029}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\squirrel">
+      <UniqueIdentifier>{7d50c89c-d109-4d40-b2e7-3a6fd114315a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\squirrel\core">
+      <UniqueIdentifier>{cc6ed63f-255e-486f-ad02-155a7663c582}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\squirrel\sqstdlib">
+      <UniqueIdentifier>{60bd9c50-2af6-47bb-9237-3102991e2932}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\squirrel">
+      <UniqueIdentifier>{9eb8db33-2fb7-4be2-a6ab-1d5229194eb6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\squirrel\core">
+      <UniqueIdentifier>{e922892c-f631-44e6-9a2a-9003adaab422}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\squirrel\sqstdlib">
+      <UniqueIdentifier>{4c960444-c3a0-4f58-b9ec-ebfde693a2be}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\hikari\core\geom\Rectangle2D.hpp">
@@ -633,6 +651,84 @@
     <ClInclude Include="..\extlibs\jsoncpp\src\json_batchallocator.h">
       <Filter>Source Files\jsoncpp</Filter>
     </ClInclude>
+    <ClInclude Include="include\hikari\client\game\Weapon.hpp">
+      <Filter>Header Files\client\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\include\squirrel.h">
+      <Filter>Header Files\squirrel\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqarray.h">
+      <Filter>Header Files\squirrel\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqclass.h">
+      <Filter>Header Files\squirrel\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqclosure.h">
+      <Filter>Header Files\squirrel\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqcompiler.h">
+      <Filter>Header Files\squirrel\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqfuncproto.h">
+      <Filter>Header Files\squirrel\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqfuncstate.h">
+      <Filter>Header Files\squirrel\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqlexer.h">
+      <Filter>Header Files\squirrel\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqobject.h">
+      <Filter>Header Files\squirrel\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqopcodes.h">
+      <Filter>Header Files\squirrel\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqpcheader.h">
+      <Filter>Header Files\squirrel\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqstate.h">
+      <Filter>Header Files\squirrel\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqstring.h">
+      <Filter>Header Files\squirrel\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqtable.h">
+      <Filter>Header Files\squirrel\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\squirrel\squserdata.h">
+      <Filter>Header Files\squirrel\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\squirrel\squtils.h">
+      <Filter>Header Files\squirrel\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqvm.h">
+      <Filter>Header Files\squirrel\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\sqstdlib\sqstdblobimpl.h">
+      <Filter>Header Files\squirrel\sqstdlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\sqstdlib\sqstdstream.h">
+      <Filter>Header Files\squirrel\sqstdlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\include\sqstdaux.h">
+      <Filter>Header Files\squirrel\sqstdlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\include\sqstdblob.h">
+      <Filter>Header Files\squirrel\sqstdlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\include\sqstdio.h">
+      <Filter>Header Files\squirrel\sqstdlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\include\sqstdmath.h">
+      <Filter>Header Files\squirrel\sqstdlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\include\sqstdstring.h">
+      <Filter>Header Files\squirrel\sqstdlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\include\sqstdsystem.h">
+      <Filter>Header Files\squirrel\sqstdlib</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\hikari\core\Hikari.cpp">
@@ -964,6 +1060,69 @@
     </ClCompile>
     <ClCompile Include="..\extlibs\jsoncpp\src\json_writer.cpp">
       <Filter>Source Files\jsoncpp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\Weapon.cpp">
+      <Filter>Header Files\core\game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\squirrel\squirrel\sqapi.cpp">
+      <Filter>Source Files\squirrel\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\squirrel\squirrel\sqbaselib.cpp">
+      <Filter>Source Files\squirrel\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\squirrel\squirrel\sqclass.cpp">
+      <Filter>Source Files\squirrel\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\squirrel\squirrel\sqcompiler.cpp">
+      <Filter>Source Files\squirrel\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\squirrel\squirrel\sqdebug.cpp">
+      <Filter>Source Files\squirrel\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\squirrel\squirrel\sqfuncstate.cpp">
+      <Filter>Source Files\squirrel\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\squirrel\squirrel\sqlexer.cpp">
+      <Filter>Source Files\squirrel\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\squirrel\squirrel\sqmem.cpp">
+      <Filter>Source Files\squirrel\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\squirrel\squirrel\sqobject.cpp">
+      <Filter>Source Files\squirrel\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\squirrel\squirrel\sqstate.cpp">
+      <Filter>Source Files\squirrel\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\squirrel\squirrel\sqtable.cpp">
+      <Filter>Source Files\squirrel\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\squirrel\squirrel\sqvm.cpp">
+      <Filter>Source Files\squirrel\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\squirrel\sqstdlib\sqstdaux.cpp">
+      <Filter>Source Files\squirrel\sqstdlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\squirrel\sqstdlib\sqstdblob.cpp">
+      <Filter>Source Files\squirrel\sqstdlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\squirrel\sqstdlib\sqstdio.cpp">
+      <Filter>Source Files\squirrel\sqstdlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\squirrel\sqstdlib\sqstdmath.cpp">
+      <Filter>Source Files\squirrel\sqstdlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\squirrel\sqstdlib\sqstdrex.cpp">
+      <Filter>Source Files\squirrel\sqstdlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\squirrel\sqstdlib\sqstdstream.cpp">
+      <Filter>Source Files\squirrel\sqstdlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\squirrel\sqstdlib\sqstdstring.cpp">
+      <Filter>Source Files\squirrel\sqstdlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\squirrel\sqstdlib\sqstdsystem.cpp">
+      <Filter>Source Files\squirrel\sqstdlib</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

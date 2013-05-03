@@ -1,15 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jsoncpp", "contrib\jsoncpp\jsoncpp.vcxproj", "{A8691230-2135-4068-8173-99C687FC255F}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "engine", "engine\engine.vcxproj", "{4E92FB0C-82F5-49A4-8CD9-9333868BB767}"
-	ProjectSection(ProjectDependencies) = postProject
-		{A8691230-2135-4068-8173-99C687FC255F} = {A8691230-2135-4068-8173-99C687FC255F}
-		{F1364433-1299-4DBA-9FE4-91CF5D6F3BEB} = {F1364433-1299-4DBA-9FE4-91CF5D6F3BEB}
-	EndProjectSection
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "physfs", "contrib\physfs\physfs.vcxproj", "{F1364433-1299-4DBA-9FE4-91CF5D6F3BEB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3A4272D9-D879-4366-B260-12DFFA1C57F0}"
 EndProject
@@ -21,14 +13,6 @@ Global
 		RelWithDebInfo|Win32 = RelWithDebInfo|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A8691230-2135-4068-8173-99C687FC255F}.Debug|Win32.ActiveCfg = Debug|Win32
-		{A8691230-2135-4068-8173-99C687FC255F}.Debug|Win32.Build.0 = Debug|Win32
-		{A8691230-2135-4068-8173-99C687FC255F}.MinSizeRel|Win32.ActiveCfg = Release|Win32
-		{A8691230-2135-4068-8173-99C687FC255F}.MinSizeRel|Win32.Build.0 = Release|Win32
-		{A8691230-2135-4068-8173-99C687FC255F}.Release|Win32.ActiveCfg = Release|Win32
-		{A8691230-2135-4068-8173-99C687FC255F}.Release|Win32.Build.0 = Release|Win32
-		{A8691230-2135-4068-8173-99C687FC255F}.RelWithDebInfo|Win32.ActiveCfg = Release|Win32
-		{A8691230-2135-4068-8173-99C687FC255F}.RelWithDebInfo|Win32.Build.0 = Release|Win32
 		{4E92FB0C-82F5-49A4-8CD9-9333868BB767}.Debug|Win32.ActiveCfg = Debug|Win32
 		{4E92FB0C-82F5-49A4-8CD9-9333868BB767}.Debug|Win32.Build.0 = Debug|Win32
 		{4E92FB0C-82F5-49A4-8CD9-9333868BB767}.MinSizeRel|Win32.ActiveCfg = Release|Win32
@@ -37,14 +21,6 @@ Global
 		{4E92FB0C-82F5-49A4-8CD9-9333868BB767}.Release|Win32.Build.0 = Release|Win32
 		{4E92FB0C-82F5-49A4-8CD9-9333868BB767}.RelWithDebInfo|Win32.ActiveCfg = Release|Win32
 		{4E92FB0C-82F5-49A4-8CD9-9333868BB767}.RelWithDebInfo|Win32.Build.0 = Release|Win32
-		{F1364433-1299-4DBA-9FE4-91CF5D6F3BEB}.Debug|Win32.ActiveCfg = Debug|Win32
-		{F1364433-1299-4DBA-9FE4-91CF5D6F3BEB}.Debug|Win32.Build.0 = Debug|Win32
-		{F1364433-1299-4DBA-9FE4-91CF5D6F3BEB}.MinSizeRel|Win32.ActiveCfg = MinSizeRel|Win32
-		{F1364433-1299-4DBA-9FE4-91CF5D6F3BEB}.MinSizeRel|Win32.Build.0 = MinSizeRel|Win32
-		{F1364433-1299-4DBA-9FE4-91CF5D6F3BEB}.Release|Win32.ActiveCfg = Release|Win32
-		{F1364433-1299-4DBA-9FE4-91CF5D6F3BEB}.Release|Win32.Build.0 = Release|Win32
-		{F1364433-1299-4DBA-9FE4-91CF5D6F3BEB}.RelWithDebInfo|Win32.ActiveCfg = RelWithDebInfo|Win32
-		{F1364433-1299-4DBA-9FE4-91CF5D6F3BEB}.RelWithDebInfo|Win32.Build.0 = RelWithDebInfo|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
