@@ -30,7 +30,7 @@ set( JSONCPP_SOURCE_FILES
 
 set( PHYSFS_DIR "${PROJECT_SOURCE_DIR}/contrib/physfs" )
 
-set( PHYSFS_STREAM_DIR "${PROJECT_SOURCE_DIR}/contrib/physfs-stream" )
+set( PHYSFS_STREAM_DIR "${PROJECT_SOURCE_DIR}/extlibs/physfs-stream" )
 set( PHYSFS_SOURCE_FILES
     ${PHYSFS_STREAM_DIR}/physfs/ifile_stream.cpp
     ${PHYSFS_STREAM_DIR}/physfs/ifile_streambuf.cpp
