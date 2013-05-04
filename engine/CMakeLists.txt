@@ -30,7 +30,7 @@ set( JSONCPP_SOURCE_FILES
 
 set( PHYSFS_DIR "${PROJECT_SOURCE_DIR}/contrib/physfs" )
 
-set( PHYSFS_STREAM_DIR "${PROJECT_SOURCE_DIR}/extlibs/physfs-stream" )
+set( PHYSFS_STREAM_DIR "${PROJECT_SOURCE_DIR}/contrib/physfs-stream" )
 set( PHYSFS_SOURCE_FILES
     ${PHYSFS_STREAM_DIR}/physfs/ifile_stream.cpp
     ${PHYSFS_STREAM_DIR}/physfs/ifile_streambuf.cpp
@@ -191,16 +191,18 @@ if(WIN32)
     set(SFML_STATIC_LIBRARIES TRUE)
 endif(WIN32)
 
-find_package(SFML 2 COMPONENTS system window graphics audio REQUIRED)
+find_package(SFML 2 COMPONENTS graphics window system audio REQUIRED)
 
 if(SFML_FOUND)
     include_directories( ${SFML_INCLUDE_DIR} )
-    target_link_libraries( hikari ${SFML_LIBRARIES} )
+    target_link_libraries( hikari ${SFML_LIBRARIES} "-stdlib=libc++")
 endif(SFML_FOUND)
 
 find_package(PhysFS REQUIRED)
 
 if(PHYSFS_FOUND)
+    ADD_DEFINITIONS(-fno-common)
+    SET(OTHER_LDFLAGS ${OTHER_LDFLAGS} "-framework Carbon -framework IOKit")
     include_directories( ${PHYSFS_INCLUDE_DIR} )
-    target_link_libraries( hikari ${PHYSFS_LIBRARY} )
+    target_link_libraries( hikari ${PHYSFS_LIBRARY} ${OTHER_LDFLAGS} )
 endif(PHYSFS_FOUND)

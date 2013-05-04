@@ -12,8 +12,8 @@ namespace hikari {
     const std::string FileSystem::readFileAsString(const std::string &fileName) {
         std::stringstream result;
 
-        if(PhysFS::exists(fileName)) {
-            auto fs = FileSystem::openFile(fileName);
+        if(exists(fileName)) {
+            auto fs = openFile(fileName);
 
             result << fs->rdbuf();
         }
