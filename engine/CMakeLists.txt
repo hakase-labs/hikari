@@ -28,10 +28,8 @@ set( JSONCPP_SOURCE_FILES
     ${JSONCPP_DIR}/src/json_writer.cpp
 )
 
-set( PHYSFS_DIR "${PROJECT_SOURCE_DIR}/contrib/physfs" )
-
 set( PHYSFS_STREAM_DIR "${PROJECT_SOURCE_DIR}/extlibs/physfs-stream" )
-set( PHYSFS_SOURCE_FILES
+set( PHYSFS_STREAM_SOURCE_FILES
     ${PHYSFS_STREAM_DIR}/physfs/ifile_stream.cpp
     ${PHYSFS_STREAM_DIR}/physfs/ifile_streambuf.cpp
     ${PHYSFS_STREAM_DIR}/physfs/ofile_stream.cpp
@@ -161,7 +159,7 @@ set( ENGINE_SOURCE_FILES
 set( HIKARI_SOURCE_FILES
     ${GME_SOURCE_FILES}
     ${JSONCPP_SOURCE_FILES}
-    ${PHYSFS_SOURCE_FILES}
+    ${PHYSFS_STREAM_SOURCE_FILES}
     ${SQUIRREL_FILES}
     ${ENGINE_SOURCE_FILES}
 )
@@ -171,7 +169,6 @@ set( INCLUDE_DIRS
     ${GME_DIR}
     ${JSONCPP_DIR}/include
     ${JSONCPP_DIR}/src
-    ${PHYSFS_DIR}
     ${PHYSFS_STREAM_DIR}
     ${SQUIRREL_DIR}/include
     ${SQUIRREL_DIR}/squirrel
