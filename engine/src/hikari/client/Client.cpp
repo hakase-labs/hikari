@@ -384,7 +384,7 @@ int main(int argc, char** argv) {
                             Entity::enableDebug(false);
                         }
 
-                        if(event.key.code == sf::Keyboard::F11) {
+                        if(event.key.code == sf::Keyboard::F6) {
                             if(fullscreen) {
                                 window.create(videoMode, APPLICATION_TITLE, sf::Style::Default);
                             } else {
