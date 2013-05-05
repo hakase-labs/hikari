@@ -3,8 +3,6 @@
 
 #include <string>
 
-#include <string>
-
 namespace hikari {
 
   /**

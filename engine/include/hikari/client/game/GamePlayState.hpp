@@ -81,9 +81,6 @@ namespace hikari {
         bool drawWeaponEnergyMeter;
         bool drawInfamousBlackBar;
         bool isViewingMenu;
-        unsigned int startRoomIndex;        // Index of the room in the current map where the hero "starts" from
-        unsigned int midpointRoomIndex;     // Index of the room in the current map where the hero spawns from if reached
-        unsigned int bossCorridorRoomIndex; // Index of the room where the hero spawns from if he reached the boss chamber
         bool hasReachedMidpoint;
         bool hasReachedBossCorridor;
 

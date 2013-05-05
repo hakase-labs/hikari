@@ -27,6 +27,7 @@ namespace hikari {
         , animationPlayer(new SpriteAnimator(sprite))
         , direction(Directions::None)
         , faction(Faction::World)
+        , weaponId(0)
         , currentAnimationName("")
     {
         reset();

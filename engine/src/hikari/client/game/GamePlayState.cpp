@@ -80,9 +80,6 @@ namespace hikari {
         , drawWeaponEnergyMeter(false)
         , drawInfamousBlackBar(false)
         , isViewingMenu(false)
-        , startRoomIndex(0)
-        , midpointRoomIndex(0)
-        , bossCorridorRoomIndex(0)
         , hasReachedMidpoint(false)
         , hasReachedBossCorridor(false)
     {
@@ -686,11 +683,8 @@ namespace hikari {
     }
 
     void GamePlayState::TeleportSubState::update(const float & dt) {
-        auto& camera = gamePlayState.camera;
         auto& hero = gamePlayState.hero;
         auto& heroPosition = hero->getPosition();
-
-        //camera.lookAt(heroPosition.getX(), heroPosition.getY());
 
         if(heroPosition.getY() < targetPoint.getY()) {
             float deltaY = std::min(16.0f, std::abs(targetPoint.getY() - heroPosition.getY()));
@@ -749,7 +743,6 @@ namespace hikari {
                 // Check if we've moved off screen and remove if so
                 //
                 const auto & view = camera.getView();
-                const auto & pos = item->getPosition();
 
                 if(!geom::intersects(item->getBoundingBox(), view)) {
                     item->setActive(false);

@@ -52,6 +52,7 @@ namespace hikari {
 
         Direction direction;
         Faction::Type faction;
+        int weaponId;
 
         // Flag to use in determining if this object acts like an obstacle
         bool obstacleFlag;
