@@ -23,6 +23,7 @@ namespace hikari {
     class Animation;
     class AnimationSet;
     class Animator;
+    class EventManager;
     class GameWorld; // Soon to replace reference to Room
     class Room;
 
@@ -43,6 +44,7 @@ namespace hikari {
         std::shared_ptr<Animation> currentAnimation;
         std::shared_ptr<Animator> animationPlayer;
 
+        std::weak_ptr<EventManager> eventManager;
         std::weak_ptr<GameWorld> world;
 
         #ifdef HIKARI_DEBUG_ENTITIES
@@ -94,8 +96,14 @@ namespace hikari {
         void setFaction(Faction::Type newFaction);
         Faction::Type getFaction() const;
 
+        void setWeaponId(int weaponId);
+        int getWeaponId() const;
+
         void setRoom(const std::shared_ptr<Room>& newRoom);
         const std::shared_ptr<Room>& getRoom() const;
+
+        void setEventManager(const std::weak_ptr<EventManager>& eventManager);
+        const std::weak_ptr<EventManager>& getEventManager() const;
 
         void setWorld(const std::weak_ptr<GameWorld>& worldRef);
         const std::weak_ptr<GameWorld>& getWorld() const;

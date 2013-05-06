@@ -4,6 +4,7 @@
 #include "hikari/core/game/GameState.hpp"
 #include "hikari/core/game/map/Camera.hpp"
 #include "hikari/core/game/map/Map.hpp"
+#include "hikari/client/game/events/EventData.hpp"
 
 #include "hikari/client/game/GameWorld.hpp"
 #include "hikari/core/game/map/RoomTransition.hpp"
@@ -44,6 +45,7 @@ namespace hikari {
     class Hero;
     class TileMapCollisionResolver;
     class Spawner;
+    class EventManager;
 
     class GamePlayState : public GameState {
 
@@ -52,6 +54,7 @@ namespace hikari {
     private:
         std::string name;
         std::weak_ptr<AudioService> audioService;
+        std::shared_ptr<EventManager> eventManager;
         std::shared_ptr<GameProgress> gameProgress;
         std::shared_ptr<ImageFont> guiFont;
         std::shared_ptr<ImageCache> imageCache;
@@ -137,6 +140,11 @@ namespace hikari {
         void renderHero(sf::RenderTarget &target) const;
         void renderEntities(sf::RenderTarget &target) const;
         void renderHud(sf::RenderTarget &target) const;
+
+        //
+        // Event handlers
+        //
+        void handleWeaponFireEvent(EventDataPtr evt);
 
         /**
          * GamePlayState::SubState encapsulates a part of gameplay that operates

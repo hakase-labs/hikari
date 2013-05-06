@@ -15,6 +15,9 @@
 #include "hikari/client/gui/EnergyMeter.hpp"
 #include "hikari/client/Services.hpp"
 #include "hikari/client/audio/AudioService.hpp"
+#include "hikari/client/game/events/EventManagerImpl.hpp"
+#include "hikari/client/game/events/EventListenerDelegate.hpp"
+#include "hikari/client/game/events/WeaponFireEventData.hpp"
 
 #include "hikari/core/game/AnimationSet.hpp"
 #include "hikari/core/game/AnimationLoader.hpp"
@@ -46,11 +49,16 @@
 
 namespace hikari {
 
+    void freeHandleWeaponFireEvent(EventDataPtr ptr) {
+        HIKARI_LOG(debug) << "Weapon Fired!";
+    }
+
     using gui::EnergyMeter;
 
     GamePlayState::GamePlayState(const std::string &name, const Json::Value &params, ServiceLocator &services)
         : name(name)
         , audioService(services.locateService<AudioService>(Services::AUDIO))
+        , eventManager(new EventManagerImpl("GamePlayEvents", false))
         , gameProgress(services.locateService<GameProgress>(Services::GAMEPROGRESS))
         , guiFont(services.locateService<ImageFont>(Services::GUIFONT))
         , imageCache(services.locateService<ImageCache>(Services::IMAGECACHE))
@@ -84,6 +92,15 @@ namespace hikari {
         , hasReachedBossCorridor(false)
     {
         loadAllMaps(services.locateService<MapLoader>(hikari::Services::MAPLOADER), params);
+
+        //
+        // Bind event handlers
+        //
+        auto weaponFireDelegate = EventListenerDelegate(&freeHandleWeaponFireEvent);
+
+        if(eventManager) {
+            eventManager->addListener(weaponFireDelegate, WeaponFireEventData::Type);
+        }
 
         //
         // Create/configure GUI
@@ -131,6 +148,7 @@ namespace hikari {
         hero->changeAnimation("idle");
         hero->setPosition(100.0f, 100.0f);
         hero->setActionController(std::make_shared<PlayerInputHeroActionController>(userInput));
+        hero->setEventManager(std::weak_ptr<EventManager>(eventManager));
 
         world.setPlayer(hero);
 
@@ -165,6 +183,10 @@ namespace hikari {
 
     bool GamePlayState::update(const float &dt) {
         userInput->update();
+
+        if(eventManager) {
+            eventManager->processEvents();
+        }
 
         if(subState) {
             if(!isViewingMenu) {
@@ -485,6 +507,9 @@ namespace hikari {
         }
     }
 
+    void GamePlayState::handleWeaponFireEvent(EventDataPtr evt) {
+        // 
+    }
 
     // ************************************************************************
     // Definition of sub-states

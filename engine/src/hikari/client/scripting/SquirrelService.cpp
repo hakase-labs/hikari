@@ -17,7 +17,7 @@ namespace hikari {
     const SQInteger SquirrelService::DEFAULT_STACK_SIZE = 1024;
 
     void SquirrelService::squirrelPrintFunction(HSQUIRRELVM vm, const SQChar *s, ...) {
-        va_list vl;
+        va_list vl; 
         va_start(vl, s);
         vprintf(s, vl);
         va_end(vl);

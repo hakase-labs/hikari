@@ -1,11 +1,13 @@
 #include "hikari/client/game/objects/Entity.hpp"
+#include "hikari/client/game/events/EventManager.hpp"
 #include "hikari/core/game/map/Room.hpp"
 #include "hikari/core/game/map/Tileset.hpp"
 #include "hikari/core/game/Animation.hpp"
 #include "hikari/core/game/AnimationSet.hpp"
 #include "hikari/core/game/SpriteAnimator.hpp"
-#include <SFML/Graphics/RenderTarget.hpp>
 #include "hikari/core/util/Log.hpp"
+
+#include <SFML/Graphics/RenderTarget.hpp>
 
 namespace hikari {
 
@@ -24,6 +26,7 @@ namespace hikari {
         , animationSet()
         , currentAnimation()
         , animationPlayer(new SpriteAnimator(sprite))
+        , eventManager()
         , world()
         , direction(Directions::None)
         , faction(Faction::World)
@@ -54,6 +57,8 @@ namespace hikari {
         , animationSet(proto.animationSet)
         , currentAnimation(proto.currentAnimation)
         , animationPlayer(new SpriteAnimator(sprite))
+        , eventManager(proto.eventManager)
+        , world(proto.world)
         , direction(proto.direction)
         , faction(proto.faction)
         , weaponId(proto.weaponId)
@@ -177,6 +182,14 @@ namespace hikari {
         return faction;
     }
 
+    void Entity::setWeaponId(int weaponId) {
+        this->weaponId = weaponId;
+    }
+
+    int Entity::getWeaponId() const {
+        return weaponId;
+    }
+
     void Entity::setRoom(const std::shared_ptr<Room>& newRoom) {
         room = newRoom;
     }
@@ -191,6 +204,14 @@ namespace hikari {
 
     const std::weak_ptr<GameWorld>& Entity::getWorld() const {
         return world;
+    }
+
+    void Entity::setEventManager(const std::weak_ptr<EventManager>& eventManager) {
+        this->eventManager = eventManager;
+    }
+
+    const std::weak_ptr<EventManager>& Entity::getEventManager() const {
+        return eventManager;
     }
 
     const Direction Entity::getDirection() const {

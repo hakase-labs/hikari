@@ -157,38 +157,38 @@ int main(int argc, char** argv) {
         sf::VideoMode videoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP);
         sf::RenderWindow window;
 
-        HIKARI_LOG(debug) << "Created render window...";
+        // HIKARI_LOG(debug) << "Created render window...";
 
         bool showFPS = clientConfig.isFpsDisplayEnabled();
 
         auto imageCache        = std::make_shared<ImageCache>(ImageCache::NO_SMOOTHING, ImageCache::USE_MASKING);
-        HIKARI_LOG(debug) << "Created imageCache";
+        // HIKARI_LOG(debug) << "Created imageCache";
         auto animationSetCache = std::make_shared<AnimationSetCache>();
-        HIKARI_LOG(debug) << "Created animationSetCache";
+        // HIKARI_LOG(debug) << "Created animationSetCache";
         auto animationLoader   = std::make_shared<AnimationLoader>();
-        HIKARI_LOG(debug) << "Created animationLoader";
+        // HIKARI_LOG(debug) << "Created animationLoader";
         auto tilesetLoader     = std::make_shared<TilesetLoader>(imageCache, animationLoader);
-        HIKARI_LOG(debug) << "Created tilesetLoader";
+        // HIKARI_LOG(debug) << "Created tilesetLoader";
         auto tilesetCache      = std::make_shared<TilesetCache>(tilesetLoader);
-        HIKARI_LOG(debug) << "Created tilesetCache";
+        // HIKARI_LOG(debug) << "Created tilesetCache";
         auto mapLoader         = std::make_shared<MapLoader>(tilesetCache);
-        HIKARI_LOG(debug) << "Created mapLoader";
+        // HIKARI_LOG(debug) << "Created mapLoader";
         auto gameProgress      = std::make_shared<GameProgress>();
-        HIKARI_LOG(debug) << "Created gameProgress";
+        // HIKARI_LOG(debug) << "Created gameProgress";
         auto audioService      = std::make_shared<AudioService>(game["assets"]["audio"]);
-        HIKARI_LOG(debug) << "Created audioService";
+        // HIKARI_LOG(debug) << "Created audioService";
         auto squirrelService   = std::make_shared<SquirrelService>(clientConfig.getScriptingStackSize());
-        HIKARI_LOG(debug) << "Created squirrelService";
+        // HIKARI_LOG(debug) << "Created squirrelService";
         auto guiFont           = std::make_shared<ImageFont>(
             imageCache->get("assets/images/gui-font.png"),
             " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
             8,
             8
         );
-        HIKARI_LOG(debug) << "Created guiFont";
+        // HIKARI_LOG(debug) << "Created guiFont";
         
         auto itemFactory       = std::make_shared<ItemFactory>(animationSetCache, imageCache, squirrelService);
-        HIKARI_LOG(debug) << "Created itemFactory";
+        // HIKARI_LOG(debug) << "Created itemFactory";
 
         ServiceLocator services;
         services.registerService(Services::AUDIO,             audioService);

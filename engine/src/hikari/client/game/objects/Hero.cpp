@@ -2,6 +2,9 @@
 #include "hikari/client/game/objects/HeroClimbingMobilityState.hpp"
 #include "hikari/client/game/objects/HeroIdleMobilityState.hpp"
 #include "hikari/client/game/objects/HeroTeleportingMobilityState.hpp"
+#include "hikari/client/game/events/EventManager.hpp"
+#include "hikari/client/game/events/EventData.hpp"
+#include "hikari/client/game/events/WeaponFireEventData.hpp"
 #include "hikari/core/game/Animation.hpp"
 #include "hikari/core/game/map/Room.hpp"
 #include "hikari/core/math/NESNumber.hpp"
@@ -402,6 +405,13 @@ namespace hikari {
         cooldownTimer = cooldown;
         HIKARI_LOG(debug4) << "Shooting now!";
         hero.chooseAnimation();
+
+        if(auto events = hero.getEventManager().lock()) {
+            EventDataPtr weaponFire(new WeaponFireEventData(hero.getWeaponId(), hero.getId()));
+            events->triggerEvent(weaponFire);
+        } else {
+            HIKARI_LOG(debug4) << "No event manager.";
+        }
     }
 
     void Hero::IsShootingState::exit() {
