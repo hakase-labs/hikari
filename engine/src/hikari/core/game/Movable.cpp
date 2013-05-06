@@ -303,7 +303,7 @@ namespace hikari {
         this->collisionCallback = callback;
     }
 
-    void Movable::update(const float& dt) {
+    void Movable::update(float dt) {
         if(isGravitated()) {
             velocity.setY(velocity.getY() + getGravity());
 

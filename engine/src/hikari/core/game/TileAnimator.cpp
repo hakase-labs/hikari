@@ -3,11 +3,21 @@
 
 namespace hikari {
 
-    TileAnimator::TileAnimator(std::vector<sf::IntRect> &tiles, const unsigned int& tileIndex)
+    TileAnimator::TileAnimator(std::vector<sf::IntRect> &tiles, unsigned int tileIndex)
         : Animator()
         , tileIndex(tileIndex)
         , tiles(tiles) {
 
+    }
+
+    TileAnimator & TileAnimator::operator=(const TileAnimator & other) {
+        // Call base-class op first!
+        Animator::operator = (other);
+
+        tileIndex = other.tileIndex;
+        tiles = other.tiles;
+
+        return *this;
     }
 
     const int& TileAnimator::getUpdatedTileIndex() const {

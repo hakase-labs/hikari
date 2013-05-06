@@ -16,6 +16,46 @@
     <ClCompile Include="..\contrib\physfs-stream\physfs\ofile_stream.cpp" />
     <ClCompile Include="..\contrib\physfs-stream\physfs\ofile_streambuf.cpp" />
     <ClCompile Include="..\contrib\physfs-stream\physfs\physfs_file_system.cpp" />
+    <ClCompile Include="..\extlibs\gme-nes\Blip_Buffer.cpp" />
+    <ClCompile Include="..\extlibs\gme-nes\Classic_Emu.cpp" />
+    <ClCompile Include="..\extlibs\gme-nes\Data_Reader.cpp" />
+    <ClCompile Include="..\extlibs\gme-nes\Effects_Buffer.cpp" />
+    <ClCompile Include="..\extlibs\gme-nes\gme.cpp" />
+    <ClCompile Include="..\extlibs\gme-nes\Gme_File.cpp" />
+    <ClCompile Include="..\extlibs\gme-nes\M3u_Playlist.cpp" />
+    <ClCompile Include="..\extlibs\gme-nes\Multi_Buffer.cpp" />
+    <ClCompile Include="..\extlibs\gme-nes\Music_Emu.cpp" />
+    <ClCompile Include="..\extlibs\gme-nes\Nes_Apu.cpp" />
+    <ClCompile Include="..\extlibs\gme-nes\Nes_Cpu.cpp" />
+    <ClCompile Include="..\extlibs\gme-nes\Nes_Fme7_Apu.cpp" />
+    <ClCompile Include="..\extlibs\gme-nes\Nes_Namco_Apu.cpp" />
+    <ClCompile Include="..\extlibs\gme-nes\Nes_Oscs.cpp" />
+    <ClCompile Include="..\extlibs\gme-nes\Nes_Vrc6_Apu.cpp" />
+    <ClCompile Include="..\extlibs\gme-nes\Nsfe_Emu.cpp" />
+    <ClCompile Include="..\extlibs\gme-nes\Nsf_Emu.cpp" />
+    <ClCompile Include="..\extlibs\jsoncpp\src\json_reader.cpp" />
+    <ClCompile Include="..\extlibs\jsoncpp\src\json_value.cpp" />
+    <ClCompile Include="..\extlibs\jsoncpp\src\json_writer.cpp" />
+    <ClCompile Include="..\extlibs\squirrel\sqstdlib\sqstdaux.cpp" />
+    <ClCompile Include="..\extlibs\squirrel\sqstdlib\sqstdblob.cpp" />
+    <ClCompile Include="..\extlibs\squirrel\sqstdlib\sqstdio.cpp" />
+    <ClCompile Include="..\extlibs\squirrel\sqstdlib\sqstdmath.cpp" />
+    <ClCompile Include="..\extlibs\squirrel\sqstdlib\sqstdrex.cpp" />
+    <ClCompile Include="..\extlibs\squirrel\sqstdlib\sqstdstream.cpp" />
+    <ClCompile Include="..\extlibs\squirrel\sqstdlib\sqstdstring.cpp" />
+    <ClCompile Include="..\extlibs\squirrel\sqstdlib\sqstdsystem.cpp" />
+    <ClCompile Include="..\extlibs\squirrel\squirrel\sqapi.cpp" />
+    <ClCompile Include="..\extlibs\squirrel\squirrel\sqbaselib.cpp" />
+    <ClCompile Include="..\extlibs\squirrel\squirrel\sqclass.cpp" />
+    <ClCompile Include="..\extlibs\squirrel\squirrel\sqcompiler.cpp" />
+    <ClCompile Include="..\extlibs\squirrel\squirrel\sqdebug.cpp" />
+    <ClCompile Include="..\extlibs\squirrel\squirrel\sqfuncstate.cpp" />
+    <ClCompile Include="..\extlibs\squirrel\squirrel\sqlexer.cpp" />
+    <ClCompile Include="..\extlibs\squirrel\squirrel\sqmem.cpp" />
+    <ClCompile Include="..\extlibs\squirrel\squirrel\sqobject.cpp" />
+    <ClCompile Include="..\extlibs\squirrel\squirrel\sqstate.cpp" />
+    <ClCompile Include="..\extlibs\squirrel\squirrel\sqtable.cpp" />
+    <ClCompile Include="..\extlibs\squirrel\squirrel\sqvm.cpp" />
     <ClCompile Include="src\hikari\client\ClientConfig.cpp" />
     <ClCompile Include="src\hikari\client\CommandProcessor.cpp" />
     <ClCompile Include="src\hikari\client\game\Effect.cpp" />
@@ -33,9 +73,16 @@
     <ClCompile Include="src\hikari\client\game\objects\EnemyBrain.cpp" />
     <ClCompile Include="src\hikari\client\game\objects\Entity.cpp" />
     <ClCompile Include="src\hikari\client\game\objects\FactoryHelpers.cpp" />
+    <ClCompile Include="src\hikari\client\game\objects\HeroAirbornMobilityState.cpp" />
+    <ClCompile Include="src\hikari\client\game\objects\HeroClimbingMobilityState.cpp" />
+    <ClCompile Include="src\hikari\client\game\objects\HeroIdleMobilityState.cpp" />
+    <ClCompile Include="src\hikari\client\game\objects\HeroSlidingMobilityState.cpp" />
+    <ClCompile Include="src\hikari\client\game\objects\HeroTeleportingMobilityState.cpp" />
+    <ClCompile Include="src\hikari\client\game\objects\HeroWalkingMobilityState.cpp" />
     <ClCompile Include="src\hikari\client\game\objects\ItemFactory.cpp" />
     <ClCompile Include="src\hikari\client\game\objects\ItemSpawner.cpp" />
     <ClCompile Include="src\hikari\client\game\objects\Spawner.cpp" />
+    <ClCompile Include="src\hikari\client\game\Weapon.cpp" />
     <ClCompile Include="src\hikari\client\scripting\AudioServiceScriptProxy.cpp" />
     <ClCompile Include="src\hikari\client\scripting\SquirrelService.cpp" />
     <ClCompile Include="src\hikari\core\game\CollisionInfo.cpp" />
@@ -50,28 +97,66 @@
     <ClCompile Include="src\hikari\core\util\Log.cpp" />
     <ClCompile Include="src\hikari\core\util\Timer.cpp" />
     <ClCompile Include="src\hikari\test\core\geom\Vector2DTest.cpp" />
-    <ClInclude Include="..\contrib\gme\blargg_config.h" />
-    <ClInclude Include="..\contrib\gme\Blip_Buffer.h" />
-    <ClInclude Include="..\contrib\gme\Data_Reader.h" />
-    <ClInclude Include="..\contrib\gme\Effects_Buffer.h" />
-    <ClInclude Include="..\contrib\gme\gme.h" />
-    <ClInclude Include="..\contrib\gme\Gme_File.h" />
-    <ClInclude Include="..\contrib\gme\Multi_Buffer.h" />
-    <ClInclude Include="..\contrib\gme\Music_Emu.h" />
-    <ClInclude Include="..\contrib\gme\Nes_Apu.h" />
-    <ClInclude Include="..\contrib\gme\Nes_Cpu.h" />
-    <ClInclude Include="..\contrib\gme\nes_cpu_io.h" />
-    <ClInclude Include="..\contrib\gme\Nes_Fme7_Apu.h" />
-    <ClInclude Include="..\contrib\gme\Nes_Namco_Apu.h" />
-    <ClInclude Include="..\contrib\gme\Nes_Oscs.h" />
-    <ClInclude Include="..\contrib\gme\Nes_Vrc6_Apu.h" />
-    <ClInclude Include="..\contrib\gme\Nsfe_Emu.h" />
-    <ClInclude Include="..\contrib\gme\Nsf_Emu.h" />
     <ClInclude Include="..\contrib\physfs-stream\physfs\ifile_stream.hpp" />
     <ClInclude Include="..\contrib\physfs-stream\physfs\ifile_streambuf.hpp" />
     <ClInclude Include="..\contrib\physfs-stream\physfs\ofile_stream.hpp" />
     <ClInclude Include="..\contrib\physfs-stream\physfs\ofile_streambuf.hpp" />
     <ClInclude Include="..\contrib\physfs-stream\physfs\physfs_file_system.hpp" />
+    <ClInclude Include="..\extlibs\gme-nes\blargg_common.h" />
+    <ClInclude Include="..\extlibs\gme-nes\blargg_config.h" />
+    <ClInclude Include="..\extlibs\gme-nes\blargg_endian.h" />
+    <ClInclude Include="..\extlibs\gme-nes\blargg_source.h" />
+    <ClInclude Include="..\extlibs\gme-nes\Blip_Buffer.h" />
+    <ClInclude Include="..\extlibs\gme-nes\Data_Reader.h" />
+    <ClInclude Include="..\extlibs\gme-nes\Effects_Buffer.h" />
+    <ClInclude Include="..\extlibs\gme-nes\gme.h" />
+    <ClInclude Include="..\extlibs\gme-nes\Gme_File.h" />
+    <ClInclude Include="..\extlibs\gme-nes\M3u_Playlist.h" />
+    <ClInclude Include="..\extlibs\gme-nes\Multi_Buffer.h" />
+    <ClInclude Include="..\extlibs\gme-nes\Music_Emu.h" />
+    <ClInclude Include="..\extlibs\gme-nes\Nes_Apu.h" />
+    <ClInclude Include="..\extlibs\gme-nes\Nes_Cpu.h" />
+    <ClInclude Include="..\extlibs\gme-nes\nes_cpu_io.h" />
+    <ClInclude Include="..\extlibs\gme-nes\Nes_Fme7_Apu.h" />
+    <ClInclude Include="..\extlibs\gme-nes\Nes_Namco_Apu.h" />
+    <ClInclude Include="..\extlibs\gme-nes\Nes_Oscs.h" />
+    <ClInclude Include="..\extlibs\gme-nes\Nes_Vrc6_Apu.h" />
+    <ClInclude Include="..\extlibs\gme-nes\Nsfe_Emu.h" />
+    <ClInclude Include="..\extlibs\gme-nes\Nsf_Emu.h" />
+    <ClInclude Include="..\extlibs\jsoncpp\include\json\autolink.h" />
+    <ClInclude Include="..\extlibs\jsoncpp\include\json\config.h" />
+    <ClInclude Include="..\extlibs\jsoncpp\include\json\features.h" />
+    <ClInclude Include="..\extlibs\jsoncpp\include\json\forwards.h" />
+    <ClInclude Include="..\extlibs\jsoncpp\include\json\json.h" />
+    <ClInclude Include="..\extlibs\jsoncpp\include\json\reader.h" />
+    <ClInclude Include="..\extlibs\jsoncpp\include\json\value.h" />
+    <ClInclude Include="..\extlibs\jsoncpp\include\json\writer.h" />
+    <ClInclude Include="..\extlibs\jsoncpp\src\json_batchallocator.h" />
+    <ClInclude Include="..\extlibs\squirrel\include\sqstdaux.h" />
+    <ClInclude Include="..\extlibs\squirrel\include\sqstdblob.h" />
+    <ClInclude Include="..\extlibs\squirrel\include\sqstdio.h" />
+    <ClInclude Include="..\extlibs\squirrel\include\sqstdmath.h" />
+    <ClInclude Include="..\extlibs\squirrel\include\sqstdstring.h" />
+    <ClInclude Include="..\extlibs\squirrel\include\sqstdsystem.h" />
+    <ClInclude Include="..\extlibs\squirrel\include\squirrel.h" />
+    <ClInclude Include="..\extlibs\squirrel\sqstdlib\sqstdblobimpl.h" />
+    <ClInclude Include="..\extlibs\squirrel\sqstdlib\sqstdstream.h" />
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqarray.h" />
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqclass.h" />
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqclosure.h" />
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqcompiler.h" />
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqfuncproto.h" />
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqfuncstate.h" />
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqlexer.h" />
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqobject.h" />
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqopcodes.h" />
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqpcheader.h" />
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqstate.h" />
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqstring.h" />
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqtable.h" />
+    <ClInclude Include="..\extlibs\squirrel\squirrel\squserdata.h" />
+    <ClInclude Include="..\extlibs\squirrel\squirrel\squtils.h" />
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqvm.h" />
     <ClInclude Include="include\hikari\client\audio\AudioService.hpp" />
     <ClInclude Include="include\hikari\client\audio\NSFSoundStream.hpp" />
     <ClInclude Include="include\hikari\client\Client.hpp" />
@@ -104,9 +189,16 @@
     <ClInclude Include="include\hikari\client\game\objects\Enemy.hpp" />
     <ClInclude Include="include\hikari\client\game\objects\EnemyBrain.hpp" />
     <ClInclude Include="include\hikari\client\game\objects\Entity.hpp" />
+    <ClInclude Include="include\hikari\client\game\objects\Faction.hpp" />
     <ClInclude Include="include\hikari\client\game\objects\FactoryHelpers.hpp" />
     <ClInclude Include="include\hikari\client\game\objects\GameObject.hpp" />
     <ClInclude Include="include\hikari\client\game\objects\Hero.hpp" />
+    <ClInclude Include="include\hikari\client\game\objects\HeroAirbornMobilityState.hpp" />
+    <ClInclude Include="include\hikari\client\game\objects\HeroClimbingMobilityState.hpp" />
+    <ClInclude Include="include\hikari\client\game\objects\HeroIdleMobilityState.hpp" />
+    <ClInclude Include="include\hikari\client\game\objects\HeroSlidingMobilityState.hpp" />
+    <ClInclude Include="include\hikari\client\game\objects\HeroTeleportingMobilityState.hpp" />
+    <ClInclude Include="include\hikari\client\game\objects\HeroWalkingMobilityState.hpp" />
     <ClInclude Include="include\hikari\client\game\objects\ItemFactory.hpp" />
     <ClInclude Include="include\hikari\client\game\objects\ItemSpawner.hpp" />
     <ClInclude Include="include\hikari\client\game\objects\RockmanHero.hpp" />
@@ -117,6 +209,7 @@
     <ClInclude Include="include\hikari\client\game\SpriteTestState.hpp" />
     <ClInclude Include="include\hikari\client\game\StageSelectState.hpp" />
     <ClInclude Include="include\hikari\client\game\TitleState.hpp" />
+    <ClInclude Include="include\hikari\client\game\Weapon.hpp" />
     <ClInclude Include="include\hikari\client\game\WeaponGetState.hpp" />
     <ClInclude Include="include\hikari\client\gui\BossMenu.hpp" />
     <ClInclude Include="include\hikari\client\gui\CommandConsole.hpp" />
@@ -161,7 +254,7 @@
     <ClInclude Include="include\hikari\core\Hikari.hpp" />
     <ClInclude Include="include\hikari\core\math\Constants.hpp" />
     <ClInclude Include="include\hikari\core\math\MathUtils.hpp" />
-    <ClInclude Include="include\hikari\core\math\RetroVector.hpp" />
+    <ClInclude Include="include\hikari\core\math\NESNumber.hpp" />
     <ClInclude Include="include\hikari\core\math\Vector2.hpp" />
     <ClInclude Include="include\hikari\core\Platform.hpp" />
     <ClInclude Include="include\hikari\core\util\AnimationSetCache.hpp" />
@@ -196,22 +289,6 @@
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\contrib\gme\Blip_Buffer.cpp" />
-    <ClCompile Include="..\contrib\gme\Classic_Emu.cpp" />
-    <ClCompile Include="..\contrib\gme\Data_Reader.cpp" />
-    <ClCompile Include="..\contrib\gme\Effects_Buffer.cpp" />
-    <ClCompile Include="..\contrib\gme\gme.cpp" />
-    <ClCompile Include="..\contrib\gme\Gme_File.cpp" />
-    <ClCompile Include="..\contrib\gme\Multi_Buffer.cpp" />
-    <ClCompile Include="..\contrib\gme\Music_Emu.cpp" />
-    <ClCompile Include="..\contrib\gme\Nes_Apu.cpp" />
-    <ClCompile Include="..\contrib\gme\Nes_Cpu.cpp" />
-    <ClCompile Include="..\contrib\gme\Nes_Fme7_Apu.cpp" />
-    <ClCompile Include="..\contrib\gme\Nes_Namco_Apu.cpp" />
-    <ClCompile Include="..\contrib\gme\Nes_Oscs.cpp" />
-    <ClCompile Include="..\contrib\gme\Nes_Vrc6_Apu.cpp" />
-    <ClCompile Include="..\contrib\gme\Nsfe_Emu.cpp" />
-    <ClCompile Include="..\contrib\gme\Nsf_Emu.cpp" />
     <ClCompile Include="src\hikari\client\audio\NSFSoundStream.cpp" />
     <ClCompile Include="src\hikari\client\Client.cpp" />
     <ClCompile Include="src\hikari\client\game\GamePlayState.cpp" />
@@ -245,7 +322,9 @@
     <ClCompile Include="src\hikari\core\game\SpriteAnimator.cpp" />
     <ClCompile Include="src\hikari\core\gui\ImageFont.cpp" />
     <ClCompile Include="src\hikari\core\Hikari.cpp" />
-    <ClCompile Include="src\hikari\core\math\RetroVector.cpp" />
+    <ClCompile Include="src\hikari\core\math\NESNumber.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">EnableAllWarnings</WarningLevel>
+    </ClCompile>
     <ClCompile Include="src\hikari\core\util\ImageCache.cpp" />
     <ClCompile Include="src\hikari\core\util\JsonUtil.cpp" />
     <ClCompile Include="src\hikari\core\util\PhysFS.cpp" />
@@ -272,6 +351,9 @@
     <None Include="..\content\tileset-dev.png" />
     <None Include="..\content\tileset-dev.txt" />
     <None Include="..\content\tileset-skull.json" />
+    <None Include="..\extlibs\jsoncpp\src\json_internalarray.inl" />
+    <None Include="..\extlibs\jsoncpp\src\json_internalmap.inl" />
+    <None Include="..\extlibs\jsoncpp\src\json_valueiterator.inl" />
     <None Include="resource\hikari.ico" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -318,13 +400,13 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)include\;$(SolutionDir)contrib\jsoncpp\include\;$(SolutionDir)contrib\squirrel3\include\;$(SolutionDir)contrib\sqrat\include\;$(SolutionDir)contrib\gme\;$(SolutionDir)contrib\physfs\;$(SolutionDir)contrib\physfs-stream\;$(SolutionDir)contrib\sfml\include\;$(SolutionDir)contrib\fastdelegate\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_DEBUG;_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES;SFML_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)include\;$(SolutionDir)contrib\sfml\include\;$(SolutionDir)contrib\physfs\;$(SolutionDir)extlibs\jsoncpp\include\;$(SolutionDir)extlibs\squirrel\include\;$(SolutionDir)extlibs\squirrel\sqstdlib\;$(SolutionDir)extlibs\squirrel\squirrel\;$(SolutionDir)extlibs\sqrat\include\;$(SolutionDir)extlibs\gme-nes\;$(SolutionDir)extlibs\physfs-stream\;$(SolutionDir)extlibs\fastdelegate\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES;SFML_STATIC;HIKARI_DEBUG_ENTITIES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>sfml-main-d.lib;sfml-system-s-d.lib;sfml-graphics-s-d.lib;sfml-audio-s-d.lib;sfml-window-s-d.lib;physfs-d.lib;jsoncpp.lib;squirreld.lib;sqstdlibd.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(solutionDir)contrib\sfml\lib\Debug\;$(SolutionDir)contrib\jsoncpp\dist\debug\;$(SolutionDir)contrib\physfs\dist\debug\;$(SolutionDir)contrib\squirrel3\lib\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>sfml-main-d.lib;sfml-system-s-d.lib;sfml-graphics-s-d.lib;sfml-audio-s-d.lib;sfml-window-s-d.lib;physfs-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(solutionDir)contrib\sfml\lib\Debug\;$(SolutionDir)contrib\physfs\dist\debug\</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>libc.lib;libcmt.lib;msvcrt.lib;libcd.lib;libcmtd.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <Profile>true</Profile>
     </Link>
@@ -344,7 +426,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(ProjectDir)include\;$(SolutionDir)contrib\jsoncpp\include\;$(SolutionDir)contrib\gme\;$(SolutionDir)contrib\physfs\;$(SolutionDir)contrib\physfs-stream\;$(SolutionDir)contrib\sfml\include\;$(SolutionDir)contrib\squirrel3\include\;$(SolutionDir)contrib\sqrat\include\;$(SolutionDir)contrib\fastdelegate\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include\;$(SolutionDir)extlibs\jsoncpp\include\;$(SolutionDir)extlibs\gme-nes\;$(SolutionDir)contrib\physfs\;$(SolutionDir)contrib\physfs-stream\;$(SolutionDir)contrib\sfml\include\;$(SolutionDir)contrib\squirrel3\include\;$(SolutionDir)contrib\sqrat\include\;$(SolutionDir)extlibs\fastdelegate\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>SFML_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
@@ -352,8 +434,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>sfml-main.lib;sfml-system-s.lib;sfml-graphics-s.lib;sfml-audio-s.lib;sfml-window-s.lib;physfs.lib;jsoncpp.lib;squirrel.lib;sqstdlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(solutionDir)contrib\sfml\lib\Release\;$(SolutionDir)contrib\physfs\dist\release\;$(SolutionDir)contrib\jsoncpp\dist\release\;$(SolutionDir)contrib\squirrel3\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>sfml-main.lib;sfml-system-s.lib;sfml-graphics-s.lib;sfml-audio-s.lib;sfml-window-s.lib;physfs.lib;squirrel.lib;sqstdlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(solutionDir)contrib\sfml\lib\Release\;$(SolutionDir)contrib\physfs\dist\release\;$(SolutionDir)contrib\squirrel3\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>libc.lib;libcmt.lib;libcd.lib;libcmtd.lib;msvcrtd.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <SubSystem>Windows</SubSystem>
       <Profile>true</Profile>

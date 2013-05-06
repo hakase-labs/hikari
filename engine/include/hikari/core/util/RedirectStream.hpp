@@ -15,8 +15,8 @@ namespace hikari {
     */
     class HIKARI_API RedirectStream {
     private:
-        std::streambuf* fromBuffer;
         std::ios* fromStream;
+        std::streambuf* fromBuffer;
 
     public:
         explicit RedirectStream(std::ios& from, std::ios& to);

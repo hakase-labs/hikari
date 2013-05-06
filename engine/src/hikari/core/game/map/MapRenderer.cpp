@@ -3,6 +3,7 @@
 #include "hikari/core/game/map/Tileset.hpp"
 #include <SFML/Graphics.hpp>
 #include <algorithm>
+#include <cmath>
 
 #ifdef _DEBUG
 #include <iostream>

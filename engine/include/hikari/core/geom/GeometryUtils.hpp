@@ -62,4 +62,4 @@ namespace geom {
 } // hikari::geom
 } // hikari
 
-#endif HIKARI_CORE_GEOM_GEOMETRYUTILS
+#endif // HIKARI_CORE_GEOM_GEOMETRYUTILS

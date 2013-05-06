@@ -15,6 +15,9 @@
 #include "hikari/client/gui/EnergyMeter.hpp"
 #include "hikari/client/Services.hpp"
 #include "hikari/client/audio/AudioService.hpp"
+#include "hikari/client/game/events/EventManagerImpl.hpp"
+#include "hikari/client/game/events/EventListenerDelegate.hpp"
+#include "hikari/client/game/events/WeaponFireEventData.hpp"
 
 #include "hikari/core/game/AnimationSet.hpp"
 #include "hikari/core/game/AnimationLoader.hpp"
@@ -46,11 +49,17 @@
 
 namespace hikari {
 
+    void freeHandleWeaponFireEvent(EventDataPtr ptr) {
+        std::shared_ptr<WeaponFireEventData> eventData = std::static_pointer_cast<WeaponFireEventData>(ptr);
+        HIKARI_LOG(debug) << "Weapon Fired! wid=" << eventData->getWeaponId() << ", sid=" << eventData->getShooterId();
+    }
+
     using gui::EnergyMeter;
 
     GamePlayState::GamePlayState(const std::string &name, const Json::Value &params, ServiceLocator &services)
         : name(name)
         , audioService(services.locateService<AudioService>(Services::AUDIO))
+        , eventManager(new EventManagerImpl("GamePlayEvents", false))
         , gameProgress(services.locateService<GameProgress>(Services::GAMEPROGRESS))
         , guiFont(services.locateService<ImageFont>(Services::GUIFONT))
         , imageCache(services.locateService<ImageCache>(Services::IMAGECACHE))
@@ -80,13 +89,19 @@ namespace hikari {
         , drawWeaponEnergyMeter(false)
         , drawInfamousBlackBar(false)
         , isViewingMenu(false)
-        , startRoomIndex(0)
-        , midpointRoomIndex(0)
-        , bossCorridorRoomIndex(0)
         , hasReachedMidpoint(false)
         , hasReachedBossCorridor(false)
     {
         loadAllMaps(services.locateService<MapLoader>(hikari::Services::MAPLOADER), params);
+
+        //
+        // Bind event handlers
+        //
+        auto weaponFireDelegate = EventListenerDelegate(&freeHandleWeaponFireEvent);
+
+        if(eventManager) {
+            eventManager->addListener(weaponFireDelegate, WeaponFireEventData::Type);
+        }
 
         //
         // Create/configure GUI
@@ -134,6 +149,7 @@ namespace hikari {
         hero->changeAnimation("idle");
         hero->setPosition(100.0f, 100.0f);
         hero->setActionController(std::make_shared<PlayerInputHeroActionController>(userInput));
+        hero->setEventManager(std::weak_ptr<EventManager>(eventManager));
 
         world.setPlayer(hero);
 
@@ -168,6 +184,10 @@ namespace hikari {
 
     bool GamePlayState::update(const float &dt) {
         userInput->update();
+
+        if(eventManager) {
+            eventManager->processEvents();
+        }
 
         if(subState) {
             if(!isViewingMenu) {
@@ -488,6 +508,9 @@ namespace hikari {
         }
     }
 
+    void GamePlayState::handleWeaponFireEvent(EventDataPtr evt) {
+        // 
+    }
 
     // ************************************************************************
     // Definition of sub-states
@@ -659,8 +682,8 @@ namespace hikari {
             spawnPosition.setY(spawnPosition.getY() + gamePlayState.currentRoom->getBounds().getY());
 
             targetPoint
-                .setX(spawnPosition.getX())
-                .setY(spawnPosition.getY());
+                .setX(static_cast<float>(spawnPosition.getX()))
+                .setY(static_cast<float>(spawnPosition.getY()));
 
             auto heroPosition = hero->getPosition();
 
@@ -675,6 +698,7 @@ namespace hikari {
 
             float topOfCameraY = camera.getView().getTop();
 
+            // Move hero to correct Y coordinate
             hero->setPosition(heroPosition.getX(), topOfCameraY - hero->getBoundingBox().getHeight());
             hero->performTeleport();
         }
@@ -685,11 +709,8 @@ namespace hikari {
     }
 
     void GamePlayState::TeleportSubState::update(const float & dt) {
-        auto& camera = gamePlayState.camera;
         auto& hero = gamePlayState.hero;
         auto& heroPosition = hero->getPosition();
-
-        //camera.lookAt(heroPosition.getX(), heroPosition.getY());
 
         if(heroPosition.getY() < targetPoint.getY()) {
             float deltaY = std::min(16.0f, std::abs(targetPoint.getY() - heroPosition.getY()));
@@ -748,7 +769,6 @@ namespace hikari {
                 // Check if we've moved off screen and remove if so
                 //
                 const auto & view = camera.getView();
-                const auto & pos = item->getPosition();
 
                 if(!geom::intersects(item->getBoundingBox(), view)) {
                     item->setActive(false);

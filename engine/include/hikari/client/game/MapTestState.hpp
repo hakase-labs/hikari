@@ -11,7 +11,7 @@
 #include "hikari/core/game/map/TilesetLoader.hpp"
 #include "hikari/core/game/map/MapLoader.hpp"
 #include "hikari/core/gui/ImageFont.hpp"
-#include "hikari/core/math/RetroVector.hpp"
+#include "hikari/core/math/NESNumber.hpp"
 #include "hikari/client/game/objects/ItemFactory.hpp"
 #include "hikari/core/game/AnimationLoader.hpp"
 #include "hikari/core/game/AnimationSet.hpp"
@@ -85,11 +85,11 @@ namespace hikari {
 
         sf::Vector2f velocity;
 
-        hikari::RetroVector retroGravity;
-        hikari::RetroVector retroPositionY;
-        hikari::RetroVector retroVelocityY;
-        hikari::RetroVector retroVelocityX;
-        hikari::RetroVector retroJumpVelocity;
+        hikari::NESNumber retroGravity;
+        hikari::NESNumber retroPositionY;
+        hikari::NESNumber retroVelocityY;
+        hikari::NESNumber retroVelocityX;
+        hikari::NESNumber retroJumpVelocity;
 
         std::shared_ptr<hikari::CollectableItem> item;
 
