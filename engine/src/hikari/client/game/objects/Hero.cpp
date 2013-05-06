@@ -4,6 +4,7 @@
 #include "hikari/client/game/objects/HeroTeleportingMobilityState.hpp"
 #include "hikari/client/game/events/EventManager.hpp"
 #include "hikari/client/game/events/EventData.hpp"
+#include "hikari/client/game/events/EntityDeathEventData.hpp"
 #include "hikari/client/game/events/WeaponFireEventData.hpp"
 #include "hikari/core/game/Animation.hpp"
 #include "hikari/core/game/map/Room.hpp"
@@ -364,7 +365,12 @@ namespace hikari {
         // Check if we hit spikes; if we did then we're dead!
         //
         if(info.isCollisionY && TileAttribute::hasAttribute(info.tileType, TileAttribute::SPIKE)) {
-            HIKARI_LOG(debug4) << "Hit spikes; send kill message!";
+            if(auto events = getEventManager().lock()) {
+                EventDataPtr weaponFire(new EntityDeathEventData(getId()));
+                events->triggerEvent(weaponFire);
+            } else {
+                HIKARI_LOG(debug4) << "No event manager.";
+            }
         }
     }
 
