@@ -19,16 +19,17 @@ namespace hikari {
 
     Entity::Entity(const int& id, std::shared_ptr<Room> room)
         : GameObject(id)
-        , room(room)
         , spriteTexture()
         , sprite()
         , animationSet()
         , currentAnimation()
         , animationPlayer(new SpriteAnimator(sprite))
+        , world()
         , direction(Directions::None)
         , faction(Faction::World)
         , weaponId(0)
         , currentAnimationName("")
+        , room(room)
     {
         reset();
 
@@ -48,7 +49,6 @@ namespace hikari {
 
     Entity::Entity(const Entity& proto)
         : GameObject(GameObject::generateObjectId())
-        , room(proto.room)
         , spriteTexture(proto.spriteTexture)
         , sprite()
         , animationSet(proto.animationSet)
@@ -56,7 +56,9 @@ namespace hikari {
         , animationPlayer(new SpriteAnimator(sprite))
         , direction(proto.direction)
         , faction(proto.faction)
+        , weaponId(proto.weaponId)
         , currentAnimationName(proto.currentAnimationName)
+        , room(proto.room)
     {
         HIKARI_LOG(debug2) << "Entity copy constructor!" << std::endl;
 
