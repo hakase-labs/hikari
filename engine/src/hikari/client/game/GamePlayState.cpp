@@ -17,6 +17,7 @@
 #include "hikari/client/audio/AudioService.hpp"
 #include "hikari/client/game/events/EventManagerImpl.hpp"
 #include "hikari/client/game/events/EventListenerDelegate.hpp"
+#include "hikari/client/game/events/EntityDeathEventData.hpp"
 #include "hikari/client/game/events/WeaponFireEventData.hpp"
 
 #include "hikari/core/game/AnimationSet.hpp"
@@ -48,11 +49,6 @@
 #include <string>
 
 namespace hikari {
-
-    void freeHandleWeaponFireEvent(EventDataPtr ptr) {
-        std::shared_ptr<WeaponFireEventData> eventData = std::static_pointer_cast<WeaponFireEventData>(ptr);
-        HIKARI_LOG(debug) << "Weapon Fired! wid=" << eventData->getWeaponId() << ", sid=" << eventData->getShooterId();
-    }
 
     using gui::EnergyMeter;
 
@@ -94,14 +90,7 @@ namespace hikari {
     {
         loadAllMaps(services.locateService<MapLoader>(hikari::Services::MAPLOADER), params);
 
-        //
-        // Bind event handlers
-        //
-        auto weaponFireDelegate = EventListenerDelegate(&freeHandleWeaponFireEvent);
-
-        if(eventManager) {
-            eventManager->addListener(weaponFireDelegate, WeaponFireEventData::Type);
-        }
+        bindEventHandlers();
 
         //
         // Create/configure GUI
@@ -508,8 +497,25 @@ namespace hikari {
         }
     }
 
+    void GamePlayState::bindEventHandlers() {
+        if(eventManager) {
+            // TODO: Change this to a member handler
+            auto weaponFireDelegate = fastdelegate::MakeDelegate(this, &GamePlayState::handleWeaponFireEvent);
+            eventManager->addListener(weaponFireDelegate, WeaponFireEventData::Type);
+
+            auto entityDeathDelegate = fastdelegate::MakeDelegate(this, &GamePlayState::handleEntityDeathEvent);
+            eventManager->addListener(entityDeathDelegate, EntityDeathEventData::Type);
+        }
+    }
+
+    void GamePlayState::handleEntityDeathEvent(EventDataPtr evt) {
+        auto eventData = std::static_pointer_cast<EntityDeathEventData>(evt);
+        HIKARI_LOG(debug) << "Member Entity died! id=" << eventData->getEntityId(); 
+    }
+
     void GamePlayState::handleWeaponFireEvent(EventDataPtr evt) {
-        // 
+        auto eventData = std::static_pointer_cast<WeaponFireEventData>(evt);
+        HIKARI_LOG(debug) << "Member Weapon Fired! wid=" << eventData->getWeaponId() << ", sid=" << eventData->getShooterId(); 
     }
 
     // ************************************************************************
