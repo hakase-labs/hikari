@@ -3,7 +3,7 @@
 
 #include "hikari/core/geom/BoundingBox.hpp"
 #include "hikari/core/math/Vector2.hpp"
-#include "hikari/core/math/RetroVector.hpp"
+#include "hikari/core/math/NESNumber.hpp"
 #include "hikari/core/game/CollisionInfo.hpp"
 #include "hikari/core/game/Direction.hpp"
 #include <functional>
@@ -89,7 +89,7 @@ namespace hikari {
         void setLandingCallback(const CollisionCallback& callback);
         void setCollisionCallback(const CollisionCallback& callback);
 
-        virtual void update(const float& dt);
+        virtual void update(float dt);
 
         static std::shared_ptr<CollisionResolver> getCollisionResolver();
         static void setCollisionResolver(std::shared_ptr<CollisionResolver> resolver);

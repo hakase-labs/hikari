@@ -18,9 +18,9 @@ namespace hikari {
         static const bool NO_MASKING;
 
     private:
-        sf::Color maskColor;
-        bool enableMask;
         bool enableSmoothing;
+        bool enableMask;
+        sf::Color maskColor;
 
     protected:
         virtual ImageCache::Resource loadResource(const std::string &fileName);

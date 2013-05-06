@@ -151,6 +151,36 @@
     <Filter Include="Header Files\client\game\events">
       <UniqueIdentifier>{42627cc6-f915-4974-8ead-b6b89dc1cc63}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\client\game\objects\hero">
+      <UniqueIdentifier>{f54212a4-4bdb-47c9-915a-6ff77ff4bc8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\client\game\objects\hero">
+      <UniqueIdentifier>{7640f2d1-f7f6-4dcd-983f-057e103b1a58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\jsoncpp">
+      <UniqueIdentifier>{a1a0df70-8dc0-45ae-abd7-1367e1cf62ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\jsoncpp">
+      <UniqueIdentifier>{02a12a68-76f6-4187-aaed-33ed83477029}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\squirrel">
+      <UniqueIdentifier>{7d50c89c-d109-4d40-b2e7-3a6fd114315a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\squirrel\core">
+      <UniqueIdentifier>{cc6ed63f-255e-486f-ad02-155a7663c582}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\squirrel\sqstdlib">
+      <UniqueIdentifier>{60bd9c50-2af6-47bb-9237-3102991e2932}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\squirrel">
+      <UniqueIdentifier>{9eb8db33-2fb7-4be2-a6ab-1d5229194eb6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\squirrel\core">
+      <UniqueIdentifier>{e922892c-f631-44e6-9a2a-9003adaab422}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\squirrel\sqstdlib">
+      <UniqueIdentifier>{4c960444-c3a0-4f58-b9ec-ebfde693a2be}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\hikari\core\geom\Rectangle2D.hpp">
@@ -240,57 +270,6 @@
     <ClInclude Include="include\hikari\client\audio\NSFSoundStream.hpp">
       <Filter>Header Files\client\audio</Filter>
     </ClInclude>
-    <ClInclude Include="..\contrib\gme\blargg_config.h">
-      <Filter>Header Files\gme</Filter>
-    </ClInclude>
-    <ClInclude Include="..\contrib\gme\Blip_Buffer.h">
-      <Filter>Header Files\gme</Filter>
-    </ClInclude>
-    <ClInclude Include="..\contrib\gme\Data_Reader.h">
-      <Filter>Header Files\gme</Filter>
-    </ClInclude>
-    <ClInclude Include="..\contrib\gme\Effects_Buffer.h">
-      <Filter>Header Files\gme</Filter>
-    </ClInclude>
-    <ClInclude Include="..\contrib\gme\gme.h">
-      <Filter>Header Files\gme</Filter>
-    </ClInclude>
-    <ClInclude Include="..\contrib\gme\Gme_File.h">
-      <Filter>Header Files\gme</Filter>
-    </ClInclude>
-    <ClInclude Include="..\contrib\gme\Multi_Buffer.h">
-      <Filter>Header Files\gme</Filter>
-    </ClInclude>
-    <ClInclude Include="..\contrib\gme\Music_Emu.h">
-      <Filter>Header Files\gme</Filter>
-    </ClInclude>
-    <ClInclude Include="..\contrib\gme\Nes_Apu.h">
-      <Filter>Header Files\gme</Filter>
-    </ClInclude>
-    <ClInclude Include="..\contrib\gme\Nes_Cpu.h">
-      <Filter>Header Files\gme</Filter>
-    </ClInclude>
-    <ClInclude Include="..\contrib\gme\nes_cpu_io.h">
-      <Filter>Header Files\gme</Filter>
-    </ClInclude>
-    <ClInclude Include="..\contrib\gme\Nes_Fme7_Apu.h">
-      <Filter>Header Files\gme</Filter>
-    </ClInclude>
-    <ClInclude Include="..\contrib\gme\Nes_Namco_Apu.h">
-      <Filter>Header Files\gme</Filter>
-    </ClInclude>
-    <ClInclude Include="..\contrib\gme\Nes_Oscs.h">
-      <Filter>Header Files\gme</Filter>
-    </ClInclude>
-    <ClInclude Include="..\contrib\gme\Nes_Vrc6_Apu.h">
-      <Filter>Header Files\gme</Filter>
-    </ClInclude>
-    <ClInclude Include="..\contrib\gme\Nsf_Emu.h">
-      <Filter>Header Files\gme</Filter>
-    </ClInclude>
-    <ClInclude Include="..\contrib\gme\Nsfe_Emu.h">
-      <Filter>Header Files\gme</Filter>
-    </ClInclude>
     <ClInclude Include="include\hikari\core\game\map\Map.hpp">
       <Filter>Header Files\core\game\map</Filter>
     </ClInclude>
@@ -329,9 +308,6 @@
     </ClInclude>
     <ClInclude Include="include\hikari\core\geom\Point2D.hpp">
       <Filter>Header Files\core\geom</Filter>
-    </ClInclude>
-    <ClInclude Include="include\hikari\client\game\objects\Hero.hpp">
-      <Filter>Header Files\client\game\objects</Filter>
     </ClInclude>
     <ClInclude Include="include\hikari\client\game\objects\GameObject.hpp">
       <Filter>Header Files\client\game\objects</Filter>
@@ -377,9 +353,6 @@
     </ClInclude>
     <ClInclude Include="include\hikari\client\audio\AudioService.hpp">
       <Filter>Header Files\client\audio</Filter>
-    </ClInclude>
-    <ClInclude Include="include\hikari\core\math\RetroVector.hpp">
-      <Filter>Header Files\core\math</Filter>
     </ClInclude>
     <ClInclude Include="include\hikari\client\game\GameWorld.hpp">
       <Filter>Header Files\client\game</Filter>
@@ -561,6 +534,201 @@
     <ClInclude Include="include\hikari\client\game\objects\FactoryHelpers.hpp">
       <Filter>Header Files\client\game\objects</Filter>
     </ClInclude>
+    <ClInclude Include="include\hikari\client\game\objects\Hero.hpp">
+      <Filter>Header Files\client\game\objects\hero</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\objects\HeroWalkingMobilityState.hpp">
+      <Filter>Header Files\client\game\objects\hero</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\objects\HeroAirbornMobilityState.hpp">
+      <Filter>Header Files\client\game\objects\hero</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\objects\HeroClimbingMobilityState.hpp">
+      <Filter>Header Files\client\game\objects\hero</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\objects\HeroIdleMobilityState.hpp">
+      <Filter>Header Files\client\game\objects\hero</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\objects\HeroSlidingMobilityState.hpp">
+      <Filter>Header Files\client\game\objects\hero</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\objects\HeroTeleportingMobilityState.hpp">
+      <Filter>Header Files\client\game\objects\hero</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\core\math\NESNumber.hpp">
+      <Filter>Header Files\core\math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\objects\Faction.hpp">
+      <Filter>Header Files\client\game\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\gme-nes\Nsfe_Emu.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\gme-nes\Nsf_Emu.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\gme-nes\Nes_Vrc6_Apu.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\gme-nes\Nes_Oscs.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\gme-nes\Nes_Namco_Apu.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\gme-nes\Nes_Fme7_Apu.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\gme-nes\nes_cpu_io.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\gme-nes\Nes_Cpu.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\gme-nes\Nes_Apu.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\gme-nes\Music_Emu.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\gme-nes\Multi_Buffer.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\gme-nes\Gme_File.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\gme-nes\gme.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\gme-nes\Effects_Buffer.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\gme-nes\Data_Reader.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\gme-nes\Blip_Buffer.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\gme-nes\blargg_source.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\gme-nes\blargg_endian.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\gme-nes\blargg_config.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\gme-nes\blargg_common.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\gme-nes\M3u_Playlist.h">
+      <Filter>Header Files\gme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\jsoncpp\include\json\autolink.h">
+      <Filter>Header Files\jsoncpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\jsoncpp\include\json\config.h">
+      <Filter>Header Files\jsoncpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\jsoncpp\include\json\features.h">
+      <Filter>Header Files\jsoncpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\jsoncpp\include\json\forwards.h">
+      <Filter>Header Files\jsoncpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\jsoncpp\include\json\json.h">
+      <Filter>Header Files\jsoncpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\jsoncpp\include\json\reader.h">
+      <Filter>Header Files\jsoncpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\jsoncpp\include\json\value.h">
+      <Filter>Header Files\jsoncpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\jsoncpp\include\json\writer.h">
+      <Filter>Header Files\jsoncpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\jsoncpp\src\json_batchallocator.h">
+      <Filter>Source Files\jsoncpp</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hikari\client\game\Weapon.hpp">
+      <Filter>Header Files\client\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\include\squirrel.h">
+      <Filter>Header Files\squirrel\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqarray.h">
+      <Filter>Header Files\squirrel\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqclass.h">
+      <Filter>Header Files\squirrel\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqclosure.h">
+      <Filter>Header Files\squirrel\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqcompiler.h">
+      <Filter>Header Files\squirrel\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqfuncproto.h">
+      <Filter>Header Files\squirrel\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqfuncstate.h">
+      <Filter>Header Files\squirrel\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqlexer.h">
+      <Filter>Header Files\squirrel\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqobject.h">
+      <Filter>Header Files\squirrel\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqopcodes.h">
+      <Filter>Header Files\squirrel\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqpcheader.h">
+      <Filter>Header Files\squirrel\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqstate.h">
+      <Filter>Header Files\squirrel\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqstring.h">
+      <Filter>Header Files\squirrel\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqtable.h">
+      <Filter>Header Files\squirrel\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\squirrel\squserdata.h">
+      <Filter>Header Files\squirrel\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\squirrel\squtils.h">
+      <Filter>Header Files\squirrel\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\squirrel\sqvm.h">
+      <Filter>Header Files\squirrel\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\sqstdlib\sqstdblobimpl.h">
+      <Filter>Header Files\squirrel\sqstdlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\sqstdlib\sqstdstream.h">
+      <Filter>Header Files\squirrel\sqstdlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\include\sqstdaux.h">
+      <Filter>Header Files\squirrel\sqstdlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\include\sqstdblob.h">
+      <Filter>Header Files\squirrel\sqstdlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\include\sqstdio.h">
+      <Filter>Header Files\squirrel\sqstdlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\include\sqstdmath.h">
+      <Filter>Header Files\squirrel\sqstdlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\include\sqstdstring.h">
+      <Filter>Header Files\squirrel\sqstdlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extlibs\squirrel\include\sqstdsystem.h">
+      <Filter>Header Files\squirrel\sqstdlib</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\hikari\core\Hikari.cpp">
@@ -613,54 +781,6 @@
     </ClCompile>
     <ClCompile Include="src\hikari\client\audio\NSFSoundStream.cpp">
       <Filter>Source Files\client\audio</Filter>
-    </ClCompile>
-    <ClCompile Include="..\contrib\gme\Blip_Buffer.cpp">
-      <Filter>Source Files\gme</Filter>
-    </ClCompile>
-    <ClCompile Include="..\contrib\gme\Classic_Emu.cpp">
-      <Filter>Source Files\gme</Filter>
-    </ClCompile>
-    <ClCompile Include="..\contrib\gme\Data_Reader.cpp">
-      <Filter>Source Files\gme</Filter>
-    </ClCompile>
-    <ClCompile Include="..\contrib\gme\Effects_Buffer.cpp">
-      <Filter>Source Files\gme</Filter>
-    </ClCompile>
-    <ClCompile Include="..\contrib\gme\gme.cpp">
-      <Filter>Source Files\gme</Filter>
-    </ClCompile>
-    <ClCompile Include="..\contrib\gme\Gme_File.cpp">
-      <Filter>Source Files\gme</Filter>
-    </ClCompile>
-    <ClCompile Include="..\contrib\gme\Multi_Buffer.cpp">
-      <Filter>Source Files\gme</Filter>
-    </ClCompile>
-    <ClCompile Include="..\contrib\gme\Music_Emu.cpp">
-      <Filter>Source Files\gme</Filter>
-    </ClCompile>
-    <ClCompile Include="..\contrib\gme\Nes_Apu.cpp">
-      <Filter>Source Files\gme</Filter>
-    </ClCompile>
-    <ClCompile Include="..\contrib\gme\Nes_Cpu.cpp">
-      <Filter>Source Files\gme</Filter>
-    </ClCompile>
-    <ClCompile Include="..\contrib\gme\Nes_Fme7_Apu.cpp">
-      <Filter>Source Files\gme</Filter>
-    </ClCompile>
-    <ClCompile Include="..\contrib\gme\Nes_Namco_Apu.cpp">
-      <Filter>Source Files\gme</Filter>
-    </ClCompile>
-    <ClCompile Include="..\contrib\gme\Nes_Oscs.cpp">
-      <Filter>Source Files\gme</Filter>
-    </ClCompile>
-    <ClCompile Include="..\contrib\gme\Nes_Vrc6_Apu.cpp">
-      <Filter>Source Files\gme</Filter>
-    </ClCompile>
-    <ClCompile Include="..\contrib\gme\Nsf_Emu.cpp">
-      <Filter>Source Files\gme</Filter>
-    </ClCompile>
-    <ClCompile Include="..\contrib\gme\Nsfe_Emu.cpp">
-      <Filter>Source Files\gme</Filter>
     </ClCompile>
     <ClCompile Include="src\hikari\core\game\map\Map.cpp">
       <Filter>Source Files\core\game\map</Filter>
@@ -728,9 +848,6 @@
     <ClCompile Include="src\hikari\client\audio\AudioService.cpp">
       <Filter>Source Files\client\audio</Filter>
     </ClCompile>
-    <ClCompile Include="src\hikari\core\math\RetroVector.cpp">
-      <Filter>Source Files\core\math</Filter>
-    </ClCompile>
     <ClCompile Include="src\hikari\client\game\GameWorld.cpp">
       <Filter>Source Files\client\game</Filter>
     </ClCompile>
@@ -742,9 +859,6 @@
     </ClCompile>
     <ClCompile Include="src\hikari\core\game\AnimationSet.cpp">
       <Filter>Source Files\core\game</Filter>
-    </ClCompile>
-    <ClCompile Include="src\hikari\client\game\objects\Hero.cpp">
-      <Filter>Source Files\client\game\objects</Filter>
     </ClCompile>
     <ClCompile Include="src\hikari\test\core\geom\Vector2DTest.cpp">
       <Filter>Source Files\test</Filter>
@@ -863,6 +977,153 @@
     <ClCompile Include="src\hikari\client\game\objects\FactoryHelpers.cpp">
       <Filter>Source Files\client\game\objects</Filter>
     </ClCompile>
+    <ClCompile Include="src\hikari\client\game\objects\Hero.cpp">
+      <Filter>Source Files\client\game\objects\hero</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\objects\HeroWalkingMobilityState.cpp">
+      <Filter>Source Files\client\game\objects\hero</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\objects\HeroAirbornMobilityState.cpp">
+      <Filter>Source Files\client\game\objects\hero</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\objects\HeroClimbingMobilityState.cpp">
+      <Filter>Source Files\client\game\objects\hero</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\objects\HeroIdleMobilityState.cpp">
+      <Filter>Source Files\client\game\objects\hero</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\objects\HeroSlidingMobilityState.cpp">
+      <Filter>Source Files\client\game\objects\hero</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\objects\HeroTeleportingMobilityState.cpp">
+      <Filter>Source Files\client\game\objects\hero</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\core\math\NESNumber.cpp">
+      <Filter>Source Files\core\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\gme-nes\Blip_Buffer.cpp">
+      <Filter>Source Files\gme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\gme-nes\Data_Reader.cpp">
+      <Filter>Source Files\gme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\gme-nes\Effects_Buffer.cpp">
+      <Filter>Source Files\gme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\gme-nes\gme.cpp">
+      <Filter>Source Files\gme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\gme-nes\Gme_File.cpp">
+      <Filter>Source Files\gme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\gme-nes\Multi_Buffer.cpp">
+      <Filter>Source Files\gme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\gme-nes\Music_Emu.cpp">
+      <Filter>Source Files\gme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\gme-nes\Nes_Apu.cpp">
+      <Filter>Source Files\gme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\gme-nes\Nes_Cpu.cpp">
+      <Filter>Source Files\gme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\gme-nes\Nes_Fme7_Apu.cpp">
+      <Filter>Source Files\gme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\gme-nes\Nes_Namco_Apu.cpp">
+      <Filter>Source Files\gme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\gme-nes\Nes_Oscs.cpp">
+      <Filter>Source Files\gme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\gme-nes\Nes_Vrc6_Apu.cpp">
+      <Filter>Source Files\gme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\gme-nes\Nsf_Emu.cpp">
+      <Filter>Source Files\gme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\gme-nes\Nsfe_Emu.cpp">
+      <Filter>Source Files\gme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\gme-nes\Classic_Emu.cpp">
+      <Filter>Source Files\gme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\gme-nes\M3u_Playlist.cpp">
+      <Filter>Source Files\gme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\jsoncpp\src\json_reader.cpp">
+      <Filter>Source Files\jsoncpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\jsoncpp\src\json_value.cpp">
+      <Filter>Source Files\jsoncpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\jsoncpp\src\json_writer.cpp">
+      <Filter>Source Files\jsoncpp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hikari\client\game\Weapon.cpp">
+      <Filter>Header Files\core\game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\squirrel\squirrel\sqapi.cpp">
+      <Filter>Source Files\squirrel\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\squirrel\squirrel\sqbaselib.cpp">
+      <Filter>Source Files\squirrel\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\squirrel\squirrel\sqclass.cpp">
+      <Filter>Source Files\squirrel\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\squirrel\squirrel\sqcompiler.cpp">
+      <Filter>Source Files\squirrel\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\squirrel\squirrel\sqdebug.cpp">
+      <Filter>Source Files\squirrel\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\squirrel\squirrel\sqfuncstate.cpp">
+      <Filter>Source Files\squirrel\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\squirrel\squirrel\sqlexer.cpp">
+      <Filter>Source Files\squirrel\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\squirrel\squirrel\sqmem.cpp">
+      <Filter>Source Files\squirrel\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\squirrel\squirrel\sqobject.cpp">
+      <Filter>Source Files\squirrel\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\squirrel\squirrel\sqstate.cpp">
+      <Filter>Source Files\squirrel\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\squirrel\squirrel\sqtable.cpp">
+      <Filter>Source Files\squirrel\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\squirrel\squirrel\sqvm.cpp">
+      <Filter>Source Files\squirrel\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\squirrel\sqstdlib\sqstdaux.cpp">
+      <Filter>Source Files\squirrel\sqstdlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\squirrel\sqstdlib\sqstdblob.cpp">
+      <Filter>Source Files\squirrel\sqstdlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\squirrel\sqstdlib\sqstdio.cpp">
+      <Filter>Source Files\squirrel\sqstdlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\squirrel\sqstdlib\sqstdmath.cpp">
+      <Filter>Source Files\squirrel\sqstdlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\squirrel\sqstdlib\sqstdrex.cpp">
+      <Filter>Source Files\squirrel\sqstdlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\squirrel\sqstdlib\sqstdstream.cpp">
+      <Filter>Source Files\squirrel\sqstdlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\squirrel\sqstdlib\sqstdstring.cpp">
+      <Filter>Source Files\squirrel\sqstdlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extlibs\squirrel\sqstdlib\sqstdsystem.cpp">
+      <Filter>Source Files\squirrel\sqstdlib</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="engine.rc">
@@ -914,6 +1175,15 @@
     </None>
     <None Include="..\content\tileset-skull.json">
       <Filter>Content</Filter>
+    </None>
+    <None Include="..\extlibs\jsoncpp\src\json_internalarray.inl">
+      <Filter>Source Files\jsoncpp</Filter>
+    </None>
+    <None Include="..\extlibs\jsoncpp\src\json_internalmap.inl">
+      <Filter>Source Files\jsoncpp</Filter>
+    </None>
+    <None Include="..\extlibs\jsoncpp\src\json_valueiterator.inl">
+      <Filter>Source Files\jsoncpp</Filter>
     </None>
   </ItemGroup>
 </Project>

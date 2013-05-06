@@ -59,7 +59,7 @@ namespace hikari {
         state->render(target);
     }
 
-    void GameController::update(const float &dt) {
+    void GameController::update(float dt) {
         if(!state) {
             throw GameControllerException("Current game state is null, cannot update.");
         }

@@ -14,8 +14,10 @@
 
 namespace hikari {
 
+    const SQInteger SquirrelService::DEFAULT_STACK_SIZE = 1024;
+
     void SquirrelService::squirrelPrintFunction(HSQUIRRELVM vm, const SQChar *s, ...) {
-        va_list vl;
+        va_list vl; 
         va_start(vl, s);
         vprintf(s, vl);
         va_end(vl);
@@ -34,7 +36,7 @@ namespace hikari {
         HIKARI_LOG(script) << message;
     }
 
-    SquirrelService::SquirrelService(const SQInteger initialStackSize = 1024)
+    SquirrelService::SquirrelService(SQInteger initialStackSize)
         : Service()
         , initialStackSize(initialStackSize)
         , vm(nullptr)
@@ -50,7 +52,7 @@ namespace hikari {
 
     void SquirrelService::initVirtualMachine() {
         if(!vm) {
-            vm = sq_open(1024);
+            vm = sq_open(initialStackSize);
             sq_setprintfunc(vm, squirrelPrintFunction, squirrelPrintFunction);
         }
     }

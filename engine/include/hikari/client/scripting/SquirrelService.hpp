@@ -16,6 +16,8 @@ namespace hikari {
         static void squirrelErrorFunction(HSQUIRRELVM vm, const SQChar *s, ...);
         static void squirrelLoggingProxyFunction(const std::string & message);
 
+        static const SQInteger DEFAULT_STACK_SIZE;
+
         SQInteger initialStackSize;
         HSQUIRRELVM vm;
 
@@ -26,7 +28,7 @@ namespace hikari {
         void deinitVirtualMachine();
 
     public:
-        SquirrelService(const SQInteger initialStackSize);
+        explicit SquirrelService(SQInteger initialStackSize = DEFAULT_STACK_SIZE);
         virtual ~SquirrelService();
 
         const HSQUIRRELVM getVmInstance();

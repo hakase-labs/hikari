@@ -69,7 +69,7 @@ namespace hikari {
 
         void handleEvent(sf::Event &event);
         void render(sf::RenderTarget &target);
-        void update(const float &dt);
+        void update(float dt);
     };
 
 } // hikari

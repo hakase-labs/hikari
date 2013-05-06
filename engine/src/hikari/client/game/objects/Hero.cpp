@@ -1,7 +1,13 @@
 #include "hikari/client/game/objects/Hero.hpp"
+#include "hikari/client/game/objects/HeroClimbingMobilityState.hpp"
+#include "hikari/client/game/objects/HeroIdleMobilityState.hpp"
+#include "hikari/client/game/objects/HeroTeleportingMobilityState.hpp"
+#include "hikari/client/game/events/EventManager.hpp"
+#include "hikari/client/game/events/EventData.hpp"
+#include "hikari/client/game/events/WeaponFireEventData.hpp"
 #include "hikari/core/game/Animation.hpp"
 #include "hikari/core/game/map/Room.hpp"
-#include "hikari/core/math/RetroVector.hpp"
+#include "hikari/core/math/NESNumber.hpp"
 #include "hikari/core/game/SpriteAnimator.hpp"
 #include "hikari/core/game/map/Tileset.hpp"
 #include "hikari/core/util/Log.hpp"
@@ -45,22 +51,25 @@ namespace hikari {
             this->isFalling = false;
             this->isAirborn = false;
 
+#ifdef HIKARI_DEBUG_HERO_PHYSICS
             this->countAscendingFrames = 0;
             this->countDecendingFrames = 0;
+#endif // HIKARI_DEBUG_HERO_PHYSICS
         });
 
-        walkVelocity = Vector2<float>(RetroVector(0x01, 0x4C).toFloat(), 0.0f);
+        walkVelocity = Vector2<float>(NESNumber(0x01, 0x4C).toFloat(), 0.0f);
         climbVelocity = Vector2<float>(walkVelocity.getY(), walkVelocity.getX()); // Climbs at same speed as he walks
-        jumpVelocity = Vector2<float>(0.0f, -(RetroVector(0x04, 0xA5) + RetroVector(0, 0x40) + RetroVector(0, 0x40)).toFloat());
-        suddenFallVelocity = Vector2<float>(0.0f, RetroVector(0, 0x80).toFloat());
-        slideVelocity = Vector2<float>(RetroVector(0x02, 0x80).toFloat(), 0.0f);
+        jumpVelocity = Vector2<float>(0.0f, -(NESNumber(0x04, 0xA5) + NESNumber(0, 0x40) + NESNumber(0, 0x40)).toFloat());
+        suddenFallVelocity = Vector2<float>(0.0f, NESNumber(0, 0x80).toFloat());
+        slideVelocity = Vector2<float>(NESNumber(0x02, 0x80).toFloat(), 0.0f);
         hurtVelocity = Vector2<float>();
 
         accelerationDelay = 0;
         accelerationDelayThreshold = 6;
-
+#ifdef HIKARI_DEBUG_HERO_PHYSICS
         this->countAscendingFrames = 0;
         this->countDecendingFrames = 0;
+#endif // HIKARI_DEBUG_HERO_PHYSICS
 
         isFullyAccelerated = false;
 
@@ -80,7 +89,7 @@ namespace hikari {
         this->actionController = actionController;
     }
 
-    void Hero::update(const float &dt) {
+    void Hero::update(float dt) {
         if(room) {
             const int gridSize = room->getGridSize();
 
@@ -359,9 +368,6 @@ namespace hikari {
         }
     }
 
-    //
-    // MobilityState
-    //
     Hero::MobilityState::MobilityState(Hero & hero)
         : hero(hero)
     {
@@ -371,519 +377,6 @@ namespace hikari {
     Hero::MobilityState::~MobilityState() {
 
     }
-
-    //
-    // TeleportingMobilityState
-    //
-    Hero::TeleportingMobilityState::TeleportingMobilityState(Hero & hero)
-        : MobilityState(hero)
-        , morphingLimit(0.2167f) // ~13 frames
-        , morphingCounter(0.0f)
-    {
-
-    }
-
-    Hero::TeleportingMobilityState::~TeleportingMobilityState() {
-
-    }
-
-    void Hero::TeleportingMobilityState::enter() {
-        hero.isTeleporting = true;
-        hero.isMorphing = false;
-        hero.chooseAnimation();
-        hero.setVelocityX(0.0f);
-        hero.setVelocityY(0.0f);
-    }
-
-    void Hero::TeleportingMobilityState::exit() {
-        hero.isTeleporting = false;
-        hero.isMorphing = false;
-    }
-
-    Hero::MobilityState::StateChangeAction Hero::TeleportingMobilityState::update(const float & dt) {
-        if(hero.isMorphing) {
-            if(morphingCounter == 0.0f) {
-                hero.chooseAnimation();
-            }
-
-            morphingCounter += dt;
-
-            if(morphingCounter >= morphingLimit) {
-                // Time to change!
-                hero.requestMobilityStateChange(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
-                // Emit event or play a sound
-                return MobilityState::NEXT;
-            }
-        }
-
-        return MobilityState::CONTINUE;
-    }
-
-    //
-    // IdleMobilityState
-    //
-    Hero::IdleMobilityState::IdleMobilityState(Hero & hero)
-        : MobilityState(hero)
-    {
-
-    }
-
-    Hero::IdleMobilityState::~IdleMobilityState() {
-
-    }
-
-    void Hero::IdleMobilityState::enter() {
-        hero.isStanding = true;
-        hero.isFullyAccelerated = false;
-        hero.chooseAnimation();
-        hero.setVelocityX(0.0f);
-    }
-
-    void Hero::IdleMobilityState::exit() {
-        hero.isStanding = false;
-    }
-
-    Hero::MobilityState::StateChangeAction Hero::IdleMobilityState::update(const float & dt) {
-        if(hero.actionController) {
-            auto const * controller = hero.actionController.get();
-
-            if(hero.isDecelerating) {
-                hero.isDecelerating = false;
-                hero.chooseAnimation();
-            }
-
-            // Disappearing blocks, moving platform, who knows...
-            if(!hero.body.isOnGround()) {
-                hero.requestMobilityStateChange(std::unique_ptr<MobilityState>(new AirbornMobilityState(hero)));
-                return MobilityState::NEXT;
-            } else {
-                if((controller->shouldMoveLeft() && !controller->shouldMoveRight())
-                    || (controller->shouldMoveRight() && !controller->shouldMoveLeft())) {
-                    hero.requestMobilityStateChange(std::unique_ptr<MobilityState>(new WalkingMobilityState(hero)));
-                    return MobilityState::NEXT;
-                }
-
-                if(controller->shouldSlide() && hero.canSlide()) {
-                    hero.requestMobilityStateChange(std::unique_ptr<MobilityState>(new SlidingMobilityState(hero)));
-                    return MobilityState::NEXT;
-                }
-
-                if(hero.canJump() && controller->shouldJump()) {
-                    hero.requestMobilityStateChange(std::unique_ptr<MobilityState>(new AirbornMobilityState(hero)));
-                    return MobilityState::NEXT;
-                }
-            }
-        }
-
-        return MobilityState::CONTINUE;
-    }
-
-    //
-    // WalkingMobilityState
-    //
-    Hero::WalkingMobilityState::WalkingMobilityState(Hero & hero)
-        : MobilityState(hero)
-        , accelerationDelay(0)
-        , accelerationDelayThreshold(6) // stall for 6 frames
-        , isDecelerating(false)
-        , lastDirection(Directions::None)
-    {
-        // HIKARI_LOG(debug4) << "WalkingMobilityState()";
-    }
-
-    Hero::WalkingMobilityState::~WalkingMobilityState() {
-        // HIKARI_LOG(debug4) << "~WalkingMobilityState()";
-    }
-
-    void Hero::WalkingMobilityState::enter() {
-        hero.isWalking = true;
-        hero.isAirborn = false;
-        hero.isStanding = false;
-        hero.isDecelerating = false;
-        isDecelerating = false;
-    }
-
-    void Hero::WalkingMobilityState::exit() {
-        hero.isWalking = false;
-    }
-
-    Hero::MobilityState::StateChangeAction Hero::WalkingMobilityState::update(const float & dt) {
-        if(hero.actionController) {
-            auto const * controller = hero.actionController.get();
-
-            lastDirection = hero.getDirection();
-
-            if(!isDecelerating) {
-                if(controller->shouldMoveLeft() && !controller->shouldMoveRight()) {
-                    hero.setDirection(Directions::Left);
-                    hero.setVelocityX(-(hero.walkVelocity.getX()));
-                }
-
-                if(controller->shouldMoveRight() && !controller->shouldMoveLeft()) {
-                    hero.setDirection(Directions::Right);
-                    hero.setVelocityX(hero.walkVelocity.getX());
-                }
-
-                // Handle direction switching (reset acceleration)
-                if(hero.getDirection() != lastDirection) {
-                    hero.isFullyAccelerated = false;
-                    hero.getAnimationPlayer()->rewind();
-                    accelerationDelay = 0;
-                }
-
-                // Handle acceleration
-                if(!hero.isFullyAccelerated) {
-                    hero.body.setApplyHorizontalVelocity(accelerationDelay == 0);
-
-                    hero.isFullyAccelerated = !(accelerationDelay < accelerationDelayThreshold);
-                    accelerationDelay += 1; // dt;
-
-                    HIKARI_LOG(debug4) << "Accellerating...";
-
-                    hero.chooseAnimation();
-                } else {
-                    hero.body.setApplyHorizontalVelocity(true);
-                    hero.chooseAnimation();
-                }
-            }
-
-            //
-            // Other state conditions
-            //
-
-            // Moving in both directions at the same time causes Rock to idle.
-            if(controller->shouldMoveLeft() && controller->shouldMoveRight()) {
-                if(!isDecelerating) {
-                    isDecelerating = true;
-                } else {
-                    hero.isDecelerating = true;
-                    hero.requestMobilityStateChange(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
-                    return MobilityState::NEXT;
-                }
-            }
-
-            // Not moving in either direction, so go back to standing.
-            if(!controller->shouldMoveLeft() && !controller->shouldMoveRight()){
-                if(!isDecelerating) {
-                    isDecelerating = true;
-                } else {
-                    hero.isDecelerating = true;
-                    hero.requestMobilityStateChange(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
-                    return MobilityState::NEXT;
-                }
-            }
-
-            if(controller->shouldSlide() && hero.canSlide()) {
-                hero.requestMobilityStateChange(std::unique_ptr<MobilityState>(new SlidingMobilityState(hero)));
-                return MobilityState::NEXT;
-            }
-
-            // Trying to jump so go ahead and jump.
-            if(hero.canJump() && controller->shouldJump()) {
-                hero.requestMobilityStateChange(std::unique_ptr<MobilityState>(new AirbornMobilityState(hero)));
-                return MobilityState::NEXT;
-            }
-
-            if(!hero.body.isOnGround()) {
-                hero.requestMobilityStateChange(std::unique_ptr<MobilityState>(new AirbornMobilityState(hero)));
-                return MobilityState::NEXT;
-            }
-        }
-
-        return MobilityState::CONTINUE;
-    }
-
-    Hero::SlidingMobilityState::SlidingMobilityState(Hero & hero)
-        : MobilityState(hero)
-        , oldBoundingBox(hero.getBoundingBox())
-        , slideDuration(0.0f)
-        , slideDurationThreshold(1.0f / 60.0f * 19.0f) // 19 frames, 0.3166 seconds
-    {
-
-    }
-
-    Hero::SlidingMobilityState::~SlidingMobilityState() {
-
-    }
-
-    void Hero::SlidingMobilityState::enter() {
-        slideDuration = 0.0f;
-
-        hero.isWalking = false;
-        hero.isStanding = false;
-        hero.isAirborn = false;
-        hero.isFullyAccelerated = true;
-        hero.isSliding = true;
-        hero.body.setApplyHorizontalVelocity(true);
-        hero.body.setApplyVerticalVelocity(true);
-
-        oldBoundingBox = hero.getBoundingBox();
-
-        BoundingBoxF newBoundingBox(oldBoundingBox);
-        newBoundingBox.setHeight(16.0f);
-        newBoundingBox.setWidth(16.0f);
-        newBoundingBox.setOrigin(8.0f, 14.0f);
-        newBoundingBox.setBottom(oldBoundingBox.getBottom());
-
-        hero.setBoundingBox(newBoundingBox);
-
-        hero.chooseAnimation();
-    }
-
-    void Hero::SlidingMobilityState::exit() {
-        const auto currentBoundingBox = hero.getBoundingBox();
-
-        BoundingBoxF restoredBoundingBox(oldBoundingBox);
-        restoredBoundingBox.setBottom(currentBoundingBox.getBottom());
-        restoredBoundingBox.setPosition(currentBoundingBox.getPosition());
-
-        hero.setBoundingBox(restoredBoundingBox);
-
-        hero.isSliding = false;
-        hero.isInTunnel = false;
-    }
-
-    Hero::MobilityState::StateChangeAction Hero::SlidingMobilityState::update(const float & dt) {
-        slideDuration += dt;
-
-        if(auto const * controller = hero.actionController.get()) {
-            if(hero.isInTunnel || (slideDuration < slideDurationThreshold && (controller->shouldSlide() || !controller->shouldStopSliding()))) {
-                if(controller->shouldMoveLeft()) {
-                    hero.setDirection(Directions::Left);
-                }
-
-                if(controller->shouldMoveRight()) {
-                    hero.setDirection(Directions::Right);
-                }
-
-                auto const direction = hero.getDirection();
-
-                if(direction == Directions::Left) {
-                    hero.setVelocityX(-(hero.slideVelocity.getX()));
-                } else {
-                    hero.setVelocityX(hero.slideVelocity.getX());
-                }
-            } else {
-                if(!controller->shouldMoveLeft() && !controller->shouldMoveRight()){
-                    hero.isDecelerating = true;
-                    hero.requestMobilityStateChange(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
-                    return MobilityState::NEXT;
-                }
-
-                if((controller->shouldMoveLeft() && !controller->shouldMoveRight())
-                    || (controller->shouldMoveRight() && !controller->shouldMoveLeft())) {
-                        hero.isFullyAccelerated = true;
-                        hero.requestMobilityStateChange(std::unique_ptr<MobilityState>(new WalkingMobilityState(hero)));
-                        return MobilityState::NEXT;
-                }
-
-                if(hero.canJump() && controller->shouldJump()) {
-                    hero.requestMobilityStateChange(std::unique_ptr<MobilityState>(new AirbornMobilityState(hero)));
-                    return MobilityState::NEXT;
-                }
-
-                if(!hero.body.isOnGround()) {
-                    hero.requestMobilityStateChange(std::unique_ptr<MobilityState>(new AirbornMobilityState(hero)));
-                    return MobilityState::NEXT;
-                }
-
-                hero.isDecelerating = true;
-                hero.requestMobilityStateChange(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
-                return MobilityState::NEXT;
-            }
-        }
-
-        return MobilityState::CONTINUE;
-    }
-
-    //
-    // JumpingMobilityState
-    //
-    Hero::AirbornMobilityState::AirbornMobilityState(Hero & hero)
-        : MobilityState(hero)
-    {
-
-    }
-
-    Hero::AirbornMobilityState::~AirbornMobilityState() {
-
-    }
-
-    void Hero::AirbornMobilityState::enter() {
-        hero.isAirborn = true;
-        hero.body.setApplyHorizontalVelocity(true);
-
-        if(hero.actionController) {
-            auto const * controller = hero.actionController.get();
-            if(controller->shouldJump() && !hero.isFalling) {
-                hero.setVelocityY(hero.jumpVelocity.getY());
-                hero.isJumping = true;
-            } else if(!hero.body.isOnGround()) {
-                hero.isFalling = true;
-            }
-        }
-
-        hero.chooseAnimation();
-    }
-
-    void Hero::AirbornMobilityState::exit() {
-        hero.isJumping = false;
-    }
-
-    Hero::MobilityState::StateChangeAction Hero::AirbornMobilityState::update(const float & dt) {
-        if(hero.actionController) {
-            auto const * controller = hero.actionController.get();
-
-            // Handle movement in the air
-            if(controller->shouldMoveLeft()) {
-                hero.setDirection(Directions::Left);
-                hero.setVelocityX(-(hero.walkVelocity.getX()));
-            } else if(controller->shouldMoveRight()) {
-                hero.setDirection(Directions::Right);
-                hero.setVelocityX(hero.walkVelocity.getX());
-            } else {
-                hero.setVelocityX(0.0f);
-            }
-
-            if(hero.getVelocityY() > 0) {
-                hero.countDecendingFrames++;
-            } else if(hero.getVelocityY() < 0) {
-                hero.countAscendingFrames++;
-            }
-
-            //
-            // Other state conditions
-            //
-            if(hero.isJumping && controller->shouldStopJumping() && hero.getVelocityY() < 0.0f) {
-                hero.isJumping = false;
-                hero.isFalling = true;
-                hero.setVelocityY(hero.suddenFallVelocity.getY());
-            }
-
-            if(hero.body.isOnGround()) {
-                if(controller->shouldMoveLeft() || controller->shouldMoveRight()) {
-                    hero.isFullyAccelerated = true;
-                    hero.requestMobilityStateChange(std::unique_ptr<MobilityState>(new WalkingMobilityState(hero)));
-                    return MobilityState::NEXT;
-                } else {
-                    hero.requestMobilityStateChange(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
-                    return MobilityState::NEXT;
-                }
-            }
-        }
-
-        return MobilityState::CONTINUE;
-    }
-
-    Hero::ClimbingMobilityState::ClimbingMobilityState(Hero & hero)
-        : MobilityState(hero)
-    {
-
-    }
-
-    Hero::ClimbingMobilityState::~ClimbingMobilityState() {
-
-    }
-
-    void Hero::ClimbingMobilityState::enter() {
-        hero.isOnLadder = true;
-        hero.isFalling = false;
-        hero.isAirborn = false;
-        hero.isFullyAccelerated = false;
-        hero.isJumping = false;
-        hero.isStanding = false;
-        hero.isDecelerating = false;
-        hero.isWalking = false;
-
-        hero.setVelocityX(0.0f);
-        hero.setPosition(static_cast<float>(hero.ladderPositionX), hero.getPosition().getY());
-        hero.body.setGravitated(false);
-        hero.body.setTreatLadderTopAsGround(false);
-    }
-
-    void Hero::ClimbingMobilityState::exit() {
-        hero.isOnLadder = false;
-        hero.body.setGravitated(true);
-        hero.body.setTreatLadderTopAsGround(true);
-        hero.getAnimationPlayer()->unpause();
-    }
-
-    Hero::MobilityState::StateChangeAction Hero::ClimbingMobilityState::update(const float & dt) {
-        hero.body.setTreatLadderTopAsGround(false);
-
-        if(hero.actionController) {
-            auto const * controller = hero.actionController.get();
-
-            hero.setVelocityY(0);
-            hero.getAnimationPlayer()->pause();
-
-            if(controller->shouldMoveUp()) {
-                if(hero.isTouchingLadderTop) {
-                    hero.changeAnimation("climbing-top");
-                } else {
-                    hero.changeAnimation("climbing");
-                }
-                hero.setVelocityY(-hero.climbVelocity.getY());
-                hero.getAnimationPlayer()->unpause();
-
-                // If we climb to the top of the ladder, we need to be put in the ground instead of move up too high.
-                // TODO: clean this code up... it's messy!
-                if(!hero.isTouchingLadder) {
-                    hero.setVelocityY(0.0f);
-
-                    auto positionPixels = hero.body.getPosition();
-                    auto offsetPixels = hero.body.getBoundingBox().getOrigin();
-                    auto gridSize = hero.getRoom()->getGridSize();
-                    auto bottom = hero.body.getBoundingBox().getBottom();
-                    int newBottom = static_cast<int>(std::ceil(bottom) / static_cast<float>(gridSize)) * gridSize; // Quantize the bottom pixels
-                    int newY = newBottom;// + offsetPixels.getY();
-                    hero.body.setPosition(positionPixels.getX(), static_cast<float>(newY));
-                    hero.body.setOnGround(true);
-                    // HIKARI_LOG(debug4) << "new y = " << newY;
-                }
-            } else if(controller->shouldMoveDown()) {
-                if(hero.isTouchingLadderTop) {
-                    hero.changeAnimation("climbing-top");
-                } else {
-                    hero.changeAnimation("climbing");
-                }
-                hero.setVelocityY(hero.climbVelocity.getY());
-                hero.getAnimationPlayer()->unpause();
-            } else if(controller->shouldJump()) {
-                // If you're holding up or down the jump button is ignored
-                // So that's why it's at the end of this if/else branch
-                hero.isFalling = true;
-                hero.requestMobilityStateChange(std::unique_ptr<MobilityState>(new AirbornMobilityState(hero)));
-                return MobilityState::NEXT;
-            }
-
-            // Only change directions if you're shooting
-            // If you're not shooting then you can't change directions left/right
-
-            // Can jump (amd fall down) from ladders
-
-
-            if(hero.body.isOnGround() && !hero.isTouchingLadderWithFeet) {
-                hero.requestMobilityStateChange(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
-                return MobilityState::NEXT;
-            }
-
-            // Can reach the top of a ladder and not be climbing anymore
-            if(!hero.isTouchingLadder && !hero.isTouchingLadderWithFeet) {
-                if(controller->shouldMoveDown()) {
-                    hero.isFalling = true;
-                    hero.requestMobilityStateChange(std::unique_ptr<MobilityState>(new AirbornMobilityState(hero)));
-                    return MobilityState::NEXT;
-                }
-
-                hero.requestMobilityStateChange(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
-                return MobilityState::NEXT;
-            }
-        }
-
-        return MobilityState::CONTINUE;
-    }
-
 
     Hero::ShootingState::ShootingState(Hero & hero)
         : hero(hero)
@@ -912,6 +405,13 @@ namespace hikari {
         cooldownTimer = cooldown;
         HIKARI_LOG(debug4) << "Shooting now!";
         hero.chooseAnimation();
+
+        if(auto events = hero.getEventManager().lock()) {
+            EventDataPtr weaponFire(new WeaponFireEventData(hero.getWeaponId(), hero.getId()));
+            events->triggerEvent(weaponFire);
+        } else {
+            HIKARI_LOG(debug4) << "No event manager.";
+        }
     }
 
     void Hero::IsShootingState::exit() {

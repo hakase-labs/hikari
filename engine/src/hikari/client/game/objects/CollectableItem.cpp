@@ -98,7 +98,7 @@ namespace hikari {
         //setActive(true);
     }
 
-    void CollectableItem::update(const float& dt) {
+    void CollectableItem::update(float dt) {
         if(isActive()) {
             Entity::update(dt);
 

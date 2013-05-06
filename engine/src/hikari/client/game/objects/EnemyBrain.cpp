@@ -1,6 +1,6 @@
 #include "hikari/client/game/objects/EnemyBrain.hpp"
 #include "hikari/core/game/AnimationSet.hpp"
-#include "hikari/core/math/RetroVector.hpp"
+#include "hikari/core/math/NESNumber.hpp"
 #include "hikari/core/util/Log.hpp"
 
 namespace hikari {

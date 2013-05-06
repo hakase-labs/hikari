@@ -26,9 +26,12 @@ namespace hikari {
     bool NSFSoundStream::open(const std::string& fileName) {
         sf::Lock lock(mutex);
 
+        if(!FileSystem::exists(fileName)) {
+            return false;
+        }
+
         int length = 0;
         auto fs = FileSystem::openFile(fileName);
-
 
         fs->seekg (0, std::ios::end);
         length = static_cast<int>(fs->tellg());
@@ -91,12 +94,16 @@ namespace hikari {
         sf::Lock lock(mutex);
         handleError(emu->play(myBufferSize, myBuffer.get()));
 
+        // HIKARI_LOG(debug) << "onGetData";
+
         Data.samples   = &myBuffer[0];
         Data.sampleCount = myBufferSize;
 
         if(!emu->track_ended()) {
+            // HIKARI_LOG(debug) << "onGetData ... track not over";
             return true;
         } else {
+            // HIKARI_LOG(debug) << "onGetData ... track over";
             return false;
         }
     }

@@ -61,7 +61,7 @@ namespace hikari {
          *
          * @return size of the grid
          */
-        const int getGridSize() const;
+        unsigned int getGridSize() const;
 
         /**
          * Gets a pointer to the Room specified as the "starting" room.
@@ -88,7 +88,7 @@ namespace hikari {
         /**
          * Gets the number of rooms that exist in the map.
          */
-        const int getRoomCount() const;
+        unsigned int getRoomCount() const;
 
        /**
         * Gets a pointer to the map data of the room with a specific index.
@@ -106,14 +106,14 @@ namespace hikari {
 
             @param index the index of the room
         */
-        const Rectangle2D<int>& getRoomRect(int index) const;
+        const Rectangle2D<int>& getRoomRect(unsigned int index) const;
 
         /**
             Finds the room which contains the location (x, y) and returns its
             id. If the location (x, y) is not within any of the rooms, -1 is
             returned.
         */
-        const int findRoomIndexByLocation(int x, int y) const;
+        unsigned int findRoomIndexByLocation(int x, int y) const;
     };
 
 } // hikari

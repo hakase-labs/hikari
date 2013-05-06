@@ -1,36 +1,45 @@
 #include "hikari/client/game/objects/Entity.hpp"
+#include "hikari/client/game/events/EventManager.hpp"
 #include "hikari/core/game/map/Room.hpp"
 #include "hikari/core/game/map/Tileset.hpp"
 #include "hikari/core/game/Animation.hpp"
 #include "hikari/core/game/AnimationSet.hpp"
 #include "hikari/core/game/SpriteAnimator.hpp"
-#include <SFML/Graphics/RenderTarget.hpp>
 #include "hikari/core/util/Log.hpp"
+
+#include <SFML/Graphics/RenderTarget.hpp>
 
 namespace hikari {
 
     bool Entity::debug = false;
 
     void Entity::enableDebug(const bool& debug) {
+        #ifdef HIKARI_DEBUG_ENTITIES
         Entity::debug = debug;
+        #endif // HIKARI_DEBUG_ENTITIES
     }
 
     Entity::Entity(const int& id, std::shared_ptr<Room> room)
         : GameObject(id)
-        , room(room)
-        , spawnPosition()
         , spriteTexture()
         , sprite()
         , animationSet()
         , currentAnimation()
         , animationPlayer(new SpriteAnimator(sprite))
-        , boxOutline()
-        , boxPosition()
+        , eventManager()
+        , world()
         , direction(Directions::None)
+        , faction(Faction::World)
+        , weaponId(0)
         , currentAnimationName("")
+        , room(room)
     {
         reset();
 
+        body.setCollisionCallback(
+            std::bind(&Entity::handleCollision, this, std::placeholders::_1, std::placeholders::_2));
+
+        #ifdef HIKARI_DEBUG_ENTITIES
         boxOutline.setFillColor(sf::Color(128, 64, 0, 128));
         boxOutline.setOutlineColor(sf::Color(255, 255, 255, 128));
         boxOutline.setOutlineThickness(1.0f);
@@ -38,24 +47,23 @@ namespace hikari {
         boxPosition.setFillColor(sf::Color(255, 0, 0, 196));
         boxPosition.setOutlineColor(sf::Color(255, 255, 255, 196));
         boxPosition.setOutlineThickness(1.0f);
-
-        body.setCollisionCallback(
-            std::bind(&Entity::handleCollision, this, std::placeholders::_1, std::placeholders::_2));
+        #endif // HIKARI_DEBUG_ENTITIES
     }
 
     Entity::Entity(const Entity& proto)
         : GameObject(GameObject::generateObjectId())
-        , room(proto.room)
-        , spawnPosition(proto.spawnPosition)
         , spriteTexture(proto.spriteTexture)
         , sprite()
         , animationSet(proto.animationSet)
         , currentAnimation(proto.currentAnimation)
         , animationPlayer(new SpriteAnimator(sprite))
-        , boxOutline(proto.boxOutline)
-        , boxPosition(proto.boxPosition)
+        , eventManager(proto.eventManager)
+        , world(proto.world)
         , direction(proto.direction)
+        , faction(proto.faction)
+        , weaponId(proto.weaponId)
         , currentAnimationName(proto.currentAnimationName)
+        , room(proto.room)
     {
         HIKARI_LOG(debug2) << "Entity copy constructor!" << std::endl;
 
@@ -65,6 +73,11 @@ namespace hikari {
             std::bind(&Entity::handleCollision, this, std::placeholders::_1, std::placeholders::_2));
 
         setSpriteTexture(spriteTexture);
+
+        #ifdef HIKARI_DEBUG_ENTITIES
+        boxOutline = proto.boxOutline;
+        boxPosition = proto.boxPosition;
+        #endif // HIKARI_DEBUG_ENTITIES
     }
 
     Entity::~Entity() {
@@ -155,10 +168,26 @@ namespace hikari {
         const sf::Vector2f& spriteScale = getSprite().getScale();
 
         if(getDirection() == Directions::Left) {
-            getSprite().setScale(-std::abs(spriteScale.x), spriteScale.y); // TODO: support flipping more that 1x scale
+            getSprite().setScale(-std::abs(spriteScale.x), spriteScale.y);
         } else {
-            getSprite().setScale(std::abs(spriteScale.x), spriteScale.y); // TODO: support flipping more that 1x scale
+            getSprite().setScale(std::abs(spriteScale.x), spriteScale.y);
         }
+    }
+
+    void Entity::setFaction(Faction::Type newFaction) {
+        faction = newFaction;
+    }
+
+    Faction::Type Entity::getFaction() const {
+        return faction;
+    }
+
+    void Entity::setWeaponId(int weaponId) {
+        this->weaponId = weaponId;
+    }
+
+    int Entity::getWeaponId() const {
+        return weaponId;
     }
 
     void Entity::setRoom(const std::shared_ptr<Room>& newRoom) {
@@ -167,6 +196,22 @@ namespace hikari {
 
     const std::shared_ptr<Room>& Entity::getRoom() const {
         return room;
+    }
+
+    void Entity::setWorld(const std::weak_ptr<GameWorld>& worldRef) {
+        world = worldRef;
+    }
+
+    const std::weak_ptr<GameWorld>& Entity::getWorld() const {
+        return world;
+    }
+
+    void Entity::setEventManager(const std::weak_ptr<EventManager>& eventManager) {
+        this->eventManager = eventManager;
+    }
+
+    const std::weak_ptr<EventManager>& Entity::getEventManager() const {
+        return eventManager;
     }
 
     const Direction Entity::getDirection() const {
@@ -197,12 +242,12 @@ namespace hikari {
         return body.isGravitated();
     }
 
-    void Entity::setObstacle(const bool& obstacle) {
-        this->obstacle = obstacle;
+    void Entity::setObstacle(const bool& isObstacle) {
+        this->obstacleFlag = isObstacle;
     }
 
     const bool Entity::isObstacle() const {
-        return obstacle;
+        return obstacleFlag;
     }
 
     void Entity::setPhasing(const bool& phasing) {
@@ -233,34 +278,40 @@ namespace hikari {
 
     }
 
-    void Entity::update(const float& dt) {
+    void Entity::update(float dt) {
         body.update(dt);
 
         animationPlayer->update(dt);
 
-        const BoundingBoxF& bb = getBoundingBox();
-
+        #ifdef HIKARI_DEBUG_ENTITIES
         if(debug) {
+            const BoundingBoxF& bb = getBoundingBox();
+
             boxOutline.setPosition(std::floor(bb.getLeft() ), std::floor(bb.getTop()));
             boxOutline.setSize(sf::Vector2f(std::floor(bb.getWidth() ), std::floor(bb.getHeight())));
 
             boxPosition.setPosition(std::floor(getPosition().getX()), std::floor(getPosition().getY()));
             boxPosition.setSize(sf::Vector2f(1.0f, 1.0f));
         }
+        #endif // HIKARI_DEBUG_ENTITIES
     }
 
     void Entity::render(sf::RenderTarget &target) {
+        #ifdef HIKARI_DEBUG_ENTITIES
         // Draw bounding box behind sprite
         if(debug) {
             target.draw(boxOutline);
         }
+        #endif // HIKARI_DEBUG_ENTITIES
 
         renderEntity(target);
-        
+
+        #ifdef HIKARI_DEBUG_ENTITIES        
         // Draw position in front of sprite
         if(debug) {
             target.draw(boxPosition);
         }
+        #endif // HIKARI_DEBUG_ENTITIES
     }
 
     void Entity::renderEntity(sf::RenderTarget &target) {
@@ -276,8 +327,6 @@ namespace hikari {
     }
 
     void Entity::reset() {
-        //MovableObject::reset();
-        //setCenter(getSpawnPosition());
         animationPlayer->rewind();
     }
 
