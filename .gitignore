@@ -70,7 +70,6 @@ _ReSharper*/
 *.layout
 
 #Hikari Specific Ignores
-codeblocks/
 content/*
 !content/conf.json
 !content/game.json
@@ -93,18 +92,6 @@ content/assets/scripts/effects*
 !content/assets/scripts/behaviors/*.nut
 !content/assets/scripts/effects/
 !content/assets/scripts/effects/*.nut
-contrib/*
-!contrib/fastdelegate
-!contrib/gme
-!contrib/guichan
-!contrib/guichan-hakase
-!contrib/guichan-sfml
-!contrib/jsoncpp
-!contrib/sfml
-!contrib/squirrel3
-!contrib/sqrat
-!contrib/physfs
-!contrib/physfs-stream
 doc/
 junk/
 tools/
