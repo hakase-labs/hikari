@@ -50,7 +50,8 @@
 namespace hikari {
 
     void freeHandleWeaponFireEvent(EventDataPtr ptr) {
-        HIKARI_LOG(debug) << "Weapon Fired!";
+        std::shared_ptr<WeaponFireEventData> eventData = std::static_pointer_cast<WeaponFireEventData>(ptr);
+        HIKARI_LOG(debug) << "Weapon Fired! wid=" << eventData->getWeaponId() << ", sid=" << eventData->getShooterId();
     }
 
     using gui::EnergyMeter;
