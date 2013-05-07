@@ -86,6 +86,7 @@ content/assets/scripts/effects*
 !content/assets/animations/items.json
 !content/assets/images/
 !content/assets/images/sp-collectables.png
+!content/assets/images/sp-particles.png
 !content/assets/scripts/
 !content/assets/scripts/*.nut
 !content/assets/scripts/behaviors/
