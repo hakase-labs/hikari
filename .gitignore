@@ -84,6 +84,7 @@ content/assets/scripts/effects*
 !content/assets/templates/items.json
 !content/assets/animations/
 !content/assets/animations/items.json
+!content/assets/animations/particles.json
 !content/assets/images/
 !content/assets/images/sp-collectables.png
 !content/assets/images/sp-particles.png
