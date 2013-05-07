@@ -1,5 +1,8 @@
 #include "hikari/client/game/objects/HeroTeleportingMobilityState.hpp"
 #include "hikari/client/game/objects/HeroIdleMobilityState.hpp"
+#include "hikari/client/game/events/EventManager.hpp"
+#include "hikari/client/game/events/EventData.hpp"
+#include "hikari/client/game/events/EntityStateChangeEventData.hpp"
 
 namespace hikari {
 
@@ -32,6 +35,9 @@ namespace hikari {
         if(hero.isMorphing) {
             if(morphingCounter == 0.0f) {
                 hero.chooseAnimation();
+                if(auto events = hero.getEventManager().lock()) {
+                    events->triggerEvent(EventDataPtr(new EntityStateChangeEventData(hero.getId(), "teleporting")));
+                }
             }
 
             morphingCounter += dt;

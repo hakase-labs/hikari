@@ -147,6 +147,7 @@ namespace hikari {
         void bindEventHandlers();
         void handleEntityDeathEvent(EventDataPtr evt);
         void handleWeaponFireEvent(EventDataPtr evt);
+        void handleEntityStateChangeEvent(EventDataPtr evt);
 
         /**
          * GamePlayState::SubState encapsulates a part of gameplay that operates

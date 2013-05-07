@@ -18,6 +18,7 @@
 #include "hikari/client/game/events/EventManagerImpl.hpp"
 #include "hikari/client/game/events/EventListenerDelegate.hpp"
 #include "hikari/client/game/events/EntityDeathEventData.hpp"
+#include "hikari/client/game/events/EntityStateChangeEventData.hpp"
 #include "hikari/client/game/events/WeaponFireEventData.hpp"
 
 #include "hikari/core/game/AnimationSet.hpp"
@@ -505,6 +506,9 @@ namespace hikari {
 
             auto entityDeathDelegate = fastdelegate::MakeDelegate(this, &GamePlayState::handleEntityDeathEvent);
             eventManager->addListener(entityDeathDelegate, EntityDeathEventData::Type);
+
+            auto entityStateChangeDelegate = fastdelegate::MakeDelegate(this, &GamePlayState::handleEntityStateChangeEvent);
+            eventManager->addListener(entityStateChangeDelegate, EntityStateChangeEventData::Type);
         }
     }
 
@@ -516,6 +520,22 @@ namespace hikari {
     void GamePlayState::handleWeaponFireEvent(EventDataPtr evt) {
         auto eventData = std::static_pointer_cast<WeaponFireEventData>(evt);
         HIKARI_LOG(debug) << "Member Weapon Fired! wid=" << eventData->getWeaponId() << ", sid=" << eventData->getShooterId(); 
+    }
+
+    void GamePlayState::handleEntityStateChangeEvent(EventDataPtr evt) {
+        auto eventData = std::static_pointer_cast<EntityStateChangeEventData>(evt);
+
+        if(eventData->getEntityId() == hero->getId()) {
+            if(eventData->getStateName() == "landed") {
+                if(auto sound = audioService.lock()) {
+                    sound->playSample(19);
+                }
+            } else if(eventData->getStateName() == "teleporting") {
+                if(auto sound = audioService.lock()) {
+                    sound->playSample(52);
+                }
+            }
+        }
     }
 
     // ************************************************************************
