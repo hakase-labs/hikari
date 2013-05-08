@@ -7,13 +7,13 @@ namespace hikari {
     /*
         Static methods and fields
     */
-    TLogLevel Log::reportingLevel = info;
+    LogLevel Log::reportingLevel = info;
 
-    TLogLevel & Log::getReportingLevel() {
+    LogLevel & Log::getReportingLevel() {
         return reportingLevel;
     }
 
-    void Log::setReportingLevel(const TLogLevel& level) {
+    void Log::setReportingLevel(const LogLevel& level) {
         reportingLevel = level;
     }
 
@@ -54,7 +54,7 @@ namespace hikari {
         return ss.str();
     }
 
-    const std::string Log::toString(const TLogLevel & level) const {
+    const std::string Log::toString(const LogLevel & level) const {
         switch(level) {
         case fatal:
             return "FATAL";
@@ -67,26 +67,23 @@ namespace hikari {
         case info:
             return "INFO";
         case debug:
-            return "DEBUG";
+            return "D0";
         case debug1:
-            return "DEBUG1";
+            return "D1";
         case debug2:
-            return "DEBUG2";
+            return "D2";
         case debug3:
-            return "DEBUG3";
+            return "D3";
         case debug4:
-            return "DEBUG4";
+            return "D4";
         default:
             return "UNKNOWN";
         }
     }
 
-    std::ostringstream& Log::get(TLogLevel level) {
-        int tabLevel = level < debug ? 0 : level - debug;
-
+    std::ostringstream& Log::get(LogLevel level) {
         os << "- " << getNowTime();
-        os << " [" << toString(level) << "]:\t";
-        os << std::string(tabLevel, '\t');
+        os << " [" << toString(level) << "]: ";
 
         return os;
     }

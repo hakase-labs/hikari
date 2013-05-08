@@ -77,6 +77,7 @@ set( ENGINE_SOURCE_FILES
     src/hikari/client/game/events/EventManager.cpp
     src/hikari/client/game/events/EventManagerImpl.cpp
     src/hikari/client/game/events/EntityDeathEventData.cpp
+    src/hikari/client/game/events/EntityStateChangeEventData.cpp
     src/hikari/client/game/events/TransitionCollisionEventData.cpp
     src/hikari/client/game/events/WeaponFireEventData.cpp
     src/hikari/client/game/objects/brains/ScriptedEnemyBrain.cpp
@@ -193,8 +194,11 @@ endif(WIN32)
 find_package(SFML 2 COMPONENTS graphics window system audio REQUIRED)
 
 if(SFML_FOUND)
+    if(APPLE)
+        set(OTHER_SFML_LDFLAGS ${OTHER_SFML_LDFLAGS} "-stdlib=libc++")
+    endif(APPLE)
     include_directories( ${SFML_INCLUDE_DIR} )
-    target_link_libraries( hikari ${SFML_LIBRARIES} "-stdlib=libc++")
+    target_link_libraries( hikari ${SFML_LIBRARIES} ${OTHER_SFML_LDFLAGS} )
 endif(SFML_FOUND)
 
 find_package(PhysFS REQUIRED)
