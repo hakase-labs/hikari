@@ -2,6 +2,8 @@
 #include "hikari/core/game/map/Room.hpp"
 #include "hikari/core/game/map/Tileset.hpp"
 
+#include <algorithm>
+
 namespace hikari {
 
     const Rectangle2D<int> Map::INVALID_ROOM_RECT = Rectangle2D<int>();
@@ -48,14 +50,14 @@ namespace hikari {
     }
 
     const RoomPtr Map::getRoom(unsigned int index) const {
-        if(index >= 0 && index < getRoomCount()) {
+        if(index < getRoomCount()) {
             return rooms.at(index);
         }
         return RoomPtr();
     }
 
     const Rectangle2D<int>& Map::getRoomRect(unsigned int index) const {
-        if(index >= 0 && index < getRoomCount()) {
+        if(index < getRoomCount()) {
             return roomRectangles.at(index);
         }
         return INVALID_ROOM_RECT;
@@ -63,6 +65,7 @@ namespace hikari {
 
     unsigned int Map::findRoomIndexByLocation(int x, int y) const {
         int index = 0;
+        
         for(std::vector< Rectangle2D<int> >::const_iterator
             it = roomRectangles.begin(),
             end = roomRectangles.end();

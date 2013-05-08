@@ -510,7 +510,8 @@ namespace hikari {
 
     void GamePlayState::handleEntityDeathEvent(EventDataPtr evt) {
         auto eventData = std::static_pointer_cast<EntityDeathEventData>(evt);
-        HIKARI_LOG(debug) << "Member Entity died! id=" << eventData->getEntityId(); 
+        HIKARI_LOG(debug) << "Member Entity died! id=" << eventData->getEntityId();
+        restartStage();
     }
 
     void GamePlayState::handleWeaponFireEvent(EventDataPtr evt) {

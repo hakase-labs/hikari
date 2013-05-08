@@ -25,7 +25,7 @@ namespace hikari {
     }
 
     const sf::IntRect& Tileset::getTileRect(const unsigned int &index) const {
-        if(index >=0 && index < tiles.size()) {
+        if(index < tiles.size()) {
             return tiles.at(index);
         } else {
             return tiles.at(0);
