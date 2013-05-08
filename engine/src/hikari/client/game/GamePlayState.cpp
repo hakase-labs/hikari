@@ -74,6 +74,7 @@ namespace hikari {
         , maps()
         , itemSpawners()
         , deactivatedItemSpawners()
+        , eventHandlerDelegates()
         , world()
         , camera(Rectangle2D<float>(0.0f, 0.0f, 256.0f, 240.0f))
         , view()
@@ -148,6 +149,21 @@ namespace hikari {
 
         subState.reset(new ReadySubState(*this));
         subState->enter();
+    }
+
+    GamePlayState::~GamePlayState() {
+        HIKARI_LOG(debug) << "~GamePlayState()";
+
+        std::for_each(
+            std::begin(eventHandlerDelegates),
+            std::end(eventHandlerDelegates), 
+            [&](const std::pair<EventListenerDelegate, EventType> & del) {
+                if(eventManager) {
+                    bool removed = eventManager->removeListener(del.first, del.second);
+                    HIKARI_LOG(debug) << "Removing event listener, type = " << del.second << ", succes = " << removed;
+                }
+            }
+        );
     }
 
     void GamePlayState::handleEvent(sf::Event &event) {
@@ -503,12 +519,15 @@ namespace hikari {
             // TODO: Change this to a member handler
             auto weaponFireDelegate = fastdelegate::MakeDelegate(this, &GamePlayState::handleWeaponFireEvent);
             eventManager->addListener(weaponFireDelegate, WeaponFireEventData::Type);
+            eventHandlerDelegates.push_back(std::make_pair(weaponFireDelegate, WeaponFireEventData::Type));
 
             auto entityDeathDelegate = fastdelegate::MakeDelegate(this, &GamePlayState::handleEntityDeathEvent);
             eventManager->addListener(entityDeathDelegate, EntityDeathEventData::Type);
+            eventHandlerDelegates.push_back(std::make_pair(entityDeathDelegate, EntityDeathEventData::Type));
 
             auto entityStateChangeDelegate = fastdelegate::MakeDelegate(this, &GamePlayState::handleEntityStateChangeEvent);
             eventManager->addListener(entityStateChangeDelegate, EntityStateChangeEventData::Type);
+            eventHandlerDelegates.push_back(std::make_pair(entityStateChangeDelegate, EntityStateChangeEventData::Type));
         }
     }
 
