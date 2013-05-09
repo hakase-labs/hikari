@@ -532,6 +532,7 @@ namespace hikari {
     }
 
     void GamePlayState::handleEntityDeathEvent(EventDataPtr evt) {
+        HIKARI_LOG(debug4) << "GamePlayState::handleEntityDeathEvent";
         auto eventData = std::static_pointer_cast<EntityDeathEventData>(evt);
         HIKARI_LOG(debug) << "Member Entity died! id=" << eventData->getEntityId();
         restartStage();
@@ -584,6 +585,8 @@ namespace hikari {
 
         fadeOverlay.setPosition(0.0f, 0.0f);
         fadeOverlay.setFillColor(sf::Color::Black);
+
+        std::cout << "ReadySubState() done" << std::endl;
     }
 
     GamePlayState::ReadySubState::~ReadySubState() {
@@ -627,6 +630,8 @@ namespace hikari {
 
             renderer->setCullRegion(Rectangle2D<int>(cameraX, cameraY, cameraWidth, cameraHeight));
         }
+
+        std::cout << "end of ReadySubState::enter()" << std::endl;
     }
 
     void GamePlayState::ReadySubState::exit() {
@@ -635,6 +640,8 @@ namespace hikari {
 
     void GamePlayState::ReadySubState::update(const float & dt) {
         const float frameMs = (1.0f/60.0f);
+
+        std::cout << "ReadySubState::update" << std::endl;
 
         timer += dt;
 

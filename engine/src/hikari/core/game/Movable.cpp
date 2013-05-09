@@ -250,6 +250,7 @@ namespace hikari {
         std::cout << "Landed! " << velocity.getY() << std::endl;
         
         if(landingCallback) {
+            HIKARI_LOG(info) << "landingCallback ";
             landingCallback(*this, collisionInfo);
         }
     }
