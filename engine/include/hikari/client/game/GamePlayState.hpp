@@ -90,6 +90,7 @@ namespace hikari {
         bool isViewingMenu;
         bool hasReachedMidpoint;
         bool hasReachedBossCorridor;
+        bool isHeroAlive;
 
         //
         // Resource Management

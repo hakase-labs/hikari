@@ -246,11 +246,7 @@ namespace hikari {
     }
 
     void Movable::onLanding() {
-        HIKARI_LOG(info) << "Movable::onLanding() ";
-        std::cout << "Landed! " << velocity.getY() << std::endl;
-        
         if(landingCallback) {
-            HIKARI_LOG(info) << "landingCallback ";
             landingCallback(*this, collisionInfo);
         }
     }
@@ -307,12 +303,7 @@ namespace hikari {
     void Movable::update(float dt) {
         if(isGravitated()) {
             velocity.setY(velocity.getY() + getGravity());
-
             velocity.setY(math::clamp(velocity.getY(), minYVelocity, maxYVelocity));
-
-            //if(velocity.getY() > (7.0f)) {
-            //    velocity.setY(7.0f);
-            //}
         }
 
         if(doesCollideWithWorld()) {

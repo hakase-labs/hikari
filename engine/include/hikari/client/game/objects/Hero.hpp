@@ -61,13 +61,13 @@ namespace hikari {
         std::unique_ptr<ShootingState> nextShootingState;
 
         /**
-            Determines whether the Hero can jump right now or not.
-        */
+         *Determines whether the Hero can jump right now or not.
+         */
         bool canJump();
 
         /**
-            Determines whther the Hero can slide right now or not.
-        */
+         * Determines whther the Hero can slide right now or not.
+         */
         bool canSlide();
 
         void performJump();

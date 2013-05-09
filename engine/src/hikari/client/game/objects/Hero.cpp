@@ -54,7 +54,6 @@ namespace hikari {
             this->isAirborn = false;
 
             if(auto events = this->getEventManager().lock()) {
-                HIKARI_LOG(debug4) << "triggering event for landing ";
                 events->triggerEvent(EventDataPtr(new EntityStateChangeEventData(getId(), "landed")));
             }
 
@@ -371,7 +370,6 @@ namespace hikari {
         // Check if we hit spikes; if we did then we're dead!
         //
         if(info.isCollisionY && TileAttribute::hasAttribute(info.tileType, TileAttribute::SPIKE)) {
-            HIKARI_LOG(debug4) << "Spikes!!! ";
             if(auto events = getEventManager().lock()) {
                 EventDataPtr imDeadNow(new EntityDeathEventData(getId()));
                 events->queueEvent(imDeadNow);

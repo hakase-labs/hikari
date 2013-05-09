@@ -19,8 +19,8 @@
 #include "hikari/client/game/events/EventListenerDelegate.hpp"
 #include "hikari/client/game/events/EntityDeathEventData.hpp"
 #include "hikari/client/game/events/EntityStateChangeEventData.hpp"
+#include "hikari/client/game/events/EventData.hpp"
 #include "hikari/client/game/events/WeaponFireEventData.hpp"
-
 #include "hikari/core/game/AnimationSet.hpp"
 #include "hikari/core/game/AnimationLoader.hpp"
 #include "hikari/core/game/TileMapCollisionResolver.hpp"
@@ -89,6 +89,7 @@ namespace hikari {
         , isViewingMenu(false)
         , hasReachedMidpoint(false)
         , hasReachedBossCorridor(false)
+        , isHeroAlive(false)
     {
         loadAllMaps(services.locateService<MapLoader>(hikari::Services::MAPLOADER), params);
 
@@ -532,10 +533,21 @@ namespace hikari {
     }
 
     void GamePlayState::handleEntityDeathEvent(EventDataPtr evt) {
-        HIKARI_LOG(debug4) << "GamePlayState::handleEntityDeathEvent";
         auto eventData = std::static_pointer_cast<EntityDeathEventData>(evt);
-        HIKARI_LOG(debug) << "Member Entity died! id=" << eventData->getEntityId();
-        restartStage();
+
+        if(eventData->getEntityId() == hero->getId()) {
+            if(isHeroAlive) {
+                isHeroAlive = false;
+                
+                HIKARI_LOG(debug) << "Hero died. Starting over.";
+
+                if(auto sound = audioService.lock()) {
+                    sound->stopMusic();
+                    sound->stopAllSamples();
+                    sound->playSample(23); // SAMPLE_HERO_DEATH
+                }
+            }
+        }
     }
 
     void GamePlayState::handleWeaponFireEvent(EventDataPtr evt) {
@@ -578,23 +590,18 @@ namespace hikari {
         , timer(0.0f)
         , fadeOverlay()
     {
-        std::cout << "ReadySubState()" << std::endl;
-
         fadeOverlay.setSize(
             sf::Vector2f(gamePlayState.camera.getView().getWidth(), gamePlayState.camera.getView().getHeight()));
 
         fadeOverlay.setPosition(0.0f, 0.0f);
         fadeOverlay.setFillColor(sf::Color::Black);
-
-        std::cout << "ReadySubState() done" << std::endl;
     }
 
     GamePlayState::ReadySubState::~ReadySubState() {
-        std::cout << "~ReadySubState()" << std::endl;
+
     }
 
     void GamePlayState::ReadySubState::enter() {
-        std::cout << "ReadySubState::enter()" << std::endl;
         timer = 0.0f;
 
         renderFadeOverlay = true;
@@ -607,8 +614,11 @@ namespace hikari {
 
         if(auto sound = gamePlayState.audioService.lock()) {
             // TODO: Obtain the correct MusicId for the level and play that.
-            //sound->playMusic(9);
+            HIKARI_LOG(debug) << "Playing music for the level!";
+            sound->playMusic(3);
         }
+
+        gamePlayState.isHeroAlive = true;
 
         if(gamePlayState.currentRoom) {
             Point2D<int> spawnPosition = gamePlayState.currentRoom->getHeroSpawnPosition();
@@ -630,18 +640,14 @@ namespace hikari {
 
             renderer->setCullRegion(Rectangle2D<int>(cameraX, cameraY, cameraWidth, cameraHeight));
         }
-
-        std::cout << "end of ReadySubState::enter()" << std::endl;
     }
 
     void GamePlayState::ReadySubState::exit() {
-        std::cout << "ReadySubState::exit()" << std::endl;
+
     }
 
     void GamePlayState::ReadySubState::update(const float & dt) {
         const float frameMs = (1.0f/60.0f);
-
-        std::cout << "ReadySubState::update" << std::endl;
 
         timer += dt;
 
@@ -716,18 +722,18 @@ namespace hikari {
         , startingPoint()
         , targetPoint()
     {
-        std::cout << "TeleportSubState()" << std::endl;
+
     }
 
     GamePlayState::TeleportSubState::~TeleportSubState() {
-        std::cout << "~TeleportSubState()" << std::endl;
+
     }
 
     void GamePlayState::TeleportSubState::enter() {
-        std::cout << "TeleportSubState::enter()" << std::endl;
-
         auto& hero = gamePlayState.hero;
         auto& currentRoom = gamePlayState.currentRoom;
+
+        gamePlayState.isHeroAlive = true;
 
         if(currentRoom) {
             Point2D<int> spawnPosition = gamePlayState.currentRoom->getHeroSpawnPosition();
@@ -758,7 +764,7 @@ namespace hikari {
     }
 
     void GamePlayState::TeleportSubState::exit() {
-        std::cout << "TeleportSubState::exit()" << std::endl;
+
     }
 
     void GamePlayState::TeleportSubState::update(const float & dt) {
@@ -785,21 +791,20 @@ namespace hikari {
     GamePlayState::PlayingSubState::PlayingSubState(GamePlayState & gamePlayState)
         : SubState(gamePlayState)
     {
-        std::cout << "PlayingSubState()" << std::endl;
+
     }
 
     GamePlayState::PlayingSubState::~PlayingSubState() {
-        std::cout << "~PlayingSubState()" << std::endl;
+
     }
 
     void GamePlayState::PlayingSubState::enter() {
-        std::cout << "PlayingSubState::enter()" << std::endl;
-
         gamePlayState.drawHeroEnergyMeter = true;
+        gamePlayState.isHeroAlive = true;
     }
 
     void GamePlayState::PlayingSubState::exit() {
-        std::cout << "PlayingSubState::exit()" << std::endl;
+
     }
 
     void GamePlayState::PlayingSubState::update(const float & dt) {
@@ -852,6 +857,12 @@ namespace hikari {
         //
         if(gamePlayState.hero) {
             gamePlayState.hero->update(dt);
+        }
+
+        // Hero died so we need to restart
+        if(!gamePlayState.isHeroAlive) {
+            gamePlayState.changeSubState(std::unique_ptr<SubState>(new ReadySubState(gamePlayState)));
+            return;
         }
 
         //
