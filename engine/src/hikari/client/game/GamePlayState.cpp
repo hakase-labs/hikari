@@ -793,6 +793,7 @@ namespace hikari {
     //
     GamePlayState::PlayingSubState::PlayingSubState(GamePlayState & gamePlayState)
         : SubState(gamePlayState)
+        , postDeathTimer(0.0f)
     {
 
     }
@@ -804,6 +805,7 @@ namespace hikari {
     void GamePlayState::PlayingSubState::enter() {
         gamePlayState.drawHeroEnergyMeter = true;
         gamePlayState.isHeroAlive = true;
+        postDeathTimer = 0.0f;
     }
 
     void GamePlayState::PlayingSubState::exit() {
@@ -855,17 +857,24 @@ namespace hikari {
                 }
         });
 
-        //
-        // Update hero
-        //
-        if(gamePlayState.hero) {
-            gamePlayState.hero->update(dt);
-        }
-
         // Hero died so we need to restart
         if(!gamePlayState.isHeroAlive) {
-            gamePlayState.changeSubState(std::unique_ptr<SubState>(new ReadySubState(gamePlayState)));
-            return;
+            postDeathTimer += dt;
+
+            // Wait 1 second after you died and then restart
+            if(postDeathTimer >= 1.0f) {
+                // gamePlayState.changeSubState(std::unique_ptr<SubState>(new ReadySubState(gamePlayState)));
+                gamePlayState.restartStage();
+                return;
+            }
+        } else {
+            // TODO: Note to self -- this seems pretty convoluted... probably change this soon please.
+            //
+            // Update hero
+            //
+            if(gamePlayState.hero) {
+                gamePlayState.hero->update(dt);
+            }
         }
 
         //
@@ -919,7 +928,11 @@ namespace hikari {
     void GamePlayState::PlayingSubState::render(sf::RenderTarget &target) {
         gamePlayState.renderMap(target);
         gamePlayState.renderEntities(target);
-        gamePlayState.renderHero(target);
+
+        if(gamePlayState.isHeroAlive) {
+            gamePlayState.renderHero(target);
+        }
+    
         gamePlayState.renderHud(target);
     }
 

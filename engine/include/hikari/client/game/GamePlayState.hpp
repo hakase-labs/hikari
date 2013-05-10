@@ -215,6 +215,8 @@ namespace hikari {
          * Actual game play, player-controlled movements, etc.
          */
         class PlayingSubState : public SubState {
+        private:
+            float postDeathTimer; // A timer that counts after you die
         public:
             PlayingSubState(GamePlayState & gamePlayState);
             virtual ~PlayingSubState();
