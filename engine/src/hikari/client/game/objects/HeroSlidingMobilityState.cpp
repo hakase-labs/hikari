@@ -7,9 +7,9 @@ namespace hikari {
 
     Hero::SlidingMobilityState::SlidingMobilityState(Hero & hero)
         : MobilityState(hero)
-        , oldBoundingBox(hero.getBoundingBox())
         , slideDuration(0.0f)
         , slideDurationThreshold(1.0f / 60.0f * 19.0f) // 19 frames, 0.3166 seconds
+        , oldBoundingBox(hero.getBoundingBox())
     {
 
     }

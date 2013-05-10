@@ -23,9 +23,9 @@ namespace hikari {
     CollectableItem::CollectableItem(const CollectableItem &proto)
         : Entity(proto)
         , effect(proto.effect->clone())
+        , ageless(proto.ageless)
         , age(0)
         , maximumAge(proto.maximumAge)
-        , ageless(proto.ageless)
     {
         setActive(false);
         setGravitated(proto.isGravitated());

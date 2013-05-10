@@ -1,0 +1,84 @@
+{
+    "name": "Particles",
+    "image": "assets/images/sp-particles.png",
+    "animations": {
+        "slide-dust": {
+            "repeat": true,
+            "keyframe": 0,
+            "syncGroup": 0,
+            "frames": [ 
+                { 
+                    "x" : 0, 
+                    "y" : 0, 
+                    "width" : 16, 
+                    "height" : 16, 
+                    "hotspotX" : 8, 
+                    "hotspotY" : 8, 
+                    "length" : 0.1167
+                },
+                { 
+                    "x" : 16, 
+                    "y" : 0, 
+                    "width" : 16, 
+                    "height" : 16, 
+                    "hotspotX" : 8, 
+                    "hotspotY" : 8, 
+                    "length" : 0.1167
+                }
+            ]
+        },
+        "medium-explosion": {
+            "description": "This is the 'normal' explosion when things are destroyed; enemies, items, all kinds of things. It's radial.",
+            "repeat": false,
+            "keyframe": 0,
+            "syncGroup": 100,
+            "frames": [ 
+                { 
+                    "x" : 0, 
+                    "y" : 8, 
+                    "width" : 24, 
+                    "height" : 24, 
+                    "hotspotX" : 12, 
+                    "hotspotY" : 12, 
+                    "length" : 0.0334
+                },
+                { 
+                    "x" : 24, 
+                    "y" : 8, 
+                    "width" : 24, 
+                    "height" : 24, 
+                    "hotspotX" : 12, 
+                    "hotspotY" : 12, 
+                    "length" : 0.05
+                },
+                { 
+                    "x" : 48, 
+                    "y" : 8, 
+                    "width" : 24, 
+                    "height" : 24, 
+                    "hotspotX" : 12, 
+                    "hotspotY" : 12, 
+                    "length" : 0.05
+                },
+                { 
+                    "x" : 72, 
+                    "y" : 8, 
+                    "width" : 24, 
+                    "height" : 24, 
+                    "hotspotX" : 12, 
+                    "hotspotY" : 12, 
+                    "length" : 0.05
+                },
+                { 
+                    "x" : 96, 
+                    "y" : 8, 
+                    "width" : 24, 
+                    "height" : 24, 
+                    "hotspotX" : 12, 
+                    "hotspotY" : 12, 
+                    "length" : 0.05
+                }
+            ]
+        }
+    }
+}

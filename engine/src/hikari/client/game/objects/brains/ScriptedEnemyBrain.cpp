@@ -39,7 +39,7 @@ namespace hikari {
     }
     
     ScriptedEnemyBrain::~ScriptedEnemyBrain() {
-        HIKARI_LOG(debug2) << "DETROYED ScriptedEnemyBrain::ScriptedEnemyBrain()";
+        HIKARI_LOG(debug2) << "DESTROYED ScriptedEnemyBrain::ScriptedEnemyBrain()";
     }
 
     void ScriptedEnemyBrain::attach(Enemy* host) {

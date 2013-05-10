@@ -4,8 +4,9 @@ namespace hikari {
     
     AnimationFrame::AnimationFrame(const Rectangle2D<int> &sourceRect, const float &displayTime, const Point2D<int> &hotspot)
         : sourceRect(sourceRect)
+        , hotspot(hotspot)
         , displayTime(displayTime)
-        , hotspot(hotspot) {
+    {
 
     }
 

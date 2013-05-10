@@ -6,8 +6,8 @@ namespace hikari {
     
     Animator::Animator() 
         : paused(false)
-        , currentFrameIndex(Animation::ANIMATION_BEGINNING_FRAME_INDEX)
         , timeElapsed(0.0f)
+        , currentFrameIndex(Animation::ANIMATION_BEGINNING_FRAME_INDEX)
         , animation()
         , callback() {
 
