@@ -538,6 +538,9 @@ namespace hikari {
         if(eventData->getEntityId() == hero->getId()) {
             if(isHeroAlive) {
                 isHeroAlive = false;
+
+                //hero->setActive(false);
+                //hero->setPosition(0.0f, 0.0f);
                 
                 HIKARI_LOG(debug) << "Hero died. Starting over.";
 
@@ -618,7 +621,7 @@ namespace hikari {
             sound->playMusic(3);
         }
 
-        gamePlayState.isHeroAlive = true;
+        // gamePlayState.isHeroAlive = true;
 
         if(gamePlayState.currentRoom) {
             Point2D<int> spawnPosition = gamePlayState.currentRoom->getHeroSpawnPosition();
@@ -733,7 +736,7 @@ namespace hikari {
         auto& hero = gamePlayState.hero;
         auto& currentRoom = gamePlayState.currentRoom;
 
-        gamePlayState.isHeroAlive = true;
+        // gamePlayState.isHeroAlive = true;
 
         if(currentRoom) {
             Point2D<int> spawnPosition = gamePlayState.currentRoom->getHeroSpawnPosition();
