@@ -22,8 +22,9 @@ namespace hikari {
 
     TilesetLoader::TilesetLoader(const std::shared_ptr<ImageCache> &imageCache,
             const std::shared_ptr<AnimationLoader> &animationLoader)
-        : imageCache(imageCache)
-        , animationLoader(animationLoader) {
+        : animationLoader(animationLoader)
+        , imageCache(imageCache)
+    {
 
     }
 

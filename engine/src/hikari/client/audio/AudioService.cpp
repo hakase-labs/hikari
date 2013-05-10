@@ -4,8 +4,8 @@
 
 namespace hikari {
 
-    const unsigned int AudioService::MUSIC_BUFFER_SIZE = 2048;
-    const unsigned int AudioService::SAMPLE_BUFFER_SIZE = 2048;
+    const unsigned int AudioService::MUSIC_BUFFER_SIZE = 2048 * 2;  // some platforms need larger buffer
+    const unsigned int AudioService::SAMPLE_BUFFER_SIZE = 2048 * 2; // so we'll double it for now.
     const unsigned int AudioService::AUDIO_SAMPLE_RATE = 44000;
 
     AudioService::AudioService(const Json::Value &configuration)

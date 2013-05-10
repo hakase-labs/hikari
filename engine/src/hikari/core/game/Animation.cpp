@@ -7,10 +7,11 @@ namespace hikari {
     const unsigned int Animation::ANIMATION_DEFAULT_SYNC_GROUP = 0;
 
     Animation::Animation(const FrameList &frames, bool doesRepeat, unsigned int keyframe, unsigned int syncGroup)
-        : frames(frames)
-        , repeat(doesRepeat)
+        : repeat(doesRepeat)
         , keyframe(keyframe)
-        , syncGroup(syncGroup) {
+        , syncGroup(syncGroup)
+        , frames(frames)
+    {
 
     }
 

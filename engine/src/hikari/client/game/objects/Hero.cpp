@@ -5,6 +5,7 @@
 #include "hikari/client/game/events/EventManager.hpp"
 #include "hikari/client/game/events/EventData.hpp"
 #include "hikari/client/game/events/EntityDeathEventData.hpp"
+#include "hikari/client/game/events/EntityStateChangeEventData.hpp"
 #include "hikari/client/game/events/WeaponFireEventData.hpp"
 #include "hikari/core/game/Animation.hpp"
 #include "hikari/core/game/map/Room.hpp"
@@ -51,6 +52,10 @@ namespace hikari {
             this->isJumping = false;
             this->isFalling = false;
             this->isAirborn = false;
+
+            if(auto events = this->getEventManager().lock()) {
+                events->triggerEvent(EventDataPtr(new EntityStateChangeEventData(getId(), "landed")));
+            }
 
 #ifdef HIKARI_DEBUG_HERO_PHYSICS
             this->countAscendingFrames = 0;
@@ -366,8 +371,8 @@ namespace hikari {
         //
         if(info.isCollisionY && TileAttribute::hasAttribute(info.tileType, TileAttribute::SPIKE)) {
             if(auto events = getEventManager().lock()) {
-                EventDataPtr weaponFire(new EntityDeathEventData(getId()));
-                events->triggerEvent(weaponFire);
+                EventDataPtr imDeadNow(new EntityDeathEventData(getId()));
+                events->queueEvent(imDeadNow);
             } else {
                 HIKARI_LOG(debug4) << "No event manager.";
             }

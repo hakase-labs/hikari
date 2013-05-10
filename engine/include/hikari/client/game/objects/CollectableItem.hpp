@@ -18,9 +18,9 @@ namespace hikari {
         static const float DEFAULT_MAXIMUM_AGE_IN_M_SECONDS;
 
         std::shared_ptr<Effect> effect;
+        bool ageless;
         float age;
         float maximumAge;
-        bool ageless;
 
     protected:
         void setAge(const float& newAge);

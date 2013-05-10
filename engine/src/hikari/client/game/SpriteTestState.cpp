@@ -13,8 +13,8 @@ namespace hikari {
         : name(name)
         , animationSetCache(animationSetCache)
         , imageCache(imageCache)
-        , animationPlayer(sprite)
-        , positionPixel(sf::Vector2f(100.0f, 100.0f)) {
+        , positionPixel(sf::Vector2f(100.0f, 100.0f))
+        , animationPlayer(sprite) {
             positionPixel.setSize(sf::Vector2f(1.0f, 1.0f));
             positionPixel.setFillColor(sf::Color(255, 255, 255, 128));
 

@@ -14,7 +14,7 @@ namespace hikari {
 if(level > ::hikari::Log::getReportingLevel()) {} \
 else ::hikari::Log().get(level)
 
-    enum TLogLevel {
+    enum LogLevel {
         fatal,
         error,
         warning,
@@ -38,12 +38,12 @@ else ::hikari::Log().get(level)
     */
     class HIKARI_API Log {
     private:
-        static TLogLevel reportingLevel;
+        static LogLevel reportingLevel;
         Log(const Log&);
         Log& operator =(const Log&);
 
         const std::string getNowTime() const;
-        const std::string toString(const TLogLevel & level) const;
+        const std::string toString(const LogLevel & level) const;
 
     protected:
         std::ostringstream os;
@@ -51,9 +51,9 @@ else ::hikari::Log().get(level)
     public:
         Log();
         virtual ~Log();
-        std::ostringstream& get(TLogLevel level = info);
-        static TLogLevel& getReportingLevel();
-        static void setReportingLevel(const TLogLevel& level);
+        std::ostringstream& get(LogLevel level = info);
+        static LogLevel& getReportingLevel();
+        static void setReportingLevel(const LogLevel& level);
     };
     
 }

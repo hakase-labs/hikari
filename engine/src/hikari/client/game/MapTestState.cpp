@@ -463,34 +463,6 @@ namespace hikari {
             // This adjusts the clipping of the tile renderer
             //
             if(cameraFollowingPlayer) {
-
-                const auto & cameraView = camera.getView();
-
-                //
-                // Allow rock to push the camera if he's at least half way into its view
-                // Basically we just check the distance between rock and the edge of the view in the opposite direction
-                //
-                //if(hero->getDirection() == Directions::Left) {
-                //    if(std::floor(std::abs(cameraView.getRight() - std::floor(hero->getPosition().getX()))) > cameraView.getWidth() / 2) {
-                //        diffPosition += currentHeroPosition - previousHeroPosition;
-
-                //        //if(diffPosition.getX() <= 1.0f) {
-                //            camera.move(diffPosition.getX(), diffPosition.getY());
-                //            diffPosition *= 0.0f;
-                //        //}
-                //    }
-                //} else if(hero->getDirection() == Directions::Right) {
-                //    if(std::floor(std::abs(cameraView.getLeft() - std::floor(hero->getPosition().getX()))) > cameraView.getWidth() / 2) {
-                //        diffPosition += currentHeroPosition - previousHeroPosition;
-
-                //        //if(diffPosition.getX() >= 1.0f) {
-                //            camera.move(diffPosition.getX(), diffPosition.getY());
-                //            diffPosition *= 0.0f;
-                //        //}
-                //    }
-                //}
-
-                //auto diffDist = hero->getDirection() == Directions::Left ? (cameraView.getRight() - hero->getPosition().getX()) : cameraView.getLeft() - hero->getPosition().getX();
                 camera.lookAt(
                     (hero->getPosition().getX()),
                     (hero->getPosition().getY())
@@ -512,15 +484,11 @@ namespace hikari {
                 it++)
             {
                 const RoomTransition& region = *it;
-                int x = static_cast<int>(hero->getPosition().getX()) + 16;
-                int y = static_cast<int>((hero->getPosition().getY())) + 8;
 
                 // A region's position is relative to the room, so that has to be
                 // taken in to account when checking intersection.
                 int regionLeft = ((currentRoom->getX() + region.getX()) * 16);
-                int regionRight = ((currentRoom->getX() + region.getX() + region.getWidth()) * 16);
                 int regionTop = ((currentRoom->getY() + region.getY()) * 16);
-                int regionBottom = ((currentRoom->getY() + region.getY() + region.getHeight()) * 16);
                 int regionWidth = region.getWidth() * 16;
                 int regionHeight = region.getHeight() * 16;
 

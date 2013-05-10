@@ -18,8 +18,9 @@
 #include "hikari/client/game/events/EventManagerImpl.hpp"
 #include "hikari/client/game/events/EventListenerDelegate.hpp"
 #include "hikari/client/game/events/EntityDeathEventData.hpp"
+#include "hikari/client/game/events/EntityStateChangeEventData.hpp"
+#include "hikari/client/game/events/EventData.hpp"
 #include "hikari/client/game/events/WeaponFireEventData.hpp"
-
 #include "hikari/core/game/AnimationSet.hpp"
 #include "hikari/core/game/AnimationLoader.hpp"
 #include "hikari/core/game/TileMapCollisionResolver.hpp"
@@ -73,6 +74,7 @@ namespace hikari {
         , maps()
         , itemSpawners()
         , deactivatedItemSpawners()
+        , eventHandlerDelegates()
         , world()
         , camera(Rectangle2D<float>(0.0f, 0.0f, 256.0f, 240.0f))
         , view()
@@ -87,6 +89,7 @@ namespace hikari {
         , isViewingMenu(false)
         , hasReachedMidpoint(false)
         , hasReachedBossCorridor(false)
+        , isHeroAlive(false)
     {
         loadAllMaps(services.locateService<MapLoader>(hikari::Services::MAPLOADER), params);
 
@@ -147,6 +150,21 @@ namespace hikari {
 
         subState.reset(new ReadySubState(*this));
         subState->enter();
+    }
+
+    GamePlayState::~GamePlayState() {
+        HIKARI_LOG(debug) << "~GamePlayState()";
+
+        std::for_each(
+            std::begin(eventHandlerDelegates),
+            std::end(eventHandlerDelegates), 
+            [&](const std::pair<EventListenerDelegate, EventType> & del) {
+                if(eventManager) {
+                    bool removed = eventManager->removeListener(del.first, del.second);
+                    HIKARI_LOG(debug) << "Removing event listener, type = " << del.second << ", succes = " << removed;
+                }
+            }
+        );
     }
 
     void GamePlayState::handleEvent(sf::Event &event) {
@@ -502,20 +520,58 @@ namespace hikari {
             // TODO: Change this to a member handler
             auto weaponFireDelegate = fastdelegate::MakeDelegate(this, &GamePlayState::handleWeaponFireEvent);
             eventManager->addListener(weaponFireDelegate, WeaponFireEventData::Type);
+            eventHandlerDelegates.push_back(std::make_pair(weaponFireDelegate, WeaponFireEventData::Type));
 
             auto entityDeathDelegate = fastdelegate::MakeDelegate(this, &GamePlayState::handleEntityDeathEvent);
             eventManager->addListener(entityDeathDelegate, EntityDeathEventData::Type);
+            eventHandlerDelegates.push_back(std::make_pair(entityDeathDelegate, EntityDeathEventData::Type));
+
+            auto entityStateChangeDelegate = fastdelegate::MakeDelegate(this, &GamePlayState::handleEntityStateChangeEvent);
+            eventManager->addListener(entityStateChangeDelegate, EntityStateChangeEventData::Type);
+            eventHandlerDelegates.push_back(std::make_pair(entityStateChangeDelegate, EntityStateChangeEventData::Type));
         }
     }
 
     void GamePlayState::handleEntityDeathEvent(EventDataPtr evt) {
         auto eventData = std::static_pointer_cast<EntityDeathEventData>(evt);
-        HIKARI_LOG(debug) << "Member Entity died! id=" << eventData->getEntityId(); 
+
+        if(eventData->getEntityId() == hero->getId()) {
+            if(isHeroAlive) {
+                isHeroAlive = false;
+
+                //hero->setActive(false);
+                //hero->setPosition(0.0f, 0.0f);
+                
+                HIKARI_LOG(debug) << "Hero died. Starting over.";
+
+                if(auto sound = audioService.lock()) {
+                    sound->stopMusic();
+                    sound->stopAllSamples();
+                    sound->playSample(23); // SAMPLE_HERO_DEATH
+                }
+            }
+        }
     }
 
     void GamePlayState::handleWeaponFireEvent(EventDataPtr evt) {
         auto eventData = std::static_pointer_cast<WeaponFireEventData>(evt);
         HIKARI_LOG(debug) << "Member Weapon Fired! wid=" << eventData->getWeaponId() << ", sid=" << eventData->getShooterId(); 
+    }
+
+    void GamePlayState::handleEntityStateChangeEvent(EventDataPtr evt) {
+        auto eventData = std::static_pointer_cast<EntityStateChangeEventData>(evt);
+
+        if(eventData->getEntityId() == hero->getId()) {
+            if(eventData->getStateName() == "landed") {
+                if(auto sound = audioService.lock()) {
+                    sound->playSample(19);
+                }
+            } else if(eventData->getStateName() == "teleporting") {
+                if(auto sound = audioService.lock()) {
+                    sound->playSample(52);
+                }
+            }
+        }
     }
 
     // ************************************************************************
@@ -537,8 +593,6 @@ namespace hikari {
         , timer(0.0f)
         , fadeOverlay()
     {
-        std::cout << "ReadySubState()" << std::endl;
-
         fadeOverlay.setSize(
             sf::Vector2f(gamePlayState.camera.getView().getWidth(), gamePlayState.camera.getView().getHeight()));
 
@@ -547,11 +601,10 @@ namespace hikari {
     }
 
     GamePlayState::ReadySubState::~ReadySubState() {
-        std::cout << "~ReadySubState()" << std::endl;
+
     }
 
     void GamePlayState::ReadySubState::enter() {
-        std::cout << "ReadySubState::enter()" << std::endl;
         timer = 0.0f;
 
         renderFadeOverlay = true;
@@ -564,8 +617,11 @@ namespace hikari {
 
         if(auto sound = gamePlayState.audioService.lock()) {
             // TODO: Obtain the correct MusicId for the level and play that.
-            //sound->playMusic(9);
+            HIKARI_LOG(debug) << "Playing music for the level!";
+            sound->playMusic(3);
         }
+
+        // gamePlayState.isHeroAlive = true;
 
         if(gamePlayState.currentRoom) {
             Point2D<int> spawnPosition = gamePlayState.currentRoom->getHeroSpawnPosition();
@@ -590,7 +646,7 @@ namespace hikari {
     }
 
     void GamePlayState::ReadySubState::exit() {
-        std::cout << "ReadySubState::exit()" << std::endl;
+
     }
 
     void GamePlayState::ReadySubState::update(const float & dt) {
@@ -669,18 +725,18 @@ namespace hikari {
         , startingPoint()
         , targetPoint()
     {
-        std::cout << "TeleportSubState()" << std::endl;
+
     }
 
     GamePlayState::TeleportSubState::~TeleportSubState() {
-        std::cout << "~TeleportSubState()" << std::endl;
+
     }
 
     void GamePlayState::TeleportSubState::enter() {
-        std::cout << "TeleportSubState::enter()" << std::endl;
-
         auto& hero = gamePlayState.hero;
         auto& currentRoom = gamePlayState.currentRoom;
+
+        // gamePlayState.isHeroAlive = true;
 
         if(currentRoom) {
             Point2D<int> spawnPosition = gamePlayState.currentRoom->getHeroSpawnPosition();
@@ -711,7 +767,7 @@ namespace hikari {
     }
 
     void GamePlayState::TeleportSubState::exit() {
-        std::cout << "TeleportSubState::exit()" << std::endl;
+
     }
 
     void GamePlayState::TeleportSubState::update(const float & dt) {
@@ -738,21 +794,20 @@ namespace hikari {
     GamePlayState::PlayingSubState::PlayingSubState(GamePlayState & gamePlayState)
         : SubState(gamePlayState)
     {
-        std::cout << "PlayingSubState()" << std::endl;
+
     }
 
     GamePlayState::PlayingSubState::~PlayingSubState() {
-        std::cout << "~PlayingSubState()" << std::endl;
+
     }
 
     void GamePlayState::PlayingSubState::enter() {
-        std::cout << "PlayingSubState::enter()" << std::endl;
-
         gamePlayState.drawHeroEnergyMeter = true;
+        gamePlayState.isHeroAlive = true;
     }
 
     void GamePlayState::PlayingSubState::exit() {
-        std::cout << "PlayingSubState::exit()" << std::endl;
+
     }
 
     void GamePlayState::PlayingSubState::update(const float & dt) {
@@ -805,6 +860,12 @@ namespace hikari {
         //
         if(gamePlayState.hero) {
             gamePlayState.hero->update(dt);
+        }
+
+        // Hero died so we need to restart
+        if(!gamePlayState.isHeroAlive) {
+            gamePlayState.changeSubState(std::unique_ptr<SubState>(new ReadySubState(gamePlayState)));
+            return;
         }
 
         //

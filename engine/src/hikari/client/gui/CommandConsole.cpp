@@ -5,11 +5,11 @@ namespace hikari {
 namespace gui {
 
     CommandConsole::CommandConsole(const std::shared_ptr<hikari::ImageFont> &font)
-        : font(font)
-        , background(sf::RectangleShape())
-        , visible(true) 
+        : visible(true) 
         , state(StateClosed)
         , commandBuffer("")
+        , font(font)
+        , background(sf::RectangleShape())
     {
         background.setSize(sf::Vector2f(256.0f, 100.0f));
         background.setFillColor(sf::Color(102, 102, 102, 224));

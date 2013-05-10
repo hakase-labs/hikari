@@ -5,6 +5,7 @@
 #include "hikari/core/game/map/Camera.hpp"
 #include "hikari/core/game/map/Map.hpp"
 #include "hikari/client/game/events/EventData.hpp"
+#include "hikari/client/game/events/EventListenerDelegate.hpp"
 
 #include "hikari/client/game/GameWorld.hpp"
 #include "hikari/core/game/map/RoomTransition.hpp"
@@ -17,6 +18,8 @@
 
 #include <string>
 #include <map>
+#include <vector>
+#include <utility>
 
 
 // #include <oolua.h>
@@ -72,6 +75,7 @@ namespace hikari {
         std::map< std::string, std::shared_ptr<Map> > maps;
         std::vector<std::weak_ptr<Spawner>> itemSpawners;
         std::vector<std::weak_ptr<Spawner>> deactivatedItemSpawners;
+        std::vector<std::pair<EventListenerDelegate, EventType>> eventHandlerDelegates;
         GameWorld world;
         Camera camera;
         sf::View view;
@@ -86,6 +90,7 @@ namespace hikari {
         bool isViewingMenu;
         bool hasReachedMidpoint;
         bool hasReachedBossCorridor;
+        bool isHeroAlive;
 
         //
         // Resource Management
@@ -147,6 +152,7 @@ namespace hikari {
         void bindEventHandlers();
         void handleEntityDeathEvent(EventDataPtr evt);
         void handleWeaponFireEvent(EventDataPtr evt);
+        void handleEntityStateChangeEvent(EventDataPtr evt);
 
         /**
          * GamePlayState::SubState encapsulates a part of gameplay that operates
@@ -249,7 +255,7 @@ namespace hikari {
 
     public:
         GamePlayState(const std::string &name, const Json::Value &params, ServiceLocator &services);
-        virtual ~GamePlayState() { std::cout << "~GamePlayState()" << std::endl; }
+        virtual ~GamePlayState();
 
         virtual void handleEvent(sf::Event &event);
         virtual void render(sf::RenderTarget &target);

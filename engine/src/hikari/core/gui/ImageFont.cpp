@@ -6,11 +6,12 @@ namespace hikari {
 
     ImageFont::ImageFont(const std::shared_ptr<sf::Texture> &glyphTexture, const std::string &glyphs, 
         const int &glyphWidth, const int &glyphHeight)
-        : glyphTexture(glyphTexture)
+        : glyphWidth(glyphWidth)
+        , glyphHeight(glyphHeight)
+        , glyphTexture(glyphTexture)
         , glyphSprite(*glyphTexture)
         , glyphs(glyphs)
-        , glyphWidth(glyphWidth)
-        , glyphHeight(glyphHeight) {
+    {
             // Loop through the glyphs
             // For each letter, create a rect that represents that letter in the image
             int i = 0;
