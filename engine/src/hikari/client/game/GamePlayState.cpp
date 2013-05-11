@@ -148,8 +148,8 @@ namespace hikari {
         const auto itemFactoryWeak = services.locateService<ItemFactory>("ItemFactory");
         world.setItemFactory(itemFactoryWeak);
 
-        subState.reset(new ReadySubState(*this));
-        subState->enter();
+        //subState.reset(new ReadySubState(*this));
+        //subState->enter();
     }
 
     GamePlayState::~GamePlayState() {
@@ -862,7 +862,7 @@ namespace hikari {
             postDeathTimer += dt;
 
             // Wait 1 second after you died and then restart
-            if(postDeathTimer >= 1.0f) {
+            if(postDeathTimer >= 2.0f) {
                 // gamePlayState.changeSubState(std::unique_ptr<SubState>(new ReadySubState(gamePlayState)));
                 gamePlayState.restartStage();
                 return;

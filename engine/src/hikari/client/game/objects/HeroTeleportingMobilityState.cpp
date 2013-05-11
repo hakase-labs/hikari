@@ -24,6 +24,7 @@ namespace hikari {
         hero.chooseAnimation();
         hero.setVelocityX(0.0f);
         hero.setVelocityY(0.0f);
+        hero.body.setOnGround(true);
     }
 
     void Hero::TeleportingMobilityState::exit() {
