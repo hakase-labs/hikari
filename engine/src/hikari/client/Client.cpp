@@ -55,6 +55,10 @@
 
 #include <SFML/Graphics.hpp>
 
+#include <guichan/sfml.hpp>
+#include <guichan/gui.hpp>
+#include <guichan/widgets/container.hpp>
+
 #include <json/reader.h>
 
 #include <algorithm>
@@ -156,6 +160,24 @@ int main(int argc, char** argv) {
 
         sf::VideoMode videoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP);
         sf::RenderWindow window;
+
+        std::unique_ptr<gcn::SFMLGraphics> guiGraphics(new gcn::SFMLGraphics(window));
+        // std::unique_ptr<gcn::SFMLFont> guiFont(new gcn::SFMLFont("arial.ttf", 10));
+        std::unique_ptr<gcn::SFMLInput> guiInput(new gcn::SFMLInput());
+        std::unique_ptr<gcn::SFMLImageLoader> guiImageLoader(new gcn::SFMLImageLoader());
+
+        gcn::Image::setImageLoader(guiImageLoader.get());
+        // gcn::Widget::setGlobalFont(guiFont.get());
+
+        std::unique_ptr<gcn::Gui> gui(new gcn::Gui());
+        std::unique_ptr<gcn::Container> topContainer(new gcn::Container());
+
+        gui->setInput(guiInput.get());
+        gui->setGraphics(guiGraphics.get());
+        gui->setTop(topContainer.get());
+
+        topContainer->setSize(100, 100);
+        topContainer->setBaseColor(gcn::Color(128, 128, 128, 64));
 
         // HIKARI_LOG(debug) << "Created render window...";
 
@@ -358,6 +380,8 @@ int main(int argc, char** argv) {
                         quit = true;
                     }
 
+                    guiInput->pushInput(event, window);
+
                     //
                     // Key presses
                     //
@@ -447,6 +471,8 @@ int main(int argc, char** argv) {
                     if(!console.isOpen()) {
                         controller.handleEvent(event);
                     }
+
+                    gui->logic();
                 }
 
                 console.update(dt);
@@ -473,6 +499,7 @@ int main(int argc, char** argv) {
             sf::Sprite renderSprite(screenBuffer.getTexture());
 
             window.draw(renderSprite);
+            gui->draw();
             window.display();
         }
 
