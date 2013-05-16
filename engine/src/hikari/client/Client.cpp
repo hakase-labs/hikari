@@ -239,18 +239,18 @@ int main(int argc, char** argv) {
         std::unique_ptr<gcn::Gui> gui(new gcn::Gui());
         std::unique_ptr<gcn::Container> topContainer(new gcn::Container());
         std::unique_ptr<gcn::Button> guiButton(new gcn::Button("Clicky!"));
-        std::unique_ptr<EnergyGague> energyGague(new EnergyGague());
+        std::unique_ptr<gui::EnergyGague> energyGague(new gui::EnergyGague());
 
         gui->setInput(guiInput.get());
         gui->setGraphics(guiGraphics.get());
         gui->setTop(topContainer.get());
 
-        //energyGague->setSize(8, 80);
-        energyGague->setValue(12);
+        energyGague->setSize(8, 80);
+        energyGague->setValue(35);
 
         topContainer->setSize(256, 240);
         topContainer->setBaseColor(gcn::Color(128, 128, 128, 64));
-        //topContainer->add(guiButton.get(), 10, 20);
+        topContainer->add(guiButton.get(), 10, 70);
         topContainer->add(energyGague.get(), 15, 25);
 
         gcn::FunctorActionListener buttonListener([](const gcn::ActionEvent& actionEvent) {
@@ -409,7 +409,7 @@ int main(int argc, char** argv) {
                         quit = true;
                     }
 
-                    guiInput->pushInput(event, window);
+                    //guiInput->pushInput(event, window);
 
                     //
                     // Key presses
