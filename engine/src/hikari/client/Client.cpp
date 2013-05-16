@@ -58,6 +58,12 @@
 #include <guichan/sfml.hpp>
 #include <guichan/gui.hpp>
 #include <guichan/widgets/container.hpp>
+#include <guichan/widgets/button.hpp>
+#include <guichan/hakase/fixedimagefont.hpp>
+#include <guichan/hakase/functoractionlistener.hpp>
+#include <guichan/actionevent.hpp>
+#include "hikari/client/gui/HikariImageLoader.hpp"
+#include "hikari/client/gui/EnergyGague.hpp"
 
 #include <json/reader.h>
 
@@ -161,24 +167,6 @@ int main(int argc, char** argv) {
         sf::VideoMode videoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP);
         sf::RenderWindow window;
 
-        std::unique_ptr<gcn::SFMLGraphics> guiGraphics(new gcn::SFMLGraphics(window));
-        // std::unique_ptr<gcn::SFMLFont> guiFont(new gcn::SFMLFont("arial.ttf", 10));
-        std::unique_ptr<gcn::SFMLInput> guiInput(new gcn::SFMLInput());
-        std::unique_ptr<gcn::SFMLImageLoader> guiImageLoader(new gcn::SFMLImageLoader());
-
-        gcn::Image::setImageLoader(guiImageLoader.get());
-        // gcn::Widget::setGlobalFont(guiFont.get());
-
-        std::unique_ptr<gcn::Gui> gui(new gcn::Gui());
-        std::unique_ptr<gcn::Container> topContainer(new gcn::Container());
-
-        gui->setInput(guiInput.get());
-        gui->setGraphics(guiGraphics.get());
-        gui->setTop(topContainer.get());
-
-        topContainer->setSize(100, 100);
-        topContainer->setBaseColor(gcn::Color(128, 128, 128, 64));
-
         // HIKARI_LOG(debug) << "Created render window...";
 
         bool showFPS = clientConfig.isFpsDisplayEnabled();
@@ -229,6 +217,47 @@ int main(int argc, char** argv) {
 
         // When this runs all of the scripts have to have been run already
         FactoryHelpers::populateCollectableItemFactory("assets/templates/items.json", std::weak_ptr<ItemFactory>(itemFactory), services);
+
+        std::unique_ptr<gcn::SFMLGraphics> guiGraphics(new gcn::SFMLGraphics(window));
+        std::unique_ptr<gcn::SFMLInput> guiInput(new gcn::SFMLInput());
+        std::unique_ptr<HikariImageLoader> guiImageLoader(new HikariImageLoader(services.locateService<ImageCache>(Services::IMAGECACHE)));
+        // std::unique_ptr<gcn::SFMLFont> guiFont(new gcn::SFMLFont("arial.ttf", 10));
+
+        gcn::Image::setImageLoader(guiImageLoader.get());
+
+        std::unique_ptr<gcn::Image> fontImage(gcn::Image::load("assets/images/gui-font.png"));
+        std::unique_ptr<gcn::FixedImageFont> fixedImageFont(
+            new gcn::FixedImageFont(
+                fontImage.get(),
+                8,
+                " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+            )
+        );
+
+        gcn::Widget::setGlobalFont(fixedImageFont.get());
+
+        std::unique_ptr<gcn::Gui> gui(new gcn::Gui());
+        std::unique_ptr<gcn::Container> topContainer(new gcn::Container());
+        std::unique_ptr<gcn::Button> guiButton(new gcn::Button("Clicky!"));
+        std::unique_ptr<EnergyGague> energyGague(new EnergyGague());
+
+        gui->setInput(guiInput.get());
+        gui->setGraphics(guiGraphics.get());
+        gui->setTop(topContainer.get());
+
+        //energyGague->setSize(8, 80);
+        energyGague->setValue(12);
+
+        topContainer->setSize(256, 240);
+        topContainer->setBaseColor(gcn::Color(128, 128, 128, 64));
+        //topContainer->add(guiButton.get(), 10, 20);
+        topContainer->add(energyGague.get(), 15, 25);
+
+        gcn::FunctorActionListener buttonListener([](const gcn::ActionEvent& actionEvent) {
+            std::cout << "Button clicked! " << actionEvent.getId() << std::endl;
+        });
+
+        guiButton->addActionListener(&buttonListener);
 
         gui::CommandConsole console(guiFont);
 
