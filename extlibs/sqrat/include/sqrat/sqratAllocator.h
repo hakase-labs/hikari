@@ -97,7 +97,7 @@ public:
         return 0;
     }
     static SQInteger Delete(SQUserPointer ptr, SQInteger size) {
-        void* instance = reinterpret_cast<C*>(ptr);
+        C* instance = reinterpret_cast<C*>(ptr);
         delete instance;
         return 0;
     }
