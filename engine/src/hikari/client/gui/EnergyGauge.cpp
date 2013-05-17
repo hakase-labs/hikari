@@ -9,20 +9,11 @@ namespace gui {
 
     const unsigned int EnergyGauge::DEFAULT_WIDTH = 8;
     const unsigned int EnergyGauge::DEFAULT_HEIGHT = 56;
+    const unsigned int EnergyGauge::DEFAULT_BASE_COLOR = 0x000000;
+    const unsigned int EnergyGauge::DEFAULT_FOREGROUND_COLOR = 0xfcd8a8;
+    const unsigned int EnergyGauge::DEFAULT_BACKGROUND_COLOR = 0xfcfcfc;
     const float EnergyGauge::DEFAULT_VALUE = 100.0f;
     const float EnergyGauge::DEFAULT_MAXIMUM_VALUE = 100.0f;
-
-    EnergyGauge::EnergyGauge()
-        : gcn::Widget()
-        , value(DEFAULT_VALUE)
-        , maximumValue(DEFAULT_MAXIMUM_VALUE)
-        , orientation(Orientation::VERTICAL)
-    {
-        setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
-        setBaseColor(gcn::Color(0x000000));
-        setBackgroundColor(gcn::Color(0xfcd8a8));
-        setForegroundColor(gcn::Color(0xfcfcfc));
-    }
 
     EnergyGauge::EnergyGauge(float maximumValue)
         : gcn::Widget()
@@ -30,14 +21,18 @@ namespace gui {
         , maximumValue(maximumValue)
         , orientation(Orientation::VERTICAL)
     {
-        setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
-        setBaseColor(gcn::Color(0x000000));
-        setBackgroundColor(gcn::Color(0xfcd8a8));
-        setForegroundColor(gcn::Color(0xfcfcfc));
+        initialize();
     }
 
     EnergyGauge::~EnergyGauge() {
 
+    }
+
+    void EnergyGauge::initialize() {
+        setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+        setBaseColor(gcn::Color(DEFAULT_BASE_COLOR));
+        setBackgroundColor(gcn::Color(DEFAULT_FOREGROUND_COLOR));
+        setForegroundColor(gcn::Color(DEFAULT_BACKGROUND_COLOR));
     }
 
     float EnergyGauge::getValue() const {

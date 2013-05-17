@@ -18,6 +18,9 @@ namespace gui {
     private:
         static const unsigned int DEFAULT_WIDTH;
         static const unsigned int DEFAULT_HEIGHT;
+        static const unsigned int DEFAULT_BASE_COLOR;
+        static const unsigned int DEFAULT_FOREGROUND_COLOR;
+        static const unsigned int DEFAULT_BACKGROUND_COLOR;
         static const float DEFAULT_VALUE;
         static const float DEFAULT_MAXIMUM_VALUE;
 
@@ -26,9 +29,10 @@ namespace gui {
 
         Orientation::Type orientation;
 
+        void initialize();
+
     public:
-        EnergyGauge();
-        explicit EnergyGauge(float maximumValue);
+        explicit EnergyGauge(float maximumValue = DEFAULT_MAXIMUM_VALUE);
         virtual ~EnergyGauge();
 
         float getValue() const;
