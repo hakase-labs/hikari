@@ -200,7 +200,7 @@ set( ENGINE_SOURCE_FILES
     src/hikari/client/gui/EnergyMeter.cpp
     src/hikari/client/gui/Widget.cpp
     src/hikari/client/gui/HikariImageLoader.cpp
-    src/hikari/client/gui/EnergyGague.cpp
+    src/hikari/client/gui/EnergyGauge.cpp
     src/hikari/core/game/Animation.cpp
     src/hikari/core/game/AnimationFrame.cpp
     src/hikari/core/game/AnimationLoader.cpp

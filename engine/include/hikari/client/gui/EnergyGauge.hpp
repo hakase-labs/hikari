@@ -1,5 +1,5 @@
-#ifndef HIKARI_CLIENT_GUI_ENERGYGAGUE
-#define HIKARI_CLIENT_GUI_ENERGYGAGUE
+#ifndef HIKARI_CLIENT_GUI_ENERGYGAUGE
+#define HIKARI_CLIENT_GUI_ENERGYGAUGE
 
 #include <memory>
 #include <guichan/widget.hpp>
@@ -14,7 +14,7 @@ namespace gcn {
 namespace hikari {
 namespace gui {
 
-    class EnergyGague : public gcn::Widget {
+    class EnergyGauge : public gcn::Widget {
     private:
         static const unsigned int DEFAULT_WIDTH;
         static const unsigned int DEFAULT_HEIGHT;
@@ -27,9 +27,9 @@ namespace gui {
         Orientation::Type orientation;
 
     public:
-        EnergyGague();
-        explicit EnergyGague(float maximumValue);
-        virtual ~EnergyGague();
+        EnergyGauge();
+        explicit EnergyGauge(float maximumValue);
+        virtual ~EnergyGauge();
 
         float getValue() const;
         float getMaximumValue() const;
@@ -46,4 +46,4 @@ namespace gui {
 } // hikari::gui
 } // hikari
 
-#endif // HIKARI_CLIENT_GUI_ENERGYGAGUE
+#endif // HIKARI_CLIENT_GUI_ENERGYGAUGE

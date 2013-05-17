@@ -63,7 +63,7 @@
 #include <guichan/hakase/functoractionlistener.hpp>
 #include <guichan/actionevent.hpp>
 #include "hikari/client/gui/HikariImageLoader.hpp"
-#include "hikari/client/gui/EnergyGague.hpp"
+#include "hikari/client/gui/EnergyGauge.hpp"
 
 #include <json/reader.h>
 
@@ -239,26 +239,26 @@ int main(int argc, char** argv) {
         std::unique_ptr<gcn::Gui> gui(new gcn::Gui());
         std::unique_ptr<gcn::Container> topContainer(new gcn::Container());
         std::unique_ptr<gcn::Button> guiButton(new gcn::Button("Clicky!"));
-        std::unique_ptr<gui::EnergyGague> energyGague(new gui::EnergyGague());
-        std::unique_ptr<gui::EnergyGague> energyGagueH(new gui::EnergyGague());
+        std::unique_ptr<gui::EnergyGauge> energyGauge(new gui::EnergyGauge());
+        std::unique_ptr<gui::EnergyGauge> energyGaugeH(new gui::EnergyGauge());
 
         gui->setInput(guiInput.get());
         gui->setGraphics(guiGraphics.get());
         gui->setTop(topContainer.get());
 
-        energyGague->setSize(8, 80);
-        energyGague->setValue(35);
+        energyGauge->setSize(8, 80);
+        energyGauge->setValue(35);
 
-        energyGagueH->setSize(80, 8);
-        energyGagueH->setValue(35);
-        energyGagueH->setOrientation(gui::Orientation::HORIZONTAL);
-        energyGagueH->setBaseColor(gcn::Color(0x991111));
+        energyGaugeH->setSize(80, 8);
+        energyGaugeH->setValue(35);
+        energyGaugeH->setOrientation(gui::Orientation::HORIZONTAL);
+        energyGaugeH->setBaseColor(gcn::Color(0x991111));
 
         topContainer->setSize(256, 240);
         topContainer->setBaseColor(gcn::Color(128, 128, 128, 64));
         topContainer->add(guiButton.get(), 10, 70);
-        topContainer->add(energyGague.get(), 15, 25);
-        topContainer->add(energyGagueH.get(), 15, 25 - 9);
+        topContainer->add(energyGauge.get(), 15, 25);
+        topContainer->add(energyGaugeH.get(), 15, 25 - 9);
 
         gcn::FunctorActionListener buttonListener([](const gcn::ActionEvent& actionEvent) {
             std::cout << "Button clicked! " << actionEvent.getId() << std::endl;

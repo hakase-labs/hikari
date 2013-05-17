@@ -1,4 +1,4 @@
-#include "hikari/client/gui/EnergyGague.hpp"
+#include "hikari/client/gui/EnergyGauge.hpp"
 
 #include <guichan/graphics.hpp>
 #include <guichan/color.hpp>
@@ -7,12 +7,12 @@
 namespace hikari {
 namespace gui {
 
-    const unsigned int EnergyGague::DEFAULT_WIDTH = 8;
-    const unsigned int EnergyGague::DEFAULT_HEIGHT = 56;
-    const float EnergyGague::DEFAULT_VALUE = 100.0f;
-    const float EnergyGague::DEFAULT_MAXIMUM_VALUE = 100.0f;
+    const unsigned int EnergyGauge::DEFAULT_WIDTH = 8;
+    const unsigned int EnergyGauge::DEFAULT_HEIGHT = 56;
+    const float EnergyGauge::DEFAULT_VALUE = 100.0f;
+    const float EnergyGauge::DEFAULT_MAXIMUM_VALUE = 100.0f;
 
-    EnergyGague::EnergyGague()
+    EnergyGauge::EnergyGauge()
         : gcn::Widget()
         , value(DEFAULT_VALUE)
         , maximumValue(DEFAULT_MAXIMUM_VALUE)
@@ -24,7 +24,7 @@ namespace gui {
         setForegroundColor(gcn::Color(0xfcfcfc));
     }
 
-    EnergyGague::EnergyGague(float maximumValue)
+    EnergyGauge::EnergyGauge(float maximumValue)
         : gcn::Widget()
         , value(DEFAULT_VALUE)
         , maximumValue(maximumValue)
@@ -36,35 +36,35 @@ namespace gui {
         setForegroundColor(gcn::Color(0xfcfcfc));
     }
 
-    EnergyGague::~EnergyGague() {
+    EnergyGauge::~EnergyGauge() {
 
     }
 
-    float EnergyGague::getValue() const {
+    float EnergyGauge::getValue() const {
         return value;
     }
 
-    float EnergyGague::getMaximumValue() const {
+    float EnergyGauge::getMaximumValue() const {
         return maximumValue;
     }
 
-    Orientation::Type EnergyGague::getOrientation() const {
+    Orientation::Type EnergyGauge::getOrientation() const {
         return orientation;
     }
 
-    void EnergyGague::setValue(float value) {
+    void EnergyGauge::setValue(float value) {
         this->value = value;
     }
 
-    void EnergyGague::setMaximumValue(float maximumValue) {
+    void EnergyGauge::setMaximumValue(float maximumValue) {
         this->maximumValue = maximumValue;
     }
 
-    void EnergyGague::setOrientation(Orientation::Type orientation) {
+    void EnergyGauge::setOrientation(Orientation::Type orientation) {
         this->orientation = orientation;
     }
 
-    void EnergyGague::draw(gcn::Graphics* graphics) {
+    void EnergyGauge::draw(gcn::Graphics* graphics) {
         int highlightThickness = (getOrientation() == Orientation::VERTICAL ? getWidth() : getHeight() ) / 4;   // width of the highlight stripe, typically 2 pixels
         const float percentageFilled = value / maximumValue;
 
