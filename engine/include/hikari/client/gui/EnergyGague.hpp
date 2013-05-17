@@ -25,7 +25,6 @@ namespace gui {
         float maximumValue;
 
         Orientation::Type orientation;
-        //gcn::Rectangle capacityOverlay;
 
     public:
         EnergyGague();

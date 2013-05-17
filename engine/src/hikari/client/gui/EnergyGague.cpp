@@ -65,14 +65,18 @@ namespace gui {
     }
 
     void EnergyGague::draw(gcn::Graphics* graphics) {
-        const int highlightWidth = getWidth() / 4;   // width of the highlight stripe, typically 2 pixels
+        int highlightThickness = (getOrientation() == Orientation::VERTICAL ? getWidth() : getHeight() ) / 4;   // width of the highlight stripe, typically 2 pixels
+        const float percentageFilled = value / maximumValue;
+
+        // Draw the background of the gague
+        graphics->setColor(getBackgroundColor());
+        graphics->fillRectangle(0, 0, getWidth(), getHeight());
 
         if(getOrientation() == Orientation::VERTICAL) {
-            graphics->setColor(getBackgroundColor());
-            graphics->fillRectangle(0, 0, getWidth(), getHeight());
-
+            // Draw the highlight stripe
             graphics->setColor(getForegroundColor());
-            graphics->fillRectangle((getWidth() / 2) - highlightWidth / 2, 0, highlightWidth, getHeight());
+            const int highlightStartX = (getWidth() / 2) - (highlightThickness / 2);
+            graphics->fillRectangle(highlightStartX, 0, highlightThickness, getHeight());
 
             graphics->setColor(getBaseColor());
         
@@ -84,10 +88,7 @@ namespace gui {
             }
 
             // Draw overlay rectangle
-            float percentageFilled = value / maximumValue;
-
             int fillHeight = getHeight() - static_cast<int>(percentageFilled * static_cast<float>(getHeight()));
-
             graphics->fillRectangle(0, 0, getWidth(), fillHeight);
 
             // Draw border
@@ -95,6 +96,26 @@ namespace gui {
             graphics->drawLine(getWidth() - 1, 0, getWidth() - 1, getHeight());
         } else {
             // Draw horizontal orientation
+            graphics->setColor(getForegroundColor());
+            const int highlightStartY = (getHeight() / 2) - (highlightThickness / 2);
+            graphics->fillRectangle(0, highlightStartY, getWidth(), highlightThickness);
+
+            graphics->setColor(getBaseColor());
+        
+            // Draw horizontal ticks
+            for(unsigned int column = 0, width = getWidth(); column < width; ++column) {
+                if(column % 2 == 1) {
+                    graphics->drawLine(column, 0, column, getHeight());
+                }
+            }
+
+            // Draw overlay rectangle
+            int fillWidth = getWidth() - static_cast<int>(percentageFilled * static_cast<float>(getWidth()));
+            graphics->fillRectangle(0, 0, fillWidth, getHeight());
+
+            // Draw border
+            graphics->drawLine(0, 0, getWidth(), 0);
+            graphics->drawLine(0, getHeight() - 1, getWidth(), getHeight() - 1);
         }
     }
 
