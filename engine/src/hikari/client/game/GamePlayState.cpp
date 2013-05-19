@@ -13,6 +13,7 @@
 #include "hikari/client/game/objects/ItemFactory.hpp"
 #include "hikari/client/game/Effect.hpp"
 #include "hikari/client/gui/EnergyMeter.hpp"
+#include "hikari/client/gui/EnergyGauge.hpp"
 #include "hikari/client/Services.hpp"
 #include "hikari/client/audio/AudioService.hpp"
 #include "hikari/client/game/events/EventManagerImpl.hpp"
@@ -36,7 +37,6 @@
 #include "hikari/core/util/ReferenceWrapper.hpp"
 #include "hikari/core/util/ServiceLocator.hpp"
 #include "hikari/core/util/StringUtils.hpp"
-
 #include "hikari/core/util/Log.hpp"
 
 #include <json/value.h>
@@ -44,6 +44,8 @@
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/View.hpp>
 #include <SFML/Window/Event.hpp>
+
+#include <guichan/widgets/container.hpp>
 
 #include <algorithm>
 #include <memory>
@@ -71,6 +73,8 @@ namespace hikari {
         , hudCurrentWeaponMeter(nullptr)
         , mapRenderer(new MapRenderer(nullptr, nullptr))
         , subState(nullptr)
+        , guiContiner(new gcn::Container())
+        , guiEnergyGauge(new gui::EnergyGauge())
         , maps()
         , itemSpawners()
         , deactivatedItemSpawners()
@@ -148,8 +152,8 @@ namespace hikari {
         const auto itemFactoryWeak = services.locateService<ItemFactory>("ItemFactory");
         world.setItemFactory(itemFactoryWeak);
 
-        subState.reset(new ReadySubState(*this));
-        subState->enter();
+        //subState.reset(new ReadySubState(*this));
+        //subState->enter();
     }
 
     GamePlayState::~GamePlayState() {
@@ -793,6 +797,7 @@ namespace hikari {
     //
     GamePlayState::PlayingSubState::PlayingSubState(GamePlayState & gamePlayState)
         : SubState(gamePlayState)
+        , postDeathTimer(0.0f)
     {
 
     }
@@ -804,6 +809,7 @@ namespace hikari {
     void GamePlayState::PlayingSubState::enter() {
         gamePlayState.drawHeroEnergyMeter = true;
         gamePlayState.isHeroAlive = true;
+        postDeathTimer = 0.0f;
     }
 
     void GamePlayState::PlayingSubState::exit() {
@@ -855,17 +861,24 @@ namespace hikari {
                 }
         });
 
-        //
-        // Update hero
-        //
-        if(gamePlayState.hero) {
-            gamePlayState.hero->update(dt);
-        }
-
         // Hero died so we need to restart
         if(!gamePlayState.isHeroAlive) {
-            gamePlayState.changeSubState(std::unique_ptr<SubState>(new ReadySubState(gamePlayState)));
-            return;
+            postDeathTimer += dt;
+
+            // Wait 1 second after you died and then restart
+            if(postDeathTimer >= 2.0f) {
+                // gamePlayState.changeSubState(std::unique_ptr<SubState>(new ReadySubState(gamePlayState)));
+                gamePlayState.restartStage();
+                return;
+            }
+        } else {
+            // TODO: Note to self -- this seems pretty convoluted... probably change this soon please.
+            //
+            // Update hero
+            //
+            if(gamePlayState.hero) {
+                gamePlayState.hero->update(dt);
+            }
         }
 
         //
@@ -919,7 +932,11 @@ namespace hikari {
     void GamePlayState::PlayingSubState::render(sf::RenderTarget &target) {
         gamePlayState.renderMap(target);
         gamePlayState.renderEntities(target);
-        gamePlayState.renderHero(target);
+
+        if(gamePlayState.isHeroAlive) {
+            gamePlayState.renderHero(target);
+        }
+    
         gamePlayState.renderHud(target);
     }
 

@@ -369,7 +369,7 @@ namespace hikari {
         //
         // Check if we hit spikes; if we did then we're dead!
         //
-        if(info.isCollisionY && TileAttribute::hasAttribute(info.tileType, TileAttribute::SPIKE)) {
+        if(TileAttribute::hasAttribute(info.tileType, TileAttribute::SPIKE)) {
             if(auto events = getEventManager().lock()) {
                 EventDataPtr imDeadNow(new EntityDeathEventData(getId()));
                 events->queueEvent(imDeadNow);
