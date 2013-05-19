@@ -58,6 +58,7 @@
 #include "guichan/widget.hpp"
 
 #include <algorithm>
+#include <iterator>
 
 namespace gcn
 {
