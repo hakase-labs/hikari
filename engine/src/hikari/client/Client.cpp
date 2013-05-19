@@ -221,7 +221,6 @@ int main(int argc, char** argv) {
         std::unique_ptr<gcn::SFMLGraphics> guiGraphics(new gcn::SFMLGraphics(window));
         std::unique_ptr<gcn::SFMLInput> guiInput(new gcn::SFMLInput());
         std::unique_ptr<HikariImageLoader> guiImageLoader(new HikariImageLoader(services.locateService<ImageCache>(Services::IMAGECACHE)));
-        // std::unique_ptr<gcn::SFMLFont> guiFont(new gcn::SFMLFont("arial.ttf", 10));
 
         gcn::Image::setImageLoader(guiImageLoader.get());
 
@@ -238,33 +237,13 @@ int main(int argc, char** argv) {
 
         std::unique_ptr<gcn::Gui> gui(new gcn::Gui());
         std::unique_ptr<gcn::Container> topContainer(new gcn::Container());
-        std::unique_ptr<gcn::Button> guiButton(new gcn::Button("Clicky!"));
-        std::unique_ptr<gui::EnergyGauge> energyGauge(new gui::EnergyGauge());
-        std::unique_ptr<gui::EnergyGauge> energyGaugeH(new gui::EnergyGauge());
 
         gui->setInput(guiInput.get());
         gui->setGraphics(guiGraphics.get());
         gui->setTop(topContainer.get());
 
-        energyGauge->setSize(8, 80);
-        energyGauge->setValue(35);
-
-        energyGaugeH->setSize(80, 8);
-        energyGaugeH->setValue(35);
-        energyGaugeH->setOrientation(gui::Orientation::HORIZONTAL);
-        energyGaugeH->setBaseColor(gcn::Color(0x991111));
-
-        topContainer->setSize(256, 240);
-        topContainer->setBaseColor(gcn::Color(128, 128, 128, 64));
-        topContainer->add(guiButton.get(), 10, 70);
-        topContainer->add(energyGauge.get(), 15, 25);
-        topContainer->add(energyGaugeH.get(), 15, 25 - 9);
-
-        gcn::FunctorActionListener buttonListener([](const gcn::ActionEvent& actionEvent) {
-            std::cout << "Button clicked! " << actionEvent.getId() << std::endl;
-        });
-
-        guiButton->addActionListener(&buttonListener);
+        topContainer->setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+        topContainer->setBaseColor(gcn::Color(255, 255, 255, 0));
 
         gui::CommandConsole console(guiFont);
 
