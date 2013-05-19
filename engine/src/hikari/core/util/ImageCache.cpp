@@ -42,7 +42,7 @@ namespace hikari {
             sf::Image imageData;
 
             // Fill an image buffer with pixel data
-            if(imageData.loadFromMemory(buffer.get(), length)) {
+            if(imageData.loadFromMemory(buffer.get(), static_cast<size_t>(length))) {
                 if(enableMask) {
                     imageData.createMaskFromColor(maskColor);
                 }
