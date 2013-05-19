@@ -13,6 +13,7 @@
 #include "hikari/client/game/objects/ItemFactory.hpp"
 #include "hikari/client/game/Effect.hpp"
 #include "hikari/client/gui/EnergyMeter.hpp"
+#include "hikari/client/gui/EnergyGauge.hpp"
 #include "hikari/client/Services.hpp"
 #include "hikari/client/audio/AudioService.hpp"
 #include "hikari/client/game/events/EventManagerImpl.hpp"
@@ -36,7 +37,6 @@
 #include "hikari/core/util/ReferenceWrapper.hpp"
 #include "hikari/core/util/ServiceLocator.hpp"
 #include "hikari/core/util/StringUtils.hpp"
-
 #include "hikari/core/util/Log.hpp"
 
 #include <json/value.h>
@@ -44,6 +44,8 @@
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/View.hpp>
 #include <SFML/Window/Event.hpp>
+
+#include <guichan/widgets/container.hpp>
 
 #include <algorithm>
 #include <memory>
@@ -71,6 +73,8 @@ namespace hikari {
         , hudCurrentWeaponMeter(nullptr)
         , mapRenderer(new MapRenderer(nullptr, nullptr))
         , subState(nullptr)
+        , guiContiner(new gcn::Container())
+        , guiEnergyGauge(new gui::EnergyGauge())
         , maps()
         , itemSpawners()
         , deactivatedItemSpawners()
