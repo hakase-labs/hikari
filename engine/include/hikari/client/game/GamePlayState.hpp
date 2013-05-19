@@ -10,6 +10,7 @@
 #include "hikari/client/game/GameWorld.hpp"
 #include "hikari/core/game/map/RoomTransition.hpp"
 
+
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/View.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
@@ -28,10 +29,15 @@ namespace Json {
     class Value;
 }
 
+namespace gcn {
+    class Container;
+}
+
 namespace hikari {
 
     namespace gui {
         class EnergyMeter;
+        class EnergyGauge;
     }
 
     class AudioService;
@@ -72,6 +78,8 @@ namespace hikari {
         std::shared_ptr<gui::EnergyMeter> hudCurrentWeaponMeter;
         std::unique_ptr<MapRenderer> mapRenderer;
         std::unique_ptr<SubState> subState;
+        std::unique_ptr<gcn::Container> guiContiner;
+        std::unique_ptr<gui::EnergyGauge> guiEnergyGauge;
         std::map< std::string, std::shared_ptr<Map> > maps;
         std::vector<std::weak_ptr<Spawner>> itemSpawners;
         std::vector<std::weak_ptr<Spawner>> deactivatedItemSpawners;
@@ -215,6 +223,8 @@ namespace hikari {
          * Actual game play, player-controlled movements, etc.
          */
         class PlayingSubState : public SubState {
+        private:
+            float postDeathTimer; // A timer that counts after you die
         public:
             PlayingSubState(GamePlayState & gamePlayState);
             virtual ~PlayingSubState();

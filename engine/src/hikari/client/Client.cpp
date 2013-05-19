@@ -55,6 +55,16 @@
 
 #include <SFML/Graphics.hpp>
 
+#include <guichan/sfml.hpp>
+#include <guichan/gui.hpp>
+#include <guichan/widgets/container.hpp>
+#include <guichan/widgets/button.hpp>
+#include <guichan/hakase/fixedimagefont.hpp>
+#include <guichan/hakase/functoractionlistener.hpp>
+#include <guichan/actionevent.hpp>
+#include "hikari/client/gui/HikariImageLoader.hpp"
+#include "hikari/client/gui/EnergyGauge.hpp"
+
 #include <json/reader.h>
 
 #include <algorithm>
@@ -208,6 +218,33 @@ int main(int argc, char** argv) {
         // When this runs all of the scripts have to have been run already
         FactoryHelpers::populateCollectableItemFactory("assets/templates/items.json", std::weak_ptr<ItemFactory>(itemFactory), services);
 
+        std::unique_ptr<gcn::SFMLGraphics> guiGraphics(new gcn::SFMLGraphics(window));
+        std::unique_ptr<gcn::SFMLInput> guiInput(new gcn::SFMLInput());
+        std::unique_ptr<HikariImageLoader> guiImageLoader(new HikariImageLoader(services.locateService<ImageCache>(Services::IMAGECACHE)));
+
+        gcn::Image::setImageLoader(guiImageLoader.get());
+
+        std::unique_ptr<gcn::Image> fontImage(gcn::Image::load("assets/images/gui-font.png"));
+        std::unique_ptr<gcn::FixedImageFont> fixedImageFont(
+            new gcn::FixedImageFont(
+                fontImage.get(),
+                8,
+                " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+            )
+        );
+
+        gcn::Widget::setGlobalFont(fixedImageFont.get());
+
+        std::unique_ptr<gcn::Gui> gui(new gcn::Gui());
+        std::unique_ptr<gcn::Container> topContainer(new gcn::Container());
+
+        gui->setInput(guiInput.get());
+        gui->setGraphics(guiGraphics.get());
+        gui->setTop(topContainer.get());
+
+        topContainer->setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+        topContainer->setBaseColor(gcn::Color(255, 255, 255, 0));
+
         gui::CommandConsole console(guiFont);
 
         // Create and initialize the game controller and game states
@@ -358,6 +395,8 @@ int main(int argc, char** argv) {
                         quit = true;
                     }
 
+                    //guiInput->pushInput(event, window);
+
                     //
                     // Key presses
                     //
@@ -447,6 +486,8 @@ int main(int argc, char** argv) {
                     if(!console.isOpen()) {
                         controller.handleEvent(event);
                     }
+
+                    gui->logic();
                 }
 
                 console.update(dt);
@@ -473,6 +514,7 @@ int main(int argc, char** argv) {
             sf::Sprite renderSprite(screenBuffer.getTexture());
 
             window.draw(renderSprite);
+            gui->draw();
             window.display();
         }
 

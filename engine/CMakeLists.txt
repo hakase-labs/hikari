@@ -66,7 +66,74 @@ set( SQUIRREL_FILES
 
 set( SQRAT_DIR "${PROJECT_SOURCE_DIR}/extlibs/sqrat" )
 
-set( FASTDELEGATE_DIR "${PROJECT_SOURCE_DIR}/extlibs/fastdelegate")
+set( FASTDELEGATE_DIR "${PROJECT_SOURCE_DIR}/extlibs/fastdelegate" )
+
+set( GUICHAN_DIR "${PROJECT_SOURCE_DIR}/extlibs/guichan" )
+set( GUICHAN_SOURCE_FILES
+    # Guichan core
+    ${GUICHAN_DIR}/src/actionevent.cpp
+    ${GUICHAN_DIR}/src/genericinput.cpp
+    ${GUICHAN_DIR}/src/keyinput.cpp
+    ${GUICHAN_DIR}/src/cliprectangle.cpp
+    ${GUICHAN_DIR}/src/graphics.cpp
+    ${GUICHAN_DIR}/src/mouseevent.cpp
+    ${GUICHAN_DIR}/src/color.cpp
+    ${GUICHAN_DIR}/src/gui.cpp
+    ${GUICHAN_DIR}/src/mouseinput.cpp
+    ${GUICHAN_DIR}/src/containerevent.cpp
+    ${GUICHAN_DIR}/src/guichan.cpp
+    ${GUICHAN_DIR}/src/rectangle.cpp
+    ${GUICHAN_DIR}/src/defaultfont.cpp
+    ${GUICHAN_DIR}/src/image.cpp
+    ${GUICHAN_DIR}/src/selectionevent.cpp
+    ${GUICHAN_DIR}/src/event.cpp
+    ${GUICHAN_DIR}/src/imagefont.cpp
+    ${GUICHAN_DIR}/src/text.cpp
+    ${GUICHAN_DIR}/src/exception.cpp
+    ${GUICHAN_DIR}/src/inputevent.cpp
+    ${GUICHAN_DIR}/src/widget.cpp
+    ${GUICHAN_DIR}/src/focushandler.cpp
+    ${GUICHAN_DIR}/src/key.cpp
+    ${GUICHAN_DIR}/src/font.cpp
+    ${GUICHAN_DIR}/src/keyevent.cpp
+
+    # Guichan widgets
+    ${GUICHAN_DIR}/src/widgets/button.cpp
+    ${GUICHAN_DIR}/src/widgets/checkbox.cpp
+    ${GUICHAN_DIR}/src/widgets/container.cpp
+    ${GUICHAN_DIR}/src/widgets/dropdown.cpp
+    ${GUICHAN_DIR}/src/widgets/icon.cpp
+    ${GUICHAN_DIR}/src/widgets/imagebutton.cpp
+    ${GUICHAN_DIR}/src/widgets/label.cpp
+    ${GUICHAN_DIR}/src/widgets/listbox.cpp
+    ${GUICHAN_DIR}/src/widgets/radiobutton.cpp
+    ${GUICHAN_DIR}/src/widgets/scrollarea.cpp
+    ${GUICHAN_DIR}/src/widgets/slider.cpp
+    ${GUICHAN_DIR}/src/widgets/tab.cpp
+    ${GUICHAN_DIR}/src/widgets/tabbedarea.cpp
+    ${GUICHAN_DIR}/src/widgets/textbox.cpp
+    ${GUICHAN_DIR}/src/widgets/textfield.cpp
+    ${GUICHAN_DIR}/src/widgets/window.cpp
+)
+
+set( GUICHAN_SFML_DIR "${PROJECT_SOURCE_DIR}/extlibs/guichan-sfml" )
+set( GUICHAN_SFML_SOURCE_FILES
+    ${GUICHAN_SFML_DIR}/src/guichan/sfml.cpp
+    ${GUICHAN_SFML_DIR}/src/guichan/sfml/sfmlfont.cpp
+    ${GUICHAN_SFML_DIR}/src/guichan/sfml/sfmlgraphics.cpp
+    ${GUICHAN_SFML_DIR}/src/guichan/sfml/sfmlimage.cpp
+    ${GUICHAN_SFML_DIR}/src/guichan/sfml/sfmlimageloader.cpp
+    ${GUICHAN_SFML_DIR}/src/guichan/sfml/sfmlinput.cpp
+)
+
+set( GUICHAN_HAKASE_DIR "${PROJECT_SOURCE_DIR}/extlibs/guichan-hakase" )
+set( GUICHAN_HAKASE_SOURCE_FILES
+    ${GUICHAN_HAKASE_DIR}/src/guichan/hakase/fixedimagefont.cpp
+    ${GUICHAN_HAKASE_DIR}/src/guichan/hakase/functoractionlistener.cpp
+    ${GUICHAN_HAKASE_DIR}/src/guichan/hakase/functordeathlistener.cpp
+    ${GUICHAN_HAKASE_DIR}/src/guichan/hakase/functorfocuslistener.cpp
+    ${GUICHAN_HAKASE_DIR}/src/guichan/hakase/functorwidgetlistener.cpp
+)
 
 set( ENGINE_SOURCE_FILES
     src/hikari/client/ClientConfig.cpp
@@ -132,6 +199,8 @@ set( ENGINE_SOURCE_FILES
     src/hikari/client/gui/CommandConsole.cpp
     src/hikari/client/gui/EnergyMeter.cpp
     src/hikari/client/gui/Widget.cpp
+    src/hikari/client/gui/HikariImageLoader.cpp
+    src/hikari/client/gui/EnergyGauge.cpp
     src/hikari/core/game/Animation.cpp
     src/hikari/core/game/AnimationFrame.cpp
     src/hikari/core/game/AnimationLoader.cpp
@@ -164,6 +233,9 @@ set( HIKARI_SOURCE_FILES
     ${JSONCPP_SOURCE_FILES}
     ${PHYSFS_STREAM_SOURCE_FILES}
     ${SQUIRREL_FILES}
+    ${GUICHAN_SOURCE_FILES}
+    ${GUICHAN_SFML_SOURCE_FILES}
+    ${GUICHAN_HAKASE_SOURCE_FILES}
     ${ENGINE_SOURCE_FILES}
 )
 
@@ -178,6 +250,10 @@ set( INCLUDE_DIRS
     ${SQUIRREL_DIR}/sqstdlib
     ${SQRAT_DIR}/include
     ${FASTDELEGATE_DIR}
+    ${GUICHAN_DIR}/include
+    ${GUICHAN_DIR}/include/guichan
+    ${GUICHAN_SFML_DIR}/include
+    ${GUICHAN_HAKASE_DIR}/include
 )
 
 include_directories( ${INCLUDE_DIRS} )
