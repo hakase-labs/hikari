@@ -64,6 +64,7 @@
 #include <guichan/actionevent.hpp>
 #include "hikari/client/gui/HikariImageLoader.hpp"
 #include "hikari/client/gui/EnergyGauge.hpp"
+#include "hikari/client/gui/Panel.hpp"
 
 #include <json/reader.h>
 
@@ -167,6 +168,18 @@ int main(int argc, char** argv) {
         sf::VideoMode videoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP);
         sf::RenderWindow window;
 
+        //
+        // Create our window
+        // We have to create the window before we load any textures since there is
+        // peculiar behavior with texture on Mac.
+        //
+        // Another aolution is to cause `ensureGlContext()` to get called.
+        //
+        window.create(videoMode, APPLICATION_TITLE, sf::Style::Default);
+        window.setActive(true);
+        window.setVerticalSyncEnabled(clientConfig.isVsyncEnabled());
+        window.setKeyRepeatEnabled(false);
+
         // HIKARI_LOG(debug) << "Created render window...";
 
         bool showFPS = clientConfig.isFpsDisplayEnabled();
@@ -235,16 +248,6 @@ int main(int argc, char** argv) {
 
         gcn::Widget::setGlobalFont(fixedImageFont.get());
 
-        std::unique_ptr<gcn::Gui> gui(new gcn::Gui());
-        std::unique_ptr<gcn::Container> topContainer(new gcn::Container());
-
-        gui->setInput(guiInput.get());
-        gui->setGraphics(guiGraphics.get());
-        gui->setTop(topContainer.get());
-
-        topContainer->setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
-        topContainer->setBaseColor(gcn::Color(255, 255, 255, 0));
-
         gui::CommandConsole console(guiFont);
 
         // Create and initialize the game controller and game states
@@ -287,6 +290,20 @@ int main(int argc, char** argv) {
         controller.addState(gamePlayState->getName(), gamePlayState);
 
         controller.setState(game.get("initial-state", "default").asString());
+
+        std::unique_ptr<gcn::Gui> gui(new gcn::Gui());
+        std::unique_ptr<gcn::Container> topContainer(new gui::Panel());
+        std::unique_ptr<gui::EnergyGauge> guiEnergyGauge(new gui::EnergyGauge(56));
+
+        gui->setInput(guiInput.get());
+        gui->setGraphics(guiGraphics.get());
+        gui->setTop(topContainer.get());
+
+        topContainer->setSize(SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4);
+        topContainer->setX(30);
+        topContainer->setY(30);
+        topContainer->setBaseColor(gcn::Color(0, 0, 0));
+        topContainer->add(guiEnergyGauge.get(), 20, 20);
 
         //
         // Register some commands
@@ -338,14 +355,6 @@ int main(int argc, char** argv) {
             const std::string& stateName = args.at(0);
             controller.setState(stateName);
         });
-
-        //
-        // Create our window
-        //
-        window.create(videoMode, APPLICATION_TITLE, sf::Style::Default);
-        window.setActive(true);
-        window.setVerticalSyncEnabled(clientConfig.isVsyncEnabled());
-        window.setKeyRepeatEnabled(false);
 
         //
         // Create a "buffer" texture -- this allows us to apply screen-wide shader effects.
@@ -549,14 +558,18 @@ void initConfiguration(const std::string &fileName, Json::Value &value) {
     using namespace hikari;
     HIKARI_LOG(debug) << "Loading configuration file...";
 
-    auto fs = FileSystem::openFile(fileName);
-    Json::Reader reader;
+    if(FileSystem::exists(fileName)) {
+        auto fs = FileSystem::openFile(fileName);
+        Json::Reader reader;
 
-    bool success = reader.parse(*fs, value, false);
+        bool success = reader.parse(*fs, value, false);
 
-    if(!success) {
-        HIKARI_LOG(info) << "Configuration file could not be found or was corrupt, using defaults.";
-        // Set defaults...
+        if(!success) {
+            HIKARI_LOG(info) << "Configuration file could not be found or was corrupt, using defaults.";
+            // Set defaults...
+        }
+    } else {
+        HIKARI_LOG(fatal) << "Couldn't find configuration file '" << fileName << "'";
     }
 }
 
@@ -564,16 +577,20 @@ void initGame(const std::string &fileName, Json::Value &value) {
     using namespace hikari;
     HIKARI_LOG(debug) << "Loading game file...";
 
-    auto fs = FileSystem::openFile(fileName);
-    Json::Reader reader;
+    if(FileSystem::exists(fileName)) {
+        auto fs = FileSystem::openFile(fileName);
+        Json::Reader reader;
 
-    HIKARI_LOG(debug) << "Opened game file...";
+        HIKARI_LOG(debug) << "Opened game file...";
 
-    bool success = reader.parse(*fs, value, false);
+        bool success = reader.parse(*fs, value, false);
 
-    if(!success) {
-        HIKARI_LOG(info) << "Game file could not be found or was corrupt, uh oh!";
+        if(!success) {
+            HIKARI_LOG(info) << "Game file could not be found or was corrupt, uh oh!";
+        } else {
+            HIKARI_LOG(debug) << "Game file loaded!";
+        }
     } else {
-        HIKARI_LOG(debug) << "Game file loaded!";
+        HIKARI_LOG(fatal) << "Couldn't find game file '" << fileName << "'";
     }
 }

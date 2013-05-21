@@ -104,7 +104,7 @@ namespace hikari {
         //
         auto energyMeterTexture = imageCache->get("assets/images/meter-overlay.png");
 
-        sf::Sprite energyMeterSprite(*energyMeterTexture);
+        sf::Sprite energyMeterSprite(*energyMeterTexture.get());
         energyMeterSprite.setTextureRect(sf::IntRect(0, 0, 8, 56));
 
         hudBossEnergyMeter = std::make_shared<EnergyMeter>(energyMeterSprite, 56.0f);
