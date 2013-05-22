@@ -59,6 +59,7 @@
 #include <guichan/gui.hpp>
 #include <guichan/widgets/container.hpp>
 #include <guichan/widgets/button.hpp>
+#include <guichan/widgets/label.hpp>
 #include <guichan/hakase/fixedimagefont.hpp>
 #include <guichan/hakase/functoractionlistener.hpp>
 #include <guichan/actionevent.hpp>
@@ -233,7 +234,7 @@ int main(int argc, char** argv) {
 
         std::unique_ptr<gcn::SFMLGraphics> guiGraphics(new gcn::SFMLGraphics(window));
         std::unique_ptr<gcn::SFMLInput> guiInput(new gcn::SFMLInput());
-        std::unique_ptr<HikariImageLoader> guiImageLoader(new HikariImageLoader(services.locateService<ImageCache>(Services::IMAGECACHE)));
+        std::unique_ptr<gui::HikariImageLoader> guiImageLoader(new gui::HikariImageLoader(services.locateService<ImageCache>(Services::IMAGECACHE)));
 
         gcn::Image::setImageLoader(guiImageLoader.get());
 
@@ -294,6 +295,7 @@ int main(int argc, char** argv) {
         std::unique_ptr<gcn::Gui> gui(new gcn::Gui());
         std::unique_ptr<gcn::Container> topContainer(new gui::Panel());
         std::unique_ptr<gui::EnergyGauge> guiEnergyGauge(new gui::EnergyGauge(56));
+        std::unique_ptr<gcn::Label> guiFpsLabel(new gcn::Label());
 
         gui->setInput(guiInput.get());
         gui->setGraphics(guiGraphics.get());
@@ -304,6 +306,7 @@ int main(int argc, char** argv) {
         topContainer->setY(30);
         topContainer->setBaseColor(gcn::Color(0, 0, 0));
         topContainer->add(guiEnergyGauge.get(), 20, 20);
+        topContainer->add(guiFpsLabel.get(), 3, 3);
 
         //
         // Register some commands
@@ -496,7 +499,9 @@ int main(int argc, char** argv) {
                         controller.handleEvent(event);
                     }
 
-                    gui->logic();
+                    if(gui->getTop()) {
+                        gui->logic();    
+                    }
                 }
 
                 console.update(dt);
@@ -514,6 +519,8 @@ int main(int argc, char** argv) {
             if(showFPS) {
                 guiFont->renderText(screenBuffer, "FPS:", 8, 8);
                 guiFont->renderText(screenBuffer, StringUtils::toString<float>(fps), 40, 8);
+                guiFpsLabel->setCaption(StringUtils::toString<float>(fps));
+                guiFpsLabel->adjustSize();
             }
 
             console.render(screenBuffer);
@@ -523,7 +530,11 @@ int main(int argc, char** argv) {
             sf::Sprite renderSprite(screenBuffer.getTexture());
 
             window.draw(renderSprite);
-            gui->draw();
+
+            if(gui->getTop()) {
+                gui->draw();
+            }
+
             window.display();
         }
 

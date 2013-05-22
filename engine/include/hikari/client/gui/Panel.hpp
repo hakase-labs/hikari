@@ -21,6 +21,9 @@ namespace gui {
         Panel();
         virtual ~Panel();
 
+        void setInnerBorderColor(const gcn::Color & innerBorderColor);
+        const gcn::Color & getInnerBorderColor() const;
+
         //Inherited from Widget
         virtual void draw(gcn::Graphics* graphics);
     };

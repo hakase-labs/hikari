@@ -19,10 +19,16 @@ namespace gui {
 
     }
 
-    void Panel::drawInnerBorder(gcn::Graphics* graphics) const {
-        graphics->setColor(innerBorderColor);
+    void Panel::setInnerBorderColor(const gcn::Color & innerBorderColor) {
+        this->innerBorderColor = innerBorderColor;
+    }
 
-        // Draw inner border
+    const gcn::Color & Panel::getInnerBorderColor() const {
+        return innerBorderColor;
+    }
+
+    void Panel::drawInnerBorder(gcn::Graphics* graphics) const {
+        graphics->setColor(getInnerBorderColor());
         graphics->drawRectangle(gcn::Rectangle(1, 1, getWidth() - 2, getHeight() - 2));
         graphics->drawRectangle(gcn::Rectangle(2, 2, getWidth() - 4, getHeight() - 4));
     }
@@ -30,6 +36,10 @@ namespace gui {
     void Panel::draw(gcn::Graphics* graphics) {
         gcn::Container::draw(graphics);
         drawInnerBorder(graphics);
+
+        if(drawShadow) {
+            // Draw the shadow
+        }
     }
 
 } // hikari::gui

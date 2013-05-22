@@ -10,6 +10,7 @@ namespace gcn {
 }
 
 namespace hikari {
+namespace gui {
 
     class HikariImageLoader : public gcn::ImageLoader {
     private:
@@ -24,6 +25,7 @@ namespace hikari {
         ImageCache::Resource loadTextureFromCache(const std::string& filename);
     };
 
+} // hikari::gui
 } // hikari
 
 #endif // HIKARI_CLIENT_GUI_HIKARIIMAGELOADER
