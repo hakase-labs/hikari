@@ -47,11 +47,11 @@ namespace hikari {
         // TODO: This needs to be refactored to be safer and things like that
         // TODO: Need a utility method to load sf:Sprite from JSON
         if(auto imageCachePtr = imageCache.lock()) {
-            background = sf::Sprite(*imageCachePtr->get(params[PROPERTY_BACKGROUND].asString()).get());
-            foreground = sf::Sprite(*imageCachePtr->get(params[PROPERTY_FOREGROUND].asString()).get());
-            cursor = sf::Sprite(*imageCachePtr->get(params[PROPERTY_CURSOR_SPRITE].asString()).get());
-            leftEye = sf::Sprite(*imageCachePtr->get(params[PROPERTY_EYE_SPRITE].asString()).get());
-            rightEye = sf::Sprite(*imageCachePtr->get(params[PROPERTY_EYE_SPRITE].asString()).get());
+            background.setTexture(*imageCachePtr->get(params[PROPERTY_BACKGROUND].asString()).get());
+            foreground.setTexture(*imageCachePtr->get(params[PROPERTY_FOREGROUND].asString()).get());
+            cursor.setTexture(*imageCachePtr->get(params[PROPERTY_CURSOR_SPRITE].asString()).get());
+            leftEye.setTexture(*imageCachePtr->get(params[PROPERTY_EYE_SPRITE].asString()).get());
+            rightEye.setTexture(*imageCachePtr->get(params[PROPERTY_EYE_SPRITE].asString()).get());
         }
 
         cursor.setPosition(-100.0f, -100.0f);
