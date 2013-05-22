@@ -48,11 +48,11 @@ namespace gui {
     }
 
     void EnergyGauge::setValue(float value) {
-        this->value = value;
+        this->value = std::min(value, getMaximumValue());
     }
 
     void EnergyGauge::setMaximumValue(float maximumValue) {
-        this->maximumValue = maximumValue;
+        this->maximumValue = std::max(0.0f, maximumValue);
     }
 
     void EnergyGauge::setOrientation(Orientation::Type orientation) {

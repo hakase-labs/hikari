@@ -2,6 +2,7 @@
 #include "guichan/sfml/sfmlimage.hpp"
 
 namespace hikari {
+namespace gui {
 
     HikariImageLoader::HikariImageLoader(const std::weak_ptr<ImageCache> & imageCache)
         : imageCache(imageCache)
@@ -38,4 +39,5 @@ namespace hikari {
         return loadedImage;
     }
 
+} // hikari::gui
 } // hikari

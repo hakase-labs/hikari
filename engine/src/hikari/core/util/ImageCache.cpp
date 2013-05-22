@@ -4,6 +4,7 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <iostream>
 #include <sstream>
+#include <cstddef>
 
 namespace hikari {
 
@@ -35,23 +36,33 @@ namespace hikari {
             HIKARI_LOG(debug4) << "Image data length: " << length << " bytes";
 
             // Create a buffer to load image data
-            std::unique_ptr<char[]> buffer(new char[static_cast<unsigned int>(length)]);
+            std::unique_ptr<char[]> buffer(new char[static_cast<std::size_t>(length)]);
 
             handle->read(buffer.get(), length);
 
             sf::Image imageData;
 
             // Fill an image buffer with pixel data
-            if(imageData.loadFromMemory(buffer.get(), static_cast<size_t>(length))) {
+            if(imageData.loadFromMemory(buffer.get(), static_cast<std::size_t>(length))) {
                 if(enableMask) {
                     imageData.createMaskFromColor(maskColor);
                 }
+
+                // HIKARI_LOG(debug4) << "Image data dimensions: " << imageData.getSize().x << "x" << imageData.getSize().y << ".";
+
+                // auto pixel1 = imageData.getPixel(0, 0);
+                // auto pixel2 = imageData.getPixel(1, 0);
+
+                // HIKARI_LOG(debug4) << "Image data 1: (" << static_cast<int>(pixel1.r) << ", " << static_cast<int>(pixel1.g) << ", " << static_cast<int>(pixel1.b) << ", " << static_cast<int>(pixel1.a) << ")";
+                // HIKARI_LOG(debug4) << "Image data 2: (" << static_cast<int>(pixel2.r) << ", " << static_cast<int>(pixel2.g) << ", " << static_cast<int>(pixel2.b) << ", " << static_cast<int>(pixel2.a) << ")";
 
                 // Then copy the processed pixels to the texture
                 if(texture->create(imageData.getSize().x, imageData.getSize().y)) {
                     texture->update(imageData);
                     texture->setSmooth(enableSmoothing);
                     texture->setRepeated(false);
+
+                    // HIKARI_LOG(debug4) << "Texture dimensions: " << texture->getSize().x << "x" << texture->getSize().y << ".";
                 } else {
                     // Throw.
                     // Couldn't create texture for some reason.
