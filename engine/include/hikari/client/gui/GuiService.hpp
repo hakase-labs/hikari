@@ -41,6 +41,8 @@ namespace hikari {
     public:
         explicit GuiService(const Json::Value & config, const std::weak_ptr<ImageCache> & imageCache, sf::RenderWindow & window);
         virtual ~GuiService();
+
+        gcn::Gui & getGui();
     };
 
 } // hikari

@@ -45,10 +45,19 @@ namespace hikari {
         gui->setInput(input.get());
         gui->setGraphics(graphics.get());
         gui->setTop(rootWidget.get());
+
+        rootWidget->setSize(256 / 4, 240 / 4);
+        rootWidget->setX(30);
+        rootWidget->setY(30);
+        rootWidget->setBaseColor(gcn::Color(0, 0, 0));
     }
 
     GuiService::~GuiService() {
 
+    }
+
+    gcn::Gui & GuiService::getGui() {
+        return *gui;
     }
 
 } // hikari

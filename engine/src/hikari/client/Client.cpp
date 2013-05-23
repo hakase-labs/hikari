@@ -399,6 +399,8 @@ int main(int argc, char** argv) {
         bool fullscreen = false;
         sf::Event event;
 
+        gcn::Gui & gui = guiService->getGui();
+
         while(!quit) {
 
             sf::Time newTime = clock.getElapsedTime();
@@ -507,9 +509,9 @@ int main(int argc, char** argv) {
                         controller.handleEvent(event);
                     }
 
-                    // if(gui->getTop()) {
-                    //     gui->logic();    
-                    // }
+                    if(gui.getTop()) {
+                        gui.logic();    
+                    }
                 }
 
                 console.update(dt);
@@ -539,9 +541,9 @@ int main(int argc, char** argv) {
 
             window.draw(renderSprite);
 
-            // if(gui->getTop()) {
-            //     gui->draw();
-            // }
+            if(gui.getTop()) {
+                gui.draw();
+            }
 
             window.display();
         }
