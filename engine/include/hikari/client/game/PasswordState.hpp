@@ -4,22 +4,37 @@
 #include "hikari/core/game/GameState.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/View.hpp>
-#include <json/value.h>
+#include <memory>
 #include <string>
 
-namespace hikari {
-namespace client {
-namespace game {
+namespace gcn {
+    class Gui;
+    class Label;
+}
 
-    class PasswordState : public hikari::core::game::GameState {
+namespace Json {
+    class Value;
+}
+
+namespace hikari {
+
+    namespace gui {
+        class Panel;
+    }
+
+    class ServiceLocator;
+
+    class PasswordState : public GameState {
     private:
         std::string name;
-        sf::RenderTarget &target;
         sf::View view;
+        std::unique_ptr<gui::Panel> passwordGrid;
+        std::unique_ptr<gcn::Label> testLabel;
+        std::weak_ptr<gcn::Gui> gui;
 
     public:
-        PasswordState(const Json::Value &params);
-        virtual ~PasswordState() {}
+        PasswordState(const std::string &name, const Json::Value &params, ServiceLocator &services);
+        virtual ~PasswordState();
 
         virtual void handleEvent(sf::Event &event);
         virtual void render(sf::RenderTarget &target);
@@ -29,8 +44,6 @@ namespace game {
         virtual const std::string &getName() const;
     };
 
-} // hikari.client.game
-} // hikari.client
 } // hikari
 
 #endif // HIKARI_CLIENT_GAME_PASSWORDSTATE

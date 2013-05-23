@@ -9,8 +9,10 @@
 #include "hikari/client/game/StageSelectState.hpp"
 #include "hikari/client/game/MapTestState.hpp"
 #include "hikari/client/game/GuiTestState.hpp"
+#include "hikari/client/game/PasswordState.hpp"
 #include "hikari/client/game/SpriteTestState.hpp"
 #include "hikari/client/audio/AudioService.hpp"
+#include "hikari/client/gui/GuiService.hpp"
 #include "hikari/client/gui/CommandConsole.hpp"
 #include "hikari/client/scripting/SquirrelService.hpp"
 #include "hikari/client/scripting/AudioServiceScriptProxy.hpp"
@@ -137,6 +139,7 @@ namespace hikari {
         services.registerService(Services::MAPLOADER,         mapLoader);
         services.registerService(Services::SCRIPTING,         squirrelService);
         services.registerService(Services::GUIFONT,           guiFont);
+        // services.registerService("GUI",                       guiWrapper);
     }
 
 } // hikari
@@ -210,6 +213,8 @@ int main(int argc, char** argv) {
             8
         );
         // HIKARI_LOG(debug) << "Created guiFont";
+
+        auto guiService        = std::make_shared<GuiService>(game, imageCache, window);
         
         auto itemFactory       = std::make_shared<ItemFactory>(animationSetCache, imageCache, squirrelService);
         // HIKARI_LOG(debug) << "Created itemFactory";
@@ -222,6 +227,7 @@ int main(int argc, char** argv) {
         services.registerService(Services::MAPLOADER,         mapLoader);
         services.registerService(Services::SCRIPTING,         squirrelService);
         services.registerService(Services::GUIFONT,           guiFont);
+        services.registerService(Services::GUISERVICE,        guiService);
         services.registerService(Services::ITEMFACTORY,       itemFactory);
 
         AudioServiceScriptProxy::setWrappedService(std::weak_ptr<AudioService>(audioService));
@@ -232,22 +238,22 @@ int main(int argc, char** argv) {
         // When this runs all of the scripts have to have been run already
         FactoryHelpers::populateCollectableItemFactory("assets/templates/items.json", std::weak_ptr<ItemFactory>(itemFactory), services);
 
-        std::unique_ptr<gcn::SFMLGraphics> guiGraphics(new gcn::SFMLGraphics(window));
-        std::unique_ptr<gcn::SFMLInput> guiInput(new gcn::SFMLInput());
-        std::unique_ptr<gui::HikariImageLoader> guiImageLoader(new gui::HikariImageLoader(services.locateService<ImageCache>(Services::IMAGECACHE)));
+        // std::unique_ptr<gcn::SFMLGraphics> guiGraphics(new gcn::SFMLGraphics(window));
+        // std::unique_ptr<gcn::SFMLInput> guiInput(new gcn::SFMLInput());
+        // std::unique_ptr<gui::HikariImageLoader> guiImageLoader(new gui::HikariImageLoader(services.locateService<ImageCache>(Services::IMAGECACHE)));
 
-        gcn::Image::setImageLoader(guiImageLoader.get());
+        // gcn::Image::setImageLoader(guiImageLoader.get());
 
-        std::unique_ptr<gcn::Image> fontImage(gcn::Image::load("assets/images/gui-font.png"));
-        std::unique_ptr<gcn::FixedImageFont> fixedImageFont(
-            new gcn::FixedImageFont(
-                fontImage.get(),
-                8,
-                " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-            )
-        );
+        // std::unique_ptr<gcn::Image> fontImage(gcn::Image::load("assets/images/gui-font.png"));
+        // std::unique_ptr<gcn::FixedImageFont> fixedImageFont(
+        //     new gcn::FixedImageFont(
+        //         fontImage.get(),
+        //         8,
+        //         " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+        //     )
+        // );
 
-        gcn::Widget::setGlobalFont(fixedImageFont.get());
+        // gcn::Widget::setGlobalFont(fixedImageFont.get());
 
         gui::CommandConsole console(guiFont);
 
@@ -283,30 +289,32 @@ int main(int argc, char** argv) {
 
         StatePtr stageSelectState(new StageSelectState("stageselect", game["states"]["select"], services));
         StatePtr gamePlayState(new GamePlayState("gameplay", game, services));
+        StatePtr passwordState(new PasswordState("password", game, services));
 
         controller.addState(mapTestState->getName(), mapTestState);
         //controller.addState(guiTestState->getName(), guiTestState);
         controller.addState(spriteTestState->getName(), spriteTestState);
         controller.addState(stageSelectState->getName(), stageSelectState);
         controller.addState(gamePlayState->getName(), gamePlayState);
+        controller.addState(passwordState->getName(), passwordState);
 
         controller.setState(game.get("initial-state", "default").asString());
 
-        std::unique_ptr<gcn::Gui> gui(new gcn::Gui());
-        std::unique_ptr<gcn::Container> topContainer(new gui::Panel());
-        std::unique_ptr<gui::EnergyGauge> guiEnergyGauge(new gui::EnergyGauge(56));
-        std::unique_ptr<gcn::Label> guiFpsLabel(new gcn::Label());
+        // std::unique_ptr<gcn::Gui> gui(new gcn::Gui());
+        // std::unique_ptr<gcn::Container> topContainer(new gui::Panel());
+        // std::unique_ptr<gui::EnergyGauge> guiEnergyGauge(new gui::EnergyGauge(56));
+        // std::unique_ptr<gcn::Label> guiFpsLabel(new gcn::Label());
 
-        gui->setInput(guiInput.get());
-        gui->setGraphics(guiGraphics.get());
-        gui->setTop(topContainer.get());
+        // gui->setInput(guiInput.get());
+        // gui->setGraphics(guiGraphics.get());
+        // gui->setTop(topContainer.get());
 
-        topContainer->setSize(SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4);
-        topContainer->setX(30);
-        topContainer->setY(30);
-        topContainer->setBaseColor(gcn::Color(0, 0, 0));
-        topContainer->add(guiEnergyGauge.get(), 20, 20);
-        topContainer->add(guiFpsLabel.get(), 3, 3);
+        // topContainer->setSize(SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4);
+        // topContainer->setX(30);
+        // topContainer->setY(30);
+        // topContainer->setBaseColor(gcn::Color(0, 0, 0));
+        // topContainer->add(guiEnergyGauge.get(), 20, 20);
+        // topContainer->add(guiFpsLabel.get(), 3, 3);
 
         //
         // Register some commands
@@ -499,9 +507,9 @@ int main(int argc, char** argv) {
                         controller.handleEvent(event);
                     }
 
-                    if(gui->getTop()) {
-                        gui->logic();    
-                    }
+                    // if(gui->getTop()) {
+                    //     gui->logic();    
+                    // }
                 }
 
                 console.update(dt);
@@ -519,8 +527,8 @@ int main(int argc, char** argv) {
             if(showFPS) {
                 guiFont->renderText(screenBuffer, "FPS:", 8, 8);
                 guiFont->renderText(screenBuffer, StringUtils::toString<float>(fps), 40, 8);
-                guiFpsLabel->setCaption(StringUtils::toString<float>(fps));
-                guiFpsLabel->adjustSize();
+                // guiFpsLabel->setCaption(StringUtils::toString<float>(fps));
+                // guiFpsLabel->adjustSize();
             }
 
             console.render(screenBuffer);
@@ -531,9 +539,9 @@ int main(int argc, char** argv) {
 
             window.draw(renderSprite);
 
-            if(gui->getTop()) {
-                gui->draw();
-            }
+            // if(gui->getTop()) {
+            //     gui->draw();
+            // }
 
             window.display();
         }

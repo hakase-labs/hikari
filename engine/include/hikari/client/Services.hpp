@@ -21,6 +21,7 @@ namespace Services {
     const static std::string MAPLOADER = "MapLoader";
     const static std::string SCRIPTING = "Scripting";
     const static std::string GUIFONT = "GuiFont";
+    const static std::string GUISERVICE = "GuiService";
     const static std::string ANIMATIONSETCACHE = "AnimationSetCache";
     const static std::string ITEMFACTORY = "ItemFactory";
 

@@ -9,6 +9,13 @@
         "tilesets" : "assets/tilesets.json",
         "stages" : "assets/stages"
     },
+    "gui" : {
+        "font" : {
+            "image" : "assets/images/gui-font.png",
+            "glyphs" : " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
+            "glyphSize" : 8
+        }
+    },
     "states" : {
         "introduction" : {},
         "title" : {},

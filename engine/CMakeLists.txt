@@ -196,12 +196,14 @@ set( ENGINE_SOURCE_FILES
     src/hikari/client/game/RealTimeInput.cpp
     src/hikari/client/game/SpriteTestState.cpp
     src/hikari/client/game/StageSelectState.cpp
+    src/hikari/client/game/PasswordState.cpp
     src/hikari/client/gui/CommandConsole.cpp
     src/hikari/client/gui/EnergyMeter.cpp
     src/hikari/client/gui/Widget.cpp
     src/hikari/client/gui/HikariImageLoader.cpp
     src/hikari/client/gui/EnergyGauge.cpp
     src/hikari/client/gui/Panel.cpp
+    src/hikari/client/gui/GuiService.cpp
     src/hikari/core/game/Animation.cpp
     src/hikari/core/game/AnimationFrame.cpp
     src/hikari/core/game/AnimationLoader.cpp
