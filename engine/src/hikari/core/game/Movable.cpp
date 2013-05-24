@@ -24,52 +24,67 @@ namespace hikari {
     const float Movable::getGravity() {
         return Movable::gravity;
     }
-
+/*
+    , onGroundNow(false)
+    , onGroundLastFrame(false)
+    , affectedByGravity(true)
+    , collidesWithWorld(true)
+    , treatLadderTopAsGround(true)
+    , applyHorizontalVelocity(true)
+    , applyVerticalVelocity(true)
+    , velocity(0.0f, 0.0f)
+    , boundingBox(0.0f, 0.0f, 0.0f, 0.0f)
+    , collisionInfo()
+    , landingCallback()
+    , collisionCallback()
+*/
     Movable::Movable()
-        : boundingBox(0.0f, 0.0f, 0.0f, 0.0f)
-        , velocity(0.0f, 0.0f)
-        , collisionInfo()
-        , onGroundNow(false)
+        : onGroundNow(false)
         , onGroundLastFrame(false)
         , affectedByGravity(true)
         , collidesWithWorld(true)
         , treatLadderTopAsGround(true)
         , applyHorizontalVelocity(true)
         , applyVerticalVelocity(true)
+        , velocity(0.0f, 0.0f)
+        , boundingBox(0.0f, 0.0f, 0.0f, 0.0f)
+        , collisionInfo()
+        , landingCallback()
         , collisionCallback()
     {
 
     }
 
     Movable::Movable(float width, float height)
-        : boundingBox(0.0f, 0.0f, width, height)
-        , velocity(0.0f, 0.0f)
-        , collisionInfo()
-        , onGroundNow(false)
+        : onGroundNow(false)
         , onGroundLastFrame(false)
         , affectedByGravity(true)
         , collidesWithWorld(true)
         , treatLadderTopAsGround(true)
         , applyHorizontalVelocity(true)
         , applyVerticalVelocity(true)
+        , velocity(0.0f, 0.0f)
+        , boundingBox(0.0f, 0.0f, width, height)
+        , collisionInfo()
+        , landingCallback()
         , collisionCallback()
     {
 
     }
 
     Movable::Movable(const Movable& proto) 
-        : boundingBox(proto.boundingBox)
-        , velocity(proto.velocity)
-        , collisionInfo(proto.collisionInfo)
-        , onGroundNow(proto.onGroundNow)
+        : onGroundNow(proto.onGroundNow)
         , onGroundLastFrame(proto.onGroundLastFrame)
         , affectedByGravity(proto.affectedByGravity)
         , collidesWithWorld(proto.collidesWithWorld)
         , treatLadderTopAsGround(proto.treatLadderTopAsGround)
         , applyHorizontalVelocity(proto.applyHorizontalVelocity)
         , applyVerticalVelocity(proto.applyVerticalVelocity)
-        , collisionCallback(proto.collisionCallback)
-        , landingCallback(proto.landingCallback)
+        , velocity(proto.velocity)
+        , boundingBox(proto.boundingBox)
+        , collisionInfo(proto.collisionInfo)
+        , landingCallback(proto.landingCallback)        // TODO: Cloning the callbacks is almost 100% wrong
+        , collisionCallback(proto.collisionCallback)    // You should create new ones instead
     {
 
     }
