@@ -60,13 +60,7 @@
 #include <guichan/sfml.hpp>
 #include <guichan/gui.hpp>
 #include <guichan/widgets/container.hpp>
-#include <guichan/widgets/button.hpp>
 #include <guichan/widgets/label.hpp>
-#include <guichan/hakase/fixedimagefont.hpp>
-#include <guichan/hakase/functoractionlistener.hpp>
-#include <guichan/actionevent.hpp>
-#include "hikari/client/gui/HikariImageLoader.hpp"
-#include "hikari/client/gui/EnergyGauge.hpp"
 #include "hikari/client/gui/Panel.hpp"
 
 #include <json/reader.h>
@@ -283,15 +277,9 @@ int main(int argc, char** argv) {
 
         controller.setState(game.get("initial-state", "default").asString());
 
-        std::unique_ptr<gui::EnergyGauge> guiEnergyGauge(new gui::EnergyGauge(56));
         std::unique_ptr<gcn::Label> guiFpsLabel(new gcn::Label());
-        std::unique_ptr<gcn::Button> guiButton(new gcn::Button("Fire!"));
-
-        auto & topContainer = guiService->getRootContainer(); //dynamic_cast<gcn::Container*>(guiService->getGui().getTop());
-
-        // topContainer.add(guiEnergyGauge.get(), 20, 20);
-        // topContainer.add(guiFpsLabel.get(), 3, 3);
-        // topContainer.add(guiButton.get(), 28, 2);
+        auto & topContainer = guiService->getHudContainer();
+        topContainer.add(guiFpsLabel.get(), 8, 8);
 
         //
         // Register some commands
@@ -394,7 +382,6 @@ int main(int argc, char** argv) {
                         quit = true;
                     }
 
-                    // guiInput->pushInput(event, window);
                     guiService->processEvent(event);
 
                     //
@@ -441,6 +428,7 @@ int main(int argc, char** argv) {
 
                         if(event.key.code == sf::Keyboard::F1) {
                             showFPS = !showFPS;
+                            guiFpsLabel->setVisible(showFPS);
                         }
 
                         if(event.key.code == sf::Keyboard::F3) {
@@ -505,8 +493,6 @@ int main(int argc, char** argv) {
             window.setView(screenBufferView);
 
             if(showFPS) {
-                guiFont->renderText(screenBuffer, "FPS:", 8, 8);
-                guiFont->renderText(screenBuffer, StringUtils::toString<float>(fps), 40, 8);
                 guiFpsLabel->setCaption(StringUtils::toString(fps));
                 guiFpsLabel->adjustSize();
             }

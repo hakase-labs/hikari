@@ -25,6 +25,8 @@ namespace hikari {
         , input(new gcn::SFMLInput())
         , imageLoader(nullptr)
         , rootWidget(new gcn::Container())
+        , rootContainer(new gcn::Container())
+        , hudContainer(new gcn::Container())
         , globalFontImage(nullptr)
         , globalFont(nullptr)
     {
@@ -47,10 +49,27 @@ namespace hikari {
         gui->setGraphics(graphics.get());
         gui->setTop(rootWidget.get());
 
+        // The root widget is an internal container for the other "layers" of widgets.
         rootWidget->setSize(256, 240);
         rootWidget->setX(0);
         rootWidget->setY(0);
         rootWidget->setBaseColor(gcn::Color(0, 0, 0, 0));
+
+        // This is where game state widgets go (almost everything)
+        rootContainer->setSize(256, 240);
+        rootContainer->setX(0);
+        rootContainer->setY(0);
+        rootContainer->setBaseColor(gcn::Color(0, 0, 0, 0));
+
+        // This is where overlaying widgets go (fps counter, console, etc.)
+        hudContainer->setSize(256, 240);
+        hudContainer->setX(0);
+        hudContainer->setY(0);
+        hudContainer->setBaseColor(gcn::Color(0, 0, 0, 0));
+
+        // The HUD container is always the "front"-most widget.
+        rootWidget->add(rootContainer.get());
+        rootWidget->add(hudContainer.get());
     }
 
     GuiService::~GuiService() {
@@ -67,8 +86,12 @@ namespace hikari {
         return *gui;
     }
 
+    gcn::Container & GuiService::getHudContainer() {
+        return *hudContainer;
+    }
+
     gcn::Container & GuiService::getRootContainer() {
-        return *rootWidget;
+        return *rootContainer;
     }
 
 } // hikari

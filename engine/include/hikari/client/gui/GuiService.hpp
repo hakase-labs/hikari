@@ -2,6 +2,7 @@
 #define HIKARI_CLIENT_GUI_GUISERVICE
 
 #include "hikari/core/util/Service.hpp"
+#include "hikari/core/util/NonCopyable.hpp"
 
 #include <memory>
 #include <string>
@@ -29,7 +30,7 @@ namespace hikari {
 
     class ImageCache;
 
-    class GuiService : public Service {
+    class GuiService : public Service, public NonCopyable {
     private:
         sf::RenderWindow & window;
         std::unique_ptr<gcn::Gui> gui;
@@ -37,6 +38,8 @@ namespace hikari {
         std::unique_ptr<gcn::SFMLInput> input;
         std::unique_ptr<gcn::ImageLoader> imageLoader;
         std::unique_ptr<gcn::Container> rootWidget;
+        std::unique_ptr<gcn::Container> rootContainer;
+        std::unique_ptr<gcn::Container> hudContainer;
         std::unique_ptr<gcn::Image> globalFontImage;
         std::unique_ptr<gcn::FixedImageFont> globalFont;
 
@@ -47,6 +50,7 @@ namespace hikari {
         void processEvent(sf::Event & evt);
 
         gcn::Gui & getGui();
+        gcn::Container & getHudContainer();
         gcn::Container & getRootContainer();
     };
 
