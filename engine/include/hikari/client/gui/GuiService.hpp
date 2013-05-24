@@ -11,7 +11,7 @@ namespace gcn {
     class Container;
     class Image;
     class ImageLoader;
-    class Input;
+    class SFMLInput;
     class FixedImageFont;
     class Gui;
 }
@@ -21,6 +21,7 @@ namespace Json {
 }
 
 namespace sf {
+    class Event;
     class RenderWindow;
 }
 
@@ -30,9 +31,10 @@ namespace hikari {
 
     class GuiService : public Service {
     private:
+        sf::RenderWindow & window;
         std::unique_ptr<gcn::Gui> gui;
         std::unique_ptr<gcn::Graphics> graphics;
-        std::unique_ptr<gcn::Input> input;
+        std::unique_ptr<gcn::SFMLInput> input;
         std::unique_ptr<gcn::ImageLoader> imageLoader;
         std::unique_ptr<gcn::Container> rootWidget;
         std::unique_ptr<gcn::Image> globalFontImage;
@@ -42,7 +44,10 @@ namespace hikari {
         explicit GuiService(const Json::Value & config, const std::weak_ptr<ImageCache> & imageCache, sf::RenderWindow & window);
         virtual ~GuiService();
 
+        void processEvent(sf::Event & evt);
+
         gcn::Gui & getGui();
+        gcn::Container & getRootContainer();
     };
 
 } // hikari

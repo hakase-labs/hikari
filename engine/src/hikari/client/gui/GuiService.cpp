@@ -19,6 +19,7 @@ namespace hikari {
 
     GuiService::GuiService(const Json::Value & config, const std::weak_ptr<ImageCache> & imageCache, sf::RenderWindow & window)
         : Service()
+        , window(window)
         , gui(new gcn::Gui())
         , graphics(new gcn::SFMLGraphics(window))
         , input(new gcn::SFMLInput())
@@ -46,18 +47,28 @@ namespace hikari {
         gui->setGraphics(graphics.get());
         gui->setTop(rootWidget.get());
 
-        rootWidget->setSize(256 / 4, 240 / 4);
-        rootWidget->setX(30);
-        rootWidget->setY(30);
-        rootWidget->setBaseColor(gcn::Color(0, 0, 0));
+        rootWidget->setSize(256, 240);
+        rootWidget->setX(0);
+        rootWidget->setY(0);
+        rootWidget->setBaseColor(gcn::Color(0, 0, 0, 0));
     }
 
     GuiService::~GuiService() {
 
     }
 
+    void GuiService::processEvent(sf::Event & evt) {
+        if(input) {
+            input->pushInput(evt, window);
+        }
+    }
+
     gcn::Gui & GuiService::getGui() {
         return *gui;
+    }
+
+    gcn::Container & GuiService::getRootContainer() {
+        return *rootWidget;
     }
 
 } // hikari

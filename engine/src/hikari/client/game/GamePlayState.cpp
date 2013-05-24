@@ -14,6 +14,7 @@
 #include "hikari/client/game/Effect.hpp"
 #include "hikari/client/gui/EnergyMeter.hpp"
 #include "hikari/client/gui/EnergyGauge.hpp"
+#include "hikari/client/gui/Panel.hpp"
 #include "hikari/client/Services.hpp"
 #include "hikari/client/audio/AudioService.hpp"
 #include "hikari/client/game/events/EventManagerImpl.hpp"
@@ -22,6 +23,7 @@
 #include "hikari/client/game/events/EntityStateChangeEventData.hpp"
 #include "hikari/client/game/events/EventData.hpp"
 #include "hikari/client/game/events/WeaponFireEventData.hpp"
+#include "hikari/client/gui/GuiService.hpp"
 #include "hikari/core/game/AnimationSet.hpp"
 #include "hikari/core/game/AnimationLoader.hpp"
 #include "hikari/core/game/TileMapCollisionResolver.hpp"
@@ -58,6 +60,7 @@ namespace hikari {
     GamePlayState::GamePlayState(const std::string &name, const Json::Value &params, ServiceLocator &services)
         : name(name)
         , audioService(services.locateService<AudioService>(Services::AUDIO))
+        , guiService(services.locateService<GuiService>(Services::GUISERVICE))
         , eventManager(new EventManagerImpl("GamePlayEvents", false))
         , gameProgress(services.locateService<GameProgress>(Services::GAMEPROGRESS))
         , guiFont(services.locateService<ImageFont>(Services::GUIFONT))
@@ -73,8 +76,9 @@ namespace hikari {
         , hudCurrentWeaponMeter(nullptr)
         , mapRenderer(new MapRenderer(nullptr, nullptr))
         , subState(nullptr)
-        , guiContiner(new gcn::Container())
+        , guiContainer(new gcn::Container())
         , guiEnergyGauge(new gui::EnergyGauge())
+        , guiMenuPanel(new gui::Panel())
         , maps()
         , itemSpawners()
         , deactivatedItemSpawners()
@@ -102,33 +106,35 @@ namespace hikari {
         //
         // Create/configure GUI
         //
-        auto energyMeterTexture = imageCache->get("assets/images/meter-overlay.png");
+        buildGui();
 
-        sf::Sprite energyMeterSprite(*energyMeterTexture.get());
-        energyMeterSprite.setTextureRect(sf::IntRect(0, 0, 8, 56));
+        // auto energyMeterTexture = imageCache->get("assets/images/meter-overlay.png");
 
-        hudBossEnergyMeter = std::make_shared<EnergyMeter>(energyMeterSprite, 56.0f);
-        hudBossEnergyMeter->setMaximumValue(56.0f);
-        hudBossEnergyMeter->setValue(46.0f);
-        hudBossEnergyMeter->setFillColor(sf::Color(21, 95, 217));
-        hudBossEnergyMeter->setPrimaryColor(sf::Color(100, 176, 255));
-        hudBossEnergyMeter->setSecondaryColor(sf::Color(255, 255, 255));
-        hudBossEnergyMeter->setPosition(sf::Vector2i(40, 25));
+        // sf::Sprite energyMeterSprite(*energyMeterTexture.get());
+        // energyMeterSprite.setTextureRect(sf::IntRect(0, 0, 8, 56));
 
-        hudHeroEnergyMeter = std::make_shared<EnergyMeter>(energyMeterSprite, 56.0f);
-        hudHeroEnergyMeter->setMaximumValue(56.0f);
-        hudHeroEnergyMeter->setValue(56.0f);
-        hudHeroEnergyMeter->setPosition(sf::Vector2i(24, 25));
+        // hudBossEnergyMeter = std::make_shared<EnergyMeter>(energyMeterSprite, 56.0f);
+        // hudBossEnergyMeter->setMaximumValue(56.0f);
+        // hudBossEnergyMeter->setValue(46.0f);
+        // hudBossEnergyMeter->setFillColor(sf::Color(21, 95, 217));
+        // hudBossEnergyMeter->setPrimaryColor(sf::Color(100, 176, 255));
+        // hudBossEnergyMeter->setSecondaryColor(sf::Color(255, 255, 255));
+        // hudBossEnergyMeter->setPosition(sf::Vector2i(40, 25));
 
-        hudCurrentWeaponMeter = std::make_shared<EnergyMeter>(energyMeterSprite, 56.0f);
-        hudCurrentWeaponMeter->setMaximumValue(56.0f);
-        hudCurrentWeaponMeter->setValue(56.0f);
-        hudCurrentWeaponMeter->setPosition(sf::Vector2i(16, 25));
+        // hudHeroEnergyMeter = std::make_shared<EnergyMeter>(energyMeterSprite, 56.0f);
+        // hudHeroEnergyMeter->setMaximumValue(56.0f);
+        // hudHeroEnergyMeter->setValue(56.0f);
+        // hudHeroEnergyMeter->setPosition(sf::Vector2i(24, 25));
 
-        leftBar.setFillColor(sf::Color::Black);
+        // hudCurrentWeaponMeter = std::make_shared<EnergyMeter>(energyMeterSprite, 56.0f);
+        // hudCurrentWeaponMeter->setMaximumValue(56.0f);
+        // hudCurrentWeaponMeter->setValue(56.0f);
+        // hudCurrentWeaponMeter->setPosition(sf::Vector2i(16, 25));
 
-        menuPlaceholder.setPosition(8.0f, 8.0f);
-        menuPlaceholder.setFillColor(sf::Color(66, 66, 66, 128));
+        // leftBar.setFillColor(sf::Color::Black);
+
+        // menuPlaceholder.setPosition(8.0f, 8.0f);
+        // menuPlaceholder.setFillColor(sf::Color(66, 66, 66, 128));
 
         //
         // Create/configure Rockman
@@ -171,9 +177,30 @@ namespace hikari {
         );
     }
 
+    void GamePlayState::buildGui() {
+        guiContainer->setWidth(256);
+        guiContainer->setHeight(240);
+        guiContainer->setOpaque(false);
+        guiContainer->setBackgroundColor(gcn::Color(0, 0, 0, 0));
+        guiContainer->add(guiEnergyGauge.get(), 24, 24);
+        guiContainer->add(guiMenuPanel.get(), 0, 0);
+
+        guiEnergyGauge->setMaximumValue(56.0f);
+        guiEnergyGauge->setValue(12.0f);
+        guiEnergyGauge->setVisible(false);
+
+        guiMenuPanel->setX(0);
+        guiMenuPanel->setY(0);
+        guiMenuPanel->setWidth(256);
+        guiMenuPanel->setHeight(240);
+        guiMenuPanel->setBaseColor(gcn::Color(0, 0, 0, 192));
+        guiMenuPanel->setVisible(false);
+    }
+
     void GamePlayState::handleEvent(sf::Event &event) {
         if((event.type == sf::Event::KeyPressed) && event.key.code == sf::Keyboard::Return) {
             isViewingMenu = !isViewingMenu;
+            guiMenuPanel->setVisible(isViewingMenu);
         }
 
         if((event.type == sf::Event::KeyPressed) && event.key.code == sf::Keyboard::BackSpace) {
@@ -210,6 +237,12 @@ namespace hikari {
     }
 
     void GamePlayState::onEnter() {
+        if(auto gui = guiService.lock()) {
+            auto & topContainer = gui->getRootContainer();
+
+            topContainer.add(guiContainer.get(), 0, 0);
+        }
+
         Movable::setCollisionResolver(collisionResolver);
         Movable::setGravity(0.25f);
 
@@ -219,7 +252,13 @@ namespace hikari {
         startStage();
     }
 
-    void GamePlayState::onExit() { }
+    void GamePlayState::onExit() {
+        if(auto gui = guiService.lock()) {
+            auto & topContainer = gui->getRootContainer();
+
+            topContainer.remove(guiContainer.get());
+        }
+    }
 
     const std::string& GamePlayState::getName() const {
         return name;
@@ -390,6 +429,9 @@ namespace hikari {
     void GamePlayState::startStage() {
         HIKARI_LOG(debug) << "Starting stage.";
 
+        // Hide energy gauge
+        // guiEnergyGauge->setVisible(false);
+
         //
         // Reset all spawners to their original state
         //
@@ -501,22 +543,22 @@ namespace hikari {
     void GamePlayState::renderHud(sf::RenderTarget &target) const {
         // guiFont->renderText(target, "HUD", 72, 32);
 
-        if(drawBossEnergyMeter) {
-            hudBossEnergyMeter->render(target);
-        }
+        // if(drawBossEnergyMeter) {
+        //     hudBossEnergyMeter->render(target);
+        // }
 
-        if(drawHeroEnergyMeter) {
-             hudHeroEnergyMeter->render(target);
-        }
+        // if(drawHeroEnergyMeter) {
+        //      hudHeroEnergyMeter->render(target);
+        // }
 
-        if(drawWeaponEnergyMeter) {
-            hudCurrentWeaponMeter->render(target);
-        }
+        // if(drawWeaponEnergyMeter) {
+        //     hudCurrentWeaponMeter->render(target);
+        // }
 
-        if(isViewingMenu) {
-            //guiFont->renderText(target, "MENU", 72, 40);
-            target.draw(menuPlaceholder);
-        }
+        // if(isViewingMenu) {
+        //     //guiFont->renderText(target, "MENU", 72, 40);
+        //     // target.draw(menuPlaceholder);
+        // }
     }
 
     void GamePlayState::bindEventHandlers() {
@@ -613,6 +655,7 @@ namespace hikari {
 
         renderFadeOverlay = true;
         renderReadyText = false;
+        gamePlayState.guiEnergyGauge->setVisible(false);
 
         sf::Color overlayColor = sf::Color(fadeOverlay.getFillColor());
         overlayColor.a = 255;
@@ -810,6 +853,8 @@ namespace hikari {
         gamePlayState.drawHeroEnergyMeter = true;
         gamePlayState.isHeroAlive = true;
         postDeathTimer = 0.0f;
+
+        gamePlayState.guiEnergyGauge->setVisible(true);
     }
 
     void GamePlayState::PlayingSubState::exit() {

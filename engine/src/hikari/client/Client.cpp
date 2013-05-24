@@ -238,23 +238,6 @@ int main(int argc, char** argv) {
         // When this runs all of the scripts have to have been run already
         FactoryHelpers::populateCollectableItemFactory("assets/templates/items.json", std::weak_ptr<ItemFactory>(itemFactory), services);
 
-        // std::unique_ptr<gcn::SFMLGraphics> guiGraphics(new gcn::SFMLGraphics(window));
-        // std::unique_ptr<gcn::SFMLInput> guiInput(new gcn::SFMLInput());
-        // std::unique_ptr<gui::HikariImageLoader> guiImageLoader(new gui::HikariImageLoader(services.locateService<ImageCache>(Services::IMAGECACHE)));
-
-        // gcn::Image::setImageLoader(guiImageLoader.get());
-
-        // std::unique_ptr<gcn::Image> fontImage(gcn::Image::load("assets/images/gui-font.png"));
-        // std::unique_ptr<gcn::FixedImageFont> fixedImageFont(
-        //     new gcn::FixedImageFont(
-        //         fontImage.get(),
-        //         8,
-        //         " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-        //     )
-        // );
-
-        // gcn::Widget::setGlobalFont(fixedImageFont.get());
-
         gui::CommandConsole console(guiFont);
 
         // Create and initialize the game controller and game states
@@ -300,21 +283,15 @@ int main(int argc, char** argv) {
 
         controller.setState(game.get("initial-state", "default").asString());
 
-        // std::unique_ptr<gcn::Gui> gui(new gcn::Gui());
-        // std::unique_ptr<gcn::Container> topContainer(new gui::Panel());
-        // std::unique_ptr<gui::EnergyGauge> guiEnergyGauge(new gui::EnergyGauge(56));
-        // std::unique_ptr<gcn::Label> guiFpsLabel(new gcn::Label());
+        std::unique_ptr<gui::EnergyGauge> guiEnergyGauge(new gui::EnergyGauge(56));
+        std::unique_ptr<gcn::Label> guiFpsLabel(new gcn::Label());
+        std::unique_ptr<gcn::Button> guiButton(new gcn::Button("Fire!"));
 
-        // gui->setInput(guiInput.get());
-        // gui->setGraphics(guiGraphics.get());
-        // gui->setTop(topContainer.get());
+        auto & topContainer = guiService->getRootContainer(); //dynamic_cast<gcn::Container*>(guiService->getGui().getTop());
 
-        // topContainer->setSize(SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4);
-        // topContainer->setX(30);
-        // topContainer->setY(30);
-        // topContainer->setBaseColor(gcn::Color(0, 0, 0));
-        // topContainer->add(guiEnergyGauge.get(), 20, 20);
-        // topContainer->add(guiFpsLabel.get(), 3, 3);
+        // topContainer.add(guiEnergyGauge.get(), 20, 20);
+        // topContainer.add(guiFpsLabel.get(), 3, 3);
+        // topContainer.add(guiButton.get(), 28, 2);
 
         //
         // Register some commands
@@ -417,7 +394,8 @@ int main(int argc, char** argv) {
                         quit = true;
                     }
 
-                    //guiInput->pushInput(event, window);
+                    // guiInput->pushInput(event, window);
+                    guiService->processEvent(event);
 
                     //
                     // Key presses
@@ -529,8 +507,8 @@ int main(int argc, char** argv) {
             if(showFPS) {
                 guiFont->renderText(screenBuffer, "FPS:", 8, 8);
                 guiFont->renderText(screenBuffer, StringUtils::toString<float>(fps), 40, 8);
-                // guiFpsLabel->setCaption(StringUtils::toString<float>(fps));
-                // guiFpsLabel->adjustSize();
+                guiFpsLabel->setCaption(StringUtils::toString(fps));
+                guiFpsLabel->adjustSize();
             }
 
             console.render(screenBuffer);
