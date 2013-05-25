@@ -8,7 +8,7 @@
 #include <string>
 
 namespace gcn {
-    class Gui;
+    class Container;
     class Label;
 }
 
@@ -18,6 +18,8 @@ namespace Json {
 
 namespace hikari {
 
+    class GuiService;
+    
     namespace gui {
         class Panel;
     }
@@ -27,10 +29,10 @@ namespace hikari {
     class PasswordState : public GameState {
     private:
         std::string name;
-        sf::View view;
         std::unique_ptr<gui::Panel> passwordGrid;
+        std::unique_ptr<gcn::Container> guiWrapper;
         std::unique_ptr<gcn::Label> testLabel;
-        std::weak_ptr<gcn::Gui> gui;
+        std::weak_ptr<GuiService> guiService;
 
     public:
         PasswordState(const std::string &name, const Json::Value &params, ServiceLocator &services);

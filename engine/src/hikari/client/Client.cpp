@@ -178,6 +178,26 @@ int main(int argc, char** argv) {
         window.setVerticalSyncEnabled(clientConfig.isVsyncEnabled());
         window.setKeyRepeatEnabled(false);
 
+        //
+        // Create a "buffer" texture -- this allows us to apply screen-wide shader effects.
+        // This also helps avoid tearing/small geometry gaps when scaling the scren up.
+        //
+        sf::RenderTexture screenBuffer;
+        screenBuffer.create(videoMode.width, videoMode.height);
+
+        //
+        // Use a view to achieve resolution-independent rendering of the "buffer" texture.
+        //
+        sf::View screenBufferView;
+
+        screenBufferView.setSize(
+            static_cast<float>(videoMode.width),
+            static_cast<float>(videoMode.height));
+
+        screenBufferView.setCenter(
+            static_cast<float>(videoMode.width / 2),
+            static_cast<float>(videoMode.height / 2));
+
         // HIKARI_LOG(debug) << "Created render window...";
 
         bool showFPS = clientConfig.isFpsDisplayEnabled();
@@ -208,7 +228,7 @@ int main(int argc, char** argv) {
         );
         // HIKARI_LOG(debug) << "Created guiFont";
 
-        auto guiService        = std::make_shared<GuiService>(game, imageCache, window);
+        auto guiService        = std::make_shared<GuiService>(game, imageCache, screenBuffer);
         
         auto itemFactory       = std::make_shared<ItemFactory>(animationSetCache, imageCache, squirrelService);
         // HIKARI_LOG(debug) << "Created itemFactory";
@@ -331,26 +351,6 @@ int main(int argc, char** argv) {
             const std::string& stateName = args.at(0);
             controller.setState(stateName);
         });
-
-        //
-        // Create a "buffer" texture -- this allows us to apply screen-wide shader effects.
-        // This also helps avoid tearing/small geometry gaps when scaling the scren up.
-        //
-        sf::RenderTexture screenBuffer;
-        screenBuffer.create(videoMode.width, videoMode.height);
-
-        //
-        // Use a view to achieve resolution-independent rendering of the "buffer" texture.
-        //
-        sf::View screenBufferView;
-
-        screenBufferView.setSize(
-            static_cast<float>(videoMode.width),
-            static_cast<float>(videoMode.height));
-
-        screenBufferView.setCenter(
-            static_cast<float>(videoMode.width / 2),
-            static_cast<float>(videoMode.height / 2));
 
         // Game loop
         float t = 0.0f;
@@ -497,6 +497,10 @@ int main(int argc, char** argv) {
                 guiFpsLabel->adjustSize();
             }
 
+            if(gui.getTop()) {
+                gui.draw();
+            }
+
             console.render(screenBuffer);
 
             screenBuffer.display();
@@ -504,11 +508,6 @@ int main(int argc, char** argv) {
             sf::Sprite renderSprite(screenBuffer.getTexture());
 
             window.draw(renderSprite);
-
-            if(gui.getTop()) {
-                gui.draw();
-            }
-
             window.display();
         }
 

@@ -23,7 +23,7 @@ namespace Json {
 
 namespace sf {
     class Event;
-    class RenderWindow;
+    class RenderTarget;
 }
 
 namespace hikari {
@@ -32,7 +32,7 @@ namespace hikari {
 
     class GuiService : public Service, public NonCopyable {
     private:
-        sf::RenderWindow & window;
+        sf::RenderTarget & renderTarget;
         std::unique_ptr<gcn::Gui> gui;
         std::unique_ptr<gcn::Graphics> graphics;
         std::unique_ptr<gcn::SFMLInput> input;
@@ -44,7 +44,7 @@ namespace hikari {
         std::unique_ptr<gcn::FixedImageFont> globalFont;
 
     public:
-        explicit GuiService(const Json::Value & config, const std::weak_ptr<ImageCache> & imageCache, sf::RenderWindow & window);
+        explicit GuiService(const Json::Value & config, const std::weak_ptr<ImageCache> & imageCache, sf::RenderTarget & renderTarget);
         virtual ~GuiService();
 
         void processEvent(sf::Event & evt);

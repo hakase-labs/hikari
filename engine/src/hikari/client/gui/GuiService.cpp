@@ -17,11 +17,11 @@
 
 namespace hikari {
 
-    GuiService::GuiService(const Json::Value & config, const std::weak_ptr<ImageCache> & imageCache, sf::RenderWindow & window)
+    GuiService::GuiService(const Json::Value & config, const std::weak_ptr<ImageCache> & imageCache, sf::RenderTarget & renderTarget)
         : Service()
-        , window(window)
+        , renderTarget(renderTarget)
         , gui(new gcn::Gui())
-        , graphics(new gcn::SFMLGraphics(window))
+        , graphics(new gcn::SFMLGraphics(renderTarget))
         , input(new gcn::SFMLInput())
         , imageLoader(nullptr)
         , rootWidget(new gcn::Container())
@@ -78,7 +78,7 @@ namespace hikari {
 
     void GuiService::processEvent(sf::Event & evt) {
         if(input) {
-            input->pushInput(evt, window);
+            input->pushInput(evt, renderTarget);
         }
     }
 
