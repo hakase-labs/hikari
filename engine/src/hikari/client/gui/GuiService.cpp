@@ -1,6 +1,7 @@
 #include "hikari/client/gui/GuiService.hpp"
 #include "hikari/client/gui/HikariImageLoader.hpp"
 #include "hikari/client/Services.hpp"
+#include "hikari/core/util/FileSystem.hpp"
 #include "hikari/core/util/ImageCache.hpp"
 #include "hikari/core/util/Log.hpp"
 
@@ -37,9 +38,12 @@ namespace hikari {
         gcn::Image::setImageLoader(imageLoader.get());
 
         buildFontMap(config["gui"]["fonts"]);
-        globalFont = fontMap.at("default");
-        gcn::Widget::setGlobalFont(globalFont.get());
+        globalFont = getFontByName("default");
 
+        if(globalFont) {
+            gcn::Widget::setGlobalFont(globalFont.get());
+        }
+        
         // Set up the GUI's inputs/outputs
         gui->setInput(input.get());
         gui->setGraphics(graphics.get());
@@ -79,28 +83,36 @@ namespace hikari {
             HIKARI_LOG(debug3) << "Creating font \"" << fontName << "\"";
 
             auto & fontSettings = fontConfig[fontName];
-            bool isValid = false;
+            bool isConfigValid = false;
 
             if(fontSettings.isMember("image")) {
                 if(fontSettings.isMember("glyphs")) {
                     if(fontSettings.isMember("glyphSize")) {
-                        isValid = true;
+                        isConfigValid = true;
                     }
                 }
             }
 
-            if(isValid) {
+            if(isConfigValid) {
                 std::string imageName = fontSettings["image"].asString();
                 std::string glyphs = fontSettings["glyphs"].asString();
                 int glyphSize = fontSettings["glyphSize"].asInt();
-                auto glyphImage = std::shared_ptr<gcn::Image>(gcn::Image::load(imageName));
 
-                if(glyphImage) {
-                    this->fontImageMap[fontName] = glyphImage;
-                    this->fontMap[fontName] = std::make_shared<gcn::FixedImageFont>(glyphImage.get(), glyphSize, glyphs);
-                    HIKARI_LOG(debug3) << "Font \"" << fontName << "\" successfully loaded.";
+                if(FileSystem::exists(imageName)) {
+                    auto glyphImage = std::shared_ptr<gcn::Image>(gcn::Image::load(imageName));
+
+                    if(glyphImage) {
+                        this->fontImageMap.insert(std::make_pair(fontName, glyphImage));
+
+                        auto font = std::make_shared<gcn::FixedImageFont>(glyphImage.get(), glyphSize, glyphs);
+                        this->fontMap.insert(std::make_pair(fontName, font));
+                        
+                        HIKARI_LOG(debug3) << "Font \"" << fontName << "\" successfully loaded.";
+                    } else {
+                        HIKARI_LOG(warning) << "Font image for \"" << fontName << "\" could not be loaded; ignoring.";
+                    }
                 } else {
-                    HIKARI_LOG(warning) << "Font image for \"" << fontName << "\" could not be loaded; ignoring.";
+                    HIKARI_LOG(warning) << "Font image for \"" << fontName << "\" could not be found; ignoring.";
                 }
             } else {
                 HIKARI_LOG(warning) << "Font \"" << fontName << "\" is not properly defined; ignoring.";
@@ -124,6 +136,18 @@ namespace hikari {
 
     gcn::Container & GuiService::getRootContainer() {
         return *rootContainer;
+    }
+
+    std::shared_ptr<gcn::Font> GuiService::getFontByName(const std::string & fontName) const {
+        std::shared_ptr<gcn::Font> font;
+
+        auto found = fontMap.find(fontName);
+
+        if(found != fontMap.end()) {
+            font = found->second;
+        }
+
+        return font;
     }
 
 } // hikari
