@@ -1,15 +1,20 @@
 #include "hikari/client/game/StageSelectState.hpp"
 #include "hikari/client/audio/AudioService.hpp"
 #include "hikari/client/game/GameProgress.hpp"
+#include "hikari/client/gui/GuiService.hpp"
 #include "hikari/client/Services.hpp"
 
 #include "hikari/core/gui/ImageFont.hpp"
 #include "hikari/core/util/ImageCache.hpp"
 #include "hikari/core/util/StringUtils.hpp"
 #include "hikari/core/util/ServiceLocator.hpp"
+#include "hikari/core/util/Log.hpp"
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Window/Event.hpp>
+
+#include <guichan/widgets/container.hpp>
+#include <guichan/widgets/label.hpp>
 
 namespace hikari {
 
@@ -35,9 +40,12 @@ namespace hikari {
 
     StageSelectState::StageSelectState(const std::string &name, const Json::Value &params, ServiceLocator &services)
         : name(name)
-        , audioService(nullptr /*services.locateService<AudioService>(Services::AUDIO) */)
+        , guiService(services.locateService<GuiService>(Services::GUISERVICE))
+        , audioService(services.locateService<AudioService>(Services::AUDIO))
         , gameProgress(services.locateService<GameProgress>(Services::GAMEPROGRESS))
-        , guiFont(services.locateService<ImageFont>(Services::GUIFONT)) 
+        , guiFont(services.locateService<ImageFont>(Services::GUIFONT))
+        , guiContainer(new gcn::Container())
+        , guiSelectedCellLabel(new gcn::Label())
         , cursorRow(DEFAULT_CURSOR_ROW)
         , cursorColumn(DEFAULT_CURSOR_COLUMN)
     {
@@ -87,10 +95,26 @@ namespace hikari {
                 cursorPositions.push_back(position);
             }
         }
+
+        buildGui();
     }
 
     void StageSelectState::calculateCursorIndex() {
         cursorIndex = (cursorRow * NUM_OF_CURSOR_ROWS) + cursorColumn;
+    }
+
+    void StageSelectState::buildGui() {
+        guiContainer->setSize(256, 240);
+        guiContainer->setBaseColor(0x1122AA);
+        guiContainer->setOpaque(true);
+        guiContainer->setVisible(true);
+
+        guiSelectedCellLabel->setX(8);
+        guiSelectedCellLabel->setY(224);
+        guiSelectedCellLabel->setCaption("(" + StringUtils::toString(cursorColumn) + ", " + StringUtils::toString(cursorRow) + ")");
+        guiSelectedCellLabel->adjustSize();
+
+        guiContainer->add(guiSelectedCellLabel.get());
     }
 
     void StageSelectState::handleEvent(sf::Event &event) {
@@ -106,29 +130,32 @@ namespace hikari {
             } else if(event.key.code == sf::Keyboard::Right) {
                 cursorColumn = std::min(NUM_OF_CURSOR_COLUMNS - 1, cursorColumn + 1);
             }
+
+            guiSelectedCellLabel->setCaption("(" + StringUtils::toString(cursorColumn) + ", " + StringUtils::toString(cursorRow) + ")");
+            guiSelectedCellLabel->adjustSize();
         }
     }
     
     void StageSelectState::render(sf::RenderTarget &target) {
-        target.draw(background);
+        //target.draw(background);
         target.draw(leftEye);
         target.draw(rightEye);
         target.draw(foreground);
         target.draw(cursor);
         
-        guiFont->renderText(target, "PUSH   START", 80, 8);
-        guiFont->renderText(target, "MAN", 48, 88);
-        guiFont->renderText(target, "MAN", 128, 88);
-        guiFont->renderText(target, "MAN", 208, 88);
-        guiFont->renderText(target, "MAN", 48, 152);
-        // guiFont->renderText(target, "MAN", 128, 152);
-        guiFont->renderText(target, "MAN", 208, 152);
-        guiFont->renderText(target, "MAN", 48, 216);
-        guiFont->renderText(target, "MAN", 128, 216);
-        guiFont->renderText(target, "MAN", 208, 216);
+        // guiFont->renderText(target, "PUSH   START", 80, 8);
+        // guiFont->renderText(target, "MAN", 48, 88);
+        // guiFont->renderText(target, "MAN", 128, 88);
+        // guiFont->renderText(target, "MAN", 208, 88);
+        // guiFont->renderText(target, "MAN", 48, 152);
+        // // guiFont->renderText(target, "MAN", 128, 152);
+        // guiFont->renderText(target, "MAN", 208, 152);
+        // guiFont->renderText(target, "MAN", 48, 216);
+        // guiFont->renderText(target, "MAN", 128, 216);
+        // guiFont->renderText(target, "MAN", 208, 216);
 
-        guiFont->renderText(target, "Boss: " + StringUtils::toString<int>(static_cast<int>(gameProgress->getCurrentBoss())), 8, 224);
-        guiFont->renderText(target, "(" + StringUtils::toString<int>(cursorColumn) + ", " + StringUtils::toString<int>(cursorRow) + ")", 8, 224);
+        // guiFont->renderText(target, "Boss: " + StringUtils::toString<int>(static_cast<int>(gameProgress->getCurrentBoss())), 8, 224);
+        // guiFont->renderText(target, "(" + StringUtils::toString<int>(cursorColumn) + ", " + StringUtils::toString<int>(cursorRow) + ")", 8, 224);
     }
 
     bool StageSelectState::update(const float &dt) {
@@ -152,16 +179,35 @@ namespace hikari {
 
     void StageSelectState::onEnter() {
         // Start music
-        //audioService->playMusic(3);
+        if(auto audio = audioService.lock()) {
+            audio->playMusic(3);
+        }
 
         // Reset cursor to default location
         cursorColumn = DEFAULT_CURSOR_COLUMN;
         cursorRow = DEFAULT_CURSOR_ROW;
+
+        // Attach our GUI
+        if(auto gui = guiService.lock()) {
+            auto & topContainer = gui->getRootContainer();
+
+            topContainer.add(guiContainer.get(), 0, 0);
+            HIKARI_LOG(debug2) << "Added top container in stage select";
+        }
     }
 
     void StageSelectState::onExit() {
         // Stop music
-        //audioService->stopMusic();
+        if(auto audio = audioService.lock()) {
+            audio->stopMusic();
+        }
+
+        // Remove our GUI
+        if(auto gui = guiService.lock()) {
+            auto & topContainer = gui->getRootContainer();
+
+            topContainer.remove(guiContainer.get());
+        }
     }
 
     const std::string& StageSelectState::getName() const {

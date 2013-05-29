@@ -18,20 +18,34 @@ namespace sf {
     class Sprite;
 }
 
+
+namespace gcn {
+    class Container;
+    class Label;
+}
+
 namespace hikari {
 
     class AudioService;
     class GameProgress;
+    class GuiService;
     class ImageFont;
     class ServiceLocator;
+
+    namespace gui {
+        // Forward-declare any GUI classes here
+    }
 
     class StageSelectState : public GameState {
     private:
         std::string name;
         sf::View view;
-        std::shared_ptr<AudioService> audioService;
-        std::shared_ptr<GameProgress> gameProgress;
-        std::shared_ptr<ImageFont> guiFont;
+        std::weak_ptr<GuiService> guiService;
+        std::weak_ptr<AudioService> audioService;
+        std::weak_ptr<GameProgress> gameProgress;
+        std::weak_ptr<ImageFont> guiFont;
+        std::unique_ptr<gcn::Container> guiContainer;
+        std::unique_ptr<gcn::Label> guiSelectedCellLabel;
 
         sf::Sprite background;
         sf::Sprite foreground;
@@ -64,6 +78,7 @@ namespace hikari {
         static const int DEFAULT_CURSOR_COLUMN;
 
         void calculateCursorIndex();
+        void buildGui();
 
     public:
         StageSelectState(const std::string &name, const Json::Value &params, ServiceLocator &services);

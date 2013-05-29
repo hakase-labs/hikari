@@ -38,10 +38,12 @@ namespace hikari {
     namespace gui {
         class EnergyMeter;
         class EnergyGauge;
+        class Panel;
     }
 
     class AudioService;
     class GameProgress;
+    class GuiService;
     class ImageFont;
     class MapLoader;
     class ServiceLocator;
@@ -63,6 +65,7 @@ namespace hikari {
     private:
         std::string name;
         std::weak_ptr<AudioService> audioService;
+        std::weak_ptr<GuiService> guiService;
         std::shared_ptr<EventManager> eventManager;
         std::shared_ptr<GameProgress> gameProgress;
         std::shared_ptr<ImageFont> guiFont;
@@ -73,13 +76,13 @@ namespace hikari {
         std::shared_ptr<Map> currentMap;
         std::shared_ptr<Room> currentRoom;
         std::shared_ptr<Hero> hero;
-        std::shared_ptr<gui::EnergyMeter> hudBossEnergyMeter;
-        std::shared_ptr<gui::EnergyMeter> hudHeroEnergyMeter;
-        std::shared_ptr<gui::EnergyMeter> hudCurrentWeaponMeter;
         std::unique_ptr<MapRenderer> mapRenderer;
         std::unique_ptr<SubState> subState;
-        std::unique_ptr<gcn::Container> guiContiner;
-        std::unique_ptr<gui::EnergyGauge> guiEnergyGauge;
+        std::unique_ptr<gcn::Container> guiContainer;
+        std::unique_ptr<gui::EnergyGauge> guiBossEnergyGauge;
+        std::unique_ptr<gui::EnergyGauge> guiHeroEnergyGauge;
+        std::unique_ptr<gui::EnergyGauge> guiWeaponEnergyGauge;
+        std::unique_ptr<gui::Panel> guiMenuPanel;
         std::map< std::string, std::shared_ptr<Map> > maps;
         std::vector<std::weak_ptr<Spawner>> itemSpawners;
         std::vector<std::weak_ptr<Spawner>> deactivatedItemSpawners;
@@ -90,10 +93,6 @@ namespace hikari {
         sf::RectangleShape spawnerMarker;
         sf::RectangleShape transitionMarker;
         sf::RectangleShape leftBar;
-        sf::RectangleShape menuPlaceholder;
-        bool drawBossEnergyMeter;
-        bool drawHeroEnergyMeter;
-        bool drawWeaponEnergyMeter;
         bool drawInfamousBlackBar;
         bool isViewingMenu;
         bool hasReachedMidpoint;
@@ -161,6 +160,11 @@ namespace hikari {
         void handleEntityDeathEvent(EventDataPtr evt);
         void handleWeaponFireEvent(EventDataPtr evt);
         void handleEntityStateChangeEvent(EventDataPtr evt);
+
+        //
+        // GUI
+        //
+        void buildGui();
 
         /**
          * GamePlayState::SubState encapsulates a part of gameplay that operates
