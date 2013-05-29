@@ -33,6 +33,9 @@ namespace hikari {
     class ImageCache;
 
     class GuiService : public Service, public NonCopyable {
+    public:
+        static const std::string DEFAULT_FONT_NAME;
+        
     private:
         sf::RenderTarget & renderTarget;
         std::unique_ptr<gcn::Gui> gui;
@@ -42,8 +45,6 @@ namespace hikari {
         std::unique_ptr<gcn::Container> rootWidget;
         std::unique_ptr<gcn::Container> rootContainer;
         std::unique_ptr<gcn::Container> hudContainer;
-        std::unique_ptr<gcn::Image> globalFontImage;
-        std::shared_ptr<gcn::Font> globalFont;
         std::unordered_map<std::string, std::shared_ptr<gcn::Image>> fontImageMap;
         std::unordered_map<std::string, std::shared_ptr<gcn::Font>> fontMap;
 

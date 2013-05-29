@@ -18,6 +18,8 @@
 
 namespace hikari {
 
+    const std::string GuiService::DEFAULT_FONT_NAME = "default";
+
     GuiService::GuiService(const Json::Value & config, const std::weak_ptr<ImageCache> & imageCache, sf::RenderTarget & renderTarget)
         : Service()
         , renderTarget(renderTarget)
@@ -28,8 +30,6 @@ namespace hikari {
         , rootWidget(new gcn::Container())
         , rootContainer(new gcn::Container())
         , hudContainer(new gcn::Container())
-        , globalFontImage(nullptr)
-        , globalFont(nullptr)
         , fontImageMap()
         , fontMap()
     {
@@ -38,9 +38,8 @@ namespace hikari {
         gcn::Image::setImageLoader(imageLoader.get());
 
         buildFontMap(config["gui"]["fonts"]);
-        globalFont = getFontByName("default");
 
-        if(globalFont) {
+        if(auto globalFont = getFontByName(DEFAULT_FONT_NAME)) {
             gcn::Widget::setGlobalFont(globalFont.get());
         }
         
@@ -49,20 +48,24 @@ namespace hikari {
         gui->setGraphics(graphics.get());
         gui->setTop(rootWidget.get());
 
+        // Base the root containers size off the size of the render target
+        unsigned int windowWidth = renderTarget.getSize().x;
+        unsigned int windowHeight = renderTarget.getSize().y;
+
         // The root widget is an internal container for the other "layers" of widgets.
-        rootWidget->setSize(256, 240);
+        rootWidget->setSize(windowWidth, windowHeight);
         rootWidget->setX(0);
         rootWidget->setY(0);
         rootWidget->setBaseColor(gcn::Color(0, 0, 0, 0));
 
         // This is where game state widgets go (almost everything)
-        rootContainer->setSize(256, 240);
+        rootContainer->setSize(windowWidth, windowHeight);
         rootContainer->setX(0);
         rootContainer->setY(0);
         rootContainer->setBaseColor(gcn::Color(0, 0, 0, 0));
 
         // This is where overlaying widgets go (fps counter, console, etc.)
-        hudContainer->setSize(256, 240);
+        hudContainer->setSize(windowWidth, windowHeight);
         hudContainer->setX(0);
         hudContainer->setY(0);
         hudContainer->setBaseColor(gcn::Color(0, 0, 0, 0));
@@ -106,7 +109,7 @@ namespace hikari {
 
                         auto font = std::make_shared<gcn::FixedImageFont>(glyphImage.get(), glyphSize, glyphs);
                         this->fontMap.insert(std::make_pair(fontName, font));
-                        
+
                         HIKARI_LOG(debug3) << "Font \"" << fontName << "\" successfully loaded.";
                     } else {
                         HIKARI_LOG(warning) << "Font image for \"" << fontName << "\" could not be loaded; ignoring.";
