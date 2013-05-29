@@ -10,10 +10,22 @@
         "stages" : "assets/stages"
     },
     "gui" : {
-        "font" : {
-            "image" : "assets/images/gui-font.png",
-            "glyphs" : " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
-            "glyphSize" : 8
+        "fonts" : {
+            "default" : {
+                "image" : "assets/images/gui-font.png",
+                "glyphs" : " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
+                "glyphSize" : 8
+            },
+            "console" : {
+                "image" : "assets/images/gui-font.png",
+                "glyphs" : " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
+                "glyphSize" : 8
+            },
+            "weapon-menu" : {
+                "image" : "assets/images/gui-font.png",
+                "glyphs" : " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
+                "glyphSize" : 8
+            }
         }
     },
     "states" : {

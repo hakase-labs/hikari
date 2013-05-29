@@ -36,22 +36,8 @@ namespace hikari {
         imageLoader.reset(new gui::HikariImageLoader(imageCache));
         gcn::Image::setImageLoader(imageLoader.get());
 
-        // Load the global/default font
-        // const std::string fontImagePath = config["gui"]["font"]["image"].asString();
-        // const std::string fontGlyphMap = config["gui"]["font"]["glyphs"].asString();
-        // const int fontGlyphSize = config["gui"]["font"]["glyphSize"].asInt();
-
-        // globalFontImage.reset(gcn::Image::load(fontImagePath));
-        // globalFont.reset(new gcn::FixedImageFont(globalFontImage.get(), fontGlyphSize, fontGlyphMap));
-
         buildFontMap(config["gui"]["fonts"]);
-
         globalFont = fontMap.at("default");
-
-        if(globalFont) {
-            HIKARI_LOG(debug3) << "Global font is non-null";
-        }
-
         gcn::Widget::setGlobalFont(globalFont.get());
 
         // Set up the GUI's inputs/outputs
@@ -110,7 +96,7 @@ namespace hikari {
                 auto glyphImage = std::shared_ptr<gcn::Image>(gcn::Image::load(imageName));
 
                 if(glyphImage) {
-                    this->fontImageMap[imageName] = glyphImage;
+                    this->fontImageMap[fontName] = glyphImage;
                     this->fontMap[fontName] = std::make_shared<gcn::FixedImageFont>(glyphImage.get(), glyphSize, glyphs);
                     HIKARI_LOG(debug3) << "Font \"" << fontName << "\" successfully loaded.";
                 } else {
@@ -120,9 +106,6 @@ namespace hikari {
                 HIKARI_LOG(warning) << "Font \"" << fontName << "\" is not properly defined; ignoring.";
             }
         });
-        //for(int index = 0, length = fontConfig.size(); index < length; ++index) {
-        //    std::string fontName = 
-        //}
     }
 
     void GuiService::processEvent(sf::Event & evt) {
