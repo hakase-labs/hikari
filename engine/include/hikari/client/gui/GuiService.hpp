@@ -4,6 +4,7 @@
 #include "hikari/core/util/Service.hpp"
 #include "hikari/core/util/NonCopyable.hpp"
 
+#include <unordered_map>
 #include <memory>
 #include <string>
 
@@ -14,6 +15,7 @@ namespace gcn {
     class ImageLoader;
     class SFMLInput;
     class FixedImageFont;
+    class Font;
     class Gui;
 }
 
@@ -41,7 +43,11 @@ namespace hikari {
         std::unique_ptr<gcn::Container> rootContainer;
         std::unique_ptr<gcn::Container> hudContainer;
         std::unique_ptr<gcn::Image> globalFontImage;
-        std::unique_ptr<gcn::FixedImageFont> globalFont;
+        std::shared_ptr<gcn::Font> globalFont;
+        std::unordered_map<std::string, std::shared_ptr<gcn::Image>> fontImageMap;
+        std::unordered_map<std::string, std::shared_ptr<gcn::Font>> fontMap;
+
+        void buildFontMap(const Json::Value & fontConfig);
 
     public:
         explicit GuiService(const Json::Value & config, const std::weak_ptr<ImageCache> & imageCache, sf::RenderTarget & renderTarget);

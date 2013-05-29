@@ -29,18 +29,28 @@ namespace hikari {
         , hudContainer(new gcn::Container())
         , globalFontImage(nullptr)
         , globalFont(nullptr)
+        , fontImageMap()
+        , fontMap()
     {
         // Set up the global image loader (a proxy to the image caching service)
         imageLoader.reset(new gui::HikariImageLoader(imageCache));
         gcn::Image::setImageLoader(imageLoader.get());
 
         // Load the global/default font
-        const std::string fontImagePath = config["gui"]["font"]["image"].asString();
-        const std::string fontGlyphMap = config["gui"]["font"]["glyphs"].asString();
-        const int fontGlyphSize = config["gui"]["font"]["glyphSize"].asInt();
+        // const std::string fontImagePath = config["gui"]["font"]["image"].asString();
+        // const std::string fontGlyphMap = config["gui"]["font"]["glyphs"].asString();
+        // const int fontGlyphSize = config["gui"]["font"]["glyphSize"].asInt();
 
-        globalFontImage.reset(gcn::Image::load(fontImagePath));
-        globalFont.reset(new gcn::FixedImageFont(globalFontImage.get(), fontGlyphSize, fontGlyphMap));
+        // globalFontImage.reset(gcn::Image::load(fontImagePath));
+        // globalFont.reset(new gcn::FixedImageFont(globalFontImage.get(), fontGlyphSize, fontGlyphMap));
+
+        buildFontMap(config["gui"]["fonts"]);
+
+        globalFont = fontMap.at("default");
+
+        if(globalFont) {
+            HIKARI_LOG(debug3) << "Global font is non-null";
+        }
 
         gcn::Widget::setGlobalFont(globalFont.get());
 
@@ -74,6 +84,45 @@ namespace hikari {
 
     GuiService::~GuiService() {
 
+    }
+
+    void GuiService::buildFontMap(const Json::Value & fontConfig) {
+        auto fontNames = fontConfig.getMemberNames();
+
+        std::for_each(std::begin(fontNames), std::end(fontNames), [&](const std::string & fontName) {
+            HIKARI_LOG(debug3) << "Creating font \"" << fontName << "\"";
+
+            auto & fontSettings = fontConfig[fontName];
+            bool isValid = false;
+
+            if(fontSettings.isMember("image")) {
+                if(fontSettings.isMember("glyphs")) {
+                    if(fontSettings.isMember("glyphSize")) {
+                        isValid = true;
+                    }
+                }
+            }
+
+            if(isValid) {
+                std::string imageName = fontSettings["image"].asString();
+                std::string glyphs = fontSettings["glyphs"].asString();
+                int glyphSize = fontSettings["glyphSize"].asInt();
+                auto glyphImage = std::shared_ptr<gcn::Image>(gcn::Image::load(imageName));
+
+                if(glyphImage) {
+                    this->fontImageMap[imageName] = glyphImage;
+                    this->fontMap[fontName] = std::make_shared<gcn::FixedImageFont>(glyphImage.get(), glyphSize, glyphs);
+                    HIKARI_LOG(debug3) << "Font \"" << fontName << "\" successfully loaded.";
+                } else {
+                    HIKARI_LOG(warning) << "Font image for \"" << fontName << "\" could not be loaded; ignoring.";
+                }
+            } else {
+                HIKARI_LOG(warning) << "Font \"" << fontName << "\" is not properly defined; ignoring.";
+            }
+        });
+        //for(int index = 0, length = fontConfig.size(); index < length; ++index) {
+        //    std::string fontName = 
+        //}
     }
 
     void GuiService::processEvent(sf::Event & evt) {
