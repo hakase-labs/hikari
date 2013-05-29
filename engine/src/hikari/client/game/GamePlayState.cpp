@@ -12,7 +12,6 @@
 #include "hikari/client/game/objects/CollectableItem.hpp"
 #include "hikari/client/game/objects/ItemFactory.hpp"
 #include "hikari/client/game/Effect.hpp"
-#include "hikari/client/gui/EnergyMeter.hpp"
 #include "hikari/client/gui/EnergyGauge.hpp"
 #include "hikari/client/gui/Panel.hpp"
 #include "hikari/client/Services.hpp"
@@ -55,8 +54,6 @@
 
 namespace hikari {
 
-    using gui::EnergyMeter;
-
     GamePlayState::GamePlayState(const std::string &name, const Json::Value &params, ServiceLocator &services)
         : name(name)
         , audioService(services.locateService<AudioService>(Services::AUDIO))
@@ -71,13 +68,12 @@ namespace hikari {
         , currentMap(nullptr)
         , currentRoom(nullptr)
         , hero(nullptr)
-        , hudBossEnergyMeter(nullptr)
-        , hudHeroEnergyMeter(nullptr)
-        , hudCurrentWeaponMeter(nullptr)
         , mapRenderer(new MapRenderer(nullptr, nullptr))
         , subState(nullptr)
         , guiContainer(new gcn::Container())
-        , guiEnergyGauge(new gui::EnergyGauge())
+        , guiBossEnergyGauge(new gui::EnergyGauge())
+        , guiHeroEnergyGauge(new gui::EnergyGauge())
+        , guiWeaponEnergyGauge(new gui::EnergyGauge())
         , guiMenuPanel(new gui::Panel())
         , maps()
         , itemSpawners()
@@ -89,10 +85,6 @@ namespace hikari {
         , spawnerMarker()
         , transitionMarker()
         , leftBar(sf::Vector2f(8.0f, 240.0f))
-        , menuPlaceholder(sf::Vector2f(240.0f, 224.0f))
-        , drawBossEnergyMeter(false)
-        , drawHeroEnergyMeter(false)
-        , drawWeaponEnergyMeter(false)
         , drawInfamousBlackBar(false)
         , isViewingMenu(false)
         , hasReachedMidpoint(false)
@@ -108,33 +100,7 @@ namespace hikari {
         //
         buildGui();
 
-        // auto energyMeterTexture = imageCache->get("assets/images/meter-overlay.png");
-
-        // sf::Sprite energyMeterSprite(*energyMeterTexture.get());
-        // energyMeterSprite.setTextureRect(sf::IntRect(0, 0, 8, 56));
-
-        // hudBossEnergyMeter = std::make_shared<EnergyMeter>(energyMeterSprite, 56.0f);
-        // hudBossEnergyMeter->setMaximumValue(56.0f);
-        // hudBossEnergyMeter->setValue(46.0f);
-        // hudBossEnergyMeter->setFillColor(sf::Color(21, 95, 217));
-        // hudBossEnergyMeter->setPrimaryColor(sf::Color(100, 176, 255));
-        // hudBossEnergyMeter->setSecondaryColor(sf::Color(255, 255, 255));
-        // hudBossEnergyMeter->setPosition(sf::Vector2i(40, 25));
-
-        // hudHeroEnergyMeter = std::make_shared<EnergyMeter>(energyMeterSprite, 56.0f);
-        // hudHeroEnergyMeter->setMaximumValue(56.0f);
-        // hudHeroEnergyMeter->setValue(56.0f);
-        // hudHeroEnergyMeter->setPosition(sf::Vector2i(24, 25));
-
-        // hudCurrentWeaponMeter = std::make_shared<EnergyMeter>(energyMeterSprite, 56.0f);
-        // hudCurrentWeaponMeter->setMaximumValue(56.0f);
-        // hudCurrentWeaponMeter->setValue(56.0f);
-        // hudCurrentWeaponMeter->setPosition(sf::Vector2i(16, 25));
-
         // leftBar.setFillColor(sf::Color::Black);
-
-        // menuPlaceholder.setPosition(8.0f, 8.0f);
-        // menuPlaceholder.setFillColor(sf::Color(66, 66, 66, 128));
 
         //
         // Create/configure Rockman
@@ -157,9 +123,6 @@ namespace hikari {
 
         const auto itemFactoryWeak = services.locateService<ItemFactory>("ItemFactory");
         world.setItemFactory(itemFactoryWeak);
-
-        //subState.reset(new ReadySubState(*this));
-        //subState->enter();
     }
 
     GamePlayState::~GamePlayState() {
@@ -182,12 +145,29 @@ namespace hikari {
         guiContainer->setHeight(240);
         guiContainer->setOpaque(false);
         guiContainer->setBackgroundColor(gcn::Color(0, 0, 0, 0));
-        guiContainer->add(guiEnergyGauge.get(), 24, 24);
+        guiContainer->add(guiBossEnergyGauge.get(), 32, 16);
+        guiContainer->add(guiHeroEnergyGauge.get(), 16, 16);
+        guiContainer->add(guiWeaponEnergyGauge.get(), 8, 16);
         guiContainer->add(guiMenuPanel.get(), 0, 0);
 
-        guiEnergyGauge->setMaximumValue(56.0f);
-        guiEnergyGauge->setValue(12.0f);
-        guiEnergyGauge->setVisible(false);
+        // The reddish energy gauge for bosses
+        guiBossEnergyGauge->setMaximumValue(56.0f);
+        guiBossEnergyGauge->setValue(56.0f);
+        guiBossEnergyGauge->setVisible(true);
+        guiBossEnergyGauge->setBackgroundColor(gcn::Color(0xe40058));
+        guiBossEnergyGauge->setForegroundColor(gcn::Color(0xfc9838));
+
+        // Mega man's energy gauge
+        guiHeroEnergyGauge->setMaximumValue(56.0f);
+        guiHeroEnergyGauge->setValue(56.0f);
+        guiHeroEnergyGauge->setVisible(false);
+
+        // Current weapon's energy gauge
+        guiWeaponEnergyGauge->setMaximumValue(56.0f);
+        guiWeaponEnergyGauge->setValue(56.0f);
+        guiWeaponEnergyGauge->setVisible(true);
+        guiWeaponEnergyGauge->setBackgroundColor(0x002a88);
+        guiWeaponEnergyGauge->setForegroundColor(0xadadad);
 
         guiMenuPanel->setX(0);
         guiMenuPanel->setY(0);
@@ -430,7 +410,7 @@ namespace hikari {
         HIKARI_LOG(debug) << "Starting stage.";
 
         // Hide energy gauge
-        // guiEnergyGauge->setVisible(false);
+        // guiHeroEnergyGauge->setVisible(false);
 
         //
         // Reset all spawners to their original state
@@ -541,24 +521,7 @@ namespace hikari {
     }
 
     void GamePlayState::renderHud(sf::RenderTarget &target) const {
-        // guiFont->renderText(target, "HUD", 72, 32);
 
-        // if(drawBossEnergyMeter) {
-        //     hudBossEnergyMeter->render(target);
-        // }
-
-        // if(drawHeroEnergyMeter) {
-        //      hudHeroEnergyMeter->render(target);
-        // }
-
-        // if(drawWeaponEnergyMeter) {
-        //     hudCurrentWeaponMeter->render(target);
-        // }
-
-        // if(isViewingMenu) {
-        //     //guiFont->renderText(target, "MENU", 72, 40);
-        //     // target.draw(menuPlaceholder);
-        // }
     }
 
     void GamePlayState::bindEventHandlers() {
@@ -655,7 +618,7 @@ namespace hikari {
 
         renderFadeOverlay = true;
         renderReadyText = false;
-        gamePlayState.guiEnergyGauge->setVisible(false);
+        gamePlayState.guiHeroEnergyGauge->setVisible(false);
 
         sf::Color overlayColor = sf::Color(fadeOverlay.getFillColor());
         overlayColor.a = 255;
@@ -784,6 +747,7 @@ namespace hikari {
         auto& currentRoom = gamePlayState.currentRoom;
 
         // gamePlayState.isHeroAlive = true;
+        gamePlayState.guiHeroEnergyGauge->setVisible(true);
 
         if(currentRoom) {
             Point2D<int> spawnPosition = gamePlayState.currentRoom->getHeroSpawnPosition();
@@ -850,11 +814,8 @@ namespace hikari {
     }
 
     void GamePlayState::PlayingSubState::enter() {
-        gamePlayState.drawHeroEnergyMeter = true;
         gamePlayState.isHeroAlive = true;
         postDeathTimer = 0.0f;
-
-        gamePlayState.guiEnergyGauge->setVisible(true);
     }
 
     void GamePlayState::PlayingSubState::exit() {
@@ -911,7 +872,7 @@ namespace hikari {
             postDeathTimer += dt;
 
             // Wait 1 second after you died and then restart
-            if(postDeathTimer >= 2.0f) {
+            if(postDeathTimer >= 2.5f) {
                 // gamePlayState.changeSubState(std::unique_ptr<SubState>(new ReadySubState(gamePlayState)));
                 gamePlayState.restartStage();
                 return;

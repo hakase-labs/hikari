@@ -76,13 +76,12 @@ namespace hikari {
         std::shared_ptr<Map> currentMap;
         std::shared_ptr<Room> currentRoom;
         std::shared_ptr<Hero> hero;
-        std::shared_ptr<gui::EnergyMeter> hudBossEnergyMeter;
-        std::shared_ptr<gui::EnergyMeter> hudHeroEnergyMeter;
-        std::shared_ptr<gui::EnergyMeter> hudCurrentWeaponMeter;
         std::unique_ptr<MapRenderer> mapRenderer;
         std::unique_ptr<SubState> subState;
         std::unique_ptr<gcn::Container> guiContainer;
-        std::unique_ptr<gui::EnergyGauge> guiEnergyGauge;
+        std::unique_ptr<gui::EnergyGauge> guiBossEnergyGauge;
+        std::unique_ptr<gui::EnergyGauge> guiHeroEnergyGauge;
+        std::unique_ptr<gui::EnergyGauge> guiWeaponEnergyGauge;
         std::unique_ptr<gui::Panel> guiMenuPanel;
         std::map< std::string, std::shared_ptr<Map> > maps;
         std::vector<std::weak_ptr<Spawner>> itemSpawners;
@@ -94,10 +93,6 @@ namespace hikari {
         sf::RectangleShape spawnerMarker;
         sf::RectangleShape transitionMarker;
         sf::RectangleShape leftBar;
-        sf::RectangleShape menuPlaceholder;
-        bool drawBossEnergyMeter;
-        bool drawHeroEnergyMeter;
-        bool drawWeaponEnergyMeter;
         bool drawInfamousBlackBar;
         bool isViewingMenu;
         bool hasReachedMidpoint;
@@ -170,7 +165,7 @@ namespace hikari {
         // GUI
         //
         void buildGui();
-        
+
         /**
          * GamePlayState::SubState encapsulates a part of gameplay that operates
          * independently from others. Some examples of this would be:

@@ -64,7 +64,7 @@ namespace hikari {
     }
 
     unsigned char GameProgress::getWeaponEnergy(unsigned char weapon) const {
-        if(weapon >= 0 && weapon < getWeaponCount()) {
+        if(weapon < getWeaponCount()) {
             return weaponEnergies[weapon];
         }
         return 0;
@@ -83,21 +83,21 @@ namespace hikari {
     }
 
     bool GameProgress::bossIsDefeated(unsigned char boss) const {
-        if(boss >= 0 && boss < getBossCount()) {
+        if(boss < getBossCount()) {
             return bossesDefeated[boss];
         }
         return false;
     }
 
     bool GameProgress::weaponIsEnabled(unsigned char weapon) const {
-        if(weapon >= 0 && weapon < getWeaponCount()) {
+        if(weapon < getWeaponCount()) {
             return weaponsEnabled[weapon];
         }
         return false;
     }
 
     void GameProgress::setBossDefeated(unsigned char boss, bool defeated) {
-        if(boss >= 0 && boss < getBossCount()) {
+        if(boss < getBossCount()) {
             bossesDefeated[boss] = defeated;
         }
     }
@@ -119,7 +119,7 @@ namespace hikari {
     }
 
     void GameProgress::setCurrentBoss(unsigned char boss) {
-        if(boss >= 0 && boss < getBossCount()) {
+        if(boss < getBossCount()) {
             currentBoss = boss;
         }
     }
@@ -129,13 +129,13 @@ namespace hikari {
     }
 
     void GameProgress::setWeaponEnergy(unsigned char weapon, unsigned char value) {
-        if(weapon >= 0 && weapon < getWeaponCount()) {
+        if(weapon < getWeaponCount()) {
             weaponEnergies[weapon] = value;
         }
     }
 
     void GameProgress::enableWeapon(unsigned char weapon, bool enable) {
-        if(weapon >= 0 && weapon < getWeaponCount()) {
+        if(weapon < getWeaponCount()) {
             weaponsEnabled[weapon] = enable;
         }
     }
