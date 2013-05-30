@@ -11,6 +11,7 @@
 #include "hikari/client/game/GuiTestState.hpp"
 #include "hikari/client/game/PasswordState.hpp"
 #include "hikari/client/game/SpriteTestState.hpp"
+#include "hikari/client/game/TitleState.hpp"
 #include "hikari/client/audio/AudioService.hpp"
 #include "hikari/client/gui/GuiService.hpp"
 #include "hikari/client/gui/CommandConsole.hpp"
@@ -287,6 +288,7 @@ int main(int argc, char** argv) {
         StatePtr stageSelectState(new StageSelectState("stageselect", game["states"]["select"], services));
         StatePtr gamePlayState(new GamePlayState("gameplay", game, services));
         StatePtr passwordState(new PasswordState("password", game, services));
+        StatePtr titleState(new TitleState("title", game, services));
 
         controller.addState(mapTestState->getName(), mapTestState);
         //controller.addState(guiTestState->getName(), guiTestState);
@@ -294,6 +296,7 @@ int main(int argc, char** argv) {
         controller.addState(stageSelectState->getName(), stageSelectState);
         controller.addState(gamePlayState->getName(), gamePlayState);
         controller.addState(passwordState->getName(), passwordState);
+        controller.addState(titleState->getName(), titleState);
 
         controller.setState(game.get("initial-state", "default").asString());
 

@@ -2,24 +2,37 @@
 #define HIKARI_CLIENT_GAME_TITLESTATE
 
 #include "hikari/core/game/GameState.hpp"
-#include <SFML/Graphics/RenderTarget.hpp>
-#include <SFML/Graphics/View.hpp>
-#include <json/value.h>
+
+#include <memory>
 #include <string>
 
-namespace hikari {
-namespace client {
-namespace game {
+namespace Json {
+    class Value;
+}
 
-    class TitleState : public hikari::core::game::GameState {
+namespace gcn {
+    class Container;
+    class Label;
+}
+
+namespace hikari {
+
+    class AudioService;
+    class GuiService;
+    class ServiceLocator;
+
+    class TitleState : public GameState {
     private:
         std::string name;
-        sf::RenderTarget &target;
-        sf::View view;
+        std::weak_ptr<GuiService> guiService;
+        std::unique_ptr<gcn::Container> guiContainer;
+        std::unique_ptr<gcn::Label> guiLabel;
+
+        void buildGui();
 
     public:
-        TitleState(const Json::Value &params);
-        virtual ~TitleState() {}
+        TitleState(const std::string &name, const Json::Value &params, ServiceLocator &services);
+        virtual ~TitleState();
 
         virtual void handleEvent(sf::Event &event);
         virtual void render(sf::RenderTarget &target);
@@ -29,8 +42,6 @@ namespace game {
         virtual const std::string &getName() const;
     };
 
-} // hikari.client.game
-} // hikari.client
 } // hikari
 
 #endif // HIKARI_CLIENT_GAME_TITLESTATE

@@ -197,6 +197,7 @@ set( ENGINE_SOURCE_FILES
     src/hikari/client/game/SpriteTestState.cpp
     src/hikari/client/game/StageSelectState.cpp
     src/hikari/client/game/PasswordState.cpp
+    src/hikari/client/game/TitleState.cpp
     src/hikari/client/gui/CommandConsole.cpp
     src/hikari/client/gui/EnergyMeter.cpp
     src/hikari/client/gui/Widget.cpp
