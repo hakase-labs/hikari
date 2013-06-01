@@ -12,7 +12,7 @@ namespace hikari {
     private:
         std::shared_ptr<EnemyBrain> brain;
     public:
-        Enemy(const int& id = GameObject::generateObjectId(), std::shared_ptr<Room> room = nullptr);
+        Enemy(int id = GameObject::generateObjectId(), std::shared_ptr<Room> room = nullptr);
         Enemy(const Enemy& proto); 
         virtual ~Enemy();
 

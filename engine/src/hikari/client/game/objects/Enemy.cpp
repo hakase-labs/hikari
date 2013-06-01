@@ -6,7 +6,7 @@
 
 namespace hikari {
 
-    Enemy::Enemy(const int &id, std::shared_ptr<Room> room) 
+    Enemy::Enemy(int id, std::shared_ptr<Room> room) 
         : Entity(id, room) 
         , brain(nullptr)
     {

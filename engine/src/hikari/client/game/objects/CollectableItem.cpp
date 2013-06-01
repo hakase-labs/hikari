@@ -9,7 +9,7 @@ namespace hikari {
     const float CollectableItem::DEFAULT_AGE_IN_M_SECONDS = 0.0f;
     const float CollectableItem::DEFAULT_MAXIMUM_AGE_IN_M_SECONDS = 10.0f;
 
-    CollectableItem::CollectableItem(const int& id, std::shared_ptr<Room> room, std::shared_ptr<Effect> effect)
+    CollectableItem::CollectableItem(int id, std::shared_ptr<Room> room, std::shared_ptr<Effect> effect)
         : Entity(id, room)
         , effect(effect)
         , ageless(false)

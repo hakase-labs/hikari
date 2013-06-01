@@ -26,7 +26,7 @@ namespace hikari {
         void setAge(float newAge);
 
     public:
-        CollectableItem(const int& id, std::shared_ptr<Room> room, std::shared_ptr<Effect> effect);
+        CollectableItem(int id, std::shared_ptr<Room> room, std::shared_ptr<Effect> effect);
         CollectableItem(const CollectableItem &proto);
         virtual ~CollectableItem();
 

@@ -19,7 +19,7 @@ namespace hikari {
         #endif // HIKARI_DEBUG_ENTITIES
     }
 
-    Entity::Entity(const int& id, std::shared_ptr<Room> room)
+    Entity::Entity(int id, std::shared_ptr<Room> room)
         : GameObject(id)
         , spriteTexture()
         , sprite()

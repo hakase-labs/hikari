@@ -17,7 +17,7 @@
 
 namespace hikari {
 
-    Hero::Hero(const int &id, std::shared_ptr<Room> room)
+    Hero::Hero(int id, std::shared_ptr<Room> room)
         : Entity(id, room)
         , isDecelerating(false)
         , isStanding(false)
