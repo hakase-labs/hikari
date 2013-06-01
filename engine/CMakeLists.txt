@@ -264,6 +264,21 @@ include_directories( ${INCLUDE_DIRS} )
 
 add_executable( hikari ${HIKARI_SOURCE_FILES} ${INCLUDE_DIRS} )
 
+
+
+#
+# Copy content files to output directory
+#
+add_custom_command(
+  TARGET hikari
+  POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E echo "Copying content..."
+  COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/content" $<TARGET_FILE_DIR:hikari>
+)
+
+MESSAGE(STATUS "Gonna copy ${PROJECT_SOURCE_DIR}/content to " $<TARGET_FILE_DIR:hikari>)
+
+
 #
 # We want to link statically on Windows
 #
