@@ -38,7 +38,7 @@ namespace hikari {
         
     private:
         sf::RenderTarget & renderTarget;
-        std::unique_ptr<gcn::Gui> gui;
+        std::unique_ptr<gcn::Gui> gui; 
         std::unique_ptr<gcn::Graphics> graphics;
         std::unique_ptr<gcn::SFMLInput> input;
         std::unique_ptr<gcn::ImageLoader> imageLoader;
