@@ -46,27 +46,27 @@ namespace hikari {
         return std::unique_ptr<CollectableItem>(new CollectableItem(*this));
     }
 
-    const float& CollectableItem::getAge() const {
+    float CollectableItem::getAge() const {
         return age;
     }
 
-    void CollectableItem::setAge(const float& newAge) {
+    void CollectableItem::setAge(float newAge) {
         age = newAge;
     }
 
-    const float& CollectableItem::getMaximumAge() const {
+    float CollectableItem::getMaximumAge() const {
         return maximumAge;
     }
 
-    void CollectableItem::setMaximumAge(const float& newMaximumAge) {
+    void CollectableItem::setMaximumAge(float newMaximumAge) {
         maximumAge = newMaximumAge;
     }
 
-    const bool& CollectableItem::isAgeless() const {
+    bool CollectableItem::isAgeless() const {
         return ageless;
     }
 
-    void CollectableItem::setAgeless(const bool& isAgeless) {
+    void CollectableItem::setAgeless(bool isAgeless) {
         ageless = isAgeless;
     }
 

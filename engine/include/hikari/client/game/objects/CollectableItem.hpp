@@ -23,7 +23,7 @@ namespace hikari {
         float maximumAge;
 
     protected:
-        void setAge(const float& newAge);
+        void setAge(float newAge);
 
     public:
         CollectableItem(const int& id, std::shared_ptr<Room> room, std::shared_ptr<Effect> effect);
@@ -32,12 +32,12 @@ namespace hikari {
 
         virtual std::unique_ptr<CollectableItem> clone() const;
 
-        const float& getAge() const;
-        const float& getMaximumAge() const;
-        void setMaximumAge(const float& newMaximumAge);
+        float getAge() const;
+        float getMaximumAge() const;
+        void setMaximumAge(float newMaximumAge);
 
-        const bool& isAgeless() const;
-        void setAgeless(const bool& isAgeless);
+        bool isAgeless() const;
+        void setAgeless(bool isAgeless);
 
         void setEffect(std::shared_ptr<Effect> newEffect);
         std::shared_ptr<Effect> getEffect() const;
