@@ -30,7 +30,7 @@ namespace hikari {
         CollectableItem(const CollectableItem &proto);
         virtual ~CollectableItem();
 
-        virtual std::shared_ptr<CollectableItem> clone() const;
+        virtual std::unique_ptr<CollectableItem> clone() const;
 
         const float& getAge() const;
         const float& getMaximumAge() const;

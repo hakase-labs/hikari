@@ -42,8 +42,8 @@ namespace hikari {
 
     }
 
-    std::shared_ptr<CollectableItem> CollectableItem::clone() const {
-        return std::shared_ptr<CollectableItem>(new CollectableItem(*this));
+    std::unique_ptr<CollectableItem> CollectableItem::clone() const {
+        return std::unique_ptr<CollectableItem>(new CollectableItem(*this));
     }
 
     const float& CollectableItem::getAge() const {
