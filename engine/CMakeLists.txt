@@ -164,6 +164,7 @@ set( ENGINE_SOURCE_FILES
     src/hikari/client/game/objects/HeroWalkingMobilityState.cpp
     src/hikari/client/game/objects/ItemFactory.cpp
     src/hikari/client/game/objects/ItemSpawner.cpp
+    src/hikari/client/game/objects/EnemyFactory.cpp
     src/hikari/client/game/objects/Spawner.cpp
     src/hikari/client/scripting/AudioServiceScriptProxy.cpp
     src/hikari/client/scripting/SquirrelService.cpp

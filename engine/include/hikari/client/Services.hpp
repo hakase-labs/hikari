@@ -6,15 +6,6 @@
 namespace hikari {
 namespace Services {
 
-    /*enum Enum {
-        AUDIO,
-        GAMEPROGRESS,
-        IMAGECACHE,
-        MAPLOADER,
-        SCRIPTING,
-        GUIFONT
-    };*/
-
     const static std::string AUDIO = "Audio";
     const static std::string GAMEPROGRESS = "GameProgress";
     const static std::string IMAGECACHE = "ImageCache";
@@ -24,8 +15,9 @@ namespace Services {
     const static std::string GUISERVICE = "GuiService";
     const static std::string ANIMATIONSETCACHE = "AnimationSetCache";
     const static std::string ITEMFACTORY = "ItemFactory";
+    const static std::string ENEMYFACTORY = "EnemyFactory";
 
-} // hikari::direction
+} // hikari::Services
 } // hikari
 
 #endif // HIKARI_CLIENT_GAME_DIRECTION

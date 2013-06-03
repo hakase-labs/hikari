@@ -24,6 +24,7 @@
 #include "hikari/client/game/objects/effects/NothingEffect.hpp"
 #include "hikari/client/game/objects/effects/ScriptedEffect.hpp"
 #include "hikari/client/game/objects/ItemFactory.hpp"
+#include "hikari/client/game/objects/EnemyFactory.hpp"
 #include "hikari/client/game/objects/FactoryHelpers.hpp"
 
 #include "hikari/core/util/FileSystem.hpp"
@@ -232,6 +233,8 @@ int main(int argc, char** argv) {
         auto guiService        = std::make_shared<GuiService>(game, imageCache, screenBuffer);
         
         auto itemFactory       = std::make_shared<ItemFactory>(animationSetCache, imageCache, squirrelService);
+        auto enemyFactory      = std::make_shared<EnemyFactory>(animationSetCache, imageCache, squirrelService);
+        
         // HIKARI_LOG(debug) << "Created itemFactory";
 
         ServiceLocator services;
@@ -244,6 +247,7 @@ int main(int argc, char** argv) {
         services.registerService(Services::GUIFONT,           guiFont);
         services.registerService(Services::GUISERVICE,        guiService);
         services.registerService(Services::ITEMFACTORY,       itemFactory);
+        services.registerService(Services::ENEMYFACTORY,       enemyFactory);
 
         AudioServiceScriptProxy::setWrappedService(std::weak_ptr<AudioService>(audioService));
         
