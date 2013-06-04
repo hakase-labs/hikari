@@ -25,12 +25,12 @@ namespace hikari {
 
     }
 
-    std::unique_ptr<Enemy> EnemyFactory::create(const std::string& itemType) {
-        auto prototype = prototypeRegistry.find(itemType);
+    std::unique_ptr<Enemy> EnemyFactory::create(const std::string& enemyType) {
+        auto prototype = prototypeRegistry.find(enemyType);
 
         if(prototype != std::end(prototypeRegistry)) {
-            //return (*prototype).second->clone();
-            return std::unique_ptr<Enemy>(nullptr);
+            return (*prototype).second->clone();
+            //return std::unique_ptr<Enemy>(nullptr);
         } else {
             // TODO: Return a "default" item so no nullptrs will be made?
             return std::unique_ptr<Enemy>(nullptr);

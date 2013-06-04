@@ -18,14 +18,29 @@ namespace hikari {
         : Entity(proto)
         , brain(nullptr)
     {
-        body.setGravitated(true);
-        body.setHasWorldCollision(true);
+        setActive(false);
+        setGravitated(proto.isGravitated());
+        setObstacle(proto.isObstacle());
+        setCurrentAnimation(proto.getCurrentAnimation());
+        setDirection(proto.getDirection());
+        setPhasing(proto.isPhasing());
+        setPosition(proto.getPosition());
+        setBoundingBox(proto.getBoundingBox());
+        setAnimationSet(proto.getAnimationSet());
+
+        if(proto.brain) {
+            setBrain(proto.brain->clone());
+        }
 
         HIKARI_LOG(debug3) << "Enemy copy constructed!";
     }
 
     Enemy::~Enemy() {
+        HIKARI_LOG(debug1) << "Enemy::~Enemy()";
+    }
 
+    std::unique_ptr<Enemy> Enemy::clone() const {
+        return std::unique_ptr<Enemy>(new Enemy(*this));
     }
 
     void Enemy::render(sf::RenderTarget &target) {

@@ -247,7 +247,7 @@ int main(int argc, char** argv) {
         services.registerService(Services::GUIFONT,           guiFont);
         services.registerService(Services::GUISERVICE,        guiService);
         services.registerService(Services::ITEMFACTORY,       itemFactory);
-        services.registerService(Services::ENEMYFACTORY,       enemyFactory);
+        services.registerService(Services::ENEMYFACTORY,      enemyFactory);
 
         AudioServiceScriptProxy::setWrappedService(std::weak_ptr<AudioService>(audioService));
         
@@ -255,7 +255,17 @@ int main(int argc, char** argv) {
         squirrelService->runScriptFile("assets/scripts/Bootstrap.nut");
 
         // When this runs all of the scripts have to have been run already
-        FactoryHelpers::populateCollectableItemFactory("assets/templates/items.json", std::weak_ptr<ItemFactory>(itemFactory), services);
+        FactoryHelpers::populateCollectableItemFactory(
+            "assets/templates/items.json",
+            std::weak_ptr<ItemFactory>(itemFactory),
+            services
+        );
+
+        FactoryHelpers::populateEnemyFactory(
+            "assets/templates/enemies.json",
+            std::weak_ptr<EnemyFactory>(enemyFactory),
+            services
+        );
 
         gui::CommandConsole console(guiFont);
 
@@ -275,6 +285,7 @@ int main(int argc, char** argv) {
             imageCache,
             guiFont,
             std::weak_ptr<ItemFactory>(itemFactory),
+            std::weak_ptr<EnemyFactory>(enemyFactory),
             services
         );
 

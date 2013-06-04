@@ -23,12 +23,13 @@ namespace hikari {
         Sqrat::Function proxyUpdate;
         Sqrat::Function proxyHandleWorldCollision;
 
-        sf::Clock updateTimer;
-        std::vector<sf::Time> updateSamples;
-
+        bool bindScriptClassInstance();
     public:
         ScriptedEnemyBrain(SquirrelService& service, const std::string& scriptClassName, const Sqrat::Table& config = Sqrat::Table());
+        ScriptedEnemyBrain(const ScriptedEnemyBrain & proto);
         virtual ~ScriptedEnemyBrain();
+
+        virtual std::unique_ptr<EnemyBrain> clone() const;
 
         virtual void attach(Enemy* host);
         virtual void detach();

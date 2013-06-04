@@ -50,6 +50,7 @@ namespace hikari {
     class Movable;
     class Hero;
     class Enemy;
+    class EnemyFactory;
 
     class MapTestState : public GameState {
     private:
@@ -158,6 +159,7 @@ namespace hikari {
             const std::shared_ptr<hikari::ImageCache> &imageCache, 
             const std::shared_ptr<hikari::ImageFont> &font,
             const std::weak_ptr<ItemFactory> &itemFactory,
+            const std::weak_ptr<EnemyFactory> &enemyFactory,
             ServiceLocator &services);
         virtual ~MapTestState();
 

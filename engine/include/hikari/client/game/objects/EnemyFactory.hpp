@@ -34,7 +34,7 @@ namespace hikari {
         //
         // Methods
         //
-        std::unique_ptr<Enemy> create(const std::string& itemType);
+        std::unique_ptr<Enemy> create(const std::string& enemyType);
 
         void registerPrototype(const std::string & prototypeName, const std::shared_ptr<Enemy> & instancee);
     };
