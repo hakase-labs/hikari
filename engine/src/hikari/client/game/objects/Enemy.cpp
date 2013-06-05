@@ -31,12 +31,9 @@ namespace hikari {
         if(proto.brain) {
             setBrain(proto.brain->clone());
         }
-
-        HIKARI_LOG(debug3) << "Enemy copy constructed!";
     }
 
     Enemy::~Enemy() {
-        HIKARI_LOG(debug1) << "Enemy::~Enemy()";
     }
 
     std::unique_ptr<Enemy> Enemy::clone() const {
