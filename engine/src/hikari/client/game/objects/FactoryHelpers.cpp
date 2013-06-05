@@ -176,6 +176,7 @@ namespace FactoryHelpers {
                                         const auto animationSet      = templateObject["animationSet"].asString();
                                         const auto boundingBoxObject = templateObject["boundingBox"];
                                         const auto statesObject      = templateObject["states"];
+                                        const auto characteristicsObject = templateObject["characteristics"];
 
                                         hikari::BoundingBoxF boundingBox(
                                             0.0f,
@@ -207,11 +208,18 @@ namespace FactoryHelpers {
                                         instance->setAnimationSet(animationSetPtr);
                                         instance->setSpriteTexture(spriteTexture);
                                         instance->setBoundingBox(boundingBox);
-                                        instance->setBrain(brain);
                                         instance->setDirection(Directions::Down);
                                         instance->setCurrentAnimation(animationSetPtr->get("idle"));
-                                        instance->setGravitated(false);
-                                        instance->setPhasing(false);
+
+                                        if(!characteristicsObject.isNull()) {
+                                            const bool gravitated = characteristicsObject["gravitated"].asBool();
+                                            const bool phasing = characteristicsObject["phasing"].asBool();
+
+                                            instance->setGravitated(gravitated);
+                                            instance->setPhasing(phasing);
+                                        }
+
+                                        instance->setBrain(brain);
                                         instance->setActive(true);
 
                                         factoryPtr->registerPrototype(name, instance);

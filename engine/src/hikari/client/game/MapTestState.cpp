@@ -182,6 +182,7 @@ namespace hikari {
                 if(auto en7 = enemyFactoryPtr->create("Telly")) {
                     en7->setDirection(Directions::Up);
                     en7->setPosition(16*12, 16*66);
+                    en7->setRoom(currentRoom);
                     enemies.push_back(std::shared_ptr<Enemy>(std::move(en7)));
                 }
 
@@ -189,7 +190,15 @@ namespace hikari {
                 if(auto en8 = enemyFactoryPtr->create("Telly")) {
                     en8->setDirection(Directions::Up);
                     en8->setPosition(16*10, 16*70);
+                    en8->setRoom(currentRoom);
                     enemies.push_back(std::shared_ptr<Enemy>(std::move(en8)));
+                }
+
+                if(auto en9 = enemyFactoryPtr->create("Octopus Battery")) {
+                    en9->setDirection(Directions::Left);
+                    en9->setPosition(16*10 + 500, 16*70 - 10);
+                    en9->setRoom(currentRoom);
+                    enemies.push_back(std::shared_ptr<Enemy>(std::move(en9)));
                 }
             }
 

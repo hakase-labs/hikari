@@ -251,11 +251,11 @@ namespace hikari {
     }
 
     void Entity::setPhasing(const bool& phasing) {
-        body.setHasWorldCollision(phasing);
+        body.setHasWorldCollision(!phasing);
     }
 
     const bool Entity::isPhasing() const {
-        return body.doesCollideWithWorld();
+        return !body.doesCollideWithWorld();
     }
 
     void Entity::onBirth() {
