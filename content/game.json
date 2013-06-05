@@ -84,6 +84,6 @@
             "tileset" : "assets/tilesets/tiles-wily1.json"
         }
     },
-    "initial-state" : "gameplay"
+    "initial-state" : "maptest"
 }
 

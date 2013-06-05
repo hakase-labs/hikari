@@ -1,0 +1,54 @@
+[
+    {
+        "name": "Telly",
+        "behavior": {
+            "type": "scripted",
+            "name": "TellyEnemyBehavior",
+            "config": {
+
+            }
+        },
+        "animationSet": "assets/animations/telly.json",
+        "boundingBox": {
+            "width": 14,
+            "height": 14,
+            "originX": 7,
+            "originY": 7
+        },
+        "states": {
+            "default": {
+                
+            }
+        },
+        "characteristics": {
+            "gravitated": false,
+            "phasing": true
+        }
+    },
+    {
+        "name": "Octopus Battery",
+        "behavior": {
+            "type": "scripted",
+            "name": "OctopusBatteryEnemyBehavior",
+            "config": {
+
+            }
+        },
+        "animationSet": "assets/animations/enemies.json",
+        "boundingBox": {
+            "width": 14,
+            "height": 14,
+            "originX": 7,
+            "originY": 7
+        },
+        "states": {
+            "default": {
+                
+            }
+        },
+        "characteristics": {
+            "gravitated": false,
+            "phasing": false
+        }
+    }
+]

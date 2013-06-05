@@ -2,17 +2,14 @@
 #define HIKARI_CLIENT_GAME_OBJECTS_ENEMYBRAIN
 
 #include "hikari/client/game/objects/Enemy.hpp"
-
-/* begin instance-level stuff */
-#include "hikari/core/util/Timer.hpp"
-/* end instance-level stuff */
+#include "hikari/core/util/Cloneable.hpp"
 
 namespace hikari {
 
     class Movable;
     class CollisionInfo;
 
-    class EnemyBrain {
+    class EnemyBrain : public Cloneable<EnemyBrain> {
     private:
         Enemy* host;
 
@@ -21,7 +18,10 @@ namespace hikari {
 
     public:
         EnemyBrain();
+        EnemyBrain(const EnemyBrain & proto);
         virtual ~EnemyBrain();
+
+        virtual std::unique_ptr<EnemyBrain> clone() const;
 
         virtual void attach(Enemy* host);
         virtual void detach();

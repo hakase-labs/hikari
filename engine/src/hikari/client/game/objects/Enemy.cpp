@@ -6,7 +6,7 @@
 
 namespace hikari {
 
-    Enemy::Enemy(const int &id, std::shared_ptr<Room> room) 
+    Enemy::Enemy(int id, std::shared_ptr<Room> room) 
         : Entity(id, room) 
         , brain(nullptr)
     {
@@ -18,14 +18,26 @@ namespace hikari {
         : Entity(proto)
         , brain(nullptr)
     {
-        body.setGravitated(true);
-        body.setHasWorldCollision(true);
+        setActive(false);
+        setGravitated(proto.isGravitated());
+        setObstacle(proto.isObstacle());
+        setCurrentAnimation(proto.getCurrentAnimation());
+        setDirection(proto.getDirection());
+        setPhasing(proto.isPhasing());
+        setPosition(proto.getPosition());
+        setBoundingBox(proto.getBoundingBox());
+        setAnimationSet(proto.getAnimationSet());
 
-        HIKARI_LOG(debug3) << "Enemy copy constructed!";
+        if(proto.brain) {
+            setBrain(proto.brain->clone());
+        }
     }
 
     Enemy::~Enemy() {
+    }
 
+    std::unique_ptr<Enemy> Enemy::clone() const {
+        return std::unique_ptr<Enemy>(new Enemy(*this));
     }
 
     void Enemy::render(sf::RenderTarget &target) {

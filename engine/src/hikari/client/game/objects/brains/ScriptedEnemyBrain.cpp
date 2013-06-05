@@ -14,27 +14,23 @@ namespace hikari {
         , instanceConfig(vm)
     {
         HIKARI_LOG(debug2) << "ScriptedEnemyBrain::ScriptedEnemyBrain()";
+        
+        if(!bindScriptClassInstance()) {
+            // throw?
+            HIKARI_LOG(error) << "ScriptedEnemyBrain failed to bind.";
+        }
+    }
 
-        try {
-            Sqrat::Function constructor(Sqrat::RootTable(vm), scriptClassName.c_str());
-
-            if(!constructor.IsNull()) {
-                Sqrat::Object& configRef = instanceConfig;
-                instance = constructor.Evaluate<Sqrat::Object>(configRef);
-
-                if(!instance.IsNull()) {
-                    proxyAttach = Sqrat::Function(instance, "attachHost");
-                    proxyDetach = Sqrat::Function(instance, "detachHost");
-                    proxyUpdate = Sqrat::Function(instance, "update");
-                    proxyHandleWorldCollision = Sqrat::Function(instance, "handleWorldCollision");
-                } else {
-                    HIKARI_LOG(debug2) << "Constructor for '" << scriptClassName << "' did not return the correct object type.";
-                }
-            } else {
-                HIKARI_LOG(debug2) << "Could not find a constructor for '" << scriptClassName << "'.";
-            }
-        } catch(Sqrat::Exception squirrelException) {
-            HIKARI_LOG(debug1) << "Could not create an instance of '" << scriptClassName << "'. Reason: " << squirrelException.Message();
+    ScriptedEnemyBrain::ScriptedEnemyBrain(const ScriptedEnemyBrain & proto)
+        : vm(proto.vm)
+        , scriptClassName(proto.scriptClassName)
+        , instance()
+        , instanceConfig(vm)
+    {
+        HIKARI_LOG(debug2) << "ScriptedEnemyBrain::ScriptedEnemyBrain() copy constructed!";
+        if(!bindScriptClassInstance()) {
+            // throw?
+            HIKARI_LOG(error) << "ScriptedEnemyBrain failed to bind.";
         }
     }
     
@@ -42,11 +38,51 @@ namespace hikari {
         HIKARI_LOG(debug2) << "DESTROYED ScriptedEnemyBrain::ScriptedEnemyBrain()";
     }
 
-    void ScriptedEnemyBrain::attach(Enemy* host) {
-        EnemyBrain::attach(host);
+    bool ScriptedEnemyBrain::bindScriptClassInstance() {
+        bool isValid = true;
 
+        if(scriptClassName.empty()) {
+            isValid = false;
+        } else {
+            try {
+                Sqrat::Function constructor(Sqrat::RootTable(vm), scriptClassName.c_str());
+
+                if(!constructor.IsNull()) {
+                    Sqrat::Object& configRef = instanceConfig;
+                    instance = constructor.Evaluate<Sqrat::Object>(configRef);
+
+                    if(!instance.IsNull()) {
+                        proxyAttach = Sqrat::Function(instance, "attachHost");
+                        proxyDetach = Sqrat::Function(instance, "detachHost");
+                        proxyUpdate = Sqrat::Function(instance, "update");
+                        proxyHandleWorldCollision = Sqrat::Function(instance, "handleWorldCollision");
+                    } else {
+                        HIKARI_LOG(debug2) << "Constructor for '" << scriptClassName << "' did not return the correct object type.";
+                    }
+                } else {
+                    HIKARI_LOG(debug2) << "Could not find a constructor for '" << scriptClassName << "'.";
+                }
+            } catch(Sqrat::Exception squirrelException) {
+                HIKARI_LOG(debug1) << "Could not create an instance of '" << scriptClassName << "'. Reason: " << squirrelException.Message();
+            }
+        }
+
+        return isValid;
+    }
+
+    std::unique_ptr<EnemyBrain> ScriptedEnemyBrain::clone() const {
+        HIKARI_LOG(debug2) << "ScriptedEnemyBrain::clone()";
+        return std::unique_ptr<EnemyBrain>(new ScriptedEnemyBrain(*this));
+    }
+
+    void ScriptedEnemyBrain::attach(Enemy* host) {
+        HIKARI_LOG(debug2) << "ScriptedEnemyBrain::attach() to " << host->getId();
+        EnemyBrain::attach(host);
+        HIKARI_LOG(debug2) << "After EnemyBrain::attach() to " << host->getId();
         if(!proxyAttach.IsNull()) {
+            HIKARI_LOG(debug2) << "In-script attach() to " << host->getId();
             proxyAttach.Execute(host);
+            HIKARI_LOG(debug2) << "After in-script attach() to " << host->getId();
         }
     }
 

@@ -29,7 +29,7 @@ namespace hikari {
         virtual void onDeactivated();
 
     public:
-        explicit GameObject(int id);
+        explicit GameObject(int id = generateObjectId());
         virtual ~GameObject();
 
         int getId() const;

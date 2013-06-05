@@ -164,6 +164,7 @@ set( ENGINE_SOURCE_FILES
     src/hikari/client/game/objects/HeroWalkingMobilityState.cpp
     src/hikari/client/game/objects/ItemFactory.cpp
     src/hikari/client/game/objects/ItemSpawner.cpp
+    src/hikari/client/game/objects/EnemyFactory.cpp
     src/hikari/client/game/objects/Spawner.cpp
     src/hikari/client/scripting/AudioServiceScriptProxy.cpp
     src/hikari/client/scripting/SquirrelService.cpp
@@ -197,6 +198,7 @@ set( ENGINE_SOURCE_FILES
     src/hikari/client/game/SpriteTestState.cpp
     src/hikari/client/game/StageSelectState.cpp
     src/hikari/client/game/PasswordState.cpp
+    src/hikari/client/game/TitleState.cpp
     src/hikari/client/gui/CommandConsole.cpp
     src/hikari/client/gui/EnergyMeter.cpp
     src/hikari/client/gui/Widget.cpp
@@ -262,6 +264,21 @@ set( INCLUDE_DIRS
 include_directories( ${INCLUDE_DIRS} )
 
 add_executable( hikari ${HIKARI_SOURCE_FILES} ${INCLUDE_DIRS} )
+
+
+
+#
+# Copy content files to output directory
+#
+add_custom_command(
+  TARGET hikari
+  POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E echo "Copying content..."
+  COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/content" $<TARGET_FILE_DIR:hikari>
+)
+
+MESSAGE(STATUS "Gonna copy ${PROJECT_SOURCE_DIR}/content to " $<TARGET_FILE_DIR:hikari>)
+
 
 #
 # We want to link statically on Windows
