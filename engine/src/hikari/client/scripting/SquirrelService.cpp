@@ -136,6 +136,7 @@ namespace hikari {
                     .Prop<const bool>(_SC("isObstacle"), &Enemy::isObstacle, &Enemy::setObstacle)
                     .Prop<const Direction>(_SC("direction"), &Enemy::getDirection, &Enemy::setDirection)
                     .Func(_SC("changeAnimation"), &Enemy::changeAnimation)
+                    .Func(_SC("getId"), &Enemy::getId)
                     .GlobalFunc(_SC("getX"), &EntityHelpers::getX)
                     .GlobalFunc(_SC("getY"), &EntityHelpers::getY)
                     .GlobalFunc(_SC("setX"), &EntityHelpers::setX)

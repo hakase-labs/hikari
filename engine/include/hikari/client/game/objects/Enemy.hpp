@@ -2,19 +2,22 @@
 #define HIKARI_CLIENT_GAME_OBJECTS_ENEMY
 
 #include "hikari/client/game/objects/Entity.hpp"
+#include "hikari/core/util/Cloneable.hpp"
 #include <memory>
 
 namespace hikari {
 
     class EnemyBrain;
 
-    class Enemy : public Entity {
+    class Enemy : public Entity, public Cloneable<Enemy> {
     private:
         std::shared_ptr<EnemyBrain> brain;
     public:
-        Enemy(const int& id = GameObject::generateObjectId(), std::shared_ptr<Room> room = nullptr);
+        Enemy(int id = GameObject::generateObjectId(), std::shared_ptr<Room> room = nullptr);
         Enemy(const Enemy& proto); 
         virtual ~Enemy();
+
+        virtual std::unique_ptr<Enemy> clone() const;
 
         virtual void update(float dt);
         virtual void render(sf::RenderTarget &target);

@@ -192,7 +192,6 @@ namespace hikari {
             auto & topContainer = gui->getRootContainer();
 
             topContainer.add(guiContainer.get(), 0, 0);
-            HIKARI_LOG(debug2) << "Added top container in stage select";
         }
     }
 

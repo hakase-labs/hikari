@@ -11,6 +11,7 @@
 #include "hikari/client/game/GuiTestState.hpp"
 #include "hikari/client/game/PasswordState.hpp"
 #include "hikari/client/game/SpriteTestState.hpp"
+#include "hikari/client/game/TitleState.hpp"
 #include "hikari/client/audio/AudioService.hpp"
 #include "hikari/client/gui/GuiService.hpp"
 #include "hikari/client/gui/CommandConsole.hpp"
@@ -23,6 +24,7 @@
 #include "hikari/client/game/objects/effects/NothingEffect.hpp"
 #include "hikari/client/game/objects/effects/ScriptedEffect.hpp"
 #include "hikari/client/game/objects/ItemFactory.hpp"
+#include "hikari/client/game/objects/EnemyFactory.hpp"
 #include "hikari/client/game/objects/FactoryHelpers.hpp"
 
 #include "hikari/core/util/FileSystem.hpp"
@@ -231,6 +233,8 @@ int main(int argc, char** argv) {
         auto guiService        = std::make_shared<GuiService>(game, imageCache, screenBuffer);
         
         auto itemFactory       = std::make_shared<ItemFactory>(animationSetCache, imageCache, squirrelService);
+        auto enemyFactory      = std::make_shared<EnemyFactory>(animationSetCache, imageCache, squirrelService);
+        
         // HIKARI_LOG(debug) << "Created itemFactory";
 
         ServiceLocator services;
@@ -243,6 +247,7 @@ int main(int argc, char** argv) {
         services.registerService(Services::GUIFONT,           guiFont);
         services.registerService(Services::GUISERVICE,        guiService);
         services.registerService(Services::ITEMFACTORY,       itemFactory);
+        services.registerService(Services::ENEMYFACTORY,      enemyFactory);
 
         AudioServiceScriptProxy::setWrappedService(std::weak_ptr<AudioService>(audioService));
         
@@ -250,7 +255,17 @@ int main(int argc, char** argv) {
         squirrelService->runScriptFile("assets/scripts/Bootstrap.nut");
 
         // When this runs all of the scripts have to have been run already
-        FactoryHelpers::populateCollectableItemFactory("assets/templates/items.json", std::weak_ptr<ItemFactory>(itemFactory), services);
+        FactoryHelpers::populateCollectableItemFactory(
+            "assets/templates/items.json",
+            std::weak_ptr<ItemFactory>(itemFactory),
+            services
+        );
+
+        FactoryHelpers::populateEnemyFactory(
+            "assets/templates/enemies.json",
+            std::weak_ptr<EnemyFactory>(enemyFactory),
+            services
+        );
 
         gui::CommandConsole console(guiFont);
 
@@ -270,6 +285,7 @@ int main(int argc, char** argv) {
             imageCache,
             guiFont,
             std::weak_ptr<ItemFactory>(itemFactory),
+            std::weak_ptr<EnemyFactory>(enemyFactory),
             services
         );
 
@@ -287,6 +303,7 @@ int main(int argc, char** argv) {
         StatePtr stageSelectState(new StageSelectState("stageselect", game["states"]["select"], services));
         StatePtr gamePlayState(new GamePlayState("gameplay", game, services));
         StatePtr passwordState(new PasswordState("password", game, services));
+        StatePtr titleState(new TitleState("title", game, services));
 
         controller.addState(mapTestState->getName(), mapTestState);
         //controller.addState(guiTestState->getName(), guiTestState);
@@ -294,6 +311,7 @@ int main(int argc, char** argv) {
         controller.addState(stageSelectState->getName(), stageSelectState);
         controller.addState(gamePlayState->getName(), gamePlayState);
         controller.addState(passwordState->getName(), passwordState);
+        controller.addState(titleState->getName(), titleState);
 
         controller.setState(game.get("initial-state", "default").asString());
 

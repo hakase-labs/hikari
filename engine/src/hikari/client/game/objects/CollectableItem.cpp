@@ -9,7 +9,7 @@ namespace hikari {
     const float CollectableItem::DEFAULT_AGE_IN_M_SECONDS = 0.0f;
     const float CollectableItem::DEFAULT_MAXIMUM_AGE_IN_M_SECONDS = 10.0f;
 
-    CollectableItem::CollectableItem(const int& id, std::shared_ptr<Room> room, std::shared_ptr<Effect> effect)
+    CollectableItem::CollectableItem(int id, std::shared_ptr<Room> room, std::shared_ptr<Effect> effect)
         : Entity(id, room)
         , effect(effect)
         , ageless(false)
@@ -42,31 +42,31 @@ namespace hikari {
 
     }
 
-    std::shared_ptr<CollectableItem> CollectableItem::clone() const {
-        return std::shared_ptr<CollectableItem>(new CollectableItem(*this));
+    std::unique_ptr<CollectableItem> CollectableItem::clone() const {
+        return std::unique_ptr<CollectableItem>(new CollectableItem(*this));
     }
 
-    const float& CollectableItem::getAge() const {
+    float CollectableItem::getAge() const {
         return age;
     }
 
-    void CollectableItem::setAge(const float& newAge) {
+    void CollectableItem::setAge(float newAge) {
         age = newAge;
     }
 
-    const float& CollectableItem::getMaximumAge() const {
+    float CollectableItem::getMaximumAge() const {
         return maximumAge;
     }
 
-    void CollectableItem::setMaximumAge(const float& newMaximumAge) {
+    void CollectableItem::setMaximumAge(float newMaximumAge) {
         maximumAge = newMaximumAge;
     }
 
-    const bool& CollectableItem::isAgeless() const {
+    bool CollectableItem::isAgeless() const {
         return ageless;
     }
 
-    void CollectableItem::setAgeless(const bool& isAgeless) {
+    void CollectableItem::setAgeless(bool isAgeless) {
         ageless = isAgeless;
     }
 

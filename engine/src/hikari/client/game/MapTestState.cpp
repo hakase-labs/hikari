@@ -25,6 +25,7 @@
 #include "hikari/client/game/objects/CollectableItem.hpp"
 #include "hikari/client/game/objects/effects/NothingEffect.hpp"
 #include "hikari/client/game/objects/effects/ScriptedEffect.hpp"
+#include "hikari/client/game/objects/EnemyFactory.hpp"
 #include "hikari/core/game/Movable.hpp"
 #include "hikari/core/game/TileMapCollisionResolver.hpp"
 #include "hikari/core/util/ReferenceWrapper.hpp"
@@ -52,6 +53,7 @@ namespace hikari {
             const std::shared_ptr<ImageCache> &imageCache,
             const std::shared_ptr<ImageFont> &font,
             const std::weak_ptr<ItemFactory> &itemFactory,
+            const std::weak_ptr<EnemyFactory> &enemyFactory,
             ServiceLocator &services)
         : name(name)
         , mapLoader(mapLoader)
@@ -144,14 +146,14 @@ namespace hikari {
             cameraViewportOutline.setFillColor(sf::Color::Transparent);
 
             std::vector<std::string> scriptFiles;
-            scriptFiles.push_back("assets/scripts/EffectBase.nut");
-            scriptFiles.push_back("assets/scripts/behaviors/EnemyBehavior.nut");
-            scriptFiles.push_back("assets/scripts/behaviors/TellyBehavior.nut");
-            scriptFiles.push_back("assets/scripts/behaviors/OctopusBatteryEnemyBehavior.nut");
+            //scriptFiles.push_back("assets/scripts/EffectBase.nut");
+            //scriptFiles.push_back("assets/scripts/behaviors/EnemyBehavior.nut");
+            //scriptFiles.push_back("assets/scripts/behaviors/TellyBehavior.nut");
+            //scriptFiles.push_back("assets/scripts/behaviors/OctopusBatteryEnemyBehavior.nut");
 
-            std::for_each(std::begin(scriptFiles), std::end(scriptFiles), [this](const std::string & scriptFileName) {
-                squirrel->runScriptFile(scriptFileName);
-            });
+            //std::for_each(std::begin(scriptFiles), std::end(scriptFiles), [this](const std::string & scriptFileName) {
+            //    squirrel->runScriptFile(scriptFileName);
+            //});
 
             item = itemFactory.lock()->createItem("Large Health Energy");
 
@@ -170,21 +172,35 @@ namespace hikari {
             //item->setBoundingBox(itemBounds);
 
             //auto clone = item->clone();
+            if(auto enemyFactoryPtr = enemyFactory.lock()) {
+                // auto en6 = spawnEnemy("scripted-octopusbattery");
+                // en6->setDirection(Directions::Up);
+                // en6->setPosition(184, 120);
+                // enemies.push_back(en6);
 
-            auto en6 = spawnEnemy("scripted-octopusbattery");
-            en6->setDirection(Directions::Up);
-            en6->setPosition(184, 120);
-            enemies.push_back(en6);
+                //auto en7 = spawnEnemy("scripted-telly");
+                if(auto en7 = enemyFactoryPtr->create("Telly")) {
+                    en7->setDirection(Directions::Up);
+                    en7->setPosition(16*12, 16*66);
+                    en7->setRoom(currentRoom);
+                    enemies.push_back(std::shared_ptr<Enemy>(std::move(en7)));
+                }
 
-            auto en7 = spawnEnemy("scripted-telly");
-            en7->setDirection(Directions::Up);
-            en7->setPosition(16*12, 16*66);
-            enemies.push_back(en7);
+                //auto en8 = en7->clone();
+                if(auto en8 = enemyFactoryPtr->create("Telly")) {
+                    en8->setDirection(Directions::Up);
+                    en8->setPosition(16*10, 16*70);
+                    en8->setRoom(currentRoom);
+                    enemies.push_back(std::shared_ptr<Enemy>(std::move(en8)));
+                }
 
-            auto en8 = spawnEnemy("scripted-telly");
-            en8->setDirection(Directions::Up);
-            en8->setPosition(16*10, 16*70);
-            enemies.push_back(en8);
+                if(auto en9 = enemyFactoryPtr->create("Octopus Battery")) {
+                    en9->setDirection(Directions::Left);
+                    en9->setPosition(16*10 + 500, 16*70 - 10);
+                    en9->setRoom(currentRoom);
+                    enemies.push_back(std::shared_ptr<Enemy>(std::move(en9)));
+                }
+            }
 
             //scriptFiles.clear();
             //scriptFiles.push_back("TellyBehaviorOverrides.nut");

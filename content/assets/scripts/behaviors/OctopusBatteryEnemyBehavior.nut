@@ -12,6 +12,7 @@ class OctopusBatteryEnemyBehavior extends EnemyBehavior {
     function update(dt) {
         if(host != null) {
             //::log("My timer = " + timer);
+            local dir = host.direction;
             switch(state) {
                 case State.IDLE:
                     if(enteringNewState) {
@@ -35,7 +36,7 @@ class OctopusBatteryEnemyBehavior extends EnemyBehavior {
                         host.changeAnimation("walking");
                         enteringNewState = false;
 
-                        switch(direction) {
+                        switch(dir) {
                             case Directions.Up:
                                 host.velocityY = -2.0;
                                 break;
@@ -62,10 +63,15 @@ class OctopusBatteryEnemyBehavior extends EnemyBehavior {
     }
 
     function handleWorldCollision(side) {
+        ::log("OctopusBatteryEnemyBehavior::handleWorldCollision");
         timer = 0.0;
         state = State.IDLE;
         enteringNewState = true;
         direction = Utils.getOppositeDirection(side);
+
+        if(host != null) {
+            host.direction = direction;
+        }
     }
 }
 

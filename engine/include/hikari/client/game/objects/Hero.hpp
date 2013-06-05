@@ -180,7 +180,7 @@ namespace hikari {
         };
 
     public:
-        Hero(const int& id, std::shared_ptr<Room> room);
+        Hero(int id, std::shared_ptr<Room> room);
         virtual ~Hero();
 
         const std::shared_ptr<HeroActionController>& getActionController() const;

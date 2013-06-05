@@ -19,7 +19,7 @@ namespace hikari {
         #endif // HIKARI_DEBUG_ENTITIES
     }
 
-    Entity::Entity(const int& id, std::shared_ptr<Room> room)
+    Entity::Entity(int id, std::shared_ptr<Room> room)
         : GameObject(id)
         , spriteTexture()
         , sprite()
@@ -67,7 +67,7 @@ namespace hikari {
     {
         HIKARI_LOG(debug2) << "Entity copy constructor!" << std::endl;
 
-        body = proto.body;
+        body = Movable(proto.body);
 
         body.setCollisionCallback(
             std::bind(&Entity::handleCollision, this, std::placeholders::_1, std::placeholders::_2));
@@ -81,7 +81,7 @@ namespace hikari {
     }
 
     Entity::~Entity() {
-
+        HIKARI_LOG(debug1) << "Entity::~Entity()";
     }
 
     std::shared_ptr<sf::Texture> Entity::getSpriteTexture() {
@@ -251,11 +251,11 @@ namespace hikari {
     }
 
     void Entity::setPhasing(const bool& phasing) {
-        body.setHasWorldCollision(phasing);
+        body.setHasWorldCollision(!phasing);
     }
 
     const bool Entity::isPhasing() const {
-        return body.doesCollideWithWorld();
+        return !body.doesCollideWithWorld();
     }
 
     void Entity::onBirth() {

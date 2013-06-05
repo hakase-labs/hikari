@@ -5,12 +5,24 @@
 
 namespace hikari {
 
-    EnemyBrain::EnemyBrain() {
+    EnemyBrain::EnemyBrain()
+        :host(nullptr)
+    {
         
+    }
+
+    EnemyBrain::EnemyBrain(const EnemyBrain & proto)
+        : host(nullptr)
+    {
+
     }
 
     EnemyBrain::~EnemyBrain() {
 
+    }
+
+    std::unique_ptr<EnemyBrain> EnemyBrain::clone() const {
+        return std::unique_ptr<EnemyBrain>(new EnemyBrain(*this));
     }
 
     Enemy* const EnemyBrain::getHost() {
