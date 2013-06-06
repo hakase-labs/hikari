@@ -50,6 +50,8 @@
 
 #include <guichan/widgets/container.hpp>
 
+#include <sqrat.h>
+
 #include <algorithm>
 #include <memory>
 #include <string>
@@ -830,7 +832,7 @@ namespace hikari {
 
         auto& camera = gamePlayState.camera;
         auto& view = camera.getView();
-        auto enemy = gamePlayState.world.spawnEnemy("Telly");
+        auto enemy = gamePlayState.world.spawnEnemy("Komasaburo");
 
         if(enemy) {
             enemy->setActive(true);
@@ -846,6 +848,12 @@ namespace hikari {
 
     void GamePlayState::PlayingSubState::update(const float & dt) {
         auto& camera = gamePlayState.camera;
+
+        auto playerPosition = gamePlayState.world.getPlayerPosition();
+        
+        Sqrat::RootTable()
+            .SetValue("heroX", playerPosition.getX())
+            .SetValue("heroY", playerPosition.getY());
 
         gamePlayState.world.update(dt);
 

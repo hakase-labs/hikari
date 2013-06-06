@@ -50,5 +50,31 @@
             "gravitated": false,
             "phasing": false
         }
+    },
+    {
+        "name": "Komasaburo",
+        "behavior": {
+            "type": "scripted",
+            "name": "KomasaburoEnemyBehavior",
+            "config": {
+
+            }
+        },
+        "animationSet": "assets/animations/komasaburo.json",
+        "boundingBox": {
+            "width": 28,
+            "height": 32,
+            "originX": 14,
+            "originY": 30
+        },
+        "states": {
+            "default": {
+                
+            }
+        },
+        "characteristics": {
+            "gravitated": true,
+            "phasing": false
+        }
     }
 ]
