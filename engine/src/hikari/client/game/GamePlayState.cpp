@@ -11,6 +11,8 @@
 #include "hikari/client/game/objects/GameObject.hpp"
 #include "hikari/client/game/objects/CollectableItem.hpp"
 #include "hikari/client/game/objects/ItemFactory.hpp"
+#include "hikari/client/game/objects/Enemy.hpp"
+#include "hikari/client/game/objects/EnemyFactory.hpp"
 #include "hikari/client/game/Effect.hpp"
 #include "hikari/client/gui/EnergyGauge.hpp"
 #include "hikari/client/gui/Panel.hpp"
@@ -47,6 +49,8 @@
 #include <SFML/Window/Event.hpp>
 
 #include <guichan/widgets/container.hpp>
+
+#include <sqrat.h>
 
 #include <algorithm>
 #include <memory>
@@ -121,8 +125,10 @@ namespace hikari {
 
         world.setPlayer(hero);
 
-        const auto itemFactoryWeak = services.locateService<ItemFactory>("ItemFactory");
+        const auto itemFactoryWeak  = services.locateService<ItemFactory>(Services::ITEMFACTORY);
+        const auto enemyFactoryWeak = services.locateService<EnemyFactory>(Services::ENEMYFACTORY);
         world.setItemFactory(itemFactoryWeak);
+        world.setEnemyFactory(enemyFactoryWeak);
     }
 
     GamePlayState::~GamePlayState() {
@@ -516,6 +522,13 @@ namespace hikari {
             std::end(activeItems), 
             std::bind(&CollectableItem::render, std::placeholders::_1, ReferenceWrapper<sf::RenderTarget>(target)));
 
+        const auto & activeEnemies = world.getActiveEnemies();
+
+        std::for_each(
+            std::begin(activeEnemies), 
+            std::end(activeEnemies), 
+            std::bind(&Enemy::render, std::placeholders::_1, ReferenceWrapper<sf::RenderTarget>(target)));
+
         // Restore UI view
         target.setView(oldView);
     }
@@ -816,6 +829,17 @@ namespace hikari {
     void GamePlayState::PlayingSubState::enter() {
         gamePlayState.isHeroAlive = true;
         postDeathTimer = 0.0f;
+
+        auto& camera = gamePlayState.camera;
+        auto& view = camera.getView();
+        auto enemy = gamePlayState.world.spawnEnemy("Komasaburo");
+
+        if(enemy) {
+            enemy->setActive(true);
+            enemy->setPosition(view.getX() + view.getWidth() / 2, view.getY() + view.getHeight() / 2);
+            enemy->setRoom(gamePlayState.currentRoom);
+            gamePlayState.world.queueObjectAddition(std::shared_ptr<Enemy>(std::move(enemy)));
+        }
     }
 
     void GamePlayState::PlayingSubState::exit() {
@@ -824,6 +848,12 @@ namespace hikari {
 
     void GamePlayState::PlayingSubState::update(const float & dt) {
         auto& camera = gamePlayState.camera;
+
+        auto playerPosition = gamePlayState.world.getPlayerPosition();
+        
+        Sqrat::RootTable()
+            .SetValue("heroX", playerPosition.getX())
+            .SetValue("heroY", playerPosition.getY());
 
         gamePlayState.world.update(dt);
 
@@ -865,6 +895,18 @@ namespace hikari {
                     item->setActive(false);
                     gamePlayState.world.queueObjectRemoval(item);
                 }
+        });
+
+        //
+        // Update enemies
+        //
+        const auto & activeEnemies = gamePlayState.world.getActiveEnemies();
+
+        std::for_each(
+            std::begin(activeEnemies), 
+            std::end(activeEnemies), 
+            [this, &camera, &dt](const std::shared_ptr<Enemy> & enemy) {
+                enemy->update(dt);
         });
 
         // Hero died so we need to restart

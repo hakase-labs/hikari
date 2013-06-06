@@ -30,7 +30,6 @@ namespace hikari {
 
         if(prototype != std::end(prototypeRegistry)) {
             return (*prototype).second->clone();
-            //return std::unique_ptr<Enemy>(nullptr);
         } else {
             // TODO: Return a "default" item so no nullptrs will be made?
             return std::unique_ptr<Enemy>(nullptr);

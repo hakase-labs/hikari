@@ -8,6 +8,7 @@ namespace hikari {
         Static methods and fields
     */
     LogLevel Log::reportingLevel = info;
+    std::ostream & Log::outputStream = std::cout;
 
     LogLevel & Log::getReportingLevel() {
         return reportingLevel;
@@ -27,9 +28,9 @@ namespace hikari {
     }
 
     Log::~Log() {
-        os << std::endl;
-        fprintf(stdout, "%s", os.str().c_str());
-        fflush(stdout);
+        Log::outputStream << os.str() << std::endl;
+        //fprintf(stdout, "%s", os.str().c_str());
+        //fflush(stdout);
     }
 
     const std::string Log::getNowTime() const {
