@@ -1,8 +1,10 @@
 #include "hikari/client/game/GameWorld.hpp"
 #include "hikari/client/game/objects/GameObject.hpp"
 #include "hikari/client/game/objects/CollectableItem.hpp"
+#include "hikari/client/game/objects/Enemy.hpp"
 #include "hikari/client/game/objects/Hero.hpp"
 #include "hikari/client/game/objects/ItemFactory.hpp"
+#include "hikari/client/game/objects/EnemyFactory.hpp"
 
 #include "hikari/core/game/map/Room.hpp"
 #include "hikari/core/util/Log.hpp"
@@ -16,12 +18,16 @@ namespace hikari {
         : player(nullptr)
         , currentRoom(nullptr)
         , itemFactory()
+        , enemyFactory()
         , queuedAdditions()
         , queuedRemovals()
         , activeObjects()
         , queuedItemAdditions()
         , queuedItemRemovals()
         , activeItems()
+        , queuedEnemyAdditions()
+        , queuedEnemyRemovals()
+        , activeEnemies()
         , objectRegistry()
         , gravityEnabled(true)
         
@@ -43,6 +49,10 @@ namespace hikari {
 
     void GameWorld::setItemFactory(const std::weak_ptr<ItemFactory> & itemFactory) {
         this->itemFactory = itemFactory;
+    }
+
+    void GameWorld::setEnemyFactory(const std::weak_ptr<EnemyFactory> & enemyFactory) {
+        this->enemyFactory = enemyFactory;
     }
         
     void GameWorld::render(sf::RenderTarget &target) {
@@ -79,6 +89,14 @@ namespace hikari {
         }
     }
 
+    void GameWorld::queueObjectAddition(const std::shared_ptr<Enemy> &obj) {
+        if(obj) {
+            queuedEnemyAdditions.push(obj);
+        } else {
+            HIKARI_LOG(debug) << "Tried to add a null object (enemy); ignoring.";
+        }
+    }
+
     void GameWorld::queueObjectRemoval(const std::shared_ptr<GameObject> &obj) {
         if(obj) {
             queuedRemovals.push(obj);
@@ -91,11 +109,20 @@ namespace hikari {
         if(obj) {
             queuedItemRemovals.push(obj);
         } else {
-            HIKARI_LOG(debug) << "Tried to remove a null object (game object); ignoring.";
+            HIKARI_LOG(debug) << "Tried to remove a null object (item); ignoring.";
+        }
+    }
+
+    void GameWorld::queueObjectRemoval(const std::shared_ptr<Enemy> &obj) {
+        if(obj) {
+            queuedEnemyRemovals.push(obj);
+        } else {
+            HIKARI_LOG(debug) << "Tried to remove a null object (enemy); ignoring.";
         }
     }
 
     void GameWorld::processAdditions() {
+        // Generic objects
         while(!queuedAdditions.empty()) {
             auto objectToBeAdded = queuedAdditions.front();
 
@@ -105,6 +132,7 @@ namespace hikari {
             queuedAdditions.pop();
         }
 
+        // Collectable Items
         while(!queuedItemAdditions.empty()) {
             auto objectToBeAdded = queuedItemAdditions.front();
 
@@ -114,6 +142,18 @@ namespace hikari {
             objectToBeAdded->setRoom(getCurrentRoom());
 
             queuedItemAdditions.pop();
+        }
+
+        // Enemies
+        while(!queuedEnemyAdditions.empty()) {
+            auto objectToBeAdded = queuedEnemyAdditions.front();
+
+            activeEnemies.push_back(objectToBeAdded);
+            objectRegistry.emplace(std::make_pair(objectToBeAdded->getId(), objectToBeAdded));
+
+            objectToBeAdded->setRoom(getCurrentRoom());
+
+            queuedEnemyAdditions.pop();
         }
     }
 
@@ -139,6 +179,17 @@ namespace hikari {
             
             queuedItemRemovals.pop();
         }
+
+        while(!queuedEnemyRemovals.empty()) {
+            auto objectToBeRemoved = queuedEnemyRemovals.front();
+            
+            activeEnemies.erase(
+                std::remove(std::begin(activeEnemies), std::end(activeEnemies), objectToBeRemoved));
+
+            objectRegistry.erase(objectToBeRemoved->getId());
+            
+            queuedEnemyRemovals.pop();
+        }
     }
 
     std::shared_ptr<CollectableItem> GameWorld::spawnCollectableItem(const std::string & name /* CollectableItemInstanceConfig instanceConfig */) const {
@@ -154,8 +205,25 @@ namespace hikari {
         return std::shared_ptr<CollectableItem>();
     }
 
+    std::unique_ptr<Enemy> GameWorld::spawnEnemy(const std::string & name /* EnemyInstanceConfig instanceConfig */) const {
+        if(auto enemyFactoryPtr = enemyFactory.lock()) {
+            try {
+                return enemyFactoryPtr->create(name);
+            } catch(HikariException & ex) {
+                HIKARI_LOG(debug) << ex.what();
+                return std::unique_ptr<Enemy>(nullptr);
+            }
+        }
+
+        return std::unique_ptr<Enemy>(nullptr);
+    }
+
     const std::vector<std::shared_ptr<CollectableItem>> & GameWorld::getActiveItems() const {
         return activeItems;
+    }
+
+    const std::vector<std::shared_ptr<Enemy>> & GameWorld::getActiveEnemies() const {
+        return activeEnemies;
     }
 
     void GameWorld::setPlayer(const std::shared_ptr<Hero>& player) {

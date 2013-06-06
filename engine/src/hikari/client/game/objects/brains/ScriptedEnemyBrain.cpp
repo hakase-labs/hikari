@@ -13,8 +13,6 @@ namespace hikari {
         , instance()
         , instanceConfig(vm)
     {
-        HIKARI_LOG(debug2) << "ScriptedEnemyBrain::ScriptedEnemyBrain()";
-        
         if(!bindScriptClassInstance()) {
             // throw?
             HIKARI_LOG(error) << "ScriptedEnemyBrain failed to bind.";
@@ -27,7 +25,6 @@ namespace hikari {
         , instance()
         , instanceConfig(vm)
     {
-        HIKARI_LOG(debug2) << "ScriptedEnemyBrain::ScriptedEnemyBrain() copy constructed!";
         if(!bindScriptClassInstance()) {
             // throw?
             HIKARI_LOG(error) << "ScriptedEnemyBrain failed to bind.";
@@ -35,7 +32,7 @@ namespace hikari {
     }
     
     ScriptedEnemyBrain::~ScriptedEnemyBrain() {
-        HIKARI_LOG(debug2) << "DESTROYED ScriptedEnemyBrain::ScriptedEnemyBrain()";
+
     }
 
     bool ScriptedEnemyBrain::bindScriptClassInstance() {
@@ -71,18 +68,14 @@ namespace hikari {
     }
 
     std::unique_ptr<EnemyBrain> ScriptedEnemyBrain::clone() const {
-        HIKARI_LOG(debug2) << "ScriptedEnemyBrain::clone()";
         return std::unique_ptr<EnemyBrain>(new ScriptedEnemyBrain(*this));
     }
 
     void ScriptedEnemyBrain::attach(Enemy* host) {
-        HIKARI_LOG(debug2) << "ScriptedEnemyBrain::attach() to " << host->getId();
         EnemyBrain::attach(host);
-        HIKARI_LOG(debug2) << "After EnemyBrain::attach() to " << host->getId();
+
         if(!proxyAttach.IsNull()) {
-            HIKARI_LOG(debug2) << "In-script attach() to " << host->getId();
             proxyAttach.Execute(host);
-            HIKARI_LOG(debug2) << "After in-script attach() to " << host->getId();
         }
     }
 
