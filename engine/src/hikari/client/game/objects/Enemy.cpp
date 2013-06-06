@@ -34,6 +34,7 @@ namespace hikari {
     }
 
     Enemy::~Enemy() {
+        
     }
 
     std::unique_ptr<Enemy> Enemy::clone() const {

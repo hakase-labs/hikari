@@ -39,6 +39,7 @@ else ::hikari::Log().get(level)
     class HIKARI_API Log {
     private:
         static LogLevel reportingLevel;
+        static std::ostream & outputStream;
         Log(const Log&);
         Log& operator =(const Log&);
 

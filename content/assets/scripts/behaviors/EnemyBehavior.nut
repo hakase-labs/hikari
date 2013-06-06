@@ -1,6 +1,7 @@
 enum State {
   IDLE,
-  MOVING
+  MOVING,
+  SHOOTING
 }
 
 class EnemyBehavior {
