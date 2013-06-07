@@ -1,0 +1,47 @@
+{
+    "name": "Komasaburo",
+    "image": "assets/images/sp-enemies.png",
+    "animations": {
+        "idle": {
+            "repeat": true,
+            "keyframe": 0,
+            "syncGroup": 0,
+            "frames": [ 
+                { 
+                    "x" : 48, 
+                    "y" : 16, 
+                    "width" : 32, 
+                    "height" : 32, 
+                    "hotspotX" : 16, 
+                    "hotspotY" : 30, 
+                    "length" : 0.1333
+                },
+                { 
+                    "x" : 80, 
+                    "y" : 16, 
+                    "width" : 32, 
+                    "height" : 32, 
+                    "hotspotX" : 16, 
+                    "hotspotY" : 30, 
+                    "length" : 0.1333
+                }
+            ]
+        },
+        "shooting": {
+            "repeat": false,
+            "keyframe": 0,
+            "syncGroup": 10,
+            "frames": [ 
+                { 
+                    "x" : 112, 
+                    "y" : 16, 
+                    "width" : 32, 
+                    "height" : 32, 
+                    "hotspotX" : 16, 
+                    "hotspotY" : 30, 
+                    "length" : 0.1333
+                }
+            ]
+        }
+    }
+}

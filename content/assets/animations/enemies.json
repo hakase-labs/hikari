@@ -1,0 +1,72 @@
+{
+	"name": "Octopus Battery",
+	"image": "assets/images/sp-enemies.png",
+	"animations": {
+		"idle": {
+			"repeat": true,
+			"keyframe": 0,
+			"syncGroup": 0,
+			"frames": [ 
+				{ 
+					"x" : 0, 
+					"y" : 0, 
+					"width" : 16, 
+					"height" : 16, 
+					"hotspotX" : 8, 
+					"hotspotY" : 8, 
+					"length" : 1.0
+				}
+			]
+		},
+		"walking": {
+			"repeat": true,
+			"keyframe": 1,
+			"syncGroup": 1,
+			"frames": [ 
+				{ 
+					"x" : 16, 
+					"y" : 0, 
+					"width" : 16, 
+					"height" : 16, 
+					"hotspotX" : 8, 
+					"hotspotY" : 8, 
+					"length" : 0.15
+				},
+				{ 
+					"x" : 32, 
+					"y" : 0, 
+					"width" : 16, 
+					"height" : 16, 
+					"hotspotX" : 8, 
+					"hotspotY" : 8, 
+					"length" : 0.01666
+				}
+			]
+		},
+		"stopping": {
+			"repeat": true,
+			"keyframe": 1,
+			"syncGroup": 2,
+			"frames": [ 
+				{ 
+					"x" : 16, 
+					"y" : 0, 
+					"width" : 16, 
+					"height" : 16, 
+					"hotspotX" : 8, 
+					"hotspotY" : 8, 
+					"length" : 0.15
+				},
+				{ 
+					"x" : 0, 
+					"y" : 0, 
+					"width" : 16, 
+					"height" : 16, 
+					"hotspotX" : 8, 
+					"hotspotY" : 8, 
+					"length" : 0.01666
+				}
+			]
+		}
+	}
+}

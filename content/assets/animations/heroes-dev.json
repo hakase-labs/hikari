@@ -1,0 +1,25 @@
+{
+	"image": "",
+	"animations": {
+		"rockman": {
+			"idle": {
+				"repeat": true,
+				"keyframe": 0,
+				"frames": [ 
+					{ "x" : 0, "y" : 0, "width" : 22, "height" : 24, "hotspotX" : 19, "hotspotY" : 24, "length" : 5.0 }
+				]
+			},
+			"running": {
+				"repeat": true,
+				"keyframe": 1,
+				"frames": [ 
+					{ "x" : 22, "y" : 0, "width" : 22, "height" : 24, "hotspotX" : 19, "hotspotY" : 24, "length" : 0.1 },
+					{ "x" : 44, "y" : 0, "width" : 30, "height" : 24, "hotspotX" : 23, "hotspotY" : 24, "length" : 0.1 },
+					{ "x" : 74, "y" : 0, "width" : 20, "height" : 24, "hotspotX" : 18, "hotspotY" : 24, "length" : 0.1333 },
+					{ "x" : 94, "y" : 0, "width" : 22, "height" : 24, "hotspotX" : 19, "hotspotY" : 24, "length" : 0.1333 },
+					{ "x" : 74, "y" : 0, "width" : 20, "height" : 24, "hotspotX" : 18, "hotspotY" : 24, "length" : 0.1333 }
+				]
+			}
+		}
+	}
+}
