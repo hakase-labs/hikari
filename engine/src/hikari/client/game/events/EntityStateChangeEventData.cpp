@@ -1,8 +1,9 @@
 #include "hikari/client/game/events/EntityStateChangeEventData.hpp"
+#include "hikari/core/util/HashedString.hpp"
 
 namespace hikari {
 
-    const EventType EntityStateChangeEventData::Type = 0xd11f5747;
+    const EventType EntityStateChangeEventData::Type = HashedString("EntityStateChangeEventData").getHash(); // was 0xd11f5747;
 
     EntityStateChangeEventData::EntityStateChangeEventData(int entityId, const std::string & stateName)
         : BaseEventData(0.0f)

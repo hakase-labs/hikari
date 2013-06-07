@@ -28,9 +28,11 @@ namespace hikari {
     class EnemyFactory;
     class Particle;
     class Projectile;
+    class EventManager;
 
     class GameWorld : public Updatable {
     private:
+        std::weak_ptr<EventManager> eventManager;
         std::shared_ptr<Hero> player;
         std::shared_ptr<Room> currentRoom;
         std::weak_ptr<ItemFactory> itemFactory;
@@ -56,6 +58,9 @@ namespace hikari {
     public:
         GameWorld();
         virtual ~GameWorld();
+
+        void setEventManager(const std::weak_ptr<EventManager>& eventManager);
+        const std::weak_ptr<EventManager>& getEventManager() const;
 
         void setCurrentRoom(const std::shared_ptr<Room> & room);
         const std::shared_ptr<Room> & getCurrentRoom() const;

@@ -24,6 +24,7 @@
 #include "hikari/client/game/events/EntityStateChangeEventData.hpp"
 #include "hikari/client/game/events/EventData.hpp"
 #include "hikari/client/game/events/WeaponFireEventData.hpp"
+#include "hikari/client/game/events/ObjectRemovedEventData.hpp"
 #include "hikari/client/gui/GuiService.hpp"
 #include "hikari/core/game/AnimationSet.hpp"
 #include "hikari/core/game/AnimationLoader.hpp"
@@ -57,6 +58,11 @@
 #include <string>
 
 namespace hikari {
+
+    void letMeKnowItsGone(EventDataPtr data) {
+        auto eventData = std::static_pointer_cast<ObjectRemovedEventData>(data);
+        HIKARI_LOG(debug1) << "Removed! id =" << eventData->getObjectId();
+    }
 
     GamePlayState::GamePlayState(const std::string &name, const Json::Value &params, ServiceLocator &services)
         : name(name)
@@ -124,6 +130,7 @@ namespace hikari {
         hero->setEventManager(std::weak_ptr<EventManager>(eventManager));
 
         world.setPlayer(hero);
+        world.setEventManager(std::weak_ptr<EventManager>(eventManager));
 
         const auto itemFactoryWeak  = services.locateService<ItemFactory>(Services::ITEMFACTORY);
         const auto enemyFactoryWeak = services.locateService<EnemyFactory>(Services::ENEMYFACTORY);
@@ -290,7 +297,9 @@ namespace hikari {
 
             // Get links to all spawners from new room
             linkSpawners(currentRoom);
-            checkSpawners();
+
+            // This was causing a bug. Any spawners that are visible before the level start were "waking" twice.
+            //checkSpawners();
 
             // Let Rockman know where he is too
             hero->setRoom(currentRoom);
@@ -551,6 +560,12 @@ namespace hikari {
             auto entityStateChangeDelegate = fastdelegate::MakeDelegate(this, &GamePlayState::handleEntityStateChangeEvent);
             eventManager->addListener(entityStateChangeDelegate, EntityStateChangeEventData::Type);
             eventHandlerDelegates.push_back(std::make_pair(entityStateChangeDelegate, EntityStateChangeEventData::Type));
+
+            auto objectRemovedDelegate = fastdelegate::FastDelegate1<EventDataPtr>(&letMeKnowItsGone);
+            eventManager->addListener(objectRemovedDelegate, ObjectRemovedEventData::Type);
+            eventHandlerDelegates.push_back(std::make_pair(objectRemovedDelegate, ObjectRemovedEventData::Type));
+
+            #include "hikari/client/game/events/ObjectRemovedEventData.hpp"
         }
     }
 
@@ -829,6 +844,14 @@ namespace hikari {
     void GamePlayState::PlayingSubState::enter() {
         gamePlayState.isHeroAlive = true;
         postDeathTimer = 0.0f;
+
+        // Remove any enemies that may have been there from before
+        auto & staleEnemies = gamePlayState.world.getActiveEnemies();
+
+        std::for_each(std::begin(staleEnemies), std::end(staleEnemies), [&](const std::shared_ptr<Enemy> & enemy) {
+            HIKARI_LOG(debug2) << "Removing stale enemy, id = " << enemy->getId();
+            gamePlayState.world.queueObjectRemoval(enemy);
+        }); 
 
         auto& camera = gamePlayState.camera;
         auto& view = camera.getView();
