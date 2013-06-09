@@ -70,33 +70,10 @@ _ReSharper*/
 *.layout
 
 #Hikari Specific Ignores
-content/*
-!content/conf.json
-!content/game.json
-content/assets/*
-content/assets/templates/*
-content/assets/animations/*
-content/assets/images/*
-content/assets/scripts/*
-content/assets/scripts/effects*
-!content/assets/
-!content/assets/templates/
-!content/assets/templates/items.json
-!content/assets/templates/enemies.json
-!content/assets/animations/
-!content/assets/animations/items.json
-!content/assets/animations/particles.json
-!content/assets/images/
-!content/assets/images/sp-collectables.png
-!content/assets/images/sp-particles.png
-!content/assets/scripts/
-!content/assets/scripts/*.nut
-!content/assets/scripts/behaviors/
-!content/assets/scripts/behaviors/*.nut
-!content/assets/scripts/effects/
-!content/assets/scripts/effects/*.nut
 doc/
 junk/
 tools/
 *.sublime-project
 *.sublime-workspace
+
+*.bak

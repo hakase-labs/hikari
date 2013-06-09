@@ -147,6 +147,7 @@ set( ENGINE_SOURCE_FILES
     src/hikari/client/game/events/EntityStateChangeEventData.cpp
     src/hikari/client/game/events/TransitionCollisionEventData.cpp
     src/hikari/client/game/events/WeaponFireEventData.cpp
+    src/hikari/client/game/events/ObjectRemovedEventData.cpp
     src/hikari/client/game/objects/brains/ScriptedEnemyBrain.cpp
     src/hikari/client/game/objects/CollectableItem.cpp
     src/hikari/client/game/objects/controllers/PlayerInputHeroActionController.cpp

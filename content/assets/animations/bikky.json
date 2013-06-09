@@ -1,0 +1,65 @@
+{
+    "name": "Bikky",
+    "image": "assets/images/sp-enemies.png",
+    "animations": {
+        "idle": {
+            "repeat": true,
+            "keyframe": 1,
+            "syncGroup": 0,
+            "frames": [ 
+                { 
+                    "x" : 96, 
+                    "y" : 64, 
+                    "width" : 48, 
+                    "height" : 56, 
+                    "hotspotX" : 24, 
+                    "hotspotY" : 36, 
+                    "length" : 0.1333
+                },
+                { 
+                    "x" : 0, 
+                    "y" : 64, 
+                    "width" : 48, 
+                    "height" : 56, 
+                    "hotspotX" : 24, 
+                    "hotspotY" : 36, 
+                    "length" : 0.1333
+                },
+                { 
+                    "x" : 48, 
+                    "y" : 64, 
+                    "width" : 48, 
+                    "height" : 56, 
+                    "hotspotX" : 24, 
+                    "hotspotY" : 36, 
+                    "length" : 0.1333
+                }
+            ]
+        },
+        "jumping": {
+            "repeat": true,
+            "keyframe": 1,
+            "syncGroup": 10,
+            "frames": [ 
+                { 
+                    "x" : 96, 
+                    "y" : 64, 
+                    "width" : 48, 
+                    "height" : 56, 
+                    "hotspotX" : 24, 
+                    "hotspotY" : 36, 
+                    "length" : 0.1333
+                },
+                { 
+                    "x" : 144, 
+                    "y" : 56, 
+                    "width" : 48, 
+                    "height" : 64, 
+                    "hotspotX" : 24,
+                    "hotspotY" : 44, 
+                    "length" : 0.1333
+                }
+            ]
+        }
+    }
+}

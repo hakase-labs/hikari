@@ -1,4 +1,6 @@
 #include "hikari/client/game/GameWorld.hpp"
+#include "hikari/client/game/events/EventManager.hpp"
+#include "hikari/client/game/events/ObjectRemovedEventData.hpp"
 #include "hikari/client/game/objects/GameObject.hpp"
 #include "hikari/client/game/objects/CollectableItem.hpp"
 #include "hikari/client/game/objects/Enemy.hpp"
@@ -15,7 +17,8 @@
 namespace hikari {
 
     GameWorld::GameWorld() 
-        : player(nullptr)
+        : eventManager()
+        , player(nullptr)
         , currentRoom(nullptr)
         , itemFactory()
         , enemyFactory()
@@ -37,6 +40,14 @@ namespace hikari {
 
     GameWorld::~GameWorld() {
         // no-op
+    }
+
+    void GameWorld::setEventManager(const std::weak_ptr<EventManager>& eventManager) {
+        this->eventManager = eventManager;
+    }
+
+    const std::weak_ptr<EventManager>& GameWorld::getEventManager() const {
+        return eventManager;
     }
 
     void GameWorld::setCurrentRoom(const std::shared_ptr<Room> & room) {
@@ -61,8 +72,8 @@ namespace hikari {
 
     void GameWorld::update(float dt) {
         //HIKARI_LOG(debug) << "GameWorld::update begin; dt = " << dt;
-        processAdditions();
         processRemovals();
+        processAdditions();
         
         /*
         std::for_each(
@@ -158,6 +169,8 @@ namespace hikari {
     }
 
     void GameWorld::processRemovals() {
+        auto eventManagerPtr = eventManager.lock();
+
         while(!queuedRemovals.empty()) {
             auto objectToBeRemoved = queuedRemovals.front();
             
@@ -167,6 +180,10 @@ namespace hikari {
             objectRegistry.erase(objectToBeRemoved->getId());
             
             queuedRemovals.pop();
+
+            if(eventManagerPtr) {
+                eventManagerPtr->queueEvent(std::make_shared<ObjectRemovedEventData>(objectToBeRemoved->getId()));
+            }
         }
 
         while(!queuedItemRemovals.empty()) {
@@ -178,6 +195,10 @@ namespace hikari {
             objectRegistry.erase(objectToBeRemoved->getId());
             
             queuedItemRemovals.pop();
+
+            if(eventManagerPtr) {
+                eventManagerPtr->queueEvent(std::make_shared<ObjectRemovedEventData>(objectToBeRemoved->getId()));
+            }
         }
 
         while(!queuedEnemyRemovals.empty()) {
@@ -189,6 +210,10 @@ namespace hikari {
             objectRegistry.erase(objectToBeRemoved->getId());
             
             queuedEnemyRemovals.pop();
+
+            if(eventManagerPtr) {
+                eventManagerPtr->queueEvent(std::make_shared<ObjectRemovedEventData>(objectToBeRemoved->getId()));
+            }
         }
     }
 
