@@ -76,5 +76,31 @@
             "gravitated": true,
             "phasing": false
         }
+    },
+    {
+        "name": "Bikky",
+        "behavior": {
+            "type": "scripted",
+            "name": "BikkyEnemyBehavior",
+            "config": {
+
+            }
+        },
+        "animationSet": "assets/animations/bikky.json",
+        "boundingBox": {
+            "width": 48,
+            "height": 56,
+            "originX": 24,
+            "originY": 36
+        },
+        "states": {
+            "default": {
+                
+            }
+        },
+        "characteristics": {
+            "gravitated": true,
+            "phasing": false
+        }
     }
 ]

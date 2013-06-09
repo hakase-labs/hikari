@@ -1,0 +1,14 @@
+{
+	"gui" : {
+		"image" : "assets/images/gui-font.png",
+		"glyphs" : " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
+		"width" : 8,
+		"height" : 8
+	},
+	"menu" : {
+		"image" : "assets/images/menu-font.png",
+		"glyphs" : " 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
+		"width" : 8,
+		"height" : 8
+	}
+}

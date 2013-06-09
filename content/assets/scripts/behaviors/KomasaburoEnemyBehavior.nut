@@ -16,7 +16,7 @@ class KomasaburoEnemyBehavior extends EnemyBehavior {
             switch(state) {
                 case State.IDLE:
                     if(enteringNewState) {
-                        adjustDirection();
+                        facePlayer();
                         host.changeAnimation("idle");
                         enteringNewState = false;
                     }
@@ -29,7 +29,7 @@ class KomasaburoEnemyBehavior extends EnemyBehavior {
                     break;
                 case State.SHOOTING:
                     if(enteringNewState) {
-                        adjustDirection();
+                        facePlayer();
                         host.changeAnimation("shooting");
                         enteringNewState = false;
                     }
@@ -48,7 +48,10 @@ class KomasaburoEnemyBehavior extends EnemyBehavior {
         base.update(dt);
     }
 
-    function adjustDirection() {
+    /**
+     * Causes the enemy to turn toward the player.
+     */
+    function facePlayer() {
         if(host != null) {
             local hostX = host.getX();
             local targetX = ::heroX;
