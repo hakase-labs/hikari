@@ -855,7 +855,7 @@ namespace hikari {
 
         auto& camera = gamePlayState.camera;
         auto& view = camera.getView();
-        auto enemy = gamePlayState.world.spawnEnemy("Komasaburo");
+        auto enemy = gamePlayState.world.spawnEnemy("Bikky");
 
         if(enemy) {
             enemy->setActive(true);
@@ -864,7 +864,7 @@ namespace hikari {
             gamePlayState.world.queueObjectAddition(std::shared_ptr<Enemy>(std::move(enemy)));
         }
     }
-
+    
     void GamePlayState::PlayingSubState::exit() {
 
     }
