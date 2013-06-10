@@ -102,5 +102,31 @@
             "gravitated": true,
             "phasing": false
         }
+    },
+    {
+        "name": "Peterchy",
+        "behavior": {
+            "type": "scripted",
+            "name": "PeterchyEnemyBehavior",
+            "config": {
+
+            }
+        },
+        "animationSet": "assets/animations/peterchy.json",
+        "boundingBox": {
+            "width": 26,
+            "height": 16,
+            "originX": 13,
+            "originY": 16
+        },
+        "states": {
+            "default": {
+                
+            }
+        },
+        "characteristics": {
+            "gravitated": true,
+            "phasing": false
+        }
     }
 ]
