@@ -855,7 +855,7 @@ namespace hikari {
 
         auto& camera = gamePlayState.camera;
         auto& view = camera.getView();
-        auto enemy = gamePlayState.world.spawnEnemy("Bikky");
+        auto enemy = gamePlayState.world.spawnEnemy("Peterchy");
 
         if(enemy) {
             enemy->setActive(true);

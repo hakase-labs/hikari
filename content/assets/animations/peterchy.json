@@ -1,0 +1,58 @@
+{
+    "name": "Peterchy",
+    "image": "assets/images/sp-enemies.png",
+    "animations": {
+        "idle": {
+            "repeat": true,
+            "keyframe": 0,
+            "syncGroup": 0,
+            "frames": [ 
+                { 
+                    "x" : 144, 
+                    "y" : 0, 
+                    "width" : 32, 
+                    "height" : 16, 
+                    "hotspotX" : 16, 
+                    "hotspotY" : 16, 
+                    "length" : 0.0833
+                },
+                { 
+                    "x" : 184, 
+                    "y" : 16, 
+                    "width" : 24, 
+                    "height" : 32, 
+                    "hotspotX" : 12, 
+                    "hotspotY" : 32, 
+                    "length" : 0.0833
+                },
+                { 
+                    "x" : 168, 
+                    "y" : 16, 
+                    "width" : 16, 
+                    "height" : 32, 
+                    "hotspotX" : 8, 
+                    "hotspotY" : 32, 
+                    "length" : 0.0833
+                },
+                { 
+                    "x" : 144, 
+                    "y" : 16, 
+                    "width" : 24, 
+                    "height" : 32, 
+                    "hotspotX" : 12, 
+                    "hotspotY" : 32, 
+                    "length" : 0.0833
+                },
+                { 
+                    "x" : 176, 
+                    "y" : 0, 
+                    "width" : 32, 
+                    "height" : 16, 
+                    "hotspotX" : 16, 
+                    "hotspotY" : 16, 
+                    "length" : 0.0833
+                }
+            ]
+        }
+    }
+}
