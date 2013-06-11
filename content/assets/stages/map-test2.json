@@ -3,7 +3,7 @@
   "gridsize": 16,
   "specialRooms": {
     "starting": 0,
-    "midpoint": 1,
+    "midpoint": 0,
     "bossCorridor": 7,
     "bossChamber": 8
   },

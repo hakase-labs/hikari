@@ -34,9 +34,6 @@ namespace hikari {
         std::vector<int> tile;
         std::vector<int> attr;
         std::vector<RoomTransition> transitions;
-        std::vector<std::shared_ptr<CollectableItem>> collectableItems;
-        std::vector<std::shared_ptr<Doodad>> doodads;
-        std::vector<std::shared_ptr<Enemy>> enemies;
         std::vector<std::shared_ptr<Spawner>> spawners;
 
         const inline bool isInBounds(const int &x, const int &y) const;
@@ -82,14 +79,19 @@ namespace hikari {
         const int getAttributeAt(int tileX, int tileY) const;
 
         /**
-            Gets the list of the room's transitions.
-        */
+         * Gets the list of the room's transitions.
+         */
         const std::vector<RoomTransition>& getTransitions() const;
 
-        const std::vector<std::shared_ptr<CollectableItem>>& getCollectableItems() const;
-        const std::vector<std::shared_ptr<Doodad>>& getDoodads() const;
-        const std::vector<std::shared_ptr<Enemy>>& getEnemies() const;
         const std::vector<std::shared_ptr<Spawner>>& getSpawners() const;
+
+        /**
+         * Gets a list of the Spawner objects in this Room.
+         *
+         * @see hikari::Spawner
+         * @return list of Spawners
+         */
+        std::vector<std::weak_ptr<Spawner>> getSpawnerList() const;
     };
 
 } // hikari
