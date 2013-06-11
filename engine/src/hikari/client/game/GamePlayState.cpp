@@ -308,34 +308,36 @@ namespace hikari {
 
     void GamePlayState::linkSpawners(const std::shared_ptr<Room> & room) {
         if(room) {
-            itemSpawners.clear();
-
-            const auto & spawners = room->getSpawners();
-
-            for(auto spawner = std::begin(spawners), end = std::end(spawners); spawner != end; spawner++) {
-                if(*spawner) {
-                    itemSpawners.emplace_back(std::weak_ptr<Spawner>(*spawner));
-                }
-            }
+            itemSpawners = room->getSpawnerList();
         }
 
         // Sort spawners by X coordinate, ascending
         std::sort(std::begin(itemSpawners), std::end(itemSpawners),
-            [](const std::weak_ptr<Spawner> &a, const std::weak_ptr<Spawner> &b) -> bool {
+            [](std::weak_ptr<Spawner> a, std::weak_ptr<Spawner> b) -> bool {
                 const auto & spawnerA = a.lock();
                 const auto & spawnerB = b.lock();
-                const auto aX = spawnerA->getPosition().getX();
-                const auto bX = spawnerB->getPosition().getX();
 
-                return aX < bX;
+                // You have to check the pointers here because some may be
+                // nullptr_t.
+
+                if(spawnerA && spawnerB) {
+                    const auto aX = spawnerA->getPosition().getX();
+                    const auto bX = spawnerB->getPosition().getX();
+
+                    return aX < bX;
+                }
+
+                return false;
             }
         );
 
         std::for_each(
             std::begin(itemSpawners),
             std::end(itemSpawners),
-            [](std::weak_ptr<Spawner> & s) {
-                if(auto ptr = s.lock()) { 
+            [&](std::weak_ptr<Spawner> & s) {
+                if(auto ptr = s.lock()) {
+                    ptr->detachEventListeners(*eventManager.get());
+                    ptr->attachEventListeners(*eventManager.get());
                     ptr->setAwake(false);
                 }
             }
@@ -916,6 +918,7 @@ namespace hikari {
                     }
 
                     item->setActive(false);
+                    item->onDeath();
                     gamePlayState.world.queueObjectRemoval(item);
                 }
         });

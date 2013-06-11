@@ -14,7 +14,7 @@ if(WIN32)
     set(SFML_STATIC_LIBRARIES TRUE)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W3")
 else()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -O")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -O -g")
 endif()
 
 if(MSVC)

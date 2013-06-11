@@ -5,10 +5,14 @@
 #include "hikari/client/game/GameWorld.hpp"
 #include "hikari/core/game/Direction.hpp"
 #include "hikari/core/math/Vector2.hpp"
+#include "hikari/client/game/events/EventData.hpp"
+#include "hikari/client/game/events/EventListenerDelegate.hpp"
 
 #include <memory>
 
 namespace hikari {
+
+    class EventManager;
     
     /**
         A Spawner is responsible for spawning one or more objects in the game
@@ -19,6 +23,9 @@ namespace hikari {
         Direction direction;
         Vector2<float> position;
         bool awake;
+
+    protected:
+        std::vector<std::pair<EventListenerDelegate, EventType>> eventHandlerDelegates;
 
     public:
         Spawner();
@@ -47,6 +54,9 @@ namespace hikari {
         void setPosition(const Vector2<float>& newPosition);
 
         virtual void performAction(GameWorld & world);
+
+        virtual void attachEventListeners(EventManager & eventManager);
+        virtual void detachEventListeners(EventManager & eventManager);
 
         virtual void attachToInstance(const std::shared_ptr<GameObject> & instance);
 

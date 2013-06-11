@@ -1,6 +1,8 @@
 #include "hikari/client/game/objects/ItemSpawner.hpp"
 #include "hikari/client/game/objects/CollectableItem.hpp"
 #include "hikari/client/game/GameWorld.hpp"
+#include "hikari/client/game/events/EventManager.hpp"
+#include "hikari/client/game/events/EntityDeathEventData.hpp"
 
 #include "hikari/core/util/Log.hpp"
 
@@ -8,6 +10,7 @@ namespace hikari {
 
     ItemSpawner::ItemSpawner(const std::string & itemName)
         : Spawner()
+        , spawnedItemId(-1)
         , itemName(itemName)
     {
 
@@ -17,16 +20,47 @@ namespace hikari {
         // No-op
     }
 
-    void ItemSpawner::performAction(GameWorld & world) {
-        auto spawnedObject = world.spawnCollectableItem(itemName);
+    void ItemSpawner::handleEntityDeathEvent(EventDataPtr event) {
+        auto eventData = std::static_pointer_cast<EntityDeathEventData>(event);
 
-        if(spawnedObject) {
+        // When an item "dies" it means that it was consumed.
+        // Consumed items don't respawn until the ItemSpawner is set back to an active state.
+        if(eventData->getEntityId() == spawnedItemId) {
+            HIKARI_LOG(debug4) << "ItemSpawner's item was consumed! id = " << eventData->getEntityId();
+            setActive(false);
+        } 
+    }
+
+    void ItemSpawner::performAction(GameWorld & world) {
+        if(auto spawnedObject = world.spawnCollectableItem(itemName)) {
+            spawnedItemId = spawnedObject->getId();
+
             spawnedObject->reset();
             spawnedObject->setPosition(getPosition());
+            spawnedObject->setAgeless(true);
             spawnedObject->setActive(true);
-        }
 
-        world.queueObjectAddition(spawnedObject);
+            world.queueObjectAddition(spawnedObject);
+        }
+    }
+
+    void ItemSpawner::attachEventListeners(EventManager & eventManager) {
+        auto entityDeathDelegate = fastdelegate::MakeDelegate(this, &ItemSpawner::handleEntityDeathEvent);
+        eventManager.addListener(entityDeathDelegate, EntityDeathEventData::Type);
+        eventHandlerDelegates.push_back(std::make_pair(entityDeathDelegate, EntityDeathEventData::Type));
+    }
+
+    void ItemSpawner::detachEventListeners(EventManager & eventManager) {
+        std::for_each(
+            std::begin(eventHandlerDelegates),
+            std::end(eventHandlerDelegates), 
+            [&](const std::pair<EventListenerDelegate, EventType> & del) {
+                bool removed = eventManager.removeListener(del.first, del.second);
+                HIKARI_LOG(debug) << "ItemSpawner :: Removing event listener, type = " << del.second << ", succes = " << removed;
+            }
+        );
+
+        eventHandlerDelegates.clear();
     }
 
     void ItemSpawner::onActivated() {

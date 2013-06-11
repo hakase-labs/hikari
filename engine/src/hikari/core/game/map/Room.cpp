@@ -1,4 +1,7 @@
 #include "hikari/core/game/map/Room.hpp"
+#include "hikari/core/util/Log.hpp"
+#include <memory>
+#include <algorithm>
 
 namespace hikari {
 
@@ -17,9 +20,6 @@ namespace hikari {
         , tile(tile)
         , attr(attr)
         , transitions(transitions)
-        , collectableItems()
-        , doodads()
-        , enemies()
         , spawners(spawners) {
 
     }
@@ -92,20 +92,19 @@ namespace hikari {
         return transitions;
     }
 
-    const std::vector<std::shared_ptr<CollectableItem>>& Room::getCollectableItems() const {
-        return collectableItems;
-    }
-
-    const std::vector<std::shared_ptr<Doodad>>& Room::getDoodads() const {
-        return doodads;
-    }
-
-    const std::vector<std::shared_ptr<Enemy>>& Room::getEnemies() const {
-        return enemies;
-    }
-
     const std::vector<std::shared_ptr<Spawner>>& Room::getSpawners() const {
         return spawners;
+    }
+
+    std::vector<std::weak_ptr<Spawner>> Room::getSpawnerList() const {
+        std::vector<std::weak_ptr<Spawner>> output;
+        output.resize(spawners.size());
+
+        std::transform(std::begin(spawners), std::end(spawners), std::begin(output), [&](std::shared_ptr<Spawner> spawner) -> std::weak_ptr<Spawner> {
+            return std::weak_ptr<Spawner>(spawner);
+        });
+
+        return output;
     }
 
 } // hikari
