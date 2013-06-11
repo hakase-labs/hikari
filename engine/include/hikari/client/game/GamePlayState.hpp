@@ -122,6 +122,11 @@ namespace hikari {
         void checkSpawners();
 
         /**
+         * Cleans up any stale objects between room transitions and level restarts.
+         */
+        void cleanStaleObjects();
+
+        /**
             Starts the current stage from the beginning.
         */
         void startStage();

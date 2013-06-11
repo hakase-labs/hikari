@@ -33,6 +33,14 @@ namespace hikari {
 
     }
 
+    void Spawner::attachEventListeners(EventManager & eventManager) {
+
+    }
+
+    void Spawner::detachEventListeners(EventManager & eventManager) {
+
+    }
+
     void Spawner::attachToInstance(const std::shared_ptr<GameObject> & instance) {
 
     }

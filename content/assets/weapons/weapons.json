@@ -1,0 +1,15 @@
+[
+    {
+        "name": "Mega Buster",
+        "projectileType": "Plasma Bullet",
+        "usageCost": 0,
+        "usageSound": "Plasma Bullet",
+    },
+    {
+        "name": "Rain Flush",
+        "projectileType": "Rain Flush",
+        "global": true,
+        "usageCost": 2,
+        "usageSound": "Rain Flush"
+    }
+]

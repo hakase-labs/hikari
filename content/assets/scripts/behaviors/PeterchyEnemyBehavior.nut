@@ -24,6 +24,9 @@ class PeterchyEnemyBehavior extends EnemyBehavior {
                 default:
                 break;
             }
+
+            host.direction = direction;
+            
             /*
             local dir = host.direction;
             switch(state) {
@@ -79,16 +82,8 @@ class PeterchyEnemyBehavior extends EnemyBehavior {
     function handleWorldCollision(side) {
         if(side == Directions.Left) {
             direction = Directions.Right;
-
-            if(host != null) {
-                host.direction = direction;
-            }
         } else if(side == Directions.Right) {
             direction = Directions.Left;
-
-            if(host != null) {
-                host.direction = direction;
-            }
         }
     }
 }
