@@ -13,19 +13,30 @@ namespace hikari {
      */
     class EnemySpawner : public Spawner {
     private:
+        static const int DEFAULT_SPAWN_LIMIT;
+        static const float DEFAULT_SPAWN_RATE;
+
+    private:
         std::vector<int> spawnedEnemyIds;
         std::string enemyType;
         bool hasLivingSpawn; // Indicates whether ths spawner has living "children"
+        int spawnLimit;      // How many enemies this spawner will spawn at once time
+        float spawnRate;     // How long to wait before spawning another enemy
 
         void handleObjectRemovedEvent(EventDataPtr event);
 
     public:
-        EnemySpawner(const std::string & enemyType);
+        EnemySpawner(const std::string & enemyType, 
+            int spawnLimit = DEFAULT_SPAWN_LIMIT, float spawnRate = DEFAULT_SPAWN_RATE);
+
         virtual ~EnemySpawner();
 
         virtual void performAction(GameWorld & world);
         virtual void attachEventListeners(EventManager & eventManager);
         virtual void detachEventListeners(EventManager & eventManager);
+
+        void setSpawnLimit(int limit);
+        void setSpawnRate(float rate);
 
         //
         // GameObject overrides
