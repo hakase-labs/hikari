@@ -1954,10 +1954,16 @@
           "direction": "Right"
         },
         {
-          "type": "Telly",
-          "x": 100,
-          "y": 64,
-          "direction": "Right"
+          "type": "Peterchy",
+          "x": 500,
+          "y": 1000,
+          "direction": "Left"
+        },
+        {
+          "type": "Komasaburo",
+          "x": 592,
+          "y": 1056,
+          "direction": "Left"
         }
       ],
       "items": [

@@ -854,17 +854,6 @@ namespace hikari {
             HIKARI_LOG(debug2) << "Removing stale enemy, id = " << enemy->getId();
             gamePlayState.world.queueObjectRemoval(enemy);
         }); 
-
-        auto& camera = gamePlayState.camera;
-        auto& view = camera.getView();
-        auto enemy = gamePlayState.world.spawnEnemy("Peterchy");
-
-        if(enemy) {
-            enemy->setActive(true);
-            enemy->setPosition(view.getX() + view.getWidth() / 2, view.getY() + view.getHeight() / 2);
-            enemy->setRoom(gamePlayState.currentRoom);
-            gamePlayState.world.queueObjectAddition(std::shared_ptr<Enemy>(std::move(enemy)));
-        }
     }
     
     void GamePlayState::PlayingSubState::exit() {

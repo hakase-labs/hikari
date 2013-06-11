@@ -97,6 +97,9 @@ namespace hikari {
     void EnemySpawner::onDeactivated() {
         GameObject::onDeactivated();
 
+        spawnedEnemyIds.clear();
+        hasLivingSpawn = false;
+
         HIKARI_LOG(debug3) << "EnemySpawner::onDeactivated(), id = " << getId();
     }
 
