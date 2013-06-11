@@ -933,6 +933,15 @@ namespace hikari {
             std::end(activeEnemies), 
             [this, &camera, &dt](const std::shared_ptr<Enemy> & enemy) {
                 enemy->update(dt);
+
+                const auto & cameraView = camera.getView();
+
+                if(!geom::intersects(enemy->getBoundingBox(), cameraView)) {
+                    HIKARI_LOG(debug3) << "Cleaning up off-screen enemy #" << enemy->getId();
+                    enemy->setActive(false);
+                    gamePlayState.world.queueObjectRemoval(enemy);
+                }
+
         });
 
         // Hero died so we need to restart

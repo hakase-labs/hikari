@@ -1949,9 +1949,9 @@
       "enemies": [
         {
           "type": "Telly",
-          "x": 32,
-          "y": 36,
-          "direction": "Left"
+          "x": 288,
+          "y": 1000,
+          "direction": "Right"
         },
         {
           "type": "Telly",
