@@ -334,8 +334,10 @@ namespace hikari {
         std::for_each(
             std::begin(itemSpawners),
             std::end(itemSpawners),
-            [](std::weak_ptr<Spawner> & s) {
-                if(auto ptr = s.lock()) { 
+            [&](std::weak_ptr<Spawner> & s) {
+                if(auto ptr = s.lock()) {
+                    ptr->detachEventListeners(*eventManager.get());
+                    ptr->attachEventListeners(*eventManager.get());
                     ptr->setAwake(false);
                 }
             }
@@ -916,6 +918,7 @@ namespace hikari {
                     }
 
                     item->setActive(false);
+                    item->onDeath();
                     gamePlayState.world.queueObjectRemoval(item);
                 }
         });

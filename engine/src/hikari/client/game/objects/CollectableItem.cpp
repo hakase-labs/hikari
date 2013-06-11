@@ -1,8 +1,12 @@
 #include "hikari/client/game/objects/CollectableItem.hpp"
+#include "hikari/client/game/events/EventManager.hpp"
+#include "hikari/client/game/events/EntityDeathEventData.hpp"
 #include "hikari/client/game/Effect.hpp"
-#include <SFML/Graphics/RenderTarget.hpp>
+
 #include "hikari/core/game/map/Room.hpp"
 #include "hikari/core/util/Log.hpp"
+
+#include <SFML/Graphics/RenderTarget.hpp>
 
 namespace hikari {
 
@@ -84,8 +88,13 @@ namespace hikari {
     }
 
     void CollectableItem::onDeath() {
-        Entity::onDeath();
+        //Entity::onDeath();
         //setActive(false);
+        HIKARI_LOG(debug2) << "CollectableItem::onDeath()";
+        if(auto eventManagetPtr = getEventManager().lock()) {
+            // May want ti triggerEvent() instead; test and see.
+            eventManagetPtr->queueEvent(EventDataPtr(new EntityDeathEventData(getId())));
+        }
     }
 
     void CollectableItem::onSleep() {

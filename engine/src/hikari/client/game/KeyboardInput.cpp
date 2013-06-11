@@ -1,5 +1,5 @@
 #include "hikari/client/game/KeyboardInput.hpp"
-
+#include "hikari/core/util/Log.hpp"
 namespace hikari {
 
     KeyboardInput::KeyboardInput()
@@ -127,7 +127,9 @@ namespace hikari {
     }
 
     void KeyboardInput::update(const sf::Event &keyboardEvent) {
+        HIKARI_LOG(debug2) << "Key event being processed!";
         if(keyboardEvent.type == sf::Event::KeyPressed) {
+            HIKARI_LOG(debug3) << "Key event KeyPressed";
             switch(keyboardEvent.key.code) {
                 case sf::Keyboard::Up:
                     previousUp = currentUp;
@@ -157,6 +159,7 @@ namespace hikari {
                     break;
             }
         } else if(keyboardEvent.type == sf::Event::KeyReleased) {
+            HIKARI_LOG(debug3) << "Key event KeyReleased";
             switch(keyboardEvent.key.code) {
                 case sf::Keyboard::Up:
                     previousUp = currentUp;

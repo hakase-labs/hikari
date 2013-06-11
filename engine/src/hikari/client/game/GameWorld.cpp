@@ -151,6 +151,7 @@ namespace hikari {
             objectRegistry.emplace(std::make_pair(objectToBeAdded->getId(), objectToBeAdded));
 
             objectToBeAdded->setRoom(getCurrentRoom());
+            objectToBeAdded->setEventManager(getEventManager());
 
             queuedItemAdditions.pop();
         }
@@ -163,6 +164,7 @@ namespace hikari {
             objectRegistry.emplace(std::make_pair(objectToBeAdded->getId(), objectToBeAdded));
 
             objectToBeAdded->setRoom(getCurrentRoom());
+            objectToBeAdded->setEventManager(getEventManager());
 
             queuedEnemyAdditions.pop();
         }
@@ -181,6 +183,8 @@ namespace hikari {
             
             queuedRemovals.pop();
 
+            //objectToBeRemoved->setEventManager(std::weak_ptr<EventManager>());
+
             if(eventManagerPtr) {
                 eventManagerPtr->queueEvent(std::make_shared<ObjectRemovedEventData>(objectToBeRemoved->getId()));
             }
@@ -196,6 +200,8 @@ namespace hikari {
             
             queuedItemRemovals.pop();
 
+            objectToBeRemoved->setEventManager(std::weak_ptr<EventManager>());
+
             if(eventManagerPtr) {
                 eventManagerPtr->queueEvent(std::make_shared<ObjectRemovedEventData>(objectToBeRemoved->getId()));
             }
@@ -210,6 +216,8 @@ namespace hikari {
             objectRegistry.erase(objectToBeRemoved->getId());
             
             queuedEnemyRemovals.pop();
+
+            objectToBeRemoved->setEventManager(std::weak_ptr<EventManager>());
 
             if(eventManagerPtr) {
                 eventManagerPtr->queueEvent(std::make_shared<ObjectRemovedEventData>(objectToBeRemoved->getId()));
