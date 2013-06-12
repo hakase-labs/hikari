@@ -551,8 +551,6 @@ namespace hikari {
             auto objectRemovedDelegate = fastdelegate::FastDelegate1<EventDataPtr>(&letMeKnowItsGone);
             eventManager->addListener(objectRemovedDelegate, ObjectRemovedEventData::Type);
             eventHandlerDelegates.push_back(std::make_pair(objectRemovedDelegate, ObjectRemovedEventData::Type));
-
-            #include "hikari/client/game/events/ObjectRemovedEventData.hpp"
         }
     }
 
@@ -645,8 +643,6 @@ namespace hikari {
             HIKARI_LOG(debug) << "Playing music for the level!";
             sound->playMusic(3);
         }
-
-        // gamePlayState.isHeroAlive = true;
 
         if(gamePlayState.currentRoom) {
             Point2D<int> spawnPosition = gamePlayState.currentRoom->getHeroSpawnPosition();
@@ -799,9 +795,13 @@ namespace hikari {
     void GamePlayState::TeleportSubState::update(const float & dt) {
         auto& hero = gamePlayState.hero;
         auto& heroPosition = hero->getPosition();
+        const float verticalTeleportSpeedPerFrame = 16.0f;
 
         if(heroPosition.getY() < targetPoint.getY()) {
-            float deltaY = std::min(16.0f, std::abs(targetPoint.getY() - heroPosition.getY()));
+            // Make sure we don't teleport too far.
+            float deltaY = std::min(verticalTeleportSpeedPerFrame,
+                                std::abs(targetPoint.getY() - heroPosition.getY()));
+
             hero->setPosition(heroPosition.getX(), heroPosition.getY() + deltaY);
         } else {
             hero->performMorph();
