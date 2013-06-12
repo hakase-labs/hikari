@@ -197,9 +197,11 @@ namespace hikari {
         }
 
         if((event.type == sf::Event::KeyPressed) && event.key.code == sf::Keyboard::BackSpace) {
-            //if(subState) {
+            if(event.key.shift) {
+                startStage();
+            } else {
                 restartStage();
-            //}
+            }
         }
     }
 
@@ -292,7 +294,8 @@ namespace hikari {
             // Make sure we detect collisions in this room
             collisionResolver->setRoom(currentRoom);
 
-            // Change the world's "room"
+            // Clean up and then change the world's "room"
+            world.removeAllObjects();
             world.setCurrentRoom(currentRoom);
 
             // Get links to all spawners from new room
@@ -432,6 +435,8 @@ namespace hikari {
         //
         // Reset all spawners to their original state
         //
+        //world.removeAllObjects();
+
         if(currentMap) {
             int numRooms = currentMap->getRoomCount();
 
@@ -465,6 +470,8 @@ namespace hikari {
     }
 
     void GamePlayState::restartStage() {
+        //world.removeAllObjects();
+
         if(currentMap) {
             // Boss corridor has highest priority
             if(hasReachedBossCorridor) {

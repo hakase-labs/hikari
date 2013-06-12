@@ -76,6 +76,8 @@ namespace hikari {
         void queueObjectRemoval(const std::shared_ptr<CollectableItem> &obj);
         void queueObjectRemoval(const std::shared_ptr<Enemy> &obj);
 
+        void removeAllObjects();
+
         std::shared_ptr<CollectableItem> spawnCollectableItem(const std::string & name /* CollectableItemInstanceConfig instanceConfig */) const;
         std::shared_ptr<Doodad> spawnDoodad(const std::string & name /* DoodadInstanceConfig instanceConfig */) const;
         std::unique_ptr<Enemy> spawnEnemy(const std::string & name /* EnemyInstanceConfig instanceConfig */) const;
