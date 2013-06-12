@@ -70,9 +70,9 @@ namespace hikari {
 
         MapPtr constructMap(const Json::Value &json) const;
         RoomPtr constructRoom(const Json::Value &json, int gridSize) const;
-        const SpawnerPtr constructSpawner(const Json::Value &json, SpawnType type) const;
-        const RoomTransition constructTransition(const Json::Value &json) const;
-        const Rectangle2D<int> constructCameraBounds(const Json::Value &json, 
+        SpawnerPtr constructSpawner(const Json::Value &json, SpawnType type) const;
+        RoomTransition constructTransition(const Json::Value &json) const;
+        Rectangle2D<int> constructCameraBounds(const Json::Value &json, 
                 int roomX, int roomY, int gridSize) const;
         bool validateMapStructure(const Json::Value &json) const;
         bool validateRoomStructure(const Json::Value &json) const;

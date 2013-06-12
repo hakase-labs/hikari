@@ -168,7 +168,7 @@ namespace hikari {
         //
         std::vector<RoomTransition> transitions;
         for(int i = 0; i < transitionCount; ++i) {
-            transitions.push_back(constructTransition(json[PROPERTY_NAME_ROOM_TRANSITIONS][i]));
+            transitions.emplace_back(constructTransition(json[PROPERTY_NAME_ROOM_TRANSITIONS][i]));
         }
 
         RoomPtr result(new Room(id, x, y, width, height, gridSize, heroSpawnPosition, cameraBounds, tile, attr, transitions, spawners));
@@ -176,7 +176,7 @@ namespace hikari {
         return result;
     }
 
-    const SpawnerPtr MapLoader::constructSpawner(const Json::Value &json, SpawnType type) const {
+    SpawnerPtr MapLoader::constructSpawner(const Json::Value &json, SpawnType type) const {
         auto spawner = std::shared_ptr<Spawner>(nullptr);
 
         switch(type) {
@@ -230,7 +230,7 @@ namespace hikari {
         return spawner;
     }
 
-    const RoomTransition MapLoader::constructTransition(const Json::Value &json) const {
+    RoomTransition MapLoader::constructTransition(const Json::Value &json) const {
         bool isBossEntrance = json.get("boss", false).asBool();
         
         // TODO: Do we need this?
@@ -261,7 +261,7 @@ namespace hikari {
         return RoomTransition(from, to, width, height, x, y, dir, isBossEntrance);
     }
 
-    const Rectangle2D<int> MapLoader::constructCameraBounds(const Json::Value &json, 
+    Rectangle2D<int> MapLoader::constructCameraBounds(const Json::Value &json, 
             int roomX, int roomY, int gridSize) const {
         int x = (roomX + json[PROPERTY_NAME_ROOM_CAMERABOUNDS_X].asInt()) * gridSize;
         int y = (roomY + json[PROPERTY_NAME_ROOM_CAMERABOUNDS_Y].asInt()) * gridSize;

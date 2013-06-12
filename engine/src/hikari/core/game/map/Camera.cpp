@@ -20,7 +20,7 @@ namespace hikari {
         return view;
     }
 
-    const sf::View Camera::getPixelAlignedView() const {
+    sf::View Camera::getPixelAlignedView() const {
         sf::Vector2f pixelAlignedCenter(view.getX() + (view.getWidth() / 2), view.getY() + (view.getHeight() / 2));
         pixelAlignedCenter.x = std::floor(pixelAlignedCenter.x);
         pixelAlignedCenter.y = std::floor(pixelAlignedCenter.y);
@@ -39,11 +39,11 @@ namespace hikari {
         this->view = view;
     }
 
-    const float Camera::getX() const {
+    float Camera::getX() const {
         return view.getX();
     }
 
-    const float Camera::getY() const {
+    float Camera::getY() const {
         return view.getY();
     }
 
@@ -57,11 +57,11 @@ namespace hikari {
         updateView();
     }
 
-    const bool Camera::canMoveHorizontal() const {
+    bool Camera::canMoveHorizontal() const {
         return !lockHorizontalMovement;
     }
 
-    const bool Camera::canMoveVertical() const {
+    bool Camera::canMoveVertical() const {
         return !lockVerticalMovement;
     }
 

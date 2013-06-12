@@ -111,14 +111,22 @@ namespace hikari {
         void changeCurrentRoom(const std::shared_ptr<Room>& newCurrentRoom);
 
         /**
-            Creates links to all spawners in a given Room without taking
-            ownership of them.
-        */
+         * Creates links to all spawners in a given Room without taking
+         * ownership of them. This causes spawners to attach event listeners and
+         * also puts them to bed.
+         *
+         * @see checkSpawners
+         */
         void linkSpawners(const std::shared_ptr<Room> & room);
 
         /**
-            Checks all linked spawners if they should be active or inactive.
-        */
+         * Checks all linked spawners if they should be active or inactive. This
+         * checks if they are on screen or not. Only spawners that are active
+         * are checked. Active spawners on screen will be woken up, active awake
+         * spawners that or off screen will be put to bed.
+         *
+         * @see linkSpawners
+         */
         void checkSpawners();
 
         /**
