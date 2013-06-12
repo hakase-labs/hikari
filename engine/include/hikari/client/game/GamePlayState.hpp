@@ -127,27 +127,28 @@ namespace hikari {
         void cleanStaleObjects();
 
         /**
-            Starts the current stage from the beginning.
-        */
+         * Starts the current stage from the beginning. This is like playing the
+         * level for the first time. This causes the state of the stage to be
+         * reset.
+         *
+         * @see startRound
+         */
         void startStage();
 
         /**
-            Starts a round of the current stage from the closest starting point.
-        */
+         * Starts a round of the current stage from the closest starting point.
+         *
+         * Starting a new round does not reset the state of the stage (items 
+         * collected won't reappear, etc.) It's like starting the level after
+         * you just died.
+         *
+         * @see startStage
+         */
         void startRound();
 
         /**
-            Handles actions that take place after a stage has been completed.
-        */
-        void endStage();
-
-        void playerBirth();
-        void playerDeath();
-
-        /**
-            Checks if the player is colliding with a transition region.
-            If it is then some kind of flag needs to be set to begin a transition.
-        */
+         * Checks if the player is colliding with a transition region.
+         */
         void checkCollisionWithTransition();
 
         //

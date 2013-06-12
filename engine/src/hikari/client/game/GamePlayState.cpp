@@ -480,22 +480,6 @@ namespace hikari {
         changeSubState(std::unique_ptr<SubState>(new ReadySubState(*this)));
     }
 
-    void GamePlayState::endStage() {
-
-    }
-
-    void GamePlayState::playerBirth() {
-        // Teleport Rock to starting point in current room
-        // Play "teleported" sample
-    }
-
-    void GamePlayState::playerDeath() {
-        // Hide hero
-        // Spawn explosion energy balls in all directions
-        // Stop music
-        // Play death sample
-    }
-
     void GamePlayState::checkCollisionWithTransition() { }
 
     void GamePlayState::renderMap(sf::RenderTarget &target) const {
