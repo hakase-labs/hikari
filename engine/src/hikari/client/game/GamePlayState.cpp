@@ -200,7 +200,7 @@ namespace hikari {
             if(event.key.shift) {
                 startStage();
             } else {
-                restartStage();
+                startRound();
             }
         }
     }
@@ -429,14 +429,9 @@ namespace hikari {
     void GamePlayState::startStage() {
         HIKARI_LOG(debug) << "Starting stage.";
 
-        // Hide energy gauge
-        // guiHeroEnergyGauge->setVisible(false);
-
         //
         // Reset all spawners to their original state
         //
-        //world.removeAllObjects();
-
         if(currentMap) {
             int numRooms = currentMap->getRoomCount();
 
@@ -463,13 +458,12 @@ namespace hikari {
 
             hasReachedMidpoint = false;
             hasReachedBossCorridor = false;
-            changeCurrentRoom(currentMap->getStartingRoom());
         }
 
-        restartStage();
+        startRound();
     }
 
-    void GamePlayState::restartStage() {
+    void GamePlayState::startRound() {
         //world.removeAllObjects();
 
         if(currentMap) {
@@ -947,7 +941,7 @@ namespace hikari {
             // Wait 1 second after you died and then restart
             if(postDeathTimer >= 2.5f) {
                 // gamePlayState.changeSubState(std::unique_ptr<SubState>(new ReadySubState(gamePlayState)));
-                gamePlayState.restartStage();
+                gamePlayState.startRound();
                 return;
             }
         } else {

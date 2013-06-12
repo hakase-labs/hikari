@@ -132,9 +132,9 @@ namespace hikari {
         void startStage();
 
         /**
-            Restarts the current stage from the closest restart point.
+            Starts a round of the current stage from the closest starting point.
         */
-        void restartStage();
+        void startRound();
 
         /**
             Handles actions that take place after a stage has been completed.
