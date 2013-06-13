@@ -2,6 +2,7 @@
 #define HIKARI_CORE_GAME_MAP_ROOMTRANSITION
 
 #include "hikari/core/Platform.hpp"
+#include "hikari/core/geom/Rectangle2D.hpp"
 
 namespace hikari {
     
@@ -30,10 +31,7 @@ namespace hikari {
         bool bossEntrance;
         int fromRegion;
         int toRegion;
-        int width;
-        int height;
-        int x;
-        int y;
+        Rectangle2D<int> bounds;
         Direction direction;
     };
     

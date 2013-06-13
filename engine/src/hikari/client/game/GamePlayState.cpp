@@ -164,8 +164,8 @@ namespace hikari {
         guiContainer->add(guiMenuPanel.get(), 0, 0);
 
         // The reddish energy gauge for bosses
-        guiBossEnergyGauge->setMaximumValue(56.0f);
-        guiBossEnergyGauge->setValue(56.0f);
+        guiBossEnergyGauge->setMaximumValue(3.0f);
+        guiBossEnergyGauge->setValue(3.0f);
         guiBossEnergyGauge->setVisible(true);
         guiBossEnergyGauge->setBackgroundColor(gcn::Color(0xe40058));
         guiBossEnergyGauge->setForegroundColor(gcn::Color(0xfc9838));
@@ -197,9 +197,11 @@ namespace hikari {
         }
 
         if((event.type == sf::Event::KeyPressed) && event.key.code == sf::Keyboard::BackSpace) {
-            //if(subState) {
-                restartStage();
-            //}
+            if(event.key.shift) {
+                startStage();
+            } else {
+                startRound();
+            }
         }
     }
 
@@ -292,7 +294,8 @@ namespace hikari {
             // Make sure we detect collisions in this room
             collisionResolver->setRoom(currentRoom);
 
-            // Change the world's "room"
+            // Clean up and then change the world's "room"
+            world.removeAllObjects();
             world.setCurrentRoom(currentRoom);
 
             // Get links to all spawners from new room
@@ -312,24 +315,24 @@ namespace hikari {
         }
 
         // Sort spawners by X coordinate, ascending
-        std::sort(std::begin(itemSpawners), std::end(itemSpawners),
-            [](std::weak_ptr<Spawner> a, std::weak_ptr<Spawner> b) -> bool {
-                const auto & spawnerA = a.lock();
-                const auto & spawnerB = b.lock();
+        // std::sort(std::begin(itemSpawners), std::end(itemSpawners),
+        //     [](std::weak_ptr<Spawner> a, std::weak_ptr<Spawner> b) -> bool {
+        //         const auto & spawnerA = a.lock();
+        //         const auto & spawnerB = b.lock();
 
-                // You have to check the pointers here because some may be
-                // nullptr_t.
+        //         // You have to check the pointers here because some may be
+        //         // nullptr_t.
 
-                if(spawnerA && spawnerB) {
-                    const auto aX = spawnerA->getPosition().getX();
-                    const auto bX = spawnerB->getPosition().getX();
+        //         if(spawnerA && spawnerB) {
+        //             const auto aX = spawnerA->getPosition().getX();
+        //             const auto bX = spawnerB->getPosition().getX();
 
-                    return aX < bX;
-                }
+        //             return aX < bX;
+        //         }
 
-                return false;
-            }
-        );
+        //         return false;
+        //     }
+        // );
 
         std::for_each(
             std::begin(itemSpawners),
@@ -362,14 +365,14 @@ namespace hikari {
                         if(spawner->isAwake()) {
                             if(!cameraView.contains(spawnerPosition.getX(), spawnerPosition.getY())) {
                                 spawner->setAwake(false);
-                                HIKARI_LOG(debug3) << "Just put spawner #" << spawner->getId() << " to bed";
+                                // HIKARI_LOG(debug3) << "Just put spawner #" << spawner->getId() << " to bed";
                             }
                         }
                         else {
                             if(cameraView.contains(spawnerPosition.getX(), spawnerPosition.getY())) {
                                 spawner->setAwake(true);
                                 spawner->performAction(world);
-                                HIKARI_LOG(debug3) << "Just woke up spawner #" << spawner->getId();
+                                // HIKARI_LOG(debug3) << "Just woke up spawner #" << spawner->getId();
                             }
                         }
                     }
@@ -426,9 +429,6 @@ namespace hikari {
     void GamePlayState::startStage() {
         HIKARI_LOG(debug) << "Starting stage.";
 
-        // Hide energy gauge
-        // guiHeroEnergyGauge->setVisible(false);
-
         //
         // Reset all spawners to their original state
         //
@@ -458,13 +458,14 @@ namespace hikari {
 
             hasReachedMidpoint = false;
             hasReachedBossCorridor = false;
-            changeCurrentRoom(currentMap->getStartingRoom());
         }
 
-        restartStage();
+        startRound();
     }
 
-    void GamePlayState::restartStage() {
+    void GamePlayState::startRound() {
+        //world.removeAllObjects();
+
         if(currentMap) {
             // Boss corridor has highest priority
             if(hasReachedBossCorridor) {
@@ -477,22 +478,6 @@ namespace hikari {
         }
 
         changeSubState(std::unique_ptr<SubState>(new ReadySubState(*this)));
-    }
-
-    void GamePlayState::endStage() {
-
-    }
-
-    void GamePlayState::playerBirth() {
-        // Teleport Rock to starting point in current room
-        // Play "teleported" sample
-    }
-
-    void GamePlayState::playerDeath() {
-        // Hide hero
-        // Spawn explosion energy balls in all directions
-        // Stop music
-        // Play death sample
     }
 
     void GamePlayState::checkCollisionWithTransition() { }
@@ -566,8 +551,6 @@ namespace hikari {
             auto objectRemovedDelegate = fastdelegate::FastDelegate1<EventDataPtr>(&letMeKnowItsGone);
             eventManager->addListener(objectRemovedDelegate, ObjectRemovedEventData::Type);
             eventHandlerDelegates.push_back(std::make_pair(objectRemovedDelegate, ObjectRemovedEventData::Type));
-
-            #include "hikari/client/game/events/ObjectRemovedEventData.hpp"
         }
     }
 
@@ -580,6 +563,18 @@ namespace hikari {
 
                 //hero->setActive(false);
                 //hero->setPosition(0.0f, 0.0f);
+
+                if(auto progress = gameProgress.lock()) {
+
+                    // Decrement lives
+                    progress->setLives(progress->getLives() - 1);
+
+                    // All the way dead
+                    if(progress->getLives() == 0) {
+                        HIKARI_LOG(debug2) << "Hero has died all of his lives, go to password screen.";
+                        // TODO: Reset number of lives here to the default.
+                    }
+                }
                 
                 HIKARI_LOG(debug) << "Hero died. Starting over.";
 
@@ -660,8 +655,6 @@ namespace hikari {
             HIKARI_LOG(debug) << "Playing music for the level!";
             sound->playMusic(3);
         }
-
-        // gamePlayState.isHeroAlive = true;
 
         if(gamePlayState.currentRoom) {
             Point2D<int> spawnPosition = gamePlayState.currentRoom->getHeroSpawnPosition();
@@ -814,9 +807,13 @@ namespace hikari {
     void GamePlayState::TeleportSubState::update(const float & dt) {
         auto& hero = gamePlayState.hero;
         auto& heroPosition = hero->getPosition();
+        const float verticalTeleportSpeedPerFrame = 16.0f;
 
         if(heroPosition.getY() < targetPoint.getY()) {
-            float deltaY = std::min(16.0f, std::abs(targetPoint.getY() - heroPosition.getY()));
+            // Make sure we don't teleport too far.
+            float deltaY = std::min(verticalTeleportSpeedPerFrame,
+                                std::abs(targetPoint.getY() - heroPosition.getY()));
+
             hero->setPosition(heroPosition.getX(), heroPosition.getY() + deltaY);
         } else {
             hero->performMorph();
@@ -854,17 +851,6 @@ namespace hikari {
             HIKARI_LOG(debug2) << "Removing stale enemy, id = " << enemy->getId();
             gamePlayState.world.queueObjectRemoval(enemy);
         }); 
-
-        auto& camera = gamePlayState.camera;
-        auto& view = camera.getView();
-        auto enemy = gamePlayState.world.spawnEnemy("Peterchy");
-
-        if(enemy) {
-            enemy->setActive(true);
-            enemy->setPosition(view.getX() + view.getWidth() / 2, view.getY() + view.getHeight() / 2);
-            enemy->setRoom(gamePlayState.currentRoom);
-            gamePlayState.world.queueObjectAddition(std::shared_ptr<Enemy>(std::move(enemy)));
-        }
     }
     
     void GamePlayState::PlayingSubState::exit() {
@@ -933,6 +919,15 @@ namespace hikari {
             std::end(activeEnemies), 
             [this, &camera, &dt](const std::shared_ptr<Enemy> & enemy) {
                 enemy->update(dt);
+
+                const auto & cameraView = camera.getView();
+
+                if(!geom::intersects(enemy->getBoundingBox(), cameraView)) {
+                    HIKARI_LOG(debug3) << "Cleaning up off-screen enemy #" << enemy->getId();
+                    enemy->setActive(false);
+                    gamePlayState.world.queueObjectRemoval(enemy);
+                }
+
         });
 
         // Hero died so we need to restart
@@ -942,7 +937,7 @@ namespace hikari {
             // Wait 1 second after you died and then restart
             if(postDeathTimer >= 2.5f) {
                 // gamePlayState.changeSubState(std::unique_ptr<SubState>(new ReadySubState(gamePlayState)));
-                gamePlayState.restartStage();
+                gamePlayState.startRound();
                 return;
             }
         } else {
