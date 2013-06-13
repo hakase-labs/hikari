@@ -5,6 +5,7 @@
 #include "hikari/core/game/map/Tileset.hpp"
 #include "hikari/client/game/objects/Spawner.hpp"
 #include "hikari/client/game/objects/ItemSpawner.hpp"
+#include "hikari/client/game/objects/EnemySpawner.hpp"
 #include "hikari/core/util/StringUtils.hpp"
 #include "hikari/core/util/TilesetCache.hpp"
 #include "hikari/core/util/PhysFS.hpp"
@@ -167,7 +168,7 @@ namespace hikari {
         //
         std::vector<RoomTransition> transitions;
         for(int i = 0; i < transitionCount; ++i) {
-            transitions.push_back(constructTransition(json[PROPERTY_NAME_ROOM_TRANSITIONS][i]));
+            transitions.emplace_back(constructTransition(json[PROPERTY_NAME_ROOM_TRANSITIONS][i]));
         }
 
         RoomPtr result(new Room(id, x, y, width, height, gridSize, heroSpawnPosition, cameraBounds, tile, attr, transitions, spawners));
@@ -175,7 +176,7 @@ namespace hikari {
         return result;
     }
 
-    const SpawnerPtr MapLoader::constructSpawner(const Json::Value &json, SpawnType type) const {
+    SpawnerPtr MapLoader::constructSpawner(const Json::Value &json, SpawnType type) const {
         auto spawner = std::shared_ptr<Spawner>(nullptr);
 
         switch(type) {
@@ -200,6 +201,28 @@ namespace hikari {
 
                 return spawner;
             }
+
+            case SPAWN_ENEMY:
+            {
+                auto type         = json[PROPERTY_NAME_ROOM_ENEMIES_TYPE].asString();
+                auto x            = json[PROPERTY_NAME_ROOM_ENEMIES_POSITION_X].asInt();
+                auto y            = json[PROPERTY_NAME_ROOM_ENEMIES_POSITION_Y].asInt();
+                auto dirString    = json.get(PROPERTY_NAME_ROOM_ENEMIES_DIRECTION, "None").asString();
+                auto direction    = (dirString == "Up" ? Directions::Up : 
+                                        (dirString == "Right" ? Directions::Right : 
+                                            (dirString == "Down" ? Directions::Down : 
+                                                (dirString == "Left" ? Directions::Left : 
+                                                    Directions::None)
+                                                )
+                                            )
+                                        );
+
+                spawner.reset(new EnemySpawner(type));
+                spawner->setPosition(Vector2<float>(static_cast<float>(x), static_cast<float>(y)));
+                spawner->setDirection(direction);
+
+                return spawner;
+            }
             default:
                 break;
         }
@@ -207,7 +230,7 @@ namespace hikari {
         return spawner;
     }
 
-    const RoomTransition MapLoader::constructTransition(const Json::Value &json) const {
+    RoomTransition MapLoader::constructTransition(const Json::Value &json) const {
         bool isBossEntrance = json.get("boss", false).asBool();
         
         // TODO: Do we need this?
@@ -238,7 +261,7 @@ namespace hikari {
         return RoomTransition(from, to, width, height, x, y, dir, isBossEntrance);
     }
 
-    const Rectangle2D<int> MapLoader::constructCameraBounds(const Json::Value &json, 
+    Rectangle2D<int> MapLoader::constructCameraBounds(const Json::Value &json, 
             int roomX, int roomY, int gridSize) const {
         int x = (roomX + json[PROPERTY_NAME_ROOM_CAMERABOUNDS_X].asInt()) * gridSize;
         int y = (roomY + json[PROPERTY_NAME_ROOM_CAMERABOUNDS_Y].asInt()) * gridSize;

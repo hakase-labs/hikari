@@ -225,6 +225,28 @@ namespace hikari {
         }
     }
 
+    void GameWorld::removeAllObjects() {
+        processRemovals();
+
+        // Items
+        std::for_each(
+            std::begin(activeItems),
+            std::end(activeItems),
+            [this](const std::shared_ptr<CollectableItem> item) {
+                this->queueObjectRemoval(item);
+            });
+
+        // Enemies
+        std::for_each(
+            std::begin(activeEnemies),
+            std::end(activeEnemies),
+            [this](const std::shared_ptr<Enemy> enemy) {
+                this->queueObjectRemoval(enemy);
+            });
+
+        processRemovals();
+    }
+
     std::shared_ptr<CollectableItem> GameWorld::spawnCollectableItem(const std::string & name /* CollectableItemInstanceConfig instanceConfig */) const {
         if(auto itemFactoryPtr = itemFactory.lock()) {
             try {

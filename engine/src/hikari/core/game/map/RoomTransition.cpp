@@ -6,10 +6,7 @@ namespace hikari {
         : bossEntrance(bossEntrance)
         , fromRegion(from)
         , toRegion(to)
-        , width(width)
-        , height(height)
-        , x(x)
-        , y(y)
+        , bounds(x, y, width, height)
         , direction(dir) {
     
     }
@@ -27,19 +24,19 @@ namespace hikari {
     }
     
     int RoomTransition::getWidth() const {
-        return width;
+        return bounds.getWidth();
     }
     
     int RoomTransition::getHeight() const {
-        return height;
+        return bounds.getHeight();
     }
     
     int RoomTransition::getX() const {
-        return x;
+        return bounds.getX();
     }
     
     int RoomTransition::getY() const {
-        return y;
+        return bounds.getY();
     }
     
     RoomTransition::Direction RoomTransition::getDirection() const {

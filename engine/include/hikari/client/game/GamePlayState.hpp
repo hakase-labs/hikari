@@ -67,7 +67,7 @@ namespace hikari {
         std::weak_ptr<AudioService> audioService;
         std::weak_ptr<GuiService> guiService;
         std::shared_ptr<EventManager> eventManager;
-        std::shared_ptr<GameProgress> gameProgress;
+        std::weak_ptr<GameProgress> gameProgress;
         std::shared_ptr<ImageFont> guiFont;
         std::shared_ptr<ImageCache> imageCache;
         std::shared_ptr<RealTimeInput> userInput;
@@ -111,14 +111,22 @@ namespace hikari {
         void changeCurrentRoom(const std::shared_ptr<Room>& newCurrentRoom);
 
         /**
-            Creates links to all spawners in a given Room without taking
-            ownership of them.
-        */
+         * Creates links to all spawners in a given Room without taking
+         * ownership of them. This causes spawners to attach event listeners and
+         * also puts them to bed.
+         *
+         * @see checkSpawners
+         */
         void linkSpawners(const std::shared_ptr<Room> & room);
 
         /**
-            Checks all linked spawners if they should be active or inactive.
-        */
+         * Checks all linked spawners if they should be active or inactive. This
+         * checks if they are on screen or not. Only spawners that are active
+         * are checked. Active spawners on screen will be woken up, active awake
+         * spawners that or off screen will be put to bed.
+         *
+         * @see linkSpawners
+         */
         void checkSpawners();
 
         /**
@@ -127,27 +135,28 @@ namespace hikari {
         void cleanStaleObjects();
 
         /**
-            Starts the current stage from the beginning.
-        */
+         * Starts the current stage from the beginning. This is like playing the
+         * level for the first time. This causes the state of the stage to be
+         * reset.
+         *
+         * @see startRound
+         */
         void startStage();
 
         /**
-            Restarts the current stage from the closest restart point.
-        */
-        void restartStage();
+         * Starts a round of the current stage from the closest starting point.
+         *
+         * Starting a new round does not reset the state of the stage (items 
+         * collected won't reappear, etc.) It's like starting the level after
+         * you just died.
+         *
+         * @see startStage
+         */
+        void startRound();
 
         /**
-            Handles actions that take place after a stage has been completed.
-        */
-        void endStage();
-
-        void playerBirth();
-        void playerDeath();
-
-        /**
-            Checks if the player is colliding with a transition region.
-            If it is then some kind of flag needs to be set to begin a transition.
-        */
+         * Checks if the player is colliding with a transition region.
+         */
         void checkCollisionWithTransition();
 
         //

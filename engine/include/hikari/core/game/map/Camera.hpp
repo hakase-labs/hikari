@@ -14,19 +14,19 @@ namespace hikari {
 
         const Rectangle2D<int>& getBoundary() const;
         const Rectangle2D<float>& getView() const;
-        const sf::View getPixelAlignedView() const;
+        sf::View getPixelAlignedView() const;
 
         void setBoundary(const Rectangle2D<int>& boundary);
         void setView(const Rectangle2D<float>& view);
 
-        const float getX() const;
-        const float getY() const;
+        float getX() const;
+        float getY() const;
 
         void setX(float x);
         void setY(float y);
 
-        const bool canMoveHorizontal() const;
-        const bool canMoveVertical() const;
+        bool canMoveHorizontal() const;
+        bool canMoveVertical() const;
 
         void lockHorizontal(bool lock);
         void lockVertical(bool lock);

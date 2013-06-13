@@ -1949,15 +1949,21 @@
       "enemies": [
         {
           "type": "Telly",
-          "x": 32,
-          "y": 36,
+          "x": 288,
+          "y": 1000,
+          "direction": "Right"
+        },
+        {
+          "type": "Peterchy",
+          "x": 500,
+          "y": 1000,
           "direction": "Left"
         },
         {
-          "type": "Telly",
-          "x": 100,
-          "y": 64,
-          "direction": "Right"
+          "type": "Komasaburo",
+          "x": 592,
+          "y": 1056,
+          "direction": "Left"
         }
       ],
       "items": [
