@@ -50,6 +50,7 @@
 #include <SFML/Window/Event.hpp>
 
 #include <guichan/widgets/container.hpp>
+#include <guichan/widgets/label.hpp>
 
 #include <sqrat.h>
 
@@ -85,6 +86,8 @@ namespace hikari {
         , guiHeroEnergyGauge(new gui::EnergyGauge())
         , guiWeaponEnergyGauge(new gui::EnergyGauge())
         , guiMenuPanel(new gui::Panel())
+        , guiLivesLabel(new gcn::Label())
+        , guiETanksLabel(new gcn::Label())
         , maps()
         , itemSpawners()
         , deactivatedItemSpawners()
@@ -188,6 +191,11 @@ namespace hikari {
         guiMenuPanel->setHeight(240);
         guiMenuPanel->setBaseColor(gcn::Color(0, 0, 0, 192));
         guiMenuPanel->setVisible(false);
+        guiMenuPanel->add(guiLivesLabel.get(), 8, 240 - 24);
+        guiMenuPanel->add(guiETanksLabel.get(), 8, 240 - 16);
+
+        guiLivesLabel->setVisible(true);
+        guiETanksLabel->setVisible(true);
     }
 
     void GamePlayState::handleEvent(sf::Event &event) {
@@ -535,7 +543,6 @@ namespace hikari {
 
     void GamePlayState::bindEventHandlers() {
         if(eventManager) {
-            // TODO: Change this to a member handler
             auto weaponFireDelegate = fastdelegate::MakeDelegate(this, &GamePlayState::handleWeaponFireEvent);
             eventManager->addListener(weaponFireDelegate, WeaponFireEventData::Type);
             eventHandlerDelegates.push_back(std::make_pair(weaponFireDelegate, WeaponFireEventData::Type));
@@ -843,6 +850,14 @@ namespace hikari {
     void GamePlayState::PlayingSubState::enter() {
         gamePlayState.isHeroAlive = true;
         postDeathTimer = 0.0f;
+
+        if(auto progress = gamePlayState.gameProgress.lock()) {
+            gamePlayState.guiLivesLabel->setCaption("Lives " + StringUtils::toString(static_cast<int>(progress->getLives())));
+            gamePlayState.guiLivesLabel->adjustSize();
+
+            gamePlayState.guiETanksLabel->setCaption("ETanks " + StringUtils::toString(static_cast<int>(progress->getETanks())));
+            gamePlayState.guiETanksLabel->adjustSize();
+        }       
 
         // Remove any enemies that may have been there from before
         auto & staleEnemies = gamePlayState.world.getActiveEnemies();

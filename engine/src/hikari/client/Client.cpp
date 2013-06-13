@@ -146,7 +146,7 @@ int main(int argc, char** argv) {
     using std::shared_ptr;
     using namespace hikari;
 
-    ::hikari::Log::setReportingLevel(debug4);
+    ::hikari::Log::setReportingLevel(fatal);
 
     initLogging(argc, argv);
 
