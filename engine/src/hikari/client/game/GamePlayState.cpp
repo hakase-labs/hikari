@@ -164,8 +164,8 @@ namespace hikari {
         guiContainer->add(guiMenuPanel.get(), 0, 0);
 
         // The reddish energy gauge for bosses
-        guiBossEnergyGauge->setMaximumValue(56.0f);
-        guiBossEnergyGauge->setValue(56.0f);
+        guiBossEnergyGauge->setMaximumValue(3.0f);
+        guiBossEnergyGauge->setValue(3.0f);
         guiBossEnergyGauge->setVisible(true);
         guiBossEnergyGauge->setBackgroundColor(gcn::Color(0xe40058));
         guiBossEnergyGauge->setForegroundColor(gcn::Color(0xfc9838));
@@ -563,6 +563,18 @@ namespace hikari {
 
                 //hero->setActive(false);
                 //hero->setPosition(0.0f, 0.0f);
+
+                if(auto progress = gameProgress.lock()) {
+
+                    // Decrement lives
+                    progress->setLives(progress->getLives() - 1);
+
+                    // All the way dead
+                    if(progress->getLives() == 0) {
+                        HIKARI_LOG(debug2) << "Hero has died all of his lives, go to password screen.";
+                        // TODO: Reset number of lives here to the default.
+                    }
+                }
                 
                 HIKARI_LOG(debug) << "Hero died. Starting over.";
 

@@ -67,7 +67,7 @@ namespace hikari {
         std::weak_ptr<AudioService> audioService;
         std::weak_ptr<GuiService> guiService;
         std::shared_ptr<EventManager> eventManager;
-        std::shared_ptr<GameProgress> gameProgress;
+        std::weak_ptr<GameProgress> gameProgress;
         std::shared_ptr<ImageFont> guiFont;
         std::shared_ptr<ImageCache> imageCache;
         std::shared_ptr<RealTimeInput> userInput;
