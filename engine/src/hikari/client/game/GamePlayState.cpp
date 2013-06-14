@@ -596,7 +596,12 @@ namespace hikari {
 
     void GamePlayState::handleWeaponFireEvent(EventDataPtr evt) {
         auto eventData = std::static_pointer_cast<WeaponFireEventData>(evt);
-        HIKARI_LOG(debug) << "Member Weapon Fired! wid=" << eventData->getWeaponId() << ", sid=" << eventData->getShooterId(); 
+        HIKARI_LOG(debug) << "Member Weapon Fired! wid=" <<
+                          eventData->getWeaponId() << ", sid=" << eventData->getShooterId() <<
+                          ", faction=" << eventData->getFaction();
+
+        // TODO: Implement projectile spawning from gameWorld
+        //       and then assign its faction, etc., from the event data
     }
 
     void GamePlayState::handleEntityStateChangeEvent(EventDataPtr evt) {

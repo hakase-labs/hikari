@@ -34,7 +34,7 @@ namespace hikari {
         Animator animator;
 
     public:
-        Particle(int id = GameObject::generateObjectId());
+        explicit Particle(float maximumAge);
         Particle(const Particle& proto); 
         virtual ~Particle();
 

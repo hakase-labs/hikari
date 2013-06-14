@@ -37,6 +37,8 @@ namespace hikari {
         bool isShooting;                // Shooting a weapon
         bool isTeleporting;             // Teleporting from sky
         bool isMorphing;                // Morphing from teleport to other state
+        bool isStunned;                 // Unable to be controlled; temporarily out of commission
+        bool isInvincible;              // Impervious to spikes and other kinds of damage
 
 #ifdef HIKARI_DEBUG_HERO_PHYSICS
         int countAscendingFrames;
@@ -61,7 +63,7 @@ namespace hikari {
         std::unique_ptr<ShootingState> nextShootingState;
 
         /**
-         *Determines whether the Hero can jump right now or not.
+         * Determines whether the Hero can jump right now or not.
          */
         bool canJump();
 
@@ -188,6 +190,7 @@ namespace hikari {
 
         void performTeleport();
         void performMorph();
+        void performHurt();
 
         virtual void update(float dt);
         virtual void render(sf::RenderTarget &target);

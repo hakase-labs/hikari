@@ -1,5 +1,6 @@
 #include "hikari/client/game/objects/Entity.hpp"
 #include "hikari/client/game/events/EventManager.hpp"
+#include "hikari/client/game/events/WeaponFireEventData.hpp"
 #include "hikari/core/game/map/Room.hpp"
 #include "hikari/core/game/map/Tileset.hpp"
 #include "hikari/core/game/Animation.hpp"
@@ -188,6 +189,15 @@ namespace hikari {
 
     int Entity::getWeaponId() const {
         return weaponId;
+    }
+
+    void Entity::fireWeapon() {
+        if(auto events = eventManager.lock()) {
+            auto eventData = std::make_shared<WeaponFireEventData>(getWeaponId(), getId(), getFaction());
+            events->triggerEvent(std::move(eventData));
+        } else {
+            HIKARI_LOG(debug4) << "Entity::fireWeapon failed; no EventManager";
+        }
     }
 
     void Entity::setRoom(const std::shared_ptr<Room>& newRoom) {

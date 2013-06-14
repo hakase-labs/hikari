@@ -31,6 +31,7 @@ class KomasaburoEnemyBehavior extends EnemyBehavior {
                     if(enteringNewState) {
                         facePlayer();
                         host.changeAnimation("shooting");
+                        host.fireWeapon();
                         enteringNewState = false;
                     }
 

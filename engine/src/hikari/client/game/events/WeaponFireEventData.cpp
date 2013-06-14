@@ -4,10 +4,11 @@ namespace hikari {
 
     const EventType WeaponFireEventData::Type = 0x13373da4;
 
-    WeaponFireEventData::WeaponFireEventData(int weaponId, int shooterId)
+    WeaponFireEventData::WeaponFireEventData(int weaponId, int shooterId, Faction::Type faction)
         : BaseEventData(0.0f)
         , weaponId(weaponId)
         , shooterId(shooterId)
+        , faction(faction)
     {
 
     }
@@ -20,6 +21,10 @@ namespace hikari {
         return shooterId;
     }
 
+    Faction::Type WeaponFireEventData::getFaction() const {
+        return faction;
+    }
+
     WeaponFireEventData::~WeaponFireEventData() {
         // Do nothing!
     }
@@ -29,7 +34,7 @@ namespace hikari {
     }
 
     EventDataPtr WeaponFireEventData::copy() const {
-        return EventDataPtr(new WeaponFireEventData(getWeaponId(), getShooterId()));
+        return EventDataPtr(new WeaponFireEventData(getWeaponId(), getShooterId(), getFaction()));
     }
 
     const char * WeaponFireEventData::getName() const {

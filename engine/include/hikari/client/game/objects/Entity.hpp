@@ -98,6 +98,7 @@ namespace hikari {
 
         void setWeaponId(int weaponId);
         int getWeaponId() const;
+        void fireWeapon();
 
         void setRoom(const std::shared_ptr<Room>& newRoom);
         const std::shared_ptr<Room>& getRoom() const;
