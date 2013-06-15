@@ -7,17 +7,18 @@
 #include "hikari/client/game/objects/Spawner.hpp"
 #include "hikari/client/game/objects/controllers/PlayerInputHeroActionController.hpp"
 #include "hikari/client/scripting/SquirrelService.hpp"
-
 #include "hikari/client/game/objects/GameObject.hpp"
 #include "hikari/client/game/objects/CollectableItem.hpp"
 #include "hikari/client/game/objects/ItemFactory.hpp"
 #include "hikari/client/game/objects/Enemy.hpp"
 #include "hikari/client/game/objects/EnemyFactory.hpp"
+#include "hikari/client/game/objects/Projectile.hpp"
 #include "hikari/client/game/Effect.hpp"
 #include "hikari/client/gui/EnergyGauge.hpp"
 #include "hikari/client/gui/Panel.hpp"
 #include "hikari/client/Services.hpp"
 #include "hikari/client/audio/AudioService.hpp"
+#include "hikari/client/game/KeyboardInput.hpp"
 #include "hikari/client/game/events/EventManagerImpl.hpp"
 #include "hikari/client/game/events/EventListenerDelegate.hpp"
 #include "hikari/client/game/events/EntityDeathEventData.hpp"
@@ -88,6 +89,7 @@ namespace hikari {
         , guiMenuPanel(new gui::Panel())
         , guiLivesLabel(new gcn::Label())
         , guiETanksLabel(new gcn::Label())
+        , keyboardInput(new KeyboardInput())
         , maps()
         , itemSpawners()
         , deactivatedItemSpawners()
@@ -598,10 +600,16 @@ namespace hikari {
         auto eventData = std::static_pointer_cast<WeaponFireEventData>(evt);
         HIKARI_LOG(debug) << "Member Weapon Fired! wid=" <<
                           eventData->getWeaponId() << ", sid=" << eventData->getShooterId() <<
-                          ", faction=" << eventData->getFaction();
+                          ", faction=" << eventData->getFaction() <<
+                          ", direction=" << eventData->getDirection();
 
-        // TODO: Implement projectile spawning from gameWorld
+        // TODO: Implement projectile spawning from world
         //       and then assign its faction, etc., from the event data
+        auto newProjectile = world.spawnProjectile("plasma");
+
+        if(newProjectile) {
+            // Do stuff
+        }
     }
 
     void GamePlayState::handleEntityStateChangeEvent(EventDataPtr evt) {

@@ -126,7 +126,7 @@ namespace hikari {
         }
     }
 
-    void KeyboardInput::update(const sf::Event &keyboardEvent) {
+    void KeyboardInput::processEvent(const sf::Event &keyboardEvent) {
         HIKARI_LOG(debug2) << "Key event being processed!";
         if(keyboardEvent.type == sf::Event::KeyPressed) {
             HIKARI_LOG(debug3) << "Key event KeyPressed";
@@ -191,4 +191,12 @@ namespace hikari {
         }
     }
 
+    void KeyboardInput::update(float dt) {
+        previousUp = currentUp;
+        previousRight = currentRight;
+        previousDown = currentDown;
+        previousLeft = currentLeft;
+        previousShoot = currentShoot;
+        previousJump = currentJump;
+    }
 } // hikari

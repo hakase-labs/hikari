@@ -1,14 +1,16 @@
 #include "hikari/client/game/events/WeaponFireEventData.hpp"
+#include "hikari/core/util/HashedString.hpp"
 
 namespace hikari {
 
-    const EventType WeaponFireEventData::Type = 0x13373da4;
+    const EventType WeaponFireEventData::Type = HashedString("WeaponFireEventData").getHash();;
 
-    WeaponFireEventData::WeaponFireEventData(int weaponId, int shooterId, Faction::Type faction)
+    WeaponFireEventData::WeaponFireEventData(int weaponId, int shooterId, Faction::Type faction, Direction direction)
         : BaseEventData(0.0f)
         , weaponId(weaponId)
         , shooterId(shooterId)
         , faction(faction)
+        , direction(direction)
     {
 
     }
@@ -25,6 +27,10 @@ namespace hikari {
         return faction;
     }
 
+    Direction WeaponFireEventData::getDirection() const {
+        return direction;
+    }
+
     WeaponFireEventData::~WeaponFireEventData() {
         // Do nothing!
     }
@@ -34,7 +40,14 @@ namespace hikari {
     }
 
     EventDataPtr WeaponFireEventData::copy() const {
-        return EventDataPtr(new WeaponFireEventData(getWeaponId(), getShooterId(), getFaction()));
+        return EventDataPtr(
+            new WeaponFireEventData(
+                getWeaponId(),
+                getShooterId(),
+                getFaction(),
+                getDirection()
+            )
+        );
     }
 
     const char * WeaponFireEventData::getName() const {
