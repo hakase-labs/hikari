@@ -18,7 +18,8 @@ namespace hikari {
     activeSampler(0),
     mutex       ()
     {
-        activeSampler = 0;
+        samplerCount = std::max(samplerCount, static_cast<unsigned int>(1));
+        this->samplerCount = samplerCount;
 
         for(int i = 0; i < samplerCount; ++i) {
             sampleBuffers.push_back(std::unique_ptr<short[]>(new short[myBufferSize]));
@@ -59,27 +60,25 @@ namespace hikari {
                 //throw std::runtime_error("Unsupported music type");
             }
 
-            emu.reset(file_type->new_emu());
+            //emu.reset(file_type->new_emu());
 
             for(int i = 0; i < samplerCount; ++i) {
                 auto sampleEmu = std::unique_ptr<Music_Emu>(file_type->new_emu());
 
-                sampleEmu->set_sample_rate(SAMPLE_RATE);
-                gme_load_data(sampleEmu.get(), buffer.get(), length);
+                if(!sampleEmu) {
+                    return false;
+                }
+
+                // Must set sample rate before loading data
+                handleError(sampleEmu->set_sample_rate(SAMPLE_RATE));
+                handleError(gme_load_data(sampleEmu.get(), buffer.get(), length));
+
                 sampleEmu->start_track(-1);
                 sampleEmu->ignore_silence(false);
                 sampleEmus.push_back(std::move(sampleEmu));
             }
 
             trackInfo.reset(new track_info_t());
-
-            if(!emu.get()) {
-                return false;
-                //throw std::runtime_error("Out of memory");
-            }
-
-            handleError(emu->set_sample_rate(SAMPLE_RATE));
-            handleError(gme_load_data(emu.get(), buffer.get(), length));
         } catch(std::runtime_error& ex) {
             HIKARI_LOG(debug) << ex.what();
             return false;
@@ -93,7 +92,7 @@ namespace hikari {
 
     void NSFSoundStream::onSeek(sf::Time timeOffset) {
         sf::Lock lock(mutex);
-        handleError(emu->seek(static_cast<long>(timeOffset.asMilliseconds())));
+        handleError(sampleEmus[0]->seek(static_cast<long>(timeOffset.asMilliseconds())));
     }
 
     bool NSFSoundStream::onGetData(sf::SoundStream::Chunk& Data) {
@@ -117,25 +116,18 @@ namespace hikari {
                     mixedValue += sampleBuffers[bufferIndex].get()[i];
                 } else {
                     // Zero-out any buffer that isn't playing.
-                    //sampleBuffers[bufferIndex].get()[i] = 0;
+                    sampleBuffers[bufferIndex].get()[i] = 0;
                 }
             }
 
             mixedBuffer[i] = mixedValue;
         }
 
-        // HIKARI_LOG(debug) << "onGetData";
-
-        Data.samples   = &myBuffer[0];
+        Data.samples     = &myBuffer[0];
         Data.sampleCount = myBufferSize;
 
-        //if(!emu->track_ended()) {
-            // HIKARI_LOG(debug) << "onGetData ... track not over";
-            return true;
-        //} else {
-            // HIKARI_LOG(debug) << "onGetData ... track over";
-        //    return false;
-        //}
+        // Never stop streaming...
+        return true;
     }
 
     void NSFSoundStream::handleError(const char* str) const {
@@ -145,42 +137,40 @@ namespace hikari {
     }
 
     long NSFSoundStream::getSampleRate() const {
-        return emu->sample_rate();
+        return sampleEmus[0]->sample_rate();
     }
 
     int NSFSoundStream::getCurrentTrack() const {
-        return emu->current_track();
+        return sampleEmus[0]->current_track();
     }
 
     void NSFSoundStream::setCurrentTrack(int track) {
         sf::Lock lock(mutex);
+
         if(track >= 0 && track < getTrackCount()) {
-            emu->start_track(track);
-
             sampleEmus[activeSampler]->start_track(track);
-
             activeSampler++;
             activeSampler %= samplerCount;
         }
     }
 
     int NSFSoundStream::getTrackCount() const {
-        return emu->track_count();
+        return sampleEmus[0]->track_count();
     }
 
     const std::string NSFSoundStream::getTrackName() {
         sf::Lock lock(mutex);
-        handleError(emu->track_info(trackInfo.get()));
+        handleError(sampleEmus[0]->track_info(trackInfo.get()));
         return std::string(trackInfo->song);
     }
 
     int NSFSoundStream::getVoiceCount() const {
-        return emu->voice_count();
+        return sampleEmus[0]->voice_count();
     }
 
     std::vector<std::string> NSFSoundStream::getVoiceNames() const {
         return std::vector<std::string>(
-            emu->voice_names(), emu->voice_names() + getVoiceCount());
+            sampleEmus[0]->voice_names(), sampleEmus[0]->voice_names() + getVoiceCount());
     }
 
 } // hikari
