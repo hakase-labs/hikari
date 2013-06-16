@@ -79,6 +79,8 @@ namespace hikari {
 
         isFullyAccelerated = false;
 
+        setFaction(Faction::Hero);
+
         changeMobilityState(std::unique_ptr<MobilityState>(new IdleMobilityState(*this)));
         changeShootingState(std::unique_ptr<ShootingState>(new NotShootingState(*this)));
     }
@@ -416,13 +418,7 @@ namespace hikari {
         cooldownTimer = cooldown;
         HIKARI_LOG(debug4) << "Shooting now!";
         hero.chooseAnimation();
-
-        if(auto events = hero.getEventManager().lock()) {
-            EventDataPtr weaponFire(new WeaponFireEventData(hero.getWeaponId(), hero.getId()));
-            events->triggerEvent(weaponFire);
-        } else {
-            HIKARI_LOG(debug4) << "No event manager.";
-        }
+        hero.fireWeapon();
     }
 
     void Hero::IsShootingState::exit() {

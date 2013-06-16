@@ -34,7 +34,8 @@ namespace hikari {
         virtual const bool wasPressed(const Button &button) const;
         virtual const bool wasReleased(const Button &button) const;
 
-        void update(const sf::Event &keyboardEvent);
+        void processEvent(const sf::Event &keyboardEvent);
+        void update(float dt);
     };
     
 } // hikari

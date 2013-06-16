@@ -8,6 +8,18 @@ class KomasaburoEnemyBehavior extends EnemyBehavior {
         ::log("KomasaburoEnemyBehavior constructor called.");
     }
 
+    /**
+     * Performs host-attachment stuff.
+     * @override
+     */
+    function attachHost(newHost, instanceConfig = {}) {
+        base.attachHost(newHost);
+
+        if(host != null) {
+            host.weaponId = 55;
+        }
+    }
+
     function update(dt) {
         if(host != null) {
 
@@ -31,6 +43,7 @@ class KomasaburoEnemyBehavior extends EnemyBehavior {
                     if(enteringNewState) {
                         facePlayer();
                         host.changeAnimation("shooting");
+                        host.fireWeapon();
                         enteringNewState = false;
                     }
 

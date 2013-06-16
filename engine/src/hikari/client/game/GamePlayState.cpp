@@ -7,17 +7,18 @@
 #include "hikari/client/game/objects/Spawner.hpp"
 #include "hikari/client/game/objects/controllers/PlayerInputHeroActionController.hpp"
 #include "hikari/client/scripting/SquirrelService.hpp"
-
 #include "hikari/client/game/objects/GameObject.hpp"
 #include "hikari/client/game/objects/CollectableItem.hpp"
 #include "hikari/client/game/objects/ItemFactory.hpp"
 #include "hikari/client/game/objects/Enemy.hpp"
 #include "hikari/client/game/objects/EnemyFactory.hpp"
+#include "hikari/client/game/objects/Projectile.hpp"
 #include "hikari/client/game/Effect.hpp"
 #include "hikari/client/gui/EnergyGauge.hpp"
 #include "hikari/client/gui/Panel.hpp"
 #include "hikari/client/Services.hpp"
 #include "hikari/client/audio/AudioService.hpp"
+#include "hikari/client/game/KeyboardInput.hpp"
 #include "hikari/client/game/events/EventManagerImpl.hpp"
 #include "hikari/client/game/events/EventListenerDelegate.hpp"
 #include "hikari/client/game/events/EntityDeathEventData.hpp"
@@ -50,6 +51,7 @@
 #include <SFML/Window/Event.hpp>
 
 #include <guichan/widgets/container.hpp>
+#include <guichan/widgets/label.hpp>
 
 #include <sqrat.h>
 
@@ -85,6 +87,9 @@ namespace hikari {
         , guiHeroEnergyGauge(new gui::EnergyGauge())
         , guiWeaponEnergyGauge(new gui::EnergyGauge())
         , guiMenuPanel(new gui::Panel())
+        , guiLivesLabel(new gcn::Label())
+        , guiETanksLabel(new gcn::Label())
+        , keyboardInput(new KeyboardInput())
         , maps()
         , itemSpawners()
         , deactivatedItemSpawners()
@@ -188,6 +193,11 @@ namespace hikari {
         guiMenuPanel->setHeight(240);
         guiMenuPanel->setBaseColor(gcn::Color(0, 0, 0, 192));
         guiMenuPanel->setVisible(false);
+        guiMenuPanel->add(guiLivesLabel.get(), 8, 240 - 24);
+        guiMenuPanel->add(guiETanksLabel.get(), 8, 240 - 16);
+
+        guiLivesLabel->setVisible(true);
+        guiETanksLabel->setVisible(true);
     }
 
     void GamePlayState::handleEvent(sf::Event &event) {
@@ -535,7 +545,6 @@ namespace hikari {
 
     void GamePlayState::bindEventHandlers() {
         if(eventManager) {
-            // TODO: Change this to a member handler
             auto weaponFireDelegate = fastdelegate::MakeDelegate(this, &GamePlayState::handleWeaponFireEvent);
             eventManager->addListener(weaponFireDelegate, WeaponFireEventData::Type);
             eventHandlerDelegates.push_back(std::make_pair(weaponFireDelegate, WeaponFireEventData::Type));
@@ -589,7 +598,18 @@ namespace hikari {
 
     void GamePlayState::handleWeaponFireEvent(EventDataPtr evt) {
         auto eventData = std::static_pointer_cast<WeaponFireEventData>(evt);
-        HIKARI_LOG(debug) << "Member Weapon Fired! wid=" << eventData->getWeaponId() << ", sid=" << eventData->getShooterId(); 
+        HIKARI_LOG(debug) << "Member Weapon Fired! wid=" <<
+                          eventData->getWeaponId() << ", sid=" << eventData->getShooterId() <<
+                          ", faction=" << eventData->getFaction() <<
+                          ", direction=" << eventData->getDirection();
+
+        // TODO: Implement projectile spawning from world
+        //       and then assign its faction, etc., from the event data
+        auto newProjectile = world.spawnProjectile("plasma");
+
+        if(newProjectile) {
+            // Do stuff
+        }
     }
 
     void GamePlayState::handleEntityStateChangeEvent(EventDataPtr evt) {
@@ -843,6 +863,14 @@ namespace hikari {
     void GamePlayState::PlayingSubState::enter() {
         gamePlayState.isHeroAlive = true;
         postDeathTimer = 0.0f;
+
+        if(auto progress = gamePlayState.gameProgress.lock()) {
+            gamePlayState.guiLivesLabel->setCaption("Lives " + StringUtils::toString(static_cast<int>(progress->getLives())));
+            gamePlayState.guiLivesLabel->adjustSize();
+
+            gamePlayState.guiETanksLabel->setCaption("ETanks " + StringUtils::toString(static_cast<int>(progress->getETanks())));
+            gamePlayState.guiETanksLabel->adjustSize();
+        }       
 
         // Remove any enemies that may have been there from before
         auto & staleEnemies = gamePlayState.world.getActiveEnemies();

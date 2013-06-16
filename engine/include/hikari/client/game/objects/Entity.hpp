@@ -56,8 +56,8 @@ namespace hikari {
         Faction::Type faction;
         int weaponId;
 
-        // Flag to use in determining if this object acts like an obstacle
-        bool obstacleFlag;
+        bool obstacleFlag; // Does this object act like an obstacle?
+        bool shieldFlag;   // Does this object deflect projectiles right now?
 
         std::string currentAnimationName;
 
@@ -98,6 +98,7 @@ namespace hikari {
 
         void setWeaponId(int weaponId);
         int getWeaponId() const;
+        void fireWeapon();
 
         void setRoom(const std::shared_ptr<Room>& newRoom);
         const std::shared_ptr<Room>& getRoom() const;
@@ -121,13 +122,13 @@ namespace hikari {
             @param affected whether this Entity should be affected by gravity or not
             @see Entity::isGravitated
         */
-        void setGravitated(const bool& affected);
+        void setGravitated(bool affected);
 
         /**
             Gets whether the Entity should be affected by gravity or not.
             @see Entity::setGravitated
         */
-        const bool isGravitated() const;
+        bool isGravitated() const;
 
         /**
             Sets whether this Entity acts like an obstacle. When an Entity is
@@ -137,7 +138,7 @@ namespace hikari {
             @param obstacle flag for whether this Entity should be an obstacle or not
             @see Entity::isObstacle
         */
-        void setObstacle(const bool& obstacle);
+        void setObstacle(bool obstacle);
 
         /**
             Gets the "obstacle status" of this Entity.
@@ -145,7 +146,23 @@ namespace hikari {
             @return whether this Entity is an obstacle or not
             @see Entity::setObstacle
         */
-        const bool isObstacle() const;
+        bool isObstacle() const;
+
+        /**
+         * Sets whether this Entity deflects projectiles or not.
+         *
+         * @param shielded true to enable shielding, false to disable
+         * @see Entity::isShielded
+         */
+        void setShielded(bool shielded);
+
+        /**
+         * Gets whether this Entity has its shields up or not.
+         *
+         * @return shield status
+         * @see Entity::setShielded
+         */
+        bool isShielded() const;
 
         /**
             Sets whether this Entity should hpase through solid objects. If an
@@ -155,7 +172,7 @@ namespace hikari {
             @param phasing flag indicating whether this Entity should phase
             @see Entity::isPhasing
         */
-        void setPhasing(const bool& phasing);
+        void setPhasing(bool phasing);
 
         /**
             Gets whether this Entity is currently phasing or not.
@@ -163,7 +180,7 @@ namespace hikari {
             @return phasing status
             @see Entity::setPhasing
         */
-        const bool isPhasing() const;
+        bool isPhasing() const;
 
         const Vector2<float>& getPosition() const;
         void setPosition(const Vector2<float>& newPosition);

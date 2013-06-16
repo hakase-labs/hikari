@@ -11,8 +11,8 @@ namespace hikari {
     AudioService::AudioService(const Json::Value &configuration)
         : musicLoaded(false)
         , samplesLoaded(false)
-        , musicStream(MUSIC_BUFFER_SIZE)
-        , sampleStream(SAMPLE_BUFFER_SIZE) 
+        , musicStream(MUSIC_BUFFER_SIZE, 1)
+        , sampleStream(SAMPLE_BUFFER_SIZE, 4) 
     {
         if(isValidConfiguration(configuration)) {
             auto musicDataFilePath = configuration["music"].asString();
@@ -60,7 +60,6 @@ namespace hikari {
 
     void AudioService::playSample(SampleId id) {
         if(isSamplesLoaded()) {
-            sampleStream.stop();
             sampleStream.setCurrentTrack(id);
             sampleStream.play();
         }
