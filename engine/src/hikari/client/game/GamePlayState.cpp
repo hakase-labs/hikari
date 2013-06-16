@@ -327,26 +327,6 @@ namespace hikari {
             itemSpawners = room->getSpawnerList();
         }
 
-        // Sort spawners by X coordinate, ascending
-        // std::sort(std::begin(itemSpawners), std::end(itemSpawners),
-        //     [](std::weak_ptr<Spawner> a, std::weak_ptr<Spawner> b) -> bool {
-        //         const auto & spawnerA = a.lock();
-        //         const auto & spawnerB = b.lock();
-
-        //         // You have to check the pointers here because some may be
-        //         // nullptr_t.
-
-        //         if(spawnerA && spawnerB) {
-        //             const auto aX = spawnerA->getPosition().getX();
-        //             const auto bX = spawnerB->getPosition().getX();
-
-        //             return aX < bX;
-        //         }
-
-        //         return false;
-        //     }
-        // );
-
         std::for_each(
             std::begin(itemSpawners),
             std::end(itemSpawners),
@@ -378,14 +358,12 @@ namespace hikari {
                         if(spawner->isAwake()) {
                             if(!cameraView.contains(spawnerPosition.getX(), spawnerPosition.getY())) {
                                 spawner->setAwake(false);
-                                // HIKARI_LOG(debug3) << "Just put spawner #" << spawner->getId() << " to bed";
                             }
                         }
                         else {
                             if(cameraView.contains(spawnerPosition.getX(), spawnerPosition.getY())) {
                                 spawner->setAwake(true);
                                 spawner->performAction(world);
-                                // HIKARI_LOG(debug3) << "Just woke up spawner #" << spawner->getId();
                             }
                         }
                     }
