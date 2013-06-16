@@ -13,6 +13,7 @@
 #include "hikari/client/game/objects/Enemy.hpp"
 #include "hikari/client/game/objects/EnemyFactory.hpp"
 #include "hikari/client/game/objects/Projectile.hpp"
+#include "hikari/client/game/objects/ProjectileFactory.hpp"
 #include "hikari/client/game/Effect.hpp"
 #include "hikari/client/gui/EnergyGauge.hpp"
 #include "hikari/client/gui/Panel.hpp"
@@ -139,8 +140,10 @@ namespace hikari {
 
         const auto itemFactoryWeak  = services.locateService<ItemFactory>(Services::ITEMFACTORY);
         const auto enemyFactoryWeak = services.locateService<EnemyFactory>(Services::ENEMYFACTORY);
+        const auto projectileFactoryWeak = services.locateService<ProjectileFactory>(Services::PROJECTILEFACTORY);
         world.setItemFactory(itemFactoryWeak);
         world.setEnemyFactory(enemyFactoryWeak);
+        world.setProjectileFactory(projectileFactoryWeak);
     }
 
     GamePlayState::~GamePlayState() {
@@ -605,7 +608,7 @@ namespace hikari {
 
         // TODO: Implement projectile spawning from world
         //       and then assign its faction, etc., from the event data
-        auto newProjectile = world.spawnProjectile("plasma");
+        auto newProjectile = world.spawnProjectile("Plasma Bullet");
 
         if(newProjectile) {
             // Do stuff

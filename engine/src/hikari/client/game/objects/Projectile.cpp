@@ -38,11 +38,14 @@ namespace hikari {
     }
 
     std::unique_ptr<Projectile> Projectile::clone() const {
+        HIKARI_LOG(debug4) << "Cloned a projectile!!!";
         return std::unique_ptr<Projectile>(new Projectile(*this));
     }
 
     void Projectile::render(sf::RenderTarget &target) {
         Entity::render(target);
+
+
     }
 
     void Projectile::update(float dt) {

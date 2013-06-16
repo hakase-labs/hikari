@@ -28,6 +28,7 @@ namespace hikari {
     class EnemyFactory;
     class Particle;
     class Projectile;
+    class ProjectileFactory;
     class EventManager;
 
     class GameWorld : public Updatable {
@@ -37,6 +38,7 @@ namespace hikari {
         std::shared_ptr<Room> currentRoom;
         std::weak_ptr<ItemFactory> itemFactory;
         std::weak_ptr<EnemyFactory> enemyFactory;
+        std::weak_ptr<ProjectileFactory> projectileFactory;
         std::queue<std::shared_ptr<GameObject>> queuedAdditions;
         std::queue<std::shared_ptr<GameObject>> queuedRemovals;
         std::vector<std::shared_ptr<GameObject>> activeObjects;
@@ -67,6 +69,7 @@ namespace hikari {
 
         void setItemFactory(const std::weak_ptr<ItemFactory> & itemFactory);
         void setEnemyFactory(const std::weak_ptr<EnemyFactory> & enemyFactory);
+        void setProjectileFactory(const std::weak_ptr<ProjectileFactory> & projectileFactory);
 
         void queueObjectAddition(const std::shared_ptr<GameObject> &obj);
         void queueObjectAddition(const std::shared_ptr<CollectableItem> &obj);

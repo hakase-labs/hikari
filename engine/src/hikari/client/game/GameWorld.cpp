@@ -8,6 +8,7 @@
 #include "hikari/client/game/objects/Hero.hpp"
 #include "hikari/client/game/objects/ItemFactory.hpp"
 #include "hikari/client/game/objects/EnemyFactory.hpp"
+#include "hikari/client/game/objects/ProjectileFactory.hpp"
 
 #include "hikari/core/game/map/Room.hpp"
 #include "hikari/core/util/Log.hpp"
@@ -23,6 +24,7 @@ namespace hikari {
         , currentRoom(nullptr)
         , itemFactory()
         , enemyFactory()
+        , projectileFactory()
         , queuedAdditions()
         , queuedRemovals()
         , activeObjects()
@@ -65,6 +67,10 @@ namespace hikari {
 
     void GameWorld::setEnemyFactory(const std::weak_ptr<EnemyFactory> & enemyFactory) {
         this->enemyFactory = enemyFactory;
+    }
+
+    void GameWorld::setProjectileFactory(const std::weak_ptr<ProjectileFactory> & projectileFactory) {
+        this->projectileFactory = projectileFactory;
     }
         
     void GameWorld::render(sf::RenderTarget &target) {
@@ -254,11 +260,10 @@ namespace hikari {
                 return itemFactoryPtr->createItem(name);
             } catch(HikariException & ex) {
                 HIKARI_LOG(debug) << ex.what();
-                return std::shared_ptr<CollectableItem>();
             }
         }
 
-        return std::shared_ptr<CollectableItem>();
+        return std::shared_ptr<CollectableItem>(nullptr);
     }
 
     std::unique_ptr<Enemy> GameWorld::spawnEnemy(const std::string & name /* EnemyInstanceConfig instanceConfig */) const {
@@ -267,7 +272,6 @@ namespace hikari {
                 return enemyFactoryPtr->create(name);
             } catch(HikariException & ex) {
                 HIKARI_LOG(debug) << ex.what();
-                return std::unique_ptr<Enemy>(nullptr);
             }
         }
 
@@ -275,7 +279,14 @@ namespace hikari {
     }
 
     std::unique_ptr<Projectile> GameWorld::spawnProjectile(const std::string & name) const {
-        // TODO: Implement this!
+        if(auto projectileFactoryPtr = projectileFactory.lock()) {
+            try {
+                return projectileFactoryPtr->create(name);
+            } catch(HikariException & ex) {
+                HIKARI_LOG(debug) << ex.what();
+            }
+        }
+
         return std::unique_ptr<Projectile>(nullptr);
     }
 

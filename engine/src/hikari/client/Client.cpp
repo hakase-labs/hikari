@@ -25,6 +25,7 @@
 #include "hikari/client/game/objects/effects/ScriptedEffect.hpp"
 #include "hikari/client/game/objects/ItemFactory.hpp"
 #include "hikari/client/game/objects/EnemyFactory.hpp"
+#include "hikari/client/game/objects/ProjectileFactory.hpp"
 #include "hikari/client/game/objects/FactoryHelpers.hpp"
 
 #include "hikari/core/util/FileSystem.hpp"
@@ -234,6 +235,7 @@ int main(int argc, char** argv) {
         
         auto itemFactory       = std::make_shared<ItemFactory>(animationSetCache, imageCache, squirrelService);
         auto enemyFactory      = std::make_shared<EnemyFactory>(animationSetCache, imageCache, squirrelService);
+        auto projectileFactory = std::make_shared<ProjectileFactory>(animationSetCache, imageCache, squirrelService);
         
         // HIKARI_LOG(debug) << "Created itemFactory";
 
@@ -248,6 +250,7 @@ int main(int argc, char** argv) {
         services.registerService(Services::GUISERVICE,        guiService);
         services.registerService(Services::ITEMFACTORY,       itemFactory);
         services.registerService(Services::ENEMYFACTORY,      enemyFactory);
+        services.registerService(Services::PROJECTILEFACTORY, projectileFactory);
 
         AudioServiceScriptProxy::setWrappedService(std::weak_ptr<AudioService>(audioService));
         
@@ -264,6 +267,12 @@ int main(int argc, char** argv) {
         FactoryHelpers::populateEnemyFactory(
             "assets/templates/enemies.json",
             std::weak_ptr<EnemyFactory>(enemyFactory),
+            services
+        );
+
+        FactoryHelpers::populateProjectileFactory(
+            "assets/templates/projectiles.json",
+            std::weak_ptr<ProjectileFactory>(projectileFactory),
             services
         );
 
