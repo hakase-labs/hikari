@@ -1,5 +1,6 @@
 #include "hikari/client/game/objects/Entity.hpp"
 #include "hikari/client/game/events/EventManager.hpp"
+#include "hikari/client/game/events/WeaponFireEventData.hpp"
 #include "hikari/core/game/map/Room.hpp"
 #include "hikari/core/game/map/Tileset.hpp"
 #include "hikari/core/game/Animation.hpp"
@@ -31,6 +32,8 @@ namespace hikari {
         , direction(Directions::None)
         , faction(Faction::World)
         , weaponId(0)
+        , obstacleFlag(false)
+        , shieldFlag(false)
         , currentAnimationName("")
         , room(room)
     {
@@ -62,6 +65,8 @@ namespace hikari {
         , direction(proto.direction)
         , faction(proto.faction)
         , weaponId(proto.weaponId)
+        , obstacleFlag(proto.obstacleFlag)
+        , shieldFlag(proto.shieldFlag)
         , currentAnimationName(proto.currentAnimationName)
         , room(proto.room)
     {
@@ -190,6 +195,21 @@ namespace hikari {
         return weaponId;
     }
 
+    void Entity::fireWeapon() {
+        if(auto events = eventManager.lock()) {
+            events->triggerEvent(
+                std::make_shared<WeaponFireEventData>(
+                    getWeaponId(),
+                    getId(),
+                    getFaction(),
+                    getDirection()
+                )
+            );
+        } else {
+            HIKARI_LOG(debug4) << "Entity::fireWeapon failed; no EventManager. id = " << getId();
+        }
+    }
+
     void Entity::setRoom(const std::shared_ptr<Room>& newRoom) {
         room = newRoom;
     }
@@ -234,27 +254,35 @@ namespace hikari {
         return body.getVelocity().getY();
     }
 
-    void Entity::setGravitated(const bool& affected) {
+    void Entity::setGravitated(bool affected) {
         body.setGravitated(affected);
     }
 
-    const bool Entity::isGravitated() const {
+    bool Entity::isGravitated() const {
         return body.isGravitated();
     }
 
-    void Entity::setObstacle(const bool& isObstacle) {
+    void Entity::setObstacle(bool isObstacle) {
         this->obstacleFlag = isObstacle;
     }
 
-    const bool Entity::isObstacle() const {
+    bool Entity::isObstacle() const {
         return obstacleFlag;
     }
 
-    void Entity::setPhasing(const bool& phasing) {
+    void Entity::setShielded(bool shielded) {
+        this->shieldFlag = shielded;
+    }
+
+    bool Entity::isShielded() const {
+        return shieldFlag;
+    }
+
+    void Entity::setPhasing(bool phasing) {
         body.setHasWorldCollision(!phasing);
     }
 
-    const bool Entity::isPhasing() const {
+    bool Entity::isPhasing() const {
         return !body.doesCollideWithWorld();
     }
 

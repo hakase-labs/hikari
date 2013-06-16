@@ -4,6 +4,7 @@
 #include "hikari/client/game/objects/GameObject.hpp"
 #include "hikari/client/game/objects/CollectableItem.hpp"
 #include "hikari/client/game/objects/Enemy.hpp"
+#include "hikari/client/game/objects/Projectile.hpp"
 #include "hikari/client/game/objects/Hero.hpp"
 #include "hikari/client/game/objects/ItemFactory.hpp"
 #include "hikari/client/game/objects/EnemyFactory.hpp"
@@ -271,6 +272,11 @@ namespace hikari {
         }
 
         return std::unique_ptr<Enemy>(nullptr);
+    }
+
+    std::unique_ptr<Projectile> GameWorld::spawnProjectile(const std::string & name) const {
+        // TODO: Implement this!
+        return std::unique_ptr<Projectile>(nullptr);
     }
 
     const std::vector<std::shared_ptr<CollectableItem>> & GameWorld::getActiveItems() const {

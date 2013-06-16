@@ -6,6 +6,7 @@
 #include <SFML/System.hpp>
 #include <SFML/System/Time.hpp>
 #include <cstdlib>
+#include <stack>
 #include <string>
 #include <vector>
 
@@ -24,9 +25,10 @@ namespace hikari {
         /// playback and stuttering. A value of 2048 or 4096 is recommended.
         ///
         /// \param bufferSize The audio buffer size
+        /// \param samplerCount The number of smaplers to create
         ///
         ////////////////////////////////////////////////////////////
-        NSFSoundStream(std::size_t bufferSize);
+        NSFSoundStream(std::size_t bufferSize, unsigned int samplerCount = 1);
 
         ////////////////////////////////////////////////////////////
         /// \brief Destructor
@@ -141,13 +143,21 @@ namespace hikari {
         ////////////////////////////////////////////////////////////
         void handleError(const char* str) const;
 
+        /**
+         * Creates and initializes buffers for all samplers.
+         */
+        void createSampleBuffers();
+
         ////////////////////////////////////////////////////////////
         // Member data
         ////////////////////////////////////////////////////////////
-        std::size_t myBufferSize;                  ///< Size of audio buffer
-        std::unique_ptr<short[]> myBuffer;       ///< Audio buffer to read/write to
-        std::unique_ptr<Music_Emu> emu;          ///< Pointer to NES APU emulator
+        std::size_t masterBufferSize;                  ///< Size of audio buffer
+        std::unique_ptr<short[]> masterBuffer;       ///< Audio buffer to read/write to
+        std::vector<std::unique_ptr<short[]>> sampleBuffers;
+        std::vector<std::unique_ptr<Music_Emu>> sampleEmus;          ///< Pointer to NES APU emulator
         std::unique_ptr<track_info_t> trackInfo; ///< Pointer to current track information
+        int samplerCount;
+        int activeSampler;
         sf::Mutex mutex;                           ///< A mutex for keeping this thread-safe
         static const long SAMPLE_RATE = 44100;     ///< The sample rate of the NES APU
     };

@@ -12,6 +12,8 @@ namespace hikari {
     {
         body.setGravitated(true);
         body.setHasWorldCollision(true);
+
+        setFaction(Faction::Enemy);
     }
 
     Enemy::Enemy(const Enemy& proto)

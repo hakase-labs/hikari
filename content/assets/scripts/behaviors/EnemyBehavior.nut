@@ -24,6 +24,10 @@ class EnemyBehavior {
         host = null;
     }
 
+    function applyConfig(config = {}) {
+        // To be implemented in subclasses
+    }
+
     function update(dt) {
         
     }

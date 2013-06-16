@@ -1964,6 +1964,12 @@
           "x": 592,
           "y": 1056,
           "direction": "Left"
+        },
+        {
+          "type": "Bikky",
+          "x": 562,
+          "y": 1056,
+          "direction": "Left"
         }
       ],
       "items": [
