@@ -1,0 +1,22 @@
+{
+    "name": "Projectiles",
+    "image": "assets/images/sp-projectiles.png",
+    "animations": {
+        "plasma-bullet": {
+            "repeat": true,
+            "keyframe": 0,
+            "syncGroup": 0,
+            "frames": [ 
+                { 
+                    "x" : 0, 
+                    "y" : 0, 
+                    "width" : 8, 
+                    "height" : 8, 
+                    "hotspotX" : 4, 
+                    "hotspotY" : 4, 
+                    "length" : 1.0
+                }
+            ]
+        }
+    }
+}

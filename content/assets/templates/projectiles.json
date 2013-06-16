@@ -1,5 +1,13 @@
 [
     {
-        "name": "Plasma Bullet"
+        "name": "Plasma Bullet",
+        "animationSet": "assets/animations/projectiles.json",
+        "animationName": "plasma-bullet",
+        "boundingBox": {
+            "width": 8,
+            "height": 6,
+            "originX": 4,
+            "originY": 3
+        }
     }
 ]

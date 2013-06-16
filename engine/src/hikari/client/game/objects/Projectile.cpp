@@ -50,6 +50,12 @@ namespace hikari {
 
     void Projectile::update(float dt) {
         Entity::update(dt);
+
+        if(getDirection() == Directions::Left) {
+            setVelocityX(-1.6f);
+        } else {
+            setVelocityX(1.6f);
+        }
         
         // if(brain) {
         //     brain->update(dt);

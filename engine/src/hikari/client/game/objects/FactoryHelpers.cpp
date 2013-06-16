@@ -284,8 +284,29 @@ namespace FactoryHelpers {
 
                                         // TODO: Create instances
                                         const auto name              = templateObject["name"].asString();
+                                        const auto animationSet      = templateObject["animationSet"].asString();
+                                        const auto animationName     = templateObject["animationName"].asString();
+                                        const auto boundingBoxObject = templateObject["boundingBox"];
+                                        
+                                        hikari::BoundingBoxF boundingBox(
+                                            0.0f,
+                                            0.0f,
+                                            static_cast<float>(boundingBoxObject["width"].asDouble()),
+                                            static_cast<float>(boundingBoxObject["height"].asDouble())
+                                        );
+
+                                        boundingBox.setOrigin(
+                                            static_cast<float>(boundingBoxObject["originX"].asDouble()),
+                                            static_cast<float>(boundingBoxObject["originY"].asDouble())
+                                        );
                                         
                                         auto instance = std::make_shared<hikari::Projectile>();
+                                        auto animationSetPtr = animationSetCache->get(animationSet);
+                                        auto spriteTexture = imageCache->get(animationSetPtr->getImageFileName());
+                                        instance->setAnimationSet(animationSetPtr);
+                                        instance->setSpriteTexture(spriteTexture);
+                                        instance->changeAnimation(animationName);
+                                        instance->setBoundingBox(boundingBox);
 
                                         factoryPtr->registerPrototype(name, instance);
                                     }

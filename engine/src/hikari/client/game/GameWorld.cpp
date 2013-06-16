@@ -115,6 +115,14 @@ namespace hikari {
         }
     }
 
+    void GameWorld::queueObjectAddition(const std::shared_ptr<Projectile> &obj) {
+        if(obj) {
+            queuedProjectileAdditions.push(obj);
+        } else {
+            HIKARI_LOG(debug) << "Tried to add a null object (projectile); ignoring.";
+        }
+    }
+
     void GameWorld::queueObjectRemoval(const std::shared_ptr<GameObject> &obj) {
         if(obj) {
             queuedRemovals.push(obj);
@@ -136,6 +144,14 @@ namespace hikari {
             queuedEnemyRemovals.push(obj);
         } else {
             HIKARI_LOG(debug) << "Tried to remove a null object (enemy); ignoring.";
+        }
+    }
+
+    void GameWorld::queueObjectRemoval(const std::shared_ptr<Projectile> &obj) {
+        if(obj) {
+            queuedProjectileRemovals.push(obj);
+        } else {
+            HIKARI_LOG(debug) << "Tried to remove a null object (projectile); ignoring.";
         }
     }
 
@@ -174,6 +190,19 @@ namespace hikari {
             objectToBeAdded->setEventManager(getEventManager());
 
             queuedEnemyAdditions.pop();
+        }
+
+        // Projectiles
+        while(!queuedProjectileAdditions.empty()) {
+            auto objectToBeAdded = queuedProjectileAdditions.front();
+
+            activeProjectiles.push_back(objectToBeAdded);
+            objectRegistry.emplace(std::make_pair(objectToBeAdded->getId(), objectToBeAdded));
+
+            objectToBeAdded->setRoom(getCurrentRoom());
+            objectToBeAdded->setEventManager(getEventManager());
+
+            queuedProjectileAdditions.pop();
         }
     }
 
@@ -230,6 +259,23 @@ namespace hikari {
                 eventManagerPtr->queueEvent(std::make_shared<ObjectRemovedEventData>(objectToBeRemoved->getId()));
             }
         }
+
+        while(!queuedProjectileRemovals.empty()) {
+            auto objectToBeRemoved = queuedProjectileRemovals.front();
+            
+            activeProjectiles.erase(
+                std::remove(std::begin(activeProjectiles), std::end(activeProjectiles), objectToBeRemoved));
+
+            objectRegistry.erase(objectToBeRemoved->getId());
+            
+            queuedProjectileRemovals.pop();
+
+            objectToBeRemoved->setEventManager(std::weak_ptr<EventManager>());
+
+            if(eventManagerPtr) {
+                eventManagerPtr->queueEvent(std::make_shared<ObjectRemovedEventData>(objectToBeRemoved->getId()));
+            }
+        }
     }
 
     void GameWorld::removeAllObjects() {
@@ -249,6 +295,14 @@ namespace hikari {
             std::end(activeEnemies),
             [this](const std::shared_ptr<Enemy> enemy) {
                 this->queueObjectRemoval(enemy);
+            });
+
+        // Projectiles
+        std::for_each(
+            std::begin(activeProjectiles),
+            std::end(activeProjectiles),
+            [this](const std::shared_ptr<Projectile> projectile) {
+                this->queueObjectRemoval(projectile);
             });
 
         processRemovals();
@@ -296,6 +350,10 @@ namespace hikari {
 
     const std::vector<std::shared_ptr<Enemy>> & GameWorld::getActiveEnemies() const {
         return activeEnemies;
+    }
+
+    const std::vector<std::shared_ptr<Projectile>> & GameWorld::getActiveProjectiles() const {
+        return activeProjectiles;
     }
 
     void GameWorld::setPlayer(const std::shared_ptr<Hero>& player) {

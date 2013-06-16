@@ -538,6 +538,13 @@ namespace hikari {
             std::end(activeEnemies), 
             std::bind(&Enemy::render, std::placeholders::_1, ReferenceWrapper<sf::RenderTarget>(target)));
 
+        const auto & activeProjectiles = world.getActiveProjectiles();
+
+        std::for_each(
+            std::begin(activeProjectiles), 
+            std::end(activeProjectiles), 
+            std::bind(&Projectile::render, std::placeholders::_1, ReferenceWrapper<sf::RenderTarget>(target)));
+
         // Restore UI view
         target.setView(oldView);
     }
@@ -608,10 +615,18 @@ namespace hikari {
 
         // TODO: Implement projectile spawning from world
         //       and then assign its faction, etc., from the event data
-        auto newProjectile = world.spawnProjectile("Plasma Bullet");
+        if(eventData->getShooterId() == hero->getId()) {
+            auto newProjectile = world.spawnProjectile("Plasma Bullet");
 
-        if(newProjectile) {
-            // Do stuff
+            if(newProjectile) {
+                newProjectile->reset();
+                newProjectile->setDirection(eventData->getDirection());
+                newProjectile->setFaction(eventData->getFaction());
+                newProjectile->setPosition(hero->getPosition());
+                newProjectile->setActive(true);
+
+                world.queueObjectAddition(std::shared_ptr<Projectile>(std::move(newProjectile)));
+            }
         }
     }
 
@@ -957,6 +972,27 @@ namespace hikari {
                     HIKARI_LOG(debug3) << "Cleaning up off-screen enemy #" << enemy->getId();
                     enemy->setActive(false);
                     gamePlayState.world.queueObjectRemoval(enemy);
+                }
+
+        });
+
+        //
+        // Update projectiles
+        //
+        const auto & activeProjectiles = gamePlayState.world.getActiveProjectiles();
+
+        std::for_each(
+            std::begin(activeProjectiles), 
+            std::end(activeProjectiles), 
+            [this, &camera, &dt](const std::shared_ptr<Projectile> & projectile) {
+                projectile->update(dt);
+
+                const auto & cameraView = camera.getView();
+
+                if(!geom::intersects(projectile->getBoundingBox(), cameraView)) {
+                    HIKARI_LOG(debug3) << "Cleaning up off-screen projectile #" << projectile->getId();
+                    projectile->setActive(false);
+                    gamePlayState.world.queueObjectRemoval(projectile);
                 }
 
         });
