@@ -143,17 +143,19 @@ namespace hikari {
         ////////////////////////////////////////////////////////////
         void handleError(const char* str) const;
 
+        /**
+         * Creates and initializes buffers for all samplers.
+         */
+        void createSampleBuffers();
+
         ////////////////////////////////////////////////////////////
         // Member data
         ////////////////////////////////////////////////////////////
-        std::size_t myBufferSize;                  ///< Size of audio buffer
-        std::unique_ptr<short[]> myBuffer;       ///< Audio buffer to read/write to
+        std::size_t masterBufferSize;                  ///< Size of audio buffer
+        std::unique_ptr<short[]> masterBuffer;       ///< Audio buffer to read/write to
         std::vector<std::unique_ptr<short[]>> sampleBuffers;
-        std::unique_ptr<Music_Emu> emu;          ///< Pointer to NES APU emulator
         std::vector<std::unique_ptr<Music_Emu>> sampleEmus;          ///< Pointer to NES APU emulator
         std::unique_ptr<track_info_t> trackInfo; ///< Pointer to current track information
-        std::vector<std::unique_ptr<track_info_t>> sampleTrackInfos;
-        std::stack<int> availableEmus;
         int samplerCount;
         int activeSampler;
         sf::Mutex mutex;                           ///< A mutex for keeping this thread-safe

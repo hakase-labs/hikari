@@ -8,22 +8,21 @@
 
 namespace hikari {
 
-    NSFSoundStream::NSFSoundStream(std::size_t bufferSize, unsigned int samplerCount) :
-    sf::SoundStream(),
-    myBufferSize(bufferSize),
-    myBuffer    (new short[myBufferSize]),
-    emu         (nullptr),
-    trackInfo   (nullptr),
-    samplerCount(samplerCount),
-    activeSampler(0),
-    mutex       ()
+    NSFSoundStream::NSFSoundStream(std::size_t bufferSize, unsigned int samplerCount)
+        : sf::SoundStream()
+        , masterBufferSize(bufferSize)
+        , masterBuffer(new short[masterBufferSize])
+        , sampleBuffers()
+        , sampleEmus()
+        , trackInfo(nullptr)
+        , samplerCount(1)
+        , activeSampler(0)
+        , mutex()
     {
         samplerCount = std::max(samplerCount, static_cast<unsigned int>(1));
         this->samplerCount = samplerCount;
 
-        for(int i = 0; i < samplerCount; ++i) {
-            sampleBuffers.push_back(std::unique_ptr<short[]>(new short[myBufferSize]));
-        }
+        createSampleBuffers();
 
         this->stop();
     }
@@ -46,21 +45,18 @@ namespace hikari {
         length = static_cast<int>(fs->tellg());
         fs->seekg (0, std::ios::beg);
 
-        std::unique_ptr<char[]> buffer(new char[length]);
+        std::unique_ptr<char[]> nsfFileBuffer(new char[length]);
 
-        fs->read(buffer.get(), length);
+        fs->read(nsfFileBuffer.get(), length);
 
         // To honor the contract of returning false on failure,
         // catch these exceptions and return false instead? Good/bad?
         try {
-            //HandleError(gme_identify_file(fileName.c_str(), &file_type));
             gme_type_t file_type = gme_identify_extension(fileName.c_str());
+            
             if(!file_type) {
                 return false;
-                //throw std::runtime_error("Unsupported music type");
             }
-
-            //emu.reset(file_type->new_emu());
 
             for(int i = 0; i < samplerCount; ++i) {
                 auto sampleEmu = std::unique_ptr<Music_Emu>(file_type->new_emu());
@@ -71,7 +67,7 @@ namespace hikari {
 
                 // Must set sample rate before loading data
                 handleError(sampleEmu->set_sample_rate(SAMPLE_RATE));
-                handleError(gme_load_data(sampleEmu.get(), buffer.get(), length));
+                handleError(gme_load_data(sampleEmu.get(), nsfFileBuffer.get(), length));
 
                 sampleEmu->start_track(-1);
                 sampleEmu->ignore_silence(false);
@@ -98,16 +94,17 @@ namespace hikari {
     bool NSFSoundStream::onGetData(sf::SoundStream::Chunk& Data) {
         sf::Lock lock(mutex);
 
-        auto * mixedBuffer = myBuffer.get();
+        auto * mixedBuffer = masterBuffer.get();
 
-         for(int bufferIndex = 0; bufferIndex < samplerCount; ++bufferIndex) {
+        // Generate samples for any playing emulators
+        for(int bufferIndex = 0; bufferIndex < samplerCount; ++bufferIndex) {
             if(!sampleEmus[bufferIndex]->track_ended()) {
-                sampleEmus[bufferIndex]->play(myBufferSize, sampleBuffers[bufferIndex].get());
+                sampleEmus[bufferIndex]->play(masterBufferSize, sampleBuffers[bufferIndex].get());
             }
         }
 
         // Mix buffers
-        for(int i = 0; i < myBufferSize; ++i) {
+        for(int i = 0; i < masterBufferSize; ++i) {
             short mixedValue = 0;
 
             for(int bufferIndex = 0; bufferIndex < samplerCount; ++bufferIndex) {
@@ -123,8 +120,8 @@ namespace hikari {
             mixedBuffer[i] = mixedValue;
         }
 
-        Data.samples     = &myBuffer[0];
-        Data.sampleCount = myBufferSize;
+        Data.samples     = &masterBuffer[0];
+        Data.sampleCount = masterBufferSize;
 
         // Never stop streaming...
         return true;
@@ -133,6 +130,18 @@ namespace hikari {
     void NSFSoundStream::handleError(const char* str) const {
         if(str) {
             throw std::runtime_error(str);
+        }
+    }
+
+    void NSFSoundStream::createSampleBuffers() {
+        sampleBuffers.clear();
+
+        for(int i = 0; i < samplerCount; ++i) {
+            auto sampleBuffer = std::unique_ptr<short[]>(new short[masterBufferSize]);
+
+            std::fill(sampleBuffer.get(), sampleBuffer.get() + masterBufferSize, 0);
+
+            sampleBuffers.push_back(std::move(sampleBuffer));
         }
     }
 

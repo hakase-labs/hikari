@@ -9,7 +9,7 @@ namespace hikari {
         return std::unique_ptr<std::istream>(new IFileStream(fileName));
     }
 
-    const std::string FileSystem::readFileAsString(const std::string &fileName) {
+    std::string FileSystem::readFileAsString(const std::string &fileName) {
         std::stringstream result;
 
         if(exists(fileName)) {
@@ -19,6 +19,25 @@ namespace hikari {
         }
 
         return result.str();
+    }
+
+    std::vector<char> FileSystem::readFileAsCharBuffer(const std::string & fileName) {
+        std::vector<char> buffer;
+
+        if(exists(fileName)) {
+            int length = 0;
+            auto fs = openFile(fileName);
+
+            fs->seekg (0, std::ios::end);
+            length = static_cast<int>(fs->tellg());
+            fs->seekg (0, std::ios::beg);
+
+            buffer.reserve(length);
+
+            fs->read(&buffer[0], length);
+        }
+
+        return buffer;
     }
 
     bool FileSystem::exists(const std::string& path) {
