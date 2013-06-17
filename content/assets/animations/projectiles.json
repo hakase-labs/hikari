@@ -1,0 +1,47 @@
+{
+    "name": "Projectiles",
+    "image": "assets/images/sp-projectiles.png",
+    "animations": {
+        "plasma-bullet": {
+            "repeat": false,
+            "keyframe": 0,
+            "syncGroup": 0,
+            "frames": [ 
+                { 
+                    "x" : 0, 
+                    "y" : 0, 
+                    "width" : 8, 
+                    "height" : 8, 
+                    "hotspotX" : 4, 
+                    "hotspotY" : 4, 
+                    "length" : 1.0
+                }
+            ]
+        },
+        "shadow-blade": {
+            "repeat": true,
+            "keyframe": 0,
+            "syncGroup": 0,
+            "frames": [ 
+                { 
+                    "x" : 16, 
+                    "y" : 0, 
+                    "width" : 16, 
+                    "height" : 16, 
+                    "hotspotX" : 8, 
+                    "hotspotY" : 8, 
+                    "length" : 0.1167
+                },
+                { 
+                    "x" : 32, 
+                    "y" : 0, 
+                    "width" : 16, 
+                    "height" : 16, 
+                    "hotspotX" : 8, 
+                    "hotspotY" : 8, 
+                    "length" : 0.1167
+                }
+            ]
+        }
+    }
+}

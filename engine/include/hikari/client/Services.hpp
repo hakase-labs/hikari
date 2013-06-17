@@ -16,6 +16,7 @@ namespace Services {
     const static std::string ANIMATIONSETCACHE = "AnimationSetCache";
     const static std::string ITEMFACTORY = "ItemFactory";
     const static std::string ENEMYFACTORY = "EnemyFactory";
+    const static std::string PROJECTILEFACTORY = "ProjectileFactory";
 
 } // hikari::Services
 } // hikari

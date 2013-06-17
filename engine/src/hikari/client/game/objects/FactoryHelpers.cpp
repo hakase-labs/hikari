@@ -2,9 +2,11 @@
 #include "hikari/client/game/objects/FactoryHelpers.hpp"
 #include "hikari/client/game/objects/EnemyFactory.hpp"
 #include "hikari/client/game/objects/ItemFactory.hpp"
+#include "hikari/client/game/objects/ProjectileFactory.hpp"
 #include "hikari/client/game/objects/GameObject.hpp"
 #include "hikari/client/game/objects/CollectableItem.hpp"
 #include "hikari/client/game/objects/Enemy.hpp"
+#include "hikari/client/game/objects/Projectile.hpp"
 #include "hikari/client/game/Effect.hpp"
 #include "hikari/client/game/objects/effects/NothingEffect.hpp"
 #include "hikari/client/game/objects/effects/ScriptedEffect.hpp"
@@ -247,6 +249,89 @@ namespace FactoryHelpers {
         } else {
             // ImageCache is borked!
             throw HikariException("Cannot populate CollectableItemFactory because ImageCache is null.");
+        }
+    }
+
+    void populateProjectileFactory(
+        const std::string & descriptorFilePath,
+        const std::weak_ptr<hikari::ProjectileFactory> & factory,
+        ServiceLocator & services
+    ) {
+        auto imageCachePtr        = services.locateService<ImageCache>(Services::IMAGECACHE);
+        auto squirrelPtr          = services.locateService<SquirrelService>(Services::SCRIPTING);
+        auto animationSetCachePtr = services.locateService<AnimationSetCache>(Services::ANIMATIONSETCACHE);
+        
+        if(auto imageCache = imageCachePtr.lock()) {
+            if(auto squirrel = squirrelPtr.lock()) {
+                if(auto animationSetCache = animationSetCachePtr.lock()) {
+                    if(auto factoryPtr = factory.lock()) {
+
+                        HIKARI_LOG(debug) << "Populating projectile factory...";
+
+                        if(FileSystem::exists(descriptorFilePath)) {
+                            auto fileContents = FileSystem::openFile(descriptorFilePath);
+                            Json::Value root;
+                            Json::Reader reader;
+
+                            if(reader.parse(*fileContents, root, false)) {
+                                auto templateCount = root.size();
+
+                                if(templateCount > 0) {
+                                    HIKARI_LOG(debug3) << "Found " << templateCount << " projectile template(s).";
+
+                                    for(decltype(templateCount) i = 0; i < templateCount; ++i) {
+                                        const auto & templateObject = root[i];
+
+                                        // TODO: Create instances
+                                        const auto name              = templateObject["name"].asString();
+                                        const auto animationSet      = templateObject["animationSet"].asString();
+                                        const auto animationName     = templateObject["animationName"].asString();
+                                        const auto boundingBoxObject = templateObject["boundingBox"];
+                                        
+                                        hikari::BoundingBoxF boundingBox(
+                                            0.0f,
+                                            0.0f,
+                                            static_cast<float>(boundingBoxObject["width"].asDouble()),
+                                            static_cast<float>(boundingBoxObject["height"].asDouble())
+                                        );
+
+                                        boundingBox.setOrigin(
+                                            static_cast<float>(boundingBoxObject["originX"].asDouble()),
+                                            static_cast<float>(boundingBoxObject["originY"].asDouble())
+                                        );
+                                        
+                                        auto instance = std::make_shared<hikari::Projectile>();
+                                        auto animationSetPtr = animationSetCache->get(animationSet);
+                                        auto spriteTexture = imageCache->get(animationSetPtr->getImageFileName());
+                                        instance->setAnimationSet(animationSetPtr);
+                                        instance->setSpriteTexture(spriteTexture);
+                                        instance->changeAnimation(animationName);
+                                        instance->setBoundingBox(boundingBox);
+
+                                        factoryPtr->registerPrototype(name, instance);
+                                    }
+                                } else {
+                                    HIKARI_LOG(debug3) << "No projectile templates found.";
+                                }
+                            }
+                        } else {
+                            HIKARI_LOG(debug3) << "Can't find projectile descriptor file: \"" << descriptorFilePath << "\"";
+                        }
+                    } else {
+                        // ItemFactory is borked!
+                        throw HikariException("Cannot populate ProjectileFactory because ProjectileFactory is null.");
+                    }
+                } else {
+                    // AnimationSetCache is borked!
+                    throw HikariException("Cannot populate ProjectileFactory because AnimationSetCache is null.");
+                }
+            } else {
+                // SquirrelService is borked!
+                throw HikariException("Cannot populate ProjectileFactory because SquirrelService is null.");
+            }
+        } else {
+            // ImageCache is borked!
+            throw HikariException("Cannot populate ProjectileFactory because ImageCache is null.");
         }
     }
 } // hikari::FactoryHelpers

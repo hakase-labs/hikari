@@ -156,6 +156,7 @@ set( ENGINE_SOURCE_FILES
     src/hikari/client/game/objects/Enemy.cpp
     src/hikari/client/game/objects/EnemyBrain.cpp
     src/hikari/client/game/objects/Projectile.cpp
+    src/hikari/client/game/objects/ProjectileFactory.cpp
     src/hikari/client/game/objects/Entity.cpp
     src/hikari/client/game/objects/FactoryHelpers.cpp
     src/hikari/client/game/objects/HeroAirbornMobilityState.cpp
