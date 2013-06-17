@@ -591,10 +591,10 @@ namespace hikari {
                           ", faction=" << eventData->getFaction() <<
                           ", direction=" << eventData->getDirection();
 
-        // TODO: Implement projectile spawning from world
-        //       and then assign its faction, etc., from the event data
+        // TODO: Factor this into another method or come up with a clean way
+        //       to spawn projectiles and set their settings.
         if(eventData->getShooterId() == hero->getId()) {
-            auto newProjectile = world.spawnProjectile("Plasma Bullet");
+            auto newProjectile = world.spawnProjectile("Shadow Blade");
 
             if(newProjectile) {
                 newProjectile->reset();

@@ -9,5 +9,16 @@
             "originX": 4,
             "originY": 3
         }
+    },
+    {
+        "name": "Shadow Blade",
+        "animationSet": "assets/animations/projectiles.json",
+        "animationName": "shadow-blade",
+        "boundingBox": {
+            "width": 14,
+            "height": 14,
+            "originX": 7,
+            "originY": 7
+        }
     }
 ]
