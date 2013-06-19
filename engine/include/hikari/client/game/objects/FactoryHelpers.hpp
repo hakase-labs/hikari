@@ -12,6 +12,7 @@ namespace hikari {
     class ServiceLocator;
     class EnemyFactory;
     class ItemFactory;
+    class ProjectileFactory;
 
 namespace FactoryHelpers {
 
@@ -46,6 +47,12 @@ namespace FactoryHelpers {
     void populateEnemyFactory(
         const std::string & descriptorFilePath,
         const std::weak_ptr<hikari::EnemyFactory> & factory,
+        ServiceLocator & services
+    );
+
+    void populateProjectileFactory(
+        const std::string & descriptorFilePath,
+        const std::weak_ptr<hikari::ProjectileFactory> & factory,
         ServiceLocator & services
     );
 

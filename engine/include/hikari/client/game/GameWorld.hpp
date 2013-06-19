@@ -28,6 +28,7 @@ namespace hikari {
     class EnemyFactory;
     class Particle;
     class Projectile;
+    class ProjectileFactory;
     class EventManager;
 
     class GameWorld : public Updatable {
@@ -37,6 +38,7 @@ namespace hikari {
         std::shared_ptr<Room> currentRoom;
         std::weak_ptr<ItemFactory> itemFactory;
         std::weak_ptr<EnemyFactory> enemyFactory;
+        std::weak_ptr<ProjectileFactory> projectileFactory;
         std::queue<std::shared_ptr<GameObject>> queuedAdditions;
         std::queue<std::shared_ptr<GameObject>> queuedRemovals;
         std::vector<std::shared_ptr<GameObject>> activeObjects;
@@ -48,6 +50,10 @@ namespace hikari {
         std::queue<std::shared_ptr<Enemy>> queuedEnemyAdditions;
         std::queue<std::shared_ptr<Enemy>> queuedEnemyRemovals;
         std::vector<std::shared_ptr<Enemy>> activeEnemies;
+
+        std::queue<std::shared_ptr<Projectile>> queuedProjectileAdditions;
+        std::queue<std::shared_ptr<Projectile>> queuedProjectileRemovals;
+        std::vector<std::shared_ptr<Projectile>> activeProjectiles;
 
         std::unordered_map<int, std::shared_ptr<GameObject>> objectRegistry;
         bool gravityEnabled;
@@ -67,14 +73,17 @@ namespace hikari {
 
         void setItemFactory(const std::weak_ptr<ItemFactory> & itemFactory);
         void setEnemyFactory(const std::weak_ptr<EnemyFactory> & enemyFactory);
+        void setProjectileFactory(const std::weak_ptr<ProjectileFactory> & projectileFactory);
 
         void queueObjectAddition(const std::shared_ptr<GameObject> &obj);
         void queueObjectAddition(const std::shared_ptr<CollectableItem> &obj);
         void queueObjectAddition(const std::shared_ptr<Enemy> &obj);
+        void queueObjectAddition(const std::shared_ptr<Projectile> &obj);
 
         void queueObjectRemoval(const std::shared_ptr<GameObject> &obj);
         void queueObjectRemoval(const std::shared_ptr<CollectableItem> &obj);
         void queueObjectRemoval(const std::shared_ptr<Enemy> &obj);
+        void queueObjectRemoval(const std::shared_ptr<Projectile> &obj);
 
         void removeAllObjects();
 
@@ -86,6 +95,7 @@ namespace hikari {
 
         const std::vector<std::shared_ptr<CollectableItem>> & getActiveItems() const;
         const std::vector<std::shared_ptr<Enemy>> & getActiveEnemies() const;
+        const std::vector<std::shared_ptr<Projectile>> & getActiveProjectiles() const;
 
         void setPlayer(const std::shared_ptr<Hero>& player);
 
