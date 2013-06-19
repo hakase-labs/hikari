@@ -14,6 +14,20 @@
         ]
     },
     {
+        "name": "Shadow Blade",
+        "projectileType": "Shadow Blade",
+        "limit": 1,
+        "usageCost": 3.0,
+        "usageSound": "Shadow Blade",
+        "usageActions": [
+            {
+                "type": "spawnProjectile",
+                "projectileType": "Shadow Blade",
+                "direction": "inherit"
+            }
+        ]
+    },
+    {
         "name": "Rain Flush",
         "projectileType": "Rain Flush",
         "global": true,
