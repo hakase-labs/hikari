@@ -202,7 +202,8 @@ namespace hikari {
                     getWeaponId(),
                     getId(),
                     getFaction(),
-                    getDirection()
+                    getDirection(),
+                    getPosition()
                 )
             );
         } else {

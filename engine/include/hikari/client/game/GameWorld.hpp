@@ -93,6 +93,7 @@ namespace hikari {
         std::unique_ptr<Particle> spawnParticle(const std::string & name /* ParticleInstanceConfig instanceConfig */) const;
         std::unique_ptr<Projectile> spawnProjectile(const std::string & name /* ProjectileInstanceConfig instanceConfig */) const;
 
+        const std::weak_ptr<GameObject> getObjectById(int id) const;
         const std::vector<std::shared_ptr<CollectableItem>> & getActiveItems() const;
         const std::vector<std::shared_ptr<Enemy>> & getActiveEnemies() const;
         const std::vector<std::shared_ptr<Projectile>> & getActiveProjectiles() const;

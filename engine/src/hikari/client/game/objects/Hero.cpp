@@ -320,6 +320,17 @@ namespace hikari {
                 changeAnimation("teleporting");
             }
         } else {
+            if(isOnLadder) {
+                if(isShooting) {
+                    changeAnimation("climbing-shooting");
+                } else {
+                    if(isTouchingLadderTop) {
+                        changeAnimation("climbing-top");
+                    } else {
+                        changeAnimation("climbing");
+                    }
+                }
+            }
             // Idle animations
             if(isStanding) {
                 if(isDecelerating) {
@@ -417,6 +428,15 @@ namespace hikari {
         cooldown = (15.0f * (1.0f / 60.0f)); // this should actually be the weapon's cooldown...
         cooldownTimer = cooldown;
         HIKARI_LOG(debug4) << "Shooting now!";
+
+        if(hero.actionController) {
+            auto const * controller = hero.actionController.get();
+            if(controller->shouldMoveLeft()) {
+                hero.setDirection(Directions::Left);
+            } else if(controller->shouldMoveRight()) {
+                hero.setDirection(Directions::Right);
+            }
+        }
         hero.chooseAnimation();
         hero.fireWeapon();
     }
@@ -434,6 +454,7 @@ namespace hikari {
             // TODO: Actually fix this to use a real cooldown
             if(controller->shouldShootWeapon()) {
                 cooldownTimer = cooldown;
+                hero.fireWeapon();
             }
         }
 

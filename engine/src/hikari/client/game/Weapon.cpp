@@ -1,4 +1,8 @@
 #include "hikari/client/game/Weapon.hpp"
+#include "hikari/client/game/WeaponAction.hpp"
+#include "hikari/client/game/events/WeaponFireEventData.hpp"
+
+#include "hikari/core/util/Log.hpp"
 
 namespace hikari {
 
@@ -7,8 +11,11 @@ namespace hikari {
   const char * DEFAULT_USAGE_SOUND = "None";
 
   Weapon::Weapon(const std::string & name, float usageCost)
-    : name(name)
-    , usageCost(usageCost)
+    : usageCost(usageCost)
+    , name(name)
+    , projectileType()
+    , usageSound()
+    , actions()
   {
 
   }
@@ -21,6 +28,10 @@ namespace hikari {
     return usageCost;
   }
 
+  const std::string & Weapon::getName() const {
+    return name;
+  }
+
   void Weapon::setName(const std::string & name) {
     this->name = name;
   }
@@ -31,6 +42,20 @@ namespace hikari {
 
   void Weapon::setSound(const std::string & sound) {
     this->usageSound = sound;
+  }
+
+  void Weapon::setActions(const std::vector<std::shared_ptr<WeaponAction>> & actions) {
+    this->actions = actions;
+  }
+  
+  void Weapon::fire(GameWorld & world, WeaponFireEventData & eventData) const {
+    HIKARI_LOG(debug4) << "Weapon::fire executed. name=" << getName();
+
+    std::for_each(std::begin(actions), std::end(actions), [&world, &eventData](const std::shared_ptr<WeaponAction> & action) {
+      if(action) {
+        action->apply(world, eventData);
+      }
+    });
   }
 } // hikari
 

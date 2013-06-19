@@ -1,9 +1,15 @@
 #ifndef HIKARI_CLIENT_GAME_WEAPON
 #define HIKARI_CLIENT_GAME_WEAPON
 
+#include <memory>
 #include <string>
+#include <vector>
 
 namespace hikari {
+
+  class GameWorld;
+  class WeaponAction;
+  class WeaponFireEventData;
 
   /**
    * A Weapon describes the properties of a "usable" weapon.
@@ -14,6 +20,7 @@ namespace hikari {
     std::string name;           /// The unique name of this weapon.
     std::string projectileType; /// The identifier of a particular projectile.
     std::string usageSound;     /// The name of the sample to play when the weapon is used.
+    std::vector<std::shared_ptr<WeaponAction>> actions;
 
   protected:
     void setName(const std::string & name);
@@ -33,6 +40,9 @@ namespace hikari {
     const std::string & getName() const;
     const std::string & getProjectileType() const;
     const std::string & getUsageSound() const;
+
+    void setActions(const std::vector<std::shared_ptr<WeaponAction>> & actions);
+    virtual void fire(GameWorld & world, WeaponFireEventData & eventData) const;
   };
 
 } // hikari

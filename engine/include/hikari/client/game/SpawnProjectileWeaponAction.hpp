@@ -1,0 +1,25 @@
+#ifndef HIKARI_CLIENT_GAME_SPAWNPROJECTILEWEAPONACTION
+#define HIKARI_CLIENT_GAME_SPAWNPROJECTILEWEAPONACTION
+
+#include "hikari/client/game/WeaponAction.hpp"
+
+#include <string>
+
+namespace hikari {
+
+  /**
+   * A WeaponAction is something that a Weapon uses to perform its action.
+   */
+  class SpawnProjectileWeaponAction : public WeaponAction {
+  private:
+    std::string projectileType;
+
+  public:
+    SpawnProjectileWeaponAction(const std::string & projectileType);
+    virtual ~SpawnProjectileWeaponAction();
+    virtual void apply(GameWorld & world, WeaponFireEventData & eventData) const;
+  };
+
+} // hikari
+
+#endif // HIKARI_CLIENT_GAME_SPAWNPROJECTILEWEAPONACTION

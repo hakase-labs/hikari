@@ -2,14 +2,43 @@
     {
         "name": "Mega Buster",
         "projectileType": "Plasma Bullet",
+        "limit": 3,
         "usageCost": 0,
         "usageSound": "Plasma Bullet",
+        "usageActions": [
+            { 
+                "type": "spawnProjectile",
+                "projectileType": "Plasma Bullet",
+                "direction": "inherit"
+            }
+        ]
     },
     {
         "name": "Rain Flush",
         "projectileType": "Rain Flush",
         "global": true,
         "usageCost": 2,
-        "usageSound": "Rain Flush"
+        "usageSound": "Rain Flush",
+        "usageActions": [
+            { 
+                "type": "screenEffect"
+            },
+            { 
+                "type": "screenEffect"
+            }
+        ]
+    },
+    {
+        "name": "Leaf Shield",
+        "projectileType": "Leaf Shield",
+        "limit": 1,
+        "usageCost": 2,
+        "usageSound": "Rain Flush",
+        "usageActions": [
+            { 
+                "type": "shield",
+                "projectileType": "Leaf Shield"
+            }
+        ]
     }
 ]
