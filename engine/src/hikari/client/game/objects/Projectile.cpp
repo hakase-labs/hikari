@@ -52,9 +52,9 @@ namespace hikari {
         Entity::update(dt);
 
         if(getDirection() == Directions::Left) {
-            setVelocityX(-1.6f);
+            setVelocityX(-2.8f);
         } else {
-            setVelocityX(1.6f);
+            setVelocityX(2.8f);
         }
         
         // if(brain) {

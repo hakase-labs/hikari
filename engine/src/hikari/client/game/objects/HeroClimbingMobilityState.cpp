@@ -46,7 +46,17 @@ namespace hikari {
             auto const * controller = hero.actionController.get();
 
             hero.setVelocityY(0);
-            hero.getAnimationPlayer()->pause();
+
+            if(!hero.isShooting) {
+                hero.getAnimationPlayer()->pause();
+            } else {
+                if(controller->shouldMoveLeft()) {
+                    hero.setDirection(Directions::Left);
+                } else if(controller->shouldMoveRight()) {
+                    hero.setDirection(Directions::Right);
+                }
+                hero.chooseAnimation();
+            }
 
             if(controller->shouldMoveUp()) {
                 if(hero.isTouchingLadderTop) {

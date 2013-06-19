@@ -30,7 +30,7 @@
                     "height" : 16, 
                     "hotspotX" : 8, 
                     "hotspotY" : 8, 
-                    "length" : 0.1167
+                    "length" : 0.05
                 },
                 { 
                     "x" : 32, 
@@ -39,7 +39,7 @@
                     "height" : 16, 
                     "hotspotX" : 8, 
                     "hotspotY" : 8, 
-                    "length" : 0.1167
+                    "length" : 0.05
                 }
             ]
         }

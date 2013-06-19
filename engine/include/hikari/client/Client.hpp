@@ -6,6 +6,7 @@
 
 #include <json/value.h>
 #include <string>
+#include <memory>
 
 //
 // Forward declarations
@@ -15,6 +16,7 @@ namespace hikari {
     class SquirrelService;
     class AnimationSetCache;
     class ImageCache;
+    class WeaponTable;
 }
 
 //
@@ -33,6 +35,8 @@ void initLogging(int argc, char** argv);
 void initFileSystem(int argc, char** argv);
 void initConfiguration(const std::string &fileName, Json::Value& value);
 void initGame(const std::string &fileName, Json::Value &value);
+
+void loadWeapons(const std::shared_ptr<hikari::WeaponTable> & weaponTable);
 
 namespace hikari {
 
