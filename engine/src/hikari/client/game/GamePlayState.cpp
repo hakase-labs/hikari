@@ -15,6 +15,8 @@
 #include "hikari/client/game/objects/Projectile.hpp"
 #include "hikari/client/game/objects/ProjectileFactory.hpp"
 #include "hikari/client/game/Effect.hpp"
+#include "hikari/client/game/Weapon.hpp"
+#include "hikari/client/game/WeaponTable.hpp"
 #include "hikari/client/gui/EnergyGauge.hpp"
 #include "hikari/client/gui/Panel.hpp"
 #include "hikari/client/Services.hpp"
@@ -72,6 +74,7 @@ namespace hikari {
         , audioService(services.locateService<AudioService>(Services::AUDIO))
         , guiService(services.locateService<GuiService>(Services::GUISERVICE))
         , eventManager(new EventManagerImpl("GamePlayEvents", false))
+        , weaponTable(services.locateService<WeaponTable>(Services::WEAPONTABLE))
         , gameProgress(services.locateService<GameProgress>(Services::GAMEPROGRESS))
         , guiFont(services.locateService<ImageFont>(Services::GUIFONT))
         , imageCache(services.locateService<ImageCache>(Services::IMAGECACHE))
@@ -593,19 +596,28 @@ namespace hikari {
 
         // TODO: Factor this into another method or come up with a clean way
         //       to spawn projectiles and set their settings.
-        if(eventData->getShooterId() == hero->getId()) {
-            auto newProjectile = world.spawnProjectile("Shadow Blade");
+        // if(eventData->getShooterId() == hero->getId()) {
+        //     auto newProjectile = world.spawnProjectile("Shadow Blade");
 
-            if(newProjectile) {
-                newProjectile->reset();
-                newProjectile->setDirection(eventData->getDirection());
-                newProjectile->setFaction(eventData->getFaction());
-                newProjectile->setPosition(hero->getPosition());
-                newProjectile->setActive(true);
+        //     if(newProjectile) {
+        //         newProjectile->reset();
+        //         newProjectile->setDirection(eventData->getDirection());
+        //         newProjectile->setFaction(eventData->getFaction());
+        //         newProjectile->setPosition(eventData->getPosition());
+        //         newProjectile->setActive(true);
 
-                world.queueObjectAddition(std::shared_ptr<Projectile>(std::move(newProjectile)));
+        //         world.queueObjectAddition(std::shared_ptr<Projectile>(std::move(newProjectile)));
+        //     }
+        // } else {
+            if(auto weapons = weaponTable.lock()) {
+                auto weaponWeak = weapons->getWeaponById(eventData->getWeaponId());
+                if(auto weapon = weaponWeak.lock()) {
+                    weapon->fire(world, *eventData.get());
+                } else {
+                    HIKARI_LOG(debug4) << "Tried to fire weapon with bad ID (" << eventData->getWeaponId() << ")";
+                }
             }
-        }
+        // }
     }
 
     void GamePlayState::handleEntityStateChangeEvent(EventDataPtr evt) {

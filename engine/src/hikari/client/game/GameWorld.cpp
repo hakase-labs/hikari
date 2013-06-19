@@ -344,6 +344,16 @@ namespace hikari {
         return std::unique_ptr<Projectile>(nullptr);
     }
 
+    const std::weak_ptr<GameObject> GameWorld::getObjectById(int id) const {
+        auto finder = objectRegistry.find(id);
+
+        if(finder != std::end(objectRegistry)) {
+            return std::weak_ptr<GameObject>(finder->second);
+        }
+
+        return std::weak_ptr<GameObject>();
+    }
+
     const std::vector<std::shared_ptr<CollectableItem>> & GameWorld::getActiveItems() const {
         return activeItems;
     }

@@ -5,12 +5,13 @@ namespace hikari {
 
     const EventType WeaponFireEventData::Type = HashedString("WeaponFireEventData").getHash();;
 
-    WeaponFireEventData::WeaponFireEventData(int weaponId, int shooterId, Faction::Type faction, Direction direction)
+    WeaponFireEventData::WeaponFireEventData(int weaponId, int shooterId, Faction::Type faction, Direction direction, const Vector2<float> & position)
         : BaseEventData(0.0f)
         , weaponId(weaponId)
         , shooterId(shooterId)
         , faction(faction)
         , direction(direction)
+        , position(position)
     {
 
     }
@@ -31,6 +32,10 @@ namespace hikari {
         return direction;
     }
 
+    const Vector2<float>& WeaponFireEventData::getPosition() const {
+        return position;
+    }
+
     WeaponFireEventData::~WeaponFireEventData() {
         // Do nothing!
     }
@@ -45,7 +50,8 @@ namespace hikari {
                 getWeaponId(),
                 getShooterId(),
                 getFaction(),
-                getDirection()
+                getDirection(),
+                getPosition()
             )
         );
     }
