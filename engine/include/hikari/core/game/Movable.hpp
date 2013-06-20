@@ -70,6 +70,7 @@ namespace hikari {
         void setOnGround(const bool & bypassCallback);
         void setPosition(const Vector2<float>& position);
         void setPosition(const float& x, const float& y);
+        void setBottom(float newBottom);
         void setVelocity(const Vector2<float>& velocity);
         void setVelocity(const float& x, const float& y);
         void setBoundingBox(const BoundingBoxF& boundingBox);
