@@ -28,7 +28,7 @@ namespace hikari {
         /// \param samplerCount The number of smaplers to create
         ///
         ////////////////////////////////////////////////////////////
-        NSFSoundStream(std::size_t bufferSize, unsigned int samplerCount = 1);
+        NSFSoundStream(std::size_t bufferSize, std::size_t samplerCount = 1);
 
         ////////////////////////////////////////////////////////////
         /// \brief Destructor
@@ -152,14 +152,17 @@ namespace hikari {
         // Member data
         ////////////////////////////////////////////////////////////
         std::size_t masterBufferSize;                  ///< Size of audio buffer
+        std::size_t samplerCount;
+        std::size_t activeSampler;
+
         std::unique_ptr<short[]> masterBuffer;       ///< Audio buffer to read/write to
         std::vector<std::unique_ptr<short[]>> sampleBuffers;
         std::vector<std::unique_ptr<Music_Emu>> sampleEmus;          ///< Pointer to NES APU emulator
         std::unique_ptr<track_info_t> trackInfo; ///< Pointer to current track information
-        int samplerCount;
-        int activeSampler;
         sf::Mutex mutex;                           ///< A mutex for keeping this thread-safe
+
         static const long SAMPLE_RATE = 44100;     ///< The sample rate of the NES APU
+        static const std::size_t MUSIC_SAMPLER_INDEX = 0;
     };
 } // hikari
 

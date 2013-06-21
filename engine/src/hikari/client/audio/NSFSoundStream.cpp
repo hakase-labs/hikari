@@ -8,18 +8,18 @@
 
 namespace hikari {
 
-    NSFSoundStream::NSFSoundStream(std::size_t bufferSize, unsigned int samplerCount)
+    NSFSoundStream::NSFSoundStream(std::size_t bufferSize, std::size_t samplerCount)
         : sf::SoundStream()
         , masterBufferSize(bufferSize)
+        , samplerCount(samplerCount)
+        , activeSampler(0)
         , masterBuffer(new short[masterBufferSize])
         , sampleBuffers()
         , sampleEmus()
         , trackInfo(nullptr)
-        , samplerCount(1)
-        , activeSampler(0)
         , mutex()
     {
-        samplerCount = std::max(samplerCount, static_cast<unsigned int>(1));
+        samplerCount = std::max(samplerCount, static_cast<std::size_t>(1));
         this->samplerCount = samplerCount;
 
         createSampleBuffers();
