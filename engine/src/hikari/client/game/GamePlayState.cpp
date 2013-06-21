@@ -594,35 +594,19 @@ namespace hikari {
                           ", faction=" << eventData->getFaction() <<
                           ", direction=" << eventData->getDirection();
 
-        // TODO: Factor this into another method or come up with a clean way
-        //       to spawn projectiles and set their settings.
-        // if(eventData->getShooterId() == hero->getId()) {
-        //     auto newProjectile = world.spawnProjectile("Shadow Blade");
+        if(auto weapons = weaponTable.lock()) {
+            auto weaponWeak = weapons->getWeaponById(eventData->getWeaponId());
+            if(auto weapon = weaponWeak.lock()) {
+                weapon->fire(world, *eventData.get());
 
-        //     if(newProjectile) {
-        //         newProjectile->reset();
-        //         newProjectile->setDirection(eventData->getDirection());
-        //         newProjectile->setFaction(eventData->getFaction());
-        //         newProjectile->setPosition(eventData->getPosition());
-        //         newProjectile->setActive(true);
-
-        //         world.queueObjectAddition(std::shared_ptr<Projectile>(std::move(newProjectile)));
-        //     }
-        // } else {
-            if(auto weapons = weaponTable.lock()) {
-                auto weaponWeak = weapons->getWeaponById(eventData->getWeaponId());
-                if(auto weapon = weaponWeak.lock()) {
-                    weapon->fire(world, *eventData.get());
-
-                    if(auto sound = audioService.lock()) {
-                        sound->playSample(40);
-                    }
-
-                } else {
-                    HIKARI_LOG(debug4) << "Tried to fire weapon with bad ID (" << eventData->getWeaponId() << ")";
+                if(auto sound = audioService.lock()) {
+                    sound->playSample(40);
                 }
+
+            } else {
+                HIKARI_LOG(debug4) << "Tried to fire weapon with bad ID (" << eventData->getWeaponId() << ")";
             }
-        // }
+        }
     }
 
     void GamePlayState::handleEntityStateChangeEvent(EventDataPtr evt) {

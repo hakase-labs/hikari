@@ -567,7 +567,21 @@ void initFileSystem(int argc, char** argv) {
     // Create virtual file system
     PhysFS::init(argv[0]);
     PhysFS::addToSearchPath(PhysFS::getBaseDir());
-    PhysFS::addToSearchPath(PhysFS::getBaseDir() + PATH_CONTENT_PACKAGE);
+
+    // Load standard content
+    try {
+        PhysFS::addToSearchPath(PhysFS::getBaseDir() + PATH_CONTENT_PACKAGE);
+    } catch(PhysFS::Exception & ex) {
+        HIKARI_LOG(error) << "Couldn't load content package. Reason: " << ex.what();
+    }
+
+    // Load custom content (if it exists)
+    try {
+        PhysFS::addToSearchPath(PhysFS::getBaseDir() + PATH_CUSTOM_PACKAGE);
+    } catch(PhysFS::Exception & ex) {
+        HIKARI_LOG(warning) << "Couldn't load custom content package. Reason: " << ex.what();
+    }
+
     PhysFS::setWriteDir(PhysFS::getBaseDir());
 
     HIKARI_LOG(debug) << "File system successfully initialized.";
