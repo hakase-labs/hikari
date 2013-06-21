@@ -28,6 +28,7 @@ const int SCREEN_BPP = 32;
 
 const std::string APPLICATION_TITLE("Hikari");
 const std::string PATH_CONTENT_PACKAGE("content.zip");
+const std::string PATH_CUSTOM_PACKAGE("custom.zip");
 
 int main(int argc, char** argv);
 
