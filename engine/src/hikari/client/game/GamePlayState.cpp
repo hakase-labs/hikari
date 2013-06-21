@@ -613,6 +613,11 @@ namespace hikari {
                 auto weaponWeak = weapons->getWeaponById(eventData->getWeaponId());
                 if(auto weapon = weaponWeak.lock()) {
                     weapon->fire(world, *eventData.get());
+
+                    if(auto sound = audioService.lock()) {
+                        sound->playSample(40);
+                    }
+
                 } else {
                     HIKARI_LOG(debug4) << "Tried to fire weapon with bad ID (" << eventData->getWeaponId() << ")";
                 }

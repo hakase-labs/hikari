@@ -274,6 +274,10 @@ namespace hikari {
         boundingBox.setPosition(x, y);
     }
 
+    void Movable::setBottom(float newBottom) {
+        boundingBox.setBottom(newBottom);
+    }
+
     void Movable::setVelocity(const Vector2<float>& velocity) {
         this->velocity = velocity;
     }

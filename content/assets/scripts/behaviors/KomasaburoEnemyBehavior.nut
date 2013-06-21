@@ -16,7 +16,7 @@ class KomasaburoEnemyBehavior extends EnemyBehavior {
         base.attachHost(newHost);
 
         if(host != null) {
-            host.weaponId = 0;
+            host.weaponId = 1;
         }
     }
 

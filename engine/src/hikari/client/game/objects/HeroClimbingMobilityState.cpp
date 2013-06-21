@@ -3,6 +3,7 @@
 #include "hikari/client/game/objects/HeroIdleMobilityState.hpp"
 #include "hikari/core/game/SpriteAnimator.hpp"
 #include "hikari/core/game/map/Room.hpp"
+#include "hikari/core/util/Log.hpp"
 
 namespace hikari {
 
@@ -30,6 +31,8 @@ namespace hikari {
         hero.setPosition(static_cast<float>(hero.ladderPositionX), hero.getPosition().getY());
         hero.body.setGravitated(false);
         hero.body.setTreatLadderTopAsGround(false);
+
+        // Determine the top-most pixel position of the ladder
     }
 
     void Hero::ClimbingMobilityState::exit() {
@@ -76,10 +79,14 @@ namespace hikari {
                     auto offsetPixels = hero.body.getBoundingBox().getOrigin();
                     auto gridSize = hero.getRoom()->getGridSize();
                     auto bottom = hero.body.getBoundingBox().getBottom();
-                    int newBottom = static_cast<int>(std::ceil(bottom) / static_cast<float>(gridSize)) * gridSize; // Quantize the bottom pixels
+                    int newBottom = (static_cast<int>(std::floor(bottom) / static_cast<float>(gridSize)) + 1) * gridSize; // Quantize the bottom pixels
                     int newY = newBottom;// + offsetPixels.getY();
-                    hero.body.setPosition(positionPixels.getX(), static_cast<float>(newY));
+                    //hero.body.setPosition(positionPixels.getX(), static_cast<float>(newY));
+                    hero.body.setBottom(newBottom);
                     hero.body.setOnGround(true);
+
+                    // HIKARI_LOG(hikari::LogLevel::debug) << "SHOULD BE POSITIONING";
+
                     // HIKARI_LOG(debug4) << "new y = " << newY;
                 }
             } else if(controller->shouldMoveDown()) {
@@ -105,6 +112,8 @@ namespace hikari {
 
 
             if(hero.body.isOnGround() && !hero.isTouchingLadderWithFeet) {
+                // HIKARI_LOG(hikari::LogLevel::debug) << "GOING IDLE";
+
                 hero.requestMobilityStateChange(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
                 return MobilityState::NEXT;
             }
@@ -116,6 +125,8 @@ namespace hikari {
                     hero.requestMobilityStateChange(std::unique_ptr<MobilityState>(new AirbornMobilityState(hero)));
                     return MobilityState::NEXT;
                 }
+
+                // HIKARI_LOG(hikari::LogLevel::debug) << "POSSIBLY FLYING OFF LADDER";
 
                 hero.requestMobilityStateChange(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
                 return MobilityState::NEXT;
