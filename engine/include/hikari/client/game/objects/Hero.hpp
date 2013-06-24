@@ -41,6 +41,9 @@ namespace hikari {
         bool isStunned;                 // Unable to be controlled; temporarily out of commission
         bool isInvincible;              // Impervious to spikes and other kinds of damage
 
+        bool isBlinking;
+        bool isVisible;
+
 #ifdef HIKARI_DEBUG_HERO_PHYSICS
         int countAscendingFrames;
         int countDecendingFrames;
@@ -50,6 +53,7 @@ namespace hikari {
         int ladderPositionX;
 
         float invincibilityTimer;
+        float blinkTimer;
 
         Vector2<float> walkVelocity;
         Vector2<float> jumpVelocity;

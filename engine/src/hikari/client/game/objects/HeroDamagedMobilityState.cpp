@@ -23,7 +23,6 @@ namespace hikari {
 
     void Hero::DamagedMobilityState::enter() {
         hero.isStunned = true;
-        // hero.isInvincible = true;
         hero.invincibilityTimer = 1.4667f;
         hero.chooseAnimation();
 
@@ -47,6 +46,7 @@ namespace hikari {
 
     void Hero::DamagedMobilityState::exit() {
         hero.isStunned = false;
+        hero.isBlinking = true;
     }
 
     Hero::MobilityState::StateChangeAction Hero::DamagedMobilityState::update(const float & dt) {

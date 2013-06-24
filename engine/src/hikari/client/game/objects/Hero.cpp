@@ -68,6 +68,9 @@ namespace hikari {
         });
 
         invincibilityTimer = 0;
+        blinkTimer = 0;
+        isBlinking = false;
+        isVisible = true;
 
         walkVelocity = Vector2<float>(NESNumber(0x01, 0x4C).toFloat(), 0.0f);
         climbVelocity = Vector2<float>(walkVelocity.getY(), walkVelocity.getX()); // Climbs at same speed as he walks
@@ -112,6 +115,17 @@ namespace hikari {
                 isInvincible = true;
             } else {
                 isInvincible = false;
+                isBlinking = false;
+                isVisible = true;
+            }
+
+            if(isBlinking) {
+                blinkTimer -= dt;
+
+                if(blinkTimer <= 0.0f) {
+                    blinkTimer = 0.0667f;
+                    isVisible = !isVisible;
+                }
             }
 
             // Do global updating...
@@ -395,7 +409,9 @@ namespace hikari {
     }
 
     void Hero::render(sf::RenderTarget &target) {
-        Entity::render(target);
+        if(isVisible) {
+            Entity::render(target);
+        }
     }
 
     void Hero::handleCollision(Movable& body, CollisionInfo& info) {
