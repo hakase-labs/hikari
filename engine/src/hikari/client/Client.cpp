@@ -635,6 +635,8 @@ void loadWeapons(const std::shared_ptr<hikari::WeaponTable> & weaponTable) {
 
     // This should be another function
     auto parseWeaponAction = [](const Json::Value & json) -> std::shared_ptr<WeaponAction> {
+        using namespace hikari; // Necessary for MSVC 2010
+
         const auto type           = json["type"].asString();
         const auto projectileType = json["projectileType"].asString();
         const auto direction      = json["direction"].asString();

@@ -17,6 +17,7 @@ namespace hikari {
         class SlidingMobilityState;     // Sublass of MobilityState
         class AirbornMobilityState;     // Sublass of MobilityState
         class ClimbingMobilityState;    // Sublass of MobilityState
+        class DamagedMobilityState;     // Sublass of MobilityState
         class ShootingState;
         class IsShootingState;          // Sublcass of ShootingState
         class NotShootingState;         // Sublcass of ShootingState
@@ -40,6 +41,9 @@ namespace hikari {
         bool isStunned;                 // Unable to be controlled; temporarily out of commission
         bool isInvincible;              // Impervious to spikes and other kinds of damage
 
+        bool isBlinking;
+        bool isVisible;
+
 #ifdef HIKARI_DEBUG_HERO_PHYSICS
         int countAscendingFrames;
         int countDecendingFrames;
@@ -47,6 +51,9 @@ namespace hikari {
         int accelerationDelay;
         int accelerationDelayThreshold;
         int ladderPositionX;
+
+        float invincibilityTimer;
+        float blinkTimer;
 
         Vector2<float> walkVelocity;
         Vector2<float> jumpVelocity;
@@ -191,6 +198,9 @@ namespace hikari {
         void performTeleport();
         void performMorph();
         void performHurt();
+        void performStun();
+
+        bool isVulnerable();
 
         virtual void update(float dt);
         virtual void render(sf::RenderTarget &target);

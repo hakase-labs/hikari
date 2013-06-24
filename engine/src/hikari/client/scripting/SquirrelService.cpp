@@ -170,8 +170,13 @@ namespace hikari {
         if(vm) {
             // TODO: See if the Sqrat::Script object can be used here; what is its internal object referring to?
             Sqrat::Script script;
-            script.CompileString(scriptString);
-            script.Run();
+
+            try {
+                script.CompileString(scriptString);
+                script.Run();
+            } catch(Sqrat::Exception & sqEx) {
+                HIKARI_LOG(error) << "Exception while executing script: " << sqEx.Message();
+            }
         }
     }
 

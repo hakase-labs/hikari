@@ -4,6 +4,8 @@
 
 #include "hikari/core/util/Log.hpp"
 
+#include <algorithm>
+
 namespace hikari {
 
   const float DEFAULT_USAGE_COST = 0.0f;

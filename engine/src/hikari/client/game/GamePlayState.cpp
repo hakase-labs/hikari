@@ -24,6 +24,7 @@
 #include "hikari/client/game/KeyboardInput.hpp"
 #include "hikari/client/game/events/EventManagerImpl.hpp"
 #include "hikari/client/game/events/EventListenerDelegate.hpp"
+#include "hikari/client/game/events/EntityDamageEventData.hpp"
 #include "hikari/client/game/events/EntityDeathEventData.hpp"
 #include "hikari/client/game/events/EntityStateChangeEventData.hpp"
 #include "hikari/client/game/events/EventData.hpp"
@@ -218,6 +219,10 @@ namespace hikari {
             } else {
                 startRound();
             }
+        }
+
+        if((event.type == sf::Event::KeyPressed) && event.key.code == sf::Keyboard::R) {
+            hero->performStun();
         }
     }
 
@@ -540,6 +545,10 @@ namespace hikari {
             eventManager->addListener(weaponFireDelegate, WeaponFireEventData::Type);
             eventHandlerDelegates.push_back(std::make_pair(weaponFireDelegate, WeaponFireEventData::Type));
 
+            auto entityDamageDelegate = fastdelegate::MakeDelegate(this, &GamePlayState::handleEntityDamageEvent);
+            eventManager->addListener(entityDamageDelegate, EntityDamageEventData::Type);
+            eventHandlerDelegates.push_back(std::make_pair(entityDamageDelegate, EntityDamageEventData::Type));
+
             auto entityDeathDelegate = fastdelegate::MakeDelegate(this, &GamePlayState::handleEntityDeathEvent);
             eventManager->addListener(entityDeathDelegate, EntityDeathEventData::Type);
             eventHandlerDelegates.push_back(std::make_pair(entityDeathDelegate, EntityDeathEventData::Type));
@@ -551,6 +560,16 @@ namespace hikari {
             auto objectRemovedDelegate = fastdelegate::FastDelegate1<EventDataPtr>(&letMeKnowItsGone);
             eventManager->addListener(objectRemovedDelegate, ObjectRemovedEventData::Type);
             eventHandlerDelegates.push_back(std::make_pair(objectRemovedDelegate, ObjectRemovedEventData::Type));
+        }
+    }
+
+    void GamePlayState::handleEntityDamageEvent(EventDataPtr evt) {
+        auto eventData = std::static_pointer_cast<EntityDamageEventData>(evt);
+
+        if(eventData->getEntityId() == hero->getId()) {
+            if(auto sound = audioService.lock()) {
+                sound->playSample(22); // SAMPLE_HERO_DAMAGE
+            }
         }
     }
 
@@ -600,7 +619,7 @@ namespace hikari {
                 weapon->fire(world, *eventData.get());
 
                 if(auto sound = audioService.lock()) {
-                    sound->playSample(40);
+                    sound->playSample(21);
                 }
 
             } else {
@@ -951,6 +970,17 @@ namespace hikari {
                     HIKARI_LOG(debug3) << "Cleaning up off-screen enemy #" << enemy->getId();
                     enemy->setActive(false);
                     gamePlayState.world.queueObjectRemoval(enemy);
+                }
+
+                //
+                // This part "damages" the hero if he touches an enemy.
+                //
+                const auto & hero = gamePlayState.hero;
+
+                if(enemy->getBoundingBox().intersects(hero->getBoundingBox())) {
+                    if(hero->isVulnerable()) {
+                        hero->performStun();
+                    }
                 }
 
         });

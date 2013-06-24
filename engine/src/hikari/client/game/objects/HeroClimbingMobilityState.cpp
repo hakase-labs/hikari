@@ -82,7 +82,7 @@ namespace hikari {
                     int newBottom = (static_cast<int>(std::floor(bottom) / static_cast<float>(gridSize)) + 1) * gridSize; // Quantize the bottom pixels
                     int newY = newBottom;// + offsetPixels.getY();
                     //hero.body.setPosition(positionPixels.getX(), static_cast<float>(newY));
-                    hero.body.setBottom(newBottom);
+                    hero.body.setBottom(static_cast<float>(newBottom));
                     hero.body.setOnGround(true);
 
                     // HIKARI_LOG(hikari::LogLevel::debug) << "SHOULD BE POSITIONING";

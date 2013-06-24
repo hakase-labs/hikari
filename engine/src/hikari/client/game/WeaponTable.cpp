@@ -18,7 +18,7 @@ namespace hikari {
     }
 
     std::weak_ptr<Weapon> WeaponTable::getWeaponById(int weaponId) const {
-        if(weaponId >= 0 && weaponId < weapons.size()) {
+        if(weaponId >= 0 && static_cast<std::size_t>(weaponId) < weapons.size()) {
             return std::weak_ptr<Weapon>(weapons.at(weaponId));
         }
 
