@@ -147,6 +147,7 @@ set( ENGINE_SOURCE_FILES
     src/hikari/client/game/events/EventData.cpp
     src/hikari/client/game/events/EventManager.cpp
     src/hikari/client/game/events/EventManagerImpl.cpp
+    src/hikari/client/game/events/EntityDamageEventData.cpp
     src/hikari/client/game/events/EntityDeathEventData.cpp
     src/hikari/client/game/events/EntityStateChangeEventData.cpp
     src/hikari/client/game/events/TransitionCollisionEventData.cpp
@@ -165,6 +166,7 @@ set( ENGINE_SOURCE_FILES
     src/hikari/client/game/objects/FactoryHelpers.cpp
     src/hikari/client/game/objects/HeroAirbornMobilityState.cpp
     src/hikari/client/game/objects/HeroClimbingMobilityState.cpp
+    src/hikari/client/game/objects/HeroDamagedMobilityState.cpp
     src/hikari/client/game/objects/HeroIdleMobilityState.cpp
     src/hikari/client/game/objects/HeroSlidingMobilityState.cpp
     src/hikari/client/game/objects/HeroTeleportingMobilityState.cpp

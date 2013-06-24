@@ -2,6 +2,7 @@
 #include "hikari/client/game/objects/HeroClimbingMobilityState.hpp"
 #include "hikari/client/game/objects/HeroIdleMobilityState.hpp"
 #include "hikari/client/game/objects/HeroTeleportingMobilityState.hpp"
+#include "hikari/client/game/objects/HeroDamagedMobilityState.hpp"
 #include "hikari/client/game/events/EventManager.hpp"
 #include "hikari/client/game/events/EventData.hpp"
 #include "hikari/client/game/events/EntityDeathEventData.hpp"
@@ -33,6 +34,9 @@ namespace hikari {
         , isFullyAccelerated(false)
         , isShooting(false)
         , isTeleporting(false)
+        , isMorphing(false)
+        , isStunned(false)
+        , isInvincible(false)
         , ladderPositionX(0)
         , actionController(nullptr)
         , mobilityState(nullptr)
@@ -62,6 +66,11 @@ namespace hikari {
             this->countDecendingFrames = 0;
 #endif // HIKARI_DEBUG_HERO_PHYSICS
         });
+
+        invincibilityTimer = 0;
+        blinkTimer = 0;
+        isBlinking = false;
+        isVisible = true;
 
         walkVelocity = Vector2<float>(NESNumber(0x01, 0x4C).toFloat(), 0.0f);
         climbVelocity = Vector2<float>(walkVelocity.getY(), walkVelocity.getX()); // Climbs at same speed as he walks
@@ -100,6 +109,24 @@ namespace hikari {
     void Hero::update(float dt) {
         if(room) {
             const int gridSize = room->getGridSize();
+
+            if(invincibilityTimer > 0.0f) {
+                invincibilityTimer -= dt;
+                isInvincible = true;
+            } else {
+                isInvincible = false;
+                isBlinking = false;
+                isVisible = true;
+            }
+
+            if(isBlinking) {
+                blinkTimer -= dt;
+
+                if(blinkTimer <= 0.0f) {
+                    blinkTimer = 0.0667f;
+                    isVisible = !isVisible;
+                }
+            }
 
             // Do global updating...
             ladderPositionX = 0;
@@ -280,6 +307,14 @@ namespace hikari {
         HIKARI_LOG(debug4) << "Started sliding!";
     }
 
+    void Hero::performStun() {
+        changeMobilityState(std::unique_ptr<MobilityState>(new DamagedMobilityState(*this)));
+    }
+
+    bool Hero::isVulnerable() {
+        return !isInvincible;
+    }
+
     void Hero::changeMobilityState(std::unique_ptr<MobilityState> && newState) {
         if(newState) {
             if(mobilityState) {
@@ -313,7 +348,10 @@ namespace hikari {
     }
 
     void Hero::chooseAnimation() {
-        if(isTeleporting) {
+        if(isStunned) {
+            changeAnimation("damaged-standing");
+        }
+        else if(isTeleporting) {
             if(isMorphing) {
                 changeAnimation("morphing");
             } else {
@@ -371,7 +409,9 @@ namespace hikari {
     }
 
     void Hero::render(sf::RenderTarget &target) {
-        Entity::render(target);
+        if(isVisible) {
+            Entity::render(target);
+        }
     }
 
     void Hero::handleCollision(Movable& body, CollisionInfo& info) {
@@ -382,12 +422,14 @@ namespace hikari {
         //
         // Check if we hit spikes; if we did then we're dead!
         //
-        if(TileAttribute::hasAttribute(info.tileType, TileAttribute::SPIKE)) {
-            if(auto events = getEventManager().lock()) {
-                EventDataPtr imDeadNow(new EntityDeathEventData(getId()));
-                events->queueEvent(imDeadNow);
-            } else {
-                HIKARI_LOG(debug4) << "No event manager.";
+        if(isVulnerable()) {
+            if(TileAttribute::hasAttribute(info.tileType, TileAttribute::SPIKE)) {
+                if(auto events = getEventManager().lock()) {
+                    EventDataPtr imDeadNow(new EntityDeathEventData(getId()));
+                    events->queueEvent(imDeadNow);
+                } else {
+                    HIKARI_LOG(debug4) << "No event manager.";
+                }
             }
         }
     }

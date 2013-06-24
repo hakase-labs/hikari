@@ -37,7 +37,7 @@ function require(fileName, reload = false) {
 
         _loaded[fileName] <- compiledScript;
 
-        compiledScript();
+        return compiledScript();
     }
 }
 
