@@ -178,6 +178,7 @@ namespace hikari {
         // Event handlers
         //
         void bindEventHandlers();
+        void handleEntityDamageEvent(EventDataPtr evt);
         void handleEntityDeathEvent(EventDataPtr evt);
         void handleWeaponFireEvent(EventDataPtr evt);
         void handleEntityStateChangeEvent(EventDataPtr evt);
