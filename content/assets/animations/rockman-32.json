@@ -1,128 +1,144 @@
 {
-	"name": "Rockman-32x32",
-	"image": "assets/images/rockman-32.png",
-	"animations": {
-		"idle": {
-			"aliases": ["standing"],
-			"repeat": true,
-			"keyframe": 1,
-			"syncGroup": 1,
-			"frames": [ 
-				{ "x" : 64, "y" : 0, "width" : 32, "height" : 32, "hotspotX" : 16, "hotspotY" : 27, "length" : 0.1 },
-				{ "x" : 0, "y" : 32, "width" : 32, "height" : 32, "hotspotX" : 16, "hotspotY" : 27, "length" : 1.5 },
-				{ "x" : 32, "y" : 32, "width" : 32, "height" : 32, "hotspotX" : 16, "hotspotY" : 27, "length" : 0.15 }
-			]
-		},
-		"standing-shooting": {
-			"repeat": false,
-			"keyframe": 0,
-			"syncGroup": 2,
-			"frames": [ 
-				{ "x" : 64, "y" : 32, "width" : 32, "height" : 32, "hotspotX" : 12, "hotspotY" : 27, "length" : 0.1 }
-			]
-		},
-		"running": {
-			"repeat": true,
-			"keyframe": 0,
-			"syncGroup": 10,
-			"frames": [ 
-				{ "x" : 96, "y" : 0, "width" : 32, "height" : 32, "hotspotX" : 12, "hotspotY" : 27, "length" : 0.1 },
-				{ "x" : 128, "y" : 0, "width" : 32, "height" : 32, "hotspotX" : 11, "hotspotY" : 27, "length" : 0.1167 },
-				{ "x" : 160, "y" : 0, "width" : 32, "height" : 32, "hotspotX" : 12, "hotspotY" : 27, "length" : 0.1167 },
-				{ "x" : 128, "y" : 0, "width" : 32, "height" : 32, "hotspotX" : 11, "hotspotY" : 27, "length" : 0.1167 }
-			]
-		},
-		"running-shooting": {
-			"repeat": true,
-			"keyframe": 0,
-			"syncGroup": 10,
-			"frames": [ 
-				{ "x" : 96, "y" : 32, "width" : 32, "height" : 32, "hotspotX" : 12, "hotspotY" : 27, "length" : 0.1 },
-				{ "x" : 128, "y" : 32, "width" : 32, "height" : 32, "hotspotX" : 11, "hotspotY" : 27, "length" : 0.1167 },
-				{ "x" : 160, "y" : 32, "width" : 32, "height" : 32, "hotspotX" : 12, "hotspotY" : 27, "length" : 0.1167 },
-				{ "x" : 128, "y" : 32, "width" : 32, "height" : 32, "hotspotX" : 11, "hotspotY" : 27, "length" : 0.1167 }
-			]
-		},
-		"running-accelerating": {
-			"aliases": ["running-stopping"],
-			"repeat": false,
-			"keyframe": 0,
-			"syncGroup": 11,
-			"frames": [ 
-				{ "x" : 64, "y" : 0, "width" : 32, "height" : 32, "hotspotX" : 16, "hotspotY" : 27, "length" : 0.1 }
-			]
-		},
-		"teleporting": {
-			"repeat": true,
-			"syncGroup": 20,
-			"frames": [
-				{ "x" : 0, "y" : 0, "width" : 32, "height" : 32, "hotspotX" : 16, "hotspotY" : 27, "length" : 0.0167 }
-			]
-		},
-		"morphing": {
-			"repeat": false,
-			"syncGroup": 21,
-			"frames": [
-				{ "x" : 0, "y" : 0, "width" : 32, "height" : 32, "hotspotX" : 16, "hotspotY" : 27, "length" : 0.0167 },
-				{ "x" : 0, "y" : 96, "width" : 32, "height" : 32, "hotspotX" : 16, "hotspotY" : 27, "length" : 0.05 },
-				{ "x" : 0, "y" : 0, "width" : 32, "height" : 32, "hotspotX" : 16, "hotspotY" : 27, "length" : 0.05 },
-				{ "x" : 32, "y" : 0, "width" : 32, "height" : 32, "hotspotX" : 16, "hotspotY" : 27, "length" : 0.0833 }
-			]
-		},
-		"jumping": {
-			"aliases": ["falling"],
-			"repeat": false,
-			"syncGroup": 30,
-			"frames": [
-				{ "x" : 192, "y" : 0, "width" : 32, "height" : 32, "hotspotX" : 16, "hotspotY" : 22, "length" : 0.0167 }
-			]
-		},
-		"jumping-shooting": {
-			"aliases": ["falling-shooting"],
-			"repeat": false,
-			"syncGroup": 30,
-			"frames": [
-				{ "x" : 192, "y" : 32, "width" : 32, "height" : 32, "hotspotX" : 16, "hotspotY" : 22, "length" : 0.0167 }
-			]
-		},
-		"climbing": {
-			"repeat": true,
-			"keyframe": 0,
-			"syncGroup": 40,
-			"frames": [
-				{ "x" : 64, "y" : 96, "width" : 32, "height" : 32, "hotspotX" : 16, "hotspotY" : 23, "length" : 0.15, "duration": 9 },
-				{ "x" : 96, "y" : 96, "width" : 32, "height" : 32, "hotspotX" : 16, "hotspotY" : 23, "length" : 0.15, "duration": 9 }
-			]
-		},
-		"climbing-shooting": {
-			"repeat": false,
-			"keyframe": 0,
-			"syncGroup": 41,
-			"frames": [
-				{ "x" : 160, "y" : 96, "width" : 32, "height" : 32, "hotspotX" : 16, "hotspotY" : 23, "length" : 0.05 }
-			]
-		},
-		"climbing-top": {
-			"repeat": false,
-			"keyframe": 0,
-			"syncGroup": 42,
-			"frames": [
-				{ "x" : 128, "y" : 96, "width" : 32, "height" : 32, "hotspotX" : 16, "hotspotY" : 22, "length" : 0.1 }
-			]
-		},
-		"sliding": {
-			"repeat": false,
-			"syncGroup": 50,
-			"frames": [
-				{ "x" : 0, "y" : 128, "width" : 32, "height" : 32, "hotspotX" : 17, "hotspotY" : 28, "length" : 1.0 }
-			]
-		},
-		"sliding-stopping": {
-			"repeat": false,
-			"syncGroup": 51,
-			"frames": [
-				{ "x" : 0, "y" : 128, "width" : 32, "height" : 32, "hotspotX" : 17, "hotspotY" : 28, "length" : 1.0 }
-			]
-		}
-	}
+    "name": "Rockman-32x32",
+    "image": "assets/images/rockman-32.png",
+    "animations": {
+        "idle": {
+            "aliases": ["standing"],
+            "repeat": true,
+            "keyframe": 1,
+            "syncGroup": 1,
+            "frames": [ 
+                { "x" : 64, "y" : 0, "width" : 32, "height" : 32, "hotspotX" : 16, "hotspotY" : 27, "length" : 0.1 },
+                { "x" : 0, "y" : 32, "width" : 32, "height" : 32, "hotspotX" : 16, "hotspotY" : 27, "length" : 1.5 },
+                { "x" : 32, "y" : 32, "width" : 32, "height" : 32, "hotspotX" : 16, "hotspotY" : 27, "length" : 0.15 }
+            ]
+        },
+        "standing-shooting": {
+            "repeat": false,
+            "keyframe": 0,
+            "syncGroup": 2,
+            "frames": [ 
+                { "x" : 64, "y" : 32, "width" : 32, "height" : 32, "hotspotX" : 12, "hotspotY" : 27, "length" : 0.1 }
+            ]
+        },
+        "running": {
+            "repeat": true,
+            "keyframe": 0,
+            "syncGroup": 10,
+            "frames": [ 
+                { "x" : 96, "y" : 0, "width" : 32, "height" : 32, "hotspotX" : 12, "hotspotY" : 27, "length" : 0.1 },
+                { "x" : 128, "y" : 0, "width" : 32, "height" : 32, "hotspotX" : 11, "hotspotY" : 27, "length" : 0.1167 },
+                { "x" : 160, "y" : 0, "width" : 32, "height" : 32, "hotspotX" : 12, "hotspotY" : 27, "length" : 0.1167 },
+                { "x" : 128, "y" : 0, "width" : 32, "height" : 32, "hotspotX" : 11, "hotspotY" : 27, "length" : 0.1167 }
+            ]
+        },
+        "running-shooting": {
+            "repeat": true,
+            "keyframe": 0,
+            "syncGroup": 10,
+            "frames": [ 
+                { "x" : 96, "y" : 32, "width" : 32, "height" : 32, "hotspotX" : 12, "hotspotY" : 27, "length" : 0.1 },
+                { "x" : 128, "y" : 32, "width" : 32, "height" : 32, "hotspotX" : 11, "hotspotY" : 27, "length" : 0.1167 },
+                { "x" : 160, "y" : 32, "width" : 32, "height" : 32, "hotspotX" : 12, "hotspotY" : 27, "length" : 0.1167 },
+                { "x" : 128, "y" : 32, "width" : 32, "height" : 32, "hotspotX" : 11, "hotspotY" : 27, "length" : 0.1167 }
+            ]
+        },
+        "running-accelerating": {
+            "aliases": ["running-stopping"],
+            "repeat": false,
+            "keyframe": 0,
+            "syncGroup": 11,
+            "frames": [ 
+                { "x" : 64, "y" : 0, "width" : 32, "height" : 32, "hotspotX" : 16, "hotspotY" : 27, "length" : 0.1 }
+            ]
+        },
+        "teleporting": {
+            "repeat": true,
+            "syncGroup": 20,
+            "frames": [
+                { "x" : 0, "y" : 0, "width" : 32, "height" : 32, "hotspotX" : 16, "hotspotY" : 27, "length" : 0.0167 }
+            ]
+        },
+        "morphing": {
+            "repeat": false,
+            "syncGroup": 21,
+            "frames": [
+                { "x" : 0, "y" : 0, "width" : 32, "height" : 32, "hotspotX" : 16, "hotspotY" : 27, "length" : 0.0167 },
+                { "x" : 0, "y" : 96, "width" : 32, "height" : 32, "hotspotX" : 16, "hotspotY" : 27, "length" : 0.05 },
+                { "x" : 0, "y" : 0, "width" : 32, "height" : 32, "hotspotX" : 16, "hotspotY" : 27, "length" : 0.05 },
+                { "x" : 32, "y" : 0, "width" : 32, "height" : 32, "hotspotX" : 16, "hotspotY" : 27, "length" : 0.0833 }
+            ]
+        },
+        "jumping": {
+            "aliases": ["falling"],
+            "repeat": false,
+            "syncGroup": 30,
+            "frames": [
+                { "x" : 192, "y" : 0, "width" : 32, "height" : 32, "hotspotX" : 16, "hotspotY" : 22, "length" : 0.0167 }
+            ]
+        },
+        "jumping-shooting": {
+            "aliases": ["falling-shooting"],
+            "repeat": false,
+            "syncGroup": 30,
+            "frames": [
+                { "x" : 192, "y" : 32, "width" : 32, "height" : 32, "hotspotX" : 16, "hotspotY" : 22, "length" : 0.0167 }
+            ]
+        },
+        "climbing": {
+            "repeat": true,
+            "keyframe": 0,
+            "syncGroup": 40,
+            "frames": [
+                { "x" : 64, "y" : 96, "width" : 32, "height" : 32, "hotspotX" : 16, "hotspotY" : 23, "length" : 0.15, "duration": 9 },
+                { "x" : 96, "y" : 96, "width" : 32, "height" : 32, "hotspotX" : 16, "hotspotY" : 23, "length" : 0.15, "duration": 9 }
+            ]
+        },
+        "climbing-shooting": {
+            "repeat": false,
+            "keyframe": 0,
+            "syncGroup": 41,
+            "frames": [
+                { "x" : 160, "y" : 96, "width" : 32, "height" : 32, "hotspotX" : 16, "hotspotY" : 23, "length" : 0.05 }
+            ]
+        },
+        "climbing-top": {
+            "repeat": false,
+            "keyframe": 0,
+            "syncGroup": 42,
+            "frames": [
+                { "x" : 128, "y" : 96, "width" : 32, "height" : 32, "hotspotX" : 16, "hotspotY" : 22, "length" : 0.1 }
+            ]
+        },
+        "sliding": {
+            "repeat": false,
+            "syncGroup": 50,
+            "frames": [
+                { "x" : 0, "y" : 128, "width" : 32, "height" : 32, "hotspotX" : 17, "hotspotY" : 28, "length" : 1.0 }
+            ]
+        },
+        "sliding-stopping": {
+            "repeat": false,
+            "syncGroup": 51,
+            "frames": [
+                { "x" : 0, "y" : 128, "width" : 32, "height" : 32, "hotspotX" : 17, "hotspotY" : 28, "length" : 1.0 }
+            ]
+        },
+        "damaged-standing": {
+            "repeat": true,
+            "syncGroup": 60,
+            "frames": [
+                { "x" : 32, "y" : 64, "width" : 32, "height" : 32, "hotspotX" : 15, "hotspotY" : 24, "length" : 0.0667 },
+                { "x" : 32, "y" : 96, "width" : 32, "height" : 32, "hotspotX" : 15, "hotspotY" : 24, "length" : 0.1 },
+                { "x" : 32, "y" : 64, "width" : 32, "height" : 32, "hotspotX" : 15, "hotspotY" : 24, "length" : 0.0834 },
+                { "x" : 32, "y" : 96, "width" : 32, "height" : 32, "hotspotX" : 15, "hotspotY" : 24, "length" : 0.05 },
+                { "x" : 32, "y" : 64, "width" : 32, "height" : 32, "hotspotX" : 15, "hotspotY" : 24, "length" : 0.05 },
+                { "x" : 32, "y" : 96, "width" : 32, "height" : 32, "hotspotX" : 15, "hotspotY" : 24, "length" : 0.0667 },
+                { "x" : 32, "y" : 64, "width" : 32, "height" : 32, "hotspotX" : 15, "hotspotY" : 24, "length" : 0.05 },
+                { "x" : 32, "y" : 96, "width" : 32, "height" : 32, "hotspotX" : 15, "hotspotY" : 24, "length" : 0.05 },
+                { "x" : 32, "y" : 64, "width" : 32, "height" : 32, "hotspotX" : 15, "hotspotY" : 24, "length" : 0.0834 },
+                { "x" : 32, "y" : 96, "width" : 32, "height" : 32, "hotspotX" : 15, "hotspotY" : 24, "length" : 0.0167 }
+            ]
+        }
+    }
 }
