@@ -41,6 +41,7 @@ namespace hikari {
         , actionController(nullptr)
         , mobilityState(nullptr)
         , nextMobilityState(nullptr)
+        , temporaryMobilityState(nullptr)
         , shootingState(nullptr)
         , nextShootingState(nullptr) 
     {
@@ -250,27 +251,35 @@ namespace hikari {
             // State machine updates
             //
 
-            if(shootingState) {
-                // Handle state change request actions...
-                ShootingState::StateChangeAction action = shootingState->update(dt);
-
-                if(ShootingState::NEXT == action) {
-                    if(nextShootingState) {
-                        changeShootingState(std::move(nextShootingState));
-                    }
-                }
-            }
-
-            if(mobilityState) {
-                // Handle state change request actions...
-                MobilityState::StateChangeAction action = mobilityState->update(dt);
+            if(temporaryMobilityState) {
+                MobilityState::StateChangeAction action = temporaryMobilityState->update(dt);
 
                 if(MobilityState::NEXT == action) {
-                    if(nextMobilityState) {
-                        changeMobilityState(std::move(nextMobilityState));
+                    popTemporaryMobilityState();
+                }
+            } else {
+                if(shootingState) {
+                    // Handle state change request actions...
+                    ShootingState::StateChangeAction action = shootingState->update(dt);
+
+                    if(ShootingState::NEXT == action) {
+                        if(nextShootingState) {
+                            changeShootingState(std::move(nextShootingState));
+                        }
                     }
                 }
-            }
+
+                if(mobilityState) {
+                    // Handle state change request actions...
+                    MobilityState::StateChangeAction action = mobilityState->update(dt);
+
+                    if(MobilityState::NEXT == action) {
+                        if(nextMobilityState) {
+                            changeMobilityState(std::move(nextMobilityState));
+                        }
+                    }
+                }
+            }    
         }
 
         Entity::update(dt);
@@ -281,7 +290,7 @@ namespace hikari {
     }
 
     bool Hero::canSlide() {
-        return !isAirborn; /* TODO: Check if currently sliding too */
+        return !isAirborn && !isSliding && !isStunned; /* TODO: Check if currently sliding too */
     }
 
     void Hero::performJump() {
@@ -308,7 +317,9 @@ namespace hikari {
     }
 
     void Hero::performStun() {
-        changeMobilityState(std::unique_ptr<MobilityState>(new DamagedMobilityState(*this)));
+        if(!isStunned) {
+            pushTemporaryMobilityState(std::unique_ptr<MobilityState>(new DamagedMobilityState(*this)));
+        }
     }
 
     bool Hero::isVulnerable() {
@@ -339,6 +350,23 @@ namespace hikari {
         if(newState) {
             nextMobilityState = std::move(newState);
         }
+    }
+
+    void Hero::pushTemporaryMobilityState(std::unique_ptr<MobilityState> && temporaryState) {
+        temporaryMobilityState = std::move(temporaryState);
+
+        if(temporaryMobilityState) {
+            temporaryMobilityState->enter();
+        }
+    }
+
+    void Hero::popTemporaryMobilityState() {
+        if(temporaryMobilityState) {
+            temporaryMobilityState->exit();
+            chooseAnimation();
+        }
+
+        pushTemporaryMobilityState(std::unique_ptr<MobilityState>(nullptr));
     }
 
     void Hero::requestShootingStateChange(std::unique_ptr<ShootingState> && newState) {
