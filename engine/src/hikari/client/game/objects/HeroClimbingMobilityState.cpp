@@ -43,6 +43,7 @@ namespace hikari {
     }
 
     Hero::MobilityState::StateChangeAction Hero::ClimbingMobilityState::update(const float & dt) {
+        hero.body.setGravitated(false);
         hero.body.setTreatLadderTopAsGround(false);
 
         if(hero.actionController) {

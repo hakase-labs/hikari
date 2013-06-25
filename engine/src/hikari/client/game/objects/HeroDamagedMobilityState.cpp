@@ -3,6 +3,7 @@
 #include "hikari/client/game/objects/HeroIdleMobilityState.hpp"
 #include "hikari/client/game/events/EventManager.hpp"
 #include "hikari/client/game/events/EntityDamageEventData.hpp"
+#include "hikari/core/game/SpriteAnimator.hpp"
 #include "hikari/core/game/Direction.hpp"
 #include "hikari/core/math/NESNumber.hpp"
 #include "hikari/core/util/Log.hpp"
@@ -33,11 +34,22 @@ namespace hikari {
             horizontalVelocity.setX(-(NESNumber(0x00, 0x80).toFloat()));
         }
 
+        // Special case for sliding and climbing:
+        // * If damaged mid-slide there is no knockback
+        // * If damaged while climbing there is no knockback
+        if(hero.isSliding || hero.isOnLadder) {
+            horizontalVelocity.setX(0.0f);
+        }
+
         // Ensure we get knocked back
+        hero.body.setGravitated(true);
         hero.body.setApplyHorizontalVelocity(true);
 
         // Make sure we start falling immediately
         hero.setVelocityY(0.0f);
+
+        // Make sure animations will play (like when you're on a ladder)
+        hero.getAnimationPlayer()->unpause();
 
         if(auto events = hero.getEventManager().lock()) {
             events->triggerEvent(EventDataPtr(new EntityDamageEventData(hero.getId(), 0.0f)));
@@ -47,13 +59,14 @@ namespace hikari {
     void Hero::DamagedMobilityState::exit() {
         hero.isStunned = false;
         hero.isBlinking = true;
+        hero.setVelocityX(0.0f);
     }
 
     Hero::MobilityState::StateChangeAction Hero::DamagedMobilityState::update(const float & dt) {
         stunnedTimer -= dt;
 
         if(stunnedTimer <= 0.0f) {
-            hero.requestMobilityStateChange(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
+            // hero.requestMobilityStateChange(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
             return MobilityState::NEXT;
         }
 
