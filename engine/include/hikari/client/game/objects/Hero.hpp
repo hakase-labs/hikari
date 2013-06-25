@@ -66,6 +66,7 @@ namespace hikari {
 
         std::unique_ptr<MobilityState> mobilityState;
         std::unique_ptr<MobilityState> nextMobilityState;
+        std::unique_ptr<MobilityState> temporaryMobilityState;
         std::unique_ptr<ShootingState> shootingState;
         std::unique_ptr<ShootingState> nextShootingState;
 
@@ -104,6 +105,9 @@ namespace hikari {
          * @param newState a pointer to a new MobilityState to enqueue
          */
         void requestMobilityStateChange(std::unique_ptr<MobilityState> && newState);
+
+        void pushTemporaryMobilityState(std::unique_ptr<MobilityState> && temporaryState);
+        void popTemporaryMobilityState();
 
         /**
          * Changes from the current shooting state to another. Before changing,
