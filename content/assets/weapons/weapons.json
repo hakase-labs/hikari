@@ -9,7 +9,11 @@
             { 
                 "type": "spawnProjectile",
                 "projectileType": "Plasma Bullet",
-                "direction": "inherit"
+                "direction": "inherit",
+                "motion": {
+                    "type": "Linear",
+                    "velocity": [4.0, 0]
+                }
             }
         ]
     },

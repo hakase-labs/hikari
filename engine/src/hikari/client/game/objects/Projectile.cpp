@@ -1,5 +1,5 @@
 #include "hikari/client/game/objects/Projectile.hpp"
-// #include "hikari/client/game/objects/ProjectileBrain.hpp"
+#include "hikari/client/game/objects/Motion.hpp"
 #include "hikari/core/game/SpriteAnimator.hpp"
 #include "hikari/core/util/Log.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
@@ -50,6 +50,10 @@ namespace hikari {
 
     void Projectile::update(float dt) {
         Entity::update(dt);
+
+        if(motion) {
+            Vector2<float> newVelocity = motion->calculate(dt, body.getVelocity());
+        }
 
         if(getDirection() == Directions::Left) {
             setVelocityX(-4.0f);

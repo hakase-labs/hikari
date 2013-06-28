@@ -640,11 +640,20 @@ void loadWeapons(const std::shared_ptr<hikari::WeaponTable> & weaponTable) {
         const auto type           = json["type"].asString();
         const auto projectileType = json["projectileType"].asString();
         const auto direction      = json["direction"].asString();
+        const auto motion         = json["motion"];
 
         std::shared_ptr<WeaponAction> action;
 
         if(type == "spawnProjectile") {
             action.reset(new SpawnProjectileWeaponAction(projectileType));
+
+            if(!motion.isNull()) {
+                const auto motionType = motion["type"].asString();
+
+                if(type == "Linear") {
+                    const auto velocity = motion["velocity"];
+                }
+            }
         }
 
         return action;
