@@ -13,7 +13,7 @@ namespace hikari {
     class Projectile : public Entity, public Cloneable<Projectile> {
     private:
         // std::shared_ptr<ProjectileBrain> brain;
-        std::unique_ptr<Motion> motion;
+        std::shared_ptr<Motion> motion;
     public:
         Projectile(int id = GameObject::generateObjectId(), std::shared_ptr<Room> room = nullptr);
         Projectile(const Projectile& proto); 
@@ -26,8 +26,8 @@ namespace hikari {
 
         virtual void handleCollision(Movable& body, CollisionInfo& info);
 
-        // void setBrain(const std::shared_ptr<ProjectileBrain> brain);
-        // const std::shared_ptr<ProjectileBrain>& getBrain() const;
+        void setMotion(const std::shared_ptr<Motion> motion);
+        const std::shared_ptr<Motion>& getMotion() const;
 
     };
 

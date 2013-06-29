@@ -12,7 +12,43 @@
                 "direction": "inherit",
                 "motion": {
                     "type": "Linear",
-                    "velocity": [4.0, 0]
+                    "velocity": [4.0, 0.0]
+                }
+            }
+        ]
+    },
+    {
+        "name": "Triple Mega Buster",
+        "projectileType": "Plasma Bullet",
+        "limit": 3,
+        "usageCost": 0,
+        "usageSound": "Plasma Bullet",
+        "usageActions": [
+            { 
+                "type": "spawnProjectile",
+                "projectileType": "Plasma Bullet",
+                "direction": "inherit",
+                "motion": {
+                    "type": "Linear",
+                    "velocity": [4.0, 0.5]
+                }
+            },
+            { 
+                "type": "spawnProjectile",
+                "projectileType": "Plasma Bullet",
+                "direction": "inherit",
+                "motion": {
+                    "type": "Linear",
+                    "velocity": [4.0, 0.0]
+                }
+            },
+            { 
+                "type": "spawnProjectile",
+                "projectileType": "Plasma Bullet",
+                "direction": "inherit",
+                "motion": {
+                    "type": "Linear",
+                    "velocity": [4.0, -0.5]
                 }
             }
         ]

@@ -3,9 +3,12 @@
 
 #include "hikari/client/game/WeaponAction.hpp"
 
+#include <memory>
 #include <string>
 
 namespace hikari {
+
+  class Motion;
 
   /**
    * A WeaponAction is something that a Weapon uses to perform its action.
@@ -13,9 +16,10 @@ namespace hikari {
   class SpawnProjectileWeaponAction : public WeaponAction {
   private:
     std::string projectileType;
+    std::shared_ptr<Motion> motion;
 
   public:
-    SpawnProjectileWeaponAction(const std::string & projectileType);
+    SpawnProjectileWeaponAction(const std::string & projectileType, const std::shared_ptr<Motion> & motion = std::shared_ptr<Motion>(nullptr));
     virtual ~SpawnProjectileWeaponAction();
     virtual void apply(GameWorld & world, WeaponFireEventData & eventData) const;
   };
