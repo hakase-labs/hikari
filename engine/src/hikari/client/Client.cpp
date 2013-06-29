@@ -31,6 +31,8 @@
 #include "hikari/client/game/objects/EnemyFactory.hpp"
 #include "hikari/client/game/objects/ProjectileFactory.hpp"
 #include "hikari/client/game/objects/FactoryHelpers.hpp"
+#include "hikari/client/game/objects/Motion.hpp"
+#include "hikari/client/game/objects/motions/LinearMotion.hpp"
 
 #include "hikari/core/util/FileSystem.hpp"
 #include "hikari/core/util/Log.hpp"
@@ -640,11 +642,28 @@ void loadWeapons(const std::shared_ptr<hikari::WeaponTable> & weaponTable) {
         const auto type           = json["type"].asString();
         const auto projectileType = json["projectileType"].asString();
         const auto direction      = json["direction"].asString();
+        const auto motion         = json["motion"];
 
         std::shared_ptr<WeaponAction> action;
 
         if(type == "spawnProjectile") {
-            action.reset(new SpawnProjectileWeaponAction(projectileType));
+            std::shared_ptr<Motion> weaponMotion;
+
+            if(!motion.isNull()) {
+                const auto motionType = motion["type"].asString();
+
+                if(motionType == "Linear") {
+                    const auto velocity = motion["velocity"];
+                    const float vX = static_cast<float>(velocity.get(0u, 0.0).asDouble());
+                    const float vY = static_cast<float>(velocity.get(1u, 0.0).asDouble());
+
+                    weaponMotion = std::make_shared<LinearMotion>(Vector2<float>(vX, vY));
+
+                    std::cout << "LINEAR MOTION CREATED" << std::endl;
+                }
+            }
+
+            action.reset(new SpawnProjectileWeaponAction(projectileType, weaponMotion));
         }
 
         return action;
