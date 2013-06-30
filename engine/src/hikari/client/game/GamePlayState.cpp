@@ -1001,7 +1001,7 @@ namespace hikari {
         std::for_each(
             std::begin(activeProjectiles), 
             std::end(activeProjectiles), 
-            [this, &camera, &dt](const std::shared_ptr<Projectile> & projectile) {
+            [this, &activeEnemies, &camera, &dt](const std::shared_ptr<Projectile> & projectile) {
                 projectile->update(dt);
 
                 const auto & cameraView = camera.getView();
@@ -1012,6 +1012,38 @@ namespace hikari {
                     gamePlayState.world.queueObjectRemoval(projectile);
                 }
 
+                // Check Hero -> Enemy projectiles
+                if(projectile->getFaction() == Faction::Hero) {
+
+                    // Check for collision with enemies
+                    std::for_each(
+                        std::begin(activeEnemies), 
+                        std::end(activeEnemies), 
+                        [this, &projectile, &dt](const std::shared_ptr<Enemy> & enemy) {
+                            if(projectile->getBoundingBox().intersects(enemy->getBoundingBox())) {
+                                HIKARI_LOG(debug3) << "Hero bullet " << projectile->getId() << " hit an enemy " << enemy->getId();
+                                projectile->setActive(false);
+                                gamePlayState.world.queueObjectRemoval(projectile);
+
+                                // Trigger enemy damage
+                            }
+                        }
+                    );
+                } else if(projectile->getFaction() == Faction::Enemy) {
+
+                    const auto & hero = gamePlayState.hero;
+
+                    // Check for collision with hero
+                    if(projectile->getBoundingBox().intersects(hero->getBoundingBox())) {
+                        HIKARI_LOG(debug3) << "Enemy bullet " << projectile->getId() << " hit the hero!";
+
+                        if(hero->isVulnerable()) {
+                            hero->performStun();
+                            projectile->setActive(false);
+                            gamePlayState.world.queueObjectRemoval(projectile);
+                        }
+                    }
+                }
         });
 
         // Hero died so we need to restart
