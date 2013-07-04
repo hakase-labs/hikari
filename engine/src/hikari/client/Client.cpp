@@ -2,6 +2,11 @@
 #include "hikari/client/Services.hpp"
 #include "hikari/client/audio/AudioService.hpp"
 #include "hikari/client/game/GameProgress.hpp"
+#include "hikari/client/game/StageSelectState.hpp"
+#include "hikari/client/game/GamePlayState.hpp"
+
+#include "hikari/client/game/PasswordState.hpp"
+#include "hikari/client/game/TitleState.hpp"
 #include "hikari/client/game/WeaponTable.hpp"
 #include "hikari/client/game/objects/EnemyFactory.hpp"
 #include "hikari/client/game/objects/FactoryHelpers.hpp"
@@ -113,7 +118,17 @@ namespace hikari {
         loadObjectTemplates();
 
         // Create controller and game states
-        
+        StatePtr stageSelectState(new StageSelectState("stageselect", gameConfigJson["states"]["select"], services));
+        StatePtr gamePlayState(new GamePlayState("gameplay", gameConfigJson, services));
+        StatePtr passwordState(new PasswordState("password", gameConfigJson, services));
+        StatePtr titleState(new TitleState("title", gameConfigJson, services));
+
+        controller.addState(stageSelectState->getName(), stageSelectState);
+        controller.addState(gamePlayState->getName(), gamePlayState);
+        controller.addState(passwordState->getName(), passwordState);
+        controller.addState(titleState->getName(), titleState);
+
+        controller.setState(gameConfigJson.get("initial-state", "default").asString());
     }
  
     void Client::initLogging(int argc, char** argv) {

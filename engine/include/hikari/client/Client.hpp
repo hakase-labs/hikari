@@ -2,6 +2,7 @@
 #define HIKARI_CLIENT
  
 #include "hikari/client/ClientConfig.hpp"
+#include "hikari/core/game/GameController.hpp"
 #include "hikari/core/util/ServiceLocator.hpp"
 
 #include <json/value.h>
@@ -49,6 +50,7 @@ namespace hikari {
         
         Json::Value gameConfigJson;
         ClientConfig clientConfig;
+        GameController controller;
         ServiceLocator services;
         sf::VideoMode videoMode;
         sf::RenderWindow window;
