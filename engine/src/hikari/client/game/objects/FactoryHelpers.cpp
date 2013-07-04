@@ -12,6 +12,12 @@
 #include "hikari/client/game/objects/effects/ScriptedEffect.hpp"
 #include "hikari/client/game/objects/EnemyBrain.hpp"
 #include "hikari/client/game/objects/brains/ScriptedEnemyBrain.hpp"
+#include "hikari/client/game/Weapon.hpp"
+#include "hikari/client/game/WeaponAction.hpp"
+#include "hikari/client/game/SpawnProjectileWeaponAction.hpp"
+#include "hikari/client/game/WeaponTable.hpp"
+#include "hikari/client/game/objects/Motion.hpp"
+#include "hikari/client/game/objects/motions/LinearMotion.hpp"
 #include "hikari/client/scripting/SquirrelService.hpp"
 
 #include "hikari/core/game/map/Room.hpp"
@@ -332,6 +338,90 @@ namespace FactoryHelpers {
         } else {
             // ImageCache is borked!
             throw HikariException("Cannot populate ProjectileFactory because ImageCache is null.");
+        }
+    }
+
+    void populateWeaponTable(
+        const std::string & descriptorFilePath,
+        const std::weak_ptr<hikari::WeaponTable> & weaponTable,
+        ServiceLocator & services
+    ) {
+        //std::string fileName = "assets/weapons/weapons.json";
+
+        using namespace hikari;
+
+        // This should be another function
+        auto parseWeaponAction = [](const Json::Value & json) -> std::shared_ptr<WeaponAction> {
+            using namespace hikari; // Necessary for MSVC 2010
+
+            const auto type           = json["type"].asString();
+            const auto projectileType = json["projectileType"].asString();
+            const auto direction      = json["direction"].asString();
+            const auto motion         = json["motion"];
+
+            std::shared_ptr<WeaponAction> action;
+
+            if(type == "spawnProjectile") {
+                std::shared_ptr<Motion> weaponMotion;
+
+                if(!motion.isNull()) {
+                    const auto motionType = motion["type"].asString();
+
+                    if(motionType == "Linear") {
+                        const auto velocity = motion["velocity"];
+                        const float vX = static_cast<float>(velocity.get(0u, 0.0).asDouble());
+                        const float vY = static_cast<float>(velocity.get(1u, 0.0).asDouble());
+
+                        weaponMotion = std::make_shared<LinearMotion>(Vector2<float>(vX, vY));
+                    }
+                }
+
+                action.reset(new SpawnProjectileWeaponAction(projectileType, weaponMotion));
+            }
+
+            return action;
+        };
+
+        if(FileSystem::exists(descriptorFilePath)) {
+            if(auto table = weaponTable.lock()) {
+                auto fs = FileSystem::openFile(descriptorFilePath);
+                Json::Reader reader;
+                Json::Value root;
+                bool success = reader.parse(*fs, root, false);
+
+                if(!success) {
+                    HIKARI_LOG(info) << "Weapons couldn't be loaded!";
+                } else {
+                    HIKARI_LOG(debug) << "Loading weapon definitions...";
+
+                    auto templateCount = root.size();
+
+                    if(templateCount > 0) {
+                        for(decltype(templateCount) i = 0; i < templateCount; ++i) {
+                            const auto & templateObject = root[i];
+
+                            const auto name           = templateObject["name"].asString();
+                            const auto projectileType = templateObject["projectileType"].asString();
+                            const auto limit          = templateObject["limit"].asInt();
+                            const auto usageCost      = static_cast<float>(templateObject["usageCost"].asDouble());
+                            const auto usageSound     = templateObject["usageSound"].asString();
+                            const auto usageActions   = templateObject["usageActions"];
+
+                            auto weaponInstance = std::make_shared<Weapon>(name, limit, usageCost);
+                            auto weaponActions = std::vector<std::shared_ptr<WeaponAction>>();
+
+                            auto actionCount = usageActions.size();
+
+                            for(decltype(actionCount) actionIndex = 0; actionIndex < actionCount; ++actionIndex) {
+                                weaponActions.push_back(parseWeaponAction(usageActions[actionIndex]));
+                            }
+
+                            weaponInstance->setActions(weaponActions);
+                            table->addWeapon(weaponInstance);
+                        }
+                    }
+                }
+            }
         }
     }
 } // hikari::FactoryHelpers

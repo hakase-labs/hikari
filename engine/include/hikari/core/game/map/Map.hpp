@@ -27,6 +27,7 @@ namespace hikari {
     class HIKARI_API Map {
     private:
         int gridSize;
+        int musicId;
         unsigned int startingRoomIndex;     // Index of the room in the current map where the hero "starts" from
         unsigned int midpointRoomIndex;     // Index of the room in the current map where the hero spawns from if reached
         unsigned int bossCorridorRoomIndex; // Index of the room where the hero spawns from if he reached the boss chamber
@@ -45,7 +46,7 @@ namespace hikari {
     public:
         static const Rectangle2D<int> INVALID_ROOM_RECT;
 
-        Map(const TileDataPtr &tileset, const int &gridSize, const std::vector<RoomPtr> &rooms, 
+        Map(const TileDataPtr &tileset, const int &gridSize, int musicId, const std::vector<RoomPtr> &rooms, 
             unsigned int startRoomIndex = 0, unsigned int midpointRoomIndex = 0, unsigned int bossCorridorRoomIndex = 0, unsigned int bossChamberRoomIndex = 0);
 
         /**
@@ -62,6 +63,14 @@ namespace hikari {
          * @return size of the grid
          */
         unsigned int getGridSize() const;
+
+        /**
+         * Gets the musicId of this stage. This is the music that is supposed
+         * to be used when this stage is being played.
+         *
+         * @return a musicId
+         */
+        int getMusicId() const;
 
         /**
          * Gets a pointer to the Room specified as the "starting" room.

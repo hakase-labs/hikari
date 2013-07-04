@@ -12,8 +12,9 @@ namespace hikari {
   const char * DEFAULT_PROJECTILE_TYPE = "None";
   const char * DEFAULT_USAGE_SOUND = "None";
 
-  Weapon::Weapon(const std::string & name, float usageCost)
+  Weapon::Weapon(const std::string & name, unsigned int limit, float usageCost)
     : usageCost(usageCost)
+    , limit(limit)
     , name(name)
     , projectileType()
     , usageSound()
@@ -28,6 +29,10 @@ namespace hikari {
 
   float Weapon::getUsageCost() const {
     return usageCost;
+  }
+
+  unsigned int Weapon::getLimit() const {
+    return limit;
   }
 
   const std::string & Weapon::getName() const {

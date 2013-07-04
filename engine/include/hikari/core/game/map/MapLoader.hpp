@@ -27,6 +27,7 @@ namespace hikari {
         static const char* PROPERTY_NAME_TILESET;
         static const char* PROPERTY_NAME_ROOMS;
         static const char* PROPERTY_NAME_GRIDSIZE;
+        static const char* PROPERTY_NAME_MUSICID;
         static const char* PROPERTY_NAME_SPECIAL_ROOMS;
         static const char* PROPERTY_NAME_SPECIAL_ROOM_STARTING;
         static const char* PROPERTY_NAME_SPECIAL_ROOM_MIDPOINT;

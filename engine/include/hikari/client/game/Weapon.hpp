@@ -17,6 +17,7 @@ namespace hikari {
   class Weapon {
   private:
     float usageCost;            /// How much ammunition one "usage" of this weapon is required for it to fire
+    unsigned int limit;         /// How many times the weapon can be fired before it requires cooldown
     std::string name;           /// The unique name of this weapon.
     std::string projectileType; /// The identifier of a particular projectile.
     std::string usageSound;     /// The name of the sample to play when the weapon is used.
@@ -32,11 +33,12 @@ namespace hikari {
     static const char * DEFAULT_PROJECTILE_TYPE;
     static const char * DEFAULT_USAGE_SOUND;
 
-    Weapon(const std::string & name, float usageCost = DEFAULT_USAGE_COST);
+    Weapon(const std::string & name, unsigned int limit, float usageCost = DEFAULT_USAGE_COST);
 
     virtual ~Weapon();
 
     float getUsageCost() const;
+    unsigned int getLimit() const;
     const std::string & getName() const;
     const std::string & getProjectileType() const;
     const std::string & getUsageSound() const;

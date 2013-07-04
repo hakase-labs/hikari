@@ -21,6 +21,7 @@ namespace hikari {
 
     const char* MapLoader::PROPERTY_NAME_TILESET = "tileset";
     const char* MapLoader::PROPERTY_NAME_GRIDSIZE = "gridsize";
+    const char* MapLoader::PROPERTY_NAME_MUSICID = "musicId";
     const char* MapLoader::PROPERTY_NAME_ROOMS = "rooms";
     const char* MapLoader::PROPERTY_NAME_SPECIAL_ROOMS = "specialRooms";
     const char* MapLoader::PROPERTY_NAME_SPECIAL_ROOM_STARTING = "starting";
@@ -72,6 +73,7 @@ namespace hikari {
         // Parse map attributes
         std::string tilesetName = json[PROPERTY_NAME_TILESET].asString();
         int gridSize = json[PROPERTY_NAME_GRIDSIZE].asInt();
+        int musicId = json[PROPERTY_NAME_MUSICID].asInt();
         int roomCount = json[PROPERTY_NAME_ROOMS].size();
 
         TileDataPtr tileset = nullptr;
@@ -105,7 +107,7 @@ namespace hikari {
             bossChamberIndex  = specialRoomIndicies.get(PROPERTY_NAME_SPECIAL_ROOM_BOSS_CHAMBER,  0).asInt();
         }
 
-        return MapPtr(new Map(tileset, gridSize, rooms, startingRoomIndex, midpointRoomIndex, bossCorridorIndex, bossChamberIndex));
+        return MapPtr(new Map(tileset, gridSize, musicId, rooms, startingRoomIndex, midpointRoomIndex, bossCorridorIndex, bossChamberIndex));
     }
 
     RoomPtr MapLoader::constructRoom(const Json::Value &json, int gridSize) const {

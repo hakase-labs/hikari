@@ -72,7 +72,6 @@ namespace hikari {
         std::shared_ptr<EventManager> eventManager;
         std::weak_ptr<WeaponTable> weaponTable;
         std::weak_ptr<GameProgress> gameProgress;
-        std::shared_ptr<ImageFont> guiFont;
         std::shared_ptr<ImageCache> imageCache;
         std::shared_ptr<RealTimeInput> userInput;
         std::shared_ptr<SquirrelService> scriptEnv;
@@ -82,6 +81,7 @@ namespace hikari {
         std::shared_ptr<Hero> hero;
         std::unique_ptr<MapRenderer> mapRenderer;
         std::unique_ptr<SubState> subState;
+        std::unique_ptr<SubState> nextSubState;
         std::unique_ptr<gcn::Container> guiContainer;
         std::unique_ptr<gui::EnergyGauge> guiBossEnergyGauge;
         std::unique_ptr<gui::EnergyGauge> guiHeroEnergyGauge;
@@ -89,6 +89,7 @@ namespace hikari {
         std::unique_ptr<gui::Panel> guiMenuPanel;
         std::unique_ptr<gcn::Label> guiLivesLabel;
         std::unique_ptr<gcn::Label> guiETanksLabel;
+        std::unique_ptr<gcn::Label> guiReadyLabel;
         std::unique_ptr<KeyboardInput> keyboardInput;
         std::map< std::string, std::shared_ptr<Map> > maps;
         std::vector<std::weak_ptr<Spawner>> itemSpawners;
@@ -115,6 +116,7 @@ namespace hikari {
         // Gameplay Mechanics
         //
         void changeSubState(std::unique_ptr<SubState> && newSubState);
+        void requestSubStateChange(std::unique_ptr<SubState> && newSubState);
         void changeCurrentRoom(const std::shared_ptr<Room>& newCurrentRoom);
 
         /**
@@ -203,10 +205,14 @@ namespace hikari {
             GamePlayState & gamePlayState;
             SubState(GamePlayState & gamePlayState);
         public:
+            enum StateChangeAction {
+                CONTINUE,
+                NEXT
+            };
             virtual ~SubState() { };
             virtual void enter() = 0;
             virtual void exit() = 0;
-            virtual void update(const float & dt) = 0;
+            virtual StateChangeAction update(const float & dt) = 0;
             virtual void render(sf::RenderTarget &target) = 0;
         };
 
@@ -225,7 +231,7 @@ namespace hikari {
             virtual ~ReadySubState();
             virtual void enter();
             virtual void exit();
-            virtual void update(const float & dt);
+            virtual StateChangeAction update(const float & dt);
             virtual void render(sf::RenderTarget &target);
         };
 
@@ -241,7 +247,7 @@ namespace hikari {
             virtual ~TeleportSubState();
             virtual void enter();
             virtual void exit();
-            virtual void update(const float & dt);
+            virtual StateChangeAction update(const float & dt);
             virtual void render(sf::RenderTarget &target);
         };
 
@@ -256,7 +262,7 @@ namespace hikari {
             virtual ~PlayingSubState();
             virtual void enter();
             virtual void exit();
-            virtual void update(const float & dt);
+            virtual StateChangeAction update(const float & dt);
             virtual void render(sf::RenderTarget &target);
         };
 
@@ -285,7 +291,7 @@ namespace hikari {
             virtual ~TransitionSubState();
             virtual void enter();
             virtual void exit();
-            virtual void update(const float & dt);
+            virtual StateChangeAction update(const float & dt);
             virtual void render(sf::RenderTarget &target);
         };
 
