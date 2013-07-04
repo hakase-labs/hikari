@@ -64,7 +64,7 @@ namespace hikari {
     }
  
     void Client::deinitFileSystem() {
- 
+        PhysFS::deinit();
     }
  
     void Client::loadScriptingEnvironment() {

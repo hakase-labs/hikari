@@ -17,8 +17,18 @@ namespace hikari {
         static const unsigned int SCREEN_WIDTH;
         static const unsigned int SCREEN_HEIGHT;
         static const unsigned int SCREEN_BITS_PER_PIXEL;
- 
+        
+        /**
+         * Initializes the client from the configuration file.
+         */
         void initConfig();
+
+        /**
+         * Initializes the virtual file system used to load content files.
+         *
+         * @param  argc the argument count
+         * @param  argv c-style string containing program arguments
+         */
         void initFileSystem(int argc, char** argv);
         void initGame();
         void initLogging(int argc, char** argv);
