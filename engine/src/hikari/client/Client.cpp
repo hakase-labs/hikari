@@ -111,6 +111,9 @@ namespace hikari {
     void Client::initGame() {
         loadScriptingEnvironment();
         loadObjectTemplates();
+
+        // Create controller and game states
+        
     }
  
     void Client::initLogging(int argc, char** argv) {
@@ -161,7 +164,37 @@ namespace hikari {
     }
  
     void Client::loadObjectTemplates() {
- 
+        if(auto itemFactory = services.locateService<ItemFactory>(Services::ITEMFACTORY).lock()) {
+            FactoryHelpers::populateCollectableItemFactory(
+                "assets/templates/items.json",
+                std::weak_ptr<ItemFactory>(itemFactory),
+                services
+            );
+        }
+
+        if(auto enemyFactory = services.locateService<EnemyFactory>(Services::ENEMYFACTORY).lock()) {
+            FactoryHelpers::populateEnemyFactory(
+                "assets/templates/enemies.json",
+                std::weak_ptr<EnemyFactory>(enemyFactory),
+                services
+            );
+        }
+
+        if(auto projectileFactory = services.locateService<ProjectileFactory>(Services::PROJECTILEFACTORY).lock()) {
+            FactoryHelpers::populateProjectileFactory(
+                "assets/templates/projectiles.json",
+                std::weak_ptr<ProjectileFactory>(projectileFactory),
+                services
+            );
+        }
+
+        if(auto weaponTable = services.locateService<WeaponTable>(Services::WEAPONTABLE).lock()) {
+            FactoryHelpers::populateWeaponTable(
+                "assets/weapons/weapons.json",
+                std::weak_ptr<WeaponTable>(weaponTable),
+                services
+            );
+        }
     }
 
     void Client::loop() {
@@ -174,12 +207,15 @@ namespace hikari {
                 if(event.type == sf::Event::Closed) {
                     quit = true;
                 }
+
+                // guiService->processEvent(event);
             }
         }
     }
 
     int Client::run() {
-        sf::Clock clock;
+        // Due to some weirdness between OSX, Windows, and Linux, the window
+        // needs to be created before anything serious can be done.
         window.create(videoMode, APP_TITLE, sf::Style::Default);
         window.setActive(true);
         window.setVerticalSyncEnabled(clientConfig.isVsyncEnabled());
