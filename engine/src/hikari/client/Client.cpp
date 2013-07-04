@@ -26,6 +26,8 @@
 #include "hikari/core/util/PhysFS.hpp"
 #include "hikari/core/util/TilesetCache.hpp"
 
+#include <guichan/gui.hpp>
+
 #include <json/reader.h>
  
 namespace hikari {
@@ -217,14 +219,79 @@ namespace hikari {
         sf::Event event;
         bool quit = false;
 
+        const float dt = 1.0f/60.0f;
+        float totalRuntime = 0.0f;
+        float speedMultiplier = 1.0f;
+
+        sf::Time currentTime = clock.getElapsedTime();
+        float accumulator = 0.0f;
+
+        auto guiService = services.locateService<GuiService>(Services::GUISERVICE).lock();
+
+        gcn::Gui & gui = guiService->getGui();
+
         while(!quit) {
-            while(window.pollEvent(event)) {
-                if(event.type == sf::Event::Closed) {
-                    quit = true;
+
+            //
+            // Logic
+            //
+
+            sf::Time newTime = clock.getElapsedTime();
+            float frameTime = newTime.asSeconds() - currentTime.asSeconds();
+            currentTime = newTime;
+            accumulator += frameTime;
+            // float fps = 1.0f / frameTime;
+
+            while(accumulator >= dt) {
+                while(window.pollEvent(event)) {
+                    if(event.type == sf::Event::Closed) {
+                        quit = true;
+                    }
+
+                    if(event.type == sf::Event::KeyPressed) {
+                        controller.handleEvent(event);
+                    }
+
+                    if(guiService) {
+                        guiService->processEvent(event);
+                    }
+
+                    if(gui.getTop()) {
+                        gui.logic();    
+                    }
                 }
 
-                // guiService->processEvent(event);
+                controller.update(dt * speedMultiplier);
+                accumulator -= dt;
+                totalRuntime += dt;
             }
+
+            //
+            // Rendering
+            //
+            
+            window.clear(sf::Color::Blue);
+            screenBuffer.clear(sf::Color::Magenta);
+            controller.render(screenBuffer);
+            window.setView(screenBufferView);
+
+            // if(showFPS) {
+            //     guiFpsLabel->setCaption(StringUtils::toString(fps));
+            //     guiFpsLabel->adjustSize();
+            // }
+
+            if(gui.getTop()) {
+                gui.draw();
+            }
+
+            // console.render(screenBuffer);
+
+            screenBuffer.display();
+
+            sf::Sprite renderSprite(screenBuffer.getTexture());
+
+            window.draw(renderSprite);
+            window.display();
         }
     }
 
@@ -236,6 +303,14 @@ namespace hikari {
         window.setVerticalSyncEnabled(clientConfig.isVsyncEnabled());
         window.setKeyRepeatEnabled(false);
         screenBuffer.create(videoMode.width, videoMode.height);
+
+        screenBufferView.setSize(
+            static_cast<float>(videoMode.width),
+            static_cast<float>(videoMode.height));
+
+        screenBufferView.setCenter(
+            static_cast<float>(videoMode.width / 2),
+            static_cast<float>(videoMode.height / 2));
 
         initServices();
         initGame();

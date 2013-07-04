@@ -55,6 +55,7 @@ namespace hikari {
         sf::VideoMode videoMode;
         sf::RenderWindow window;
         sf::RenderTexture screenBuffer;
+        sf::View screenBufferView;
  
     public:
         Client(int argc, char** argv);
