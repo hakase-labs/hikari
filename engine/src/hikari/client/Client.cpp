@@ -164,6 +164,20 @@ namespace hikari {
  
     }
 
+    void Client::loop() {
+        sf::Clock clock;
+        sf::Event event;
+        bool quit = false;
+
+        while(!quit) {
+            while(window.pollEvent(event)) {
+                if(event.type == sf::Event::Closed) {
+                    quit = true;
+                }
+            }
+        }
+    }
+
     int Client::run() {
         sf::Clock clock;
         window.create(videoMode, APP_TITLE, sf::Style::Default);
@@ -175,16 +189,7 @@ namespace hikari {
         initServices();
         initGame();
 
-        sf::Event event;
-        bool quit = false;
-
-        while(!quit) {
-            while(window.pollEvent(event)) {
-                if(event.type == sf::Event::Closed) {
-                    quit = true;
-                }
-            }
-        }
+        loop();
 
         return 0;
     }

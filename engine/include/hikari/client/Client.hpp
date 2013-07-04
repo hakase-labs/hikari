@@ -44,6 +44,8 @@ namespace hikari {
  
         void loadScriptingEnvironment();
         void loadObjectTemplates();
+
+        void loop();
         
         Json::Value gameConfigJson;
         ClientConfig clientConfig;
