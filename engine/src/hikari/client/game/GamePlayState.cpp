@@ -92,6 +92,7 @@ namespace hikari {
         , guiMenuPanel(new gui::Panel())
         , guiLivesLabel(new gcn::Label())
         , guiETanksLabel(new gcn::Label())
+        , guiReadyLabel(new gcn::Label())
         , keyboardInput(new KeyboardInput())
         , maps()
         , itemSpawners()
@@ -203,6 +204,15 @@ namespace hikari {
 
         guiLivesLabel->setVisible(true);
         guiETanksLabel->setVisible(true);
+
+        guiReadyLabel->setX(108);
+        guiReadyLabel->setY(121);
+        guiReadyLabel->setCaption("READY");
+        guiReadyLabel->setAlignment(gcn::Graphics::Left);
+        guiReadyLabel->adjustSize();
+        guiReadyLabel->setVisible(false);
+
+        guiContainer->add(guiReadyLabel.get());
     }
 
     void GamePlayState::handleEvent(sf::Event &event) {
@@ -674,6 +684,8 @@ namespace hikari {
 
         fadeOverlay.setPosition(0.0f, 0.0f);
         fadeOverlay.setFillColor(sf::Color::Black);
+
+        gamePlayState.guiReadyLabel->setVisible(false);
     }
 
     GamePlayState::ReadySubState::~ReadySubState() {
@@ -773,6 +785,8 @@ namespace hikari {
         if(timer >= ((24.0f + 15.0f + 15.0f + 15.0f + 3.0f) * frameMs)) {
             renderReadyText = false;
         }
+
+        gamePlayState.guiReadyLabel->setVisible(renderReadyText);
 
         // The "READY" sequence is 76 frames long, ~1.2666 seconds.
         if(timer >= (76.0f * frameMs)) {

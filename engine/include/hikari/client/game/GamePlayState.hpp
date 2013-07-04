@@ -88,6 +88,7 @@ namespace hikari {
         std::unique_ptr<gui::Panel> guiMenuPanel;
         std::unique_ptr<gcn::Label> guiLivesLabel;
         std::unique_ptr<gcn::Label> guiETanksLabel;
+        std::unique_ptr<gcn::Label> guiReadyLabel;
         std::unique_ptr<KeyboardInput> keyboardInput;
         std::map< std::string, std::shared_ptr<Map> > maps;
         std::vector<std::weak_ptr<Spawner>> itemSpawners;
