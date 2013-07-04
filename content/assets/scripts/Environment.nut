@@ -48,4 +48,4 @@ function log(message) {
     ::hikari.internal.log(message);
 }
 
-::print("Scripting environment is ready.");
+log("Scripting environment is ready.");
