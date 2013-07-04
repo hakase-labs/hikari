@@ -85,6 +85,7 @@ namespace hikari {
         , hero(nullptr)
         , mapRenderer(new MapRenderer(nullptr, nullptr))
         , subState(nullptr)
+        , nextSubState(nullptr)
         , guiContainer(new gcn::Container())
         , guiBossEnergyGauge(new gui::EnergyGauge())
         , guiHeroEnergyGauge(new gui::EnergyGauge())
@@ -260,8 +261,17 @@ namespace hikari {
         }
 
         if(subState) {
+            // "Pause" th substate if the menu is being shown
             if(!isViewingMenu) {
-                subState->update(dt);
+
+                // Handle state change request actions...
+                SubState::StateChangeAction action = subState->update(dt);
+
+                if(SubState::NEXT == action) {
+                    if(nextSubState) {
+                        changeSubState(std::move(nextSubState));
+                    }
+                }
             }
         }
 
@@ -303,6 +313,12 @@ namespace hikari {
             }
             subState = std::move(newSubState);
             subState->enter();
+        }
+    }
+
+    void GamePlayState::requestSubStateChange(std::unique_ptr<SubState> && newSubState) {
+        if(newSubState) {
+            nextSubState = std::move(newSubState);
         }
     }
 
@@ -735,7 +751,7 @@ namespace hikari {
 
     }
 
-    void GamePlayState::ReadySubState::update(const float & dt) {
+    GamePlayState::SubState::StateChangeAction GamePlayState::ReadySubState::update(const float & dt) {
         const float frameMs = (1.0f/60.0f);
 
         timer += dt;
@@ -789,8 +805,11 @@ namespace hikari {
 
         // The "READY" sequence is 76 frames long, ~1.2666 seconds.
         if(timer >= (76.0f * frameMs)) {
-            gamePlayState.changeSubState(std::unique_ptr<SubState>(new TeleportSubState(gamePlayState)));
+            gamePlayState.requestSubStateChange(std::unique_ptr<SubState>(new TeleportSubState(gamePlayState)));
+            return SubState::NEXT;
         }
+
+        return SubState::CONTINUE;
     }
 
     void GamePlayState::ReadySubState::render(sf::RenderTarget &target) {
@@ -859,7 +878,7 @@ namespace hikari {
 
     }
 
-    void GamePlayState::TeleportSubState::update(const float & dt) {
+    GamePlayState::SubState::StateChangeAction GamePlayState::TeleportSubState::update(const float & dt) {
         auto& hero = gamePlayState.hero;
         auto& heroPosition = hero->getPosition();
         const float verticalTeleportSpeedPerFrame = 16.0f;
@@ -872,8 +891,11 @@ namespace hikari {
             hero->setPosition(heroPosition.getX(), heroPosition.getY() + deltaY);
         } else {
             hero->performMorph();
-            gamePlayState.changeSubState(std::unique_ptr<SubState>(new PlayingSubState(gamePlayState)));
+            gamePlayState.requestSubStateChange(std::unique_ptr<SubState>(new PlayingSubState(gamePlayState)));
+            return SubState::NEXT;
         }
+
+        return SubState::CONTINUE;
     }
 
     void GamePlayState::TeleportSubState::render(sf::RenderTarget &target) {
@@ -920,7 +942,7 @@ namespace hikari {
 
     }
 
-    void GamePlayState::PlayingSubState::update(const float & dt) {
+    GamePlayState::SubState::StateChangeAction GamePlayState::PlayingSubState::update(const float & dt) {
         auto& camera = gamePlayState.camera;
 
         auto playerPosition = gamePlayState.world.getPlayerPosition();
@@ -1063,9 +1085,9 @@ namespace hikari {
 
             // Wait 1 second after you died and then restart
             if(postDeathTimer >= 2.5f) {
-                // gamePlayState.changeSubState(std::unique_ptr<SubState>(new ReadySubState(gamePlayState)));
+                // gamePlayState.requestSubStateChange(std::unique_ptr<SubState>(new ReadySubState(gamePlayState)));
                 gamePlayState.startRound();
-                return;
+                return SubState::NEXT;
             }
         } else {
             // TODO: Note to self -- this seems pretty convoluted... probably change this soon please.
@@ -1119,10 +1141,13 @@ namespace hikari {
 
             if(transitionBounds.contains(hero->getBoundingBox())) {
                 HIKARI_LOG(debug) << "Transitioning from room " << currentRoom->getId() << " to room " << transition.getToRegion();
-                gamePlayState.changeSubState(std::unique_ptr<SubState>(new TransitionSubState(gamePlayState, transition)));
+                gamePlayState.requestSubStateChange(std::unique_ptr<SubState>(new TransitionSubState(gamePlayState, transition)));
+                return SubState::NEXT;
                 break;
             }
         }
+
+        return SubState::CONTINUE;
     }
 
     void GamePlayState::PlayingSubState::render(sf::RenderTarget &target) {
@@ -1232,7 +1257,7 @@ namespace hikari {
         gamePlayState.changeCurrentRoom(nextRoom);
     }
 
-    void GamePlayState::TransitionSubState::update(const float & dt) {
+    GamePlayState::SubState::StateChangeAction GamePlayState::TransitionSubState::update(const float & dt) {
         auto & camera = gamePlayState.camera;
         auto & hero = gamePlayState.hero;
 
@@ -1297,8 +1322,11 @@ namespace hikari {
         }
 
         if(transitionFinished) {
-            gamePlayState.changeSubState(std::unique_ptr<SubState>(new PlayingSubState(gamePlayState)));
+            gamePlayState.requestSubStateChange(std::unique_ptr<SubState>(new PlayingSubState(gamePlayState)));
+            return SubState::NEXT;
         }
+
+        return SubState::CONTINUE;
     }
 
     void GamePlayState::TransitionSubState::render(sf::RenderTarget &target) {

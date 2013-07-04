@@ -81,6 +81,7 @@ namespace hikari {
         std::shared_ptr<Hero> hero;
         std::unique_ptr<MapRenderer> mapRenderer;
         std::unique_ptr<SubState> subState;
+        std::unique_ptr<SubState> nextSubState;
         std::unique_ptr<gcn::Container> guiContainer;
         std::unique_ptr<gui::EnergyGauge> guiBossEnergyGauge;
         std::unique_ptr<gui::EnergyGauge> guiHeroEnergyGauge;
@@ -115,6 +116,7 @@ namespace hikari {
         // Gameplay Mechanics
         //
         void changeSubState(std::unique_ptr<SubState> && newSubState);
+        void requestSubStateChange(std::unique_ptr<SubState> && newSubState);
         void changeCurrentRoom(const std::shared_ptr<Room>& newCurrentRoom);
 
         /**
@@ -203,10 +205,14 @@ namespace hikari {
             GamePlayState & gamePlayState;
             SubState(GamePlayState & gamePlayState);
         public:
+            enum StateChangeAction {
+                CONTINUE,
+                NEXT
+            };
             virtual ~SubState() { };
             virtual void enter() = 0;
             virtual void exit() = 0;
-            virtual void update(const float & dt) = 0;
+            virtual StateChangeAction update(const float & dt) = 0;
             virtual void render(sf::RenderTarget &target) = 0;
         };
 
@@ -225,7 +231,7 @@ namespace hikari {
             virtual ~ReadySubState();
             virtual void enter();
             virtual void exit();
-            virtual void update(const float & dt);
+            virtual StateChangeAction update(const float & dt);
             virtual void render(sf::RenderTarget &target);
         };
 
@@ -241,7 +247,7 @@ namespace hikari {
             virtual ~TeleportSubState();
             virtual void enter();
             virtual void exit();
-            virtual void update(const float & dt);
+            virtual StateChangeAction update(const float & dt);
             virtual void render(sf::RenderTarget &target);
         };
 
@@ -256,7 +262,7 @@ namespace hikari {
             virtual ~PlayingSubState();
             virtual void enter();
             virtual void exit();
-            virtual void update(const float & dt);
+            virtual StateChangeAction update(const float & dt);
             virtual void render(sf::RenderTarget &target);
         };
 
@@ -285,7 +291,7 @@ namespace hikari {
             virtual ~TransitionSubState();
             virtual void enter();
             virtual void exit();
-            virtual void update(const float & dt);
+            virtual StateChangeAction update(const float & dt);
             virtual void render(sf::RenderTarget &target);
         };
 
