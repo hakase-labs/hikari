@@ -373,8 +373,6 @@ namespace FactoryHelpers {
                         const float vY = static_cast<float>(velocity.get(1u, 0.0).asDouble());
 
                         weaponMotion = std::make_shared<LinearMotion>(Vector2<float>(vX, vY));
-
-                        // std::cout << "LINEAR MOTION CREATED" << std::endl;
                     }
                 }
 
@@ -417,8 +415,6 @@ namespace FactoryHelpers {
                             for(decltype(actionCount) actionIndex = 0; actionIndex < actionCount; ++actionIndex) {
                                 weaponActions.push_back(parseWeaponAction(usageActions[actionIndex]));
                             }
-
-                            //weaponActions.push_back(std::make_shared<WeaponAction>());
 
                             weaponInstance->setActions(weaponActions);
                             table->addWeapon(weaponInstance);
