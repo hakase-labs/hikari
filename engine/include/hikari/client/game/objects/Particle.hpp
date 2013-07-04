@@ -41,8 +41,11 @@ namespace hikari {
         virtual void update(float dt);
         virtual void render(sf::RenderTarget &target);
 
-        void setVelocity(const Vector2<float> velocity);
-        const Vector2<float> getVelocity() const;
+        void setVelocity(const Vector2<float> & velocity);
+        const Vector2<float> & getVelocity() const;
+
+        void setBoundingBox(const BoundingBox<float> & boundingBox);
+        const BoundingBox<float> & getBoundingBox() const;
     };
 
 } // hikari

@@ -289,7 +289,7 @@ namespace hikari {
         Movable::setGravity(0.25f);
 
         // Determine which stage we're on and set that to the current level...
-        currentMap = maps.at("map-test2.json");
+        currentMap = maps.at("map-test4.json");
 
         startStage();
     }
@@ -1052,11 +1052,11 @@ namespace hikari {
                     std::for_each(
                         std::begin(activeEnemies), 
                         std::end(activeEnemies), 
-                        [this, &projectile, &dt](const std::shared_ptr<Enemy> & enemy) {
+                        [&](const std::shared_ptr<Enemy> & enemy) {
                             if(projectile->getBoundingBox().intersects(enemy->getBoundingBox())) {
                                 HIKARI_LOG(debug3) << "Hero bullet " << projectile->getId() << " hit an enemy " << enemy->getId();
                                 projectile->setActive(false);
-                                gamePlayState.world.queueObjectRemoval(projectile);
+                                gamePlayState.world.queueObjectRemoval(projectile); 
 
                                 // Trigger enemy damage
                             }
