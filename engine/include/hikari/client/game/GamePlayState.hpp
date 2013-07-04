@@ -72,7 +72,6 @@ namespace hikari {
         std::shared_ptr<EventManager> eventManager;
         std::weak_ptr<WeaponTable> weaponTable;
         std::weak_ptr<GameProgress> gameProgress;
-        std::shared_ptr<ImageFont> guiFont;
         std::shared_ptr<ImageCache> imageCache;
         std::shared_ptr<RealTimeInput> userInput;
         std::shared_ptr<SquirrelService> scriptEnv;

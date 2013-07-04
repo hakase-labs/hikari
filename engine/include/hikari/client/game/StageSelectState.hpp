@@ -42,7 +42,6 @@ namespace hikari {
         std::weak_ptr<GuiService> guiService;
         std::weak_ptr<AudioService> audioService;
         std::weak_ptr<GameProgress> gameProgress;
-        std::weak_ptr<ImageFont> guiFont;
         std::unique_ptr<::gcn::Container> guiContainer;
         std::unique_ptr<::gcn::Label> guiSelectedCellLabel;
 

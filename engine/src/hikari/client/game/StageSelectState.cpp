@@ -43,7 +43,6 @@ namespace hikari {
         , guiService(services.locateService<GuiService>(Services::GUISERVICE))
         , audioService(services.locateService<AudioService>(Services::AUDIO))
         , gameProgress(services.locateService<GameProgress>(Services::GAMEPROGRESS))
-        , guiFont(services.locateService<ImageFont>(Services::GUIFONT))
         , guiContainer(new gcn::Container())
         , guiSelectedCellLabel(new gcn::Label())
         , cursorRow(DEFAULT_CURSOR_ROW)
@@ -100,7 +99,7 @@ namespace hikari {
     }
 
     StageSelectState::~StageSelectState() {
-        
+
     }
 
     void StageSelectState::calculateCursorIndex() {

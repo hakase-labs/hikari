@@ -39,7 +39,6 @@
 #include "hikari/core/game/map/Room.hpp"
 #include "hikari/core/game/map/RoomTransition.hpp"
 #include "hikari/core/geom/GeometryUtils.hpp"
-#include "hikari/core/gui/ImageFont.hpp"
 #include "hikari/core/util/ImageCache.hpp"
 #include "hikari/core/util/JsonUtils.hpp"
 #include "hikari/core/util/FileSystem.hpp"
@@ -77,7 +76,6 @@ namespace hikari {
         , eventManager(new EventManagerImpl("GamePlayEvents", false))
         , weaponTable(services.locateService<WeaponTable>(Services::WEAPONTABLE))
         , gameProgress(services.locateService<GameProgress>(Services::GAMEPROGRESS))
-        , guiFont(services.locateService<ImageFont>(Services::GUIFONT))
         , imageCache(services.locateService<ImageCache>(Services::IMAGECACHE))
         , userInput(new RealTimeInput())
         , scriptEnv(services.locateService<SquirrelService>(Services::SCRIPTING))
@@ -790,7 +788,7 @@ namespace hikari {
         }
 
         if(renderReadyText) {
-            gamePlayState.guiFont->renderText(target, "READY", 108, 121);
+            // gamePlayState.guiFont->renderText(target, "READY", 108, 121);
         }
     }
 
