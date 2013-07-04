@@ -99,6 +99,10 @@ namespace hikari {
         buildGui();
     }
 
+    StageSelectState::~StageSelectState() {
+        
+    }
+
     void StageSelectState::calculateCursorIndex() {
         cursorIndex = (cursorRow * NUM_OF_CURSOR_ROWS) + cursorColumn;
     }

@@ -18,7 +18,6 @@ namespace sf {
     class Sprite;
 }
 
-
 namespace gcn {
     class Container;
     class Label;
@@ -44,8 +43,8 @@ namespace hikari {
         std::weak_ptr<AudioService> audioService;
         std::weak_ptr<GameProgress> gameProgress;
         std::weak_ptr<ImageFont> guiFont;
-        std::unique_ptr<gcn::Container> guiContainer;
-        std::unique_ptr<gcn::Label> guiSelectedCellLabel;
+        std::unique_ptr<::gcn::Container> guiContainer;
+        std::unique_ptr<::gcn::Label> guiSelectedCellLabel;
 
         sf::Sprite background;
         sf::Sprite foreground;
@@ -82,7 +81,7 @@ namespace hikari {
 
     public:
         StageSelectState(const std::string &name, const Json::Value &params, ServiceLocator &services);
-        virtual ~StageSelectState() {}
+        virtual ~StageSelectState();
 
         virtual void handleEvent(sf::Event &event);
         virtual void render(sf::RenderTarget &target);
