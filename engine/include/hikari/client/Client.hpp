@@ -13,6 +13,7 @@ namespace hikari {
         static const std::string APP_TITLE;
         static const std::string PATH_CONTENT;
         static const std::string PATH_CUSTOM_CONTENT;
+        static const std::string PATH_CONFIG_FILE;
  
         static const unsigned int SCREEN_WIDTH;
         static const unsigned int SCREEN_HEIGHT;
