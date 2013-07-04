@@ -1,6 +1,7 @@
 {
   "tileset": "assets/tilesets/tiles-wily1.json",
   "gridsize": 16,
+  "musicId": 7,
   "specialRooms": {
     "starting": 0,
     "midpoint": 0,

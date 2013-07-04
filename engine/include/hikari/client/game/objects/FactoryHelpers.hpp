@@ -13,6 +13,7 @@ namespace hikari {
     class EnemyFactory;
     class ItemFactory;
     class ProjectileFactory;
+    class WeaponTable;
 
 namespace FactoryHelpers {
 
@@ -34,7 +35,8 @@ namespace FactoryHelpers {
     );
 
     /**
-     *  Populates an EnemyFactory with prototype instances loaded from a descriptor file.
+     * Populates an EnemyFactory with prototype instances loaded from a 
+     * descriptor file.
      *
      * This function loads a descriptor file and creates instances of enemies
      * to be used as prototypes. These prototypes are then injected into a 
@@ -50,9 +52,35 @@ namespace FactoryHelpers {
         ServiceLocator & services
     );
 
+    /**
+     * Populates an ProjectileFactory with prototype instances loaded from a 
+     * descriptor file.
+     *
+     * This function loads a descriptor file and creates instances of 
+     * projectiles to be used as prototypes. These prototypes are then injected
+     * into a specified factory.
+     *
+     * @param descriptorFilePath the path to the descriptor file
+     * @param factory            the factory to populate
+     * @param services           the service locator
+     */
     void populateProjectileFactory(
         const std::string & descriptorFilePath,
         const std::weak_ptr<hikari::ProjectileFactory> & factory,
+        ServiceLocator & services
+    );
+
+    /**
+     * Populates a WeaponTable with instances of Weapons by parsing and 
+     * instantiating the Weapon instances from a descriptor file.
+     *
+     * @param descriptorFilePath the path to the descriptor file
+     * @param weaponTable        a weapon table to populate
+     * @param services           the service locator
+     */
+    void populateWeaponTable(
+        const std::string & descriptorFilePath,
+        const std::weak_ptr<hikari::WeaponTable> & weaponTable,
         ServiceLocator & services
     );
 

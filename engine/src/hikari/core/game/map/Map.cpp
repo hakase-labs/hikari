@@ -8,9 +8,10 @@ namespace hikari {
 
     const Rectangle2D<int> Map::INVALID_ROOM_RECT = Rectangle2D<int>();
 
-    Map::Map(const TileDataPtr &tileset, const int &gridSize, const std::vector<RoomPtr> &rooms,
+    Map::Map(const TileDataPtr &tileset, const int &gridSize, int musicId, const std::vector<RoomPtr> &rooms,
             unsigned int startingRoomIndex, unsigned int midpointRoomIndex, unsigned int bossCorridorRoomIndex, unsigned int bossChamberRoomIndex)
         : gridSize(gridSize)
+        , musicId(musicId)
         , startingRoomIndex(startingRoomIndex)
         , midpointRoomIndex(midpointRoomIndex)
         , bossCorridorRoomIndex(bossCorridorRoomIndex)
@@ -27,6 +28,10 @@ namespace hikari {
 
     unsigned int Map::getGridSize() const {
         return gridSize;
+    }
+
+    int Map::getMusicId() const {
+        return musicId;
     }
 
     RoomPtr Map::getStartingRoom() const {
