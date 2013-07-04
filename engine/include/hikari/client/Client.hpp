@@ -3,7 +3,11 @@
  
 #include "hikari/client/ClientConfig.hpp"
 #include "hikari/core/util/ServiceLocator.hpp"
- 
+
+#include <json/value.h>
+
+#include <SFML/Graphics.hpp>
+
 #include <string>
  
 namespace hikari {
@@ -14,6 +18,7 @@ namespace hikari {
         static const std::string PATH_CONTENT;
         static const std::string PATH_CUSTOM_CONTENT;
         static const std::string PATH_CONFIG_FILE;
+        static const std::string PATH_GAME_CONFIG_FILE;
  
         static const unsigned int SCREEN_WIDTH;
         static const unsigned int SCREEN_HEIGHT;
@@ -39,9 +44,13 @@ namespace hikari {
  
         void loadScriptingEnvironment();
         void loadObjectTemplates();
- 
+        
+        Json::Value gameConfigJson;
         ClientConfig clientConfig;
         ServiceLocator services;
+        sf::VideoMode videoMode;
+        sf::RenderWindow window;
+        sf::RenderTexture screenBuffer;
  
     public:
         Client(int argc, char** argv);
