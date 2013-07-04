@@ -1,6 +1,7 @@
 {
 	"tileset" : "assets/tilesets/tiles-skull.json",
 	"gridsize" : 16,
+	"musicId" : 4,
 	"rooms": [
 		{
 			"id" : 0,

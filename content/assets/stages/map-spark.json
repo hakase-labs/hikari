@@ -1,6 +1,7 @@
 {
 	"tileset" : "assets/tilesets/tiles-spark.json",
 	"gridsize" : 16,
+	"musicId" : 5,
 	"rooms": [
 		{
 			"id" : 0,

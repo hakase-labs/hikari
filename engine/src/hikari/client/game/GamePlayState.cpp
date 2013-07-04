@@ -705,9 +705,8 @@ namespace hikari {
         fadeOverlay.setFillColor(overlayColor);
 
         if(auto sound = gamePlayState.audioService.lock()) {
-            // TODO: Obtain the correct MusicId for the level and play that.
             HIKARI_LOG(debug) << "Playing music for the level!";
-            sound->playMusic(3);
+            sound->playMusic(gamePlayState.currentMap->getMusicId());
         }
 
         if(gamePlayState.currentRoom) {

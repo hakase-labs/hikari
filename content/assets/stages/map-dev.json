@@ -1,6 +1,7 @@
 {
     "tileset" : "assets/tilesets/tiles-dev.json",
     "gridsize" : 16,
+    "musicId" : 3,
     "rooms": [
         {
             "id" : 0,
