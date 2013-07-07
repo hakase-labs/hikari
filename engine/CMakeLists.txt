@@ -246,6 +246,8 @@ set( ENGINE_SOURCE_FILES
     src/hikari/core/util/TilesetCache.cpp
 )
 
+# SOURCE_GROUP(hikari FILES ${ENGINE_SOURCE_FILES})
+
 set( HIKARI_SOURCE_FILES
     ${GME_SOURCE_FILES}
     ${JSONCPP_SOURCE_FILES}
