@@ -134,7 +134,11 @@ namespace hikari {
     }
  
     void Client::initLogging(int argc, char** argv) {
+        #ifdef DEBUG
         ::hikari::Log::setReportingLevel(debug4);
+        #else
+        ::hikari::Log::setReportingLevel(warning);
+        #endif
     }
  
     void Client::initServices() {
@@ -167,6 +171,24 @@ namespace hikari {
 
         // Script wrappers/proxy classes
         AudioServiceScriptProxy::setWrappedService(std::weak_ptr<AudioService>(audioService));
+    }
+
+    void Client::initWindow() {
+        // Due to some weirdness between OSX, Windows, and Linux, the window
+        // needs to be created before anything serious can be done.
+        window.create(videoMode, APP_TITLE, sf::Style::Default);
+        window.setActive(true);
+        window.setVerticalSyncEnabled(clientConfig.isVsyncEnabled());
+        window.setKeyRepeatEnabled(false);
+        screenBuffer.create(videoMode.width, videoMode.height);
+
+        screenBufferView.setSize(
+            static_cast<float>(videoMode.width),
+            static_cast<float>(videoMode.height));
+
+        screenBufferView.setCenter(
+            static_cast<float>(videoMode.width / 2),
+            static_cast<float>(videoMode.height / 2));
     }
  
     void Client::deinitFileSystem() {
@@ -296,22 +318,7 @@ namespace hikari {
     }
 
     int Client::run() {
-        // Due to some weirdness between OSX, Windows, and Linux, the window
-        // needs to be created before anything serious can be done.
-        window.create(videoMode, APP_TITLE, sf::Style::Default);
-        window.setActive(true);
-        window.setVerticalSyncEnabled(clientConfig.isVsyncEnabled());
-        window.setKeyRepeatEnabled(false);
-        screenBuffer.create(videoMode.width, videoMode.height);
-
-        screenBufferView.setSize(
-            static_cast<float>(videoMode.width),
-            static_cast<float>(videoMode.height));
-
-        screenBufferView.setCenter(
-            static_cast<float>(videoMode.width / 2),
-            static_cast<float>(videoMode.height / 2));
-
+        initWindow();
         initServices();
         initGame();
 
