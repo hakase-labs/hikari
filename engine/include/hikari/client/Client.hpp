@@ -40,6 +40,7 @@ namespace hikari {
         void initGame();
         void initLogging(int argc, char** argv);
         void initServices();
+        void initWindow();
  
         void deinitFileSystem();
  
