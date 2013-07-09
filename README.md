@@ -31,25 +31,34 @@ Before building Hikari, make sure that the following libraries are compiled and 
 ### Building on Windows (VS2010) ###
 
 1. Ensure SFML and PhysicsFS are installed.
-2. Clone the Hikari repository.
-    git clone https://github.com/zackthehuman/hikari.git hikari
+2. Clone the repository.
+
+        git clone https://github.com/zackthehuman/hikari.git hikari
+    
 3. Generate the build files.
-    mkdir hikari-build
-    cd hikari-build
-    cmake -G "Visual Studio 10" ../hikari
+    
+        mkdir hikari-build
+        cd hikari-build
+        cmake -G "Visual Studio 10" ../hikari
+
 4. Open the `.sln` in Visual Studio and build the `ALL_BUILD` target.
 
 ### Building on Linux (Makefile) ###
 
 1. Ensure SFML and PhysicsFS are installed.
-2. Clone the Hikari repository.
-    git clone https://github.com/zackthehuman/hikari.git hikari
+2. Clone the repository.
+    
+        git clone https://github.com/zackthehuman/hikari.git hikari
+
 3. Generate the build files.
-    mkdir hikari-build
-    cd hikari-build
-    cmake -G "Unix Makefiles" ../hikari
+    
+        mkdir hikari-build
+        cd hikari-build
+        cmake -G "Unix Makefiles" ../hikari
+
 4. Build the application.
-    make
+    
+        make
 
 ## Why is it called "Hikari"? ##
 
