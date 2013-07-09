@@ -7,7 +7,7 @@ Project Hikari is the code name for a yet-to-be-named open-source Mega Man/Rockm
 
 ## Customization & Extension ##
 
-The game is designed to be as data-driven as possible and as such it allows for cusomization and extension:
+The game is designed to be as data-driven as possible and as such it allows for customization and extension:
 
 * Animations are `JSON` structures
 * Items, Enemies, Projectiles, etc are `JSON` structures
@@ -27,6 +27,8 @@ Before building Hikari, make sure that the following libraries are compiled and 
 
 * [SFML][4]
 * [PhysicsFS][5]
+
+Also note that this project uses `C++11` features such as `auto`, `decltype`, and lambdas, and therefore requires a somewhat compliant compiler in order to build successfully.
 
 ### Building on Windows (VS2010) ###
 
