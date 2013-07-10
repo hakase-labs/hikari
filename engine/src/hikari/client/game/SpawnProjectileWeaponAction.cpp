@@ -1,5 +1,6 @@
 #include "hikari/client/game/SpawnProjectileWeaponAction.hpp"
 #include "hikari/client/game/GameWorld.hpp"
+#include "hikari/client/game/Weapon.hpp"
 #include "hikari/client/game/events/WeaponFireEventData.hpp"
 #include "hikari/client/game/objects/Projectile.hpp"
 #include "hikari/client/game/objects/Motion.hpp"
@@ -21,7 +22,7 @@ namespace hikari {
         // dtor
     }
 
-    void SpawnProjectileWeaponAction::apply(GameWorld & world, WeaponFireEventData & eventData) const {
+    void SpawnProjectileWeaponAction::apply(GameWorld & world, const Weapon & weapon, WeaponFireEventData & eventData) const {
         HIKARI_LOG(debug4) << "SpawnProjectileWeaponAction::apply executed.";
 
         auto projectile = world.spawnProjectile(projectileType);
@@ -31,6 +32,7 @@ namespace hikari {
             projectile->setDirection(eventData.getDirection());
             projectile->setFaction(eventData.getFaction());
             projectile->setPosition(eventData.getPosition());
+            projectile->setDamageId(weapon.getDamageId());
             projectile->setActive(true);
 
             if(motion) {
