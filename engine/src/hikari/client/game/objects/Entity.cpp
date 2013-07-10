@@ -32,6 +32,7 @@ namespace hikari {
         , direction(Directions::None)
         , faction(Faction::World)
         , weaponId(0)
+        , damageId(0)
         , obstacleFlag(false)
         , shieldFlag(false)
         , currentAnimationName("")
@@ -65,6 +66,7 @@ namespace hikari {
         , direction(proto.direction)
         , faction(proto.faction)
         , weaponId(proto.weaponId)
+        , damageId(proto.damageId)
         , obstacleFlag(proto.obstacleFlag)
         , shieldFlag(proto.shieldFlag)
         , currentAnimationName(proto.currentAnimationName)
@@ -211,8 +213,12 @@ namespace hikari {
         }
     }
 
+    void Entity::setDamageId(int damageId) {
+        this->damageId = damageId;
+    }
+
     int Entity::getDamageId() const {
-        return 0;
+        return damageId;
     }
 
     void Entity::setRoom(const std::shared_ptr<Room>& newRoom) {

@@ -1069,8 +1069,9 @@ namespace hikari {
                                 damageKey.damagerType = projectile->getDamageId();
                                 damageKey.damageeType = enemy->getDamageId();
 
-
-                    // TODO: Perform damage lookup and apply it to hero.
+                                HIKARI_LOG(debug3) << "Hero bullet damage id = " << projectile->getDamageId();
+                                
+                                // TODO: Perform damage lookup and apply it to hero.
                                 // Trigger enemy damage
                             }
                         }

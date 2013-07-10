@@ -64,6 +64,7 @@ namespace FactoryHelpers {
                                 const auto & templateObject = root[i];
 
                                 const auto name              = templateObject["name"].asString();
+                                const auto damageId          = templateObject.get("damageId", 0).asInt();
                                 const auto effect            = templateObject["effect"].asString();
                                 const auto effectConfig      = templateObject["effectConfig"];
                                 const auto animationSet      = templateObject["animationSet"].asString();
@@ -129,6 +130,7 @@ namespace FactoryHelpers {
                                 item->setBoundingBox(boundingBox);
                                 item->setAgeless(ageless);
                                 item->setMaximumAge(static_cast<float>(maximumAge));
+                                item->setDamageId(damageId);
 
                                 factoryPtr->registerPrototype(name, item);
                             }
@@ -180,6 +182,7 @@ namespace FactoryHelpers {
                                         const auto & templateObject = root[i];
 
                                         const auto name              = templateObject["name"].asString();
+                                        const auto damageId          = templateObject.get("damageId", 0).asInt();
                                         const auto behavior          = templateObject["behavior"];
                                         const auto animationSet      = templateObject["animationSet"].asString();
                                         const auto boundingBoxObject = templateObject["boundingBox"];
@@ -228,6 +231,7 @@ namespace FactoryHelpers {
                                         }
 
                                         instance->setBrain(brain);
+                                        instance->setDamageId(damageId);
                                         instance->setActive(true);
 
                                         factoryPtr->registerPrototype(name, instance);
@@ -288,8 +292,8 @@ namespace FactoryHelpers {
                                     for(decltype(templateCount) i = 0; i < templateCount; ++i) {
                                         const auto & templateObject = root[i];
 
-                                        // TODO: Create instances
                                         const auto name              = templateObject["name"].asString();
+                                        const auto damageId          = templateObject.get("damageId", 0).asInt();
                                         const auto animationSet      = templateObject["animationSet"].asString();
                                         const auto animationName     = templateObject["animationName"].asString();
                                         const auto boundingBoxObject = templateObject["boundingBox"];
@@ -313,6 +317,7 @@ namespace FactoryHelpers {
                                         instance->setSpriteTexture(spriteTexture);
                                         instance->changeAnimation(animationName);
                                         instance->setBoundingBox(boundingBox);
+                                        instance->setDamageId(damageId);
 
                                         factoryPtr->registerPrototype(name, instance);
                                     }
@@ -401,13 +406,14 @@ namespace FactoryHelpers {
                             const auto & templateObject = root[i];
 
                             const auto name           = templateObject["name"].asString();
+                            const auto damageId       = templateObject.get("damageId", 0).asInt();
                             const auto projectileType = templateObject["projectileType"].asString();
                             const auto limit          = templateObject["limit"].asInt();
                             const auto usageCost      = static_cast<float>(templateObject["usageCost"].asDouble());
                             const auto usageSound     = templateObject["usageSound"].asString();
                             const auto usageActions   = templateObject["usageActions"];
 
-                            auto weaponInstance = std::make_shared<Weapon>(name, limit, usageCost);
+                            auto weaponInstance = std::make_shared<Weapon>(name, limit, damageId, usageCost);
                             auto weaponActions = std::vector<std::shared_ptr<WeaponAction>>();
 
                             auto actionCount = usageActions.size();
