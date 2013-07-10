@@ -55,6 +55,7 @@ namespace hikari {
         Direction direction;
         Faction::Type faction;
         int weaponId;
+        int damageId;
 
         bool obstacleFlag; // Does this object act like an obstacle?
         bool shieldFlag;   // Does this object deflect projectiles right now?
@@ -99,6 +100,9 @@ namespace hikari {
         void setWeaponId(int weaponId);
         int getWeaponId() const;
         void fireWeapon();
+
+        void setDamageId(int damageId);
+        int getDamageId() const;
 
         void setRoom(const std::shared_ptr<Room>& newRoom);
         const std::shared_ptr<Room>& getRoom() const;

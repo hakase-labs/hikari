@@ -1,6 +1,7 @@
 [
     {
         "name": "Mega Buster",
+        "damageId": 7,
         "projectileType": "Plasma Bullet",
         "limit": 3,
         "usageCost": 0,

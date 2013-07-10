@@ -6,6 +6,7 @@
 namespace hikari {
 
   class GameWorld;
+  class Weapon;
   class WeaponFireEventData;
 
   /**
@@ -21,7 +22,7 @@ namespace hikari {
      *
      * @param world the GameWorld instance where the actions take effect
      */
-    virtual void apply(GameWorld & world, WeaponFireEventData & eventData) const;
+    virtual void apply(GameWorld & world, const Weapon & weapon, WeaponFireEventData & eventData) const;
   };
 
 } // hikari

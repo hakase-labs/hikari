@@ -21,7 +21,7 @@ namespace hikari {
   public:
     SpawnProjectileWeaponAction(const std::string & projectileType, const std::shared_ptr<Motion> & motion = std::shared_ptr<Motion>(nullptr));
     virtual ~SpawnProjectileWeaponAction();
-    virtual void apply(GameWorld & world, WeaponFireEventData & eventData) const;
+    virtual void apply(GameWorld & world, const Weapon & weapon, WeaponFireEventData & eventData) const;
   };
 
 } // hikari
