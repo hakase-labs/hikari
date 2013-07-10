@@ -17,6 +17,7 @@
 #include "hikari/client/game/Effect.hpp"
 #include "hikari/client/game/Weapon.hpp"
 #include "hikari/client/game/WeaponTable.hpp"
+#include "hikari/client/game/DamageKey.hpp"
 #include "hikari/client/gui/EnergyGauge.hpp"
 #include "hikari/client/gui/Panel.hpp"
 #include "hikari/client/Services.hpp"
@@ -1019,6 +1020,12 @@ namespace hikari {
                 const auto & hero = gamePlayState.hero;
 
                 if(enemy->getBoundingBox().intersects(hero->getBoundingBox())) {
+                    DamageKey damageKey;
+                    damageKey.damagerType = enemy->getDamageId();
+                    damageKey.damageeType = hero->getDamageId();
+
+                    // TODO: Perform damage lookup and apply it to hero.
+
                     if(hero->isVulnerable()) {
                         hero->performStun();
                     }
@@ -1058,6 +1065,12 @@ namespace hikari {
                                 projectile->setActive(false);
                                 gamePlayState.world.queueObjectRemoval(projectile); 
 
+                                DamageKey damageKey;
+                                damageKey.damagerType = projectile->getDamageId();
+                                damageKey.damageeType = enemy->getDamageId();
+
+
+                    // TODO: Perform damage lookup and apply it to hero.
                                 // Trigger enemy damage
                             }
                         }
@@ -1069,6 +1082,12 @@ namespace hikari {
                     // Check for collision with hero
                     if(projectile->getBoundingBox().intersects(hero->getBoundingBox())) {
                         HIKARI_LOG(debug3) << "Enemy bullet " << projectile->getId() << " hit the hero!";
+
+                        DamageKey damageKey;
+                        damageKey.damagerType = projectile->getDamageId();
+                        damageKey.damageeType = hero->getDamageId();
+
+                        // TODO: Perform damage lookup and apply it to hero.
 
                         if(hero->isVulnerable()) {
                             hero->performStun();

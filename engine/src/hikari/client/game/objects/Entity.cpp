@@ -211,6 +211,10 @@ namespace hikari {
         }
     }
 
+    int Entity::getDamageId() const {
+        return 0;
+    }
+
     void Entity::setRoom(const std::shared_ptr<Room>& newRoom) {
         room = newRoom;
     }
