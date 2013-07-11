@@ -8,6 +8,7 @@
 #include "hikari/client/game/PasswordState.hpp"
 #include "hikari/client/game/TitleState.hpp"
 #include "hikari/client/game/WeaponTable.hpp"
+#include "hikari/client/game/DamageTable.hpp"
 #include "hikari/client/game/objects/EnemyFactory.hpp"
 #include "hikari/client/game/objects/FactoryHelpers.hpp"
 #include "hikari/client/game/objects/ItemFactory.hpp"
@@ -156,6 +157,7 @@ namespace hikari {
         auto enemyFactory      = std::make_shared<EnemyFactory>(animationSetCache, imageCache, squirrelService);
         auto projectileFactory = std::make_shared<ProjectileFactory>(animationSetCache, imageCache, squirrelService);
         auto weaponTable       = std::make_shared<WeaponTable>();
+        auto damageTable       = std::make_shared<DamageTable>();
 
         services.registerService(Services::AUDIO,             audioService);
         services.registerService(Services::GAMEPROGRESS,      gameProgress);
@@ -168,6 +170,7 @@ namespace hikari {
         services.registerService(Services::ENEMYFACTORY,      enemyFactory);
         services.registerService(Services::PROJECTILEFACTORY, projectileFactory);
         services.registerService(Services::WEAPONTABLE,       weaponTable);
+        services.registerService(Services::DAMAGETABLE,       damageTable);
 
         // Script wrappers/proxy classes
         AudioServiceScriptProxy::setWrappedService(std::weak_ptr<AudioService>(audioService));
