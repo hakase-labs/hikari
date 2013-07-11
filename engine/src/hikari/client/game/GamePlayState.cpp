@@ -18,6 +18,7 @@
 #include "hikari/client/game/Weapon.hpp"
 #include "hikari/client/game/WeaponTable.hpp"
 #include "hikari/client/game/DamageKey.hpp"
+#include "hikari/client/game/DamageTable.hpp"
 #include "hikari/client/gui/EnergyGauge.hpp"
 #include "hikari/client/gui/Panel.hpp"
 #include "hikari/client/Services.hpp"
@@ -76,6 +77,7 @@ namespace hikari {
         , guiService(services.locateService<GuiService>(Services::GUISERVICE))
         , eventManager(new EventManagerImpl("GamePlayEvents", false))
         , weaponTable(services.locateService<WeaponTable>(Services::WEAPONTABLE))
+        , damageTable(services.locateService<DamageTable>(Services::DAMAGETABLE))
         , gameProgress(services.locateService<GameProgress>(Services::GAMEPROGRESS))
         , imageCache(services.locateService<ImageCache>(Services::IMAGECACHE))
         , userInput(new RealTimeInput())
@@ -290,7 +292,7 @@ namespace hikari {
         Movable::setGravity(0.25f);
 
         // Determine which stage we're on and set that to the current level...
-        currentMap = maps.at("map-test4.json");
+        currentMap = maps.at("map-test2.json");
 
         startStage();
     }
@@ -635,6 +637,14 @@ namespace hikari {
                     sound->stopAllSamples();
                     sound->playSample(23); // SAMPLE_HERO_DEATH
                 }
+            }
+        } else if(eventData->getEntityType() == EntityDeathEventData::Enemy) {
+            HIKARI_LOG(debug2) << "An enemy died! id = " << eventData->getEntityId();
+
+            auto enemyPtr = std::dynamic_pointer_cast<Enemy>(world.getObjectById(eventData->getEntityId()).lock());
+
+            if(enemyPtr) {
+                world.queueObjectRemoval(enemyPtr);
             }
         }
     }
@@ -1025,6 +1035,15 @@ namespace hikari {
                     damageKey.damageeType = hero->getDamageId();
 
                     // TODO: Perform damage lookup and apply it to hero.
+                    // START DAMAGE RESOLVER LOGIC
+                    float damageAmount = 0.0f;
+
+                    if(auto dt = gamePlayState.damageTable.lock()) {
+                        damageAmount = dt->getDamageFor(damageKey.damagerType);
+                    }
+                    // END DAMAGE RESOLVER LOGIC
+                    
+                    HIKARI_LOG(debug3) << "Her should take " << damageAmount << " damage!";
 
                     if(hero->isVulnerable()) {
                         hero->performStun();
@@ -1073,6 +1092,15 @@ namespace hikari {
                                 
                                 // TODO: Perform damage lookup and apply it to hero.
                                 // Trigger enemy damage
+                                float damageAmount = 0.0f;
+
+                                if(auto dt = gamePlayState.damageTable.lock()) {
+                                    damageAmount = dt->getDamageFor(damageKey.damagerType);
+                                }
+
+                                HIKARI_LOG(debug3) << "Enemy took " << damageAmount;
+                                
+                                enemy->takeDamage(damageAmount);
                             }
                         }
                     );

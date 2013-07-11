@@ -60,6 +60,7 @@ namespace hikari {
     class EventManager;
     class KeyboardInput;
     class WeaponTable;
+    class DamageTable;
 
     class GamePlayState : public GameState {
 
@@ -71,6 +72,7 @@ namespace hikari {
         std::weak_ptr<GuiService> guiService;
         std::shared_ptr<EventManager> eventManager;
         std::weak_ptr<WeaponTable> weaponTable;
+        std::weak_ptr<DamageTable> damageTable;
         std::weak_ptr<GameProgress> gameProgress;
         std::shared_ptr<ImageCache> imageCache;
         std::shared_ptr<RealTimeInput> userInput;
