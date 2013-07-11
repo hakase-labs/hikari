@@ -9,14 +9,24 @@ namespace hikari {
     public:
         static const EventType Type;
 
+        enum EntityType {
+            Unknown = 1,
+            Hero = 2,
+            Enemy = 3,
+            Projectile = 4,
+            Item = 5
+        };
+
     private:
         int entityId;
+        EntityType entityType;
         
     public:
-        explicit EntityDeathEventData(int entityId);
+        explicit EntityDeathEventData(int entityId, EntityType entityType = EntityType::Unknown);
         virtual ~EntityDeathEventData();
 
         int getEntityId() const;
+        EntityType getEntityType() const;
 
         virtual const EventType & getEventType() const;
 

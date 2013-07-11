@@ -8,6 +8,7 @@
 #include "hikari/client/game/PasswordState.hpp"
 #include "hikari/client/game/TitleState.hpp"
 #include "hikari/client/game/WeaponTable.hpp"
+#include "hikari/client/game/DamageTable.hpp"
 #include "hikari/client/game/objects/EnemyFactory.hpp"
 #include "hikari/client/game/objects/FactoryHelpers.hpp"
 #include "hikari/client/game/objects/ItemFactory.hpp"
@@ -119,6 +120,13 @@ namespace hikari {
         loadScriptingEnvironment();
         loadObjectTemplates();
 
+        if(auto damageTable = services.locateService<DamageTable>(Services::DAMAGETABLE).lock()) {
+            damageTable->addEntry(0, 0.0f);
+            damageTable->addEntry(1, 10.0f);
+            damageTable->addEntry(4, 6.0f);
+            damageTable->addEntry(7, 1.0f);
+        }
+
         // Create controller and game states
         StatePtr stageSelectState(new StageSelectState("stageselect", gameConfigJson["states"]["select"], services));
         StatePtr gamePlayState(new GamePlayState("gameplay", gameConfigJson, services));
@@ -134,11 +142,11 @@ namespace hikari {
     }
  
     void Client::initLogging(int argc, char** argv) {
-        #ifdef DEBUG
+        // #ifdef DEBUG
         ::hikari::Log::setReportingLevel(debug4);
-        #else
-        ::hikari::Log::setReportingLevel(warning);
-        #endif
+        // #else
+        // ::hikari::Log::setReportingLevel(warning);
+        // #endif
     }
  
     void Client::initServices() {
@@ -156,6 +164,7 @@ namespace hikari {
         auto enemyFactory      = std::make_shared<EnemyFactory>(animationSetCache, imageCache, squirrelService);
         auto projectileFactory = std::make_shared<ProjectileFactory>(animationSetCache, imageCache, squirrelService);
         auto weaponTable       = std::make_shared<WeaponTable>();
+        auto damageTable       = std::make_shared<DamageTable>();
 
         services.registerService(Services::AUDIO,             audioService);
         services.registerService(Services::GAMEPROGRESS,      gameProgress);
@@ -168,6 +177,7 @@ namespace hikari {
         services.registerService(Services::ENEMYFACTORY,      enemyFactory);
         services.registerService(Services::PROJECTILEFACTORY, projectileFactory);
         services.registerService(Services::WEAPONTABLE,       weaponTable);
+        services.registerService(Services::DAMAGETABLE,       damageTable);
 
         // Script wrappers/proxy classes
         AudioServiceScriptProxy::setWrappedService(std::weak_ptr<AudioService>(audioService));
