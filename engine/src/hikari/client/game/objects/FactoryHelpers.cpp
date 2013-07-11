@@ -183,6 +183,7 @@ namespace FactoryHelpers {
 
                                         const auto name              = templateObject["name"].asString();
                                         const auto damageId          = templateObject.get("damageId", 0).asInt();
+                                        const auto hitPoints         = static_cast<float>(templateObject.get("hitPoints", 0.0).asDouble());
                                         const auto behavior          = templateObject["behavior"];
                                         const auto animationSet      = templateObject["animationSet"].asString();
                                         const auto boundingBoxObject = templateObject["boundingBox"];
@@ -232,6 +233,7 @@ namespace FactoryHelpers {
 
                                         instance->setBrain(brain);
                                         instance->setDamageId(damageId);
+                                        instance->setHitPoints(hitPoints);
                                         instance->setActive(true);
 
                                         factoryPtr->registerPrototype(name, instance);
