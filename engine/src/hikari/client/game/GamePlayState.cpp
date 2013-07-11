@@ -292,7 +292,7 @@ namespace hikari {
         Movable::setGravity(0.25f);
 
         // Determine which stage we're on and set that to the current level...
-        currentMap = maps.at("map-test4.json");
+        currentMap = maps.at("map-test2.json");
 
         startStage();
     }
@@ -1092,6 +1092,15 @@ namespace hikari {
                                 
                                 // TODO: Perform damage lookup and apply it to hero.
                                 // Trigger enemy damage
+                                float damageAmount = 0.0f;
+
+                                if(auto dt = gamePlayState.damageTable.lock()) {
+                                    damageAmount = dt->getDamageFor(damageKey.damagerType);
+                                }
+
+                                HIKARI_LOG(debug3) << "Enemy took " << damageAmount;
+                                
+                                enemy->takeDamage(damageAmount);
                             }
                         }
                     );
