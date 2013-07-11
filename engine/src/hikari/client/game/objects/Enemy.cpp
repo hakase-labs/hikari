@@ -1,5 +1,7 @@
 #include "hikari/client/game/objects/Enemy.hpp"
 #include "hikari/client/game/objects/EnemyBrain.hpp"
+#include "hikari/client/game/events/EventManager.hpp"
+#include "hikari/client/game/events/EntityDeathEventData.hpp"
 #include "hikari/core/game/SpriteAnimator.hpp"
 #include "hikari/core/util/Log.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
@@ -9,6 +11,7 @@ namespace hikari {
     Enemy::Enemy(int id, std::shared_ptr<Room> room) 
         : Entity(id, room) 
         , brain(nullptr)
+        , hitPoints(0.0)
     {
         body.setGravitated(true);
         body.setHasWorldCollision(true);
@@ -19,6 +22,7 @@ namespace hikari {
     Enemy::Enemy(const Enemy& proto)
         : Entity(proto)
         , brain(nullptr)
+        , hitPoints(proto.hitPoints)
     {
         setActive(false);
         setGravitated(proto.isGravitated());
@@ -49,6 +53,10 @@ namespace hikari {
 
     void Enemy::update(float dt) {
         Entity::update(dt);
+
+        if(auto eventManagetPtr = getEventManager().lock()) {
+            eventManagetPtr->queueEvent(EventDataPtr(new EntityDeathEventData(getId(), EntityDeathEventData::Enemy)));
+        }
         
         if(brain) {
             brain->update(dt);
@@ -70,6 +78,14 @@ namespace hikari {
 
     const std::shared_ptr<EnemyBrain>& Enemy::getBrain() const {
         return brain;
+    }
+
+    void Enemy::setHitPoints(float hp) {
+        hitPoints = hp;
+    }
+
+    float Enemy::getHitPoints() const {
+        return hitPoints;
     }
 
 } // hikari

@@ -93,7 +93,7 @@ namespace hikari {
         HIKARI_LOG(debug2) << "CollectableItem::onDeath()";
         if(auto eventManagetPtr = getEventManager().lock()) {
             // May want ti triggerEvent() instead; test and see.
-            eventManagetPtr->queueEvent(EventDataPtr(new EntityDeathEventData(getId())));
+            eventManagetPtr->queueEvent(EventDataPtr(new EntityDeathEventData(getId(), EntityDeathEventData::Item)));
         }
     }
 

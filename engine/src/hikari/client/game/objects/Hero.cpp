@@ -453,7 +453,7 @@ namespace hikari {
         if(isVulnerable()) {
             if(TileAttribute::hasAttribute(info.tileType, TileAttribute::SPIKE)) {
                 if(auto events = getEventManager().lock()) {
-                    EventDataPtr imDeadNow(new EntityDeathEventData(getId()));
+                    EventDataPtr imDeadNow(new EntityDeathEventData(getId(), EntityDeathEventData::Hero));
                     events->queueEvent(imDeadNow);
                 } else {
                     HIKARI_LOG(debug4) << "No event manager.";
