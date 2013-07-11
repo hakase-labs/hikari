@@ -26,7 +26,7 @@ namespace hikari {
         auto it = damageValues.find(damageId);
 
         if(it != std::end(damageValues)) {
-            return it->first;
+            return it->second;
         }
 
         return 0.0f;
