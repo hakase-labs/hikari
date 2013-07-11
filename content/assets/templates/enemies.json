@@ -2,6 +2,7 @@
     {
         "name": "Telly",
         "damageId": 4,
+        "hitPoints": 1.0,
         "behavior": {
             "type": "scripted",
             "name": "TellyEnemyBehavior",
@@ -28,6 +29,7 @@
     },
     {
         "name": "Octopus Battery",
+        "hitPoints": 3.0,
         "behavior": {
             "type": "scripted",
             "name": "OctopusBatteryEnemyBehavior",
@@ -54,6 +56,7 @@
     },
     {
         "name": "Komasaburo",
+        "hitPoints": 6.0,
         "behavior": {
             "type": "scripted",
             "name": "KomasaburoEnemyBehavior",
@@ -80,6 +83,7 @@
     },
     {
         "name": "Bikky",
+        "hitPoints": 6.0,
         "behavior": {
             "type": "scripted",
             "name": "BikkyEnemyBehavior",
@@ -106,6 +110,7 @@
     },
     {
         "name": "Peterchy",
+        "hitPoints": 3.0,
         "behavior": {
             "type": "scripted",
             "name": "PeterchyEnemyBehavior",
