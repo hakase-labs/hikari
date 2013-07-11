@@ -54,8 +54,10 @@ namespace hikari {
     void Enemy::update(float dt) {
         Entity::update(dt);
 
-        if(auto eventManagetPtr = getEventManager().lock()) {
-            eventManagetPtr->queueEvent(EventDataPtr(new EntityDeathEventData(getId(), EntityDeathEventData::Enemy)));
+        if(getHitPoints() <= 0.0f) {
+            if(auto eventManagetPtr = getEventManager().lock()) {
+                eventManagetPtr->queueEvent(EventDataPtr(new EntityDeathEventData(getId(), EntityDeathEventData::Enemy)));
+            }
         }
         
         if(brain) {
