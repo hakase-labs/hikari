@@ -90,4 +90,8 @@ namespace hikari {
         return hitPoints;
     }
 
+    void Enemy::takeDamage(float amount) {
+        setHitPoints(getHitPoints() - amount);
+    }
+
 } // hikari

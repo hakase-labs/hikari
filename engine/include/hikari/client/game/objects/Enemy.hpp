@@ -31,6 +31,7 @@ namespace hikari {
 
         void setHitPoints(float hp);
         float getHitPoints() const;
+        void takeDamage(float amount);
 
     };
 
