@@ -638,6 +638,14 @@ namespace hikari {
                     sound->playSample(23); // SAMPLE_HERO_DEATH
                 }
             }
+        } else if(eventData->getEntityType() == EntityDeathEventData::Enemy) {
+            HIKARI_LOG(debug2) << "An enemy died! id = " << eventData->getEntityId();
+
+            auto enemyPtr = std::dynamic_pointer_cast<Enemy>(world.getObjectById(eventData->getEntityId()).lock());
+
+            if(enemyPtr) {
+                world.queueObjectRemoval(enemyPtr);
+            }
         }
     }
 
