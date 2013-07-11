@@ -120,6 +120,12 @@ namespace hikari {
         loadScriptingEnvironment();
         loadObjectTemplates();
 
+        if(auto damageTable = services.locateService<DamageTable>(Services::DAMAGETABLE).lock()) {
+            damageTable->addEntry(0, 0.0f);
+            damageTable->addEntry(1, 10.0f);
+            damageTable->addEntry(4, 6.0f);
+        }
+
         // Create controller and game states
         StatePtr stageSelectState(new StageSelectState("stageselect", gameConfigJson["states"]["select"], services));
         StatePtr gamePlayState(new GamePlayState("gameplay", gameConfigJson, services));
@@ -135,11 +141,11 @@ namespace hikari {
     }
  
     void Client::initLogging(int argc, char** argv) {
-        #ifdef DEBUG
+        // #ifdef DEBUG
         ::hikari::Log::setReportingLevel(debug4);
-        #else
-        ::hikari::Log::setReportingLevel(warning);
-        #endif
+        // #else
+        // ::hikari::Log::setReportingLevel(warning);
+        // #endif
     }
  
     void Client::initServices() {

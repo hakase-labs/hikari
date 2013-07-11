@@ -18,6 +18,7 @@
 #include "hikari/client/game/Weapon.hpp"
 #include "hikari/client/game/WeaponTable.hpp"
 #include "hikari/client/game/DamageKey.hpp"
+#include "hikari/client/game/DamageTable.hpp"
 #include "hikari/client/gui/EnergyGauge.hpp"
 #include "hikari/client/gui/Panel.hpp"
 #include "hikari/client/Services.hpp"
@@ -76,6 +77,7 @@ namespace hikari {
         , guiService(services.locateService<GuiService>(Services::GUISERVICE))
         , eventManager(new EventManagerImpl("GamePlayEvents", false))
         , weaponTable(services.locateService<WeaponTable>(Services::WEAPONTABLE))
+        , damageTable(services.locateService<DamageTable>(Services::DAMAGETABLE))
         , gameProgress(services.locateService<GameProgress>(Services::GAMEPROGRESS))
         , imageCache(services.locateService<ImageCache>(Services::IMAGECACHE))
         , userInput(new RealTimeInput())
@@ -1025,6 +1027,15 @@ namespace hikari {
                     damageKey.damageeType = hero->getDamageId();
 
                     // TODO: Perform damage lookup and apply it to hero.
+                    // START DAMAGE RESOLVER LOGIC
+                    float damageAmount = 0.0f;
+
+                    if(auto dt = gamePlayState.damageTable.lock()) {
+                        damageAmount = dt->getDamageFor(damageKey.damagerType);
+                    }
+                    // END DAMAGE RESOLVER LOGIC
+                    
+                    HIKARI_LOG(debug3) << "Her should take " << damageAmount << " damage!";
 
                     if(hero->isVulnerable()) {
                         hero->performStun();

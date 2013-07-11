@@ -1,6 +1,7 @@
 [
     {
         "name": "Telly",
+        "damageId": 4,
         "behavior": {
             "type": "scripted",
             "name": "TellyEnemyBehavior",
