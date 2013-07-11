@@ -124,6 +124,7 @@ namespace hikari {
             damageTable->addEntry(0, 0.0f);
             damageTable->addEntry(1, 10.0f);
             damageTable->addEntry(4, 6.0f);
+            damageTable->addEntry(7, 1.0f);
         }
 
         // Create controller and game states
