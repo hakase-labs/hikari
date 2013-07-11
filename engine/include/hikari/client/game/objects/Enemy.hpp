@@ -12,6 +12,8 @@ namespace hikari {
     class Enemy : public Entity, public Cloneable<Enemy> {
     private:
         std::shared_ptr<EnemyBrain> brain;
+        float hitPoints;
+
     public:
         Enemy(int id = GameObject::generateObjectId(), std::shared_ptr<Room> room = nullptr);
         Enemy(const Enemy& proto); 
@@ -26,6 +28,9 @@ namespace hikari {
 
         void setBrain(const std::shared_ptr<EnemyBrain> brain);
         const std::shared_ptr<EnemyBrain>& getBrain() const;
+
+        void setHitPoints(float hp);
+        float getHitPoints() const;
 
     };
 
