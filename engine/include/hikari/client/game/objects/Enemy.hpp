@@ -13,6 +13,7 @@ namespace hikari {
     private:
         std::shared_ptr<EnemyBrain> brain;
         float hitPoints;
+        int tookDamageThisTick;
 
     public:
         Enemy(int id = GameObject::generateObjectId(), std::shared_ptr<Room> room = nullptr);
