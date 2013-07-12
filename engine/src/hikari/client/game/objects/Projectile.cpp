@@ -27,10 +27,6 @@ namespace hikari {
         setPosition(proto.getPosition());
         setBoundingBox(proto.getBoundingBox());
         setAnimationSet(proto.getAnimationSet());
-
-        // if(proto.brain) {
-        //     setBrain(proto.brain->clone());
-        // }
     }
 
     Projectile::~Projectile() {
@@ -38,14 +34,11 @@ namespace hikari {
     }
 
     std::unique_ptr<Projectile> Projectile::clone() const {
-        HIKARI_LOG(debug4) << "Cloned a projectile!!!";
         return std::unique_ptr<Projectile>(new Projectile(*this));
     }
 
     void Projectile::render(sf::RenderTarget &target) {
         Entity::render(target);
-
-
     }
 
     void Projectile::update(float dt) {
@@ -57,7 +50,7 @@ namespace hikari {
             setVelocityY(newVelocity.getY());
 
             // Flip horizontal velocity depending on direction and whether it is
-            // inert or not. When a projectil is inert it no longer cares about
+            // inert or not. When a projectile is inert it no longer cares about
             // direction.
             if(!isInert()) {
                 if(getDirection() == Directions::Left) {
@@ -78,9 +71,7 @@ namespace hikari {
     }
 
     void Projectile::handleCollision(Movable& body, CollisionInfo& info) {
-        // if(brain) {
-        //     brain->handleCollision(body, info);
-        // }
+
     }
 
     void Projectile::setMotion(const std::shared_ptr<Motion> motion) {
