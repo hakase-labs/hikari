@@ -12,6 +12,7 @@ namespace hikari {
         , maximumAge(maximumAge)
         , boundingBox(0.0f, 0.0f, 0.0f, 0.0f)
         , sprite()
+        , spriteTexture(nullptr)
         , animation()
         , animationSet()
         , animator(new SpriteAnimator(sprite))
@@ -25,6 +26,7 @@ namespace hikari {
         , maximumAge(proto.maximumAge)
         , boundingBox(proto.boundingBox)
         , sprite(proto.sprite)
+        , spriteTexture(proto.spriteTexture)
         , animation(proto.animation)
         , animationSet(proto.animationSet)
         , animator(new SpriteAnimator(sprite))
@@ -69,10 +71,19 @@ namespace hikari {
 
     void Particle::setAnimationSet(const std::weak_ptr<AnimationSet> & animationSet) {
         this->animationSet = animationSet;
+        animator->setAnimation(animation.lock());
     }
 
     const std::weak_ptr<AnimationSet> & Particle::getAnimationSet() const {
         return animationSet;
+    }
+
+    void Particle::setSpriteTexture(const std::shared_ptr<sf::Texture>& newTexture) {
+        spriteTexture = newTexture;
+
+        if(spriteTexture) {
+            sprite.setTexture(*(spriteTexture.get()));
+        }
     }
 
     void Particle::setCurrentAnimation(const std::string & animationName) {
@@ -81,6 +92,8 @@ namespace hikari {
                 animation = set->get(animationName);
             }
         }
+
+        animator->setAnimation(animation.lock());
     }
 
 } // hikari

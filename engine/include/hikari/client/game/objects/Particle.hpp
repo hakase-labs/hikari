@@ -12,6 +12,7 @@
 
 namespace sf {
     class RenderTarget;
+    class Texture;
 }
 
 namespace hikari {
@@ -29,6 +30,7 @@ namespace hikari {
         BoundingBox<float> boundingBox;
 
         sf::Sprite sprite;
+        std::shared_ptr<sf::Texture> spriteTexture;
         std::weak_ptr<Animation> animation;
         std::weak_ptr<AnimationSet> animationSet;
         std::unique_ptr<Animator> animator;
@@ -49,6 +51,8 @@ namespace hikari {
 
         void setAnimationSet(const std::weak_ptr<AnimationSet> & animationSet);
         const std::weak_ptr<AnimationSet> & getAnimationSet() const;
+
+        void setSpriteTexture(const std::shared_ptr<sf::Texture>& newTexture);
 
         void setCurrentAnimation(const std::string & animationName);
     };
