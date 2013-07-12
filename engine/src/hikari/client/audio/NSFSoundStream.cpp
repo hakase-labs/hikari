@@ -143,7 +143,7 @@ namespace hikari {
                 if(!emu->track_ended()) {
                     // This mixing strategy came from: http://www.vttoth.com/CMS/index.php/technical-notes/68
                     // And supporting information from: http://cboard.cprogramming.com/c-programming/103456-mixing-pcm-samples-dealing-clicks-overflow.html
-                    mixedValue = mixedValue + buffer[i] - ((mixedValue * buffer[i]) >> 0x10);
+                    mixedValue = mixedValue + buffer[i] - ((mixedValue * buffer[i]) / 65535);
                 } else {
                     buffer[i] = 0;
                 }
