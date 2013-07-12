@@ -31,7 +31,7 @@ namespace hikari {
         sf::Sprite sprite;
         std::weak_ptr<Animation> animation;
         std::weak_ptr<AnimationSet> animationSet;
-        Animator animator;
+        std::unique_ptr<Animator> animator;
 
     public:
         explicit Particle(float maximumAge);
@@ -46,6 +46,11 @@ namespace hikari {
 
         void setBoundingBox(const BoundingBox<float> & boundingBox);
         const BoundingBox<float> & getBoundingBox() const;
+
+        void setAnimationSet(const std::weak_ptr<AnimationSet> & animationSet);
+        const std::weak_ptr<AnimationSet> & getAnimationSet() const;
+
+        void setCurrentAnimation(const std::string & animationName);
     };
 
 } // hikari
