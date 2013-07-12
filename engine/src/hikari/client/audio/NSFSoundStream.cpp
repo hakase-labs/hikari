@@ -221,7 +221,16 @@ namespace hikari {
     }
 
     int NSFSoundStream::getTrackCount() const {
-        return 50; // sampleEmus[0]->track_count();
+        int trackCount = 0;
+
+        if(!availableSamplers.empty()) {
+            auto & sampler = availableSamplers.top();
+            auto & emu = sampler.first;
+
+            trackCount = emu->track_count();
+        }
+        
+        return trackCount; // sampleEmus[0]->track_count();
     }
 
     const std::string NSFSoundStream::getTrackName() {
