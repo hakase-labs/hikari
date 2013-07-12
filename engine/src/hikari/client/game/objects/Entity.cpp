@@ -72,7 +72,7 @@ namespace hikari {
         , currentAnimationName(proto.currentAnimationName)
         , room(proto.room)
     {
-        HIKARI_LOG(debug2) << "Entity copy constructor!" << std::endl;
+        // HIKARI_LOG(debug2) << "Entity copy constructor!" << std::endl;
 
         body = Movable(proto.body);
 
@@ -88,7 +88,7 @@ namespace hikari {
     }
 
     Entity::~Entity() {
-        HIKARI_LOG(debug1) << "Entity::~Entity()";
+        // HIKARI_LOG(debug1) << "Entity::~Entity()";
     }
 
     std::shared_ptr<sf::Texture> Entity::getSpriteTexture() {
