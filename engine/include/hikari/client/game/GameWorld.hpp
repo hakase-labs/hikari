@@ -11,6 +11,7 @@
 #include <queue>
 #include <unordered_map>
 #include <vector>
+#include <list>
 
 namespace sf {
     class RenderTarget;
@@ -39,20 +40,20 @@ namespace hikari {
         std::weak_ptr<ItemFactory> itemFactory;
         std::weak_ptr<EnemyFactory> enemyFactory;
         std::weak_ptr<ProjectileFactory> projectileFactory;
-        std::queue<std::shared_ptr<GameObject>> queuedAdditions;
-        std::queue<std::shared_ptr<GameObject>> queuedRemovals;
+        std::list<std::shared_ptr<GameObject>> queuedAdditions;
+        std::list<std::shared_ptr<GameObject>> queuedRemovals;
         std::vector<std::shared_ptr<GameObject>> activeObjects;
 
-        std::queue<std::shared_ptr<CollectableItem>> queuedItemAdditions;
-        std::queue<std::shared_ptr<CollectableItem>> queuedItemRemovals;
+        std::list<std::shared_ptr<CollectableItem>> queuedItemAdditions;
+        std::list<std::shared_ptr<CollectableItem>> queuedItemRemovals;
         std::vector<std::shared_ptr<CollectableItem>> activeItems;
 
-        std::queue<std::shared_ptr<Enemy>> queuedEnemyAdditions;
-        std::queue<std::shared_ptr<Enemy>> queuedEnemyRemovals;
+        std::list<std::shared_ptr<Enemy>> queuedEnemyAdditions;
+        std::list<std::shared_ptr<Enemy>> queuedEnemyRemovals;
         std::vector<std::shared_ptr<Enemy>> activeEnemies;
 
-        std::queue<std::shared_ptr<Projectile>> queuedProjectileAdditions;
-        std::queue<std::shared_ptr<Projectile>> queuedProjectileRemovals;
+        std::list<std::shared_ptr<Projectile>> queuedProjectileAdditions;
+        std::list<std::shared_ptr<Projectile>> queuedProjectileRemovals;
         std::vector<std::shared_ptr<Projectile>> activeProjectiles;
 
         std::unordered_map<int, std::shared_ptr<GameObject>> objectRegistry;

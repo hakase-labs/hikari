@@ -14,8 +14,6 @@
 #include "hikari/core/util/Log.hpp"
 #include "hikari/core/util/exception/HikariException.hpp"
 
-// #include <oolua.h>
-
 namespace hikari {
 
     GameWorld::GameWorld() 
@@ -78,22 +76,13 @@ namespace hikari {
     }
 
     void GameWorld::update(float dt) {
-        //HIKARI_LOG(debug) << "GameWorld::update begin; dt = " << dt;
         processRemovals();
         processAdditions();
-        
-        /*
-        std::for_each(
-            activeObjects.begin(), 
-            activeObjects.end(), 
-            std::bind(&GameObject::update, std::placeholders::_1, std::cref(dt)));
-        */
-        //HIKARI_LOG(debug) << "GameWorld::update finish";
     }
 
     void GameWorld::queueObjectAddition(const std::shared_ptr<GameObject> &obj) {
         if(obj) {
-            queuedAdditions.push(obj);
+            queuedAdditions.push_back(obj);
         } else {
             HIKARI_LOG(debug) << "Tried to add a null object (game object); ignoring.";
         }
@@ -101,7 +90,7 @@ namespace hikari {
 
     void GameWorld::queueObjectAddition(const std::shared_ptr<CollectableItem> &obj) {
         if(obj) {
-            queuedItemAdditions.push(obj);
+            queuedItemAdditions.push_back(obj);
         } else {
             HIKARI_LOG(debug) << "Tried to add a null object (item); ignoring.";
         }
@@ -109,7 +98,7 @@ namespace hikari {
 
     void GameWorld::queueObjectAddition(const std::shared_ptr<Enemy> &obj) {
         if(obj) {
-            queuedEnemyAdditions.push(obj);
+            queuedEnemyAdditions.push_back(obj);
         } else {
             HIKARI_LOG(debug) << "Tried to add a null object (enemy); ignoring.";
         }
@@ -117,7 +106,7 @@ namespace hikari {
 
     void GameWorld::queueObjectAddition(const std::shared_ptr<Projectile> &obj) {
         if(obj) {
-            queuedProjectileAdditions.push(obj);
+            queuedProjectileAdditions.push_back(obj);
         } else {
             HIKARI_LOG(debug) << "Tried to add a null object (projectile); ignoring.";
         }
@@ -125,7 +114,15 @@ namespace hikari {
 
     void GameWorld::queueObjectRemoval(const std::shared_ptr<GameObject> &obj) {
         if(obj) {
-            queuedRemovals.push(obj);
+            auto finder = std::find(
+                std::begin(queuedRemovals),
+                std::end(queuedRemovals), 
+                obj);
+
+            // Avoid double-enqueueing
+            if(finder == std::end(queuedRemovals)) {
+                queuedRemovals.push_back(obj);
+            }
         } else {
             HIKARI_LOG(debug) << "Tried to remove a null object (game object); ignoring.";
         }
@@ -133,7 +130,15 @@ namespace hikari {
 
     void GameWorld::queueObjectRemoval(const std::shared_ptr<CollectableItem> &obj) {
         if(obj) {
-            queuedItemRemovals.push(obj);
+            auto finder = std::find(
+                std::begin(queuedItemRemovals),
+                std::end(queuedItemRemovals), 
+                obj);
+
+            // Avoid double-enqueueing
+            if(finder == std::end(queuedItemRemovals)) {
+                queuedItemRemovals.push_back(obj);
+            }
         } else {
             HIKARI_LOG(debug) << "Tried to remove a null object (item); ignoring.";
         }
@@ -141,7 +146,15 @@ namespace hikari {
 
     void GameWorld::queueObjectRemoval(const std::shared_ptr<Enemy> &obj) {
         if(obj) {
-            queuedEnemyRemovals.push(obj);
+            auto finder = std::find(
+                std::begin(queuedEnemyRemovals),
+                std::end(queuedEnemyRemovals), 
+                obj);
+
+            // Avoid double-enqueueing
+            if(finder == std::end(queuedEnemyRemovals)) {
+                queuedEnemyRemovals.push_back(obj);
+            }
         } else {
             HIKARI_LOG(debug) << "Tried to remove a null object (enemy); ignoring.";
         }
@@ -149,7 +162,15 @@ namespace hikari {
 
     void GameWorld::queueObjectRemoval(const std::shared_ptr<Projectile> &obj) {
         if(obj) {
-            queuedProjectileRemovals.push(obj);
+            auto finder = std::find(
+                std::begin(queuedProjectileRemovals),
+                std::end(queuedProjectileRemovals), 
+                obj);
+
+            // Avoid double-enqueueing
+            if(finder == std::end(queuedProjectileRemovals)) {
+                queuedProjectileRemovals.push_back(obj);
+            }
         } else {
             HIKARI_LOG(debug) << "Tried to remove a null object (projectile); ignoring.";
         }
@@ -163,7 +184,7 @@ namespace hikari {
             activeObjects.push_back(objectToBeAdded);
             objectRegistry.emplace(std::make_pair(objectToBeAdded->getId(), objectToBeAdded));
 
-            queuedAdditions.pop();
+            queuedAdditions.pop_front();
         }
 
         // Collectable Items
@@ -176,7 +197,7 @@ namespace hikari {
             objectToBeAdded->setRoom(getCurrentRoom());
             objectToBeAdded->setEventManager(getEventManager());
 
-            queuedItemAdditions.pop();
+            queuedItemAdditions.pop_front();
         }
 
         // Enemies
@@ -189,7 +210,7 @@ namespace hikari {
             objectToBeAdded->setRoom(getCurrentRoom());
             objectToBeAdded->setEventManager(getEventManager());
 
-            queuedEnemyAdditions.pop();
+            queuedEnemyAdditions.pop_front();
         }
 
         // Projectiles
@@ -202,7 +223,7 @@ namespace hikari {
             objectToBeAdded->setRoom(getCurrentRoom());
             objectToBeAdded->setEventManager(getEventManager());
 
-            queuedProjectileAdditions.pop();
+            queuedProjectileAdditions.pop_front();
         }
     }
 
@@ -217,7 +238,7 @@ namespace hikari {
 
             objectRegistry.erase(objectToBeRemoved->getId());
             
-            queuedRemovals.pop();
+            queuedRemovals.pop_front();
 
             //objectToBeRemoved->setEventManager(std::weak_ptr<EventManager>());
 
@@ -234,7 +255,7 @@ namespace hikari {
 
             objectRegistry.erase(objectToBeRemoved->getId());
             
-            queuedItemRemovals.pop();
+            queuedItemRemovals.pop_front();
 
             objectToBeRemoved->setEventManager(std::weak_ptr<EventManager>());
 
@@ -251,7 +272,7 @@ namespace hikari {
 
             objectRegistry.erase(objectToBeRemoved->getId());
             
-            queuedEnemyRemovals.pop();
+            queuedEnemyRemovals.pop_front();
 
             objectToBeRemoved->setEventManager(std::weak_ptr<EventManager>());
 
@@ -262,13 +283,13 @@ namespace hikari {
 
         while(!queuedProjectileRemovals.empty()) {
             auto objectToBeRemoved = queuedProjectileRemovals.front();
-            
+
             activeProjectiles.erase(
                 std::remove(std::begin(activeProjectiles), std::end(activeProjectiles), objectToBeRemoved));
 
             objectRegistry.erase(objectToBeRemoved->getId());
             
-            queuedProjectileRemovals.pop();
+            queuedProjectileRemovals.pop_front();
 
             objectToBeRemoved->setEventManager(std::weak_ptr<EventManager>());
 
