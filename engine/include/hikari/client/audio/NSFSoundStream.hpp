@@ -9,6 +9,7 @@
 #include <stack>
 #include <string>
 #include <vector>
+#include <list>
 
 struct Music_Emu;
 struct track_info_t;
@@ -154,6 +155,10 @@ namespace hikari {
         std::size_t masterBufferSize;                  ///< Size of audio buffer
         std::size_t samplerCount;
         std::size_t activeSampler;
+
+        typedef std::pair<std::shared_ptr<Music_Emu>, std::vector<short>> SamplerPair;
+        std::stack<SamplerPair> availableSamplers;
+        std::list<SamplerPair> activeSamplers;
 
         std::unique_ptr<short[]> masterBuffer;       ///< Audio buffer to read/write to
         std::vector<std::unique_ptr<short[]>> sampleBuffers;

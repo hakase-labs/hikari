@@ -59,7 +59,7 @@ namespace hikari {
             }
 
             for(int i = 0; i < samplerCount; ++i) {
-                auto sampleEmu = std::unique_ptr<Music_Emu>(file_type->new_emu());
+                auto sampleEmu = std::shared_ptr<Music_Emu>(file_type->new_emu());
 
                 if(!sampleEmu) {
                     return false;
@@ -71,7 +71,11 @@ namespace hikari {
 
                 sampleEmu->start_track(-1);
                 sampleEmu->ignore_silence(false);
-                sampleEmus.push_back(std::move(sampleEmu));
+
+                auto sampleBuffer = std::vector<short>(masterBufferSize);
+                std::fill(std::begin(sampleBuffer), std::end(sampleBuffer), 0);
+                availableSamplers.push(std::make_pair(sampleEmu, sampleBuffer));
+                // sampleEmus.push_back(std::move(sampleEmu));
             }
 
             trackInfo.reset(new track_info_t());
@@ -88,7 +92,13 @@ namespace hikari {
 
     void NSFSoundStream::onSeek(sf::Time timeOffset) {
         sf::Lock lock(mutex);
-        handleError(sampleEmus[0]->seek(static_cast<long>(timeOffset.asMilliseconds())));
+
+        if(!activeSamplers.empty()) {
+            auto & sampler = activeSamplers.front();
+            auto & emu = sampler.first;
+
+            handleError(emu->seek(static_cast<long>(timeOffset.asMilliseconds())));
+        }
     }
 
     bool NSFSoundStream::onGetData(sf::SoundStream::Chunk& Data) {
@@ -97,28 +107,67 @@ namespace hikari {
         auto * mixedBuffer = masterBuffer.get();
 
         // Generate samples for any playing emulators
-        for(int bufferIndex = 0; bufferIndex < samplerCount; ++bufferIndex) {
-            if(!sampleEmus[bufferIndex]->track_ended()) {
-                sampleEmus[bufferIndex]->play(masterBufferSize, sampleBuffers[bufferIndex].get());
-            }
-        }
+        // for(int bufferIndex = 0; bufferIndex < samplerCount; ++bufferIndex) {
+        //     if(!sampleEmus[bufferIndex]->track_ended()) {
+        //         sampleEmus[bufferIndex]->play(masterBufferSize, sampleBuffers[bufferIndex].get());
+        //     }
+        // }
+        activeSamplers.remove_if([&](const SamplerPair & pair) {
+            bool ended = (pair.first)->track_ended();
 
-        // Mix buffers
+            if(ended) {
+                availableSamplers.push(pair);
+            }
+
+            return ended;
+        });
+
+        std::for_each(std::begin(activeSamplers), std::end(activeSamplers), [&](SamplerPair & pair) {
+            auto & emu = pair.first;
+            auto & buffer = pair.second;
+
+            if(!emu->track_ended()) {
+                emu->play(masterBufferSize, &buffer[0]);
+            } else {
+                //availableSamplers.push(pair);
+            }
+        });
+
         for(int i = 0; i < masterBufferSize; ++i) {
             short mixedValue = 0;
 
-            for(int bufferIndex = 0; bufferIndex < samplerCount; ++bufferIndex) {
-                // Don't mix buffers that aren't playing.
-                if(!sampleEmus[bufferIndex]->track_ended()) {
-                    mixedValue += sampleBuffers[bufferIndex].get()[i];
+            std::for_each(std::begin(activeSamplers), std::end(activeSamplers), [&](SamplerPair & pair) {
+                auto & emu = pair.first;
+                auto & buffer = pair.second;
+
+                if(!emu->track_ended()) {
+                    mixedValue = buffer[i];
                 } else {
-                    // Zero-out any buffer that isn't playing.
-                    sampleBuffers[bufferIndex].get()[i] = 0;
+                    buffer[i] = 0;
                 }
-            }
+            });
 
             mixedBuffer[i] = mixedValue;
         }
+
+        // HIKARI_LOG(debug2) << "Active samplers: " <<activeSamplers.size();
+
+        // Mix buffers
+        // for(int i = 0; i < masterBufferSize; ++i) {
+        //     short mixedValue = 0;
+
+        //     for(int bufferIndex = 0; bufferIndex < samplerCount; ++bufferIndex) {
+        //         // Don't mix buffers that aren't playing.
+        //         if(!sampleEmus[bufferIndex]->track_ended()) {
+        //             mixedValue += sampleBuffers[bufferIndex].get()[i];
+        //         } else {
+        //             // Zero-out any buffer that isn't playing.
+        //             sampleBuffers[bufferIndex].get()[i] = 0;
+        //         }
+        //     }
+
+        //     mixedBuffer[i] = mixedValue;
+        // }
 
         Data.samples     = &masterBuffer[0];
         Data.sampleCount = masterBufferSize;
@@ -157,14 +206,20 @@ namespace hikari {
         sf::Lock lock(mutex);
 
         if(track >= 0 && track < getTrackCount()) {
-            sampleEmus[activeSampler]->start_track(track);
-            activeSampler++;
-            activeSampler %= samplerCount;
+            // sampleEmus[activeSampler]->start_track(track);
+            // activeSampler++;
+            // activeSampler %= samplerCount;
+            if(!availableSamplers.empty()) {
+                auto sampler = availableSamplers.top();
+                availableSamplers.pop();
+                (sampler.first)->start_track(track);
+                activeSamplers.push_back(sampler);
+            }
         }
     }
 
     int NSFSoundStream::getTrackCount() const {
-        return sampleEmus[0]->track_count();
+        return 50; // sampleEmus[0]->track_count();
     }
 
     const std::string NSFSoundStream::getTrackName() {
