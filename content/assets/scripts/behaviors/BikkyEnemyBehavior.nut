@@ -19,6 +19,7 @@
                         if(enteringNewState) {
                             host.changeAnimation("idle");
                             host.velocityX = 0;
+                            host.isShielded = true;
                             enteringNewState = false;
                             ::hikari.sound.playSample(32);
                         }
@@ -34,6 +35,7 @@
                         if(enteringNewState) {
                             enteringNewState = false;
                             timer = 0.0;
+                            host.isShielded = false;
                         }
 
                         if(timer >= 0.1333) {

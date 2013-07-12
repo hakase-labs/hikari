@@ -1080,27 +1080,31 @@ namespace hikari {
                         std::end(activeEnemies), 
                         [&](const std::shared_ptr<Enemy> & enemy) {
                             if(projectile->getBoundingBox().intersects(enemy->getBoundingBox())) {
-                                HIKARI_LOG(debug3) << "Hero bullet " << projectile->getId() << " hit an enemy " << enemy->getId();
-                                projectile->setActive(false);
-                                gamePlayState.world.queueObjectRemoval(projectile); 
+                                if(enemy->isShielded()) {
+                                    // Deflect projectile
+                                } else {
+                                    HIKARI_LOG(debug3) << "Hero bullet " << projectile->getId() << " hit an enemy " << enemy->getId();
+                                    projectile->setActive(false);
+                                    gamePlayState.world.queueObjectRemoval(projectile); 
 
-                                DamageKey damageKey;
-                                damageKey.damagerType = projectile->getDamageId();
-                                damageKey.damageeType = enemy->getDamageId();
+                                    DamageKey damageKey;
+                                    damageKey.damagerType = projectile->getDamageId();
+                                    damageKey.damageeType = enemy->getDamageId();
 
-                                HIKARI_LOG(debug3) << "Hero bullet damage id = " << projectile->getDamageId();
-                                
-                                // TODO: Perform damage lookup and apply it to hero.
-                                // Trigger enemy damage
-                                float damageAmount = 0.0f;
+                                    HIKARI_LOG(debug3) << "Hero bullet damage id = " << projectile->getDamageId();
+                                    
+                                    // TODO: Perform damage lookup and apply it to hero.
+                                    // Trigger enemy damage
+                                    float damageAmount = 0.0f;
 
-                                if(auto dt = gamePlayState.damageTable.lock()) {
-                                    damageAmount = dt->getDamageFor(damageKey.damagerType);
+                                    if(auto dt = gamePlayState.damageTable.lock()) {
+                                        damageAmount = dt->getDamageFor(damageKey.damagerType);
+                                    }
+
+                                    HIKARI_LOG(debug3) << "Enemy took " << damageAmount;
+                                    
+                                    enemy->takeDamage(damageAmount);
                                 }
-
-                                HIKARI_LOG(debug3) << "Enemy took " << damageAmount;
-                                
-                                enemy->takeDamage(damageAmount);
                             }
                         }
                     );
