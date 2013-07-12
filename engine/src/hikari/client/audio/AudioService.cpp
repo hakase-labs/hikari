@@ -12,7 +12,7 @@ namespace hikari {
         : musicLoaded(false)
         , samplesLoaded(false)
         , musicStream(MUSIC_BUFFER_SIZE, 1)
-        , sampleStream(SAMPLE_BUFFER_SIZE, 4) 
+        , sampleStream(SAMPLE_BUFFER_SIZE, 12) 
     {
         if(isValidConfiguration(configuration)) {
             auto musicDataFilePath = configuration["music"].asString();
