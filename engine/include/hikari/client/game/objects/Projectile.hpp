@@ -7,13 +7,13 @@
 
 namespace hikari {
 
-    // class ProjectileBrain;
     class Motion;
 
     class Projectile : public Entity, public Cloneable<Projectile> {
     private:
-        // std::shared_ptr<ProjectileBrain> brain;
         std::shared_ptr<Motion> motion;
+        bool inert;
+
     public:
         Projectile(int id = GameObject::generateObjectId(), std::shared_ptr<Room> room = nullptr);
         Projectile(const Projectile& proto); 
@@ -28,6 +28,22 @@ namespace hikari {
 
         void setMotion(const std::shared_ptr<Motion> motion);
         const std::shared_ptr<Motion>& getMotion() const;
+
+        /**
+         * Sets whether the projectile is inert or not. When a projectile is
+         * inert it is no longer effective (like when it has been deflected, for
+         * example).
+         * 
+         * @param inert true to make the projectile inert, false otherwise
+         */
+        void setInert(bool inert);
+
+        /**
+         * Gets whether the projectile is inert or not.
+         * 
+         * @return true if it is inert, false otherwise
+         */
+        bool isInert() const;
 
     };
 

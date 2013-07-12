@@ -8,7 +8,7 @@ namespace hikari {
 
     Projectile::Projectile(int id, std::shared_ptr<Room> room) 
         : Entity(id, room) 
-        // , brain(nullptr)
+        , inert(false)
     {
         body.setGravitated(false);
         body.setHasWorldCollision(false);
@@ -16,7 +16,7 @@ namespace hikari {
 
     Projectile::Projectile(const Projectile& proto)
         : Entity(proto)
-        // , brain(nullptr)
+        , inert(false)
     {
         setActive(false);
         setGravitated(proto.isGravitated());
@@ -56,9 +56,15 @@ namespace hikari {
 
             setVelocityY(newVelocity.getY());
 
-            // Flip horizontal velocity depending on direction
-            if(getDirection() == Directions::Left) {
-                setVelocityX(-newVelocity.getX());
+            // Flip horizontal velocity depending on direction and whether it is
+            // inert or not. When a projectil is inert it no longer cares about
+            // direction.
+            if(!isInert()) {
+                if(getDirection() == Directions::Left) {
+                    setVelocityX(-newVelocity.getX());
+                } else {
+                    setVelocityX(newVelocity.getX());
+                }
             } else {
                 setVelocityX(newVelocity.getX());
             }
@@ -69,10 +75,6 @@ namespace hikari {
                 setVelocityX(4.0f);
             }
         }
-        
-        // if(brain) {
-        //     brain->update(dt);
-        // }
     }
 
     void Projectile::handleCollision(Movable& body, CollisionInfo& info) {
@@ -89,15 +91,12 @@ namespace hikari {
         return motion;
     }
 
-    // void Projectile::setBrain(const std::shared_ptr<ProjectileBrain> newBrain) {
-    //     if(newBrain) {
-    //         brain = newBrain;
-    //         brain->attach(this);
-    //     }
-    // }
+    void Projectile::setInert(bool inert) {
+        this->inert = inert;
+    }
 
-    // const std::shared_ptr<ProjectileBrain>& Projectile::getBrain() const {
-    //     return brain;
-    // }
+    bool Projectile::isInert() const {
+        return inert;
+    }
 
 } // hikari
