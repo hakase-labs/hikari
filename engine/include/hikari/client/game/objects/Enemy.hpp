@@ -13,7 +13,11 @@ namespace hikari {
     private:
         std::shared_ptr<EnemyBrain> brain;
         float hitPoints;
-        int tookDamageThisTick;
+
+        /**
+         * After taking damage this counts how many ticks that elapse.
+         */
+        int damageTickCounter;
 
     public:
         Enemy(int id = GameObject::generateObjectId(), std::shared_ptr<Room> room = nullptr);
