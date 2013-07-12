@@ -32,7 +32,6 @@
 #include "hikari/client/game/events/EventData.hpp"
 #include "hikari/client/game/events/WeaponFireEventData.hpp"
 #include "hikari/client/game/events/ObjectRemovedEventData.hpp"
-#include "hikari/client/game/objects/motions/LinearMotion.hpp"
 #include "hikari/client/gui/GuiService.hpp"
 #include "hikari/core/game/AnimationSet.hpp"
 #include "hikari/core/game/AnimationLoader.hpp"
@@ -1082,11 +1081,9 @@ namespace hikari {
                         [&](const std::shared_ptr<Enemy> & enemy) {
                             if(projectile->getBoundingBox().intersects(enemy->getBoundingBox())) {
                                 if(enemy->isShielded()) {
-                                    // Deflect projectile
-                                    projectile->setInert(true);
 
-                                    auto deflectedMotion = std::make_shared<LinearMotion>(Vector2<float>(-4.0, -3.0f));
-                                    projectile->setMotion(deflectedMotion);
+                                    // Deflect projectile
+                                    projectile->deflect();
                                 } else {
                                     if(!projectile->isInert()) {
                                         HIKARI_LOG(debug3) << "Hero bullet " << projectile->getId() << " hit an enemy " << enemy->getId();
