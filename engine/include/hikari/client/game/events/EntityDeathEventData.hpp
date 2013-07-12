@@ -22,7 +22,7 @@ namespace hikari {
         EntityType entityType;
         
     public:
-        explicit EntityDeathEventData(int entityId, EntityType entityType = EntityType::Unknown);
+        explicit EntityDeathEventData(int entityId, EntityType entityType = Unknown);
         virtual ~EntityDeathEventData();
 
         int getEntityId() const;

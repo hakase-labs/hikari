@@ -58,7 +58,7 @@ namespace hikari {
                 return false;
             }
 
-            for(int i = 0; i < samplerCount; ++i) {
+            for(std::size_t i = 0; i < samplerCount; ++i) {
                 auto sampleEmu = std::shared_ptr<Music_Emu>(file_type->new_emu());
 
                 if(!sampleEmu) {
@@ -112,7 +112,7 @@ namespace hikari {
         //         sampleEmus[bufferIndex]->play(masterBufferSize, sampleBuffers[bufferIndex].get());
         //     }
         // }
-        activeSamplers.remove_if([&](const SamplerPair & pair) {
+        activeSamplers.remove_if([&](const SamplerPair & pair) -> bool {
             bool ended = (pair.first)->track_ended();
 
             if(ended) {
@@ -133,7 +133,7 @@ namespace hikari {
             }
         });
 
-        for(int i = 0; i < masterBufferSize; ++i) {
+        for(std::size_t i = 0; i < masterBufferSize; ++i) {
             short mixedValue = 0;
 
             std::for_each(std::begin(activeSamplers), std::end(activeSamplers), [&](SamplerPair & pair) {
@@ -185,7 +185,7 @@ namespace hikari {
     void NSFSoundStream::createSampleBuffers() {
         sampleBuffers.clear();
 
-        for(int i = 0; i < samplerCount; ++i) {
+        for(std::size_t i = 0; i < samplerCount; ++i) {
             auto sampleBuffer = std::unique_ptr<short[]>(new short[masterBufferSize]);
 
             std::fill(sampleBuffer.get(), sampleBuffer.get() + masterBufferSize, 0);
