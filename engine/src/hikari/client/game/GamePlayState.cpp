@@ -1084,6 +1084,10 @@ namespace hikari {
 
                                     // Deflect projectile
                                     projectile->deflect();
+
+                                    if(auto sound = gamePlayState.audioService.lock()) {
+                                        sound->playSample(25); // SAMPLE_HERO_DEATH
+                                    }
                                 } else {
                                     if(!projectile->isInert()) {
                                         HIKARI_LOG(debug3) << "Hero bullet " << projectile->getId() << " hit an enemy " << enemy->getId();
@@ -1107,6 +1111,10 @@ namespace hikari {
                                         HIKARI_LOG(debug3) << "Enemy took " << damageAmount;
                                         
                                         enemy->takeDamage(damageAmount);
+
+                                        if(auto sound = gamePlayState.audioService.lock()) {
+                                            sound->playSample(24); // SAMPLE_HERO_DEATH
+                                        }
                                     }
                                 }
                             }
