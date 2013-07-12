@@ -11,6 +11,7 @@ namespace hikari {
 
     class Projectile : public Entity, public Cloneable<Projectile> {
     private:
+        static const std::shared_ptr<Motion> DeflectedMotion;
         std::shared_ptr<Motion> motion;
         bool inert;
 
@@ -44,6 +45,12 @@ namespace hikari {
          * @return true if it is inert, false otherwise
          */
         bool isInert() const;
+
+        /**
+         * Causes the projectile to be "deflected". This also causes the
+         * projectile to become inert.
+         */
+        void deflect();
 
     };
 
