@@ -58,7 +58,7 @@ namespace hikari {
                 return false;
             }
 
-            for(int i = 0; i < samplerCount; ++i) {
+            for(std::size_t i = 0; i < samplerCount; ++i) {
                 auto sampleEmu = std::shared_ptr<Music_Emu>(file_type->new_emu());
 
                 if(!sampleEmu) {
@@ -112,7 +112,7 @@ namespace hikari {
         //         sampleEmus[bufferIndex]->play(masterBufferSize, sampleBuffers[bufferIndex].get());
         //     }
         // }
-        activeSamplers.remove_if([&](const SamplerPair & pair) {
+        activeSamplers.remove_if([&](const SamplerPair & pair) -> bool {
             bool ended = (pair.first)->track_ended();
 
             if(ended) {
@@ -133,7 +133,7 @@ namespace hikari {
             }
         });
 
-        for(int i = 0; i < masterBufferSize; ++i) {
+        for(std::size_t i = 0; i < masterBufferSize; ++i) {
             short mixedValue = 0;
 
             std::for_each(std::begin(activeSamplers), std::end(activeSamplers), [&](SamplerPair & pair) {
@@ -141,7 +141,9 @@ namespace hikari {
                 auto & buffer = pair.second;
 
                 if(!emu->track_ended()) {
-                    mixedValue = buffer[i];
+                    // This mixing strategy came from: http://www.vttoth.com/CMS/index.php/technical-notes/68
+                    // And supporting information from: http://cboard.cprogramming.com/c-programming/103456-mixing-pcm-samples-dealing-clicks-overflow.html
+                    mixedValue = mixedValue + buffer[i] - ((mixedValue * buffer[i]) / 65535);
                 } else {
                     buffer[i] = 0;
                 }
@@ -185,7 +187,7 @@ namespace hikari {
     void NSFSoundStream::createSampleBuffers() {
         sampleBuffers.clear();
 
-        for(int i = 0; i < samplerCount; ++i) {
+        for(std::size_t i = 0; i < samplerCount; ++i) {
             auto sampleBuffer = std::unique_ptr<short[]>(new short[masterBufferSize]);
 
             std::fill(sampleBuffer.get(), sampleBuffer.get() + masterBufferSize, 0);
@@ -219,7 +221,16 @@ namespace hikari {
     }
 
     int NSFSoundStream::getTrackCount() const {
-        return 50; // sampleEmus[0]->track_count();
+        int trackCount = 0;
+
+        if(!availableSamplers.empty()) {
+            auto & sampler = availableSamplers.top();
+            auto & emu = sampler.first;
+
+            trackCount = emu->track_count();
+        }
+        
+        return trackCount; // sampleEmus[0]->track_count();
     }
 
     const std::string NSFSoundStream::getTrackName() {

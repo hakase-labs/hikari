@@ -60,6 +60,8 @@ namespace hikari {
         bool obstacleFlag; // Does this object act like an obstacle?
         bool shieldFlag;   // Does this object deflect projectiles right now?
 
+        Vector2<float> actionSpot; // An offset from the position where actions "take place"
+
         std::string currentAnimationName;
 
         void move(const Vector2<float>& delta);
@@ -189,6 +191,9 @@ namespace hikari {
         const Vector2<float>& getPosition() const;
         void setPosition(const Vector2<float>& newPosition);
         void setPosition(const float x, const float y);
+
+        const Vector2<float>& getActionSpot() const;
+        void setActionSpot(const Vector2<float> & spot);
 
         const BoundingBoxF& getBoundingBox() const;
         void setBoundingBox(const BoundingBoxF& box);

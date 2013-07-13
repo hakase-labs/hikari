@@ -4,6 +4,7 @@
 #include "hikari/client/game/objects/GameObject.hpp"
 #include "hikari/client/game/objects/CollectableItem.hpp"
 #include "hikari/client/game/objects/Enemy.hpp"
+#include "hikari/client/game/objects/Particle.hpp"
 #include "hikari/client/game/objects/Projectile.hpp"
 #include "hikari/client/game/objects/Hero.hpp"
 #include "hikari/client/game/objects/ItemFactory.hpp"
@@ -32,6 +33,9 @@ namespace hikari {
         , queuedEnemyAdditions()
         , queuedEnemyRemovals()
         , activeEnemies()
+        , queuedParticleAdditions()
+        , queuedParticleRemovals()
+        , activeParticles()
         , objectRegistry()
         , gravityEnabled(true)
         
@@ -104,6 +108,14 @@ namespace hikari {
         }
     }
 
+    void GameWorld::queueObjectAddition(const std::shared_ptr<Particle> &obj) {
+        if(obj) {
+            queuedParticleAdditions.push_back(obj);
+        } else {
+            HIKARI_LOG(debug) << "Tried to add a null object (particle); ignoring.";
+        }
+    }
+
     void GameWorld::queueObjectAddition(const std::shared_ptr<Projectile> &obj) {
         if(obj) {
             queuedProjectileAdditions.push_back(obj);
@@ -160,6 +172,22 @@ namespace hikari {
         }
     }
 
+    void GameWorld::queueObjectRemoval(const std::shared_ptr<Particle> &obj) {
+        if(obj) {
+            auto finder = std::find(
+                std::begin(queuedParticleRemovals),
+                std::end(queuedParticleRemovals), 
+                obj);
+
+            // Avoid double-enqueueing
+            if(finder == std::end(queuedParticleRemovals)) {
+                queuedParticleRemovals.push_back(obj);
+            }
+        } else {
+            HIKARI_LOG(debug) << "Tried to remove a null object (particle); ignoring.";
+        }
+    }
+
     void GameWorld::queueObjectRemoval(const std::shared_ptr<Projectile> &obj) {
         if(obj) {
             auto finder = std::find(
@@ -211,6 +239,16 @@ namespace hikari {
             objectToBeAdded->setEventManager(getEventManager());
 
             queuedEnemyAdditions.pop_front();
+        }
+
+        // Particles
+        while(!queuedParticleAdditions.empty()) {
+            auto objectToBeAdded = queuedParticleAdditions.front();
+
+            activeParticles.push_back(objectToBeAdded);
+            objectRegistry.emplace(std::make_pair(objectToBeAdded->getId(), objectToBeAdded));
+
+            queuedParticleAdditions.pop_front();
         }
 
         // Projectiles
@@ -281,6 +319,21 @@ namespace hikari {
             }
         }
 
+        while(!queuedParticleRemovals.empty()) {
+            auto objectToBeRemoved = queuedParticleRemovals.front();
+
+            activeParticles.erase(
+                std::remove(std::begin(activeParticles), std::end(activeParticles), objectToBeRemoved));
+
+            objectRegistry.erase(objectToBeRemoved->getId());
+            
+            queuedParticleRemovals.pop_front();
+
+            if(eventManagerPtr) {
+                eventManagerPtr->queueEvent(std::make_shared<ObjectRemovedEventData>(objectToBeRemoved->getId()));
+            }
+        }
+
         while(!queuedProjectileRemovals.empty()) {
             auto objectToBeRemoved = queuedProjectileRemovals.front();
 
@@ -318,6 +371,14 @@ namespace hikari {
                 this->queueObjectRemoval(enemy);
             });
 
+        // Particles
+        std::for_each(
+            std::begin(activeParticles),
+            std::end(activeParticles),
+            [this](const std::shared_ptr<Particle> particle) {
+                this->queueObjectRemoval(particle);
+            });
+
         // Projectiles
         std::for_each(
             std::begin(activeProjectiles),
@@ -353,6 +414,10 @@ namespace hikari {
         return std::unique_ptr<Enemy>(nullptr);
     }
 
+    std::unique_ptr<Particle> GameWorld::spawnParticle(const std::string & name) const {
+        return std::unique_ptr<Particle>(nullptr);
+    }
+
     std::unique_ptr<Projectile> GameWorld::spawnProjectile(const std::string & name) const {
         if(auto projectileFactoryPtr = projectileFactory.lock()) {
             try {
@@ -381,6 +446,10 @@ namespace hikari {
 
     const std::vector<std::shared_ptr<Enemy>> & GameWorld::getActiveEnemies() const {
         return activeEnemies;
+    }
+
+    const std::vector<std::shared_ptr<Particle>> & GameWorld::getActiveParticles() const {
+        return activeParticles;
     }
 
     const std::vector<std::shared_ptr<Projectile>> & GameWorld::getActiveProjectiles() const {
