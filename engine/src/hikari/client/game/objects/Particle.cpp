@@ -17,7 +17,7 @@ namespace hikari {
         , animationSet()
         , animator(new SpriteAnimator(sprite))
     {
-
+        animator->rewind();
     }
 
     Particle::Particle(const Particle& proto)
@@ -31,18 +31,25 @@ namespace hikari {
         , animationSet(proto.animationSet)
         , animator(new SpriteAnimator(sprite))
     {
-
+        setAnimationSet(animationSet);
+        setSpriteTexture(spriteTexture);
+        animator->setAnimation(animation.lock());
+        animator->rewind();
     }
 
     Particle::~Particle() {
 
     }
 
+    std::unique_ptr<Particle> Particle::clone() const {
+        return std::unique_ptr<Particle>(new Particle(*this));
+    }
+
     void Particle::update(float dt) {
         GameObject::update(dt);
 
         animator->update(dt);
-
+        
         if(age >= maximumAge) {
             // Die
             setActive(false);
@@ -50,7 +57,22 @@ namespace hikari {
     }
 
     void Particle::render(sf::RenderTarget &target) {
+        auto position = getPosition();
+
+        sprite.setPosition(
+            std::floor(position.getX()), 
+            std::floor(position.getY())
+        );
+
         target.draw(sprite);
+    }
+
+    void Particle::setPosition(const Vector2<float> & position) {
+        boundingBox.setPosition(position);
+    }
+
+    const Vector2<float> & Particle::getPosition() const {
+        return boundingBox.getPosition();
     }
 
     void Particle::setVelocity(const Vector2<float> & velocity) {
