@@ -108,6 +108,14 @@ namespace hikari {
         }
     }
 
+    void GameWorld::queueObjectAddition(const std::shared_ptr<Particle> &obj) {
+        if(obj) {
+            queuedParticleAdditions.push_back(obj);
+        } else {
+            HIKARI_LOG(debug) << "Tried to add a null object (particle); ignoring.";
+        }
+    }
+
     void GameWorld::queueObjectAddition(const std::shared_ptr<Projectile> &obj) {
         if(obj) {
             queuedProjectileAdditions.push_back(obj);
@@ -161,6 +169,22 @@ namespace hikari {
             }
         } else {
             HIKARI_LOG(debug) << "Tried to remove a null object (enemy); ignoring.";
+        }
+    }
+
+    void GameWorld::queueObjectRemoval(const std::shared_ptr<Particle> &obj) {
+        if(obj) {
+            auto finder = std::find(
+                std::begin(queuedParticleRemovals),
+                std::end(queuedParticleRemovals), 
+                obj);
+
+            // Avoid double-enqueueing
+            if(finder == std::end(queuedParticleRemovals)) {
+                queuedParticleRemovals.push_back(obj);
+            }
+        } else {
+            HIKARI_LOG(debug) << "Tried to remove a null object (particle); ignoring.";
         }
     }
 
@@ -285,6 +309,21 @@ namespace hikari {
             }
         }
 
+        while(!queuedParticleRemovals.empty()) {
+            auto objectToBeRemoved = queuedParticleRemovals.front();
+
+            activeParticles.erase(
+                std::remove(std::begin(activeParticles), std::end(activeParticles), objectToBeRemoved));
+
+            objectRegistry.erase(objectToBeRemoved->getId());
+            
+            queuedParticleRemovals.pop_front();
+
+            if(eventManagerPtr) {
+                eventManagerPtr->queueEvent(std::make_shared<ObjectRemovedEventData>(objectToBeRemoved->getId()));
+            }
+        }
+
         while(!queuedProjectileRemovals.empty()) {
             auto objectToBeRemoved = queuedProjectileRemovals.front();
 
@@ -320,6 +359,14 @@ namespace hikari {
             std::end(activeEnemies),
             [this](const std::shared_ptr<Enemy> enemy) {
                 this->queueObjectRemoval(enemy);
+            });
+
+        // Particles
+        std::for_each(
+            std::begin(activeParticles),
+            std::end(activeParticles),
+            [this](const std::shared_ptr<Particle> particle) {
+                this->queueObjectRemoval(particle);
             });
 
         // Projectiles

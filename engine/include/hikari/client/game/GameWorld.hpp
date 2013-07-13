@@ -83,11 +83,13 @@ namespace hikari {
         void queueObjectAddition(const std::shared_ptr<GameObject> &obj);
         void queueObjectAddition(const std::shared_ptr<CollectableItem> &obj);
         void queueObjectAddition(const std::shared_ptr<Enemy> &obj);
+        void queueObjectAddition(const std::shared_ptr<Particle> &obj);
         void queueObjectAddition(const std::shared_ptr<Projectile> &obj);
 
         void queueObjectRemoval(const std::shared_ptr<GameObject> &obj);
         void queueObjectRemoval(const std::shared_ptr<CollectableItem> &obj);
         void queueObjectRemoval(const std::shared_ptr<Enemy> &obj);
+        void queueObjectRemoval(const std::shared_ptr<Particle> &obj);
         void queueObjectRemoval(const std::shared_ptr<Projectile> &obj);
 
         void removeAllObjects();
