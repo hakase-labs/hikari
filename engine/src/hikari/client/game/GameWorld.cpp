@@ -241,6 +241,16 @@ namespace hikari {
             queuedEnemyAdditions.pop_front();
         }
 
+        // Particles
+        while(!queuedParticleAdditions.empty()) {
+            auto objectToBeAdded = queuedParticleAdditions.front();
+
+            activeParticles.push_back(objectToBeAdded);
+            objectRegistry.emplace(std::make_pair(objectToBeAdded->getId(), objectToBeAdded));
+
+            queuedParticleAdditions.pop_front();
+        }
+
         // Projectiles
         while(!queuedProjectileAdditions.empty()) {
             auto objectToBeAdded = queuedProjectileAdditions.front();
