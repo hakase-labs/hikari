@@ -4,6 +4,7 @@
 #include "hikari/client/game/objects/GameObject.hpp"
 #include "hikari/client/game/objects/CollectableItem.hpp"
 #include "hikari/client/game/objects/Enemy.hpp"
+#include "hikari/client/game/objects/Particle.hpp"
 #include "hikari/client/game/objects/Projectile.hpp"
 #include "hikari/client/game/objects/Hero.hpp"
 #include "hikari/client/game/objects/ItemFactory.hpp"
@@ -32,6 +33,9 @@ namespace hikari {
         , queuedEnemyAdditions()
         , queuedEnemyRemovals()
         , activeEnemies()
+        , queuedParticleAdditions()
+        , queuedParticleRemovals()
+        , activeParticles()
         , objectRegistry()
         , gravityEnabled(true)
         
@@ -353,6 +357,10 @@ namespace hikari {
         return std::unique_ptr<Enemy>(nullptr);
     }
 
+    std::unique_ptr<Particle> GameWorld::spawnParticle(const std::string & name) const {
+        return std::unique_ptr<Particle>(nullptr);
+    }
+
     std::unique_ptr<Projectile> GameWorld::spawnProjectile(const std::string & name) const {
         if(auto projectileFactoryPtr = projectileFactory.lock()) {
             try {
@@ -381,6 +389,10 @@ namespace hikari {
 
     const std::vector<std::shared_ptr<Enemy>> & GameWorld::getActiveEnemies() const {
         return activeEnemies;
+    }
+
+    const std::vector<std::shared_ptr<Particle>> & GameWorld::getActiveParticles() const {
+        return activeParticles;
     }
 
     const std::vector<std::shared_ptr<Projectile>> & GameWorld::getActiveProjectiles() const {

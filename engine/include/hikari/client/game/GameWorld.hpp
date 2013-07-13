@@ -52,6 +52,10 @@ namespace hikari {
         std::list<std::shared_ptr<Enemy>> queuedEnemyRemovals;
         std::vector<std::shared_ptr<Enemy>> activeEnemies;
 
+        std::list<std::shared_ptr<Particle>> queuedParticleAdditions;
+        std::list<std::shared_ptr<Particle>> queuedParticleRemovals;
+        std::vector<std::shared_ptr<Particle>> activeParticles;
+
         std::list<std::shared_ptr<Projectile>> queuedProjectileAdditions;
         std::list<std::shared_ptr<Projectile>> queuedProjectileRemovals;
         std::vector<std::shared_ptr<Projectile>> activeProjectiles;
@@ -97,6 +101,7 @@ namespace hikari {
         const std::weak_ptr<GameObject> getObjectById(int id) const;
         const std::vector<std::shared_ptr<CollectableItem>> & getActiveItems() const;
         const std::vector<std::shared_ptr<Enemy>> & getActiveEnemies() const;
+        const std::vector<std::shared_ptr<Particle>> & getActiveParticles() const;
         const std::vector<std::shared_ptr<Projectile>> & getActiveProjectiles() const;
 
         void setPlayer(const std::shared_ptr<Hero>& player);
