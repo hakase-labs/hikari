@@ -12,6 +12,7 @@ namespace hikari {
         : Entity(id, room) 
         , brain(nullptr)
         , hitPoints(0.0)
+        , damageTickCounter(0)
     {
         body.setGravitated(true);
         body.setHasWorldCollision(true);
@@ -23,6 +24,7 @@ namespace hikari {
         : Entity(proto)
         , brain(nullptr)
         , hitPoints(proto.hitPoints)
+        , damageTickCounter(0)
     {
         setActive(false);
         setGravitated(proto.isGravitated());
@@ -48,7 +50,9 @@ namespace hikari {
     }
 
     void Enemy::render(sf::RenderTarget &target) {
-        Entity::render(target);
+        if(damageTickCounter == 0) {
+            Entity::render(target);
+        }
     }
 
     void Enemy::update(float dt) {
@@ -62,6 +66,14 @@ namespace hikari {
         
         if(brain) {
             brain->update(dt);
+        }
+
+        if(damageTickCounter > 0) {
+            // setVulnerable(false);
+            damageTickCounter++;
+            damageTickCounter %= 2;
+        } else {
+            // setVulnerable(true);
         }
     }
 
@@ -92,6 +104,7 @@ namespace hikari {
 
     void Enemy::takeDamage(float amount) {
         setHitPoints(getHitPoints() - amount);
+        damageTickCounter = 1;
     }
 
 } // hikari

@@ -166,6 +166,7 @@ set( ENGINE_SOURCE_FILES
     src/hikari/client/game/objects/ProjectileFactory.cpp
     src/hikari/client/game/objects/Motion.cpp
     src/hikari/client/game/objects/motions/LinearMotion.cpp
+    src/hikari/client/game/objects/Particle.cpp
     src/hikari/client/game/objects/Entity.cpp
     src/hikari/client/game/objects/FactoryHelpers.cpp
     src/hikari/client/game/objects/HeroAirbornMobilityState.cpp

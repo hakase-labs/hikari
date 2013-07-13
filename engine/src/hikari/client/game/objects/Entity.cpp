@@ -35,6 +35,7 @@ namespace hikari {
         , damageId(0)
         , obstacleFlag(false)
         , shieldFlag(false)
+        , actionSpot(0.0f, 0.0f)
         , currentAnimationName("")
         , room(room)
     {
@@ -69,6 +70,7 @@ namespace hikari {
         , damageId(proto.damageId)
         , obstacleFlag(proto.obstacleFlag)
         , shieldFlag(proto.shieldFlag)
+        , actionSpot(proto.actionSpot)
         , currentAnimationName(proto.currentAnimationName)
         , room(proto.room)
     {
@@ -160,6 +162,14 @@ namespace hikari {
         body.setPosition(x, y);
     }
 
+    const Vector2<float>& Entity::getActionSpot() const {
+        return actionSpot;
+    }
+
+    void Entity::setActionSpot(const Vector2<float> & spot) {
+        actionSpot = spot;
+    }
+
     const BoundingBoxF& Entity::getBoundingBox() const {
         return body.getBoundingBox();
     }
@@ -199,13 +209,21 @@ namespace hikari {
 
     void Entity::fireWeapon() {
         if(auto events = eventManager.lock()) {
+            
+            // Adjust offset for direction
+            Vector2<float> offset = getActionSpot();
+
+            if(getDirection() == Directions::Left) {
+                offset.setX(-offset.getX());
+            }
+
             events->triggerEvent(
                 std::make_shared<WeaponFireEventData>(
                     getWeaponId(),
                     getId(),
                     getFaction(),
                     getDirection(),
-                    getPosition()
+                    getPosition() + offset
                 )
             );
         } else {

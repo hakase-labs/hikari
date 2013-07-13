@@ -61,6 +61,7 @@ namespace hikari {
     class KeyboardInput;
     class WeaponTable;
     class DamageTable;
+    class Particle;
 
     class GamePlayState : public GameState {
 
@@ -108,6 +109,8 @@ namespace hikari {
         bool hasReachedMidpoint;
         bool hasReachedBossCorridor;
         bool isHeroAlive;
+
+        std::shared_ptr<Particle> particle;
 
         //
         // Resource Management
