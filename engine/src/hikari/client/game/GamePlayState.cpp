@@ -14,6 +14,7 @@
 #include "hikari/client/game/objects/EnemyFactory.hpp"
 #include "hikari/client/game/objects/Projectile.hpp"
 #include "hikari/client/game/objects/ProjectileFactory.hpp"
+#include "hikari/client/game/objects/Particle.hpp"
 #include "hikari/client/game/Effect.hpp"
 #include "hikari/client/game/Weapon.hpp"
 #include "hikari/client/game/WeaponTable.hpp"
@@ -139,6 +140,7 @@ namespace hikari {
         hero->setBoundingBox(BoundingBoxF(0, 0, 16, 24).setOrigin(8, 20));
         hero->changeAnimation("idle");
         hero->setPosition(100.0f, 100.0f);
+        hero->setActionSpot(Vector2<float>(6.0, -8.0));
         hero->setActionController(std::make_shared<PlayerInputHeroActionController>(userInput));
         hero->setEventManager(std::weak_ptr<EventManager>(eventManager));
 
@@ -251,6 +253,10 @@ namespace hikari {
             subState->render(target);
         }
 
+        // if(particle) {
+        //     particle->render(target);
+        // }
+
         if(drawInfamousBlackBar) {
             target.draw(leftBar);
         }
@@ -258,6 +264,10 @@ namespace hikari {
 
     bool GamePlayState::update(const float &dt) {
         userInput->update();
+
+        // if(particle) {
+        //     particle->update(dt);
+        // }
 
         if(eventManager) {
             eventManager->processEvents();
@@ -293,6 +303,16 @@ namespace hikari {
 
         // Determine which stage we're on and set that to the current level...
         currentMap = maps.at("map-test2.json");
+
+        particle = std::make_shared<Particle>(1.0f);
+
+        auto particleAnimationSet = AnimationLoader::loadSet("assets/animations/particles.json");
+        auto particleSpriteSheet = imageCache->get(particleAnimationSet->getImageFileName());
+        particle->setActive(true);
+        particle->setAnimationSet(particleAnimationSet);
+        particle->setSpriteTexture(particleSpriteSheet);
+        particle->setBoundingBox(BoundingBoxF(0, 0, 16, 24).setOrigin(8, 20));
+        particle->setCurrentAnimation("medium-explosion");
 
         startStage();
     }
@@ -559,6 +579,13 @@ namespace hikari {
             std::end(activeEnemies), 
             std::bind(&Enemy::render, std::placeholders::_1, ReferenceWrapper<sf::RenderTarget>(target)));
 
+        const auto & activeParticles = world.getActiveParticles();
+
+        std::for_each(
+            std::begin(activeParticles), 
+            std::end(activeParticles), 
+            std::bind(&Particle::render, std::placeholders::_1, ReferenceWrapper<sf::RenderTarget>(target)));
+
         const auto & activeProjectiles = world.getActiveProjectiles();
 
         std::for_each(
@@ -645,6 +672,11 @@ namespace hikari {
 
             if(enemyPtr) {
                 world.queueObjectRemoval(enemyPtr);
+
+                std::shared_ptr<Particle> clone = particle->clone();
+                clone->setPosition(enemyPtr->getPosition());
+                clone->setActive(true);
+                world.queueObjectAddition(clone);
             }
         }
     }
@@ -1050,6 +1082,29 @@ namespace hikari {
                     }
                 }
 
+        });
+
+        // 
+        // Update particles
+        // 
+        const auto & activeParticles = gamePlayState.world.getActiveParticles();
+
+        std::for_each(
+            std::begin(activeParticles), 
+            std::end(activeParticles), 
+            [this, &camera, &dt](const std::shared_ptr<Particle> & particle) {
+                particle->update(dt);
+
+                const auto & cameraView = camera.getView();
+
+                if(!geom::intersects(particle->getBoundingBox(), cameraView)) {
+                    HIKARI_LOG(debug3) << "Cleaning up off-screen particle #" << particle->getId();
+                    particle->setActive(false);
+                }
+
+                if(particle->isActive()) {
+                    gamePlayState.world.queueObjectRemoval(particle);
+                }
         });
 
         //
