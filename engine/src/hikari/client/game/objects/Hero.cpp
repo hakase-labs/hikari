@@ -322,6 +322,10 @@ namespace hikari {
         }
     }
 
+    void Hero::stopShooting() {
+        changeShootingState(std::unique_ptr<ShootingState>(new NotShootingState(*this)));
+    }
+
     bool Hero::isVulnerable() {
         return !isInvincible;
     }
