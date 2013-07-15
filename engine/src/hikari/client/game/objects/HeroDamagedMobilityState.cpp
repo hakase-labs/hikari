@@ -67,7 +67,6 @@ namespace hikari {
         stunnedTimer -= dt;
 
         if(stunnedTimer <= 0.0f) {
-            // hero.requestMobilityStateChange(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
             return MobilityState::NEXT;
         }
 
