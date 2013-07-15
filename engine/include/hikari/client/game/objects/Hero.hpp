@@ -204,6 +204,7 @@ namespace hikari {
         void performMorph();
         void performHurt();
         void performStun();
+        void kill();
 
         bool isVulnerable();
 
