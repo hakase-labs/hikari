@@ -156,7 +156,7 @@ namespace hikari {
         std::size_t samplerCount;
         std::size_t activeSampler;
 
-        typedef std::pair<std::shared_ptr<Music_Emu>, std::vector<short>> SamplerPair;
+        typedef std::pair<std::shared_ptr<Music_Emu>, std::shared_ptr<std::vector<short>>> SamplerPair;
         std::stack<SamplerPair> availableSamplers;
         std::list<SamplerPair> activeSamplers;
 

@@ -72,8 +72,8 @@ namespace hikari {
                 sampleEmu->start_track(-1);
                 sampleEmu->ignore_silence(false);
 
-                auto sampleBuffer = std::vector<short>(masterBufferSize);
-                std::fill(std::begin(sampleBuffer), std::end(sampleBuffer), 0);
+                auto sampleBuffer = std::make_shared<std::vector<short>>(masterBufferSize);
+                std::fill(std::begin(*sampleBuffer), std::end(*sampleBuffer), 0);
                 availableSamplers.push(std::make_pair(sampleEmu, sampleBuffer));
                 // sampleEmus.push_back(std::move(sampleEmu));
             }
@@ -124,7 +124,7 @@ namespace hikari {
 
         std::for_each(std::begin(activeSamplers), std::end(activeSamplers), [&](SamplerPair & pair) {
             auto & emu = pair.first;
-            auto & buffer = pair.second;
+            auto & buffer = *pair.second;
 
             if(!emu->track_ended()) {
                 emu->play(masterBufferSize, &buffer[0]);
@@ -134,16 +134,22 @@ namespace hikari {
         });
 
         for(std::size_t i = 0; i < masterBufferSize; ++i) {
-            short mixedValue = 0;
+            short mixedValue = 65535;
 
             std::for_each(std::begin(activeSamplers), std::end(activeSamplers), [&](SamplerPair & pair) {
                 auto & emu = pair.first;
-                auto & buffer = pair.second;
+                auto & buffer = *pair.second;
 
                 if(!emu->track_ended()) {
                     // This mixing strategy came from: http://www.vttoth.com/CMS/index.php/technical-notes/68
                     // And supporting information from: http://cboard.cprogramming.com/c-programming/103456-mixing-pcm-samples-dealing-clicks-overflow.html
-                    mixedValue = mixedValue + buffer[i] - ((mixedValue * buffer[i]) / 65535);
+                    //mixedValue = mixedValue + buffer[i] - ((mixedValue * buffer[i]) / 65535);
+                    
+                    // Method dreived from: http://stackoverflow.com/a/10029792
+                    float a = (mixedValue + 32767.0f) / 65536.0f;
+                    float b = (buffer[i] + 32767.0f) / 65536.0f;
+
+                    mixedValue = static_cast<short>((a + b) * 65536.0f);
                 } else {
                     buffer[i] = 0;
                 }
