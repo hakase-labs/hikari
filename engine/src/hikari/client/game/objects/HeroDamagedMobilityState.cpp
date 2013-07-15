@@ -25,6 +25,7 @@ namespace hikari {
     void Hero::DamagedMobilityState::enter() {
         hero.isStunned = true;
         hero.invincibilityTimer = 1.4667f;
+        hero.stopShooting();
         hero.chooseAnimation();
 
         // If we're facing left, move right, if right, move left.
