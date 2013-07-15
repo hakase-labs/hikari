@@ -519,6 +519,9 @@ namespace hikari {
 
     void GamePlayState::startRound() {
         //world.removeAllObjects();
+        if(auto gp = gameProgress.lock()) {
+            gp->setPlayerEnergy(56);
+        }
 
         if(currentMap) {
             // Boss corridor has highest priority
@@ -1080,10 +1083,16 @@ namespace hikari {
                     }
                     // END DAMAGE RESOLVER LOGIC
                     
-                    HIKARI_LOG(debug3) << "Her should take " << damageAmount << " damage!";
+                    HIKARI_LOG(debug3) << "Hero should take " << damageAmount << " damage!";
 
                     if(hero->isVulnerable()) {
                         hero->performStun();
+
+                        if(auto gp = gamePlayState.gameProgress.lock()) {
+                            gp->setPlayerEnergy(
+                                gp->getPlayerEnergy() - 5
+                            );
+                        }
                     }
                 }
 
@@ -1269,6 +1278,18 @@ namespace hikari {
                 return SubState::NEXT;
                 break;
             }
+        }
+
+        if(auto gp = gamePlayState.gameProgress.lock()) {
+            int playerEnergy = gp->getPlayerEnergy();
+
+            if(playerEnergy <= 0) {
+                hero->kill();
+            }
+            
+            gamePlayState.guiHeroEnergyGauge->setValue(
+                gp->getPlayerEnergy()
+            );
         }
 
         return SubState::CONTINUE;
