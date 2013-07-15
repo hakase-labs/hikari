@@ -715,6 +715,11 @@ namespace hikari {
                 if(auto sound = audioService.lock()) {
                     sound->playSample(52);
                 }
+            } else if(eventData->getStateName() == "sliding") {
+                std::shared_ptr<Particle> clone = particle->clone();
+                clone->setPosition(hero->getPosition());
+                clone->setActive(true);
+                world.queueObjectAddition(clone);
             }
         }
     }
