@@ -33,7 +33,7 @@ namespace hikari {
         unsigned char getLives() const;
         unsigned char getETanks() const;
         unsigned char getMTanks() const;
-        unsigned char getPlayerEnergy() const;
+        int getPlayerEnergy() const;
         unsigned char getCurrentBoss() const;
         unsigned char getCurrentWeapon() const;
         unsigned char getWeaponCount() const;
@@ -49,7 +49,7 @@ namespace hikari {
         void setLives(unsigned char value);
         void setETanks(unsigned char value);
         void setMTanks(unsigned char value);
-        void setPlayerEnergy(unsigned char value);
+        void setPlayerEnergy(int value);
         void setCurrentBoss(unsigned char boss);
         void setCurrentWeapon(unsigned char weapon);
         void setWeaponEnergy(unsigned char weapon, unsigned char value);
