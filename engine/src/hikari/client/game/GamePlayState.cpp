@@ -435,6 +435,15 @@ namespace hikari {
         );
     }
 
+    std::shared_ptr<CollectableItem> GamePlayState::spawnBonusItem(int bonusTableIndex) {
+        std::shared_ptr<CollectableItem> bonus;
+
+        // Some logic here to pick item type
+        bonus = world.spawnCollectableItem("Large Health Energy");
+
+        return bonus;
+    }
+
     void GamePlayState::loadAllMaps(const std::weak_ptr<MapLoader> &mapLoader, const Json::Value &params) {
         if(auto mapLoaderPtr = mapLoader.lock()) {
             try {
@@ -682,12 +691,13 @@ namespace hikari {
                 world.queueObjectAddition(clone);
 
                 // Calculate bonus drop
-                auto bonus = world.spawnCollectableItem("Small Health Energy");
-                bonus->setPosition(enemyPtr->getPosition());
-                bonus->setActive(true);
-                bonus->setAgeless(false);
-                bonus->setMaximumAge(3.0f);
-                world.queueObjectAddition(bonus);
+                if(auto bonus = spawnBonusItem()) {
+                    bonus->setPosition(enemyPtr->getPosition());
+                    bonus->setActive(true);
+                    bonus->setAgeless(false);
+                    bonus->setMaximumAge(3.0f);
+                    world.queueObjectAddition(bonus);
+                }
             }
         } else if(eventData->getEntityType() == EntityDeathEventData::Item) {
             HIKARI_LOG(debug2) << "An item died! id = " << eventData->getEntityId();

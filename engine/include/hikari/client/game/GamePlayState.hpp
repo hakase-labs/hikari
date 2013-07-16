@@ -62,6 +62,7 @@ namespace hikari {
     class WeaponTable;
     class DamageTable;
     class Particle;
+    class CollectableItem;
 
     class GamePlayState : public GameState {
 
@@ -147,6 +148,12 @@ namespace hikari {
          * Cleans up any stale objects between room transitions and level restarts.
          */
         void cleanStaleObjects();
+
+        /**
+         * Spawns a "random" bonus item and returns a pointer to the instance.
+         * If the random drop is "nothing" then a null pointer is returned.
+         */
+        std::shared_ptr<CollectableItem> spawnBonusItem(int bonusTableIndex = 0);
 
         /**
          * Starts the current stage from the beginning. This is like playing the
