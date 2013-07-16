@@ -10,6 +10,7 @@
 #include <string>
 #include <vector>
 #include <list>
+#include <unordered_map>
 
 struct Music_Emu;
 struct track_info_t;
@@ -159,6 +160,7 @@ namespace hikari {
         typedef std::pair<std::shared_ptr<Music_Emu>, std::shared_ptr<std::vector<short>>> SamplerPair;
         std::stack<SamplerPair> availableSamplers;
         std::list<SamplerPair> activeSamplers;
+        std::unordered_map<int, SamplerPair> samplerSlots;
 
         std::unique_ptr<short[]> masterBuffer;       ///< Audio buffer to read/write to
         std::vector<std::unique_ptr<short[]>> sampleBuffers;

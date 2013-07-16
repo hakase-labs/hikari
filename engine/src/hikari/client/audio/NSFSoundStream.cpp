@@ -114,9 +114,11 @@ namespace hikari {
         // }
         activeSamplers.remove_if([&](const SamplerPair & pair) -> bool {
             bool ended = (pair.first)->track_ended();
+            int track = (pair.first)->current_track();
 
             if(ended) {
                 availableSamplers.push(pair);
+                samplerSlots.erase(track);
             }
 
             return ended;
@@ -217,11 +219,15 @@ namespace hikari {
             // sampleEmus[activeSampler]->start_track(track);
             // activeSampler++;
             // activeSampler %= samplerCount;
-            if(!availableSamplers.empty()) {
+            if(samplerSlots.count(track) > 0) {
+                auto sampler = samplerSlots.at(track);
+                (sampler.first)->start_track(track);
+            } else if(!availableSamplers.empty()) {
                 auto sampler = availableSamplers.top();
                 availableSamplers.pop();
                 (sampler.first)->start_track(track);
                 activeSamplers.push_back(sampler);
+                samplerSlots[track] = sampler;
             }
         }
     }
