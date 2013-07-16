@@ -680,6 +680,22 @@ namespace hikari {
                 clone->setPosition(enemyPtr->getPosition());
                 clone->setActive(true);
                 world.queueObjectAddition(clone);
+
+                // Calculate bonus drop
+                auto bonus = world.spawnCollectableItem("Small Health Energy");
+                bonus->setPosition(enemyPtr->getPosition());
+                bonus->setActive(true);
+                bonus->setAgeless(false);
+                bonus->setMaximumAge(3.0f);
+                world.queueObjectAddition(bonus);
+            }
+        } else if(eventData->getEntityType() == EntityDeathEventData::Item) {
+            HIKARI_LOG(debug2) << "An item died! id = " << eventData->getEntityId();
+
+            auto itemPtr = std::dynamic_pointer_cast<CollectableItem>(world.getObjectById(eventData->getEntityId()).lock());
+
+            if(itemPtr) {
+                world.queueObjectRemoval(itemPtr);
             }
         }
     }
@@ -1022,9 +1038,9 @@ namespace hikari {
 
                 if(!geom::intersects(item->getBoundingBox(), view)) {
                     item->setActive(false);
+
+                    // Don't call onDeath since this is non a "natural" death
                     gamePlayState.world.queueObjectRemoval(item);
-                    // TODO: Handle setting the spawner to deactivated some how...
-                    // gamePlayState.deactivatedItemSpawners.push_back(item);
                 }
 
                 //
@@ -1041,7 +1057,6 @@ namespace hikari {
 
                     item->setActive(false);
                     item->onDeath();
-                    gamePlayState.world.queueObjectRemoval(item);
                 }
         });
 
@@ -1286,7 +1301,7 @@ namespace hikari {
             if(playerEnergy <= 0) {
                 hero->kill();
             }
-            
+
             gamePlayState.guiHeroEnergyGauge->setValue(
                 gp->getPlayerEnergy()
             );
