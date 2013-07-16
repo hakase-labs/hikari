@@ -435,6 +435,15 @@ namespace hikari {
         );
     }
 
+    std::shared_ptr<CollectableItem> GamePlayState::spawnBonusItem(int bonusTableIndex) {
+        std::shared_ptr<CollectableItem> bonus;
+
+        // Some logic here to pick item type
+        bonus = world.spawnCollectableItem("Large Health Energy");
+
+        return bonus;
+    }
+
     void GamePlayState::loadAllMaps(const std::weak_ptr<MapLoader> &mapLoader, const Json::Value &params) {
         if(auto mapLoaderPtr = mapLoader.lock()) {
             try {
@@ -519,6 +528,9 @@ namespace hikari {
 
     void GamePlayState::startRound() {
         //world.removeAllObjects();
+        if(auto gp = gameProgress.lock()) {
+            gp->setPlayerEnergy(56);
+        }
 
         if(currentMap) {
             // Boss corridor has highest priority
@@ -677,6 +689,23 @@ namespace hikari {
                 clone->setPosition(enemyPtr->getPosition());
                 clone->setActive(true);
                 world.queueObjectAddition(clone);
+
+                // Calculate bonus drop
+                if(auto bonus = spawnBonusItem()) {
+                    bonus->setPosition(enemyPtr->getPosition());
+                    bonus->setActive(true);
+                    bonus->setAgeless(false);
+                    bonus->setMaximumAge(3.0f);
+                    world.queueObjectAddition(bonus);
+                }
+            }
+        } else if(eventData->getEntityType() == EntityDeathEventData::Item) {
+            HIKARI_LOG(debug2) << "An item died! id = " << eventData->getEntityId();
+
+            auto itemPtr = std::dynamic_pointer_cast<CollectableItem>(world.getObjectById(eventData->getEntityId()).lock());
+
+            if(itemPtr) {
+                world.queueObjectRemoval(itemPtr);
             }
         }
     }
@@ -715,6 +744,11 @@ namespace hikari {
                 if(auto sound = audioService.lock()) {
                     sound->playSample(52);
                 }
+            } else if(eventData->getStateName() == "sliding") {
+                std::shared_ptr<Particle> clone = particle->clone();
+                clone->setPosition(hero->getPosition());
+                clone->setActive(true);
+                world.queueObjectAddition(clone);
             }
         }
     }
@@ -1014,9 +1048,9 @@ namespace hikari {
 
                 if(!geom::intersects(item->getBoundingBox(), view)) {
                     item->setActive(false);
+
+                    // Don't call onDeath since this is non a "natural" death
                     gamePlayState.world.queueObjectRemoval(item);
-                    // TODO: Handle setting the spawner to deactivated some how...
-                    // gamePlayState.deactivatedItemSpawners.push_back(item);
                 }
 
                 //
@@ -1033,7 +1067,6 @@ namespace hikari {
 
                     item->setActive(false);
                     item->onDeath();
-                    gamePlayState.world.queueObjectRemoval(item);
                 }
         });
 
@@ -1075,10 +1108,16 @@ namespace hikari {
                     }
                     // END DAMAGE RESOLVER LOGIC
                     
-                    HIKARI_LOG(debug3) << "Her should take " << damageAmount << " damage!";
+                    HIKARI_LOG(debug3) << "Hero should take " << damageAmount << " damage!";
 
                     if(hero->isVulnerable()) {
                         hero->performStun();
+
+                        if(auto gp = gamePlayState.gameProgress.lock()) {
+                            gp->setPlayerEnergy(
+                                gp->getPlayerEnergy() - 5
+                            );
+                        }
                     }
                 }
 
@@ -1264,6 +1303,18 @@ namespace hikari {
                 return SubState::NEXT;
                 break;
             }
+        }
+
+        if(auto gp = gamePlayState.gameProgress.lock()) {
+            int playerEnergy = gp->getPlayerEnergy();
+
+            if(playerEnergy <= 0) {
+                hero->kill();
+            }
+
+            gamePlayState.guiHeroEnergyGauge->setValue(
+                gp->getPlayerEnergy()
+            );
         }
 
         return SubState::CONTINUE;

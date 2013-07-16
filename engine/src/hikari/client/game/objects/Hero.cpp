@@ -306,6 +306,9 @@ namespace hikari {
 
     void Hero::performTeleport() {
         changeMobilityState(std::unique_ptr<MobilityState>(new TeleportingMobilityState(*this)));
+        popTemporaryMobilityState();
+        isBlinking = false;
+        blinkTimer = 0.0f;
     }
 
     void Hero::performMorph() {
@@ -319,6 +322,19 @@ namespace hikari {
     void Hero::performStun() {
         if(!isStunned) {
             pushTemporaryMobilityState(std::unique_ptr<MobilityState>(new DamagedMobilityState(*this)));
+        }
+    }
+
+    void Hero::stopShooting() {
+        changeShootingState(std::unique_ptr<ShootingState>(new NotShootingState(*this)));
+    }
+
+    void Hero::kill() {
+        if(auto events = getEventManager().lock()) {
+            EventDataPtr imDeadNow(new EntityDeathEventData(getId(), EntityDeathEventData::Hero));
+            events->queueEvent(imDeadNow);
+        } else {
+            HIKARI_LOG(debug4) << "No event manager.";
         }
     }
 
@@ -452,12 +468,7 @@ namespace hikari {
         //
         if(isVulnerable()) {
             if(TileAttribute::hasAttribute(info.tileType, TileAttribute::SPIKE)) {
-                if(auto events = getEventManager().lock()) {
-                    EventDataPtr imDeadNow(new EntityDeathEventData(getId(), EntityDeathEventData::Hero));
-                    events->queueEvent(imDeadNow);
-                } else {
-                    HIKARI_LOG(debug4) << "No event manager.";
-                }
+                kill();
             }
         }
     }
