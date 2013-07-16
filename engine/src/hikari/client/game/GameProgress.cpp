@@ -47,7 +47,7 @@ namespace hikari {
         return mTanks;
     }
 
-    unsigned char GameProgress::getPlayerEnergy() const {
+    int GameProgress::getPlayerEnergy() const {
         return playerEnergy;
     }
 
@@ -114,8 +114,8 @@ namespace hikari {
         mTanks = value;
     }
 
-    void GameProgress::setPlayerEnergy(unsigned char value) {
-        playerEnergy = value;
+    void GameProgress::setPlayerEnergy(int value) {
+        playerEnergy = std::max(0, value);
     }
 
     void GameProgress::setCurrentBoss(unsigned char boss) {

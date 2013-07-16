@@ -82,6 +82,7 @@ namespace hikari {
 
         void performJump();
         void performSlide();
+        void stopShooting();
 
         /**
          * Changes from the current mobility state to another. Before changing,
@@ -203,6 +204,7 @@ namespace hikari {
         void performMorph();
         void performHurt();
         void performStun();
+        void kill();
 
         bool isVulnerable();
 
