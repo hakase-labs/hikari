@@ -29,7 +29,7 @@
         },
         "medium-explosion": {
             "description": "This is the 'normal' explosion when things are destroyed; enemies, items, all kinds of things. It's radial.",
-            "repeat": true,
+            "repeat": false,
             "keyframe": 0,
             "syncGroup": 100,
             "frames": [ 
