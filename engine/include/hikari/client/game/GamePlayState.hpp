@@ -99,6 +99,7 @@ namespace hikari {
         std::vector<std::weak_ptr<Spawner>> itemSpawners;
         std::vector<std::weak_ptr<Spawner>> deactivatedItemSpawners;
         std::vector<std::pair<EventListenerDelegate, EventType>> eventHandlerDelegates;
+        std::vector<std::pair<int, std::string>> bonusChancesTable;
         GameWorld world;
         Camera camera;
         sf::View view;
@@ -148,6 +149,8 @@ namespace hikari {
          * Cleans up any stale objects between room transitions and level restarts.
          */
         void cleanStaleObjects();
+
+        void populateBonusChancesTable();
 
         /**
          * Spawns a "random" bonus item and returns a pointer to the instance.

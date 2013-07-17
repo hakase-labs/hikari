@@ -62,6 +62,7 @@
 #include <sqrat.h>
 
 #include <algorithm>
+#include <cstdlib>
 #include <memory>
 #include <string>
 
@@ -103,6 +104,7 @@ namespace hikari {
         , itemSpawners()
         , deactivatedItemSpawners()
         , eventHandlerDelegates()
+        , bonusChancesTable()
         , world()
         , camera(Rectangle2D<float>(0.0f, 0.0f, 256.0f, 240.0f))
         , view()
@@ -123,6 +125,8 @@ namespace hikari {
         // Create/configure GUI
         //
         buildGui();
+
+        populateBonusChancesTable();
 
         // leftBar.setFillColor(sf::Color::Black);
 
@@ -435,12 +439,39 @@ namespace hikari {
         );
     }
 
+    void GamePlayState::populateBonusChancesTable() {
+        srand(42);
+        bonusChancesTable.push_back(std::make_pair(1,  "Extra Life"));
+        bonusChancesTable.push_back(std::make_pair(2,  "Large Health Energy"));
+        bonusChancesTable.push_back(std::make_pair(2,  "Large Weapon Energy"));
+        bonusChancesTable.push_back(std::make_pair(15, "Small Health Energy"));
+        bonusChancesTable.push_back(std::make_pair(15, "Small Weapon Energy"));
+    }
+
     std::shared_ptr<CollectableItem> GamePlayState::spawnBonusItem(int bonusTableIndex) {
         std::shared_ptr<CollectableItem> bonus;
 
-        // Some logic here to pick item type
-        bonus = world.spawnCollectableItem("Large Health Energy");
+        int roll = rand() % 100;
 
+        if(bonusChancesTable.size() > 0) {
+            int lowerBound = 0;
+            int upperBound = 0;
+
+            for(auto it = std::begin(bonusChancesTable), end = std::end(bonusChancesTable); it != end; it++) {
+                const auto & chance = *it;
+
+                upperBound = lowerBound + chance.first;
+
+                if(roll >= lowerBound && roll < upperBound) {
+                    bonus = world.spawnCollectableItem(chance.second);
+                    break;
+                }
+
+                // Advance the lower bound
+                lowerBound = upperBound;
+            }
+        }
+ 
         return bonus;
     }
 
