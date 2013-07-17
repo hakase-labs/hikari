@@ -308,7 +308,7 @@ namespace hikari {
         // Determine which stage we're on and set that to the current level...
         currentMap = maps.at("map-test2.json");
 
-        particle = std::make_shared<Particle>(1.0f);
+        particle = std::make_shared<Particle>(0.2334f);
 
         auto particleAnimationSet = AnimationLoader::loadSet("assets/animations/particles.json");
         auto particleSpriteSheet = imageCache->get(particleAnimationSet->getImageFileName());
@@ -1172,7 +1172,7 @@ namespace hikari {
                     particle->setActive(false);
                 }
 
-                if(particle->isActive()) {
+                if(!particle->isActive()) {
                     gamePlayState.world.queueObjectRemoval(particle);
                 }
         });
@@ -1344,7 +1344,7 @@ namespace hikari {
             }
 
             gamePlayState.guiHeroEnergyGauge->setValue(
-                gp->getPlayerEnergy()
+                static_cast<float>(gp->getPlayerEnergy())
             );
         }
 
