@@ -30,6 +30,7 @@ namespace hikari {
     class GuiService;
     class ImageFont;
     class ServiceLocator;
+    class GameController;
 
     namespace gui {
         // Forward-declare any GUI classes here
@@ -38,6 +39,7 @@ namespace hikari {
     class StageSelectState : public GameState {
     private:
         std::string name;
+        GameController & controller;
         sf::View view;
         std::weak_ptr<GuiService> guiService;
         std::weak_ptr<AudioService> audioService;
@@ -54,6 +56,7 @@ namespace hikari {
         int cursorRow;
         int cursorColumn;
         int cursorIndex;
+        bool startGamePlay;
 
         std::vector< std::pair< Point2D<float>, Point2D<float> > > eyePositions;
         std::vector< Point2D<float> > cursorPositions;
@@ -79,7 +82,7 @@ namespace hikari {
         void buildGui();
 
     public:
-        StageSelectState(const std::string &name, const Json::Value &params, ServiceLocator &services);
+        StageSelectState(const std::string &name, const Json::Value &params, GameController & controller, ServiceLocator &services);
         virtual ~StageSelectState();
 
         virtual void handleEvent(sf::Event &event);

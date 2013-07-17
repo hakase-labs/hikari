@@ -4,6 +4,7 @@
 #include "hikari/client/gui/GuiService.hpp"
 #include "hikari/client/Services.hpp"
 
+#include "hikari/core/game/GameController.hpp"
 #include "hikari/core/gui/ImageFont.hpp"
 #include "hikari/core/util/ImageCache.hpp"
 #include "hikari/core/util/StringUtils.hpp"
@@ -38,8 +39,9 @@ namespace hikari {
     const int StageSelectState::DEFAULT_CURSOR_ROW = 1;
     const int StageSelectState::DEFAULT_CURSOR_COLUMN = 1;
 
-    StageSelectState::StageSelectState(const std::string &name, const Json::Value &params, ServiceLocator &services)
+    StageSelectState::StageSelectState(const std::string &name, const Json::Value &params, GameController & controller, ServiceLocator &services)
         : name(name)
+        , controller(controller)
         , guiService(services.locateService<GuiService>(Services::GUISERVICE))
         , audioService(services.locateService<AudioService>(Services::AUDIO))
         , gameProgress(services.locateService<GameProgress>(Services::GAMEPROGRESS))
@@ -132,6 +134,9 @@ namespace hikari {
                 cursorColumn = std::max(0, cursorColumn - 1);
             } else if(event.key.code == sf::Keyboard::Right) {
                 cursorColumn = std::min(NUM_OF_CURSOR_COLUMNS - 1, cursorColumn + 1);
+            } else if(event.key.code == sf::Keyboard::Return) {
+                controller.setNextState("gameplay");
+                startGamePlay = true;
             }
 
             guiSelectedCellLabel->setCaption("(" + StringUtils::toString(cursorColumn) + ", " + StringUtils::toString(cursorRow) + ")");
@@ -177,10 +182,12 @@ namespace hikari {
         const Point2D<float> &cursorPosition = cursorPositions.at(cursorIndex);
         cursor.setPosition(cursorPosition.getX(), cursorPosition.getY());
 
-        return false;
+        return startGamePlay;
     }
 
     void StageSelectState::onEnter() {
+        startGamePlay = false;
+        
         // Start music
         if(auto audio = audioService.lock()) {
             audio->playMusic(3);

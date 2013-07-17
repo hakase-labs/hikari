@@ -128,7 +128,7 @@ namespace hikari {
         }
 
         // Create controller and game states
-        StatePtr stageSelectState(new StageSelectState("stageselect", gameConfigJson["states"]["select"], services));
+        StatePtr stageSelectState(new StageSelectState("stageselect", gameConfigJson["states"]["select"], controller, services));
         StatePtr gamePlayState(new GamePlayState("gameplay", gameConfigJson, services));
         StatePtr passwordState(new PasswordState("password", gameConfigJson, services));
         StatePtr titleState(new TitleState("title", gameConfigJson, services));
