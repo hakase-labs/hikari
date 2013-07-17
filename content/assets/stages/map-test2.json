@@ -1955,6 +1955,24 @@
           "direction": "Right"
         },
         {
+          "type": "Telly",
+          "x": 388,
+          "y": 1100,
+          "direction": "Left"
+        },
+        {
+          "type": "Telly",
+          "x": 398,
+          "y": 1050,
+          "direction": "Right"
+        },
+        {
+          "type": "Telly",
+          "x": 298,
+          "y": 1200,
+          "direction": "Left"
+        },
+        {
           "type": "Peterchy",
           "x": 500,
           "y": 1000,

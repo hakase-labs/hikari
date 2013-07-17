@@ -2,6 +2,7 @@
 #include "hikari/core/game/AnimationSet.hpp"
 #include "hikari/core/game/SpriteAnimator.hpp"
 
+#include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 
 namespace hikari {
@@ -49,6 +50,8 @@ namespace hikari {
         GameObject::update(dt);
 
         animator->update(dt);
+        
+        age += dt;
         
         if(age >= maximumAge) {
             // Die
