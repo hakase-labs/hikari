@@ -320,6 +320,8 @@ namespace hikari {
     }
 
     void Hero::performStun() {
+        isInvincible = true;
+
         if(!isStunned) {
             pushTemporaryMobilityState(std::unique_ptr<MobilityState>(new DamagedMobilityState(*this)));
         }
