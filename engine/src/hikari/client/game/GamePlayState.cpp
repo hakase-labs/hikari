@@ -63,6 +63,7 @@
 
 #include <algorithm>
 #include <cstdlib>
+#include <ctime>
 #include <memory>
 #include <string>
 
@@ -440,7 +441,7 @@ namespace hikari {
     }
 
     void GamePlayState::populateBonusChancesTable() {
-        srand(42);
+        srand(time(nullptr));
         bonusChancesTable.push_back(std::make_pair(1,  "Extra Life"));
         bonusChancesTable.push_back(std::make_pair(2,  "Large Health Energy"));
         bonusChancesTable.push_back(std::make_pair(2,  "Large Weapon Energy"));
@@ -724,6 +725,7 @@ namespace hikari {
                 // Calculate bonus drop
                 if(auto bonus = spawnBonusItem()) {
                     bonus->setPosition(enemyPtr->getPosition());
+                    bonus->setVelocityY(-3.0f); // TODO: Determine the actual upward velocity.
                     bonus->setActive(true);
                     bonus->setAgeless(false);
                     bonus->setMaximumAge(3.0f);
