@@ -3,10 +3,12 @@
 #include "hikari/client/game/objects/EnemyFactory.hpp"
 #include "hikari/client/game/objects/ItemFactory.hpp"
 #include "hikari/client/game/objects/ProjectileFactory.hpp"
+#include "hikari/client/game/objects/ParticleFactory.hpp"
 #include "hikari/client/game/objects/GameObject.hpp"
 #include "hikari/client/game/objects/CollectableItem.hpp"
 #include "hikari/client/game/objects/Enemy.hpp"
 #include "hikari/client/game/objects/Projectile.hpp"
+#include "hikari/client/game/objects/Particle.hpp"
 #include "hikari/client/game/Effect.hpp"
 #include "hikari/client/game/objects/effects/NothingEffect.hpp"
 #include "hikari/client/game/objects/effects/ScriptedEffect.hpp"
@@ -262,6 +264,59 @@ namespace FactoryHelpers {
             // ImageCache is borked!
             throw HikariException("Cannot populate CollectableItemFactory because ImageCache is null.");
         }
+    }
+
+    void populateParticleFactory(
+        const std::string & descriptorFilePath,
+        const std::weak_ptr<hikari::ParticleFactory> & factory,
+        ServiceLocator & services
+    ) {
+        auto imageCachePtr        = services.locateService<ImageCache>(Services::IMAGECACHE);
+        auto animationSetCachePtr = services.locateService<AnimationSetCache>(Services::ANIMATIONSETCACHE);
+
+        if(auto imageCache = imageCachePtr.lock()) {
+            if(auto animationSetCache = animationSetCachePtr.lock()) {
+                if(auto factoryPtr = factory.lock()) {
+
+                    HIKARI_LOG(debug) << "Populating particles factory...";
+
+                    // TODO: Work
+                    // 
+                    auto particle = std::make_shared<Particle>(0.2334f);
+
+                    auto particleAnimationSet = animationSetCache->get("assets/animations/particles.json");
+                    auto particleSpriteSheet = imageCache->get(particleAnimationSet->getImageFileName());
+
+                    particle->setActive(true);
+                    particle->setAnimationSet(particleAnimationSet);
+                    particle->setSpriteTexture(particleSpriteSheet);
+                    particle->setBoundingBox(BoundingBoxF(0, 0, 16, 24).setOrigin(8, 20));
+                    particle->setCurrentAnimation("medium-explosion");
+
+                    factoryPtr->registerPrototype("medium-explosion", particle);
+                    
+                } else {
+                    // ItemFactory is borked!
+                    throw HikariException("Cannot populate ProjectileFactory because ProjectileFactory is null.");
+                }
+            } else {
+                // AnimationSetCache is borked!
+                throw HikariException("Cannot populate ProjectileFactory because AnimationSetCache is null.");
+            }
+        } else {
+            // ImageCache is borked!
+            throw HikariException("Cannot populate ProjectileFactory because ImageCache is null.");
+        }
+
+        // particle = std::make_shared<Particle>(0.2334f);
+
+        // auto particleAnimationSet = AnimationLoader::loadSet("assets/animations/particles.json");
+        // auto particleSpriteSheet = imageCache->get(particleAnimationSet->getImageFileName());
+        // particle->setActive(true);
+        // particle->setAnimationSet(particleAnimationSet);
+        // particle->setSpriteTexture(particleSpriteSheet);
+        // particle->setBoundingBox(BoundingBoxF(0, 0, 16, 24).setOrigin(8, 20));
+        // particle->setCurrentAnimation("medium-explosion");
     }
 
     void populateProjectileFactory(

@@ -9,6 +9,7 @@
 #include "hikari/client/game/objects/Hero.hpp"
 #include "hikari/client/game/objects/ItemFactory.hpp"
 #include "hikari/client/game/objects/EnemyFactory.hpp"
+#include "hikari/client/game/objects/ParticleFactory.hpp"
 #include "hikari/client/game/objects/ProjectileFactory.hpp"
 
 #include "hikari/core/game/map/Room.hpp"
@@ -23,6 +24,7 @@ namespace hikari {
         , currentRoom(nullptr)
         , itemFactory()
         , enemyFactory()
+        , particleFactory()
         , projectileFactory()
         , queuedAdditions()
         , queuedRemovals()
@@ -69,6 +71,10 @@ namespace hikari {
 
     void GameWorld::setEnemyFactory(const std::weak_ptr<EnemyFactory> & enemyFactory) {
         this->enemyFactory = enemyFactory;
+    }
+
+    void GameWorld::setParticleFactory(const std::weak_ptr<ParticleFactory> & particleFactory) {
+        this->particleFactory = particleFactory;
     }
 
     void GameWorld::setProjectileFactory(const std::weak_ptr<ProjectileFactory> & projectileFactory) {

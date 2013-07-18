@@ -13,6 +13,7 @@
 #include "hikari/client/game/objects/FactoryHelpers.hpp"
 #include "hikari/client/game/objects/ItemFactory.hpp"
 #include "hikari/client/game/objects/ProjectileFactory.hpp"
+#include "hikari/client/game/objects/ParticleFactory.hpp"
 #include "hikari/client/gui/GuiService.hpp"
 #include "hikari/client/scripting/SquirrelService.hpp"
 #include "hikari/client/scripting/AudioServiceScriptProxy.hpp"
@@ -129,7 +130,7 @@ namespace hikari {
 
         // Create controller and game states
         StatePtr stageSelectState(new StageSelectState("stageselect", gameConfigJson["states"]["select"], controller, services));
-        StatePtr gamePlayState(new GamePlayState("gameplay", gameConfigJson, services));
+        StatePtr gamePlayState(new GamePlayState("gameplay", controller, gameConfigJson, services));
         StatePtr passwordState(new PasswordState("password", gameConfigJson, services));
         StatePtr titleState(new TitleState("title", gameConfigJson, services));
 
@@ -163,6 +164,7 @@ namespace hikari {
         auto itemFactory       = std::make_shared<ItemFactory>(animationSetCache, imageCache, squirrelService);
         auto enemyFactory      = std::make_shared<EnemyFactory>(animationSetCache, imageCache, squirrelService);
         auto projectileFactory = std::make_shared<ProjectileFactory>(animationSetCache, imageCache, squirrelService);
+        auto particleFactory   = std::make_shared<ParticleFactory>(animationSetCache, imageCache);
         auto weaponTable       = std::make_shared<WeaponTable>();
         auto damageTable       = std::make_shared<DamageTable>();
 
@@ -176,6 +178,7 @@ namespace hikari {
         services.registerService(Services::ITEMFACTORY,       itemFactory);
         services.registerService(Services::ENEMYFACTORY,      enemyFactory);
         services.registerService(Services::PROJECTILEFACTORY, projectileFactory);
+        services.registerService(Services::PARTICLEFACTORY,   particleFactory);
         services.registerService(Services::WEAPONTABLE,       weaponTable);
         services.registerService(Services::DAMAGETABLE,       damageTable);
 
@@ -225,6 +228,14 @@ namespace hikari {
             FactoryHelpers::populateEnemyFactory(
                 "assets/templates/enemies.json",
                 std::weak_ptr<EnemyFactory>(enemyFactory),
+                services
+            );
+        }
+
+        if(auto particleFactory = services.locateService<ParticleFactory>(Services::PARTICLEFACTORY).lock()) {
+            FactoryHelpers::populateParticleFactory(
+                "assets/templates/particles.json",
+                std::weak_ptr<ParticleFactory>(particleFactory),
                 services
             );
         }

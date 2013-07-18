@@ -13,6 +13,7 @@ namespace hikari {
     class EnemyFactory;
     class ItemFactory;
     class ProjectileFactory;
+    class ParticleFactory;
     class WeaponTable;
 
 namespace FactoryHelpers {
@@ -49,6 +50,24 @@ namespace FactoryHelpers {
     void populateEnemyFactory(
         const std::string & descriptorFilePath,
         const std::weak_ptr<hikari::EnemyFactory> & factory,
+        ServiceLocator & services
+    );
+
+    /**
+     * Populates an ParticleFactory with prototype instances loaded from a 
+     * descriptor file.
+     *
+     * This function loads a descriptor file and creates instances of 
+     * particles to be used as prototypes. These prototypes are then injected
+     * into a specified factory.
+     *
+     * @param descriptorFilePath the path to the descriptor file
+     * @param factory            the factory to populate
+     * @param services           the service locator
+     */
+    void populateParticleFactory(
+        const std::string & descriptorFilePath,
+        const std::weak_ptr<hikari::ParticleFactory> & factory,
         ServiceLocator & services
     );
 

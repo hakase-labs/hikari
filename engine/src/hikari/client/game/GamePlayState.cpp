@@ -15,6 +15,7 @@
 #include "hikari/client/game/objects/Projectile.hpp"
 #include "hikari/client/game/objects/ProjectileFactory.hpp"
 #include "hikari/client/game/objects/Particle.hpp"
+#include "hikari/client/game/objects/ParticleFactory.hpp"
 #include "hikari/client/game/Effect.hpp"
 #include "hikari/client/game/Weapon.hpp"
 #include "hikari/client/game/WeaponTable.hpp"
@@ -34,6 +35,7 @@
 #include "hikari/client/game/events/WeaponFireEventData.hpp"
 #include "hikari/client/game/events/ObjectRemovedEventData.hpp"
 #include "hikari/client/gui/GuiService.hpp"
+#include "hikari/core/game/GameController.hpp"
 #include "hikari/core/game/AnimationSet.hpp"
 #include "hikari/core/game/AnimationLoader.hpp"
 #include "hikari/core/game/TileMapCollisionResolver.hpp"
@@ -74,8 +76,9 @@ namespace hikari {
         HIKARI_LOG(debug1) << "Removed! id =" << eventData->getObjectId();
     }
 
-    GamePlayState::GamePlayState(const std::string &name, const Json::Value &params, ServiceLocator &services)
+    GamePlayState::GamePlayState(const std::string &name, GameController & controller, const Json::Value &params, ServiceLocator &services)
         : name(name)
+        , controller(controller)
         , audioService(services.locateService<AudioService>(Services::AUDIO))
         , guiService(services.locateService<GuiService>(Services::GUISERVICE))
         , eventManager(new EventManagerImpl("GamePlayEvents", false))
@@ -117,6 +120,7 @@ namespace hikari {
         , hasReachedMidpoint(false)
         , hasReachedBossCorridor(false)
         , isHeroAlive(false)
+        , gotoNextState(false)
     {
         loadAllMaps(services.locateService<MapLoader>(hikari::Services::MAPLOADER), params);
 
@@ -154,9 +158,11 @@ namespace hikari {
 
         const auto itemFactoryWeak  = services.locateService<ItemFactory>(Services::ITEMFACTORY);
         const auto enemyFactoryWeak = services.locateService<EnemyFactory>(Services::ENEMYFACTORY);
+        const auto particleFactoryWeak = services.locateService<ParticleFactory>(Services::PARTICLEFACTORY);
         const auto projectileFactoryWeak = services.locateService<ProjectileFactory>(Services::PROJECTILEFACTORY);
         world.setItemFactory(itemFactoryWeak);
         world.setEnemyFactory(enemyFactoryWeak);
+        world.setParticleFactory(particleFactoryWeak);
         world.setProjectileFactory(projectileFactoryWeak);
     }
 
@@ -268,6 +274,8 @@ namespace hikari {
     }
 
     bool GamePlayState::update(const float &dt) {
+        gotoNextState = false;
+
         userInput->update();
 
         // if(particle) {
@@ -293,7 +301,7 @@ namespace hikari {
             }
         }
 
-        return false;
+        return gotoNextState;
     }
 
     void GamePlayState::onEnter() {
@@ -698,6 +706,8 @@ namespace hikari {
                     if(progress->getLives() == 0) {
                         HIKARI_LOG(debug2) << "Hero has died all of his lives, go to password screen.";
                         // TODO: Reset number of lives here to the default.
+                        controller.setNextState("stageselect");
+                        gotoNextState = true;
                     }
                 }
                 
