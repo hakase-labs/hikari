@@ -11,6 +11,7 @@ namespace hikari {
         : GameObject()
         , age(0.0f)
         , maximumAge(maximumAge)
+        , velocity(0.0f, 0.0f)
         , boundingBox(0.0f, 0.0f, 0.0f, 0.0f)
         , sprite()
         , spriteTexture(nullptr)
@@ -25,6 +26,7 @@ namespace hikari {
         : GameObject()
         , age(0.0f)
         , maximumAge(proto.maximumAge)
+        , velocity(proto.velocity)
         , boundingBox(proto.boundingBox)
         , sprite(proto.sprite)
         , spriteTexture(proto.spriteTexture)
@@ -51,9 +53,11 @@ namespace hikari {
 
         animator->update(dt);
         
+        setPosition(getPosition() + getVelocity());
+
         age += dt;
-        
-        if(age >= maximumAge) {
+
+        if(getMaximumAge() > 0 && (age >= getMaximumAge())) {
             // Die
             setActive(false);
         }
@@ -68,6 +72,14 @@ namespace hikari {
         );
 
         target.draw(sprite);
+    }
+
+    void Particle::setMaximumAge(float maximumAge) {
+        this->maximumAge = maximumAge;
+    }
+
+    float Particle::getMaximumAge() const {
+        return maximumAge;
     }
 
     void Particle::setPosition(const Vector2<float> & position) {

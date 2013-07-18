@@ -1,0 +1,41 @@
+[
+    {
+        "name": "Medium Explosion",
+        "animationSet": "assets/animations/particles.json",
+        "animationName": "medium-explosion",
+        "boundingBox": {
+            "width": 14,
+            "height": 14,
+            "originX": 7,
+            "originY": 7
+        },
+        "ageless": false,
+        "maximumAge": 0.2334
+    },
+    {
+        "name": "Medium Explosion (Loop)",
+        "animationSet": "assets/animations/particles.json",
+        "animationName": "medium-explosion-looping",
+        "boundingBox": {
+            "width": 14,
+            "height": 14,
+            "originX": 7,
+            "originY": 7
+        },
+        "ageless": true,
+        "maximumAge": -1.0
+    },
+    {
+        "name": "Sliding Dust",
+        "animationSet": "assets/animations/particles.json",
+        "animationName": "slide-dust",
+        "boundingBox": {
+            "width": 8,
+            "height": 8,
+            "originX": 4,
+            "originY": 4
+        },
+        "ageless": false,
+        "maximumAge": 0.8667
+    }
+]
