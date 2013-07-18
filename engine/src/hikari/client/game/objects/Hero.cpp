@@ -309,6 +309,8 @@ namespace hikari {
         popTemporaryMobilityState();
         isBlinking = false;
         blinkTimer = 0.0f;
+        invincibilityTimer = 0.0f;
+        isVisible = true;
     }
 
     void Hero::performMorph() {
@@ -320,11 +322,11 @@ namespace hikari {
     }
 
     void Hero::performStun() {
-        isInvincible = true;
-
         if(!isStunned) {
             pushTemporaryMobilityState(std::unique_ptr<MobilityState>(new DamagedMobilityState(*this)));
         }
+
+        isStunned = true;
     }
 
     void Hero::stopShooting() {
