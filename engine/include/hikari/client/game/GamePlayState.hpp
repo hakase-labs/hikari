@@ -18,6 +18,7 @@
 #include <memory>
 
 #include <string>
+#include <list>
 #include <map>
 #include <vector>
 #include <utility>
@@ -101,7 +102,7 @@ namespace hikari {
         std::vector<std::weak_ptr<Spawner>> itemSpawners;
         std::vector<std::weak_ptr<Spawner>> deactivatedItemSpawners;
         std::vector<std::pair<EventListenerDelegate, EventType>> eventHandlerDelegates;
-        std::vector<std::pair<int, std::string>> bonusChancesTable;
+        std::list<std::pair<int, std::string>> bonusChancesTable;
         GameWorld world;
         Camera camera;
         sf::View view;
