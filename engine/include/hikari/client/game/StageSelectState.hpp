@@ -21,6 +21,7 @@ namespace sf {
 namespace gcn {
     class Container;
     class Label;
+    class Icon;
 }
 
 namespace hikari {
@@ -46,12 +47,12 @@ namespace hikari {
         std::weak_ptr<GameProgress> gameProgress;
         std::unique_ptr<::gcn::Container> guiContainer;
         std::unique_ptr<::gcn::Label> guiSelectedCellLabel;
+        std::unique_ptr<::gcn::Icon> guiCursorIcon;
 
         sf::Sprite background;
         sf::Sprite foreground;
         sf::Sprite leftEye;
         sf::Sprite rightEye;
-        sf::Sprite cursor;
 
         int cursorRow;
         int cursorColumn;

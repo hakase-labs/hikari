@@ -16,6 +16,7 @@
 
 #include <guichan/widgets/container.hpp>
 #include <guichan/widgets/label.hpp>
+#include <guichan/widgets/icon.hpp>
 
 namespace hikari {
 
@@ -47,6 +48,7 @@ namespace hikari {
         , gameProgress(services.locateService<GameProgress>(Services::GAMEPROGRESS))
         , guiContainer(new gcn::Container())
         , guiSelectedCellLabel(new gcn::Label())
+        , guiCursorIcon()
         , cursorRow(DEFAULT_CURSOR_ROW)
         , cursorColumn(DEFAULT_CURSOR_COLUMN)
     {
@@ -58,12 +60,14 @@ namespace hikari {
         if(auto imageCachePtr = imageCache.lock()) {
             background.setTexture(*imageCachePtr->get(params[PROPERTY_BACKGROUND].asString()).get());
             foreground.setTexture(*imageCachePtr->get(params[PROPERTY_FOREGROUND].asString()).get());
-            cursor.setTexture(*imageCachePtr->get(params[PROPERTY_CURSOR_SPRITE].asString()).get());
             leftEye.setTexture(*imageCachePtr->get(params[PROPERTY_EYE_SPRITE].asString()).get());
             rightEye.setTexture(*imageCachePtr->get(params[PROPERTY_EYE_SPRITE].asString()).get());
         }
 
-        cursor.setPosition(-100.0f, -100.0f);
+        guiCursorIcon.reset(new gcn::Icon(params[PROPERTY_CURSOR_SPRITE].asString()));
+
+        guiCursorIcon->setX(-100);
+        guiCursorIcon->setY(-100);
 
         // Load eye positions
         // There are 9 positions; 18 points total (one for left, one for right eye)
@@ -111,7 +115,7 @@ namespace hikari {
     void StageSelectState::buildGui() {
         guiContainer->setSize(256, 240);
         guiContainer->setBaseColor(0x1122AA);
-        guiContainer->setOpaque(true);
+        guiContainer->setOpaque(false);
         guiContainer->setVisible(true);
 
         guiSelectedCellLabel->setX(8);
@@ -120,6 +124,7 @@ namespace hikari {
         guiSelectedCellLabel->adjustSize();
 
         guiContainer->add(guiSelectedCellLabel.get());
+        guiContainer->add(guiCursorIcon.get());
     }
 
     void StageSelectState::handleEvent(sf::Event &event) {
@@ -149,7 +154,6 @@ namespace hikari {
         target.draw(leftEye);
         target.draw(rightEye);
         target.draw(foreground);
-        target.draw(cursor);
         
         // guiFont->renderText(target, "PUSH   START", 80, 8);
         // guiFont->renderText(target, "MAN", 48, 88);
@@ -180,7 +184,9 @@ namespace hikari {
 
         // Set cursor position
         const Point2D<float> &cursorPosition = cursorPositions.at(cursorIndex);
-        cursor.setPosition(cursorPosition.getX(), cursorPosition.getY());
+
+        guiCursorIcon->setX(cursorPosition.getX());
+        guiCursorIcon->setY(cursorPosition.getY());
 
         return startGamePlay;
     }
