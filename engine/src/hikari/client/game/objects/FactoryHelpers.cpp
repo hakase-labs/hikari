@@ -3,10 +3,12 @@
 #include "hikari/client/game/objects/EnemyFactory.hpp"
 #include "hikari/client/game/objects/ItemFactory.hpp"
 #include "hikari/client/game/objects/ProjectileFactory.hpp"
+#include "hikari/client/game/objects/ParticleFactory.hpp"
 #include "hikari/client/game/objects/GameObject.hpp"
 #include "hikari/client/game/objects/CollectableItem.hpp"
 #include "hikari/client/game/objects/Enemy.hpp"
 #include "hikari/client/game/objects/Projectile.hpp"
+#include "hikari/client/game/objects/Particle.hpp"
 #include "hikari/client/game/Effect.hpp"
 #include "hikari/client/game/objects/effects/NothingEffect.hpp"
 #include "hikari/client/game/objects/effects/ScriptedEffect.hpp"
@@ -261,6 +263,77 @@ namespace FactoryHelpers {
         } else {
             // ImageCache is borked!
             throw HikariException("Cannot populate CollectableItemFactory because ImageCache is null.");
+        }
+    }
+
+    void populateParticleFactory(
+        const std::string & descriptorFilePath,
+        const std::weak_ptr<hikari::ParticleFactory> & factory,
+        ServiceLocator & services
+    ) {
+        auto imageCachePtr        = services.locateService<ImageCache>(Services::IMAGECACHE);
+        auto animationSetCachePtr = services.locateService<AnimationSetCache>(Services::ANIMATIONSETCACHE);
+
+        if(auto imageCache = imageCachePtr.lock()) {
+            if(auto animationSetCache = animationSetCachePtr.lock()) {
+                if(auto factoryPtr = factory.lock()) {
+
+                    HIKARI_LOG(debug) << "Populating particles factory...";
+
+                    auto fileContents = FileSystem::openFile(descriptorFilePath);
+                    Json::Value root;
+                    Json::Reader reader;
+
+                    if(reader.parse(*fileContents, root, false)) {
+                        auto templateCount = root.size();
+
+                        for(decltype(templateCount) i = 0; i < templateCount; ++i) {
+                            const auto & templateObject = root[i];
+
+                            const auto name              = templateObject["name"].asString();
+                            const auto animationSet      = templateObject["animationSet"].asString();
+                            const auto animationName     = templateObject["animationName"].asString();
+                            const auto boundingBoxObject = templateObject["boundingBox"];
+                            const auto ageless           = templateObject["ageless"].asBool();
+                            const auto maximumAge        = templateObject["maximumAge"].asDouble();
+
+                            hikari::BoundingBoxF boundingBox(
+                                0.0f,
+                                0.0f,
+                                static_cast<float>(boundingBoxObject["width"].asDouble()),
+                                static_cast<float>(boundingBoxObject["height"].asDouble())
+                            );
+
+                            boundingBox.setOrigin(
+                                static_cast<float>(boundingBoxObject["originX"].asDouble()),
+                                static_cast<float>(boundingBoxObject["originY"].asDouble())
+                            );
+
+                            auto instance = std::make_shared<Particle>(static_cast<float>(maximumAge));
+
+                            auto animationSetPtr = animationSetCache->get(animationSet);
+                            auto spriteTexture = imageCache->get(animationSetPtr->getImageFileName());
+
+                            instance->setAnimationSet(animationSetPtr);
+                            instance->setSpriteTexture(spriteTexture);
+                            instance->setBoundingBox(boundingBox);
+                            instance->setCurrentAnimation(animationName);
+
+                            factoryPtr->registerPrototype(name, instance);
+                        }
+                    }
+
+                } else {
+                    // ItemFactory is borked!
+                    throw HikariException("Cannot populate ProjectileFactory because ProjectileFactory is null.");
+                }
+            } else {
+                // AnimationSetCache is borked!
+                throw HikariException("Cannot populate ProjectileFactory because AnimationSetCache is null.");
+            }
+        } else {
+            // ImageCache is borked!
+            throw HikariException("Cannot populate ProjectileFactory because ImageCache is null.");
         }
     }
 

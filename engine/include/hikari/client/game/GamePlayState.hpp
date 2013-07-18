@@ -18,6 +18,7 @@
 #include <memory>
 
 #include <string>
+#include <list>
 #include <map>
 #include <vector>
 #include <utility>
@@ -43,6 +44,7 @@ namespace hikari {
     }
 
     class AudioService;
+    class GameController;
     class GameProgress;
     class GuiService;
     class ImageFont;
@@ -70,6 +72,7 @@ namespace hikari {
 
     private:
         std::string name;
+        GameController & controller;
         std::weak_ptr<AudioService> audioService;
         std::weak_ptr<GuiService> guiService;
         std::shared_ptr<EventManager> eventManager;
@@ -99,7 +102,7 @@ namespace hikari {
         std::vector<std::weak_ptr<Spawner>> itemSpawners;
         std::vector<std::weak_ptr<Spawner>> deactivatedItemSpawners;
         std::vector<std::pair<EventListenerDelegate, EventType>> eventHandlerDelegates;
-        std::vector<std::pair<int, std::string>> bonusChancesTable;
+        std::list<std::pair<int, std::string>> bonusChancesTable;
         GameWorld world;
         Camera camera;
         sf::View view;
@@ -111,6 +114,7 @@ namespace hikari {
         bool hasReachedMidpoint;
         bool hasReachedBossCorridor;
         bool isHeroAlive;
+        bool gotoNextState;
 
         std::shared_ptr<Particle> particle;
 
@@ -311,7 +315,7 @@ namespace hikari {
         };
 
     public:
-        GamePlayState(const std::string &name, const Json::Value &params, ServiceLocator &services);
+        GamePlayState(const std::string &name, GameController & controller, const Json::Value &params, ServiceLocator &services);
         virtual ~GamePlayState();
 
         virtual void handleEvent(sf::Event &event);

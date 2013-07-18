@@ -46,6 +46,9 @@ namespace hikari {
         virtual void update(float dt);
         virtual void render(sf::RenderTarget &target);
 
+        void setMaximumAge(float maximumAge);
+        float getMaximumAge() const;
+
         void setPosition(const Vector2<float> & position);
         const Vector2<float> & getPosition() const;
 

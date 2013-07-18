@@ -21,6 +21,7 @@ namespace sf {
 namespace gcn {
     class Container;
     class Label;
+    class Icon;
 }
 
 namespace hikari {
@@ -30,6 +31,7 @@ namespace hikari {
     class GuiService;
     class ImageFont;
     class ServiceLocator;
+    class GameController;
 
     namespace gui {
         // Forward-declare any GUI classes here
@@ -38,22 +40,24 @@ namespace hikari {
     class StageSelectState : public GameState {
     private:
         std::string name;
+        GameController & controller;
         sf::View view;
         std::weak_ptr<GuiService> guiService;
         std::weak_ptr<AudioService> audioService;
         std::weak_ptr<GameProgress> gameProgress;
         std::unique_ptr<::gcn::Container> guiContainer;
         std::unique_ptr<::gcn::Label> guiSelectedCellLabel;
+        std::unique_ptr<::gcn::Icon> guiCursorIcon;
 
         sf::Sprite background;
         sf::Sprite foreground;
         sf::Sprite leftEye;
         sf::Sprite rightEye;
-        sf::Sprite cursor;
 
         int cursorRow;
         int cursorColumn;
         int cursorIndex;
+        bool startGamePlay;
 
         std::vector< std::pair< Point2D<float>, Point2D<float> > > eyePositions;
         std::vector< Point2D<float> > cursorPositions;
@@ -79,7 +83,7 @@ namespace hikari {
         void buildGui();
 
     public:
-        StageSelectState(const std::string &name, const Json::Value &params, ServiceLocator &services);
+        StageSelectState(const std::string &name, const Json::Value &params, GameController & controller, ServiceLocator &services);
         virtual ~StageSelectState();
 
         virtual void handleEvent(sf::Event &event);
