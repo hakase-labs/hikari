@@ -421,6 +421,14 @@ namespace hikari {
     }
 
     std::unique_ptr<Particle> GameWorld::spawnParticle(const std::string & name) const {
+        if(auto particleFactoryPtr = particleFactory.lock()) {
+            try {
+                return particleFactoryPtr->create(name);
+            } catch(HikariException & ex) {
+                HIKARI_LOG(debug) << ex.what();
+            }
+        }
+
         return std::unique_ptr<Particle>(nullptr);
     }
 

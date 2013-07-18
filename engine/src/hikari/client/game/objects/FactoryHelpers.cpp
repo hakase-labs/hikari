@@ -280,21 +280,49 @@ namespace FactoryHelpers {
 
                     HIKARI_LOG(debug) << "Populating particles factory...";
 
-                    // TODO: Work
-                    // 
-                    auto particle = std::make_shared<Particle>(0.2334f);
+                    auto fileContents = FileSystem::openFile(descriptorFilePath);
+                    Json::Value root;
+                    Json::Reader reader;
 
-                    auto particleAnimationSet = animationSetCache->get("assets/animations/particles.json");
-                    auto particleSpriteSheet = imageCache->get(particleAnimationSet->getImageFileName());
+                    if(reader.parse(*fileContents, root, false)) {
+                        auto templateCount = root.size();
 
-                    particle->setActive(true);
-                    particle->setAnimationSet(particleAnimationSet);
-                    particle->setSpriteTexture(particleSpriteSheet);
-                    particle->setBoundingBox(BoundingBoxF(0, 0, 16, 24).setOrigin(8, 20));
-                    particle->setCurrentAnimation("medium-explosion");
+                        for(decltype(templateCount) i = 0; i < templateCount; ++i) {
+                            const auto & templateObject = root[i];
 
-                    factoryPtr->registerPrototype("medium-explosion", particle);
-                    
+                            const auto name              = templateObject["name"].asString();
+                            const auto animationSet      = templateObject["animationSet"].asString();
+                            const auto animationName     = templateObject["animationName"].asString();
+                            const auto boundingBoxObject = templateObject["boundingBox"];
+                            const auto ageless           = templateObject["ageless"].asBool();
+                            const auto maximumAge        = templateObject["maximumAge"].asDouble();
+
+                            hikari::BoundingBoxF boundingBox(
+                                0.0f,
+                                0.0f,
+                                static_cast<float>(boundingBoxObject["width"].asDouble()),
+                                static_cast<float>(boundingBoxObject["height"].asDouble())
+                            );
+
+                            boundingBox.setOrigin(
+                                static_cast<float>(boundingBoxObject["originX"].asDouble()),
+                                static_cast<float>(boundingBoxObject["originY"].asDouble())
+                            );
+
+                            auto instance = std::make_shared<Particle>(static_cast<float>(maximumAge));
+
+                            auto animationSetPtr = animationSetCache->get(animationSet);
+                            auto spriteTexture = imageCache->get(animationSetPtr->getImageFileName());
+
+                            instance->setAnimationSet(animationSetPtr);
+                            instance->setSpriteTexture(spriteTexture);
+                            instance->setBoundingBox(boundingBox);
+                            instance->setCurrentAnimation(animationName);
+
+                            factoryPtr->registerPrototype(name, instance);
+                        }
+                    }
+
                 } else {
                     // ItemFactory is borked!
                     throw HikariException("Cannot populate ProjectileFactory because ProjectileFactory is null.");
@@ -307,16 +335,6 @@ namespace FactoryHelpers {
             // ImageCache is borked!
             throw HikariException("Cannot populate ProjectileFactory because ImageCache is null.");
         }
-
-        // particle = std::make_shared<Particle>(0.2334f);
-
-        // auto particleAnimationSet = AnimationLoader::loadSet("assets/animations/particles.json");
-        // auto particleSpriteSheet = imageCache->get(particleAnimationSet->getImageFileName());
-        // particle->setActive(true);
-        // particle->setAnimationSet(particleAnimationSet);
-        // particle->setSpriteTexture(particleSpriteSheet);
-        // particle->setBoundingBox(BoundingBoxF(0, 0, 16, 24).setOrigin(8, 20));
-        // particle->setCurrentAnimation("medium-explosion");
     }
 
     void populateProjectileFactory(
