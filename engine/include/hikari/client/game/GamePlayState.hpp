@@ -163,6 +163,12 @@ namespace hikari {
         std::shared_ptr<CollectableItem> spawnBonusItem(int bonusTableIndex = 0);
 
         /**
+         * Spawns a death explosion -- like when the hero or a boss is defeated.
+         * @param position where the particles shouls radiate from
+         */
+        void spawnDeathExplosion(const Vector2<float> & position);
+
+        /**
          * Starts the current stage from the beginning. This is like playing the
          * level for the first time. This causes the state of the stage to be
          * reset.

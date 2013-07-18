@@ -492,6 +492,136 @@ namespace hikari {
         return bonus;
     }
 
+    void GamePlayState::spawnDeathExplosion(const Vector2<float> & position) {
+        // Fast Top Left
+        if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion (Loop)")) {
+            clone->setPosition(position);
+            clone->setVelocity(Vector2<float>(-2.125f, -2.125f));
+            clone->setActive(true);
+            world.queueObjectAddition(clone);
+        }
+
+        // Fast Top Up
+        if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion (Loop)")) {
+            clone->setPosition(position);
+            clone->setVelocity(Vector2<float>(0.0f, -3.0f));
+            clone->setActive(true);
+            world.queueObjectAddition(clone);
+        }
+
+        // Fast Top Right
+        if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion (Loop)")) {
+            clone->setPosition(position);
+            clone->setVelocity(Vector2<float>(2.125f, -2.125f));
+            clone->setActive(true);
+            world.queueObjectAddition(clone);
+        }
+
+        // Fast Left
+        if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion (Loop)")) {
+            clone->setPosition(position);
+            clone->setVelocity(Vector2<float>(-3.0f, 0.0f));
+            clone->setActive(true);
+            world.queueObjectAddition(clone);
+        }
+
+        // Fast Bottom Left
+        if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion (Loop)")) {
+            clone->setPosition(position);
+            clone->setVelocity(Vector2<float>(-2.125f, 2.125f));
+            clone->setActive(true);
+            world.queueObjectAddition(clone);
+        }
+
+        // Fast Bottom Down
+        if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion (Loop)")) {
+            clone->setPosition(position);
+            clone->setVelocity(Vector2<float>(0.0f, 3.0f));
+            clone->setActive(true);
+            world.queueObjectAddition(clone);
+        }
+
+        // Fast Bottom Right
+        if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion (Loop)")) {
+            clone->setPosition(position);
+            clone->setVelocity(Vector2<float>(2.125f, 2.125f));
+            clone->setActive(true);
+            world.queueObjectAddition(clone);
+        }
+
+        // Fast Right
+        if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion (Loop)")) {
+            clone->setPosition(position);
+            clone->setVelocity(Vector2<float>(3.0f, 0.0f));
+            clone->setActive(true);
+            world.queueObjectAddition(clone);
+        }
+
+        // Slow Top Left
+        if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion (Loop)")) {
+            clone->setPosition(position);
+            clone->setVelocity(Vector2<float>(-1.0625f, -1.0625f));
+            clone->setActive(true);
+            world.queueObjectAddition(clone);
+        }
+
+        // Slow Top Up
+        if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion (Loop)")) {
+            clone->setPosition(position);
+            clone->setVelocity(Vector2<float>(0.0f, -1.5f));
+            clone->setActive(true);
+            world.queueObjectAddition(clone);
+        }
+
+        // Slow Top Right
+        if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion (Loop)")) {
+            clone->setPosition(position);
+            clone->setVelocity(Vector2<float>(1.0625f, -1.0625f));
+            clone->setActive(true);
+            world.queueObjectAddition(clone);
+        }
+
+        // Slow Left
+        if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion (Loop)")) {
+            clone->setPosition(position);
+            clone->setVelocity(Vector2<float>(-1.5f, 0.0f));
+            clone->setActive(true);
+            world.queueObjectAddition(clone);
+        }
+
+        // Slow Bottom Left
+        if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion (Loop)")) {
+            clone->setPosition(position);
+            clone->setVelocity(Vector2<float>(-1.0625f, 1.0625f));
+            clone->setActive(true);
+            world.queueObjectAddition(clone);
+        }
+
+        // Slow Bottom Down
+        if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion (Loop)")) {
+            clone->setPosition(position);
+            clone->setVelocity(Vector2<float>(0.0f, 1.5f));
+            clone->setActive(true);
+            world.queueObjectAddition(clone);
+        }
+
+        // Slow Bottom Right
+        if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion (Loop)")) {
+            clone->setPosition(position);
+            clone->setVelocity(Vector2<float>(1.0625f, 1.0625f));
+            clone->setActive(true);
+            world.queueObjectAddition(clone);
+        }
+
+        // Slow Right
+        if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion (Loop)")) {
+            clone->setPosition(position);
+            clone->setVelocity(Vector2<float>(1.5f, 0.0f));
+            clone->setActive(true);
+            world.queueObjectAddition(clone);
+        }
+    }
+
     void GamePlayState::loadAllMaps(const std::weak_ptr<MapLoader> &mapLoader, const Json::Value &params) {
         if(auto mapLoaderPtr = mapLoader.lock()) {
             try {
@@ -719,149 +849,7 @@ namespace hikari {
                     }
                 }
 
-                // Fast Top Left
-                if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion (Loop)")) {
-                    clone->setPosition(hero->getPosition());
-                    clone->setVelocity(Vector2<float>(-2.31f, -2.31f));
-                    // clone->setMaximumAge(-1.0f);
-                    clone->setActive(true);
-                    world.queueObjectAddition(clone);
-                }
-
-                // Fast Top Up
-                if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion (Loop)")) {
-                    clone->setPosition(hero->getPosition());
-                    clone->setVelocity(Vector2<float>(0.0f, -3.0f));
-                    // clone->setMaximumAge(-1.0f);
-                    clone->setActive(true);
-                    world.queueObjectAddition(clone);
-                }
-
-                // Fast Top Right
-                if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion (Loop)")) {
-                    clone->setPosition(hero->getPosition());
-                    clone->setVelocity(Vector2<float>(2.31f, -2.31f));
-                    // clone->setMaximumAge(-1.0f);
-                    clone->setActive(true);
-                    world.queueObjectAddition(clone);
-                }
-
-                // Fast Left
-                if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion (Loop)")) {
-                    clone->setPosition(hero->getPosition());
-                    clone->setVelocity(Vector2<float>(-3.0f, 0.0f));
-                    // clone->setMaximumAge(-1.0f);
-                    clone->setActive(true);
-                    world.queueObjectAddition(clone);
-                }
-
-                // Fast Bottom Left
-                if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion (Loop)")) {
-                    clone->setPosition(hero->getPosition());
-                    clone->setVelocity(Vector2<float>(-2.31f, 2.31f));
-                    // clone->setMaximumAge(-1.0f);
-                    clone->setActive(true);
-                    world.queueObjectAddition(clone);
-                }
-
-                // Fast Bottom Down
-                if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion (Loop)")) {
-                    clone->setPosition(hero->getPosition());
-                    clone->setVelocity(Vector2<float>(0.0f, 3.0f));
-                    // clone->setMaximumAge(-1.0f);
-                    clone->setActive(true);
-                    world.queueObjectAddition(clone);
-                }
-
-                // Fast Bottom Right
-                if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion (Loop)")) {
-                    clone->setPosition(hero->getPosition());
-                    clone->setVelocity(Vector2<float>(2.31f, 2.31f));
-                    // clone->setMaximumAge(-1.0f);
-                    clone->setActive(true);
-                    world.queueObjectAddition(clone);
-                }
-
-                // Fast Right
-                if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion (Loop)")) {
-                    clone->setPosition(hero->getPosition());
-                    clone->setVelocity(Vector2<float>(3.0f, 0.0f));
-                    // clone->setMaximumAge(-1.0f);
-                    clone->setActive(true);
-                    world.queueObjectAddition(clone);
-                }
-
-                // Slow Top Left
-                if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion (Loop)")) {
-                    clone->setPosition(hero->getPosition());
-                    clone->setVelocity(Vector2<float>(-1.15f, -1.15f));
-                    // clone->setMaximumAge(-1.0f);
-                    clone->setActive(true);
-                    world.queueObjectAddition(clone);
-                }
-
-                // Slow Top Up
-                if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion (Loop)")) {
-                    clone->setPosition(hero->getPosition());
-                    clone->setVelocity(Vector2<float>(0.0f, -1.5f));
-                    // clone->setMaximumAge(-1.0f);
-                    clone->setActive(true);
-                    world.queueObjectAddition(clone);
-                }
-
-                // Slow Top Right
-                if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion (Loop)")) {
-                    clone->setPosition(hero->getPosition());
-                    clone->setVelocity(Vector2<float>(1.15f, -1.15f));
-                    // clone->setMaximumAge(-1.0f);
-                    clone->setActive(true);
-                    world.queueObjectAddition(clone);
-                }
-
-                // Slow Left
-                if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion (Loop)")) {
-                    clone->setPosition(hero->getPosition());
-                    clone->setVelocity(Vector2<float>(-1.5f, 0.0f));
-                    // clone->setMaximumAge(-1.0f);
-                    clone->setActive(true);
-                    world.queueObjectAddition(clone);
-                }
-
-                // Slow Bottom Left
-                if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion (Loop)")) {
-                    clone->setPosition(hero->getPosition());
-                    clone->setVelocity(Vector2<float>(-1.15f, 1.15f));
-                    // clone->setMaximumAge(-1.0f);
-                    clone->setActive(true);
-                    world.queueObjectAddition(clone);
-                }
-
-                // Slow Bottom Down
-                if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion (Loop)")) {
-                    clone->setPosition(hero->getPosition());
-                    clone->setVelocity(Vector2<float>(0.0f, 1.5f));
-                    // clone->setMaximumAge(-1.0f);
-                    clone->setActive(true);
-                    world.queueObjectAddition(clone);
-                }
-
-                // Slow Bottom Right
-                if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion (Loop)")) {
-                    clone->setPosition(hero->getPosition());
-                    clone->setVelocity(Vector2<float>(1.15f, 1.15f));
-                    // clone->setMaximumAge(-1.0f);
-                    clone->setActive(true);
-                    world.queueObjectAddition(clone);
-                }
-
-                // Slow Right
-                if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion (Loop)")) {
-                    clone->setPosition(hero->getPosition());
-                    clone->setVelocity(Vector2<float>(1.5f, 0.0f));
-                    // clone->setMaximumAge(-1.0f);
-                    clone->setActive(true);
-                    world.queueObjectAddition(clone);
-                }
+                spawnDeathExplosion(hero->getPosition());
                 
                 HIKARI_LOG(debug) << "Hero died. Starting over.";
 
