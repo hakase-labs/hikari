@@ -123,8 +123,6 @@ namespace hikari {
         bool isHeroAlive;
         bool gotoNextState;
 
-        std::shared_ptr<Particle> particle;
-
         //
         // Resource Management
         //

@@ -272,10 +272,6 @@ namespace hikari {
             subState->render(target);
         }
 
-        // if(particle) {
-        //     particle->render(target);
-        // }
-
         if(drawInfamousBlackBar) {
             target.draw(leftBar);
         }
@@ -285,10 +281,6 @@ namespace hikari {
         gotoNextState = false;
 
         userInput->update();
-
-        // if(particle) {
-        //     particle->update(dt);
-        // }
 
         if(eventManager) {
             eventManager->processEvents();
@@ -324,16 +316,6 @@ namespace hikari {
 
         // Determine which stage we're on and set that to the current level...
         currentMap = maps.at("map-test2.json");
-
-        // particle = std::make_shared<Particle>(0.2334f);
-
-        // auto particleAnimationSet = AnimationLoader::loadSet("assets/animations/particles.json");
-        // auto particleSpriteSheet = imageCache->get(particleAnimationSet->getImageFileName());
-        // particle->setActive(true);
-        // particle->setAnimationSet(particleAnimationSet);
-        // particle->setSpriteTexture(particleSpriteSheet);
-        // particle->setBoundingBox(BoundingBoxF(0, 0, 16, 24).setOrigin(8, 20));
-        // particle->setCurrentAnimation("medium-explosion");
 
         startStage();
     }
