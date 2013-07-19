@@ -14,6 +14,8 @@ namespace hikari {
         , hitPoints(0.0)
         , damageTickCounter(0)
     {
+        setDeathType(EntityDeathType::Small);
+
         body.setGravitated(true);
         body.setHasWorldCollision(true);
 
@@ -26,6 +28,8 @@ namespace hikari {
         , hitPoints(proto.hitPoints)
         , damageTickCounter(0)
     {
+        setDeathType(proto.getDeathType());
+        
         setActive(false);
         setGravitated(proto.isGravitated());
         setObstacle(proto.isObstacle());
