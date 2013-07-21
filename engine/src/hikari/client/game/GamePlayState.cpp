@@ -1249,17 +1249,17 @@ namespace hikari {
                         std::begin(activeEnemies), 
                         std::end(activeEnemies), 
                         [&](const std::shared_ptr<Enemy> & enemy) {
-                            if(projectile->getBoundingBox().intersects(enemy->getBoundingBox())) {
-                                if(enemy->isShielded()) {
+                            if(!projectile->isInert()) {
+                                if(projectile->getBoundingBox().intersects(enemy->getBoundingBox())) {
+                                    if(enemy->isShielded()) {
+                                         // Deflect projectile
+                                        projectile->deflect();
 
-                                    // Deflect projectile
-                                    projectile->deflect();
-
-                                    if(auto sound = gamePlayState.audioService.lock()) {
-                                        sound->playSample(25); // SAMPLE_HERO_DEATH
-                                    }
-                                } else {
-                                    if(!projectile->isInert()) {
+                                        if(auto sound = gamePlayState.audioService.lock()) {
+                                            HIKARI_LOG(debug4) << "PLAYING SAMPLE weapon DEFLECTED";
+                                            sound->playSample(25); // SAMPLE_HERO_DEATH
+                                        }
+                                    } else {
                                         HIKARI_LOG(debug3) << "Hero bullet " << projectile->getId() << " hit an enemy " << enemy->getId();
                                         projectile->setActive(false);
                                         gamePlayState.world.queueObjectRemoval(projectile); 
