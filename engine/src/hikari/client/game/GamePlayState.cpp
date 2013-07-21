@@ -868,6 +868,12 @@ namespace hikari {
         renderReadyText = false;
         gamePlayState.guiHeroEnergyGauge->setVisible(false);
 
+        if(auto gp = gamePlayState.gameProgress.lock()) {
+            gamePlayState.guiHeroEnergyGauge->setValue(
+                static_cast<float>(gp->getPlayerEnergy())
+            );
+        }
+        
         sf::Color overlayColor = sf::Color(fadeOverlay.getFillColor());
         overlayColor.a = 255;
 
