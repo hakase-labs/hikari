@@ -325,15 +325,15 @@ namespace FactoryHelpers {
 
                 } else {
                     // ItemFactory is borked!
-                    throw HikariException("Cannot populate ProjectileFactory because ProjectileFactory is null.");
+                    throw HikariException("Cannot populate ParticleFactory because ParticleFactory is null.");
                 }
             } else {
                 // AnimationSetCache is borked!
-                throw HikariException("Cannot populate ProjectileFactory because AnimationSetCache is null.");
+                throw HikariException("Cannot populate ParticleFactory because AnimationSetCache is null.");
             }
         } else {
             // ImageCache is borked!
-            throw HikariException("Cannot populate ProjectileFactory because ImageCache is null.");
+            throw HikariException("Cannot populate ParticleFactory because ImageCache is null.");
         }
     }
 
@@ -369,6 +369,8 @@ namespace FactoryHelpers {
 
                                         const auto name              = templateObject["name"].asString();
                                         const auto damageId          = templateObject.get("damageId", 0).asInt();
+                                        const auto isGravitated      = templateObject.get("gravitated", false).asBool();
+                                        const auto isPhasing         = templateObject.get("phasing", true).asBool();
                                         const auto animationSet      = templateObject["animationSet"].asString();
                                         const auto animationName     = templateObject["animationName"].asString();
                                         const auto boundingBoxObject = templateObject["boundingBox"];
@@ -389,6 +391,8 @@ namespace FactoryHelpers {
                                         auto animationSetPtr = animationSetCache->get(animationSet);
                                         auto spriteTexture = imageCache->get(animationSetPtr->getImageFileName());
                                         instance->setAnimationSet(animationSetPtr);
+                                        instance->setGravitated(isGravitated);
+                                        instance->setPhasing(isPhasing);
                                         instance->setSpriteTexture(spriteTexture);
                                         instance->changeAnimation(animationName);
                                         instance->setBoundingBox(boundingBox);

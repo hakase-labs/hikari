@@ -20,5 +20,18 @@
             "originX": 7,
             "originY": 7
         }
+    },
+    {
+        "name": "Komasaburo Top",
+        "animationSet": "assets/animations/projectiles.json",
+        "animationName": "komasaburo-top",
+        "boundingBox": {
+            "width": 15,
+            "height": 16,
+            "originX": 7,
+            "originY": 16
+        },
+        "gravitated": true,
+        "phasing": false
     }
 ]

@@ -31,6 +31,7 @@ namespace hikari {
         , world()
         , direction(Directions::None)
         , faction(Faction::World)
+        , deathType(EntityDeathType::Nothing)
         , weaponId(0)
         , damageId(0)
         , obstacleFlag(false)
@@ -66,6 +67,7 @@ namespace hikari {
         , world(proto.world)
         , direction(proto.direction)
         , faction(proto.faction)
+        , deathType(proto.deathType)
         , weaponId(proto.weaponId)
         , damageId(proto.damageId)
         , obstacleFlag(proto.obstacleFlag)
@@ -197,6 +199,14 @@ namespace hikari {
 
     Faction::Type Entity::getFaction() const {
         return faction;
+    }
+
+    void Entity::setDeathType(EntityDeathType::Type newDeathType) {
+        deathType = newDeathType;
+    }
+
+    EntityDeathType::Type Entity::getDeathType() const {
+        return deathType;
     }
 
     void Entity::setWeaponId(int weaponId) {
