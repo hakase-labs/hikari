@@ -272,10 +272,6 @@ namespace hikari {
             subState->render(target);
         }
 
-        // if(particle) {
-        //     particle->render(target);
-        // }
-
         if(drawInfamousBlackBar) {
             target.draw(leftBar);
         }
@@ -285,10 +281,6 @@ namespace hikari {
         gotoNextState = false;
 
         userInput->update();
-
-        // if(particle) {
-        //     particle->update(dt);
-        // }
 
         if(eventManager) {
             eventManager->processEvents();
@@ -324,16 +316,6 @@ namespace hikari {
 
         // Determine which stage we're on and set that to the current level...
         currentMap = maps.at("map-test2.json");
-
-        // particle = std::make_shared<Particle>(0.2334f);
-
-        // auto particleAnimationSet = AnimationLoader::loadSet("assets/animations/particles.json");
-        // auto particleSpriteSheet = imageCache->get(particleAnimationSet->getImageFileName());
-        // particle->setActive(true);
-        // particle->setAnimationSet(particleAnimationSet);
-        // particle->setSpriteTexture(particleSpriteSheet);
-        // particle->setBoundingBox(BoundingBoxF(0, 0, 16, 24).setOrigin(8, 20));
-        // particle->setCurrentAnimation("medium-explosion");
 
         startStage();
     }
@@ -492,6 +474,49 @@ namespace hikari {
         return bonus;
     }
 
+    void GamePlayState::spawnDeathExplosion(EntityDeathType::Type type, const Vector2<float> & position) {
+        if(type == EntityDeathType::Hero) {
+            // This type of explosion shoots in 8 directions. Thwo explosions per 
+            // direction; one fast and one slow. It's the death thath appens to Rock
+            // as well as Robot Masters.
+            std::list<Vector2<float>> velocities;
+            velocities.emplace_back(Vector2<float>(-2.125f,  -2.125f )); // Fast up left
+            velocities.emplace_back(Vector2<float>(0.0f,     -3.0f   )); // Fast up
+            velocities.emplace_back(Vector2<float>(2.125f,   -2.125f )); // Fast up right
+            velocities.emplace_back(Vector2<float>(-3.0f,     0.0f   )); // Fast left
+            velocities.emplace_back(Vector2<float>(-2.125f,   2.125f )); // Fast down left
+            velocities.emplace_back(Vector2<float>(0.0f,      3.0f   )); // Fast down
+            velocities.emplace_back(Vector2<float>(2.125f,    2.125f )); // Fast down right
+            velocities.emplace_back(Vector2<float>(3.0f,      0.0f   )); // Fast right
+            velocities.emplace_back(Vector2<float>(-1.0625f, -1.0625f)); // Slow up left
+            velocities.emplace_back(Vector2<float>(0.0f,     -1.5f   )); // Slow up
+            velocities.emplace_back(Vector2<float>(1.0625f,  -1.0625f)); // Slow up right
+            velocities.emplace_back(Vector2<float>(-1.5f,     0.0f   )); // Slow left
+            velocities.emplace_back(Vector2<float>(-1.0625f,  1.0625f)); // Slow down left
+            velocities.emplace_back(Vector2<float>(0.0f,      1.5f   )); // Slow down
+            velocities.emplace_back(Vector2<float>(1.0625f,   1.0625f)); // Slow down right
+            velocities.emplace_back(Vector2<float>(1.5f,      0.0f   )); // Slow right
+
+            while(!velocities.empty()) {
+                auto vel = velocities.front();
+                velocities.pop_front();
+
+                if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion (Loop)")) {
+                    clone->setPosition(position);
+                    clone->setVelocity(vel);
+                    clone->setActive(true);
+                    world.queueObjectAddition(clone);
+                }
+            }
+        } else if(type == EntityDeathType::Small) {
+            if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion")) {
+                clone->setPosition(position);
+                clone->setActive(true);
+                world.queueObjectAddition(clone);
+            }
+        }
+    }
+
     void GamePlayState::loadAllMaps(const std::weak_ptr<MapLoader> &mapLoader, const Json::Value &params) {
         if(auto mapLoaderPtr = mapLoader.lock()) {
             try {
@@ -504,11 +529,11 @@ namespace hikari {
                     // Get file listing and load all .json files as maps
                     auto fileListing = FileSystem::getFileListing(stagesDirectory);
 
-                    HIKARI_LOG(debug) << "Found " << fileListing.size() << " file(s) in map directory.";
+                    HIKARI_LOG(debug3) << "Found " << fileListing.size() << " file(s) in map directory.";
 
                     for(auto index = std::begin(fileListing), end = std::end(fileListing); index != end; index++) {
-                        const auto & fileName = (*index);
-                        const auto & filePath = stagesDirectory + "/" + fileName; // TODO: Handle file paths for real
+                        const std::string & fileName = (*index);
+                        const std::string & filePath = stagesDirectory + "/" + fileName; // TODO: Handle file paths for real
 
                         if(StringUtils::endsWith(filePath, ".json")) {
                             try {
@@ -719,149 +744,7 @@ namespace hikari {
                     }
                 }
 
-                // Fast Top Left
-                if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion (Loop)")) {
-                    clone->setPosition(hero->getPosition());
-                    clone->setVelocity(Vector2<float>(-2.31f, -2.31f));
-                    // clone->setMaximumAge(-1.0f);
-                    clone->setActive(true);
-                    world.queueObjectAddition(clone);
-                }
-
-                // Fast Top Up
-                if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion (Loop)")) {
-                    clone->setPosition(hero->getPosition());
-                    clone->setVelocity(Vector2<float>(0.0f, -3.0f));
-                    // clone->setMaximumAge(-1.0f);
-                    clone->setActive(true);
-                    world.queueObjectAddition(clone);
-                }
-
-                // Fast Top Right
-                if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion (Loop)")) {
-                    clone->setPosition(hero->getPosition());
-                    clone->setVelocity(Vector2<float>(2.31f, -2.31f));
-                    // clone->setMaximumAge(-1.0f);
-                    clone->setActive(true);
-                    world.queueObjectAddition(clone);
-                }
-
-                // Fast Left
-                if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion (Loop)")) {
-                    clone->setPosition(hero->getPosition());
-                    clone->setVelocity(Vector2<float>(-3.0f, 0.0f));
-                    // clone->setMaximumAge(-1.0f);
-                    clone->setActive(true);
-                    world.queueObjectAddition(clone);
-                }
-
-                // Fast Bottom Left
-                if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion (Loop)")) {
-                    clone->setPosition(hero->getPosition());
-                    clone->setVelocity(Vector2<float>(-2.31f, 2.31f));
-                    // clone->setMaximumAge(-1.0f);
-                    clone->setActive(true);
-                    world.queueObjectAddition(clone);
-                }
-
-                // Fast Bottom Down
-                if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion (Loop)")) {
-                    clone->setPosition(hero->getPosition());
-                    clone->setVelocity(Vector2<float>(0.0f, 3.0f));
-                    // clone->setMaximumAge(-1.0f);
-                    clone->setActive(true);
-                    world.queueObjectAddition(clone);
-                }
-
-                // Fast Bottom Right
-                if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion (Loop)")) {
-                    clone->setPosition(hero->getPosition());
-                    clone->setVelocity(Vector2<float>(2.31f, 2.31f));
-                    // clone->setMaximumAge(-1.0f);
-                    clone->setActive(true);
-                    world.queueObjectAddition(clone);
-                }
-
-                // Fast Right
-                if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion (Loop)")) {
-                    clone->setPosition(hero->getPosition());
-                    clone->setVelocity(Vector2<float>(3.0f, 0.0f));
-                    // clone->setMaximumAge(-1.0f);
-                    clone->setActive(true);
-                    world.queueObjectAddition(clone);
-                }
-
-                // Slow Top Left
-                if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion (Loop)")) {
-                    clone->setPosition(hero->getPosition());
-                    clone->setVelocity(Vector2<float>(-1.15f, -1.15f));
-                    // clone->setMaximumAge(-1.0f);
-                    clone->setActive(true);
-                    world.queueObjectAddition(clone);
-                }
-
-                // Slow Top Up
-                if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion (Loop)")) {
-                    clone->setPosition(hero->getPosition());
-                    clone->setVelocity(Vector2<float>(0.0f, -1.5f));
-                    // clone->setMaximumAge(-1.0f);
-                    clone->setActive(true);
-                    world.queueObjectAddition(clone);
-                }
-
-                // Slow Top Right
-                if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion (Loop)")) {
-                    clone->setPosition(hero->getPosition());
-                    clone->setVelocity(Vector2<float>(1.15f, -1.15f));
-                    // clone->setMaximumAge(-1.0f);
-                    clone->setActive(true);
-                    world.queueObjectAddition(clone);
-                }
-
-                // Slow Left
-                if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion (Loop)")) {
-                    clone->setPosition(hero->getPosition());
-                    clone->setVelocity(Vector2<float>(-1.5f, 0.0f));
-                    // clone->setMaximumAge(-1.0f);
-                    clone->setActive(true);
-                    world.queueObjectAddition(clone);
-                }
-
-                // Slow Bottom Left
-                if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion (Loop)")) {
-                    clone->setPosition(hero->getPosition());
-                    clone->setVelocity(Vector2<float>(-1.15f, 1.15f));
-                    // clone->setMaximumAge(-1.0f);
-                    clone->setActive(true);
-                    world.queueObjectAddition(clone);
-                }
-
-                // Slow Bottom Down
-                if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion (Loop)")) {
-                    clone->setPosition(hero->getPosition());
-                    clone->setVelocity(Vector2<float>(0.0f, 1.5f));
-                    // clone->setMaximumAge(-1.0f);
-                    clone->setActive(true);
-                    world.queueObjectAddition(clone);
-                }
-
-                // Slow Bottom Right
-                if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion (Loop)")) {
-                    clone->setPosition(hero->getPosition());
-                    clone->setVelocity(Vector2<float>(1.15f, 1.15f));
-                    // clone->setMaximumAge(-1.0f);
-                    clone->setActive(true);
-                    world.queueObjectAddition(clone);
-                }
-
-                // Slow Right
-                if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion (Loop)")) {
-                    clone->setPosition(hero->getPosition());
-                    clone->setVelocity(Vector2<float>(1.5f, 0.0f));
-                    // clone->setMaximumAge(-1.0f);
-                    clone->setActive(true);
-                    world.queueObjectAddition(clone);
-                }
+                spawnDeathExplosion(hero->getDeathType(), hero->getPosition());
                 
                 HIKARI_LOG(debug) << "Hero died. Starting over.";
 
@@ -879,11 +762,7 @@ namespace hikari {
             if(enemyPtr) {
                 world.queueObjectRemoval(enemyPtr);
 
-                if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion")) {
-                    clone->setPosition(enemyPtr->getPosition());
-                    clone->setActive(true);
-                    world.queueObjectAddition(clone);
-                }
+                spawnDeathExplosion(enemyPtr->getDeathType(), enemyPtr->getPosition());
 
                 // Calculate bonus drop
                 if(auto bonus = spawnBonusItem()) {
@@ -989,6 +868,12 @@ namespace hikari {
         renderReadyText = false;
         gamePlayState.guiHeroEnergyGauge->setVisible(false);
 
+        if(auto gp = gamePlayState.gameProgress.lock()) {
+            gamePlayState.guiHeroEnergyGauge->setValue(
+                static_cast<float>(gp->getPlayerEnergy())
+            );
+        }
+        
         sf::Color overlayColor = sf::Color(fadeOverlay.getFillColor());
         overlayColor.a = 255;
 
@@ -1370,17 +1255,17 @@ namespace hikari {
                         std::begin(activeEnemies), 
                         std::end(activeEnemies), 
                         [&](const std::shared_ptr<Enemy> & enemy) {
-                            if(projectile->getBoundingBox().intersects(enemy->getBoundingBox())) {
-                                if(enemy->isShielded()) {
+                            if(!projectile->isInert()) {
+                                if(projectile->getBoundingBox().intersects(enemy->getBoundingBox())) {
+                                    if(enemy->isShielded()) {
+                                         // Deflect projectile
+                                        projectile->deflect();
 
-                                    // Deflect projectile
-                                    projectile->deflect();
-
-                                    if(auto sound = gamePlayState.audioService.lock()) {
-                                        sound->playSample(25); // SAMPLE_HERO_DEATH
-                                    }
-                                } else {
-                                    if(!projectile->isInert()) {
+                                        if(auto sound = gamePlayState.audioService.lock()) {
+                                            HIKARI_LOG(debug4) << "PLAYING SAMPLE weapon DEFLECTED";
+                                            sound->playSample(25); // SAMPLE_HERO_DEATH
+                                        }
+                                    } else {
                                         HIKARI_LOG(debug3) << "Hero bullet " << projectile->getId() << " hit an enemy " << enemy->getId();
                                         projectile->setActive(false);
                                         gamePlayState.world.queueObjectRemoval(projectile); 

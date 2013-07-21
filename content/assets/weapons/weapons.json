@@ -69,6 +69,24 @@
         ]
     },
     {
+        "name": "Komasaburo Top",
+        "projectileType": "Komasaburo Top",
+        "limit": 1,
+        "usageCost": 3.0,
+        "usageSound": "Shadow Blade",
+        "usageActions": [
+            {
+                "type": "spawnProjectile",
+                "projectileType": "Komasaburo Top",
+                "direction": "inherit",
+                "motion": {
+                    "type": "Linear",
+                    "velocity": [2.0, 0.0]
+                }
+            }
+        ]
+    },
+    {
         "name": "Rain Flush",
         "projectileType": "Rain Flush",
         "global": true,

@@ -21,7 +21,7 @@
         "shadow-blade": {
             "repeat": true,
             "keyframe": 0,
-            "syncGroup": 0,
+            "syncGroup": 100,
             "frames": [ 
                 { 
                     "x" : 16, 
@@ -40,6 +40,49 @@
                     "hotspotX" : 8, 
                     "hotspotY" : 8, 
                     "length" : 0.05
+                }
+            ]
+        },
+        "komasaburo-top": {
+            "repeat": true,
+            "keyframe": 0,
+            "syncGroup": 200,
+            "frames": [
+                { 
+                    "x" : 0, 
+                    "y" : 16, 
+                    "width" : 16, 
+                    "height" : 16, 
+                    "hotspotX" : 8, 
+                    "hotspotY" : 16, 
+                    "length" : 0.1
+                },
+                { 
+                    "x" : 16, 
+                    "y" : 16, 
+                    "width" : 16, 
+                    "height" : 16, 
+                    "hotspotX" : 8, 
+                    "hotspotY" : 16, 
+                    "length" : 0.1
+                },
+                { 
+                    "x" : 32, 
+                    "y" : 16, 
+                    "width" : 16, 
+                    "height" : 16, 
+                    "hotspotX" : 8, 
+                    "hotspotY" : 16, 
+                    "length" : 0.1
+                },
+                { 
+                    "x" : 16, 
+                    "y" : 16, 
+                    "width" : 16, 
+                    "height" : 16, 
+                    "hotspotX" : 8, 
+                    "hotspotY" : 16, 
+                    "length" : 0.1
                 }
             ]
         }

@@ -6,6 +6,7 @@
 #include "hikari/core/game/map/Map.hpp"
 #include "hikari/client/game/events/EventData.hpp"
 #include "hikari/client/game/events/EventListenerDelegate.hpp"
+#include "hikari/client/game/objects/EntityDeathType.hpp"
 
 #include "hikari/client/game/GameWorld.hpp"
 #include "hikari/core/game/map/RoomTransition.hpp"
@@ -66,6 +67,12 @@ namespace hikari {
     class Particle;
     class CollectableItem;
 
+    /**
+     * GamePlayState is the class where actual stages are played. Most of the
+     * game mechanics exist in this state. These mechanics include starting of
+     * stages, handling spawning of enemies and items, and pretty much anything
+     * else that the player actually "plays" in the game.
+     */
     class GamePlayState : public GameState {
 
     class SubState;
@@ -116,8 +123,6 @@ namespace hikari {
         bool isHeroAlive;
         bool gotoNextState;
 
-        std::shared_ptr<Particle> particle;
-
         //
         // Resource Management
         //
@@ -154,6 +159,9 @@ namespace hikari {
          */
         void cleanStaleObjects();
 
+        /**
+         * Builds a table of probabilites for bonus drop items.
+         */
         void populateBonusChancesTable();
 
         /**
@@ -161,6 +169,13 @@ namespace hikari {
          * If the random drop is "nothing" then a null pointer is returned.
          */
         std::shared_ptr<CollectableItem> spawnBonusItem(int bonusTableIndex = 0);
+
+        /**
+         * Spawns a death explosion -- like when the hero or a boss is defeated.
+         * @param type the EntityDeathType of explosion
+         * @param position where the particles should radiate from
+         */
+        void spawnDeathExplosion(EntityDeathType::Type type, const Vector2<float> & position);
 
         /**
          * Starts the current stage from the beginning. This is like playing the
