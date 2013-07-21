@@ -32,6 +32,8 @@ namespace hikari {
     }
 
     void Hero::AirbornMobilityState::exit() {
+        hero.isAirborn = false;
+        hero.isFalling = false;
         hero.isJumping = false;
     }
 
