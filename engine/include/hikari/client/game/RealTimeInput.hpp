@@ -3,7 +3,10 @@
 
 #include "hikari/core/Platform.hpp"
 #include "hikari/client/game/Input.hpp"
+
 #include <SFML/Window/Keyboard.hpp>
+
+#include <unordered_map>
 
 namespace hikari {
 
@@ -23,6 +26,8 @@ namespace hikari {
         bool currentLeft;
         bool currentShoot;
         bool currentJump;
+
+        std::unordered_map<Button, sf::Keyboard::Key> keybindings;
 
     public:
         RealTimeInput();
