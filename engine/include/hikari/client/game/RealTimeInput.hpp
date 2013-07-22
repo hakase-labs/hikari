@@ -10,6 +10,18 @@
 
 namespace hikari {
 
+    /**
+     * RealTimeInput implements the Input iterface in was way that utilizes the
+     * state of the computer's keyboard. It is not driven by events but relies
+     * on querying the state of the keyboard every frame.
+     *
+     * When using this class it is important to call the RealTimeInput::update()
+     * method every frame to ensure that they state of the keyboard is 
+     * accurately reflected.
+     *
+     * Additionally this class allows they keyboard-to-virtual gamepad button
+     * bindings to be set from outside the class.
+     */
     class RealTimeInput : public Input {
     private:
         static const bool BUTTON_PUSHED = true;
@@ -39,6 +51,10 @@ namespace hikari {
         virtual const bool wasPressed(const Button &button) const;
         virtual const bool wasReleased(const Button &button) const;
 
+        /**
+         * Updates the state of the virtual gamepad by reading the keyboard
+         * state. This should be called at the beginning of every frame.
+         */
         void update();
 
         /**
