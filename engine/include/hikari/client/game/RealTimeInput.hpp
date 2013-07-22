@@ -40,6 +40,14 @@ namespace hikari {
         virtual const bool wasReleased(const Button &button) const;
 
         void update();
+
+        /**
+         * Binds a particular keyboard key to a button.
+         *
+         * @param  button the virtual button to set binding for
+         * @param  key    the keyboard key to trigger the button
+         */
+        void bindKey(const Button & button, sf::Keyboard::Key key);
     };
     
 } // hikari

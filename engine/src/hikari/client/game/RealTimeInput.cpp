@@ -18,12 +18,12 @@ namespace hikari {
         , keybindings()
     {
         // Set up defaut key bindings
-        keybindings[Input::BUTTON_UP]    = sf::Keyboard::Up;
-        keybindings[Input::BUTTON_RIGHT] = sf::Keyboard::Right;
-        keybindings[Input::BUTTON_DOWN]  = sf::Keyboard::Down;
-        keybindings[Input::BUTTON_LEFT]  = sf::Keyboard::Left;
-        keybindings[Input::BUTTON_SHOOT] = sf::Keyboard::A;
-        keybindings[Input::BUTTON_JUMP]  = sf::Keyboard::S;
+        bindKey(Input::BUTTON_UP,    sf::Keyboard::Up);
+        bindKey(Input::BUTTON_RIGHT, sf::Keyboard::Right);
+        bindKey(Input::BUTTON_DOWN,  sf::Keyboard::Down);
+        bindKey(Input::BUTTON_LEFT,  sf::Keyboard::Left);
+        bindKey(Input::BUTTON_SHOOT, sf::Keyboard::A);
+        bindKey(Input::BUTTON_JUMP,  sf::Keyboard::S);
     }
 
     const bool RealTimeInput::isUp(const Button &button) const {
@@ -148,6 +148,10 @@ namespace hikari {
         currentLeft  = sf::Keyboard::isKeyPressed(keybindings[Input::BUTTON_LEFT]);
         currentShoot = sf::Keyboard::isKeyPressed(keybindings[Input::BUTTON_SHOOT]);
         currentJump  = sf::Keyboard::isKeyPressed(keybindings[Input::BUTTON_JUMP]);
+    }
+
+    void RealTimeInput::bindKey(const Button & button, sf::Keyboard::Key key) {
+        keybindings[button] = key;
     }
 
 } // hikari
