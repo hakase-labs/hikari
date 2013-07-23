@@ -28,6 +28,8 @@ namespace hikari {
 
         void extractValuesFromJson(const Json::Value& configJson);
     public:
+        typedef std::map<std::string, std::string> StringMap;
+        
         ClientConfig();
         ClientConfig(const Json::Value& configJson);
 
@@ -42,8 +44,8 @@ namespace hikari {
         std::string getVideoMode() const;
         void setVideoMode(const std::string & mode);
 
-        std::map<std::string, std::string> getKeyBindings() const;
-        void setKeyBindings(const std::map<std::string, std::string> & bindings);
+        StringMap getKeyBindings() const;
+        void setKeyBindings(const StringMap & bindings);
 
         /**
          * Serializes the configuration options into a string.

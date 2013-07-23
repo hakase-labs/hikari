@@ -109,11 +109,11 @@ namespace hikari {
         videoMode = mode;
     }
 
-    std::map<std::string, std::string> ClientConfig::getKeyBindings() const {
+    ClientConfig::StringMap ClientConfig::getKeyBindings() const {
         return keybindings;
     }
 
-    void ClientConfig::setKeyBindings(const std::map<std::string, std::string> & bindings) {
+    void ClientConfig::setKeyBindings(const ClientConfig::StringMap & bindings) {
         keybindings = bindings;
     }
 
@@ -133,7 +133,7 @@ namespace hikari {
         std::for_each(
             std::begin(keybindings),
             std::end(keybindings),
-            [&](const decltype(keybindings)::value_type & entry) {
+            [&](ClientConfig::StringMap::value_type & entry) {
                 const std::string & key = entry.first;
                 const std::string & value = entry.second;
                 keybindingObject[key] = value;
