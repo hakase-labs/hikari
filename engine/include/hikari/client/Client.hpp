@@ -60,6 +60,7 @@ namespace hikari {
  
     public:
         Client(int argc, char** argv);
+        ~Client();
         int run();
     };
  

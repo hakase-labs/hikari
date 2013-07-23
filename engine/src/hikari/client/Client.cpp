@@ -56,6 +56,10 @@ namespace hikari {
         initFileSystem(argc, argv);
         initConfig();
     }
+
+    Client::~Client() {
+        deinitFileSystem();
+    }
  
     void Client::initConfig() {
         // Load client config first
@@ -187,21 +191,43 @@ namespace hikari {
     }
 
     void Client::initWindow() {
+        std::string videoScale = clientConfig.getVideoMode();
+        bool enabledFullScreen = false;
+
+        if(videoScale == "1x") {
+            videoMode.width = SCREEN_WIDTH;
+            videoMode.height = SCREEN_HEIGHT;
+        } else if(videoScale == "2x") {
+            videoMode.width = SCREEN_WIDTH * 2;
+            videoMode.height = SCREEN_HEIGHT * 2;
+        } else if(videoScale == "3x") {
+            videoMode.width = SCREEN_WIDTH * 3;
+            videoMode.height = SCREEN_HEIGHT * 3;
+        } else {
+            if(videoScale == "full") {
+                enabledFullScreen = true;
+            }
+        }
         // Due to some weirdness between OSX, Windows, and Linux, the window
         // needs to be created before anything serious can be done.
-        window.create(videoMode, APP_TITLE, sf::Style::Default);
+        window.create(videoMode, APP_TITLE, (enabledFullScreen ? sf::Style::Fullscreen : sf::Style::Default));
         window.setActive(true);
         window.setVerticalSyncEnabled(clientConfig.isVsyncEnabled());
         window.setKeyRepeatEnabled(false);
-        screenBuffer.create(videoMode.width, videoMode.height);
+
+        // Screen buffer is hard-coded to be the size of the render area, in 
+        // other words, it doesn't scale with the window size. When it is
+        // rendered it will be stretched to fit the window. This makes ti retain
+        // its (desired) pixelated quality.
+        screenBuffer.create(SCREEN_WIDTH, SCREEN_HEIGHT);
 
         screenBufferView.setSize(
-            static_cast<float>(videoMode.width),
-            static_cast<float>(videoMode.height));
+            static_cast<float>(SCREEN_WIDTH),
+            static_cast<float>(SCREEN_HEIGHT));
 
         screenBufferView.setCenter(
-            static_cast<float>(videoMode.width / 2),
-            static_cast<float>(videoMode.height / 2));
+            static_cast<float>(SCREEN_WIDTH / 2),
+            static_cast<float>(SCREEN_HEIGHT / 2));
     }
  
     void Client::deinitFileSystem() {

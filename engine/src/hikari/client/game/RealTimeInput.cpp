@@ -14,8 +14,16 @@ namespace hikari {
         , currentDown(false)
         , currentLeft(false)
         , currentShoot(false)
-        , currentJump(false) {
-
+        , currentJump(false)
+        , keybindings()
+    {
+        // Set up defaut key bindings
+        bindKey(Input::BUTTON_UP,    sf::Keyboard::Up);
+        bindKey(Input::BUTTON_RIGHT, sf::Keyboard::Right);
+        bindKey(Input::BUTTON_DOWN,  sf::Keyboard::Down);
+        bindKey(Input::BUTTON_LEFT,  sf::Keyboard::Left);
+        bindKey(Input::BUTTON_SHOOT, sf::Keyboard::A);
+        bindKey(Input::BUTTON_JUMP,  sf::Keyboard::S);
     }
 
     const bool RealTimeInput::isUp(const Button &button) const {
@@ -127,19 +135,23 @@ namespace hikari {
     }
 
     void RealTimeInput::update() {
-        previousUp = currentUp;
+        previousUp    = currentUp;
         previousRight = currentRight;
-        previousDown = currentDown;
-        previousLeft = currentLeft;
+        previousDown  = currentDown;
+        previousLeft  = currentLeft;
         previousShoot = currentShoot;
-        previousJump = currentJump;
+        previousJump  = currentJump;
 
-        currentUp = sf::Keyboard::isKeyPressed(sf::Keyboard::Up);
-        currentRight = sf::Keyboard::isKeyPressed(sf::Keyboard::Right);
-        currentDown = sf::Keyboard::isKeyPressed(sf::Keyboard::Down);
-        currentLeft = sf::Keyboard::isKeyPressed(sf::Keyboard::Left);
-        currentShoot = sf::Keyboard::isKeyPressed(sf::Keyboard::A);
-        currentJump = sf::Keyboard::isKeyPressed(sf::Keyboard::S);
+        currentUp    = sf::Keyboard::isKeyPressed(keybindings[Input::BUTTON_UP]);
+        currentRight = sf::Keyboard::isKeyPressed(keybindings[Input::BUTTON_RIGHT]);
+        currentDown  = sf::Keyboard::isKeyPressed(keybindings[Input::BUTTON_DOWN]);
+        currentLeft  = sf::Keyboard::isKeyPressed(keybindings[Input::BUTTON_LEFT]);
+        currentShoot = sf::Keyboard::isKeyPressed(keybindings[Input::BUTTON_SHOOT]);
+        currentJump  = sf::Keyboard::isKeyPressed(keybindings[Input::BUTTON_JUMP]);
+    }
+
+    void RealTimeInput::bindKey(const Button & button, sf::Keyboard::Key key) {
+        keybindings[button] = key;
     }
 
 } // hikari
