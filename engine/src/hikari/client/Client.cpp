@@ -48,7 +48,7 @@ namespace hikari {
         : gameConfigJson()
         , clientConfig()
         , services()
-        , videoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BITS_PER_PIXEL)
+        , videoMode(SCREEN_WIDTH * 3, SCREEN_HEIGHT * 3, SCREEN_BITS_PER_PIXEL)
         , window()
         , screenBuffer()
     {
@@ -197,15 +197,20 @@ namespace hikari {
         window.setActive(true);
         window.setVerticalSyncEnabled(clientConfig.isVsyncEnabled());
         window.setKeyRepeatEnabled(false);
-        screenBuffer.create(videoMode.width, videoMode.height);
+
+        // Screen buffer is hard-coded to be the size of the render area, in 
+        // other words, it doesn't scale with the window size. When it is
+        // rendered it will be stretched to fit the window. This makes ti retain
+        // its (desired) pixelated quality.
+        screenBuffer.create(SCREEN_WIDTH, SCREEN_HEIGHT);
 
         screenBufferView.setSize(
-            static_cast<float>(videoMode.width),
-            static_cast<float>(videoMode.height));
+            static_cast<float>(SCREEN_WIDTH),
+            static_cast<float>(SCREEN_HEIGHT));
 
         screenBufferView.setCenter(
-            static_cast<float>(videoMode.width / 2),
-            static_cast<float>(videoMode.height / 2));
+            static_cast<float>(SCREEN_WIDTH / 2),
+            static_cast<float>(SCREEN_HEIGHT / 2));
     }
  
     void Client::deinitFileSystem() {

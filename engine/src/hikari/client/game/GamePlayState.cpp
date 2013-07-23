@@ -186,9 +186,9 @@ namespace hikari {
         guiContainer->setHeight(240);
         guiContainer->setOpaque(false);
         guiContainer->setBackgroundColor(gcn::Color(0, 0, 0, 0));
-        guiContainer->add(guiBossEnergyGauge.get(), 32, 16);
+        //guiContainer->add(guiBossEnergyGauge.get(), 32, 16);
         guiContainer->add(guiHeroEnergyGauge.get(), 16, 16);
-        guiContainer->add(guiWeaponEnergyGauge.get(), 8, 16);
+        //guiContainer->add(guiWeaponEnergyGauge.get(), 8, 16);
         guiContainer->add(guiMenuPanel.get(), 0, 0);
 
         // The reddish energy gauge for bosses
@@ -315,7 +315,7 @@ namespace hikari {
         Movable::setGravity(0.25f);
 
         // Determine which stage we're on and set that to the current level...
-        currentMap = maps.at("map-test2.json");
+        currentMap = maps.at("map-test4.json");
 
         startStage();
     }
