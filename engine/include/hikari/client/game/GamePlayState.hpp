@@ -72,6 +72,12 @@ namespace hikari {
      * game mechanics exist in this state. These mechanics include starting of
      * stages, handling spawning of enemies and items, and pretty much anything
      * else that the player actually "plays" in the game.
+     *
+     * The primary mechanics of the game are implemented as a series of 
+     * substates within this class. Only one substate can be active at a time.
+     * Different substates include the period before Rock teleports in (called
+     * the "Ready" substate), then the period when he *is* teleporting in,
+     * then the period when the player can actually play, etc.
      */
     class GamePlayState : public GameState {
 
@@ -131,14 +137,51 @@ namespace hikari {
         //
         // Gameplay Mechanics
         //
+        
+        /**
+         * Immediately changes from one substate to another. This causes the 
+         * current substate's "exit()" method to be called before calling the
+         * "enter()" method of the new substate. If either the current or the
+         * new substate is null it will be ignored (no methods will be called
+         * on it).
+         *
+         * Note: be careful when using this between substates. Changing states
+         * will cause the "old" state to be deleted -- so don't call this from
+         * the middle of a method in a substate. Doing so will lead to undefined
+         * behavior and most likely a SEGFAULT.
+         * 
+         * @param newSubState the new substate to enter in to
+         */
         void changeSubState(std::unique_ptr<SubState> && newSubState);
+
+        /**
+         * Enqueues a substate to be entered in to. This is safer than using
+         * changeSubState directly. If you want to change from one substate to
+         * another from *within* a substate then use this method to enqeue the
+         * next state.
+         * 
+         * @param newSubState the new substate to enter into when safe
+         */
         void requestSubStateChange(std::unique_ptr<SubState> && newSubState);
+
+        /**
+         * Changes which room is the current room. The current room is used for
+         * variaous things -- most importantly it is used for collision 
+         * detection and also spawning enemies and items. Only one room can be
+         * "current" at a time.
+         *
+         * Changing rooms causes cleanup to take place in the old room before
+         * setting the new room as current. The current room should not be
+         * tamplered with -- it should only be changed with this method.
+         * 
+         * @param newCurrentRoom pointer to new room (which will become current)
+         */
         void changeCurrentRoom(const std::shared_ptr<Room>& newCurrentRoom);
 
         /**
          * Creates links to all spawners in a given Room without taking
          * ownership of them. This causes spawners to attach event listeners and
-         * also puts them to bed.
+         * also puts them in an "asleep" state.
          *
          * @see checkSpawners
          */

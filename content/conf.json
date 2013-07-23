@@ -1,14 +1,16 @@
 { 
     "vsync" : true,
-    "videoMode" : "",
+    "videoMode" : "1x",
     "showfps" : true,
-    "keyboard" : {
-        "up" : "up",
-        "right" : "right",
-        "down" : "down",
-        "left" : "left",
-        "jump" : "a",
-        "shoot" : "s"
+    "bindings" : {
+        "keyboard" : {
+            "up" : "up",
+            "right" : "right",
+            "down" : "down",
+            "left" : "left",
+            "jump" : "a",
+            "shoot" : "s"
+        }
     },
     "scripting" : {
         "stackSize" : 2048
