@@ -48,7 +48,7 @@ namespace hikari {
         : gameConfigJson()
         , clientConfig()
         , services()
-        , videoMode(SCREEN_WIDTH * 3, SCREEN_HEIGHT * 3, SCREEN_BITS_PER_PIXEL)
+        , videoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BITS_PER_PIXEL)
         , window()
         , screenBuffer()
     {
@@ -191,9 +191,26 @@ namespace hikari {
     }
 
     void Client::initWindow() {
+        std::string videoScale = clientConfig.getVideoMode();
+        bool enabledFullScreen = false;
+
+        if(videoScale == "1x") {
+            videoMode.width = SCREEN_WIDTH;
+            videoMode.height = SCREEN_HEIGHT;
+        } else if(videoScale == "2x") {
+            videoMode.width = SCREEN_WIDTH * 2;
+            videoMode.height = SCREEN_HEIGHT * 2;
+        } else if(videoScale == "3x") {
+            videoMode.width = SCREEN_WIDTH * 3;
+            videoMode.height = SCREEN_HEIGHT * 3;
+        } else {
+            if(videoScale == "full") {
+                enabledFullScreen = true;
+            }
+        }
         // Due to some weirdness between OSX, Windows, and Linux, the window
         // needs to be created before anything serious can be done.
-        window.create(videoMode, APP_TITLE, sf::Style::Default);
+        window.create(videoMode, APP_TITLE, (enabledFullScreen ? sf::Style::Fullscreen : sf::Style::Default));
         window.setActive(true);
         window.setVerticalSyncEnabled(clientConfig.isVsyncEnabled());
         window.setKeyRepeatEnabled(false);
