@@ -193,21 +193,23 @@ namespace hikari {
     void Client::initWindow() {
         std::string videoScale = clientConfig.getVideoMode();
         bool enabledFullScreen = false;
+        unsigned int screenScaler = 1;
 
         if(videoScale == "1x") {
-            videoMode.width = SCREEN_WIDTH;
-            videoMode.height = SCREEN_HEIGHT;
+            screenScaler = 1;
         } else if(videoScale == "2x") {
-            videoMode.width = SCREEN_WIDTH * 2;
-            videoMode.height = SCREEN_HEIGHT * 2;
+            screenScaler = 2;
         } else if(videoScale == "3x") {
-            videoMode.width = SCREEN_WIDTH * 3;
-            videoMode.height = SCREEN_HEIGHT * 3;
+            screenScaler = 3;
         } else {
             if(videoScale == "full") {
                 enabledFullScreen = true;
             }
         }
+
+        videoMode.width  = SCREEN_WIDTH  * screenScaler;
+        videoMode.height = SCREEN_HEIGHT * screenScaler;
+
         // Due to some weirdness between OSX, Windows, and Linux, the window
         // needs to be created before anything serious can be done.
         window.create(videoMode, APP_TITLE, (enabledFullScreen ? sf::Style::Fullscreen : sf::Style::Default));
