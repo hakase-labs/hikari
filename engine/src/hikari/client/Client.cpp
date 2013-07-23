@@ -56,6 +56,10 @@ namespace hikari {
         initFileSystem(argc, argv);
         initConfig();
     }
+
+    Client::~Client() {
+        deinitFileSystem();
+    }
  
     void Client::initConfig() {
         // Load client config first
