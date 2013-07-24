@@ -65,6 +65,7 @@ namespace hikari {
         , animationSet(proto.animationSet)
         , currentAnimation(proto.currentAnimation)
         , animationPlayer(new SpriteAnimator(sprite))
+        , animatedSprite(nullptr)
         , eventManager(proto.eventManager)
         , world(proto.world)
         , direction(proto.direction)
@@ -85,7 +86,13 @@ namespace hikari {
         body.setCollisionCallback(
             std::bind(&Entity::handleCollision, this, std::placeholders::_1, std::placeholders::_2));
 
+        // Clone the animation information if present
+        animatedSprite.reset(proto.animatedSprite ? new AnimatedSprite(*proto.animatedSprite.get()) : new AnimatedSprite());
+
+        changeAnimation(currentAnimationName);
+
         setSpriteTexture(spriteTexture);
+        setAnimationSet(proto.animationSet);
 
         #ifdef HIKARI_DEBUG_ENTITIES
         boxOutline = proto.boxOutline;
@@ -105,6 +112,10 @@ namespace hikari {
         return sprite;
     }
 
+    std::unique_ptr<AnimatedSprite> & Entity::getAnimatedSprite() {
+        return animatedSprite;
+    }
+
     std::shared_ptr<AnimationSet> Entity::getAnimationSet() const {
         return animationSet;
     }
@@ -120,6 +131,9 @@ namespace hikari {
                     setCurrentAnimation(set->get(animationName));
                     currentAnimationName = animationName;
                 }
+            }
+            if(animatedSprite) {
+                animatedSprite->setAnimation(animationName);
             }
         }
     }
@@ -140,9 +154,9 @@ namespace hikari {
         sprite = newSprite;
     }
 
-    void Entity::setAnimationSet(std::shared_ptr<AnimationSet> newAnimationSet) {
+    void Entity::setAnimationSet(const std::shared_ptr<AnimationSet> & newAnimationSet) {
         animationSet = newAnimationSet;
-        if(animationSet) {
+        if(animationSet && animatedSprite) {
             animatedSprite->setAnimationSet(newAnimationSet);
         }
     }
@@ -193,8 +207,16 @@ namespace hikari {
 
         if(getDirection() == Directions::Left) {
             getSprite().setScale(-std::abs(spriteScale.x), spriteScale.y);
+
+            if(animatedSprite) {
+                animatedSprite->setXFlipped(true);
+            }
         } else {
             getSprite().setScale(std::abs(spriteScale.x), spriteScale.y);
+
+            if(animatedSprite) {
+                animatedSprite->setXFlipped(false);
+            }
         }
     }
 
@@ -355,6 +377,10 @@ namespace hikari {
 
         animationPlayer->update(dt);
 
+        if(animatedSprite) {
+            animatedSprite->update(dt);
+        }
+
         #ifdef HIKARI_DEBUG_ENTITIES
         if(debug) {
             const BoundingBoxF& bb = getBoundingBox();
@@ -390,15 +416,15 @@ namespace hikari {
         auto sprite = getSprite();
         auto position = getPosition();
 
-        sprite.setPosition(
-            std::floor(position.getX()), 
-            std::floor(position.getY())
-        );
+        // sprite.setPosition(
+        //     std::floor(position.getX()), 
+        //     std::floor(position.getY())
+        // );
 
-        target.draw(sprite);
+        // target.draw(sprite);
 
         if(animatedSprite) {
-            animatedSprite->setPosition(position);
+            animatedSprite->setPosition(Vector2<float>(std::floor(position.getX()), std::floor(position.getY())));
             animatedSprite->render(target);
         }
     }

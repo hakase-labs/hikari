@@ -223,7 +223,8 @@ namespace FactoryHelpers {
                                         instance->setSpriteTexture(spriteTexture);
                                         instance->setBoundingBox(boundingBox);
                                         instance->setDirection(Directions::Down);
-                                        instance->setCurrentAnimation(animationSetPtr->get("idle"));
+                                        //instance->setCurrentAnimation(animationSetPtr->get("idle"));
+                                        instance->changeAnimation("idle");
 
                                         if(!characteristicsObject.isNull()) {
                                             const bool gravitated = characteristicsObject["gravitated"].asBool();

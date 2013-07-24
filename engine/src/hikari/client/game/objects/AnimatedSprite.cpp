@@ -20,6 +20,18 @@ namespace hikari {
 
     }
 
+    AnimatedSprite::AnimatedSprite(const AnimatedSprite & proto)
+        : sprite(proto.sprite)
+        , currentAnimation("")
+        , animationSet(proto.animationSet)
+        , animator(sprite)
+        , isXAxisFlipped(proto.isXAxisFlipped)
+        , isYAxisFlipped(proto.isYAxisFlipped)
+    {
+        setAnimationSet(getAnimationSet());
+        setAnimation(proto.currentAnimation);
+    }
+
     void AnimatedSprite::update(float dt) {
         animator.update(dt);
     }
@@ -29,19 +41,28 @@ namespace hikari {
     }
 
     void AnimatedSprite::setAnimation(const std::string & animationName) {
-        if(auto animSet = animationSet.lock()) {
-            if(animSet->has(animationName)) {
-                animator.setAnimation(animSet->get(animationName));
+         if(animationName != currentAnimation) {
+            if(auto animSet = animationSet.lock()) {
+                if(animSet->has(animationName)) {
+                    animator.setAnimation(animSet->get(animationName));
+                    currentAnimation = animationName;
+                }
             }
-        }
+         }
     }
 
     void AnimatedSprite::setAnimationSet(const std::weak_ptr<AnimationSet> & animationSetPtr) {
-        std::cout << "BEFORE THE ANIMATION SET POINTER" << std::endl;
         if(!animationSetPtr.expired()) {
             animationSet = animationSetPtr;
+
+            if(auto animSet = animationSet.lock()) {
+                auto & texture = animSet->getTexture();
+                
+                if(texture) {
+                    sprite.setTexture(*texture.get());
+                }
+            }
         }
-        std::cout << "SET THE ANIMATION SET POINTER" << std::endl;
     }
 
     const std::string & AnimatedSprite::getAnimation() const {
@@ -64,6 +85,11 @@ namespace hikari {
                 -1.0f * std::abs(sprite.getScale().x),
                 sprite.getScale().y
             );
+        } else {
+            sprite.setScale(
+                std::abs(sprite.getScale().x),
+                sprite.getScale().y
+            );
         }
     }
 
@@ -78,6 +104,11 @@ namespace hikari {
             sprite.setScale(
                 sprite.getScale().x,
                 -1.0f * std::abs(sprite.getScale().y)
+            );
+        } else {
+            sprite.setScale(
+                sprite.getScale().x,
+                std::abs(sprite.getScale().y)
             );
         }
     }

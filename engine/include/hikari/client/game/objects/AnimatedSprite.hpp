@@ -30,6 +30,7 @@ namespace hikari {
 
     public:
         AnimatedSprite();
+        AnimatedSprite(const AnimatedSprite & proto);
 
         //
         // Inherited from hikari::Updatable

@@ -157,7 +157,7 @@ namespace hikari {
     void Client::initServices() {
         auto imageCache        = std::make_shared<ImageCache>(ImageCache::NO_SMOOTHING, ImageCache::USE_MASKING);
         auto animationSetCache = std::make_shared<AnimationSetCache>();
-        auto animationLoader   = std::make_shared<AnimationLoader>();
+        auto animationLoader   = std::make_shared<AnimationLoader>(std::weak_ptr<ImageCache>(imageCache));
         auto tilesetLoader     = std::make_shared<TilesetLoader>(imageCache, animationLoader);
         auto tilesetCache      = std::make_shared<TilesetCache>(tilesetLoader);
         auto mapLoader         = std::make_shared<MapLoader>(tilesetCache);
@@ -185,6 +185,8 @@ namespace hikari {
         services.registerService(Services::PARTICLEFACTORY,   particleFactory);
         services.registerService(Services::WEAPONTABLE,       weaponTable);
         services.registerService(Services::DAMAGETABLE,       damageTable);
+
+        AnimationLoader::setImageCache(std::weak_ptr<ImageCache>(imageCache));
 
         // Script wrappers/proxy classes
         AudioServiceScriptProxy::setWrappedService(std::weak_ptr<AudioService>(audioService));

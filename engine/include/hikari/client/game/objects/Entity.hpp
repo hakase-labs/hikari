@@ -76,6 +76,8 @@ namespace hikari {
         std::shared_ptr<Room> room;
         sf::Sprite& getSprite();
 
+        std::unique_ptr<AnimatedSprite> & getAnimatedSprite();
+
         virtual void renderEntity(sf::RenderTarget &target);
 
     public:
@@ -92,7 +94,7 @@ namespace hikari {
 
         void setSpriteTexture(const std::shared_ptr<sf::Texture>& newTexture);
         void setSprite(const sf::Sprite& newSprite);
-        void setAnimationSet(std::shared_ptr<AnimationSet> newAnimationSet);
+        void setAnimationSet(const std::shared_ptr<AnimationSet> & newAnimationSet);
         void setCurrentAnimation(std::shared_ptr<Animation> newAnimation);
         void changeAnimation(const std::string& animationName);
         void setAnimationPlayer(std::shared_ptr<Animator> newAnimationPlayer);
