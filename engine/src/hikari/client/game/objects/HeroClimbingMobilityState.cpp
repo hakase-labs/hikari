@@ -1,6 +1,7 @@
 #include "hikari/client/game/objects/HeroClimbingMobilityState.hpp"
 #include "hikari/client/game/objects/HeroAirbornMobilityState.hpp"
 #include "hikari/client/game/objects/HeroIdleMobilityState.hpp"
+#include "hikari/client/game/objects/AnimatedSprite.hpp"
 #include "hikari/core/game/SpriteAnimator.hpp"
 #include "hikari/core/game/map/Room.hpp"
 #include "hikari/core/util/Log.hpp"
@@ -39,7 +40,7 @@ namespace hikari {
         hero.isOnLadder = false;
         hero.body.setGravitated(true);
         hero.body.setTreatLadderTopAsGround(true);
-        hero.getAnimationPlayer()->unpause();
+        hero.getAnimatedSprite()->unpause();
     }
 
     Hero::MobilityState::StateChangeAction Hero::ClimbingMobilityState::update(const float & dt) {
@@ -52,7 +53,7 @@ namespace hikari {
             hero.setVelocityY(0);
 
             if(!hero.isShooting) {
-                hero.getAnimationPlayer()->pause();
+                hero.getAnimatedSprite()->pause();
             } else {
                 if(controller->shouldMoveLeft()) {
                     hero.setDirection(Directions::Left);
@@ -69,7 +70,7 @@ namespace hikari {
                     hero.changeAnimation("climbing");
                 }
                 hero.setVelocityY(-hero.climbVelocity.getY());
-                hero.getAnimationPlayer()->unpause();
+                hero.getAnimatedSprite()->unpause();
 
                 // If we climb to the top of the ladder, we need to be put in the ground instead of move up too high.
                 // TODO: clean this code up... it's messy!
@@ -97,7 +98,7 @@ namespace hikari {
                     hero.changeAnimation("climbing");
                 }
                 hero.setVelocityY(hero.climbVelocity.getY());
-                hero.getAnimationPlayer()->unpause();
+                hero.getAnimatedSprite()->unpause();
             } else if(controller->shouldJump()) {
                 // If you're holding up or down the jump button is ignored
                 // So that's why it's at the end of this if/else branch

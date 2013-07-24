@@ -2,6 +2,7 @@
 #include "hikari/client/game/objects/HeroAirbornMobilityState.hpp"
 #include "hikari/client/game/objects/HeroIdleMobilityState.hpp"
 #include "hikari/client/game/objects/HeroSlidingMobilityState.hpp"
+#include "hikari/client/game/objects/AnimatedSprite.hpp"
 #include "hikari/core/game/SpriteAnimator.hpp"
 #include "hikari/core/util/Log.hpp"
 
@@ -53,7 +54,7 @@ namespace hikari {
                 // Handle direction switching (reset acceleration)
                 if(hero.getDirection() != lastDirection) {
                     hero.isFullyAccelerated = false;
-                    hero.getAnimationPlayer()->rewind();
+                    hero.getAnimatedSprite()->rewind();
                     accelerationDelay = 0;
                 }
 

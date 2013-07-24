@@ -127,7 +127,6 @@ namespace FactoryHelpers {
                                 auto animationSetPtr = animationSetCache->get(animationSet);
                                 auto spriteTexture = imageCache->get(animationSetPtr->getImageFileName());
                                 item->setAnimationSet(animationSetPtr);
-                                item->setSpriteTexture(spriteTexture);
                                 item->changeAnimation(animationName);
                                 item->setBoundingBox(boundingBox);
                                 item->setAgeless(ageless);
@@ -220,10 +219,9 @@ namespace FactoryHelpers {
 
                                         auto instance = std::make_shared<Enemy>(GameObject::generateObjectId(), nullptr);
                                         instance->setAnimationSet(animationSetPtr);
-                                        instance->setSpriteTexture(spriteTexture);
                                         instance->setBoundingBox(boundingBox);
                                         instance->setDirection(Directions::Down);
-                                        instance->setCurrentAnimation(animationSetPtr->get("idle"));
+                                        instance->changeAnimation("idle");
 
                                         if(!characteristicsObject.isNull()) {
                                             const bool gravitated = characteristicsObject["gravitated"].asBool();
@@ -393,7 +391,6 @@ namespace FactoryHelpers {
                                         instance->setAnimationSet(animationSetPtr);
                                         instance->setGravitated(isGravitated);
                                         instance->setPhasing(isPhasing);
-                                        instance->setSpriteTexture(spriteTexture);
                                         instance->changeAnimation(animationName);
                                         instance->setBoundingBox(boundingBox);
                                         instance->setDamageId(damageId);

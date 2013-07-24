@@ -156,8 +156,8 @@ namespace hikari {
  
     void Client::initServices() {
         auto imageCache        = std::make_shared<ImageCache>(ImageCache::NO_SMOOTHING, ImageCache::USE_MASKING);
-        auto animationSetCache = std::make_shared<AnimationSetCache>();
-        auto animationLoader   = std::make_shared<AnimationLoader>();
+        auto animationLoader   = std::make_shared<AnimationLoader>(std::weak_ptr<ImageCache>(imageCache));
+        auto animationSetCache = std::make_shared<AnimationSetCache>(animationLoader);
         auto tilesetLoader     = std::make_shared<TilesetLoader>(imageCache, animationLoader);
         auto tilesetCache      = std::make_shared<TilesetCache>(tilesetLoader);
         auto mapLoader         = std::make_shared<MapLoader>(tilesetCache);
@@ -186,6 +186,8 @@ namespace hikari {
         services.registerService(Services::WEAPONTABLE,       weaponTable);
         services.registerService(Services::DAMAGETABLE,       damageTable);
 
+        AnimationLoader::setImageCache(std::weak_ptr<ImageCache>(imageCache));
+
         // Script wrappers/proxy classes
         AudioServiceScriptProxy::setWrappedService(std::weak_ptr<AudioService>(audioService));
     }
@@ -193,21 +195,23 @@ namespace hikari {
     void Client::initWindow() {
         std::string videoScale = clientConfig.getVideoMode();
         bool enabledFullScreen = false;
+        unsigned int screenScaler = 1;
 
         if(videoScale == "1x") {
-            videoMode.width = SCREEN_WIDTH;
-            videoMode.height = SCREEN_HEIGHT;
+            screenScaler = 1;
         } else if(videoScale == "2x") {
-            videoMode.width = SCREEN_WIDTH * 2;
-            videoMode.height = SCREEN_HEIGHT * 2;
+            screenScaler = 2;
         } else if(videoScale == "3x") {
-            videoMode.width = SCREEN_WIDTH * 3;
-            videoMode.height = SCREEN_HEIGHT * 3;
+            screenScaler = 3;
         } else {
             if(videoScale == "full") {
                 enabledFullScreen = true;
             }
         }
+
+        videoMode.width  = SCREEN_WIDTH  * screenScaler;
+        videoMode.height = SCREEN_HEIGHT * screenScaler;
+
         // Due to some weirdness between OSX, Windows, and Linux, the window
         // needs to be created before anything serious can be done.
         window.create(videoMode, APP_TITLE, (enabledFullScreen ? sf::Style::Fullscreen : sf::Style::Default));
@@ -217,7 +221,7 @@ namespace hikari {
 
         // Screen buffer is hard-coded to be the size of the render area, in 
         // other words, it doesn't scale with the window size. When it is
-        // rendered it will be stretched to fit the window. This makes ti retain
+        // rendered it will be stretched to fit the window. This makes it retain
         // its (desired) pixelated quality.
         screenBuffer.create(SCREEN_WIDTH, SCREEN_HEIGHT);
 

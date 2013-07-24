@@ -1,4 +1,5 @@
 #include "hikari/client/game/objects/Entity.hpp"
+#include "hikari/client/game/objects/AnimatedSprite.hpp"
 #include "hikari/client/game/events/EventManager.hpp"
 #include "hikari/client/game/events/WeaponFireEventData.hpp"
 #include "hikari/core/game/map/Room.hpp"
@@ -22,11 +23,7 @@ namespace hikari {
 
     Entity::Entity(int id, std::shared_ptr<Room> room)
         : GameObject(id)
-        , spriteTexture()
-        , sprite()
-        , animationSet()
-        , currentAnimation()
-        , animationPlayer(new SpriteAnimator(sprite))
+        , animatedSprite(new AnimatedSprite())
         , eventManager()
         , world()
         , direction(Directions::None)
@@ -58,11 +55,7 @@ namespace hikari {
 
     Entity::Entity(const Entity& proto)
         : GameObject(GameObject::generateObjectId())
-        , spriteTexture(proto.spriteTexture)
-        , sprite()
-        , animationSet(proto.animationSet)
-        , currentAnimation(proto.currentAnimation)
-        , animationPlayer(new SpriteAnimator(sprite))
+        , animatedSprite(nullptr)
         , eventManager(proto.eventManager)
         , world(proto.world)
         , direction(proto.direction)
@@ -83,7 +76,10 @@ namespace hikari {
         body.setCollisionCallback(
             std::bind(&Entity::handleCollision, this, std::placeholders::_1, std::placeholders::_2));
 
-        setSpriteTexture(spriteTexture);
+        // Clone the animation information if present
+        animatedSprite.reset(proto.animatedSprite ? new AnimatedSprite(*proto.animatedSprite.get()) : new AnimatedSprite());
+
+        changeAnimation(currentAnimationName);
 
         #ifdef HIKARI_DEBUG_ENTITIES
         boxOutline = proto.boxOutline;
@@ -95,61 +91,21 @@ namespace hikari {
         // HIKARI_LOG(debug1) << "Entity::~Entity()";
     }
 
-    std::shared_ptr<sf::Texture> Entity::getSpriteTexture() {
-        return spriteTexture;
-    }
-
-    sf::Sprite& Entity::getSprite() {
-        return sprite;
-    }
-
-    std::shared_ptr<AnimationSet> Entity::getAnimationSet() const {
-        return animationSet;
-    }
-
-    std::shared_ptr<Animation> Entity::getCurrentAnimation() const {
-        return currentAnimation;
+    std::unique_ptr<AnimatedSprite> & Entity::getAnimatedSprite() {
+        return animatedSprite;
     }
 
     void Entity::changeAnimation(const std::string& animationName) {
-        if(!currentAnimation || currentAnimationName != animationName) {
-            if(auto set = getAnimationSet()) {
-                if(set->has(animationName)) {
-                    setCurrentAnimation(set->get(animationName));
-                    currentAnimationName = animationName;
-                }
-            }
+        if(animatedSprite) {
+            currentAnimationName = animationName;
+            animatedSprite->setAnimation(animationName);
         }
     }
 
-    std::shared_ptr<Animator> Entity::getAnimationPlayer() const {
-        return animationPlayer;
-    }
-
-    void Entity::setSpriteTexture(const std::shared_ptr<sf::Texture> & newTexture) {
-        spriteTexture = newTexture;
-
-        if(spriteTexture) {
-            sprite.setTexture(*(getSpriteTexture().get()));
+    void Entity::setAnimationSet(const std::shared_ptr<AnimationSet> & newAnimationSet) {
+        if(newAnimationSet && animatedSprite) {
+            animatedSprite->setAnimationSet(newAnimationSet);
         }
-    }
-
-    void Entity::setSprite(const sf::Sprite& newSprite) {
-        sprite = newSprite;
-    }
-
-    void Entity::setAnimationSet(std::shared_ptr<AnimationSet> newAnimationSet) {
-        animationSet = newAnimationSet;
-    }
-
-    void Entity::setCurrentAnimation(std::shared_ptr<Animation> newAnimation) {
-        currentAnimation = newAnimation;
-        animationPlayer->setAnimation(getCurrentAnimation());
-    }
-
-    void Entity::setAnimationPlayer(std::shared_ptr<Animator> newAnimationPlayer) {
-        animationPlayer = newAnimationPlayer;
-        setCurrentAnimation(getCurrentAnimation());
     }
 
     const Vector2<float>& Entity::getPosition() const {
@@ -184,12 +140,15 @@ namespace hikari {
         this->direction = dir;
 
         // Flip sprite and sprite offset if facing left
-        const sf::Vector2f& spriteScale = getSprite().getScale();
 
         if(getDirection() == Directions::Left) {
-            getSprite().setScale(-std::abs(spriteScale.x), spriteScale.y);
+            if(animatedSprite) {
+                animatedSprite->setXFlipped(true);
+            }
         } else {
-            getSprite().setScale(std::abs(spriteScale.x), spriteScale.y);
+            if(animatedSprite) {
+                animatedSprite->setXFlipped(false);
+            }
         }
     }
 
@@ -348,7 +307,9 @@ namespace hikari {
     void Entity::update(float dt) {
         body.update(dt);
 
-        animationPlayer->update(dt);
+        if(animatedSprite) {
+            animatedSprite->update(dt);
+        }
 
         #ifdef HIKARI_DEBUG_ENTITIES
         if(debug) {
@@ -382,19 +343,23 @@ namespace hikari {
     }
 
     void Entity::renderEntity(sf::RenderTarget &target) {
-        auto sprite = getSprite();
-        auto position = getPosition();
+        const auto & position = getPosition();
 
-        sprite.setPosition(
-            std::floor(position.getX()), 
-            std::floor(position.getY())
-        );
-
-        target.draw(sprite);
+        if(animatedSprite) {
+            animatedSprite->setPosition(
+                Vector2<float>(
+                    std::floor(position.getX()),
+                    std::floor(position.getY())
+                )
+            );
+            animatedSprite->render(target);
+        }
     }
 
     void Entity::reset() {
-        animationPlayer->rewind();
+        if(animatedSprite) {
+            animatedSprite->rewind();
+        }
     }
 
     namespace EntityHelpers {

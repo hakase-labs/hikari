@@ -8,6 +8,10 @@
 #include <unordered_map>
 #include <utility>
 
+namespace sf {
+    class Texture;
+}
+
 namespace hikari {
 
     typedef std::shared_ptr<Animation> AnimationPtr;
@@ -19,15 +23,17 @@ namespace hikari {
     private:
         std::string name;
         std::string imageFileName;
+        std::shared_ptr<sf::Texture> texture;
         std::unordered_map<std::string, AnimationPtr> animationMap;
 
     public:
         static const AnimationPtr NULL_ANIMATION;
 
-        AnimationSet(const std::string& name, const std::string& imageFileName);
+        AnimationSet(const std::string& name, const std::string& imageFileName, const std::shared_ptr<sf::Texture> & texture);
 
         const std::string& getName() const;
         const std::string& getImageFileName() const;
+        const std::shared_ptr<sf::Texture> & getTexture() const;
 
         bool add(const std::string& name, const AnimationPtr& animation);
         bool has(const std::string& name) const;
