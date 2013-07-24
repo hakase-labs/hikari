@@ -18,7 +18,7 @@ namespace hikari {
     class HIKARI_API AnimationLoader {
     public:
         static std::shared_ptr<Animation> load(const std::string &fileName);
-        static std::shared_ptr<AnimationSet> loadSet(const std::string &fileName);
+        std::shared_ptr<AnimationSet> loadSet(const std::string &fileName);
         AnimationLoader(const std::weak_ptr<ImageCache> & imageCache);
         static void setImageCache(const std::weak_ptr<ImageCache> & imageCache);
         std::shared_ptr<Animation> loadFromJsonObject(const Json::Value &json);
