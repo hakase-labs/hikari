@@ -55,6 +55,35 @@ namespace hikari {
         Vector2<float> getPosition() const;
         void setPosition(const Vector2<float> & position);
 
+        /**
+         * Starts an animation playback from the beginning.
+         */
+        void rewind();
+
+        /**
+         * Pauses any animation playback.
+         *
+         * @see unpause()
+         */
+        void pause();
+
+        /**
+         * Unpauses any animation playback.
+         *
+         * @see pause()
+         */
+        void unpause();
+
+        /**
+         * Determines whether the animation playback is paused.
+         *
+         * @see pause()
+         * @see unapuse()
+         * 
+         * @return true if playback is paused, false otherwise
+         */
+        bool isPaused() const;
+
         // set position
         // flip x
         // flip y ?

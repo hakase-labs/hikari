@@ -200,6 +200,12 @@ namespace hikari {
         const std::shared_ptr<HeroActionController>& getActionController() const;
         void setActionController(const std::shared_ptr<HeroActionController>& actionController);
 
+        /**
+         * Allows playing of the animation even if the Hero isn't being updated.
+         * This is useful for transition sequences.
+         */
+        void playAnimation(float dt);
+
         void performTeleport();
         void performMorph();
         void performHurt();

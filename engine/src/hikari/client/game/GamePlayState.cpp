@@ -139,18 +139,16 @@ namespace hikari {
         auto animationCacheWeak = services.locateService<AnimationSetCache>(Services::ANIMATIONSETCACHE);
 
         if(auto animationCache = animationCacheWeak.lock()) {
-            
+
             //
             // Create/configure Rockman
             //
             auto heroId = GameObject::generateObjectId();
             auto heroAnimationSet = animationCache->get("assets/animations/rockman-32.json");
-            auto heroSpriteSheet = imageCache->get(heroAnimationSet->getImageFileName());
-
+            
             hero = std::make_shared<Hero>(heroId, nullptr);
             hero->setActive(true);
             hero->setAnimationSet(heroAnimationSet);
-            hero->setSpriteTexture(heroSpriteSheet);
             hero->setBoundingBox(BoundingBoxF(0, 0, 16, 24).setOrigin(8, 20));
             hero->changeAnimation("idle");
             hero->setPosition(100.0f, 100.0f);
@@ -1530,7 +1528,7 @@ namespace hikari {
 
                     auto heroTranslateY = -heroTranslationSpeedY * dt;
                     hero->setPosition(hero->getPosition().getX(), hero->getPosition().getY() + heroTranslateY);
-                    hero->getAnimationPlayer()->update(dt);
+                    hero->playAnimation(dt);
                 } else {
                     transitionFinished = true;
                 }
@@ -1543,7 +1541,7 @@ namespace hikari {
 
                     auto heroTranslateX = heroTranslationSpeedX * dt;
                     hero->setPosition(hero->getPosition().getX() + heroTranslateX, hero->getPosition().getY());
-                    hero->getAnimationPlayer()->update(dt);
+                    hero->playAnimation(dt);
                 } else {
                     transitionFinished = true;
                 }
@@ -1556,7 +1554,7 @@ namespace hikari {
 
                     auto heroTranslateY = heroTranslationSpeedY * dt;
                     hero->setPosition(hero->getPosition().getX(), hero->getPosition().getY() + heroTranslateY);
-                    hero->getAnimationPlayer()->update(dt);
+                    hero->playAnimation(dt);
                 } else {
                     transitionFinished = true;
                 }
@@ -1569,7 +1567,7 @@ namespace hikari {
 
                     auto heroTranslateX = -heroTranslationSpeedX * dt;
                     hero->setPosition(hero->getPosition().getX() + heroTranslateX, hero->getPosition().getY());
-                    hero->getAnimationPlayer()->update(dt);
+                    hero->playAnimation(dt);
                 } else {
                     transitionFinished = true;
                 }

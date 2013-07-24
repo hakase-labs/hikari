@@ -121,4 +121,20 @@ namespace hikari {
         sprite.setPosition(position.getX(), position.getY());
     }
 
+    void AnimatedSprite::rewind() {
+        animator.rewind();
+    }
+
+    void AnimatedSprite::pause() {
+        animator.pause();
+    }
+
+    void AnimatedSprite::unpause() {
+        animator.unpause();
+    }
+
+    bool AnimatedSprite::isPaused() const {
+        return animator.isPaused();
+    }
+
 } // hikari
