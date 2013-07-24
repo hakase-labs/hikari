@@ -156,8 +156,8 @@ namespace hikari {
  
     void Client::initServices() {
         auto imageCache        = std::make_shared<ImageCache>(ImageCache::NO_SMOOTHING, ImageCache::USE_MASKING);
-        auto animationSetCache = std::make_shared<AnimationSetCache>();
         auto animationLoader   = std::make_shared<AnimationLoader>(std::weak_ptr<ImageCache>(imageCache));
+        auto animationSetCache = std::make_shared<AnimationSetCache>(animationLoader);
         auto tilesetLoader     = std::make_shared<TilesetLoader>(imageCache, animationLoader);
         auto tilesetCache      = std::make_shared<TilesetCache>(tilesetLoader);
         auto mapLoader         = std::make_shared<MapLoader>(tilesetCache);
