@@ -219,7 +219,7 @@ namespace hikari {
 
         // Screen buffer is hard-coded to be the size of the render area, in 
         // other words, it doesn't scale with the window size. When it is
-        // rendered it will be stretched to fit the window. This makes ti retain
+        // rendered it will be stretched to fit the window. This makes it retain
         // its (desired) pixelated quality.
         screenBuffer.create(SCREEN_WIDTH, SCREEN_HEIGHT);
 
