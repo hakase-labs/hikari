@@ -34,12 +34,10 @@ namespace hikari {
         setActive(false);
         setGravitated(proto.isGravitated());
         setObstacle(proto.isObstacle());
-        setCurrentAnimation(proto.getCurrentAnimation());
         setDirection(proto.getDirection());
         setPhasing(proto.isPhasing());
         setPosition(proto.getPosition());
         setBoundingBox(proto.getBoundingBox());
-        setAnimationSet(proto.getAnimationSet());
     }
 
     CollectableItem::~CollectableItem() {
@@ -84,27 +82,22 @@ namespace hikari {
 
     void CollectableItem::onBirth() {
         Entity::onBirth();
-        //setActive(true);
     }
 
     void CollectableItem::onDeath() {
-        //Entity::onDeath();
-        //setActive(false);
         HIKARI_LOG(debug2) << "CollectableItem::onDeath()";
         if(auto eventManagetPtr = getEventManager().lock()) {
-            // May want ti triggerEvent() instead; test and see.
+            // TODO: May want to triggerEvent() instead; test and see.
             eventManagetPtr->queueEvent(EventDataPtr(new EntityDeathEventData(getId(), EntityDeathEventData::Item)));
         }
     }
 
     void CollectableItem::onSleep() {
         Entity::onSleep();
-        //setActive(false);
     }
 
     void CollectableItem::onWake() {
         Entity::onWake();
-        //setActive(true);
     }
 
     void CollectableItem::update(float dt) {

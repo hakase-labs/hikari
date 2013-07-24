@@ -3,6 +3,7 @@
 #include "hikari/client/game/objects/HeroIdleMobilityState.hpp"
 #include "hikari/client/game/objects/HeroTeleportingMobilityState.hpp"
 #include "hikari/client/game/objects/HeroDamagedMobilityState.hpp"
+#include "hikari/client/game/objects/AnimatedSprite.hpp"
 #include "hikari/client/game/events/EventManager.hpp"
 #include "hikari/client/game/events/EventData.hpp"
 #include "hikari/client/game/events/EntityDeathEventData.hpp"
@@ -293,6 +294,14 @@ namespace hikari {
 
     bool Hero::canSlide() {
         return !isAirborn && !isSliding && !isStunned; /* TODO: Check if currently sliding too */
+    }
+
+    void Hero::playAnimation(float dt) {
+        const auto & animSprite = getAnimatedSprite();
+
+        if(animSprite) {
+            animSprite->update(dt);
+        }
     }
 
     void Hero::performJump() {

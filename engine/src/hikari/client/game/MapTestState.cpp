@@ -643,7 +643,7 @@ namespace hikari {
 
                     auto heroTranslateY = -heroTranslationSpeedY  * dt;
                     hero->setPosition(hero->getPosition().getX(), hero->getPosition().getY() + heroTranslateY);
-                    hero->getAnimationPlayer()->update(dt);
+                    // hero->getAnimationPlayer()->update(dt);
                 } else {
                     transitionEnd();
                 }
@@ -656,7 +656,7 @@ namespace hikari {
 
                     auto heroTranslateX = heroTranslationSpeedX  * dt;
                     hero->setPosition(hero->getPosition().getX() + heroTranslateX, hero->getPosition().getY());
-                    hero->getAnimationPlayer()->update(dt);
+                    // hero->getAnimationPlayer()->update(dt);
                 } else {
                     transitionEnd();
                 }
@@ -669,7 +669,7 @@ namespace hikari {
 
                     auto heroTranslateY = heroTranslationSpeedY  * dt;
                     hero->setPosition(hero->getPosition().getX(), hero->getPosition().getY() + heroTranslateY);
-                    hero->getAnimationPlayer()->update(dt);
+                    // hero->getAnimationPlayer()->update(dt);
                 } else {
                     transitionEnd();
                 }
@@ -682,7 +682,7 @@ namespace hikari {
 
                     auto heroTranslateX = -heroTranslationSpeedX  * dt;
                     hero->setPosition(hero->getPosition().getX() + heroTranslateX, hero->getPosition().getY());
-                    hero->getAnimationPlayer()->update(dt);
+                    // hero->getAnimationPlayer()->update(dt);
                 } else {
                     transitionEnd();
                 }
@@ -723,7 +723,7 @@ namespace hikari {
 
         hero->setActive(true);
         hero->setAnimationSet(heroAnimationSet);
-        hero->setSpriteTexture(spriteSheet);
+        // hero->setSpriteTexture(spriteSheet);
         hero->setBoundingBox(BoundingBoxF(0, 0, 16, 24).setOrigin(8, 20));
         hero->changeAnimation("idle");
         hero->setPosition(100.0f, 100.0f);
@@ -763,9 +763,9 @@ namespace hikari {
 
             instance->setActive(true);
             instance->setAnimationSet(enemyAnimationSet);
-            instance->setSpriteTexture(enemySprites);
+            // instance->setSpriteTexture(enemySprites);
             instance->setBoundingBox(BoundingBoxF(0, 0, 14, 14).setOrigin(7, 7));
-            instance->setCurrentAnimation(enemyAnimationSet->get("idle"));
+            // instance->setCurrentAnimation(enemyAnimationSet->get("idle"));
             instance->setGravitated(false);
             instance->setPhasing(false);
 
@@ -781,9 +781,9 @@ namespace hikari {
 
             instance->setActive(true);
             instance->setAnimationSet(enemyAnimationSet);
-            instance->setSpriteTexture(enemySprites);
+            // instance->setSpriteTexture(enemySprites);
             instance->setBoundingBox(BoundingBoxF(0, 0, 14, 14).setOrigin(7, 7));
-            instance->setCurrentAnimation(enemyAnimationSet->get("idle"));
+            // instance->setCurrentAnimation(enemyAnimationSet->get("idle"));
             instance->setGravitated(false);
 
             auto enemyBrain = std::make_shared<ScriptedEnemyBrain>(*squirrel, "OctopusBatteryEnemyBehavior");

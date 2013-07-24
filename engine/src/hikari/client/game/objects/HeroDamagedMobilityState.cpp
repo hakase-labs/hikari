@@ -1,6 +1,7 @@
 #include "hikari/client/game/objects/HeroDamagedMobilityState.hpp"
 // #include "hikari/client/game/objects/HeroWalkingMobilityState.hpp"
 #include "hikari/client/game/objects/HeroIdleMobilityState.hpp"
+#include "hikari/client/game/objects/AnimatedSprite.hpp"
 #include "hikari/client/game/events/EventManager.hpp"
 #include "hikari/client/game/events/EntityDamageEventData.hpp"
 #include "hikari/core/game/SpriteAnimator.hpp"
@@ -50,7 +51,7 @@ namespace hikari {
         hero.setVelocityY(0.0f);
 
         // Make sure animations will play (like when you're on a ladder)
-        hero.getAnimationPlayer()->unpause();
+        hero.getAnimatedSprite()->unpause();
 
         if(auto events = hero.getEventManager().lock()) {
             events->triggerEvent(EventDataPtr(new EntityDamageEventData(hero.getId(), 0.0f)));

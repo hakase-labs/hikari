@@ -24,6 +24,7 @@ namespace hikari {
     class Animation;
     class AnimationSet;
     class Animator;
+    class AnimatedSprite;
     class EventManager;
     class GameWorld; // Soon to replace reference to Room
     class Room;
@@ -41,9 +42,7 @@ namespace hikari {
         std::shared_ptr<sf::Texture> spriteTexture;
         sf::Sprite sprite;
 
-        std::shared_ptr<AnimationSet> animationSet;
-        std::shared_ptr<Animation> currentAnimation;
-        std::shared_ptr<Animator> animationPlayer;
+        std::unique_ptr<AnimatedSprite> animatedSprite;
 
         std::weak_ptr<EventManager> eventManager;
         std::weak_ptr<GameWorld> world;
@@ -72,7 +71,8 @@ namespace hikari {
     protected:
         Movable body;
         std::shared_ptr<Room> room;
-        sf::Sprite& getSprite();
+        
+        std::unique_ptr<AnimatedSprite> & getAnimatedSprite();
 
         virtual void renderEntity(sf::RenderTarget &target);
 
@@ -83,18 +83,9 @@ namespace hikari {
         Entity(const Entity& proto);
         virtual ~Entity();
 
-        std::shared_ptr<sf::Texture> getSpriteTexture();
-        std::shared_ptr<AnimationSet> getAnimationSet() const;
-        std::shared_ptr<Animation> getCurrentAnimation() const;
-        std::shared_ptr<Animator> getAnimationPlayer() const;
-
-        void setSpriteTexture(const std::shared_ptr<sf::Texture>& newTexture);
-        void setSprite(const sf::Sprite& newSprite);
-        void setAnimationSet(std::shared_ptr<AnimationSet> newAnimationSet);
-        void setCurrentAnimation(std::shared_ptr<Animation> newAnimation);
+        void setAnimationSet(const std::shared_ptr<AnimationSet> & newAnimationSet);
         void changeAnimation(const std::string& animationName);
-        void setAnimationPlayer(std::shared_ptr<Animator> newAnimationPlayer);
-
+        
         void setDirection(const Direction& dir);
         const Direction getDirection() const;
 

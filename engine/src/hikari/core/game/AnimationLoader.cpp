@@ -3,10 +3,15 @@
 #include "hikari/core/game/AnimationFrame.hpp"
 #include "hikari/core/game/AnimationSet.hpp"
 #include "hikari/core/geom/Rectangle2D.hpp"
+#include "hikari/core/util/ImageCache.hpp"
 #include "hikari/core/util/StringUtils.hpp"
 #include "hikari/core/util/JsonUtils.hpp"
 #include "hikari/core/util/PhysFS.hpp"
+
 #include <json/value.h>
+
+#include <SFML/Graphics/Texture.hpp>
+
 #include <exception>
 #include <fstream>
 
@@ -27,9 +32,14 @@ namespace hikari {
     const char* AnimationLoader::PROPERTY_FRAME_LENGTH = "length";
     const char* AnimationLoader::PROPERTY_FRAME_HOTSPOT_X = "hotspotX";
     const char* AnimationLoader::PROPERTY_FRAME_HOTSPOT_Y = "hotspotY";
+    std::weak_ptr<ImageCache> AnimationLoader::imageCache = std::weak_ptr<ImageCache>();
 
-    AnimationLoader::AnimationLoader() {
+    AnimationLoader::AnimationLoader(const std::weak_ptr<ImageCache> & imageCache) {
+        // TODO: Make this less static...
+    }
 
+    void AnimationLoader::setImageCache(const std::weak_ptr<ImageCache> & imageCache) {
+        AnimationLoader::imageCache = imageCache;
     }
     
     std::shared_ptr<Animation> AnimationLoader::load(const std::string &fileName) {
@@ -48,9 +58,14 @@ namespace hikari {
             // Extract name and image file path
             std::string name = root[PROPERTY_NAME].asString();
             std::string imageFileName = root[PROPERTY_IMAGE_FILE_NAME].asString();
+            std::shared_ptr<sf::Texture> texture;
+
+            if(auto cache = imageCache.lock()) {
+                texture = cache->get(imageFileName);
+            }
 
             std::shared_ptr<AnimationSet> resultSet = 
-                std::shared_ptr<AnimationSet>(new AnimationSet(name, imageFileName));
+                std::shared_ptr<AnimationSet>(new AnimationSet(name, imageFileName, texture));
 
             // Extract animations
             const Json::Value animations = root[PROPERTY_ANIMATIONS];

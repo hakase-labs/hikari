@@ -4,9 +4,11 @@ namespace hikari {
 
     const AnimationPtr AnimationSet::NULL_ANIMATION = AnimationPtr();
 
-    AnimationSet::AnimationSet(const std::string& name, const std::string& imageFileName)
+    AnimationSet::AnimationSet(const std::string& name, const std::string& imageFileName, const std::shared_ptr<sf::Texture> & texture)
         : name(name)
-        , imageFileName(imageFileName) {
+        , imageFileName(imageFileName)
+        , texture(texture)
+        , animationMap() {
 
     }
 
@@ -16,6 +18,10 @@ namespace hikari {
 
     const std::string& AnimationSet::getImageFileName() const {
         return imageFileName;
+    }
+
+    const std::shared_ptr<sf::Texture> & AnimationSet::getTexture() const {
+        return texture;
     }
 
     bool AnimationSet::add(const std::string& name, const AnimationPtr& animation) {

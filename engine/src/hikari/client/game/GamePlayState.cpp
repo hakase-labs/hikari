@@ -45,6 +45,7 @@
 #include "hikari/core/game/map/RoomTransition.hpp"
 #include "hikari/core/geom/GeometryUtils.hpp"
 #include "hikari/core/util/ImageCache.hpp"
+#include "hikari/core/util/AnimationSetCache.hpp"
 #include "hikari/core/util/JsonUtils.hpp"
 #include "hikari/core/util/FileSystem.hpp"
 #include "hikari/core/util/ReferenceWrapper.hpp"
@@ -135,23 +136,26 @@ namespace hikari {
 
         // leftBar.setFillColor(sf::Color::Black);
 
-        //
-        // Create/configure Rockman
-        //
-        auto heroId = GameObject::generateObjectId();
-        auto heroAnimationSet = AnimationLoader::loadSet("assets/animations/rockman-32.json");
-        auto heroSpriteSheet = imageCache->get(heroAnimationSet->getImageFileName());
+        auto animationCacheWeak = services.locateService<AnimationSetCache>(Services::ANIMATIONSETCACHE);
 
-        hero = std::make_shared<Hero>(heroId, nullptr);
-        hero->setActive(true);
-        hero->setAnimationSet(heroAnimationSet);
-        hero->setSpriteTexture(heroSpriteSheet);
-        hero->setBoundingBox(BoundingBoxF(0, 0, 16, 24).setOrigin(8, 20));
-        hero->changeAnimation("idle");
-        hero->setPosition(100.0f, 100.0f);
-        hero->setActionSpot(Vector2<float>(6.0, -8.0));
-        hero->setActionController(std::make_shared<PlayerInputHeroActionController>(userInput));
-        hero->setEventManager(std::weak_ptr<EventManager>(eventManager));
+        if(auto animationCache = animationCacheWeak.lock()) {
+
+            //
+            // Create/configure Rockman
+            //
+            auto heroId = GameObject::generateObjectId();
+            auto heroAnimationSet = animationCache->get("assets/animations/rockman-32.json");
+            
+            hero = std::make_shared<Hero>(heroId, nullptr);
+            hero->setActive(true);
+            hero->setAnimationSet(heroAnimationSet);
+            hero->setBoundingBox(BoundingBoxF(0, 0, 16, 24).setOrigin(8, 20));
+            hero->changeAnimation("idle");
+            hero->setPosition(100.0f, 100.0f);
+            hero->setActionSpot(Vector2<float>(6.0, -8.0));
+            hero->setActionController(std::make_shared<PlayerInputHeroActionController>(userInput));
+            hero->setEventManager(std::weak_ptr<EventManager>(eventManager));
+        }
 
         world.setPlayer(hero);
         world.setEventManager(std::weak_ptr<EventManager>(eventManager));
@@ -1524,7 +1528,7 @@ namespace hikari {
 
                     auto heroTranslateY = -heroTranslationSpeedY * dt;
                     hero->setPosition(hero->getPosition().getX(), hero->getPosition().getY() + heroTranslateY);
-                    hero->getAnimationPlayer()->update(dt);
+                    hero->playAnimation(dt);
                 } else {
                     transitionFinished = true;
                 }
@@ -1537,7 +1541,7 @@ namespace hikari {
 
                     auto heroTranslateX = heroTranslationSpeedX * dt;
                     hero->setPosition(hero->getPosition().getX() + heroTranslateX, hero->getPosition().getY());
-                    hero->getAnimationPlayer()->update(dt);
+                    hero->playAnimation(dt);
                 } else {
                     transitionFinished = true;
                 }
@@ -1550,7 +1554,7 @@ namespace hikari {
 
                     auto heroTranslateY = heroTranslationSpeedY * dt;
                     hero->setPosition(hero->getPosition().getX(), hero->getPosition().getY() + heroTranslateY);
-                    hero->getAnimationPlayer()->update(dt);
+                    hero->playAnimation(dt);
                 } else {
                     transitionFinished = true;
                 }
@@ -1563,7 +1567,7 @@ namespace hikari {
 
                     auto heroTranslateX = -heroTranslationSpeedX * dt;
                     hero->setPosition(hero->getPosition().getX() + heroTranslateX, hero->getPosition().getY());
-                    hero->getAnimationPlayer()->update(dt);
+                    hero->playAnimation(dt);
                 } else {
                     transitionFinished = true;
                 }
