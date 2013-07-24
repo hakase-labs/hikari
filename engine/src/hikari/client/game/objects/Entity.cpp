@@ -372,15 +372,15 @@ namespace hikari {
             return entity->getPosition().getY();
         }
 
-        void setX(Entity * entity, const float & x) {
+        void setX(Entity * entity, float x) {
             entity->setPosition(x, entity->getPosition().getY());
         }
 
-        void setY(Entity * entity, const float & y) {
+        void setY(Entity * entity, float y) {
             entity->setPosition(entity->getPosition().getX(), y);
         }
 
-        bool checkIfTileAtPositionHasAttribute(Entity * entity, const int & x, const int & y, const int & attribute) {
+        bool checkIfTileAtPositionHasAttribute(Entity * entity, int x, int y, int attribute) {
             if(const auto & room = entity->getRoom()) {
                 return TileAttribute::hasAttribute(room->getAttributeAt(x / 16, y / 16), static_cast<TileAttribute::TileAttribute>(attribute));
             }
