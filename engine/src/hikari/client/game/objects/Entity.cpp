@@ -1,4 +1,5 @@
 #include "hikari/client/game/objects/Entity.hpp"
+#include "hikari/client/game/objects/AnimatedSprite.hpp"
 #include "hikari/client/game/events/EventManager.hpp"
 #include "hikari/client/game/events/WeaponFireEventData.hpp"
 #include "hikari/core/game/map/Room.hpp"
@@ -27,6 +28,7 @@ namespace hikari {
         , animationSet()
         , currentAnimation()
         , animationPlayer(new SpriteAnimator(sprite))
+        , animatedSprite(new AnimatedSprite())
         , eventManager()
         , world()
         , direction(Directions::None)
@@ -140,6 +142,9 @@ namespace hikari {
 
     void Entity::setAnimationSet(std::shared_ptr<AnimationSet> newAnimationSet) {
         animationSet = newAnimationSet;
+        if(animationSet) {
+            animatedSprite->setAnimationSet(newAnimationSet);
+        }
     }
 
     void Entity::setCurrentAnimation(std::shared_ptr<Animation> newAnimation) {
@@ -391,6 +396,11 @@ namespace hikari {
         );
 
         target.draw(sprite);
+
+        if(animatedSprite) {
+            animatedSprite->setPosition(position);
+            animatedSprite->render(target);
+        }
     }
 
     void Entity::reset() {

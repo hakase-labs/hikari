@@ -24,6 +24,7 @@ namespace hikari {
     class Animation;
     class AnimationSet;
     class Animator;
+    class AnimatedSprite;
     class EventManager;
     class GameWorld; // Soon to replace reference to Room
     class Room;
@@ -44,6 +45,7 @@ namespace hikari {
         std::shared_ptr<AnimationSet> animationSet;
         std::shared_ptr<Animation> currentAnimation;
         std::shared_ptr<Animator> animationPlayer;
+        std::unique_ptr<AnimatedSprite> animatedSprite;
 
         std::weak_ptr<EventManager> eventManager;
         std::weak_ptr<GameWorld> world;
