@@ -20,8 +20,13 @@ namespace hikari {
         , tile(tile)
         , attr(attr)
         , transitions(transitions)
-        , spawners(spawners) {
+        , spawners(spawners)
+    {
+        traceLadders();
+    }
 
+    void Room::traceLadders() {
+        
     }
     
     const int Room::getId() const {

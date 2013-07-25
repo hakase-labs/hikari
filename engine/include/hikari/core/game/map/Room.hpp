@@ -38,6 +38,12 @@ namespace hikari {
 
         const inline bool isInBounds(const int &x, const int &y) const;
 
+        /**
+         * Iterates through the attribute data searching for ladders and traces
+         * their region into BoundingBox instances.
+         */
+        void traceLadders();
+
     public:
         const static int NO_TILE = -1;
 
