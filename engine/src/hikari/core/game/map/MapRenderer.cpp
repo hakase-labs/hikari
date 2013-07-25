@@ -68,6 +68,16 @@ namespace hikari {
                 target.draw(tileSprite);
             }
         }
+
+        sf::RectangleShape ladderRect;
+        ladderRect.setFillColor(sf::Color(64, 128, 32, 64));
+
+        std::for_each(std::begin(room->getLadders()), std::end(room->getLadders()), [this, &ladderRect, &target](const BoundingBox<int> & ladder) {
+            ladderRect.setPosition(sf::Vector2f(ladder.getLeft(), ladder.getTop()));
+            ladderRect.setSize(sf::Vector2f(ladder.getWidth(), ladder.getHeight()));
+
+            target.draw(ladderRect);
+        });
     }
 
     inline void MapRenderer::cullTiles() {

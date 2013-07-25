@@ -3,8 +3,10 @@
 
 #include "hikari/core/Platform.hpp"
 #include "hikari/core/game/map/RoomTransition.hpp"
+#include "hikari/core/geom/BoundingBox.hpp"
 #include "hikari/core/geom/Point2D.hpp"
 #include "hikari/core/geom/Rectangle2D.hpp"
+#include <list>
 #include <memory>
 #include <vector>
 
@@ -15,9 +17,6 @@
 
 namespace hikari {
 
-    class CollectableItem;
-    class Doodad;
-    class Enemy;
     class Spawner;
 
     class HIKARI_API Room {
@@ -35,6 +34,7 @@ namespace hikari {
         std::vector<int> attr;
         std::vector<RoomTransition> transitions;
         std::vector<std::shared_ptr<Spawner>> spawners;
+        std::list<BoundingBox<int>> ladders;
 
         const inline bool isInBounds(const int &x, const int &y) const;
 
@@ -90,6 +90,8 @@ namespace hikari {
         const std::vector<RoomTransition>& getTransitions() const;
 
         const std::vector<std::shared_ptr<Spawner>>& getSpawners() const;
+
+        const std::list<BoundingBox<int>> & getLadders() const;
 
         /**
          * Gets a list of the Spawner objects in this Room.
