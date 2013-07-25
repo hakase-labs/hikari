@@ -35,7 +35,7 @@ namespace hikari {
                 int attribute = attr[x + (y * getWidth())];
 
                 if(TileAttribute::hasAttribute(attribute, TileAttribute::LADDER_TOP)) {
-                    ladderTops.emplace_back(x, y);
+                    ladderTops.emplace_back(std::pair<int, int>(x, y));
                 }
             }
         }
@@ -56,10 +56,12 @@ namespace hikari {
             }
 
             ladders.emplace_back(
-                (getX() + top.first)  * getGridSize(), // ladder top left X (in pixels)
-                (getY() + top.second) * getGridSize(), // ladder top left Y (in pixels)
-                getGridSize(),                         // ladder width      (in pixels)
-                (bottom - top.second) * getGridSize()  // ladder height     (in pixels)
+                BoundingBox<int>(
+                    (getX() + top.first)  * getGridSize(), // ladder top left X (in pixels)
+                    (getY() + top.second) * getGridSize(), // ladder top left Y (in pixels)
+                    getGridSize(),                         // ladder width      (in pixels)
+                    (bottom - top.second) * getGridSize()  // ladder height     (in pixels)
+                )
             );
 
             HIKARI_LOG(debug4) << "Found bottom top at " << ladders.back();
