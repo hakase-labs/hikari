@@ -22,7 +22,6 @@ namespace hikari {
     private:
         sf::Sprite sprite;
         std::string currentAnimation;
-        // std::weak_ptr<Animation> animation;
         std::weak_ptr<AnimationSet> animationSet;
         SpriteAnimator animator;
         bool isXAxisFlipped;
@@ -83,10 +82,6 @@ namespace hikari {
          * @return true if playback is paused, false otherwise
          */
         bool isPaused() const;
-
-        // set position
-        // flip x
-        // flip y ?
     };
 } // hikari
 
