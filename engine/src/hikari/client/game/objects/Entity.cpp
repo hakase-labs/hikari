@@ -34,7 +34,6 @@ namespace hikari {
         , obstacleFlag(false)
         , shieldFlag(false)
         , actionSpot(0.0f, 0.0f)
-        , currentAnimationName("")
         , room(room)
     {
         reset();
@@ -66,11 +65,8 @@ namespace hikari {
         , obstacleFlag(proto.obstacleFlag)
         , shieldFlag(proto.shieldFlag)
         , actionSpot(proto.actionSpot)
-        , currentAnimationName(proto.currentAnimationName)
         , room(proto.room)
     {
-        // HIKARI_LOG(debug2) << "Entity copy constructor!" << std::endl;
-
         body = Movable(proto.body);
 
         body.setCollisionCallback(
@@ -79,8 +75,6 @@ namespace hikari {
         // Clone the animation information if present
         animatedSprite.reset(proto.animatedSprite ? new AnimatedSprite(*proto.animatedSprite.get()) : new AnimatedSprite());
 
-        changeAnimation(currentAnimationName);
-
         #ifdef HIKARI_DEBUG_ENTITIES
         boxOutline = proto.boxOutline;
         boxPosition = proto.boxPosition;
@@ -88,7 +82,6 @@ namespace hikari {
     }
 
     Entity::~Entity() {
-        // HIKARI_LOG(debug1) << "Entity::~Entity()";
     }
 
     std::unique_ptr<AnimatedSprite> & Entity::getAnimatedSprite() {
@@ -97,7 +90,6 @@ namespace hikari {
 
     void Entity::changeAnimation(const std::string& animationName) {
         if(animatedSprite) {
-            currentAnimationName = animationName;
             animatedSprite->setAnimation(animationName);
         }
     }

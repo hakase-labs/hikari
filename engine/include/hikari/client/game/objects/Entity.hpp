@@ -21,9 +21,7 @@ namespace sf {
 
 namespace hikari {
 
-    class Animation;
     class AnimationSet;
-    class Animator;
     class AnimatedSprite;
     class EventManager;
     class GameWorld; // Soon to replace reference to Room
@@ -39,11 +37,7 @@ namespace hikari {
     private:
         static bool debug;
 
-        std::shared_ptr<sf::Texture> spriteTexture;
-        sf::Sprite sprite;
-
         std::unique_ptr<AnimatedSprite> animatedSprite;
-
         std::weak_ptr<EventManager> eventManager;
         std::weak_ptr<GameWorld> world;
 
@@ -62,8 +56,6 @@ namespace hikari {
         bool shieldFlag;   // Does this object deflect projectiles right now?
 
         Vector2<float> actionSpot; // An offset from the position where actions "take place"
-
-        std::string currentAnimationName;
 
         void move(const Vector2<float>& delta);
         void move(const float& dx, const float& dy);
