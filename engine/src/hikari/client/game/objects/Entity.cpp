@@ -24,6 +24,7 @@ namespace hikari {
         , animatedSprite(new AnimatedSprite())
         , eventManager()
         , world()
+        , room(room)
         , direction(Directions::None)
         , faction(Faction::World)
         , deathType(EntityDeathType::Nothing)
@@ -33,7 +34,6 @@ namespace hikari {
         , shieldFlag(false)
         , actionSpot(0.0f, 0.0f)
         , body()
-        , room(room)
     {
         reset();
 
@@ -56,6 +56,7 @@ namespace hikari {
         , animatedSprite(nullptr)
         , eventManager(proto.eventManager)
         , world(proto.world)
+        , room(proto.room)
         , direction(proto.direction)
         , faction(proto.faction)
         , deathType(proto.deathType)
@@ -65,7 +66,6 @@ namespace hikari {
         , shieldFlag(proto.shieldFlag)
         , actionSpot(proto.actionSpot)
         , body(proto.body)
-        , room(proto.room)
     {
         setGravitated(proto.isGravitated());
         setPhasing(proto.isPhasing());

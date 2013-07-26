@@ -111,7 +111,7 @@ namespace hikari {
     }
 
     void Hero::update(float dt) {
-        if(room) {
+        if(const auto & room = getRoom()) {
             const int gridSize = room->getGridSize();
 
             if(invincibilityTimer > 0.0f) {

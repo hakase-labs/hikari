@@ -35,6 +35,7 @@ namespace hikari {
         std::unique_ptr<AnimatedSprite> animatedSprite;
         std::weak_ptr<EventManager> eventManager;
         std::weak_ptr<GameWorld> world;
+        std::shared_ptr<Room> room;
 
         #ifdef HIKARI_DEBUG_ENTITIES
         sf::RectangleShape boxOutline;
@@ -57,9 +58,8 @@ namespace hikari {
 
     protected:
         Movable body;
-        std::shared_ptr<Room> room;
-        
         std::unique_ptr<AnimatedSprite> & getAnimatedSprite();
+        //const std::shared_ptr<Room> & getRoom() const;
 
         virtual void renderEntity(sf::RenderTarget &target);
 
