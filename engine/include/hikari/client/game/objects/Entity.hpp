@@ -100,6 +100,7 @@ namespace hikari {
 
         void setVelocityX(const float &vx);
         const float getVelocityX() const;
+
         void setVelocityY(const float &vy);
         const float getVelocityY() const;
 
@@ -172,14 +173,62 @@ namespace hikari {
          */
         bool isPhasing() const;
 
+        /**
+         * Gets the position of the Entity.
+         *
+         * @return Entity's position
+         * @see setPosition
+         */
         const Vector2<float>& getPosition() const;
+
+        /**
+         * Sets the Entity's position to newPosition.
+         * 
+         * @param newPosition a new position to give the Entity
+         * @see getPosition
+         */
         void setPosition(const Vector2<float>& newPosition);
+
+        /**
+         * Sets the Entity's position to (x, y).
+         * 
+         * @param x a new X coordinate to give the Entity
+         * @param y a new Y coordinate to give the Entity
+         * @see getPosition
+         */
         void setPosition(const float x, const float y);
 
+        /**
+         * Gets the Entity's "action spot", which is a point relative to its
+         * position where "actions" should take place. For example, when 
+         * shooting a weapon the action spot would be used to calculate
+         * where the projectiles should spawn from.
+         *
+         * @see setActionSpot
+         * @see getPosition
+         */
         const Vector2<float>& getActionSpot() const;
+
+        /**
+         * Sets the Entity's "action spot".
+         * 
+         * @param spot a point relative to the Entity's position to be used as
+         *             the "action spot"
+         */
         void setActionSpot(const Vector2<float> & spot);
 
+        /**
+         * Gets the Entity's bounding box.
+         *
+         * @return the BoundingBox of the Entity
+         */
         const BoundingBoxF& getBoundingBox() const;
+
+        /**
+         * Sets the Entity's bounding box.
+         * 
+         * @param box the bounding box to use
+         */
         void setBoundingBox(const BoundingBoxF& box);
 
         /**
