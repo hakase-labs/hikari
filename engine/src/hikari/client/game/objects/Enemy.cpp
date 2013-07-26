@@ -27,16 +27,8 @@ namespace hikari {
         , brain(nullptr)
         , hitPoints(proto.hitPoints)
         , damageTickCounter(0)
-    {
-        setDeathType(proto.getDeathType());
-        
+    {   
         setActive(false);
-        setGravitated(proto.isGravitated());
-        setObstacle(proto.isObstacle());
-        setDirection(proto.getDirection());
-        setPhasing(proto.isPhasing());
-        setPosition(proto.getPosition());
-        setBoundingBox(proto.getBoundingBox());
 
         if(proto.brain) {
             setBrain(proto.brain->clone());

@@ -66,8 +66,11 @@ namespace hikari {
         , shieldFlag(proto.shieldFlag)
         , actionSpot(proto.actionSpot)
         , room(proto.room)
+        , body(proto.body)
     {
-        body = Movable(proto.body);
+        setGravitated(proto.isGravitated());
+        setPhasing(proto.isPhasing());
+        setPosition(proto.getPosition());
 
         body.setCollisionCallback(
             std::bind(&Entity::handleCollision, this, std::placeholders::_1, std::placeholders::_2));
