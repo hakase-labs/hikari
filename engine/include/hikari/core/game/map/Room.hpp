@@ -34,7 +34,7 @@ namespace hikari {
         std::vector<int> attr;
         std::vector<RoomTransition> transitions;
         std::vector<std::shared_ptr<Spawner>> spawners;
-        std::list<BoundingBox<int>> ladders;
+        std::list<BoundingBox<float>> ladders;
 
         const inline bool isInBounds(const int &x, const int &y) const;
 
@@ -91,7 +91,7 @@ namespace hikari {
 
         const std::vector<std::shared_ptr<Spawner>>& getSpawners() const;
 
-        const std::list<BoundingBox<int>> & getLadders() const;
+        const std::list<BoundingBox<float>> & getLadders() const;
 
         /**
          * Gets a list of the Spawner objects in this Room.

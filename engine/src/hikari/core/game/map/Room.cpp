@@ -56,11 +56,11 @@ namespace hikari {
             }
 
             ladders.emplace_back(
-                BoundingBox<int>(
-                    (getX() + top.first)  * getGridSize(), // ladder top left X (in pixels)
-                    (getY() + top.second) * getGridSize(), // ladder top left Y (in pixels)
-                    getGridSize(),                         // ladder width      (in pixels)
-                    (bottom - top.second) * getGridSize()  // ladder height     (in pixels)
+                BoundingBox<float>(
+                    static_cast<float>((getX() + top.first)  * getGridSize()), // ladder top left X (in pixels)
+                    static_cast<float>((getY() + top.second) * getGridSize()), // ladder top left Y (in pixels)
+                    static_cast<float>(getGridSize()                        ), // ladder width      (in pixels)
+                    static_cast<float>((bottom - top.second) * getGridSize())  // ladder height     (in pixels)
                 )
             );
 
@@ -140,7 +140,7 @@ namespace hikari {
         return spawners;
     }
 
-    const std::list<BoundingBox<int>> & Room::getLadders() const {
+    const std::list<BoundingBox<float>> & Room::getLadders() const {
         return ladders;
     }
 
