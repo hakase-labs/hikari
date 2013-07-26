@@ -70,9 +70,11 @@ namespace hikari {
         }
 
         sf::RectangleShape ladderRect;
-        ladderRect.setFillColor(sf::Color(64, 128, 32, 64));
+        ladderRect.setFillColor(sf::Color(128, 128, 0, 96));
+        ladderRect.setOutlineColor(sf::Color(255, 255, 255, 128));
+        ladderRect.setOutlineThickness(1.0f);
 
-        std::for_each(std::begin(room->getLadders()), std::end(room->getLadders()), [this, &ladderRect, &target](const BoundingBox<int> & ladder) {
+        std::for_each(std::begin(room->getLadders()), std::end(room->getLadders()), [this, &ladderRect, &target](const BoundingBox<float> & ladder) {
             ladderRect.setPosition(sf::Vector2f(ladder.getLeft(), ladder.getTop()));
             ladderRect.setSize(sf::Vector2f(ladder.getWidth(), ladder.getHeight()));
 
