@@ -8,11 +8,6 @@
 #include "hikari/core/game/Direction.hpp"
 #include "hikari/core/math/Vector2.hpp"
 
-#include <SFML/Graphics/Texture.hpp>
-#include <SFML/Graphics/Sprite.hpp>
-
-#include <SFML/Graphics.hpp>
-
 #include <memory>
 
 namespace sf {

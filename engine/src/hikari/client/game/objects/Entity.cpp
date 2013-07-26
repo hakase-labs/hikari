@@ -4,8 +4,6 @@
 #include "hikari/client/game/events/WeaponFireEventData.hpp"
 #include "hikari/core/game/map/Room.hpp"
 #include "hikari/core/game/map/Tileset.hpp"
-#include "hikari/core/game/Animation.hpp"
-#include "hikari/core/game/AnimationSet.hpp"
 #include "hikari/core/game/SpriteAnimator.hpp"
 #include "hikari/core/util/Log.hpp"
 
@@ -34,6 +32,7 @@ namespace hikari {
         , obstacleFlag(false)
         , shieldFlag(false)
         , actionSpot(0.0f, 0.0f)
+        , body()
         , room(room)
     {
         reset();
@@ -65,8 +64,8 @@ namespace hikari {
         , obstacleFlag(proto.obstacleFlag)
         , shieldFlag(proto.shieldFlag)
         , actionSpot(proto.actionSpot)
-        , room(proto.room)
         , body(proto.body)
+        , room(proto.room)
     {
         setGravitated(proto.isGravitated());
         setPhasing(proto.isPhasing());
@@ -338,14 +337,9 @@ namespace hikari {
     }
 
     void Entity::renderEntity(sf::RenderTarget &target) {
-        const auto & position = getPosition();
-
         if(animatedSprite) {
             animatedSprite->setPosition(
-                Vector2<float>(
-                    std::floor(position.getX()),
-                    std::floor(position.getY())
-                )
+                getPosition().toFloor()
             );
             animatedSprite->render(target);
         }
@@ -377,7 +371,11 @@ namespace hikari {
 
         bool checkIfTileAtPositionHasAttribute(Entity * entity, int x, int y, int attribute) {
             if(const auto & room = entity->getRoom()) {
-                return TileAttribute::hasAttribute(room->getAttributeAt(x / 16, y / 16), static_cast<TileAttribute::TileAttribute>(attribute));
+                int gridSize = room->getGridSize();
+                return TileAttribute::hasAttribute(
+                    room->getAttributeAt(x / gridSize, y / gridSize), 
+                    static_cast<TileAttribute::TileAttribute>(attribute)
+                );
             }
 
             return false;
