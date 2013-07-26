@@ -14,12 +14,10 @@ namespace hikari {
         , hitPoints(0.0)
         , damageTickCounter(0)
     {
-        setDeathType(EntityDeathType::Small);
-
-        body.setGravitated(true);
-        body.setHasWorldCollision(true);
-
+        setGravitated(true);
+        setPhasing(false);
         setFaction(Faction::Enemy);
+        setDeathType(EntityDeathType::Small);
     }
 
     Enemy::Enemy(const Enemy& proto)
@@ -77,7 +75,7 @@ namespace hikari {
         }
     }
 
-    void Enemy::setBrain(const std::shared_ptr<EnemyBrain> newBrain) {
+    void Enemy::setBrain(const std::shared_ptr<EnemyBrain> & newBrain) {
         if(newBrain) {
             brain = newBrain;
             brain->attach(this);

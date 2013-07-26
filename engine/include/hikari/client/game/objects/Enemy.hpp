@@ -31,7 +31,7 @@ namespace hikari {
 
         virtual void handleCollision(Movable& body, CollisionInfo& info);
 
-        void setBrain(const std::shared_ptr<EnemyBrain> brain);
+        void setBrain(const std::shared_ptr<EnemyBrain> & brain);
         const std::shared_ptr<EnemyBrain>& getBrain() const;
 
         void setHitPoints(float hp);
