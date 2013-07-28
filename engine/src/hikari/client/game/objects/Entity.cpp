@@ -4,8 +4,6 @@
 #include "hikari/client/game/events/WeaponFireEventData.hpp"
 #include "hikari/core/game/map/Room.hpp"
 #include "hikari/core/game/map/Tileset.hpp"
-#include "hikari/core/game/Animation.hpp"
-#include "hikari/core/game/AnimationSet.hpp"
 #include "hikari/core/game/SpriteAnimator.hpp"
 #include "hikari/core/util/Log.hpp"
 
@@ -26,6 +24,7 @@ namespace hikari {
         , animatedSprite(new AnimatedSprite())
         , eventManager()
         , world()
+        , room(room)
         , direction(Directions::None)
         , faction(Faction::World)
         , deathType(EntityDeathType::Nothing)
@@ -34,8 +33,7 @@ namespace hikari {
         , obstacleFlag(false)
         , shieldFlag(false)
         , actionSpot(0.0f, 0.0f)
-        , currentAnimationName("")
-        , room(room)
+        , body()
     {
         reset();
 
@@ -58,6 +56,7 @@ namespace hikari {
         , animatedSprite(nullptr)
         , eventManager(proto.eventManager)
         , world(proto.world)
+        , room(proto.room)
         , direction(proto.direction)
         , faction(proto.faction)
         , deathType(proto.deathType)
@@ -66,20 +65,17 @@ namespace hikari {
         , obstacleFlag(proto.obstacleFlag)
         , shieldFlag(proto.shieldFlag)
         , actionSpot(proto.actionSpot)
-        , currentAnimationName(proto.currentAnimationName)
-        , room(proto.room)
+        , body(proto.body)
     {
-        // HIKARI_LOG(debug2) << "Entity copy constructor!" << std::endl;
-
-        body = Movable(proto.body);
+        setGravitated(proto.isGravitated());
+        setPhasing(proto.isPhasing());
+        setPosition(proto.getPosition());
 
         body.setCollisionCallback(
             std::bind(&Entity::handleCollision, this, std::placeholders::_1, std::placeholders::_2));
 
         // Clone the animation information if present
         animatedSprite.reset(proto.animatedSprite ? new AnimatedSprite(*proto.animatedSprite.get()) : new AnimatedSprite());
-
-        changeAnimation(currentAnimationName);
 
         #ifdef HIKARI_DEBUG_ENTITIES
         boxOutline = proto.boxOutline;
@@ -88,7 +84,6 @@ namespace hikari {
     }
 
     Entity::~Entity() {
-        // HIKARI_LOG(debug1) << "Entity::~Entity()";
     }
 
     std::unique_ptr<AnimatedSprite> & Entity::getAnimatedSprite() {
@@ -97,7 +92,6 @@ namespace hikari {
 
     void Entity::changeAnimation(const std::string& animationName) {
         if(animatedSprite) {
-            currentAnimationName = animationName;
             animatedSprite->setAnimation(animationName);
         }
     }
@@ -343,14 +337,9 @@ namespace hikari {
     }
 
     void Entity::renderEntity(sf::RenderTarget &target) {
-        const auto & position = getPosition();
-
         if(animatedSprite) {
             animatedSprite->setPosition(
-                Vector2<float>(
-                    std::floor(position.getX()),
-                    std::floor(position.getY())
-                )
+                getPosition().toFloor()
             );
             animatedSprite->render(target);
         }
@@ -372,17 +361,21 @@ namespace hikari {
             return entity->getPosition().getY();
         }
 
-        void setX(Entity * entity, const float & x) {
+        void setX(Entity * entity, float x) {
             entity->setPosition(x, entity->getPosition().getY());
         }
 
-        void setY(Entity * entity, const float & y) {
+        void setY(Entity * entity, float y) {
             entity->setPosition(entity->getPosition().getX(), y);
         }
 
-        bool checkIfTileAtPositionHasAttribute(Entity * entity, const int & x, const int & y, const int & attribute) {
+        bool checkIfTileAtPositionHasAttribute(Entity * entity, int x, int y, int attribute) {
             if(const auto & room = entity->getRoom()) {
-                return TileAttribute::hasAttribute(room->getAttributeAt(x / 16, y / 16), static_cast<TileAttribute::TileAttribute>(attribute));
+                int gridSize = room->getGridSize();
+                return TileAttribute::hasAttribute(
+                    room->getAttributeAt(x / gridSize, y / gridSize), 
+                    static_cast<TileAttribute::TileAttribute>(attribute)
+                );
             }
 
             return false;

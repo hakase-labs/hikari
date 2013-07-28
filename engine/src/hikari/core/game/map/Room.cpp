@@ -1,7 +1,9 @@
 #include "hikari/core/game/map/Room.hpp"
+#include "hikari/core/game/map/Tileset.hpp"
 #include "hikari/core/util/Log.hpp"
 #include <memory>
 #include <algorithm>
+#include <list>
 
 namespace hikari {
 
@@ -20,8 +22,50 @@ namespace hikari {
         , tile(tile)
         , attr(attr)
         , transitions(transitions)
-        , spawners(spawners) {
+        , spawners(spawners)
+    {
+        traceLadders();
+    }
 
+    void Room::traceLadders() {
+        std::list<std::pair<int, int>> ladderTops;
+
+        for(int y = 0; y < getHeight(); ++y) {
+            for(int x = 0; x < getWidth(); ++x) {
+                int attribute = attr[x + (y * getWidth())];
+
+                if(TileAttribute::hasAttribute(attribute, TileAttribute::LADDER_TOP)) {
+                    ladderTops.emplace_back(std::pair<int, int>(x, y));
+                }
+            }
+        }
+
+        std::for_each(std::begin(ladderTops), std::end(ladderTops), [this](const std::pair<int, int> & top) {
+            int bottom = top.second;
+
+            // Trace the ladder down vertically until you find a tile that is 
+            // not a ladder.
+            while(bottom < getHeight()) {
+                int attribute = attr[top.first + (bottom * getWidth())];
+
+                if(!TileAttribute::hasAttribute(attribute, TileAttribute::LADDER)) {
+                    break;
+                }
+
+                bottom++;
+            }
+
+            ladders.emplace_back(
+                BoundingBox<float>(
+                    static_cast<float>((getX() + top.first)  * getGridSize()), // ladder top left X (in pixels)
+                    static_cast<float>((getY() + top.second) * getGridSize()), // ladder top left Y (in pixels)
+                    static_cast<float>(getGridSize()                        ), // ladder width      (in pixels)
+                    static_cast<float>((bottom - top.second) * getGridSize())  // ladder height     (in pixels)
+                )
+            );
+
+            HIKARI_LOG(debug4) << "Found bottom top at " << ladders.back();
+        });
     }
     
     const int Room::getId() const {
@@ -94,6 +138,10 @@ namespace hikari {
 
     const std::vector<std::shared_ptr<Spawner>>& Room::getSpawners() const {
         return spawners;
+    }
+
+    const std::list<BoundingBox<float>> & Room::getLadders() const {
+        return ladders;
     }
 
     std::vector<std::weak_ptr<Spawner>> Room::getSpawnerList() const {

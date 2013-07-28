@@ -8,11 +8,6 @@
 #include "hikari/core/game/Direction.hpp"
 #include "hikari/core/math/Vector2.hpp"
 
-#include <SFML/Graphics/Texture.hpp>
-#include <SFML/Graphics/Sprite.hpp>
-
-#include <SFML/Graphics.hpp>
-
 #include <memory>
 
 namespace sf {
@@ -21,31 +16,26 @@ namespace sf {
 
 namespace hikari {
 
-    class Animation;
     class AnimationSet;
-    class Animator;
     class AnimatedSprite;
     class EventManager;
     class GameWorld; // Soon to replace reference to Room
     class Room;
 
     /**
-        Base class for all in-game entities. 
-        
-        An Entity has a logical and a rendered component. Most objects are
-        subclasses of Entity.
-    */
+     * Base class for all in-game entities. 
+     *  
+     * An Entity has a logical and a rendered component. Most objects are
+     * subclasses of Entity.
+     */
     class Entity : public GameObject {
     private:
         static bool debug;
 
-        std::shared_ptr<sf::Texture> spriteTexture;
-        sf::Sprite sprite;
-
         std::unique_ptr<AnimatedSprite> animatedSprite;
-
         std::weak_ptr<EventManager> eventManager;
         std::weak_ptr<GameWorld> world;
+        std::shared_ptr<Room> room;
 
         #ifdef HIKARI_DEBUG_ENTITIES
         sf::RectangleShape boxOutline;
@@ -63,16 +53,13 @@ namespace hikari {
 
         Vector2<float> actionSpot; // An offset from the position where actions "take place"
 
-        std::string currentAnimationName;
-
         void move(const Vector2<float>& delta);
         void move(const float& dx, const float& dy);
 
     protected:
         Movable body;
-        std::shared_ptr<Room> room;
-        
         std::unique_ptr<AnimatedSprite> & getAnimatedSprite();
+        //const std::shared_ptr<Room> & getRoom() const;
 
         virtual void renderEntity(sf::RenderTarget &target);
 
@@ -113,41 +100,42 @@ namespace hikari {
 
         void setVelocityX(const float &vx);
         const float getVelocityX() const;
+
         void setVelocityY(const float &vy);
         const float getVelocityY() const;
 
         /**
-            Sets whether this Entity should be affected by gravity or not. When
-            an Entity is affected by gravity, its Y position is adjusted over
-            time by a gravitational constant.
-
-            @param affected whether this Entity should be affected by gravity or not
-            @see Entity::isGravitated
-        */
+         * Sets whether this Entity should be affected by gravity or not. When
+         * an Entity is affected by gravity, its Y position is adjusted over
+         * time by a gravitational constant.
+         * 
+         * @param affected whether this Entity should be affected by gravity or not
+         * @see Entity::isGravitated
+         */
         void setGravitated(bool affected);
 
         /**
-            Gets whether the Entity should be affected by gravity or not.
-            @see Entity::setGravitated
-        */
+         * Gets whether the Entity should be affected by gravity or not.
+         * @see Entity::setGravitated
+         */
         bool isGravitated() const;
 
         /**
-            Sets whether this Entity acts like an obstacle. When an Entity is
-            an obstacle, it obstructs the movement of other Entities. It can 
-            also be stood on (like solid ground).
-
-            @param obstacle flag for whether this Entity should be an obstacle or not
-            @see Entity::isObstacle
-        */
+         * Sets whether this Entity acts like an obstacle. When an Entity is
+         * an obstacle, it obstructs the movement of other Entities. It can 
+         * also be stood on (like solid ground).
+         * 
+         * @param obstacle flag for whether this Entity should be an obstacle or not
+         * @see Entity::isObstacle
+         */
         void setObstacle(bool obstacle);
 
         /**
-            Gets the "obstacle status" of this Entity.
-
-            @return whether this Entity is an obstacle or not
-            @see Entity::setObstacle
-        */
+         * Gets the "obstacle status" of this Entity.
+         * 
+         * @return whether this Entity is an obstacle or not
+         * @see Entity::setObstacle
+         */
         bool isObstacle() const;
 
         /**
@@ -167,68 +155,194 @@ namespace hikari {
         bool isShielded() const;
 
         /**
-            Sets whether this Entity should hpase through solid objects. If an
-            object is phasing it can freely pass through solid objects like
-            walls. It will not perform collision checks with the world.
-
-            @param phasing flag indicating whether this Entity should phase
-            @see Entity::isPhasing
-        */
+         * Sets whether this Entity should phase through solid objects. If an
+         * object is phasing it can freely pass through solid objects like
+         * walls. It will not perform collision checks with the world.
+         * 
+         * @param phasing flag indicating whether this Entity should phase
+         * @see Entity::isPhasing
+         */
         void setPhasing(bool phasing);
 
         /**
-            Gets whether this Entity is currently phasing or not.
-
-            @return phasing status
-            @see Entity::setPhasing
-        */
+         * Gets whether this Entity is currently phasing or not. Entities that
+         * are phasing do not perform Object vs. World collision checks.
+         * 
+         * @return phasing status
+         * @see Entity::setPhasing
+         */
         bool isPhasing() const;
 
+        /**
+         * Gets the position of the Entity.
+         *
+         * @return Entity's position
+         * @see setPosition
+         */
         const Vector2<float>& getPosition() const;
+
+        /**
+         * Sets the Entity's position to newPosition.
+         * 
+         * @param newPosition a new position to give the Entity
+         * @see getPosition
+         */
         void setPosition(const Vector2<float>& newPosition);
+
+        /**
+         * Sets the Entity's position to (x, y).
+         * 
+         * @param x a new X coordinate to give the Entity
+         * @param y a new Y coordinate to give the Entity
+         * @see getPosition
+         */
         void setPosition(const float x, const float y);
 
+        /**
+         * Gets the Entity's "action spot", which is a point relative to its
+         * position where "actions" should take place. For example, when 
+         * shooting a weapon the action spot would be used to calculate
+         * where the projectiles should spawn from.
+         *
+         * @see setActionSpot
+         * @see getPosition
+         */
         const Vector2<float>& getActionSpot() const;
+
+        /**
+         * Sets the Entity's "action spot".
+         * 
+         * @param spot a point relative to the Entity's position to be used as
+         *             the "action spot"
+         */
         void setActionSpot(const Vector2<float> & spot);
 
+        /**
+         * Gets the Entity's bounding box.
+         *
+         * @return the BoundingBox of the Entity
+         */
         const BoundingBoxF& getBoundingBox() const;
+
+        /**
+         * Sets the Entity's bounding box.
+         * 
+         * @param box the bounding box to use
+         */
         void setBoundingBox(const BoundingBoxF& box);
 
         /**
-            Called when Entity is added to the game.
-        */
+         * Called when Entity is added to the game.
+         */
         virtual void onBirth();
 
         /**
-            Called when Entity is removed from the game.
-        */
+         * Called when Entity is removed from the game.
+         */
         virtual void onDeath();
 
         /**
-            Called when Entity needs to "wake up". For example, it enters the screen area.
-        */
+         * Called when Entity needs to "wake up". For example, it enters the screen area.
+         */
         virtual void onWake();
 
         /**
-            Called when Entity needs to go to sleep. For example, it's no longer on screen.
-        */
+         * Called when Entity needs to go to sleep. For example, it's no longer on screen.
+         */
         virtual void onSleep();
 
+        /**
+         * A function that is called when this object's body collides with 
+         * different kinds of tiles.
+         *
+         * This method it used to handle Object vs. World collisions -- tile
+         * collision resolution. Different objects can handle this in different
+         * ways so it can be overridden by subclasses for their own use.
+         *
+         * @param body the Movable involved in the collision
+         * @param info information about the collision event
+         */
         virtual void handleCollision(Movable& body, CollisionInfo& info);
 
+        /**
+         * Updates the Entity allowing it to make changes to its internal state.
+         *
+         * @param dt the amount of time that should elapse for the Entity
+         */
         virtual void update(float dt);
+
+        /**
+         * Renders the entity to a specific RenderTarget. This draws the Entity
+         * to the target and, optionally, debug information (hitboxes, etc.) if
+         * those features are enabled.
+         *
+         * @param target a sf::RenderTarget to draw to
+         */
         virtual void render(sf::RenderTarget &target);
+
+        /**
+         * A function that can be used to "reset" an Entity to its original
+         * state.
+         *
+         * This should no longer be used and will be removed eventually.
+         * 
+         * @deprecated
+         */
         virtual void reset();
     };
 
+    /**
+     * EntityHelpers contains static helper functions related to the Entity
+     * class. These are mostly used by the scripting layer to manipulate
+     * Entity instances without moving them between layers in the appication.
+     */
     namespace EntityHelpers {
 
+        /**
+         * Gets the X position of a given Entity.
+         *
+         * @param  entity an Entity to get the position from
+         * @return        the X position of the specified Entity
+         */
         float getX(const Entity* entity);
-        float getY(const Entity* entity);
-        void setX(Entity * entity, const float & x);
-        void setY(Entity * entity, const float & y);
 
-        bool checkIfTileAtPositionHasAttribute(Entity * entity, const int & x, const int & y, const int & attribute);
+        /**
+         * Gets the Y position of a given Entity.
+         *
+         * @param  entity an Entity to get the position from
+         * @return        the Y position of the specified Entity
+         */
+        float getY(const Entity* entity);
+
+        /**
+         * Sets the X position of a given Entity.
+         * @param entity an Entity to set the position of
+         * @param x      the new X position to set for the Entity
+         */
+        void setX(Entity * entity, float x);
+
+        /**
+         * Sets the Y position of a given Entity.
+         * @param entity an Entity to set the position of
+         * @param y      the new Y position to set for the Entity
+         */
+        void setY(Entity * entity, float y);
+
+        /**
+         * Performs a check to see if the tile at a specified position of the
+         * room that an Entity is in has some attribute.
+         *
+         * In other words, it can be used to see if an entity is touching
+         * spikes, water, solid walls, etc.
+         * 
+         * @param  entity    the Entity to use as a Room reference
+         * @param  x         the x position (in pixels) of a tile
+         * @param  y         the y position (in pixels) of a tile
+         * @param  attribute the attribute to look for
+         * @return           true if the attribute was found in the tile at the
+         *                   specified position, false otherwise
+         */
+        bool checkIfTileAtPositionHasAttribute(Entity * entity, int x, int y, int attribute);
 
     } // hikari.EntityHelpers
 

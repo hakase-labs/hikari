@@ -30,7 +30,8 @@ namespace hikari {
             ABYSS = (1 << 4),
             FLIP_HORIZONTAL = (1 << 5),
             FLIP_VERTICAL = (1 << 6),
-            ROTATE_BY_90 = (1 << 7)
+            ROTATE_BY_90 = (1 << 7),
+            WATER = (1 << 8)
         };
 
         bool hasAttribute(const int &tile, const TileAttribute &attr);

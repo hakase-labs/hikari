@@ -63,48 +63,50 @@ namespace hikari {
                 hero.chooseAnimation();
             }
 
-            if(controller->shouldMoveUp()) {
-                if(hero.isTouchingLadderTop) {
-                    hero.changeAnimation("climbing-top");
-                } else {
-                    hero.changeAnimation("climbing");
+            if(!hero.isShooting) {
+                if(controller->shouldMoveUp()) {
+                    if(hero.isTouchingLadderTop) {
+                        hero.changeAnimation("climbing-top");
+                    } else {
+                        hero.changeAnimation("climbing");
+                    }
+                    hero.setVelocityY(-hero.climbVelocity.getY());
+                    hero.getAnimatedSprite()->unpause();
+
+                    // If we climb to the top of the ladder, we need to be put in the ground instead of move up too high.
+                    // TODO: clean this code up... it's messy!
+                    if(!hero.isTouchingLadder) {
+                        hero.setVelocityY(0.0f);
+
+                        auto positionPixels = hero.body.getPosition();
+                        auto offsetPixels = hero.body.getBoundingBox().getOrigin();
+                        auto gridSize = hero.getRoom()->getGridSize();
+                        auto bottom = hero.body.getBoundingBox().getBottom();
+                        int newBottom = (static_cast<int>(std::floor(bottom) / static_cast<float>(gridSize)) + 1) * gridSize; // Quantize the bottom pixels
+                        int newY = newBottom;// + offsetPixels.getY();
+                        //hero.body.setPosition(positionPixels.getX(), static_cast<float>(newY));
+                        hero.body.setBottom(static_cast<float>(newBottom));
+                        hero.body.setOnGround(true);
+
+                        // HIKARI_LOG(hikari::LogLevel::debug) << "SHOULD BE POSITIONING";
+
+                        // HIKARI_LOG(debug4) << "new y = " << newY;
+                    }
+                } else if(controller->shouldMoveDown()) {
+                    if(hero.isTouchingLadderTop) {
+                        hero.changeAnimation("climbing-top");
+                    } else {
+                        hero.changeAnimation("climbing");
+                    }
+                    hero.setVelocityY(hero.climbVelocity.getY());
+                    hero.getAnimatedSprite()->unpause();
+                } else if(controller->shouldJump()) {
+                    // If you're holding up or down the jump button is ignored
+                    // So that's why it's at the end of this if/else branch
+                    hero.isFalling = true;
+                    hero.requestMobilityStateChange(std::unique_ptr<MobilityState>(new AirbornMobilityState(hero)));
+                    return MobilityState::NEXT;
                 }
-                hero.setVelocityY(-hero.climbVelocity.getY());
-                hero.getAnimatedSprite()->unpause();
-
-                // If we climb to the top of the ladder, we need to be put in the ground instead of move up too high.
-                // TODO: clean this code up... it's messy!
-                if(!hero.isTouchingLadder) {
-                    hero.setVelocityY(0.0f);
-
-                    auto positionPixels = hero.body.getPosition();
-                    auto offsetPixels = hero.body.getBoundingBox().getOrigin();
-                    auto gridSize = hero.getRoom()->getGridSize();
-                    auto bottom = hero.body.getBoundingBox().getBottom();
-                    int newBottom = (static_cast<int>(std::floor(bottom) / static_cast<float>(gridSize)) + 1) * gridSize; // Quantize the bottom pixels
-                    int newY = newBottom;// + offsetPixels.getY();
-                    //hero.body.setPosition(positionPixels.getX(), static_cast<float>(newY));
-                    hero.body.setBottom(static_cast<float>(newBottom));
-                    hero.body.setOnGround(true);
-
-                    // HIKARI_LOG(hikari::LogLevel::debug) << "SHOULD BE POSITIONING";
-
-                    // HIKARI_LOG(debug4) << "new y = " << newY;
-                }
-            } else if(controller->shouldMoveDown()) {
-                if(hero.isTouchingLadderTop) {
-                    hero.changeAnimation("climbing-top");
-                } else {
-                    hero.changeAnimation("climbing");
-                }
-                hero.setVelocityY(hero.climbVelocity.getY());
-                hero.getAnimatedSprite()->unpause();
-            } else if(controller->shouldJump()) {
-                // If you're holding up or down the jump button is ignored
-                // So that's why it's at the end of this if/else branch
-                hero.isFalling = true;
-                hero.requestMobilityStateChange(std::unique_ptr<MobilityState>(new AirbornMobilityState(hero)));
-                return MobilityState::NEXT;
             }
 
             // Only change directions if you're shooting

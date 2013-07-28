@@ -111,7 +111,7 @@ namespace hikari {
     }
 
     void Hero::update(float dt) {
-        if(room) {
+        if(const auto & room = getRoom()) {
             const int gridSize = room->getGridSize();
 
             if(invincibilityTimer > 0.0f) {
@@ -140,7 +140,7 @@ namespace hikari {
 
             // Check to see if we're touching a ladder
             {
-                auto bbox = this->getBoundingBox();
+                const auto & bbox = this->getBoundingBox();
                 auto topRight = bbox.getTopRight();
                 auto topLeft = bbox.getTopLeft();
                 auto bottomLeft = bbox.getBottomLeft();
