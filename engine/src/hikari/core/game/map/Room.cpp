@@ -30,42 +30,59 @@ namespace hikari {
     void Room::traceLadders() {
         std::list<std::pair<int, int>> ladderTops;
 
-        for(int y = 0; y < getHeight(); ++y) {
-            for(int x = 0; x < getWidth(); ++x) {
+        for(int x = 0; x < getWidth(); ++x) {
+            bool topFound = false;
+            bool bottomFound = false;
+            int ladderTop = 0;
+            int ladderX = 0;
+            int ladderBottom = 0;
+
+            for(int y = 0; y < getHeight(); ++y) {
                 int attribute = attr[x + (y * getWidth())];
 
-                if(TileAttribute::hasAttribute(attribute, TileAttribute::LADDER_TOP)) {
-                    ladderTops.emplace_back(std::pair<int, int>(x, y));
+                if(TileAttribute::hasAttribute(attribute, TileAttribute::LADDER)) {
+                    if(!topFound) {
+                        topFound = true;
+                        ladderTop = y;
+                        ladderX = x;
+                    }
+
+                    // Find ladder at the bottom of the map
+                    if(y == getHeight() - 1) {
+                        if(topFound) {
+                            bottomFound = true;
+                            ladderBottom = y + 1;
+                        }
+                    }
+                } else {
+                    if(topFound) {
+                        if(!bottomFound) {
+                            bottomFound = true;
+                            ladderBottom = y;
+                        }
+                    }
+                }
+
+                if(topFound && bottomFound) {
+                    ladders.emplace_back(
+                        BoundingBox<float>(
+                            static_cast<float>((getX() + ladderX) * getGridSize()        ), // ladder top left X (in pixels)
+                            static_cast<float>((getY() + ladderTop) * getGridSize()      ), // ladder top left Y (in pixels)
+                            static_cast<float>(getGridSize()                             ), // ladder width      (in pixels)
+                            static_cast<float>((ladderBottom - ladderTop) * getGridSize())  // ladder height     (in pixels)
+                        )
+                    );
+
+                    HIKARI_LOG(debug4) << "Found ladder at " << ladders.back();
+
+                    topFound = false;
+                    bottomFound = false;
+                    ladderX = 0;
+                    ladderBottom = 0;
+                    ladderTop = 0;
                 }
             }
         }
-
-        std::for_each(std::begin(ladderTops), std::end(ladderTops), [this](const std::pair<int, int> & top) {
-            int bottom = top.second;
-
-            // Trace the ladder down vertically until you find a tile that is 
-            // not a ladder.
-            while(bottom < getHeight()) {
-                int attribute = attr[top.first + (bottom * getWidth())];
-
-                if(!TileAttribute::hasAttribute(attribute, TileAttribute::LADDER)) {
-                    break;
-                }
-
-                bottom++;
-            }
-
-            ladders.emplace_back(
-                BoundingBox<float>(
-                    static_cast<float>((getX() + top.first)  * getGridSize()), // ladder top left X (in pixels)
-                    static_cast<float>((getY() + top.second) * getGridSize()), // ladder top left Y (in pixels)
-                    static_cast<float>(getGridSize()                        ), // ladder width      (in pixels)
-                    static_cast<float>((bottom - top.second) * getGridSize())  // ladder height     (in pixels)
-                )
-            );
-
-            HIKARI_LOG(debug4) << "Found bottom top at " << ladders.back();
-        });
     }
     
     const int Room::getId() const {
