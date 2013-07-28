@@ -292,7 +292,6 @@ namespace FactoryHelpers {
                             const auto animationSet      = templateObject["animationSet"].asString();
                             const auto animationName     = templateObject["animationName"].asString();
                             const auto boundingBoxObject = templateObject["boundingBox"];
-                            const auto ageless           = templateObject["ageless"].asBool();
                             const auto maximumAge        = templateObject["maximumAge"].asDouble();
 
                             hikari::BoundingBoxF boundingBox(

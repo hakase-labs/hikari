@@ -11,7 +11,6 @@ namespace hikari {
     AnimatedSprite::AnimatedSprite()
         : sprite()
         , currentAnimation("")
-        // , animation()
         , animationSet()
         , animator(sprite)
         , isXAxisFlipped(false)

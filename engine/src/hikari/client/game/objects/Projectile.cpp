@@ -23,14 +23,6 @@ namespace hikari {
         , inert(false)
     {
         setActive(false);
-        setGravitated(proto.isGravitated());
-        setObstacle(proto.isObstacle());
-        // setCurrentAnimation(proto.getCurrentAnimation());
-        setDirection(proto.getDirection());
-        setPhasing(proto.isPhasing());
-        setPosition(proto.getPosition());
-        setBoundingBox(proto.getBoundingBox());
-        // setAnimationSet(proto.getAnimationSet());
     }
 
     Projectile::~Projectile() {

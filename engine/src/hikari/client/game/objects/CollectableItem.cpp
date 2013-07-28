@@ -32,12 +32,6 @@ namespace hikari {
         , maximumAge(proto.maximumAge)
     {
         setActive(false);
-        setGravitated(proto.isGravitated());
-        setObstacle(proto.isObstacle());
-        setDirection(proto.getDirection());
-        setPhasing(proto.isPhasing());
-        setPosition(proto.getPosition());
-        setBoundingBox(proto.getBoundingBox());
     }
 
     CollectableItem::~CollectableItem() {

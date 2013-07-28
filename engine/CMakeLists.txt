@@ -209,7 +209,6 @@ set( ENGINE_SOURCE_FILES
     src/hikari/client/game/GameProgress.cpp
     src/hikari/client/game/GuiTestState.cpp
     src/hikari/client/game/KeyboardInput.cpp
-    src/hikari/client/game/MapTestState.cpp
     src/hikari/client/game/objects/GameObject.cpp
     src/hikari/client/game/RealTimeInput.cpp
     src/hikari/client/game/SpriteTestState.cpp

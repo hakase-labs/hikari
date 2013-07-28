@@ -62,6 +62,30 @@ namespace hikari {
             stream << ")";
             return stream;
         }
+
+        /**
+         * Floors the X and Y values in the Vector2.
+         */
+        Vector2& floor();
+        
+        /**
+         * Creates a new Vector2 with its values adjuted by std::floor.
+         * 
+         * @return a new Vector2 of floored values
+         */
+        Vector2 toFloor() const;
+        
+        /**
+         * Ceils the X and Y values in the Vector2.
+         */
+        Vector2& ceil();
+
+        /**
+         * Creates a new Vector2 with its values adjuted by std::ceil.
+         * 
+         * @return a new Vector2 of ceiled values
+         */
+        Vector2 toCeil() const;
     };
 
     template <typename T>
@@ -247,6 +271,32 @@ namespace hikari {
             std::abs(getX()),
             std::abs(getY())
         );
+    }
+
+    template<typename T>
+    Vector2<T> & Vector2<T>::floor() {
+        setX(std::floor(getX()));
+        setY(std::floor(getY()));
+
+        return *this;
+    }
+    
+    template<typename T>
+    Vector2<T> Vector2<T>::toFloor() const {
+        return Vector2<T>(*this).floor();
+    }
+    
+    template<typename T>
+    Vector2<T> & Vector2<T>::ceil() {
+        setX(std::ceil(getX()));
+        setY(std::ceil(getY()));
+
+        return *this;
+    }
+
+    template<typename T>
+    Vector2<T> Vector2<T>::toCeil() const {
+        return Vector2<T>(*this).ceil();
     }
 
 } // hikari
