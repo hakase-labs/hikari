@@ -9,6 +9,8 @@
 			"y" : 0,
 			"width" : 30,
 			"height" : 15,
+			"heroSpawnX": 32,
+      		"heroSpawnY": 32,
 			"cameraBounds" : {
 				"x" : 0,
 				"y" : 0,
