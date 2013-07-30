@@ -103,6 +103,11 @@ namespace hikari {
                         hero.requestMobilityStateChange(std::unique_ptr<MobilityState>(new AirbornMobilityState(hero)));
                         return MobilityState::NEXT;
                     }
+
+                    if(hero.body.isOnGround()) {
+                        hero.requestMobilityStateChange(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
+                        return MobilityState::NEXT;
+                    }
                 } else if(controller->shouldJump()) {
                     // If you're holding up or down the jump button is ignored
                     // So that's why it's at the end of this if/else branch
@@ -119,10 +124,7 @@ namespace hikari {
                 hero.chooseAnimation();
             }
 
-            if(hero.body.isOnGround()) {
-                hero.requestMobilityStateChange(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
-                return MobilityState::NEXT;
-            }
+            
         }
 
         // if(hero.actionController) {
