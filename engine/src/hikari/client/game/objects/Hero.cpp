@@ -15,6 +15,7 @@
 #include "hikari/core/game/SpriteAnimator.hpp"
 #include "hikari/core/game/map/Tileset.hpp"
 #include "hikari/core/util/Log.hpp"
+#include "hikari/core/geom/GeometryUtils.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
 
 namespace hikari {
@@ -29,6 +30,7 @@ namespace hikari {
         , isJumping(false)
         , isFalling(false)
         , isAirborn(false)
+        , isClimbing(false)
         , isOnLadder(false)
         , isTouchingLadder(false)
         , isTouchingLadderWithFeet(false)
@@ -138,83 +140,6 @@ namespace hikari {
             isTouchingLadderTop = false;
             isTouchingLadderWithFeet = false;
 
-            // Check to see if we're touching a ladder
-            {
-                const auto & bbox = this->getBoundingBox();
-                auto topRight = bbox.getTopRight();
-                auto topLeft = bbox.getTopLeft();
-                auto bottomLeft = bbox.getBottomLeft();
-                auto bottomRight = bbox.getBottomRight();
-
-                int trAttr        = room->getAttributeAt(static_cast<int>(topRight.getX()    - 1) / gridSize, static_cast<int>(topRight.getY()       ) / gridSize);
-                int tlAttr        = room->getAttributeAt(static_cast<int>(topLeft.getX()        ) / gridSize, static_cast<int>(topLeft.getY()        ) / gridSize);
-                int blAttr        = room->getAttributeAt(static_cast<int>(bottomLeft.getX()     ) / gridSize, static_cast<int>(bottomLeft.getY()  - 1) / gridSize);
-                int brAttr        = room->getAttributeAt(static_cast<int>(bottomRight.getX() - 1) / gridSize, static_cast<int>(bottomRight.getY() - 1) / gridSize);
-                int feetLeftAttr  = room->getAttributeAt(static_cast<int>(bottomLeft.getX()     ) / gridSize, static_cast<int>(bottomLeft.getY()     ) / gridSize);
-                int feetRightAttr = room->getAttributeAt(static_cast<int>(bottomRight.getX() - 1) / gridSize, static_cast<int>(bottomRight.getY()    ) / gridSize);
-                int posAttr       = room->getAttributeAt(static_cast<int>(getPosition().getX()  ) / gridSize, static_cast<int>(getPosition().getY()  ) / gridSize);
-
-                bool touchingTopRight =     ((trAttr != Room::NO_TILE)         && TileAttribute::hasAttribute(trAttr,          TileAttribute::LADDER));
-                bool touchingTopLeft =      ((tlAttr != Room::NO_TILE)         && TileAttribute::hasAttribute(tlAttr,          TileAttribute::LADDER));
-                bool touchingBottomLeft =   ((blAttr != Room::NO_TILE)         && TileAttribute::hasAttribute(blAttr,          TileAttribute::LADDER));
-                bool touchingBottomRight =  ((brAttr != Room::NO_TILE)         && TileAttribute::hasAttribute(brAttr,          TileAttribute::LADDER));
-                bool touchingFeetLeft =     ((feetLeftAttr != Room::NO_TILE)   && TileAttribute::hasAttribute(feetLeftAttr,    TileAttribute::LADDER_TOP));
-                bool touchingFeetRight =    ((feetRightAttr != Room::NO_TILE)  && TileAttribute::hasAttribute(feetRightAttr,   TileAttribute::LADDER_TOP));
-                bool touchingBodyOnLadder = ((posAttr != Room::NO_TILE)        && TileAttribute::hasAttribute(posAttr,         TileAttribute::LADDER));
-                bool touchingLadderTop =    ((posAttr != Room::NO_TILE)        && TileAttribute::hasAttribute(posAttr,         TileAttribute::LADDER_TOP));
-
-                isTouchingLadderWithFeet = touchingFeetLeft || touchingFeetRight;
-
-                if(touchingBodyOnLadder|| touchingTopRight || touchingBottomRight || touchingTopLeft || touchingBottomLeft || isTouchingLadderWithFeet) {
-                    if(touchingBodyOnLadder) {
-                        isTouchingLadder = true;
-                    }
-
-                    if(touchingTopRight || touchingBottomRight || touchingFeetRight) {
-                        // Determine the overlap amount rightward
-                        int realX = static_cast<int>(topRight.getX());
-                        int tileX = (static_cast<int>(topRight.getX()) / gridSize) * gridSize;
-                        int overlap = std::abs(realX - tileX);
-
-                        if(overlap >= 4) {
-                            ladderPositionX = tileX + static_cast<int>(bbox.getWidth() / 2);
-                            isTouchingLadder = true;
-
-                            // HIKARI_LOG(debug4) << "Overlap Right: " << overlap;
-                        }
-                    }
-
-                    if(touchingTopLeft || touchingBottomLeft || touchingFeetLeft) {
-                        // Determine the overlap leftward
-                        int realX = static_cast<int>(topLeft.getX());
-                        int tileX = (static_cast<int>(topLeft.getX()) / gridSize) * gridSize;
-                        int overlap = std::abs(realX - tileX - gridSize);
-
-                        //// ladderPositionX = (((static_cast<int>(topRight.getX()) / gridSize) - 1) * gridSize ) + (bbox.getWidth() / 2);
-                        if(overlap >= 4) {
-                            ladderPositionX = tileX + static_cast<int>(bbox.getWidth() / 2);
-                            isTouchingLadder = true;
-
-                            // HIKARI_LOG(debug4) << "Overlap Left: " << overlap;
-                        }
-                    }
-
-                    if(touchingLadderTop) {
-                        // Find overlap
-                        unsigned char ladderTopOverlap = (static_cast<int>(getPosition().getY()) % gridSize);
-
-                        if(ladderTopOverlap <= 8) {
-                            isTouchingLadderTop = true;
-                        }
-
-                        // HIKARI_LOG(debug4) << "Ladder top overlap: " << static_cast<int>(ladderTopOverlap);
-                    }
-                } else {
-                    isTouchingLadder = false;
-                    isOnLadder = false;
-                }
-            }
-
             //
             // Check if we're in a tunnel
             //
@@ -233,20 +158,6 @@ namespace hikari {
                 if(((topLeftTile != Room::NO_TILE) && TileAttribute::hasAttribute(topLeftTile, TileAttribute::SOLID))
                     || ((topRightTile != Room::NO_TILE) && TileAttribute::hasAttribute(topRightTile, TileAttribute::SOLID))) {
                     isInTunnel = true;
-                }
-            }
-
-            if(actionController) {
-                if(actionController->shouldMoveUp()) {
-                    if(isTouchingLadder && !isOnLadder) {
-                        if(!isTouchingLadderWithFeet) {
-                            changeMobilityState(std::unique_ptr<MobilityState>(new ClimbingMobilityState(*this)));
-                        }
-                    }
-                } else if(actionController->shouldMoveDown()) {
-                    if(isTouchingLadder && !isOnLadder && (!body.isOnGround() || isTouchingLadderWithFeet)) {
-                        changeMobilityState(std::unique_ptr<MobilityState>(new ClimbingMobilityState(*this)));
-                    }
                 }
             }
 
@@ -342,6 +253,42 @@ namespace hikari {
 
     void Hero::stopShooting() {
         changeShootingState(std::unique_ptr<ShootingState>(new NotShootingState(*this)));
+    }
+
+    void Hero::requestClimbingAttachment(const BoundingBox<float> & climbableRegion) {
+        if(isClimbing) {
+            // Do nothing since I'm already on a ladder.
+        } else {
+            // Check if I want to climb...
+            BoundingBox<float> intersection = geom::intersection(getBoundingBox(), climbableRegion);
+
+            if(intersection.getWidth() >= 4) {
+                // Must overlap at least 4 pixels in order to mount.
+                if(actionController) {
+                    if(actionController->shouldMoveUp()) {
+                        float heroFeetY = body.getBoundingBox().getBottom();
+                        float distanceFromLadderTop = heroFeetY - climbableRegion.getTop();
+                        bool touchingTopOfLadder = distanceFromLadderTop >= 1;
+
+                        if(touchingTopOfLadder) {
+                            changeMobilityState(std::unique_ptr<MobilityState>(new ClimbingMobilityState(*this, climbableRegion)));
+                        }
+                    } else if(actionController->shouldMoveDown()) {
+                        // Check if standing on top of a ladder
+                        float heroFeetY = body.getBoundingBox().getBottom();
+                        bool touchingTopOfLadder = heroFeetY <= climbableRegion.getTop() + 1;
+
+                        // HIKARI_LOG(debug4) << "feetY = " << heroFeetY << ", regionTop = " << climbableRegion.getTop() << ", yes = " << touchingTopOfLadder;
+                        
+                        if(body.isOnGround()) {
+                            if(!isClimbing && touchingTopOfLadder) {
+                                changeMobilityState(std::unique_ptr<MobilityState>(new ClimbingMobilityState(*this, climbableRegion)));
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     void Hero::kill() {
