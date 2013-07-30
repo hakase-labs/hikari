@@ -357,9 +357,30 @@ namespace hikari {
                 // Must overlap at least 4 pixels in order to mount.
                 if(actionController) {
                     if(actionController->shouldMoveUp()) {
-                        changeMobilityState(std::unique_ptr<MobilityState>(new ClimbingMobilityState(*this, climbableRegion)));
+                        float heroFeetY = body.getBoundingBox().getBottom();
+                        float distanceFromLadderTop = heroFeetY - climbableRegion.getTop();
+
+                        bool touchingTopOfLadder = distanceFromLadderTop >= 1;
+
+                        if(touchingTopOfLadder) {
+                            changeMobilityState(std::unique_ptr<MobilityState>(new ClimbingMobilityState(*this, climbableRegion)));
+                        }
                     } else if(actionController->shouldMoveDown()) {
-                        changeMobilityState(std::unique_ptr<MobilityState>(new ClimbingMobilityState(*this, climbableRegion)));
+                        // Check if standing on top of a ladder
+                        float heroFeetY = body.getBoundingBox().getBottom();
+                        bool touchingTopOfLadder = heroFeetY <= climbableRegion.getTop() + 1;
+
+                        HIKARI_LOG(debug4) << "feetY = " << heroFeetY << ", regionTop = " << climbableRegion.getTop() << ", yes = " << touchingTopOfLadder;
+                        
+                        if(body.isOnGround()) {
+                            if(!isClimbing && touchingTopOfLadder) {
+                                changeMobilityState(std::unique_ptr<MobilityState>(new ClimbingMobilityState(*this, climbableRegion)));
+                            }
+                        }
+
+                        // if(!isClimbing && (!body.isOnGround() || touchingTopOfLadder)) {
+                        //     changeMobilityState(std::unique_ptr<MobilityState>(new ClimbingMobilityState(*this, climbableRegion)));
+                        // }
                     }
                 }
             }

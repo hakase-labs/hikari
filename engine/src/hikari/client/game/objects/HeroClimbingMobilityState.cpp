@@ -83,6 +83,11 @@ namespace hikari {
                         hero.setVelocityY(0.0f);
                         hero.body.setBottom(climbableRegion.getTop());
                         hero.body.setOnGround(true);
+
+                        // if(hero.body.isOnGround()) {
+                        hero.requestMobilityStateChange(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
+                        return MobilityState::NEXT;
+                        // }
                     } else {
                         hero.setVelocityY(-hero.climbVelocity.getY());
                         hero.getAnimatedSprite()->unpause();
@@ -115,8 +120,6 @@ namespace hikari {
             }
 
             if(hero.body.isOnGround()) {
-                // HIKARI_LOG(hikari::LogLevel::debug) << "GOING IDLE";
-
                 hero.requestMobilityStateChange(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
                 return MobilityState::NEXT;
             }
