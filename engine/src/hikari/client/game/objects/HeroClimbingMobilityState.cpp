@@ -105,8 +105,13 @@ namespace hikari {
                     }
 
                     if(hero.body.isOnGround()) {
-                        hero.requestMobilityStateChange(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
-                        return MobilityState::NEXT;
+                        float heroFeetY = hero.body.getBoundingBox().getBottom();
+                        bool touchingTopOfLadder = heroFeetY <= climbableRegion.getTop() + 1;
+
+                        if(!touchingTopOfLadder) {
+                            hero.requestMobilityStateChange(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
+                            return MobilityState::NEXT;
+                        }
                     }
                 } else if(controller->shouldJump()) {
                     // If you're holding up or down the jump button is ignored
