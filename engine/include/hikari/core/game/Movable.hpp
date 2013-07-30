@@ -13,6 +13,11 @@ namespace hikari {
 
     class CollisionResolver;
 
+    /**
+     * Movable is a class that handles physical movement. It cane be used with
+     * a CollisionChecker to handle collision detection and response with the
+     * world.
+     */
     class Movable {
     public:
         typedef std::function<void (Movable&, CollisionInfo&)> CollisionCallback;
@@ -62,7 +67,23 @@ namespace hikari {
         Movable(const Movable& proto);
         virtual ~Movable();
 
-        const bool& isOnGround() const;
+        /**
+         * Indicates whether the Movable is on the ground right now or not.
+         *
+         * @return true if on ground, false otherwise
+         * @see Movable::setOnGround
+         */
+        bool isOnGround() const;
+
+        /**
+         * Gets the position of the Movable. The position may not be the same
+         * as the top-left corner depending on the Movable's bounding box
+         * origin.
+         *
+         * @return a vector containing the position
+         * @see Movable::setPosition
+         * @see Movable::getBoundingBox
+         */
         const Vector2<float>& getPosition() const;
         const Vector2<float>& getVelocity() const;
         const BoundingBoxF& getBoundingBox() const;

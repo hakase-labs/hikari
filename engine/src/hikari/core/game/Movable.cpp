@@ -24,20 +24,7 @@ namespace hikari {
     const float Movable::getGravity() {
         return Movable::gravity;
     }
-/*
-    , onGroundNow(false)
-    , onGroundLastFrame(false)
-    , affectedByGravity(true)
-    , collidesWithWorld(true)
-    , treatLadderTopAsGround(true)
-    , applyHorizontalVelocity(true)
-    , applyVerticalVelocity(true)
-    , velocity(0.0f, 0.0f)
-    , boundingBox(0.0f, 0.0f, 0.0f, 0.0f)
-    , collisionInfo()
-    , landingCallback()
-    , collisionCallback()
-*/
+
     Movable::Movable()
         : onGroundNow(false)
         , onGroundLastFrame(false)
@@ -101,7 +88,7 @@ namespace hikari {
         collisionResolver = resolver;
     }
 
-    const bool& Movable::isOnGround() const {
+    bool Movable::isOnGround() const {
         return isOnGroundNow();
     }
 
