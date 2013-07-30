@@ -319,7 +319,7 @@ namespace hikari {
         Movable::setGravity(0.25f);
 
         // Determine which stage we're on and set that to the current level...
-        currentMap = maps.at("map-test2.json");
+        currentMap = maps.at("map-test4.json");
 
         startStage();
     }
@@ -1347,7 +1347,7 @@ namespace hikari {
                     const BoundingBox<float> & ladder = *index;
                     
                     if(gamePlayState.hero->getBoundingBox().intersects(ladder)) {
-                       HIKARI_LOG(debug3) << "Intesecting a ladder!";
+                       gamePlayState.hero->requestClimbingAttachment(ladder);
                     }
 
                     index++;

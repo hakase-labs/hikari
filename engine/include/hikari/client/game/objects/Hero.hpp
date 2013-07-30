@@ -30,6 +30,7 @@ namespace hikari {
         bool isJumping;                 // Moving upward with no solid ground underneath
         bool isFalling;                 // Falling with no solid ground underneath
         bool isAirborn;                 // In air; falling or jumping
+        bool isClimbing;
         bool isOnLadder;                // Mounted on a ladder (climbing)
         bool isTouchingLadder;          // Touching a ladder with any part of the body
         bool isTouchingLadderTop;       // Colliding with a "ladder top"
@@ -210,6 +211,7 @@ namespace hikari {
         void performMorph();
         void performHurt();
         void performStun();
+        void requestClimbingAttachment(const BoundingBox<float> & climbableRegion);
         void kill();
 
         bool isVulnerable();
