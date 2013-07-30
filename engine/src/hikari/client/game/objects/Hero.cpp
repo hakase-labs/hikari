@@ -15,6 +15,7 @@
 #include "hikari/core/game/SpriteAnimator.hpp"
 #include "hikari/core/game/map/Tileset.hpp"
 #include "hikari/core/util/Log.hpp"
+#include "hikari/core/geom/GeometryUtils.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
 
 namespace hikari {
@@ -29,6 +30,7 @@ namespace hikari {
         , isJumping(false)
         , isFalling(false)
         , isAirborn(false)
+        , isClimbing(false)
         , isOnLadder(false)
         , isTouchingLadder(false)
         , isTouchingLadderWithFeet(false)
@@ -237,17 +239,17 @@ namespace hikari {
             }
 
             if(actionController) {
-                if(actionController->shouldMoveUp()) {
-                    if(isTouchingLadder && !isOnLadder) {
-                        if(!isTouchingLadderWithFeet) {
-                            changeMobilityState(std::unique_ptr<MobilityState>(new ClimbingMobilityState(*this)));
-                        }
-                    }
-                } else if(actionController->shouldMoveDown()) {
-                    if(isTouchingLadder && !isOnLadder && (!body.isOnGround() || isTouchingLadderWithFeet)) {
-                        changeMobilityState(std::unique_ptr<MobilityState>(new ClimbingMobilityState(*this)));
-                    }
-                }
+                // if(actionController->shouldMoveUp()) {
+                //     if(isTouchingLadder && !isOnLadder) {
+                //         if(!isTouchingLadderWithFeet) {
+                //             changeMobilityState(std::unique_ptr<MobilityState>(new ClimbingMobilityState(*this, BoundingBox<float>(0, 0, 0, 0))));
+                //         }
+                //     }
+                // } else if(actionController->shouldMoveDown()) {
+                //     if(isTouchingLadder && !isOnLadder && (!body.isOnGround() || isTouchingLadderWithFeet)) {
+                //         changeMobilityState(std::unique_ptr<MobilityState>(new ClimbingMobilityState(*this, BoundingBox<float>(0, 0, 0, 0))));
+                //     }
+                // }
             }
 
             //
@@ -342,6 +344,26 @@ namespace hikari {
 
     void Hero::stopShooting() {
         changeShootingState(std::unique_ptr<ShootingState>(new NotShootingState(*this)));
+    }
+
+    void Hero::requestClimbingAttachment(const BoundingBox<float> & climbableRegion) {
+        if(isClimbing) {
+            // Do nothing since I'm already on a ladder.
+        } else {
+            // Check if I want to climb...
+            BoundingBox<float> intersection = geom::intersection(getBoundingBox(), climbableRegion);
+
+            if(intersection.getWidth() >= 4) {
+                // Must overlap at least 4 pixels in order to mount.
+                if(actionController) {
+                    if(actionController->shouldMoveUp()) {
+                        changeMobilityState(std::unique_ptr<MobilityState>(new ClimbingMobilityState(*this, climbableRegion)));
+                    } else if(actionController->shouldMoveDown()) {
+                        changeMobilityState(std::unique_ptr<MobilityState>(new ClimbingMobilityState(*this, climbableRegion)));
+                    }
+                }
+            }
+        }
     }
 
     void Hero::kill() {

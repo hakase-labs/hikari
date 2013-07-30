@@ -59,6 +59,16 @@ namespace geom {
                 rect.getTop() > box.getBottom() || rect.getBottom() < box.getTop());
     }
 
+    template <typename T>
+    BoundingBox<T> intersection(const BoundingBox<T>& a, const BoundingBox<T>& b) {
+        T top = std::max(a.getTop(), b.getTop());
+        T right = std::min(a.getRight(), b.getRight());
+        T bottom = std::min(a.getBottom(), b.getBottom());
+        T left = std::max(a.getLeft(), b.getLeft());
+
+        return BoundingBox<T>(top, left, (right - left), (bottom - top));
+    }
+
 } // hikari::geom
 } // hikari
 
