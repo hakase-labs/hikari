@@ -53,7 +53,7 @@ namespace FactoryHelpers {
                 if(auto animationSetCache = animationSetCachePtr.lock()) {
                     if(auto factoryPtr = factory.lock()) {
 
-                        HIKARI_LOG(debug) << "Populating item factory...";
+                        HIKARI_LOG(debug) << "Populating item factory... (" << descriptorFilePath << ")";
 
                         auto fileContents = FileSystem::openFile(descriptorFilePath);
                         Json::Value root;

@@ -28,6 +28,13 @@
             }
         }
     },
+    "templatePaths" : {
+        "items" : "assets/templates/items.json",
+        "enemies" : "assets/templates/enemies.json",
+        "particles" : "assets/templates/particles.json",
+        "projectiles" : "assets/templates/projectiles.json",
+        "weapons" : "assets/weapons/weapons.json"
+    },
     "states" : {
         "introduction" : {},
         "title" : {},

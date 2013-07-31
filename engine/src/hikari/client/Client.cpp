@@ -47,6 +47,7 @@ namespace hikari {
     Client::Client(int argc, char** argv)
         : gameConfigJson()
         , clientConfig()
+        , gameConfig()
         , services()
         , videoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BITS_PER_PIXEL)
         , window()
@@ -93,6 +94,7 @@ namespace hikari {
                 HIKARI_LOG(fatal) << "Game configuration file could not be found or was corrupt.";
             } else {
                 gameConfigJson = value;
+                gameConfig = GameConfig(value);
             }
         } else {
             HIKARI_LOG(fatal) << "Couldn't find game configuration file '" << PATH_GAME_CONFIG_FILE << "'";
@@ -248,7 +250,7 @@ namespace hikari {
     void Client::loadObjectTemplates() {
         if(auto itemFactory = services.locateService<ItemFactory>(Services::ITEMFACTORY).lock()) {
             FactoryHelpers::populateCollectableItemFactory(
-                "assets/templates/items.json",
+                gameConfig.getItemTemplatePath(),
                 std::weak_ptr<ItemFactory>(itemFactory),
                 services
             );
@@ -256,7 +258,7 @@ namespace hikari {
 
         if(auto enemyFactory = services.locateService<EnemyFactory>(Services::ENEMYFACTORY).lock()) {
             FactoryHelpers::populateEnemyFactory(
-                "assets/templates/enemies.json",
+                gameConfig.getEnemyTemplatePath(),
                 std::weak_ptr<EnemyFactory>(enemyFactory),
                 services
             );
@@ -264,7 +266,7 @@ namespace hikari {
 
         if(auto particleFactory = services.locateService<ParticleFactory>(Services::PARTICLEFACTORY).lock()) {
             FactoryHelpers::populateParticleFactory(
-                "assets/templates/particles.json",
+                gameConfig.getParticleTemplatePath(),
                 std::weak_ptr<ParticleFactory>(particleFactory),
                 services
             );
@@ -272,7 +274,7 @@ namespace hikari {
 
         if(auto projectileFactory = services.locateService<ProjectileFactory>(Services::PROJECTILEFACTORY).lock()) {
             FactoryHelpers::populateProjectileFactory(
-                "assets/templates/projectiles.json",
+                gameConfig.getProjectileTemplatePath(),
                 std::weak_ptr<ProjectileFactory>(projectileFactory),
                 services
             );
@@ -280,7 +282,7 @@ namespace hikari {
 
         if(auto weaponTable = services.locateService<WeaponTable>(Services::WEAPONTABLE).lock()) {
             FactoryHelpers::populateWeaponTable(
-                "assets/weapons/weapons.json",
+                gameConfig.getWeaponTemplatePath(),
                 std::weak_ptr<WeaponTable>(weaponTable),
                 services
             );

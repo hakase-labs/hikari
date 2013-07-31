@@ -139,6 +139,7 @@ set( ENGINE_SOURCE_FILES
     src/hikari/client/Main.cpp
     src/hikari/client/ClientConfig.cpp
     src/hikari/client/CommandProcessor.cpp
+    src/hikari/client/game/GameConfig.cpp
     src/hikari/client/game/Effect.cpp
     src/hikari/client/game/Weapon.cpp
     src/hikari/client/game/WeaponAction.cpp
