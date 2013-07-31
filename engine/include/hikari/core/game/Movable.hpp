@@ -38,7 +38,7 @@ namespace hikari {
         bool onGroundLastFrame;
         bool affectedByGravity;
         bool collidesWithWorld;
-        bool treatLadderTopAsGround;
+        bool treatPlatformAsGround;
         bool applyHorizontalVelocity;
         bool applyVerticalVelocity;
 
@@ -96,7 +96,7 @@ namespace hikari {
         void setVelocity(const float& x, const float& y);
         void setBoundingBox(const BoundingBoxF& boundingBox);
 
-        void setTreatLadderTopAsGround(const bool& treatAsGround); 
+        void setTreatPlatformAsGround(const bool& treatAsGround); 
         void setApplyHorizontalVelocity(const bool& applyVelocity);
         void setApplyVerticalVelocity(const bool& applyVelocity);
 

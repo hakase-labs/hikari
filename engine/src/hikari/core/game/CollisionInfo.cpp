@@ -3,7 +3,7 @@
 namespace hikari {
     
     CollisionInfo::CollisionInfo() 
-        : treatLadderTopAsGround(true)
+        : treatPlatformAsGround(true)
         , isCollisionX(false)
         , isCollisionY(false)
         , worldX(0)
@@ -20,7 +20,7 @@ namespace hikari {
     }
 
     void CollisionInfo::clear() {
-        treatLadderTopAsGround = true;
+        treatPlatformAsGround = true;
         isCollisionX = false;
         isCollisionY = false;
         worldX = 0;

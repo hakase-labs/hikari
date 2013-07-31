@@ -30,7 +30,7 @@ namespace hikari {
         , onGroundLastFrame(false)
         , affectedByGravity(true)
         , collidesWithWorld(true)
-        , treatLadderTopAsGround(true)
+        , treatPlatformAsGround(true)
         , applyHorizontalVelocity(true)
         , applyVerticalVelocity(true)
         , velocity(0.0f, 0.0f)
@@ -47,7 +47,7 @@ namespace hikari {
         , onGroundLastFrame(false)
         , affectedByGravity(true)
         , collidesWithWorld(true)
-        , treatLadderTopAsGround(true)
+        , treatPlatformAsGround(true)
         , applyHorizontalVelocity(true)
         , applyVerticalVelocity(true)
         , velocity(0.0f, 0.0f)
@@ -64,7 +64,7 @@ namespace hikari {
         , onGroundLastFrame(proto.onGroundLastFrame)
         , affectedByGravity(proto.affectedByGravity)
         , collidesWithWorld(proto.collidesWithWorld)
-        , treatLadderTopAsGround(proto.treatLadderTopAsGround)
+        , treatPlatformAsGround(proto.treatPlatformAsGround)
         , applyHorizontalVelocity(proto.applyHorizontalVelocity)
         , applyVerticalVelocity(proto.applyVerticalVelocity)
         , velocity(proto.velocity)
@@ -143,7 +143,7 @@ namespace hikari {
 
     void Movable::checkCollision(const float& dt) {
         collisionInfo.clear();
-        collisionInfo.treatLadderTopAsGround = this->treatLadderTopAsGround;
+        collisionInfo.treatPlatformAsGround = this->treatPlatformAsGround;
 
         preCheckCollision();
 
@@ -277,8 +277,8 @@ namespace hikari {
         this->boundingBox = boundingBox;
     }
 
-    void Movable::setTreatLadderTopAsGround(const bool& treatAsGround) {
-        this->treatLadderTopAsGround = treatAsGround;
+    void Movable::setTreatPlatformAsGround(const bool& treatAsGround) {
+        this->treatPlatformAsGround = treatAsGround;
     }
 
     void Movable::setApplyHorizontalVelocity(const bool& applyVelocity) {
