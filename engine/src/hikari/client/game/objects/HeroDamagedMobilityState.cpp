@@ -39,7 +39,7 @@ namespace hikari {
         // Special case for sliding and climbing:
         // * If damaged mid-slide there is no knockback
         // * If damaged while climbing there is no knockback
-        if(hero.isSliding || hero.isOnLadder) {
+        if(hero.isSliding || hero.isClimbing) {
             horizontalVelocity.setX(0.0f);
         }
 

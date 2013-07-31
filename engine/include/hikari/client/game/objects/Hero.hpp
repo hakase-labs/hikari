@@ -30,11 +30,9 @@ namespace hikari {
         bool isJumping;                 // Moving upward with no solid ground underneath
         bool isFalling;                 // Falling with no solid ground underneath
         bool isAirborn;                 // In air; falling or jumping
-        bool isClimbing;
-        bool isOnLadder;                // Mounted on a ladder (climbing)
+        bool isClimbing;                // Mounted on a ladder (climbing)
         bool isTouchingLadder;          // Touching a ladder with any part of the body
         bool isTouchingLadderTop;       // Colliding with a "ladder top"
-        bool isTouchingLadderWithFeet;  // Feet are standing on top of a ladder
         bool isFullyAccelerated;        // Moving at full speed horizontally
         bool isShooting;                // Shooting a weapon
         bool isTeleporting;             // Teleporting from sky
