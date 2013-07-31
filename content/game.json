@@ -1,5 +1,5 @@
 {
-    "environment" : "assets/scripts/Environment.nut",
+    "environment" : ["assets/scripts/Environment.nut", "assets/scripts/Bootstrap.nut"],
     "assets" : {
         "fonts" : "assets/fonts.json",
         "audio" : {
@@ -91,6 +91,6 @@
             "tileset" : "assets/tilesets/tiles-wily1.json"
         }
     },
-    "initial-state" : "gameplay"
+    "initialState" : "gameplay"
 }
 

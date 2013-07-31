@@ -145,7 +145,7 @@ namespace hikari {
         controller.addState(passwordState->getName(), passwordState);
         controller.addState(titleState->getName(), titleState);
 
-        controller.setState(gameConfigJson.get("initial-state", "default").asString());
+        controller.setState(gameConfig.getInitialState());
     }
  
     void Client::initLogging(int argc, char** argv) {
@@ -242,8 +242,11 @@ namespace hikari {
  
     void Client::loadScriptingEnvironment() {
         if(auto squirrelService = services.locateService<SquirrelService>(Services::SCRIPTING).lock()) {
-            squirrelService->runScriptFile("assets/scripts/Environment.nut");
-            squirrelService->runScriptFile("assets/scripts/Bootstrap.nut");
+            const std::vector<std::string> & startupScripts = gameConfig.getStartUpScripts();
+
+            std::for_each(std::begin(startupScripts), std::end(startupScripts), [&](const std::string & scriptPath) {
+                squirrelService->runScriptFile(scriptPath);
+            });
         }
     }
  
