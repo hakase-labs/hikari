@@ -28,6 +28,10 @@ namespace hikari {
     Movable::Movable()
         : onGroundNow(false)
         , onGroundLastFrame(false)
+        , topBlockedFlag(false)
+        , rightBlockedFlag(false)
+        , bottomBlockedFlag(false)
+        , leftBlockedFlag(false)
         , affectedByGravity(true)
         , collidesWithWorld(true)
         , treatPlatformAsGround(true)
@@ -45,6 +49,10 @@ namespace hikari {
     Movable::Movable(float width, float height)
         : onGroundNow(false)
         , onGroundLastFrame(false)
+        , topBlockedFlag(false)
+        , rightBlockedFlag(false)
+        , bottomBlockedFlag(false)
+        , leftBlockedFlag(false)
         , affectedByGravity(true)
         , collidesWithWorld(true)
         , treatPlatformAsGround(true)
@@ -62,6 +70,10 @@ namespace hikari {
     Movable::Movable(const Movable& proto) 
         : onGroundNow(proto.onGroundNow)
         , onGroundLastFrame(proto.onGroundLastFrame)
+        , topBlockedFlag(proto.topBlockedFlag)
+        , rightBlockedFlag(proto.rightBlockedFlag)
+        , bottomBlockedFlag(proto.bottomBlockedFlag)
+        , leftBlockedFlag(proto.leftBlockedFlag)
         , affectedByGravity(proto.affectedByGravity)
         , collidesWithWorld(proto.collidesWithWorld)
         , treatPlatformAsGround(proto.treatPlatformAsGround)
@@ -90,6 +102,22 @@ namespace hikari {
 
     bool Movable::isOnGround() const {
         return isOnGroundNow();
+    }
+
+    bool Movable::isTopBlocked() const {
+        return topBlockedFlag;
+    }
+
+    bool Movable::isRightBlocked() const {
+        return rightBlockedFlag;
+    }
+
+    bool Movable::isBottomBlocked() const {
+        return bottomBlockedFlag;
+    }
+
+    bool Movable::isLeftBlocked() const {
+        return leftBlockedFlag;
     }
 
     const Vector2<float>& Movable::getPosition() const {
@@ -139,6 +167,10 @@ namespace hikari {
     void Movable::preCheckCollision() {
         onGroundLastFrame = onGroundNow;
         onGroundNow = false;
+        topBlockedFlag = false;
+        rightBlockedFlag = false;
+        bottomBlockedFlag = false;
+        leftBlockedFlag = false;
     }
 
     void Movable::checkCollision(const float& dt) {
@@ -163,6 +195,7 @@ namespace hikari {
             if(collisionInfo.isCollisionX) {
                 boundingBox.setLeft(static_cast<float>(collisionInfo.correctedX));
                 velocity.setX(0.0f);
+                leftBlockedFlag = true;
 
                 if(collisionCallback) {
                     collisionCallback(*this, collisionInfo);
@@ -184,6 +217,7 @@ namespace hikari {
             if(collisionInfo.isCollisionX) {
                 boundingBox.setRight(static_cast<float>(collisionInfo.correctedX));
                 velocity.setX(0.0f);
+                rightBlockedFlag = true;
 
                 if(collisionCallback) {
                     collisionCallback(*this, collisionInfo);
@@ -207,6 +241,7 @@ namespace hikari {
             if(collisionInfo.isCollisionY) {
                 boundingBox.setTop(static_cast<float>(collisionInfo.correctedY));
                 velocity.setY(0.0f);
+                topBlockedFlag = true;
 
                 if(collisionCallback) {
                     collisionCallback(*this, collisionInfo);
@@ -229,6 +264,7 @@ namespace hikari {
                 boundingBox.setBottom(static_cast<float>(collisionInfo.correctedY));
                 velocity.setY(velocity.getY() - std::floor(velocity.getY()));
                 onGroundNow = true;
+                bottomBlockedFlag = true;
 
                 if(collisionCallback) {
                     collisionCallback(*this, collisionInfo);

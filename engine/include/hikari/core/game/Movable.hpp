@@ -36,6 +36,10 @@ namespace hikari {
 
         bool onGroundNow;
         bool onGroundLastFrame;
+        bool topBlockedFlag;
+        bool rightBlockedFlag;
+        bool bottomBlockedFlag;
+        bool leftBlockedFlag;
         bool affectedByGravity;
         bool collidesWithWorld;
         bool treatPlatformAsGround;
@@ -74,6 +78,11 @@ namespace hikari {
          * @see Movable::setOnGround
          */
         bool isOnGround() const;
+
+        bool isTopBlocked() const;
+        bool isRightBlocked() const;
+        bool isBottomBlocked() const;
+        bool isLeftBlocked() const;
 
         /**
          * Gets the position of the Movable. The position may not be the same
