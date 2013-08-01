@@ -248,11 +248,9 @@ namespace hikari {
 
     void Hero::requestClimbingAttachment(const BoundingBox<float> & climbableRegion) {
         if(!isClimbing) {
-            // Check if I want to climb...
-            BoundingBox<float> intersection = geom::intersection(getBoundingBox(), climbableRegion);
-
             if(actionController) {
                 if(actionController->shouldMoveUp()) {
+                    // Check to see if we're still able to climb up
                     float heroFeetY = body.getBoundingBox().getBottom();
                     float distanceFromPlatform = heroFeetY - climbableRegion.getTop();
                     bool touchingTopOfLadder = distanceFromPlatform >= 1;
@@ -265,8 +263,6 @@ namespace hikari {
                     float heroFeetY = body.getBoundingBox().getBottom();
                     bool touchingTopOfLadder = heroFeetY <= climbableRegion.getTop() + 1;
 
-                    // HIKARI_LOG(debug4) << "feetY = " << heroFeetY << ", regionTop = " << climbableRegion.getTop() << ", yes = " << touchingTopOfLadder;
-                    
                     if(body.isOnGround()) {
                         if(!isClimbing && touchingTopOfLadder) {
                             changeMobilityState(std::unique_ptr<MobilityState>(new ClimbingMobilityState(*this, climbableRegion)));
