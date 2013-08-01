@@ -14,6 +14,11 @@ namespace hikari {
     const char* ClientConfig::PROPERTY_BINDINGS = "bindings";
     const char* ClientConfig::PROPERTY_KEYBOARD_BINDINGS = "keyboard";
 
+    const char* ClientConfig::VIDEO_SCALE_1X = "1x";
+    const char* ClientConfig::VIDEO_SCALE_2X = "2x";
+    const char* ClientConfig::VIDEO_SCALE_3X = "3x";
+    const char* ClientConfig::VIDEO_SCALE_FULL = "full";
+
     void ClientConfig::extractValuesFromJson(const Json::Value& configJson) {
         if(!configJson.isNull()) {
             if(configJson.isMember(PROPERTY_FPS)) {

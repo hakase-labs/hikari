@@ -199,14 +199,14 @@ namespace hikari {
         bool enabledFullScreen = false;
         unsigned int screenScaler = 1;
 
-        if(videoScale == "1x") {
+        if(videoScale == ClientConfig::VIDEO_SCALE_1X) {
             screenScaler = 1;
-        } else if(videoScale == "2x") {
+        } else if(videoScale == ClientConfig::VIDEO_SCALE_2X) {
             screenScaler = 2;
-        } else if(videoScale == "3x") {
+        } else if(videoScale == ClientConfig::VIDEO_SCALE_3X) {
             screenScaler = 3;
         } else {
-            if(videoScale == "full") {
+            if(videoScale == ClientConfig::VIDEO_SCALE_FULL) {
                 enabledFullScreen = true;
             }
         }
@@ -371,6 +371,8 @@ namespace hikari {
             window.draw(renderSprite);
             window.display();
         }
+
+        HIKARI_LOG(debug) << "Quitting; total run time = " << totalRuntime << " seconds.";
     }
 
     int Client::run() {
