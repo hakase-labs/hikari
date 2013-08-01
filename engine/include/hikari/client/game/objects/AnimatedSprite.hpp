@@ -41,7 +41,6 @@ namespace hikari {
         void setAnimation(const std::string & animationName);
         void setAnimationSet(const std::weak_ptr<AnimationSet> & animationSetPtr);
 
-        // const sf::Sprite & getSprite() const;
         const std::string & getAnimation() const;
         const std::weak_ptr<AnimationSet> getAnimationSet() const;
 
