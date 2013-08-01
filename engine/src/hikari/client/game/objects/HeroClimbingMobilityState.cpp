@@ -78,8 +78,14 @@ namespace hikari {
                         hero.requestMobilityStateChange(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
                         return MobilityState::NEXT;
                     } else {
+                        // This condition prevents hero from continuing to 
+                        // "climb" when climbing into a wall on top. The hero
+                        // still "moves" but the animation looks like he's
+                        // stationary.
+                        if(!hero.body.isTopBlocked()) {
+                            hero.getAnimatedSprite()->unpause();
+                        }
                         hero.setVelocityY(-hero.climbVelocity.getY());
-                        hero.getAnimatedSprite()->unpause();
                     }
                 } else if(controller->shouldMoveDown()) {
                     hero.setVelocityY(hero.climbVelocity.getY());
