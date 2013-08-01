@@ -39,7 +39,7 @@ namespace hikari {
         }
 
         int length = 0;
-        auto fs = FileSystem::openFile(fileName);
+        auto fs = FileSystem::openFileRead(fileName);
 
         fs->seekg (0, std::ios::end);
         length = static_cast<int>(fs->tellg());

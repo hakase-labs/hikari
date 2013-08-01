@@ -16,7 +16,7 @@ namespace hikari {
     TilesetCache::Resource TilesetCache::loadResource(const std::string &fileName) {
         HIKARI_LOG(debug) << "Caching tileset: " << fileName;
 
-        auto fs = FileSystem::openFile(fileName);
+        auto fs = FileSystem::openFileRead(fileName);
 
         if(!fs->good()) {
             std::stringstream ss;

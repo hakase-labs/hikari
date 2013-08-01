@@ -55,7 +55,7 @@ namespace FactoryHelpers {
 
                         HIKARI_LOG(debug) << "Populating item factory... (" << descriptorFilePath << ")";
 
-                        auto fileContents = FileSystem::openFile(descriptorFilePath);
+                        auto fileContents = FileSystem::openFileRead(descriptorFilePath);
                         Json::Value root;
                         Json::Reader reader;
 
@@ -171,7 +171,7 @@ namespace FactoryHelpers {
                         HIKARI_LOG(debug) << "Populating enemy factory...";
 
                         if(FileSystem::exists(descriptorFilePath)) {
-                            auto fileContents = FileSystem::openFile(descriptorFilePath);
+                            auto fileContents = FileSystem::openFileRead(descriptorFilePath);
                             Json::Value root;
                             Json::Reader reader;
 
@@ -278,7 +278,7 @@ namespace FactoryHelpers {
 
                     HIKARI_LOG(debug) << "Populating particles factory...";
 
-                    auto fileContents = FileSystem::openFile(descriptorFilePath);
+                    auto fileContents = FileSystem::openFileRead(descriptorFilePath);
                     Json::Value root;
                     Json::Reader reader;
 
@@ -351,7 +351,7 @@ namespace FactoryHelpers {
                         HIKARI_LOG(debug) << "Populating projectile factory...";
 
                         if(FileSystem::exists(descriptorFilePath)) {
-                            auto fileContents = FileSystem::openFile(descriptorFilePath);
+                            auto fileContents = FileSystem::openFileRead(descriptorFilePath);
                             Json::Value root;
                             Json::Reader reader;
 
@@ -464,7 +464,7 @@ namespace FactoryHelpers {
 
         if(FileSystem::exists(descriptorFilePath)) {
             if(auto table = weaponTable.lock()) {
-                auto fs = FileSystem::openFile(descriptorFilePath);
+                auto fs = FileSystem::openFileRead(descriptorFilePath);
                 Json::Reader reader;
                 Json::Value root;
                 bool success = reader.parse(*fs, root, false);

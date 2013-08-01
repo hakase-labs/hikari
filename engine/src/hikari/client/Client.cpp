@@ -65,7 +65,7 @@ namespace hikari {
     void Client::initConfig() {
         // Load client config first
         if(FileSystem::exists(PATH_CONFIG_FILE)) {
-            auto fs = FileSystem::openFile(PATH_CONFIG_FILE);
+            auto fs = FileSystem::openFileRead(PATH_CONFIG_FILE);
 
             Json::Reader reader;
             Json::Value value;
@@ -83,7 +83,7 @@ namespace hikari {
 
         // Then load the game config
         if(FileSystem::exists(PATH_GAME_CONFIG_FILE)) {
-            auto fs = FileSystem::openFile(PATH_GAME_CONFIG_FILE);
+            auto fs = FileSystem::openFileRead(PATH_GAME_CONFIG_FILE);
 
             Json::Reader reader;
             Json::Value value;

@@ -12,7 +12,7 @@ namespace hikari {
 
     bool PhysFSUtils::loadImage(const std::string &fileName, sf::Texture &texture) {
         if(PhysFS::exists(fileName)) {
-            auto fs = FileSystem::openFile(fileName);
+            auto fs = FileSystem::openFileRead(fileName);
 
             fs->seekg(0, std::ios::end);
             auto length = fs->tellg();
@@ -43,7 +43,7 @@ namespace hikari {
         Json::Value result;
 
         if(PhysFS::exists(fileName)) {
-            auto fs = FileSystem::openFile(fileName);
+            auto fs = FileSystem::openFileRead(fileName);
             Json::Reader reader;
             
             bool parseSuccessful = reader.parse(*fs, result);
@@ -62,7 +62,7 @@ namespace hikari {
         std::stringstream result;
 
         if(PhysFS::exists(fileName)) {
-            auto fs = FileSystem::openFile(fileName);
+            auto fs = FileSystem::openFileRead(fileName);
 
             result << fs->rdbuf();
         }

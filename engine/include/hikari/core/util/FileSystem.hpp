@@ -4,6 +4,7 @@
 #include "hikari/core/Platform.hpp"
 
 #include <istream>
+#include <ostream>
 #include <memory>
 #include <string>
 #include <vector>
@@ -22,7 +23,12 @@ namespace hikari {
             };
         };
 
-        static std::unique_ptr<std::istream> openFile(const std::string & fileName, OpenMode::Type openMode = OpenMode::Read);
+        /**
+         * Opens a file as read-only.
+         * @param fileName the path and name of the file to open
+         */
+        static std::unique_ptr<std::istream> openFileRead(const std::string & fileName);
+        static std::unique_ptr<std::ostream> openFileWrite(const std::string & fileName);
         
         static std::string readFileAsString(const std::string & fileName);
         static std::vector<char> readFileAsCharBuffer(const std::string & fileName);

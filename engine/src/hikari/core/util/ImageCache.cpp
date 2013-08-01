@@ -26,7 +26,7 @@ namespace hikari {
         Resource texture(new sf::Texture());
 
         if(FileSystem::exists(fileName)) {
-            auto handle = FileSystem::openFile(fileName);
+            auto handle = FileSystem::openFileRead(fileName);
 
             // Figure out how many bytes the image is
             handle->seekg(0, std::ios::end);
