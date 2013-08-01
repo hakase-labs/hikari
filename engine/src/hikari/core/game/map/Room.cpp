@@ -66,9 +66,9 @@ namespace hikari {
                 if(topFound && bottomFound) {
                     ladders.emplace_back(
                         BoundingBox<float>(
-                            static_cast<float>((getX() + ladderX) * getGridSize()        ), // ladder top left X (in pixels)
+                            static_cast<float>(((getX() + ladderX) * getGridSize()) + 4  ), // ladder top left X (in pixels)
                             static_cast<float>((getY() + ladderTop) * getGridSize()      ), // ladder top left Y (in pixels)
-                            static_cast<float>(getGridSize()                             ), // ladder width      (in pixels)
+                            static_cast<float>(getGridSize() - 4 - 4                     ), // ladder width      (in pixels)
                             static_cast<float>((ladderBottom - ladderTop) * getGridSize())  // ladder height     (in pixels)
                         )
                     );

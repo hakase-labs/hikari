@@ -110,6 +110,8 @@ namespace hikari {
     }
 
     void Hero::update(float dt) {
+        Entity::update(dt);
+
         if(const auto & room = getRoom()) {
             const int gridSize = room->getGridSize();
 
@@ -186,8 +188,6 @@ namespace hikari {
                 }
             }    
         }
-
-        Entity::update(dt);
     }
 
     bool Hero::canJump() {
@@ -251,28 +251,25 @@ namespace hikari {
             // Check if I want to climb...
             BoundingBox<float> intersection = geom::intersection(getBoundingBox(), climbableRegion);
 
-            if(intersection.getWidth() >= 4) {
-                // Must overlap at least 4 pixels in order to mount.
-                if(actionController) {
-                    if(actionController->shouldMoveUp()) {
-                        float heroFeetY = body.getBoundingBox().getBottom();
-                        float distanceFromPlatform = heroFeetY - climbableRegion.getTop();
-                        bool touchingTopOfLadder = distanceFromPlatform >= 1;
+            if(actionController) {
+                if(actionController->shouldMoveUp()) {
+                    float heroFeetY = body.getBoundingBox().getBottom();
+                    float distanceFromPlatform = heroFeetY - climbableRegion.getTop();
+                    bool touchingTopOfLadder = distanceFromPlatform >= 1;
 
-                        if(touchingTopOfLadder) {
+                    if(touchingTopOfLadder) {
+                        changeMobilityState(std::unique_ptr<MobilityState>(new ClimbingMobilityState(*this, climbableRegion)));
+                    }
+                } else if(actionController->shouldMoveDown()) {
+                    // Check if standing on top of a ladder
+                    float heroFeetY = body.getBoundingBox().getBottom();
+                    bool touchingTopOfLadder = heroFeetY <= climbableRegion.getTop() + 1;
+
+                    // HIKARI_LOG(debug4) << "feetY = " << heroFeetY << ", regionTop = " << climbableRegion.getTop() << ", yes = " << touchingTopOfLadder;
+                    
+                    if(body.isOnGround()) {
+                        if(!isClimbing && touchingTopOfLadder) {
                             changeMobilityState(std::unique_ptr<MobilityState>(new ClimbingMobilityState(*this, climbableRegion)));
-                        }
-                    } else if(actionController->shouldMoveDown()) {
-                        // Check if standing on top of a ladder
-                        float heroFeetY = body.getBoundingBox().getBottom();
-                        bool touchingTopOfLadder = heroFeetY <= climbableRegion.getTop() + 1;
-
-                        // HIKARI_LOG(debug4) << "feetY = " << heroFeetY << ", regionTop = " << climbableRegion.getTop() << ", yes = " << touchingTopOfLadder;
-                        
-                        if(body.isOnGround()) {
-                            if(!isClimbing && touchingTopOfLadder) {
-                                changeMobilityState(std::unique_ptr<MobilityState>(new ClimbingMobilityState(*this, climbableRegion)));
-                            }
                         }
                     }
                 }
@@ -413,6 +410,12 @@ namespace hikari {
         if(info.isCollisionY && info.directionY == Directions::Down) {
             isAirborn = false;
         }
+
+        // if(body.isLeftBlocked()) {
+        //     HIKARI_LOG(debug4) << "Running into the wall on the left!";
+        // } else if(body.isRightBlocked()) {
+        //     HIKARI_LOG(debug4) << "Running into the wall on the right!";
+        // }
 
         //
         // Check if we hit spikes; if we did then we're dead!
