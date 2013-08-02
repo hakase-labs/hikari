@@ -22,10 +22,11 @@ namespace hikari {
         // dtor
     }
 
-    void SpawnProjectileWeaponAction::apply(GameWorld & world, const Weapon & weapon, WeaponFireEventData & eventData) const {
+    std::weak_ptr<GameObject> SpawnProjectileWeaponAction::apply(GameWorld & world, const Weapon & weapon, WeaponFireEventData & eventData) const {
         HIKARI_LOG(debug4) << "SpawnProjectileWeaponAction::apply executed.";
 
         auto projectile = world.spawnProjectile(projectileType);
+        std::weak_ptr<GameObject> trackedProjectile;
 
         if(projectile) {
             projectile->reset();
@@ -39,7 +40,13 @@ namespace hikari {
                 projectile->setMotion(motion);
             }
 
-            world.queueObjectAddition(std::shared_ptr<Projectile>(std::move(projectile)));
+            std::shared_ptr<Projectile> projectilePtr(std::move(projectile));
+
+            world.queueObjectAddition(projectilePtr);
+            trackedProjectile = std::weak_ptr<GameObject>(projectilePtr);
         }
+
+        // Return an empty pointer
+        return trackedProjectile;
     }
 } // hikari
