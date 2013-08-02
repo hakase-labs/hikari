@@ -47,7 +47,7 @@ namespace hikari {
     const std::string & getUsageSound() const;
 
     void setActions(const std::vector<std::shared_ptr<WeaponAction>> & actions);
-    virtual std::unique_ptr<Shot> fire(GameWorld & world, WeaponFireEventData & eventData) const;
+    virtual Shot fire(GameWorld & world, WeaponFireEventData & eventData) const;
   };
 
 } // hikari

@@ -174,26 +174,28 @@ namespace hikari {
     }
 
     void Entity::fireWeapon() {
-        if(auto events = eventManager.lock()) {
-            
-            // Adjust offset for direction
-            Vector2<float> offset = getActionSpot();
+        if(canFireWeapon()) {
+            if(auto events = eventManager.lock()) {
+                
+                // Adjust offset for direction
+                Vector2<float> offset = getActionSpot();
 
-            if(getDirection() == Directions::Left) {
-                offset.setX(-offset.getX());
+                if(getDirection() == Directions::Left) {
+                    offset.setX(-offset.getX());
+                }
+
+                events->triggerEvent(
+                    std::make_shared<WeaponFireEventData>(
+                        getWeaponId(),
+                        getId(),
+                        getFaction(),
+                        getDirection(),
+                        getPosition() + offset
+                    )
+                );
+            } else {
+                HIKARI_LOG(debug4) << "Entity::fireWeapon failed; no EventManager. id = " << getId();
             }
-
-            events->triggerEvent(
-                std::make_shared<WeaponFireEventData>(
-                    getWeaponId(),
-                    getId(),
-                    getFaction(),
-                    getDirection(),
-                    getPosition() + offset
-                )
-            );
-        } else {
-            HIKARI_LOG(debug4) << "Entity::fireWeapon failed; no EventManager. id = " << getId();
         }
     }
 
@@ -247,6 +249,14 @@ namespace hikari {
 
     const float Entity::getVelocityY() const {
         return body.getVelocity().getY();
+    }
+
+    void Entity::observeShot(const Shot & shot) {
+        activeShots.push_back(shot);
+    }
+
+    unsigned int Entity::getActiveShotCount() const {
+        return activeShots.size();
     }
 
     void Entity::setGravitated(bool affected) {
@@ -319,6 +329,8 @@ namespace hikari {
             boxPosition.setSize(sf::Vector2f(1.0f, 1.0f));
         }
         #endif // HIKARI_DEBUG_ENTITIES
+
+        removeNonActiveShots();
     }
 
     void Entity::render(sf::RenderTarget &target) {
@@ -346,6 +358,25 @@ namespace hikari {
             );
             animatedSprite->render(target);
         }
+    }
+
+    void Entity::removeNonActiveShots() {
+        if(getActiveShotCount() > 0) {
+            activeShots.erase(
+                std::remove_if(
+                    std::begin(activeShots),
+                    std::end(activeShots),
+                    [](const Shot & shot) {
+                        return !shot.isActive();
+                    }
+                ),
+                std::end(activeShots)
+            );
+        }
+    }
+
+    bool Entity::canFireWeapon() const {
+        return getActiveShotCount() < 3; // TODO: Change this to weapon-specified threshold
     }
 
     void Entity::reset() {

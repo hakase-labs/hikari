@@ -407,12 +407,6 @@ namespace hikari {
             isAirborn = false;
         }
 
-        // if(body.isLeftBlocked()) {
-        //     HIKARI_LOG(debug4) << "Running into the wall on the left!";
-        // } else if(body.isRightBlocked()) {
-        //     HIKARI_LOG(debug4) << "Running into the wall on the right!";
-        // }
-
         //
         // Check if we hit spikes; if we did then we're dead!
         //
@@ -522,7 +516,7 @@ namespace hikari {
         if(hero.actionController) {
             auto const * controller = hero.actionController.get();
 
-            if(controller->shouldShootWeapon()) {
+            if(controller->shouldShootWeapon() && hero.canFireWeapon()) {
                 hero.requestShootingStateChange(std::unique_ptr<ShootingState>(new IsShootingState(hero)));
                 return ShootingState::NEXT;
             }
