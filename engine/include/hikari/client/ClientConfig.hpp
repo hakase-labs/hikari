@@ -29,6 +29,11 @@ namespace hikari {
         void extractValuesFromJson(const Json::Value& configJson);
     public:
         typedef std::map<std::string, std::string> StringMap;
+
+        static const char* VIDEO_SCALE_1X;
+        static const char* VIDEO_SCALE_2X;
+        static const char* VIDEO_SCALE_3X;
+        static const char* VIDEO_SCALE_FULL;
         
         ClientConfig();
         ClientConfig(const Json::Value& configJson);

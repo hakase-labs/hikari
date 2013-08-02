@@ -18,6 +18,7 @@
 #include "hikari/client/game/objects/ParticleFactory.hpp"
 #include "hikari/client/game/Effect.hpp"
 #include "hikari/client/game/Weapon.hpp"
+#include "hikari/client/game/Shot.hpp"
 #include "hikari/client/game/WeaponTable.hpp"
 #include "hikari/client/game/DamageKey.hpp"
 #include "hikari/client/game/DamageTable.hpp"
@@ -799,7 +800,7 @@ namespace hikari {
         if(auto weapons = weaponTable.lock()) {
             auto weaponWeak = weapons->getWeaponById(eventData->getWeaponId());
             if(auto weapon = weaponWeak.lock()) {
-                weapon->fire(world, *eventData.get());
+                std::unique_ptr<Shot> shot = weapon->fire(world, *eventData.get());
 
                 if(auto sound = audioService.lock()) {
                     sound->playSample(21);

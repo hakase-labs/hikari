@@ -17,6 +17,7 @@ namespace hikari {
         static const unsigned int AUDIO_SAMPLE_RATE;
         bool musicLoaded;
         bool samplesLoaded;
+        bool enabledFlag;
 
         NSFSoundStream musicStream;
         NSFSoundStream sampleStream;
@@ -37,6 +38,31 @@ namespace hikari {
 
         bool isMusicLoaded() const;
         bool isSamplesLoaded() const;
+
+        /**
+         * Disables all audio and stops any playing music and samples. When
+         * disabled, any requests to play music or samples are ignored.
+         *
+         * @see AudioService::enable
+         * @see AudioService::isEnabled
+         */
+        void disable();
+
+        /**
+         * Enables music and sample playback.
+         *
+         * @see AudioService::disable
+         * @see AudioService::isEnabled
+         */
+        void enable();
+
+        /**
+         * Checks to see if audio is enabled or not. When disabled, any requests
+         * to play music or samples are ignored.
+         * 
+         * @return true if currently enabled, false otherwise
+         */
+        bool isEnabled() const;
     };
 
 } // hikari

@@ -1,5 +1,5 @@
 {
-    "environment" : "assets/scripts/Environment.nut",
+    "environment" : ["assets/scripts/Environment.nut", "assets/scripts/Bootstrap.nut"],
     "assets" : {
         "fonts" : "assets/fonts.json",
         "audio" : {
@@ -27,6 +27,13 @@
                 "glyphSize" : 8
             }
         }
+    },
+    "templatePaths" : {
+        "items" : "assets/templates/items.json",
+        "enemies" : "assets/templates/enemies.json",
+        "particles" : "assets/templates/particles.json",
+        "projectiles" : "assets/templates/projectiles.json",
+        "weapons" : "assets/weapons/weapons.json"
     },
     "states" : {
         "introduction" : {},
@@ -84,6 +91,6 @@
             "tileset" : "assets/tilesets/tiles-wily1.json"
         }
     },
-    "initial-state" : "gameplay"
+    "initialState" : "gameplay"
 }
 

@@ -47,6 +47,7 @@ namespace hikari {
     Client::Client(int argc, char** argv)
         : gameConfigJson()
         , clientConfig()
+        , gameConfig()
         , services()
         , videoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BITS_PER_PIXEL)
         , window()
@@ -64,7 +65,7 @@ namespace hikari {
     void Client::initConfig() {
         // Load client config first
         if(FileSystem::exists(PATH_CONFIG_FILE)) {
-            auto fs = FileSystem::openFile(PATH_CONFIG_FILE);
+            auto fs = FileSystem::openFileRead(PATH_CONFIG_FILE);
 
             Json::Reader reader;
             Json::Value value;
@@ -82,7 +83,7 @@ namespace hikari {
 
         // Then load the game config
         if(FileSystem::exists(PATH_GAME_CONFIG_FILE)) {
-            auto fs = FileSystem::openFile(PATH_GAME_CONFIG_FILE);
+            auto fs = FileSystem::openFileRead(PATH_GAME_CONFIG_FILE);
 
             Json::Reader reader;
             Json::Value value;
@@ -93,6 +94,7 @@ namespace hikari {
                 HIKARI_LOG(fatal) << "Game configuration file could not be found or was corrupt.";
             } else {
                 gameConfigJson = value;
+                gameConfig = GameConfig(value);
             }
         } else {
             HIKARI_LOG(fatal) << "Couldn't find game configuration file '" << PATH_GAME_CONFIG_FILE << "'";
@@ -143,7 +145,7 @@ namespace hikari {
         controller.addState(passwordState->getName(), passwordState);
         controller.addState(titleState->getName(), titleState);
 
-        controller.setState(gameConfigJson.get("initial-state", "default").asString());
+        controller.setState(gameConfig.getInitialState());
     }
  
     void Client::initLogging(int argc, char** argv) {
@@ -197,14 +199,14 @@ namespace hikari {
         bool enabledFullScreen = false;
         unsigned int screenScaler = 1;
 
-        if(videoScale == "1x") {
+        if(videoScale == ClientConfig::VIDEO_SCALE_1X) {
             screenScaler = 1;
-        } else if(videoScale == "2x") {
+        } else if(videoScale == ClientConfig::VIDEO_SCALE_2X) {
             screenScaler = 2;
-        } else if(videoScale == "3x") {
+        } else if(videoScale == ClientConfig::VIDEO_SCALE_3X) {
             screenScaler = 3;
         } else {
-            if(videoScale == "full") {
+            if(videoScale == ClientConfig::VIDEO_SCALE_FULL) {
                 enabledFullScreen = true;
             }
         }
@@ -240,15 +242,18 @@ namespace hikari {
  
     void Client::loadScriptingEnvironment() {
         if(auto squirrelService = services.locateService<SquirrelService>(Services::SCRIPTING).lock()) {
-            squirrelService->runScriptFile("assets/scripts/Environment.nut");
-            squirrelService->runScriptFile("assets/scripts/Bootstrap.nut");
+            const std::vector<std::string> & startupScripts = gameConfig.getStartUpScripts();
+
+            std::for_each(std::begin(startupScripts), std::end(startupScripts), [&](const std::string & scriptPath) {
+                squirrelService->runScriptFile(scriptPath);
+            });
         }
     }
  
     void Client::loadObjectTemplates() {
         if(auto itemFactory = services.locateService<ItemFactory>(Services::ITEMFACTORY).lock()) {
             FactoryHelpers::populateCollectableItemFactory(
-                "assets/templates/items.json",
+                gameConfig.getItemTemplatePath(),
                 std::weak_ptr<ItemFactory>(itemFactory),
                 services
             );
@@ -256,7 +261,7 @@ namespace hikari {
 
         if(auto enemyFactory = services.locateService<EnemyFactory>(Services::ENEMYFACTORY).lock()) {
             FactoryHelpers::populateEnemyFactory(
-                "assets/templates/enemies.json",
+                gameConfig.getEnemyTemplatePath(),
                 std::weak_ptr<EnemyFactory>(enemyFactory),
                 services
             );
@@ -264,7 +269,7 @@ namespace hikari {
 
         if(auto particleFactory = services.locateService<ParticleFactory>(Services::PARTICLEFACTORY).lock()) {
             FactoryHelpers::populateParticleFactory(
-                "assets/templates/particles.json",
+                gameConfig.getParticleTemplatePath(),
                 std::weak_ptr<ParticleFactory>(particleFactory),
                 services
             );
@@ -272,7 +277,7 @@ namespace hikari {
 
         if(auto projectileFactory = services.locateService<ProjectileFactory>(Services::PROJECTILEFACTORY).lock()) {
             FactoryHelpers::populateProjectileFactory(
-                "assets/templates/projectiles.json",
+                gameConfig.getProjectileTemplatePath(),
                 std::weak_ptr<ProjectileFactory>(projectileFactory),
                 services
             );
@@ -280,7 +285,7 @@ namespace hikari {
 
         if(auto weaponTable = services.locateService<WeaponTable>(Services::WEAPONTABLE).lock()) {
             FactoryHelpers::populateWeaponTable(
-                "assets/weapons/weapons.json",
+                gameConfig.getWeaponTemplatePath(),
                 std::weak_ptr<WeaponTable>(weaponTable),
                 services
             );
@@ -366,6 +371,8 @@ namespace hikari {
             window.draw(renderSprite);
             window.display();
         }
+
+        HIKARI_LOG(debug) << "Quitting; total run time = " << totalRuntime << " seconds.";
     }
 
     int Client::run() {
