@@ -144,6 +144,7 @@ set( ENGINE_SOURCE_FILES
     src/hikari/client/game/Weapon.cpp
     src/hikari/client/game/WeaponAction.cpp
     src/hikari/client/game/SpawnProjectileWeaponAction.cpp
+    src/hikari/client/game/Shot.cpp
     src/hikari/client/game/WeaponTable.cpp
     src/hikari/client/game/DamageTable.cpp
     src/hikari/client/game/events/BaseEventData.cpp
