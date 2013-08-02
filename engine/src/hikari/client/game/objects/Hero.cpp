@@ -110,8 +110,6 @@ namespace hikari {
     }
 
     void Hero::update(float dt) {
-        Entity::update(dt);
-
         if(const auto & room = getRoom()) {
             const int gridSize = room->getGridSize();
 
@@ -188,6 +186,8 @@ namespace hikari {
                 }
             }    
         }
+
+        Entity::update(dt);
     }
 
     bool Hero::canJump() {
