@@ -39,6 +39,7 @@ namespace hikari {
         , isStunned(false)
         , isInvincible(false)
         , actionController(nullptr)
+        , climbableRegion(0, 0, 0, 0)
         , mobilityState(nullptr)
         , nextMobilityState(nullptr)
         , temporaryMobilityState(nullptr)
@@ -269,6 +270,12 @@ namespace hikari {
                         }
                     }
                 }
+            }
+        } else {
+            // It's possible that we lose the ladder after a transition
+            // so this is accounted for here.
+            if(climbableRegion != this->climbableRegion) {
+                changeMobilityState(std::unique_ptr<MobilityState>(new ClimbingMobilityState(*this, climbableRegion)));
             }
         }
     }
