@@ -417,7 +417,8 @@ namespace hikari {
         // Check if we hit spikes; if we did then we're dead!
         //
         if(isVulnerable()) {
-            if(TileAttribute::hasAttribute(info.tileType, TileAttribute::SPIKE)) {
+            if(TileAttribute::hasAttribute(info.tileType, TileAttribute::SPIKE)
+                || TileAttribute::hasAttribute(info.tileType, TileAttribute::ABYSS)) {
                 kill();
             }
         }
