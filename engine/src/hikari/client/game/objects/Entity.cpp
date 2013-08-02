@@ -1,5 +1,6 @@
 #include "hikari/client/game/objects/Entity.hpp"
 #include "hikari/client/game/objects/AnimatedSprite.hpp"
+#include "hikari/client/game/Shot.hpp"
 #include "hikari/client/game/events/EventManager.hpp"
 #include "hikari/client/game/events/WeaponFireEventData.hpp"
 #include "hikari/core/game/map/Room.hpp"
@@ -33,6 +34,7 @@ namespace hikari {
         , obstacleFlag(false)
         , shieldFlag(false)
         , actionSpot(0.0f, 0.0f)
+        , activeShots()
         , body()
     {
         reset();
@@ -65,6 +67,7 @@ namespace hikari {
         , obstacleFlag(proto.obstacleFlag)
         , shieldFlag(proto.shieldFlag)
         , actionSpot(proto.actionSpot)
+        , activeShots()
         , body(proto.body)
     {
         setGravitated(proto.isGravitated());
