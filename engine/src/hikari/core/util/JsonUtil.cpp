@@ -12,7 +12,7 @@ namespace hikari {
         Json::Reader reader;
 
         //PhysFS::FileStream fs(fileName.c_str(), PhysFS::OM_READ);
-        auto fs = FileSystem::openFile(fileName);
+        auto fs = FileSystem::openFileRead(fileName);
 
         if(!fs->good()) {
             std::stringstream ss;

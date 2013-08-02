@@ -19,7 +19,7 @@ namespace hikari {
         void determineCorrection(const Direction& direction, CollisionInfo& collisionInfo);
 
         bool tileIsSolid(const int& tileAttribute) const;
-        bool tileIsLadderTop(const int& tileAttribute) const;
+        bool tileIsPlatform(const int& tileAttribute) const;
 
     public:
         TileMapCollisionResolver();

@@ -1,6 +1,8 @@
 #include "hikari/client/game/Weapon.hpp"
 #include "hikari/client/game/WeaponAction.hpp"
 #include "hikari/client/game/events/WeaponFireEventData.hpp"
+#include "hikari/client/game/Shot.hpp"
+#include "hikari/client/game/objects/GameObject.hpp"
 
 #include "hikari/core/util/Log.hpp"
 
@@ -60,13 +62,17 @@ namespace hikari {
     this->actions = actions;
   }
   
-  void Weapon::fire(GameWorld & world, WeaponFireEventData & eventData) const {
+  std::unique_ptr<Shot> Weapon::fire(GameWorld & world, WeaponFireEventData & eventData) const {
     HIKARI_LOG(debug4) << "Weapon::fire executed. name=" << getName();
+    
+    std::list<std::weak_ptr<GameObject>> spawnedObjects;
 
-    std::for_each(std::begin(actions), std::end(actions), [this, &world, &eventData](const std::shared_ptr<WeaponAction> & action) {
+    std::for_each(std::begin(actions), std::end(actions), [this, &world, &eventData, &spawnedObjects](const std::shared_ptr<WeaponAction> & action) {
       if(action) {
-        action->apply(world, *this, eventData);
+        spawnedObjects.push_back(action->apply(world, *this, eventData));
       }
     });
+
+    return std::unique_ptr<Shot>(new Shot(spawnedObjects));
   }
 } // hikari

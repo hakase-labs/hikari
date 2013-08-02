@@ -24,26 +24,17 @@ namespace hikari {
     const float Movable::getGravity() {
         return Movable::gravity;
     }
-/*
-    , onGroundNow(false)
-    , onGroundLastFrame(false)
-    , affectedByGravity(true)
-    , collidesWithWorld(true)
-    , treatLadderTopAsGround(true)
-    , applyHorizontalVelocity(true)
-    , applyVerticalVelocity(true)
-    , velocity(0.0f, 0.0f)
-    , boundingBox(0.0f, 0.0f, 0.0f, 0.0f)
-    , collisionInfo()
-    , landingCallback()
-    , collisionCallback()
-*/
+
     Movable::Movable()
         : onGroundNow(false)
         , onGroundLastFrame(false)
+        , topBlockedFlag(false)
+        , rightBlockedFlag(false)
+        , bottomBlockedFlag(false)
+        , leftBlockedFlag(false)
         , affectedByGravity(true)
         , collidesWithWorld(true)
-        , treatLadderTopAsGround(true)
+        , treatPlatformAsGround(true)
         , applyHorizontalVelocity(true)
         , applyVerticalVelocity(true)
         , velocity(0.0f, 0.0f)
@@ -58,9 +49,13 @@ namespace hikari {
     Movable::Movable(float width, float height)
         : onGroundNow(false)
         , onGroundLastFrame(false)
+        , topBlockedFlag(false)
+        , rightBlockedFlag(false)
+        , bottomBlockedFlag(false)
+        , leftBlockedFlag(false)
         , affectedByGravity(true)
         , collidesWithWorld(true)
-        , treatLadderTopAsGround(true)
+        , treatPlatformAsGround(true)
         , applyHorizontalVelocity(true)
         , applyVerticalVelocity(true)
         , velocity(0.0f, 0.0f)
@@ -75,9 +70,13 @@ namespace hikari {
     Movable::Movable(const Movable& proto) 
         : onGroundNow(proto.onGroundNow)
         , onGroundLastFrame(proto.onGroundLastFrame)
+        , topBlockedFlag(proto.topBlockedFlag)
+        , rightBlockedFlag(proto.rightBlockedFlag)
+        , bottomBlockedFlag(proto.bottomBlockedFlag)
+        , leftBlockedFlag(proto.leftBlockedFlag)
         , affectedByGravity(proto.affectedByGravity)
         , collidesWithWorld(proto.collidesWithWorld)
-        , treatLadderTopAsGround(proto.treatLadderTopAsGround)
+        , treatPlatformAsGround(proto.treatPlatformAsGround)
         , applyHorizontalVelocity(proto.applyHorizontalVelocity)
         , applyVerticalVelocity(proto.applyVerticalVelocity)
         , velocity(proto.velocity)
@@ -101,8 +100,24 @@ namespace hikari {
         collisionResolver = resolver;
     }
 
-    const bool& Movable::isOnGround() const {
+    bool Movable::isOnGround() const {
         return isOnGroundNow();
+    }
+
+    bool Movable::isTopBlocked() const {
+        return topBlockedFlag;
+    }
+
+    bool Movable::isRightBlocked() const {
+        return rightBlockedFlag;
+    }
+
+    bool Movable::isBottomBlocked() const {
+        return bottomBlockedFlag;
+    }
+
+    bool Movable::isLeftBlocked() const {
+        return leftBlockedFlag;
     }
 
     const Vector2<float>& Movable::getPosition() const {
@@ -152,11 +167,15 @@ namespace hikari {
     void Movable::preCheckCollision() {
         onGroundLastFrame = onGroundNow;
         onGroundNow = false;
+        topBlockedFlag = false;
+        rightBlockedFlag = false;
+        bottomBlockedFlag = false;
+        leftBlockedFlag = false;
     }
 
     void Movable::checkCollision(const float& dt) {
         collisionInfo.clear();
-        collisionInfo.treatLadderTopAsGround = this->treatLadderTopAsGround;
+        collisionInfo.treatPlatformAsGround = this->treatPlatformAsGround;
 
         preCheckCollision();
 
@@ -176,6 +195,7 @@ namespace hikari {
             if(collisionInfo.isCollisionX) {
                 boundingBox.setLeft(static_cast<float>(collisionInfo.correctedX));
                 velocity.setX(0.0f);
+                leftBlockedFlag = true;
 
                 if(collisionCallback) {
                     collisionCallback(*this, collisionInfo);
@@ -197,6 +217,7 @@ namespace hikari {
             if(collisionInfo.isCollisionX) {
                 boundingBox.setRight(static_cast<float>(collisionInfo.correctedX));
                 velocity.setX(0.0f);
+                rightBlockedFlag = true;
 
                 if(collisionCallback) {
                     collisionCallback(*this, collisionInfo);
@@ -220,6 +241,7 @@ namespace hikari {
             if(collisionInfo.isCollisionY) {
                 boundingBox.setTop(static_cast<float>(collisionInfo.correctedY));
                 velocity.setY(0.0f);
+                topBlockedFlag = true;
 
                 if(collisionCallback) {
                     collisionCallback(*this, collisionInfo);
@@ -242,6 +264,7 @@ namespace hikari {
                 boundingBox.setBottom(static_cast<float>(collisionInfo.correctedY));
                 velocity.setY(velocity.getY() - std::floor(velocity.getY()));
                 onGroundNow = true;
+                bottomBlockedFlag = true;
 
                 if(collisionCallback) {
                     collisionCallback(*this, collisionInfo);
@@ -290,8 +313,8 @@ namespace hikari {
         this->boundingBox = boundingBox;
     }
 
-    void Movable::setTreatLadderTopAsGround(const bool& treatAsGround) {
-        this->treatLadderTopAsGround = treatAsGround;
+    void Movable::setTreatPlatformAsGround(const bool& treatAsGround) {
+        this->treatPlatformAsGround = treatAsGround;
     }
 
     void Movable::setApplyHorizontalVelocity(const bool& applyVelocity) {

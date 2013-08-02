@@ -88,7 +88,7 @@ namespace hikari {
 
                     // Here we check for ladder tops as well as solid ground.
                     // Ladder tops are only "solid" if you're falling "down" on them.
-                    if(tileIsSolid(currentTile) || (collisionInfo.treatLadderTopAsGround && tileIsLadderTop(currentTile) && directionY == Directions::Down)) {
+                    if(tileIsSolid(currentTile) || (collisionInfo.treatPlatformAsGround && tileIsPlatform(currentTile) && directionY == Directions::Down)) {
                         collisionInfo.isCollisionY = true;
                         collisionInfo.tileX = tileX;
                         collisionInfo.tileY = tileY;
@@ -135,8 +135,8 @@ namespace hikari {
         return (tileAttribute != Room::NO_TILE) && TileAttribute::hasAttribute(tileAttribute, TileAttribute::SOLID);
     }
 
-    bool TileMapCollisionResolver::tileIsLadderTop(const int& tileAttribute) const {
-        return (tileAttribute != Room::NO_TILE) && TileAttribute::hasAttribute(tileAttribute, TileAttribute::LADDER_TOP);
+    bool TileMapCollisionResolver::tileIsPlatform(const int& tileAttribute) const {
+        return (tileAttribute != Room::NO_TILE) && TileAttribute::hasAttribute(tileAttribute, TileAttribute::PLATFORM);
     }
 
 } // hikari

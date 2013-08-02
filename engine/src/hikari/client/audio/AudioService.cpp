@@ -11,8 +11,9 @@ namespace hikari {
     AudioService::AudioService(const Json::Value &configuration)
         : musicLoaded(false)
         , samplesLoaded(false)
+        , enabledFlag(true)
         , musicStream(MUSIC_BUFFER_SIZE, 1)
-        , sampleStream(SAMPLE_BUFFER_SIZE, 12) 
+        , sampleStream(SAMPLE_BUFFER_SIZE, 12)
     {
         if(isValidConfiguration(configuration)) {
             auto musicDataFilePath = configuration["music"].asString();
@@ -47,7 +48,7 @@ namespace hikari {
     }
 
     void AudioService::playMusic(MusicId id) {
-        if(isMusicLoaded()) {
+        if(isEnabled() && isMusicLoaded()) {
             musicStream.stop();
             musicStream.setCurrentTrack(id);
             musicStream.play();
@@ -59,7 +60,7 @@ namespace hikari {
     }
 
     void AudioService::playSample(SampleId id) {
-        if(isSamplesLoaded()) {
+        if(isEnabled() && isSamplesLoaded()) {
             sampleStream.setCurrentTrack(id);
             sampleStream.play();
         }
@@ -75,6 +76,21 @@ namespace hikari {
 
     bool AudioService::isSamplesLoaded() const {
         return samplesLoaded;
+    }
+
+    void AudioService::disable() {
+        enabledFlag = false;
+
+        stopAllSamples();
+        stopMusic();
+    }
+
+    void AudioService::enable() {
+        enabledFlag = true;
+    }
+
+    bool AudioService::isEnabled() const {
+        return enabledFlag;
     }
 
 } // hikari

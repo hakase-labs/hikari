@@ -8,6 +8,7 @@
 #include "hikari/core/game/Direction.hpp"
 #include "hikari/core/math/Vector2.hpp"
 
+#include <list>
 #include <memory>
 
 namespace sf {
@@ -21,6 +22,7 @@ namespace hikari {
     class EventManager;
     class GameWorld; // Soon to replace reference to Room
     class Room;
+    class Shot;
 
     /**
      * Base class for all in-game entities. 
@@ -52,6 +54,8 @@ namespace hikari {
         bool shieldFlag;   // Does this object deflect projectiles right now?
 
         Vector2<float> actionSpot; // An offset from the position where actions "take place"
+
+        std::list<std::unique_ptr<Shot>> activeShots;
 
         void move(const Vector2<float>& delta);
         void move(const float& dx, const float& dy);

@@ -25,7 +25,7 @@ namespace hikari {
             NO_ATTRIBUTES = 0,
             SOLID = (1 << 0),
             LADDER = (1 << 1),
-            LADDER_TOP = (1 << 2),
+            PLATFORM = (1 << 2),
             SPIKE = (1 << 3),
             ABYSS = (1 << 4),
             FLIP_HORIZONTAL = (1 << 5),

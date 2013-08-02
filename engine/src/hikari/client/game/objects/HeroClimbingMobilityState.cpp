@@ -21,7 +21,6 @@ namespace hikari {
 
     void Hero::ClimbingMobilityState::enter() {
         hero.isClimbing = true;
-        hero.isOnLadder = true;
         hero.isFalling = false;
         hero.isAirborn = false;
         hero.isFullyAccelerated = false;
@@ -33,22 +32,21 @@ namespace hikari {
         hero.setVelocityX(0.0f);
         hero.setVelocityY(0.0f);
         hero.body.setGravitated(false);
-        hero.body.setTreatLadderTopAsGround(false);
+        hero.body.setTreatPlatformAsGround(false);
 
         hero.body.setPosition(climbableRegion.getLeft() + (climbableRegion.getWidth() / 2), hero.getPosition().getY());
     }
 
     void Hero::ClimbingMobilityState::exit() {
         hero.isClimbing = false;
-        hero.isOnLadder = false;
         hero.body.setGravitated(true);
-        hero.body.setTreatLadderTopAsGround(true);
+        hero.body.setTreatPlatformAsGround(true);
         hero.getAnimatedSprite()->unpause();
     }
 
     Hero::MobilityState::StateChangeAction Hero::ClimbingMobilityState::update(const float & dt) {
         hero.body.setGravitated(false);
-        hero.body.setTreatLadderTopAsGround(false);
+        hero.body.setTreatPlatformAsGround(false);
 
         if(hero.actionController) {
             auto const * controller = hero.actionController.get();
@@ -60,12 +58,10 @@ namespace hikari {
 
                 float heroFeetY = hero.getPosition().getY();
 
-                // Check if we're overlapping enough to bend over
-                if((heroFeetY - climbableRegion.getTop()) <= 8) {
-                    hero.changeAnimation("climbing-top");
-                } else {
-                    hero.changeAnimation("climbing");
-                }
+                // This determines if showing ladder-top (bent over) or normal
+                // animation.
+                hero.isTouchingLadderTop = (heroFeetY - climbableRegion.getTop()) <= 8;
+                hero.chooseAnimation();
 
                 if(controller->shouldMoveUp()) {
                     // Check if moving would eject the hero
@@ -82,8 +78,14 @@ namespace hikari {
                         hero.requestMobilityStateChange(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
                         return MobilityState::NEXT;
                     } else {
+                        // This condition prevents hero from continuing to 
+                        // "climb" when climbing into a wall on top. The hero
+                        // still "moves" but the animation looks like he's
+                        // stationary.
+                        if(!hero.body.isTopBlocked()) {
+                            hero.getAnimatedSprite()->unpause();
+                        }
                         hero.setVelocityY(-hero.climbVelocity.getY());
-                        hero.getAnimatedSprite()->unpause();
                     }
                 } else if(controller->shouldMoveDown()) {
                     hero.setVelocityY(hero.climbVelocity.getY());

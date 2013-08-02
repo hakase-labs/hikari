@@ -13,6 +13,11 @@ namespace hikari {
 
     class CollisionResolver;
 
+    /**
+     * Movable is a class that handles physical movement. It cane be used with
+     * a CollisionChecker to handle collision detection and response with the
+     * world.
+     */
     class Movable {
     public:
         typedef std::function<void (Movable&, CollisionInfo&)> CollisionCallback;
@@ -31,9 +36,13 @@ namespace hikari {
 
         bool onGroundNow;
         bool onGroundLastFrame;
+        bool topBlockedFlag;
+        bool rightBlockedFlag;
+        bool bottomBlockedFlag;
+        bool leftBlockedFlag;
         bool affectedByGravity;
         bool collidesWithWorld;
-        bool treatLadderTopAsGround;
+        bool treatPlatformAsGround;
         bool applyHorizontalVelocity;
         bool applyVerticalVelocity;
 
@@ -62,7 +71,28 @@ namespace hikari {
         Movable(const Movable& proto);
         virtual ~Movable();
 
-        const bool& isOnGround() const;
+        /**
+         * Indicates whether the Movable is on the ground right now or not.
+         *
+         * @return true if on ground, false otherwise
+         * @see Movable::setOnGround
+         */
+        bool isOnGround() const;
+
+        bool isTopBlocked() const;
+        bool isRightBlocked() const;
+        bool isBottomBlocked() const;
+        bool isLeftBlocked() const;
+
+        /**
+         * Gets the position of the Movable. The position may not be the same
+         * as the top-left corner depending on the Movable's bounding box
+         * origin.
+         *
+         * @return a vector containing the position
+         * @see Movable::setPosition
+         * @see Movable::getBoundingBox
+         */
         const Vector2<float>& getPosition() const;
         const Vector2<float>& getVelocity() const;
         const BoundingBoxF& getBoundingBox() const;
@@ -75,7 +105,7 @@ namespace hikari {
         void setVelocity(const float& x, const float& y);
         void setBoundingBox(const BoundingBoxF& boundingBox);
 
-        void setTreatLadderTopAsGround(const bool& treatAsGround); 
+        void setTreatPlatformAsGround(const bool& treatAsGround); 
         void setApplyHorizontalVelocity(const bool& applyVelocity);
         void setApplyVerticalVelocity(const bool& applyVelocity);
 

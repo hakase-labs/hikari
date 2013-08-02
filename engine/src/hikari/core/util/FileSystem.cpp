@@ -1,19 +1,28 @@
 #include "hikari/core/util/FileSystem.hpp"
 #include "hikari/core/util/PhysFS.hpp"
+
 #include <physfs/ifile_stream.hpp>
+#include <physfs/ofile_stream.hpp>
+
+#include <istream>
+#include <ostream>
 #include <sstream>
 
 namespace hikari {
 
-    std::unique_ptr<std::istream> FileSystem::openFile(const std::string & fileName, OpenMode::Type openMode) {
+    std::unique_ptr<std::istream> FileSystem::openFileRead(const std::string & fileName) {
         return std::unique_ptr<std::istream>(new IFileStream(fileName));
+    }
+
+    std::unique_ptr<std::ostream> FileSystem::openFileWrite(const std::string & fileName) {
+        return std::unique_ptr<std::ostream>(new OFileStream(fileName));
     }
 
     std::string FileSystem::readFileAsString(const std::string &fileName) {
         std::stringstream result;
 
         if(exists(fileName)) {
-            auto fs = openFile(fileName);
+            auto fs = openFileRead(fileName);
 
             result << fs->rdbuf();
         }
@@ -26,7 +35,7 @@ namespace hikari {
 
         if(exists(fileName)) {
             int length = 0;
-            auto fs = openFile(fileName);
+            auto fs = openFileRead(fileName);
 
             fs->seekg (0, std::ios::end);
             length = static_cast<int>(fs->tellg());
