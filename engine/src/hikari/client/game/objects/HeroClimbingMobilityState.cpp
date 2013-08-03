@@ -35,6 +35,7 @@ namespace hikari {
         hero.body.setTreatPlatformAsGround(false);
 
         hero.body.setPosition(climbableRegion.getLeft() + (climbableRegion.getWidth() / 2), hero.getPosition().getY());
+        hero.climbableRegion = climbableRegion;
     }
 
     void Hero::ClimbingMobilityState::exit() {
@@ -42,11 +43,21 @@ namespace hikari {
         hero.body.setGravitated(true);
         hero.body.setTreatPlatformAsGround(true);
         hero.getAnimatedSprite()->unpause();
+        hero.climbableRegion = BoundingBox<float>(0, 0, 0, 0);
     }
 
     Hero::MobilityState::StateChangeAction Hero::ClimbingMobilityState::update(const float & dt) {
         hero.body.setGravitated(false);
         hero.body.setTreatPlatformAsGround(false);
+
+        // If something causes Hero to no longer be on the ladder -- like a
+        // transition -- for example, then we should eject and fall.
+        if(!hero.getBoundingBox().intersects(climbableRegion)) {
+            hero.isClimbing = false;
+
+            hero.requestMobilityStateChange(std::unique_ptr<MobilityState>(new AirbornMobilityState(hero)));
+            return MobilityState::NEXT;
+        }
 
         if(hero.actionController) {
             auto const * controller = hero.actionController.get();
