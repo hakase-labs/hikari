@@ -40,8 +40,8 @@ namespace hikari {
         , isInvincible(false)
         , isUnderWater(false)
         , wasUnderWaterLastFrame(false)
-        , actionController(nullptr)
         , climbableRegion(0, 0, 0, 0)
+        , actionController(nullptr)
         , mobilityState(nullptr)
         , nextMobilityState(nullptr)
         , temporaryMobilityState(nullptr)
@@ -550,7 +550,7 @@ namespace hikari {
         if(hero.actionController) {
             auto const * controller = hero.actionController.get();
 
-            if(controller->shouldShootWeapon() && hero.canFireWeapon()) {
+            if(controller->shouldShootWeapon() && hero.canFireWeapon() && !hero.isSliding) {
                 hero.requestShootingStateChange(std::unique_ptr<ShootingState>(new IsShootingState(hero)));
                 return ShootingState::NEXT;
             }
