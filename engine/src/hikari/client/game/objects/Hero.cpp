@@ -38,6 +38,8 @@ namespace hikari {
         , isMorphing(false)
         , isStunned(false)
         , isInvincible(false)
+        , isUnderWater(false)
+        , wasUnderWaterLastFrame(false)
         , actionController(nullptr)
         , climbableRegion(0, 0, 0, 0)
         , mobilityState(nullptr)
@@ -50,7 +52,6 @@ namespace hikari {
 
         body.setGravitated(true);
         body.setHasWorldCollision(true);
-        body.setGravityApplicationThreshold(3);
 
         body.setCollisionCallback(std::bind(&Entity::handleCollision, this, std::placeholders::_1, std::placeholders::_2));
         body.setLandingCallback([this](Movable& movable, CollisionInfo& collisionInfo) {
@@ -112,6 +113,18 @@ namespace hikari {
     }
 
     void Hero::update(float dt) {
+        if(wasUnderWaterLastFrame != isUnderWater) {
+            if(wasUnderWaterLastFrame) {
+                HIKARI_LOG(debug4) << "I'm not in water anymore!";
+                body.setGravityApplicationThreshold(1);
+            } else {
+                HIKARI_LOG(debug4) << "I'm jumping in the water NOW!";
+                body.setGravityApplicationThreshold(3);
+            }
+        }
+
+        wasUnderWaterLastFrame = isUnderWater;
+
         if(const auto & room = getRoom()) {
             const int gridSize = room->getGridSize();
 
@@ -151,6 +164,19 @@ namespace hikari {
                 if(((topLeftTile != Room::NO_TILE) && TileAttribute::hasAttribute(topLeftTile, TileAttribute::SOLID))
                     || ((topRightTile != Room::NO_TILE) && TileAttribute::hasAttribute(topRightTile, TileAttribute::SOLID))) {
                     isInTunnel = true;
+                }
+            }
+
+            // Check if we're under water or starting to enter water
+            {
+                int bodyPositionTile = room->getAttributeAt(
+                    static_cast<int>(getPosition().getX()) / gridSize,
+                    static_cast<int>(getPosition().getY() - 8) / gridSize);
+
+                if((bodyPositionTile != Room::NO_TILE) && TileAttribute::hasAttribute(bodyPositionTile, TileAttribute::WATER)) {
+                    isUnderWater = true;
+                } else {
+                    isUnderWater = false;
                 }
             }
 

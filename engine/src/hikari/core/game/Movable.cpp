@@ -356,7 +356,7 @@ namespace hikari {
             } else {
                 gravityApplicationCounter++;
 
-                if(gravityApplicationCounter == getGravityApplicationThreshold()) {
+                if(gravityApplicationCounter >= getGravityApplicationThreshold()) {
                     velocity.setY(velocity.getY() + getGravity());
                     gravityApplicationCounter = 0;
                 }

@@ -43,6 +43,9 @@ namespace hikari {
         bool isBlinking;
         bool isVisible;
 
+        bool isUnderWater;
+        bool wasUnderWaterLastFrame;
+
 #ifdef HIKARI_DEBUG_HERO_PHYSICS
         int countAscendingFrames;
         int countDecendingFrames;
