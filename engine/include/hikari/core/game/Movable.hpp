@@ -29,8 +29,8 @@ namespace hikari {
         static float minXVelocity;
 
         static float gravity;
-        static int gravityApplicationCounter;   // Used to count how many frames since last gavity application
-        static int gravityApplicationThreshold; // Used to determine when to apply gravity
+        unsigned int gravityApplicationCounter;   // Used to count how many frames since last gavity application
+        unsigned int gravityApplicationThreshold; // Used to determine when to apply gravity
 
         static std::shared_ptr<CollisionResolver> collisionResolver;
 
@@ -121,6 +121,9 @@ namespace hikari {
         void setCollisionCallback(const CollisionCallback& callback);
 
         virtual void update(float dt);
+
+        unsigned int getGravityApplicationThreshold() const;
+        void setGravityApplicationThreshold(unsigned int threshold);
 
         static std::shared_ptr<CollisionResolver> getCollisionResolver();
         static void setCollisionResolver(std::shared_ptr<CollisionResolver> resolver);

@@ -62,7 +62,7 @@ namespace hikari {
     this->actions = actions;
   }
   
-  std::unique_ptr<Shot> Weapon::fire(GameWorld & world, WeaponFireEventData & eventData) const {
+  Shot Weapon::fire(GameWorld & world, WeaponFireEventData & eventData) const {
     HIKARI_LOG(debug4) << "Weapon::fire executed. name=" << getName();
     
     std::list<std::weak_ptr<GameObject>> spawnedObjects;
@@ -73,6 +73,6 @@ namespace hikari {
       }
     });
 
-    return std::unique_ptr<Shot>(new Shot(spawnedObjects));
+    return Shot(spawnedObjects);
   }
 } // hikari

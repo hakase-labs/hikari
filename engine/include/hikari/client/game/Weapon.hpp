@@ -13,7 +13,9 @@ namespace hikari {
   class Shot;
 
   /**
-   * A Weapon describes the properties of a "usable" weapon.
+   * A Weapon describes the properties of a "usable" weapon. Weapons are
+   * stateless -- they can only be used to fire a weapon. Objects which
+   * use weapons must track their effects themself.
    */
   class Weapon {
   private:
@@ -47,7 +49,7 @@ namespace hikari {
     const std::string & getUsageSound() const;
 
     void setActions(const std::vector<std::shared_ptr<WeaponAction>> & actions);
-    virtual std::unique_ptr<Shot> fire(GameWorld & world, WeaponFireEventData & eventData) const;
+    virtual Shot fire(GameWorld & world, WeaponFireEventData & eventData) const;
   };
 
 } // hikari

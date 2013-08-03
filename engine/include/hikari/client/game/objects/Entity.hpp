@@ -55,7 +55,7 @@ namespace hikari {
 
         Vector2<float> actionSpot; // An offset from the position where actions "take place"
 
-        std::list<std::unique_ptr<Shot>> activeShots;
+        std::list<Shot> activeShots;
 
         void move(const Vector2<float>& delta);
         void move(const float& dx, const float& dy);
@@ -66,6 +66,20 @@ namespace hikari {
         //const std::shared_ptr<Room> & getRoom() const;
 
         virtual void renderEntity(sf::RenderTarget &target);
+
+        /**
+         * Removes any non-active shots that are currently being observed by the
+         * Entity. This should be called by an Entity at least once every update.
+         */
+        void removeNonActiveShots();
+
+        /**
+         * Returns whether the Entity can fire its currently assigned weapon or 
+         * not.
+         * 
+         * @return true if weapon can be fired, false otherwise
+         */
+        bool canFireWeapon() const;
 
     public:
         static void enableDebug(const bool &debug);
@@ -107,6 +121,21 @@ namespace hikari {
 
         void setVelocityY(const float &vy);
         const float getVelocityY() const;
+
+        /**
+         * Causes the Entity to observe a Shot. Entities can observe many shots
+         * at one time.
+         * 
+         * @param shot the Shot to observe
+         */
+        void observeShot(const Shot & shot);
+
+        /**
+         * Returns how many active shots the Entity is observing.
+         * 
+         * @return count onf active shots
+         */
+        unsigned int getActiveShotCount() const;
 
         /**
          * Sets whether this Entity should be affected by gravity or not. When

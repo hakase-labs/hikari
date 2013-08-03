@@ -38,6 +38,9 @@ namespace hikari {
         , isMorphing(false)
         , isStunned(false)
         , isInvincible(false)
+        , isUnderWater(false)
+        , wasUnderWaterLastFrame(false)
+        , climbableRegion(0, 0, 0, 0)
         , actionController(nullptr)
         , mobilityState(nullptr)
         , nextMobilityState(nullptr)
@@ -110,6 +113,18 @@ namespace hikari {
     }
 
     void Hero::update(float dt) {
+        if(wasUnderWaterLastFrame != isUnderWater) {
+            if(wasUnderWaterLastFrame) {
+                HIKARI_LOG(debug4) << "I'm not in water anymore!";
+                body.setGravityApplicationThreshold(1);
+            } else {
+                HIKARI_LOG(debug4) << "I'm jumping in the water NOW!";
+                body.setGravityApplicationThreshold(3);
+            }
+        }
+
+        wasUnderWaterLastFrame = isUnderWater;
+
         if(const auto & room = getRoom()) {
             const int gridSize = room->getGridSize();
 
@@ -149,6 +164,19 @@ namespace hikari {
                 if(((topLeftTile != Room::NO_TILE) && TileAttribute::hasAttribute(topLeftTile, TileAttribute::SOLID))
                     || ((topRightTile != Room::NO_TILE) && TileAttribute::hasAttribute(topRightTile, TileAttribute::SOLID))) {
                     isInTunnel = true;
+                }
+            }
+
+            // Check if we're under water or starting to enter water
+            {
+                int bodyPositionTile = room->getAttributeAt(
+                    static_cast<int>(getPosition().getX()) / gridSize,
+                    static_cast<int>(getPosition().getY() - 8) / gridSize);
+
+                if((bodyPositionTile != Room::NO_TILE) && TileAttribute::hasAttribute(bodyPositionTile, TileAttribute::WATER)) {
+                    isUnderWater = true;
+                } else {
+                    isUnderWater = false;
                 }
             }
 
@@ -269,6 +297,12 @@ namespace hikari {
                         }
                     }
                 }
+            }
+        } else {
+            // It's possible that we lose the ladder after a transition
+            // so this is accounted for here.
+            if(climbableRegion != this->climbableRegion) {
+                changeMobilityState(std::unique_ptr<MobilityState>(new ClimbingMobilityState(*this, climbableRegion)));
             }
         }
     }
@@ -407,17 +441,12 @@ namespace hikari {
             isAirborn = false;
         }
 
-        // if(body.isLeftBlocked()) {
-        //     HIKARI_LOG(debug4) << "Running into the wall on the left!";
-        // } else if(body.isRightBlocked()) {
-        //     HIKARI_LOG(debug4) << "Running into the wall on the right!";
-        // }
-
         //
         // Check if we hit spikes; if we did then we're dead!
         //
         if(isVulnerable()) {
-            if(TileAttribute::hasAttribute(info.tileType, TileAttribute::SPIKE)) {
+            if(TileAttribute::hasAttribute(info.tileType, TileAttribute::SPIKE)
+                || TileAttribute::hasAttribute(info.tileType, TileAttribute::ABYSS)) {
                 kill();
             }
         }
@@ -521,7 +550,7 @@ namespace hikari {
         if(hero.actionController) {
             auto const * controller = hero.actionController.get();
 
-            if(controller->shouldShootWeapon()) {
+            if(controller->shouldShootWeapon() && hero.canFireWeapon() && !hero.isSliding) {
                 hero.requestShootingStateChange(std::unique_ptr<ShootingState>(new IsShootingState(hero)));
                 return ShootingState::NEXT;
             }

@@ -43,6 +43,9 @@ namespace hikari {
         bool isBlinking;
         bool isVisible;
 
+        bool isUnderWater;
+        bool wasUnderWaterLastFrame;
+
 #ifdef HIKARI_DEBUG_HERO_PHYSICS
         int countAscendingFrames;
         int countDecendingFrames;
@@ -60,6 +63,7 @@ namespace hikari {
         Vector2<float> suddenFallVelocity;
         Vector2<float> slideVelocity;
         Vector2<float> hurtVelocity;
+        BoundingBox<float> climbableRegion;
 
         std::shared_ptr<HeroActionController> actionController;
 

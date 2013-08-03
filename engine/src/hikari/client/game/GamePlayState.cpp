@@ -92,6 +92,7 @@ namespace hikari {
         , scriptEnv(services.locateService<SquirrelService>(Services::SCRIPTING))
         , collisionResolver(new TileMapCollisionResolver())
         , currentMap(nullptr)
+        , currentTileset(nullptr)
         , currentRoom(nullptr)
         , hero(nullptr)
         , mapRenderer(new MapRenderer(nullptr, nullptr))
@@ -306,6 +307,10 @@ namespace hikari {
             }
         }
 
+        if(currentTileset) {
+            currentTileset->update(dt);
+        }
+
         return gotoNextState;
     }
 
@@ -320,7 +325,9 @@ namespace hikari {
         Movable::setGravity(0.25f);
 
         // Determine which stage we're on and set that to the current level...
-        currentMap = maps.at("map-test4.json");
+        if((currentMap = maps.at("map-test5.json"))) {
+            currentTileset = currentMap->getTileset();
+        }
 
         startStage();
     }
@@ -800,7 +807,29 @@ namespace hikari {
         if(auto weapons = weaponTable.lock()) {
             auto weaponWeak = weapons->getWeaponById(eventData->getWeaponId());
             if(auto weapon = weaponWeak.lock()) {
-                std::unique_ptr<Shot> shot = weapon->fire(world, *eventData.get());
+                Shot shot = weapon->fire(world, *eventData.get());
+
+                // This is dirty and I don't like it, so I should design a better
+                // way to accomplish this part.
+                if(eventData->getShooterId() == hero->getId()) {
+                    hero->observeShot(shot);
+
+                    HIKARI_LOG(debug4) << "Hero's shot count: " << hero->getActiveShotCount();
+                } else {
+                    // It could be an enemy...
+                    // So we need to somehow get the enemy by ID and make it 
+                    // observe the shot. It would be nice to do this without
+                    // casting.
+                    // TODO: CLEAN ME / CASTING
+                    std::weak_ptr<GameObject> possibleEnemyPtr = world.getObjectById(eventData->getShooterId());
+
+                    if(auto enemyGoPtr = possibleEnemyPtr.lock()) {
+                        if(std::shared_ptr<Enemy> enemy = std::static_pointer_cast<Enemy>(enemyGoPtr)) {
+                            enemy->observeShot(shot);
+                        }
+                    }
+                }
+                
 
                 if(auto sound = audioService.lock()) {
                     sound->playSample(21);
