@@ -50,6 +50,7 @@ namespace hikari {
 
         body.setGravitated(true);
         body.setHasWorldCollision(true);
+        body.setGravityApplicationThreshold(3);
 
         body.setCollisionCallback(std::bind(&Entity::handleCollision, this, std::placeholders::_1, std::placeholders::_2));
         body.setLandingCallback([this](Movable& movable, CollisionInfo& collisionInfo) {

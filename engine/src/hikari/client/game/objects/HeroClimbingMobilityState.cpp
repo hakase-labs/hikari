@@ -50,7 +50,7 @@ namespace hikari {
         hero.body.setGravitated(false);
         hero.body.setTreatPlatformAsGround(false);
 
-        // If something causes Her to no longer be on the ladder, like a
+        // If something causes Hero to no longer be on the ladder -- like a
         // transition -- for example, then we should eject and fall.
         if(!hero.getBoundingBox().intersects(climbableRegion)) {
             hero.isClimbing = false;

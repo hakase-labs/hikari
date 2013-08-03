@@ -21,8 +21,8 @@ namespace hikari {
     /**
      * Adds a weapon to the table and returns the assigned weapon ID.
      *
-     * @param  weapon [description]
-     * @return        [description]
+     * @param  weapon the Weapon instance to add
+     * @return        integer ID of the added Weapon
      */
     int addWeapon(const std::shared_ptr<Weapon> & weapon);
 

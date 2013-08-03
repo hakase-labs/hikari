@@ -13,7 +13,9 @@ namespace hikari {
   class Shot;
 
   /**
-   * A Weapon describes the properties of a "usable" weapon.
+   * A Weapon describes the properties of a "usable" weapon. Weapons are
+   * stateless -- they can only be used to fire a weapon. Objects which
+   * use weapons must track their effects themself.
    */
   class Weapon {
   private:

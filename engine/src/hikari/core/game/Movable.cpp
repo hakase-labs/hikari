@@ -14,8 +14,8 @@ namespace hikari {
 
     std::shared_ptr<CollisionResolver> Movable::collisionResolver = nullptr;
     float Movable::gravity = 0.0f;
-    int Movable::gravityApplicationCounter = 0;
-    int Movable::gravityApplicationThreshold = 1;
+    // int Movable::gravityApplicationCounter = 0;
+    // int Movable::gravityApplicationThreshold = 1;
 
     void Movable::setGravity(const float& gravity) {
         Movable::gravity = gravity;
@@ -26,7 +26,9 @@ namespace hikari {
     }
 
     Movable::Movable()
-        : onGroundNow(false)
+        : gravityApplicationCounter(0u)
+        , gravityApplicationThreshold(1u)
+        , onGroundNow(false)
         , onGroundLastFrame(false)
         , topBlockedFlag(false)
         , rightBlockedFlag(false)
@@ -47,7 +49,9 @@ namespace hikari {
     }
 
     Movable::Movable(float width, float height)
-        : onGroundNow(false)
+        : gravityApplicationCounter(0u)
+        , gravityApplicationThreshold(1u)
+        , onGroundNow(false)
         , onGroundLastFrame(false)
         , topBlockedFlag(false)
         , rightBlockedFlag(false)
@@ -68,7 +72,9 @@ namespace hikari {
     }
 
     Movable::Movable(const Movable& proto) 
-        : onGroundNow(proto.onGroundNow)
+        : gravityApplicationCounter(proto.gravityApplicationCounter)
+        , gravityApplicationThreshold(proto.gravityApplicationThreshold)
+        , onGroundNow(proto.onGroundNow)
         , onGroundLastFrame(proto.onGroundLastFrame)
         , topBlockedFlag(proto.topBlockedFlag)
         , rightBlockedFlag(proto.rightBlockedFlag)
@@ -344,7 +350,18 @@ namespace hikari {
 
     void Movable::update(float dt) {
         if(isGravitated()) {
-            velocity.setY(velocity.getY() + getGravity());
+            if(isOnGround()) {
+                velocity.setY(velocity.getY() + getGravity());
+                gravityApplicationCounter = 0;
+            } else {
+                gravityApplicationCounter++;
+
+                if(gravityApplicationCounter == getGravityApplicationThreshold()) {
+                    velocity.setY(velocity.getY() + getGravity());
+                    gravityApplicationCounter = 0;
+                }
+            }
+
             velocity.setY(math::clamp(velocity.getY(), minYVelocity, maxYVelocity));
         }
 
@@ -356,6 +373,14 @@ namespace hikari {
         setPosition(
             getPosition().getX() + (applyHorizontalVelocity ? velocity.getX() : 0)/* * dt */, 
             getPosition().getY() + (applyVerticalVelocity   ? velocity.getY() : 0)/* * dt */);
+    }
+
+    unsigned int Movable::getGravityApplicationThreshold() const {
+        return gravityApplicationThreshold;
+    }
+
+    void Movable::setGravityApplicationThreshold(unsigned int threshold) {
+        gravityApplicationThreshold = threshold;
     }
 
 } // hikari
