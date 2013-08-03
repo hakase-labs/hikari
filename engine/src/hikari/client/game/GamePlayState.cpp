@@ -92,6 +92,7 @@ namespace hikari {
         , scriptEnv(services.locateService<SquirrelService>(Services::SCRIPTING))
         , collisionResolver(new TileMapCollisionResolver())
         , currentMap(nullptr)
+        , currentTileset(nullptr)
         , currentRoom(nullptr)
         , hero(nullptr)
         , mapRenderer(new MapRenderer(nullptr, nullptr))
@@ -306,6 +307,10 @@ namespace hikari {
             }
         }
 
+        if(currentTileset) {
+            currentTileset->update(dt);
+        }
+
         return gotoNextState;
     }
 
@@ -320,7 +325,9 @@ namespace hikari {
         Movable::setGravity(0.25f);
 
         // Determine which stage we're on and set that to the current level...
-        currentMap = maps.at("map-test2.json");
+        if(currentMap = maps.at("map-pearl.json")) {
+            currentTileset = currentMap->getTileset();
+        }
 
         startStage();
     }

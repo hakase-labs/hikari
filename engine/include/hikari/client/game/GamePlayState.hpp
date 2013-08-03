@@ -97,6 +97,7 @@ namespace hikari {
         std::shared_ptr<SquirrelService> scriptEnv;
         std::shared_ptr<TileMapCollisionResolver> collisionResolver;
         std::shared_ptr<Map> currentMap;
+        std::shared_ptr<Tileset> currentTileset;
         std::shared_ptr<Room> currentRoom;
         std::shared_ptr<Hero> hero;
         std::unique_ptr<MapRenderer> mapRenderer;
