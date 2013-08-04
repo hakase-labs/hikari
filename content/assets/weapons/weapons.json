@@ -31,7 +31,7 @@
                 "direction": "inherit",
                 "motion": {
                     "type": "Linear",
-                    "velocity": [4.0, 0.5]
+                    "velocity": [3.825, 0.5]
                 }
             },
             { 
@@ -49,7 +49,7 @@
                 "direction": "inherit",
                 "motion": {
                     "type": "Linear",
-                    "velocity": [4.0, -0.5]
+                    "velocity": [3.825, -0.5]
                 }
             }
         ]
@@ -81,6 +81,7 @@
                 "direction": "inherit",
                 "motion": {
                     "type": "Linear",
+                    "applyYVelocity": false,
                     "velocity": [2.0, 0.0]
                 }
             }
