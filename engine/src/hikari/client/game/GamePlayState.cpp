@@ -325,7 +325,7 @@ namespace hikari {
         Movable::setGravity(0.25f);
 
         // Determine which stage we're on and set that to the current level...
-        if(currentMap = maps.at("map-pearl.json")) {
+        if((currentMap = maps.at("map-test5.json"))) {
             currentTileset = currentMap->getTileset();
         }
 
