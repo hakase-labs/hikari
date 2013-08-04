@@ -120,10 +120,11 @@ namespace hikari {
             } else {
                 HIKARI_LOG(debug4) << "I'm jumping in the water NOW!";
                 body.setGravityApplicationThreshold(3);
-            }
 
-            if(auto events = this->getEventManager().lock()) {
-                events->triggerEvent(EventDataPtr(new EntityStateChangeEventData(getId(), "water")));
+                // Only emit event when plunging in to a body of water.
+                if(auto events = this->getEventManager().lock()) {
+                    events->triggerEvent(EventDataPtr(new EntityStateChangeEventData(getId(), "water")));
+                }
             }
         }
 
