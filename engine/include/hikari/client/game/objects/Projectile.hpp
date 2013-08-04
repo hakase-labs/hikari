@@ -27,6 +27,8 @@ namespace hikari {
 
         virtual void handleCollision(Movable& body, CollisionInfo& info);
 
+        virtual void onDeath();
+
         void setMotion(const std::shared_ptr<Motion> motion);
         const std::shared_ptr<Motion>& getMotion() const;
 

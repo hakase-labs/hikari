@@ -10,15 +10,9 @@
 
 namespace hikari {
 
-    const float CollectableItem::DEFAULT_AGE_IN_M_SECONDS = 0.0f;
-    const float CollectableItem::DEFAULT_MAXIMUM_AGE_IN_M_SECONDS = 10.0f;
-
     CollectableItem::CollectableItem(int id, std::shared_ptr<Room> room, std::shared_ptr<Effect> effect)
         : Entity(id, room)
         , effect(effect)
-        , ageless(false)
-        , age(DEFAULT_AGE_IN_M_SECONDS)
-        , maximumAge(DEFAULT_MAXIMUM_AGE_IN_M_SECONDS)
     {
         body.setGravitated(true);
         body.setHasWorldCollision(true);
@@ -27,9 +21,6 @@ namespace hikari {
     CollectableItem::CollectableItem(const CollectableItem &proto)
         : Entity(proto)
         , effect(proto.effect->clone())
-        , ageless(proto.ageless)
-        , age(0)
-        , maximumAge(proto.maximumAge)
     {
         setActive(false);
     }
@@ -40,30 +31,6 @@ namespace hikari {
 
     std::unique_ptr<CollectableItem> CollectableItem::clone() const {
         return std::unique_ptr<CollectableItem>(new CollectableItem(*this));
-    }
-
-    float CollectableItem::getAge() const {
-        return age;
-    }
-
-    void CollectableItem::setAge(float newAge) {
-        age = newAge;
-    }
-
-    float CollectableItem::getMaximumAge() const {
-        return maximumAge;
-    }
-
-    void CollectableItem::setMaximumAge(float newMaximumAge) {
-        maximumAge = newMaximumAge;
-    }
-
-    bool CollectableItem::isAgeless() const {
-        return ageless;
-    }
-
-    void CollectableItem::setAgeless(bool isAgeless) {
-        ageless = isAgeless;
     }
 
     void CollectableItem::setEffect(std::shared_ptr<Effect> newEffect) {
@@ -97,14 +64,6 @@ namespace hikari {
     void CollectableItem::update(float dt) {
         if(isActive()) {
             Entity::update(dt);
-
-            if(!isAgeless()) {
-                setAge(getAge() + dt);
-
-                if(getAge() >= getMaximumAge()) {
-                    onDeath();
-                }
-            }
         }
     }
 
@@ -114,8 +73,6 @@ namespace hikari {
 
     void CollectableItem::reset() {
         Entity::reset();
-        setActive(false);
-        setAge(DEFAULT_AGE_IN_M_SECONDS);
     }
 
 } // hikari

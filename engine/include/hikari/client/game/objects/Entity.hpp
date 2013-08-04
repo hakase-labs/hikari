@@ -33,6 +33,8 @@ namespace hikari {
     class Entity : public GameObject {
     private:
         static bool debug;
+        static const float DEFAULT_AGE_IN_M_SECONDS;
+        static const float DEFAULT_MAXIMUM_AGE_IN_M_SECONDS;
 
         std::unique_ptr<AnimatedSprite> animatedSprite;
         std::weak_ptr<EventManager> eventManager;
@@ -52,6 +54,10 @@ namespace hikari {
 
         bool obstacleFlag; // Does this object act like an obstacle?
         bool shieldFlag;   // Does this object deflect projectiles right now?
+        bool agelessFlag;  // Does this object not experience aging?
+        
+        float age;
+        float maximumAge;
 
         Vector2<float> actionSpot; // An offset from the position where actions "take place"
 
@@ -80,6 +86,8 @@ namespace hikari {
          * @return true if weapon can be fired, false otherwise
          */
         bool canFireWeapon() const;
+
+        void setAge(float newAge);
 
     public:
         static void enableDebug(const bool &debug);
@@ -121,6 +129,13 @@ namespace hikari {
 
         void setVelocityY(const float &vy);
         const float getVelocityY() const;
+
+        float getAge() const;
+        float getMaximumAge() const;
+        void setMaximumAge(float newMaximumAge);
+
+        bool isAgeless() const;
+        void setAgeless(bool isAgeless);
 
         /**
          * Causes the Entity to observe a Shot. Entities can observe many shots

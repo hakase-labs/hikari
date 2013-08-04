@@ -325,7 +325,7 @@ namespace hikari {
         Movable::setGravity(0.25f);
 
         // Determine which stage we're on and set that to the current level...
-        if((currentMap = maps.at("map-pearl.json"))) {
+        if((currentMap = maps.at("map-test2.json"))) {
             currentTileset = currentMap->getTileset();
         }
 
@@ -793,6 +793,14 @@ namespace hikari {
 
             if(itemPtr) {
                 world.queueObjectRemoval(itemPtr);
+            }
+        } else if(eventData->getEntityType() == EntityDeathEventData::Projectile) {
+            HIKARI_LOG(debug2) << "A projectile died! id = " << eventData->getEntityId();
+
+            auto projectilePtr = std::dynamic_pointer_cast<Projectile>(world.getObjectById(eventData->getEntityId()).lock());
+
+            if(projectilePtr) {
+                world.queueObjectRemoval(projectilePtr);
             }
         }
     }

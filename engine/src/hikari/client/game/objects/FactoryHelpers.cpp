@@ -371,6 +371,8 @@ namespace FactoryHelpers {
                                         const auto animationSet      = templateObject["animationSet"].asString();
                                         const auto animationName     = templateObject["animationName"].asString();
                                         const auto boundingBoxObject = templateObject["boundingBox"];
+                                        const auto ageless           = templateObject.get("ageless", true).asBool(); 
+                                        const auto maximumAge        = static_cast<float>(templateObject.get("maximumAge", 0.0f).asDouble());  
                                         
                                         hikari::BoundingBoxF boundingBox(
                                             0.0f,
@@ -393,6 +395,8 @@ namespace FactoryHelpers {
                                         instance->changeAnimation(animationName);
                                         instance->setBoundingBox(boundingBox);
                                         instance->setDamageId(damageId);
+                                        instance->setAgeless(ageless);
+                                        instance->setMaximumAge(maximumAge);
 
                                         factoryPtr->registerPrototype(name, instance);
                                     }
