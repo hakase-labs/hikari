@@ -121,6 +121,10 @@ namespace hikari {
                 HIKARI_LOG(debug4) << "I'm jumping in the water NOW!";
                 body.setGravityApplicationThreshold(3);
             }
+
+            if(auto events = this->getEventManager().lock()) {
+                events->triggerEvent(EventDataPtr(new EntityStateChangeEventData(getId(), "water")));
+            }
         }
 
         wasUnderWaterLastFrame = isUnderWater;

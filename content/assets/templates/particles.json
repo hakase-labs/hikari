@@ -37,5 +37,18 @@
         },
         "ageless": false,
         "maximumAge": 0.8667
+    },
+    {
+        "name": "Medium Splash",
+        "animationSet": "assets/animations/particles.json",
+        "animationName": "medium-splash",
+        "boundingBox": {
+            "width": 16,
+            "height": 16,
+            "originX": 8,
+            "originY": 8
+        },
+        "ageless": false,
+        "maximumAge": 0.2334
     }
 ]
