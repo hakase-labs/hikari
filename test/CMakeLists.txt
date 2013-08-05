@@ -11,6 +11,8 @@ set( INCLUDE_DIRS
 set( TEST_SOURCE_FILES
     src/test/Main.cpp
     src/test/TestVector2.cpp
+    src/test/TestPoint2D.cpp
+    src/test/TestRectangle2D.cpp
 )
 
 include_directories( ${INCLUDE_DIRS} )
