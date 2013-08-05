@@ -198,7 +198,6 @@ set( ENGINE_SOURCE_FILES
     src/hikari/core/util/HashedString.cpp
     src/hikari/core/util/Log.cpp
     src/hikari/core/util/Timer.cpp
-    src/hikari/test/core/geom/Vector2DTest.cpp
     src/hikari/client/audio/AudioService.cpp
     src/hikari/client/game/GameWorld.cpp
     src/hikari/client/game/objects/Hero.cpp
