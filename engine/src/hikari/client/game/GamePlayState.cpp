@@ -466,12 +466,11 @@ namespace hikari {
 
         if(bonusChancesTable.size() > 0) {
             int lowerBound = 0;
-            int upperBound = 0;
 
             for(auto it = std::begin(bonusChancesTable), end = std::end(bonusChancesTable); it != end; it++) {
                 const auto & chance = *it;
 
-                upperBound = lowerBound + chance.first;
+                int upperBound = lowerBound + chance.first;
 
                 if(roll >= lowerBound && roll < upperBound) {
                     bonus = world.spawnCollectableItem(chance.second);
@@ -1100,9 +1099,10 @@ namespace hikari {
     GamePlayState::SubState::StateChangeAction GamePlayState::TeleportSubState::update(const float & dt) {
         auto& hero = gamePlayState.hero;
         auto& heroPosition = hero->getPosition();
-        const float verticalTeleportSpeedPerFrame = 16.0f;
 
         if(heroPosition.getY() < targetPoint.getY()) {
+            const float verticalTeleportSpeedPerFrame = 16.0f;
+
             // Make sure we don't teleport too far.
             float deltaY = std::min(verticalTeleportSpeedPerFrame,
                                 std::abs(targetPoint.getY() - heroPosition.getY()));
@@ -1457,7 +1457,6 @@ namespace hikari {
                 HIKARI_LOG(debug) << "Transitioning from room " << currentRoom->getId() << " to room " << transition.getToRegion();
                 gamePlayState.requestSubStateChange(std::unique_ptr<SubState>(new TransitionSubState(gamePlayState, transition)));
                 return SubState::NEXT;
-                break;
             }
         }
 

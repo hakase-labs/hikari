@@ -66,7 +66,7 @@ namespace gui {
             // Render the last n history
             std::vector<std::string>::const_reverse_iterator itr = commandHistory.rbegin();
             std::vector<std::string>::const_reverse_iterator stop = itr + std::min(static_cast<int>(commandHistory.size()), 12);
-            for(int line = 2; itr < stop; itr++, line++) {
+            for(int line = 2; itr < stop; ++itr, ++line) {
                 font->renderText(target, *itr, 1, static_cast<int>(background.getPosition().y) + 100 - font->getGlyphHeight() * line);
             }
 

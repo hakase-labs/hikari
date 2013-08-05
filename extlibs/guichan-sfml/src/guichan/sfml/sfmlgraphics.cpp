@@ -161,8 +161,6 @@ namespace gcn
             throw GCN_EXCEPTION("Clip stack is empty, perhaps you called a draw function outside of _beginDraw() and _endDraw()?");
         }
 
-        const ClipRectangle& top = mClipStack.top();
-
         int x1 = rectangle.x;
         int x2 = rectangle.x + rectangle.width - 1;
         int y1 = rectangle.y;
