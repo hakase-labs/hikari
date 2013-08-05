@@ -371,6 +371,8 @@ namespace FactoryHelpers {
                                         const auto animationSet      = templateObject["animationSet"].asString();
                                         const auto animationName     = templateObject["animationName"].asString();
                                         const auto boundingBoxObject = templateObject["boundingBox"];
+                                        const auto ageless           = templateObject.get("ageless", true).asBool(); 
+                                        const auto maximumAge        = static_cast<float>(templateObject.get("maximumAge", 0.0f).asDouble());  
                                         
                                         hikari::BoundingBoxF boundingBox(
                                             0.0f,
@@ -393,6 +395,8 @@ namespace FactoryHelpers {
                                         instance->changeAnimation(animationName);
                                         instance->setBoundingBox(boundingBox);
                                         instance->setDamageId(damageId);
+                                        instance->setAgeless(ageless);
+                                        instance->setMaximumAge(maximumAge);
 
                                         factoryPtr->registerPrototype(name, instance);
                                     }
@@ -452,7 +456,14 @@ namespace FactoryHelpers {
                         const float vX = static_cast<float>(velocity.get(0u, 0.0).asDouble());
                         const float vY = static_cast<float>(velocity.get(1u, 0.0).asDouble());
 
-                        weaponMotion = std::make_shared<LinearMotion>(Vector2<float>(vX, vY));
+                        const bool applyXVelocity = motion.get("applyXVelocity", true).asBool();
+                        const bool applyYVelocity = motion.get("applyYVelocity", true).asBool();
+
+                        auto linearMotion = std::make_shared<LinearMotion>(Vector2<float>(vX, vY));
+                        linearMotion->setApplyHorizontalVelocity(applyXVelocity);
+                        linearMotion->setApplyVerticalVelocity(applyYVelocity);
+
+                        weaponMotion = linearMotion;
                     }
                 }
 

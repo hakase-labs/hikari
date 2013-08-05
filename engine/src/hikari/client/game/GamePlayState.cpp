@@ -325,7 +325,7 @@ namespace hikari {
         Movable::setGravity(0.25f);
 
         // Determine which stage we're on and set that to the current level...
-        if((currentMap = maps.at("map-test5.json"))) {
+        if((currentMap = maps.at("map-pearl.json"))) {
             currentTileset = currentMap->getTileset();
         }
 
@@ -794,6 +794,14 @@ namespace hikari {
             if(itemPtr) {
                 world.queueObjectRemoval(itemPtr);
             }
+        } else if(eventData->getEntityType() == EntityDeathEventData::Projectile) {
+            HIKARI_LOG(debug2) << "A projectile died! id = " << eventData->getEntityId();
+
+            auto projectilePtr = std::dynamic_pointer_cast<Projectile>(world.getObjectById(eventData->getEntityId()).lock());
+
+            if(projectilePtr) {
+                world.queueObjectRemoval(projectilePtr);
+            }
         }
     }
 
@@ -845,6 +853,24 @@ namespace hikari {
         auto eventData = std::static_pointer_cast<EntityStateChangeEventData>(evt);
 
         if(eventData->getEntityId() == hero->getId()) {
+            if(eventData->getStateName() == "water") {
+                // if(auto sound = audioService.lock()) {
+                //     sound->playSample(19);
+                // }
+                if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Splash")) {
+                    clone->setPosition(Vector2<float>(
+                        hero->getPosition().getX(),
+                        static_cast<float>(static_cast<int>(hero->getPosition().getY()) / 16) * 16)
+                    );
+                    clone->setActive(true);
+                    world.queueObjectAddition(clone);
+                }
+
+                if(auto sound = audioService.lock()) {
+                    sound->playSample(31);
+                }
+            }
+
             if(eventData->getStateName() == "landed") {
                 if(auto sound = audioService.lock()) {
                     sound->playSample(19);

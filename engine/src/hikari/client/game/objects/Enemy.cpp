@@ -14,6 +14,7 @@ namespace hikari {
         , hitPoints(0.0)
         , damageTickCounter(0)
     {
+        setAgeless(true);
         setGravitated(true);
         setPhasing(false);
         setFaction(Faction::Enemy);
@@ -26,6 +27,7 @@ namespace hikari {
         , hitPoints(proto.hitPoints)
         , damageTickCounter(0)
     {   
+        setAgeless(true);
         setActive(false);
 
         if(proto.brain) {

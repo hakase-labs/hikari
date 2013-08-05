@@ -1,6 +1,8 @@
 #include "hikari/client/game/objects/Projectile.hpp"
 #include "hikari/client/game/objects/Motion.hpp"
 #include "hikari/client/game/objects/motions/LinearMotion.hpp"
+#include "hikari/client/game/events/EventManager.hpp"
+#include "hikari/client/game/events/EntityDeathEventData.hpp"
 #include "hikari/core/game/SpriteAnimator.hpp"
 #include "hikari/core/math/Vector2.hpp"
 #include "hikari/core/util/Log.hpp"
@@ -83,6 +85,14 @@ namespace hikari {
     void Projectile::deflect() {
         setInert(true);
         setMotion(DeflectedMotion);
+    }
+
+    void Projectile::onDeath() {
+        HIKARI_LOG(debug2) << "Projectile::onDeath()";
+        if(auto eventManagetPtr = getEventManager().lock()) {
+            // TODO: May want to triggerEvent() instead; test and see.
+            eventManagetPtr->queueEvent(EventDataPtr(new EntityDeathEventData(getId(), EntityDeathEventData::Projectile)));
+        }
     }
 
 } // hikari
