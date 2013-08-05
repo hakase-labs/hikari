@@ -150,9 +150,9 @@ namespace hikari {
  
     void Client::initLogging(int argc, char** argv) {
         // #ifdef DEBUG
-        //::hikari::Log::setReportingLevel(debug4);
+        ::hikari::Log::setReportingLevel(debug4);
         // #else
-        ::hikari::Log::setReportingLevel(warning);
+        // ::hikari::Log::setReportingLevel(warning);
         // #endif
     }
  

@@ -141,6 +141,41 @@
                     "length" : 0.05
                 }
             ]
+        },
+        "medium-splash": {
+            "description": "A splash that shows up when something breaks the surface of water.",
+            "repeat": false,
+            "keyframe": 0,
+            "syncGroup": 200,
+            "frames": [
+                { 
+                    "x" : 0, 
+                    "y" : 48, 
+                    "width" : 32, 
+                    "height" : 16, 
+                    "hotspotX" : 16, 
+                    "hotspotY" : 16, 
+                    "length" : 0.0667
+                },
+                { 
+                    "x" : 32, 
+                    "y" : 32, 
+                    "width" : 16, 
+                    "height" : 32, 
+                    "hotspotX" : 8, 
+                    "hotspotY" : 32, 
+                    "length" : 0.0833
+                },
+                { 
+                    "x" : 48, 
+                    "y" : 48, 
+                    "width" : 16, 
+                    "height" : 16, 
+                    "hotspotX" : 8, 
+                    "hotspotY" : 16, 
+                    "length" : 0.0833
+                }
+            ]
         }
     }
 }

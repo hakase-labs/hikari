@@ -44,3 +44,4 @@ if( APPLE )
 endif( APPLE )
 
 add_subdirectory( engine )
+add_subdirectory( test )

@@ -32,6 +32,8 @@
             "originY": 16
         },
         "gravitated": true,
-        "phasing": false
+        "phasing": false,
+        "ageless": false,
+        "maximumAge": 2.0
     }
 ]

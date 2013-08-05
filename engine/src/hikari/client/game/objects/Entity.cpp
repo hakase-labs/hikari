@@ -13,6 +13,8 @@
 namespace hikari {
 
     bool Entity::debug = false;
+    const float Entity::DEFAULT_AGE_IN_M_SECONDS = 0.0f;
+    const float Entity::DEFAULT_MAXIMUM_AGE_IN_M_SECONDS = 10.0f;
 
     void Entity::enableDebug(const bool& debug) {
         #ifdef HIKARI_DEBUG_ENTITIES
@@ -33,6 +35,9 @@ namespace hikari {
         , damageId(0)
         , obstacleFlag(false)
         , shieldFlag(false)
+        , agelessFlag(false)
+        , age(DEFAULT_AGE_IN_M_SECONDS)
+        , maximumAge(DEFAULT_MAXIMUM_AGE_IN_M_SECONDS)
         , actionSpot(0.0f, 0.0f)
         , activeShots()
         , body()
@@ -66,6 +71,9 @@ namespace hikari {
         , damageId(proto.damageId)
         , obstacleFlag(proto.obstacleFlag)
         , shieldFlag(proto.shieldFlag)
+        , agelessFlag(proto.agelessFlag)
+        , age(0)
+        , maximumAge(proto.maximumAge)
         , actionSpot(proto.actionSpot)
         , activeShots()
         , body(proto.body)
@@ -251,6 +259,30 @@ namespace hikari {
         return body.getVelocity().getY();
     }
 
+    float Entity::getAge() const {
+        return age;
+    }
+
+    void Entity::setAge(float newAge) {
+        age = newAge;
+    }
+
+    float Entity::getMaximumAge() const {
+        return maximumAge;
+    }
+
+    void Entity::setMaximumAge(float newMaximumAge) {
+        maximumAge = newMaximumAge;
+    }
+
+    bool Entity::isAgeless() const {
+        return agelessFlag;
+    }
+
+    void Entity::setAgeless(bool isAgeless) {
+        agelessFlag = isAgeless;
+    }
+
     void Entity::observeShot(const Shot & shot) {
         activeShots.push_back(shot);
     }
@@ -313,6 +345,16 @@ namespace hikari {
 
     void Entity::update(float dt) {
         body.update(dt);
+
+        if(isActive()) {
+            if(!isAgeless()) {
+                setAge(getAge() + dt);
+
+                if(getAge() >= getMaximumAge()) {
+                    onDeath();
+                }
+            }
+        }
 
         if(animatedSprite) {
             animatedSprite->update(dt);
@@ -383,6 +425,9 @@ namespace hikari {
         if(animatedSprite) {
             animatedSprite->rewind();
         }
+
+        setActive(false);
+        setAge(DEFAULT_AGE_IN_M_SECONDS);
     }
 
     namespace EntityHelpers {

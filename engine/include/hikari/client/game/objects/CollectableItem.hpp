@@ -14,16 +14,7 @@ namespace hikari {
 
     class CollectableItem : public Entity, public Cloneable<CollectableItem> {
     private:
-        static const float DEFAULT_AGE_IN_M_SECONDS;
-        static const float DEFAULT_MAXIMUM_AGE_IN_M_SECONDS;
-
         std::shared_ptr<Effect> effect;
-        bool ageless;
-        float age;
-        float maximumAge;
-
-    protected:
-        void setAge(float newAge);
 
     public:
         CollectableItem(int id, std::shared_ptr<Room> room, std::shared_ptr<Effect> effect);
@@ -31,13 +22,6 @@ namespace hikari {
         virtual ~CollectableItem();
 
         virtual std::unique_ptr<CollectableItem> clone() const;
-
-        float getAge() const;
-        float getMaximumAge() const;
-        void setMaximumAge(float newMaximumAge);
-
-        bool isAgeless() const;
-        void setAgeless(bool isAgeless);
 
         void setEffect(std::shared_ptr<Effect> newEffect);
         std::shared_ptr<Effect> getEffect() const;
