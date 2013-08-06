@@ -150,28 +150,28 @@ namespace hikari {
         bool contains(const T& x, const T& y) const;
 
         /**
-         * Determines if this BoundingBox is to the left of another one.
+         * Determines if this BoundingBox is completely to the left of another one.
          * @param  other the BoundingBox to check against
          * @return       true if this BoundingBox is to the left of other, otherwise false
          */
         bool isLeftOf(const BoundingBox& other) const;
 
         /**
-         * Determines if this BoundingBox is to the right of another one.
+         * Determines if this BoundingBox is completely to the right of another one.
          * @param  other the BoundingBox to check against
          * @return       true if this BoundingBox is to the right of other, otherwise false
          */
         bool isRightOf(const BoundingBox& other) const;
 
         /**
-         * Determines if this BoundingBox is above another one.
+         * Determines if this BoundingBox is completely above another one.
          * @param  other the BoundingBox to check against
          * @return       true if this BoundingBox is above other, otherwise false
          */
         bool isAbove(const BoundingBox& other) const;
 
         /**
-         * Determines if this BoundingBox is below another one.
+         * Determines if this BoundingBox is completely below another one.
          * @param  other the BoundingBox to check against
          * @return       true if this BoundingBox is below other, otherwise false
          */
