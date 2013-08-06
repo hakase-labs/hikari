@@ -14,6 +14,7 @@ set( TEST_SOURCE_FILES
     src/test/TestPoint2D.cpp
     src/test/TestRectangle2D.cpp
     src/test/TestBoundingBox.cpp
+    src/test/TestGeometryUtils.cpp
 )
 
 include_directories( ${INCLUDE_DIRS} )
