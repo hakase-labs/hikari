@@ -155,7 +155,7 @@ namespace hikari {
         ////////////////////////////////////////////////////////////
         std::size_t masterBufferSize;                  ///< Size of audio buffer
         std::size_t samplerCount;
-        std::size_t activeSampler;
+        // std::size_t activeSampler;
 
         typedef std::pair<std::shared_ptr<Music_Emu>, std::shared_ptr<std::vector<short>>> SamplerPair;
         std::stack<SamplerPair> availableSamplers;

@@ -16,13 +16,13 @@ namespace gui {
     const int EnergyMeter::VERTICAL_ORIENTATION = 1;
 
     EnergyMeter::EnergyMeter(const sf::Sprite &overlay, const float &maximumValue)
-        : orientation(-1)
-        , overlay(overlay)
+        : value(maximumValue)
         , maximumValue(maximumValue)
-        , value(maximumValue)
-        , fillColor(DEFAULT_FILL_COLOR)
+        , orientation(-1)
+        , overlay(overlay)
         , primaryColor(DEFAULT_PRIMARY_COLOR)
         , secondaryColor(DEFAULT_SECONDARY_COLOR)
+        , fillColor(DEFAULT_FILL_COLOR)
     {
         setVisible(true);
 
