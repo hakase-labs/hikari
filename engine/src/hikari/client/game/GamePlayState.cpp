@@ -742,6 +742,7 @@ namespace hikari {
                 //hero->setPosition(0.0f, 0.0f);
 
                 if(auto progress = gameProgress.lock()) {
+                    progress->setPlayerEnergy(0);
 
                     // Decrement lives
                     progress->setLives(progress->getLives() - 1);
@@ -859,7 +860,7 @@ namespace hikari {
                 if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Splash")) {
                     clone->setPosition(Vector2<float>(
                         hero->getPosition().getX(),
-                        static_cast<float>(static_cast<int>(hero->getPosition().getY()) / 16) * 16)
+                        static_cast<float>(static_cast<int>(std::floor(hero->getPosition().getY())) / 16) * 16)
                     );
                     clone->setActive(true);
                     world.queueObjectAddition(clone);
