@@ -1,9 +1,9 @@
+![Hikari](http://zackthehuman.com/images/hikari/hikari-logo.png)
+
 Project Hikari
 ==============
 
 Project Hikari is the code name for a yet-to-be-named open-source Mega Man/Rockman game clone written in C++. The goal of this project is to create a faithful clone of the classic NES title ["Mega Man"][2] ("Rockman" in Japan). The feature set of the game consists of elements from various Mega Man titles, but is strongly influenced by Mega Man 3.
-
-![Hikari](http://zackthehuman.com/images/hikari/hikari-logo.png)
 
 ## Customization & Extension ##
 
