@@ -1,6 +1,8 @@
 #include "hikari/client/game/TitleState.hpp"
 #include "hikari/client/audio/AudioService.hpp"
 #include "hikari/client/gui/GuiService.hpp"
+#include "hikari/client/gui/Menu.hpp"
+#include "hikari/client/gui/MenuItem.hpp"
 #include "hikari/client/Services.hpp"
 
 #include "hikari/core/util/ServiceLocator.hpp"
@@ -22,6 +24,7 @@ namespace hikari {
         , guiService(services.locateService<GuiService>(Services::GUISERVICE))
         , guiContainer(new gcn::Container())
         , guiLabel(new gcn::Label())
+        , guiMenu(new gui::Menu())
     {
         buildGui();
     }
@@ -38,6 +41,35 @@ namespace hikari {
 
         guiLabel->setCaption("Title Screen");
         guiLabel->adjustSize();
+
+        guiMenu->setWidth(guiContainer->getWidth() - 32);
+        guiMenu->setHeight((guiContainer->getHeight() / 2) - 32);
+        guiMenu->setBackgroundColor(gcn::Color(45, 45, 45));
+
+        std::shared_ptr<gui::MenuItem> firstItem(new gui::MenuItem("FIRST ITEM"));
+        firstItem->setWidth(60);
+        firstItem->setHeight(8);
+        firstItem->setForegroundColor(gcn::Color(250, 250, 250));
+        firstItem->setSelectionColor(gcn::Color(250, 128, 128));
+        guiMenu->addItem(firstItem);
+
+        std::shared_ptr<gui::MenuItem> secondItem(new gui::MenuItem("SECOND ITEM"));
+        secondItem->setWidth(60);
+        secondItem->setHeight(8);
+        secondItem->setY(8);
+        secondItem->setForegroundColor(gcn::Color(250, 250, 250));
+        secondItem->setSelectionColor(gcn::Color(250, 128, 128));
+        guiMenu->addItem(secondItem);
+
+        std::shared_ptr<gui::MenuItem> thirdItem(new gui::MenuItem("THIRD ITEM"));
+        thirdItem->setWidth(60);
+        thirdItem->setHeight(8);
+        thirdItem->setY(16);
+        thirdItem->setForegroundColor(gcn::Color(250, 250, 250));
+        thirdItem->setSelectionColor(gcn::Color(250, 128, 128));
+        guiMenu->addItem(thirdItem);
+
+        guiContainer->add(guiMenu.get(), 16, 128);
 
         guiContainer->add(guiLabel.get(), 30, 30);
     }
@@ -60,6 +92,7 @@ namespace hikari {
             auto & topContainer = gui->getRootContainer();
 
             topContainer.add(guiContainer.get(), 0, 0);
+            guiMenu->requestFocus();
         }
     }
 

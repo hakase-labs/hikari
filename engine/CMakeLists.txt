@@ -246,6 +246,8 @@ set( HIKARI_CLIENT_GUI_SOURCE_FILES
     src/hikari/client/gui/HikariImageLoader.cpp
     src/hikari/client/gui/Panel.cpp
     src/hikari/client/gui/Widget.cpp
+    src/hikari/client/gui/MenuItem.cpp
+    src/hikari/client/gui/Menu.cpp
 )
 
 source_group(hikari\\client\\gui FILES ${HIKARI_CLIENT_GUI_SOURCE_FILES})

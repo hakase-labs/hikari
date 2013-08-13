@@ -91,6 +91,6 @@
             "tileset" : "assets/tilesets/tiles-wily1.json"
         }
     },
-    "initialState" : "gameplay"
+    "initialState" : "title"
 }
 

@@ -17,6 +17,10 @@ namespace gcn {
 
 namespace hikari {
 
+    namespace gui {
+        class Menu;
+    }
+
     class AudioService;
     class GuiService;
     class ServiceLocator;
@@ -27,6 +31,7 @@ namespace hikari {
         std::weak_ptr<GuiService> guiService;
         std::unique_ptr<gcn::Container> guiContainer;
         std::unique_ptr<gcn::Label> guiLabel;
+        std::unique_ptr<gui::Menu> guiMenu;
 
         void buildGui();
 
