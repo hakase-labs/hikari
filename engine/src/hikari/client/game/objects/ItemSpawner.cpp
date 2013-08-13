@@ -1,7 +1,7 @@
 #include "hikari/client/game/objects/ItemSpawner.hpp"
 #include "hikari/client/game/objects/CollectableItem.hpp"
 #include "hikari/client/game/GameWorld.hpp"
-#include "hikari/client/game/events/EventManager.hpp"
+#include "hikari/client/game/events/EventBus.hpp"
 #include "hikari/client/game/events/EntityDeathEventData.hpp"
 
 #include "hikari/core/util/Log.hpp"
@@ -44,18 +44,18 @@ namespace hikari {
         }
     }
 
-    void ItemSpawner::attachEventListeners(EventManager & eventManager) {
+    void ItemSpawner::attachEventListeners(EventBus & EventBus) {
         auto entityDeathDelegate = fastdelegate::MakeDelegate(this, &ItemSpawner::handleEntityDeathEvent);
-        eventManager.addListener(entityDeathDelegate, EntityDeathEventData::Type);
+        EventBus.addListener(entityDeathDelegate, EntityDeathEventData::Type);
         eventHandlerDelegates.push_back(std::make_pair(entityDeathDelegate, EntityDeathEventData::Type));
     }
 
-    void ItemSpawner::detachEventListeners(EventManager & eventManager) {
+    void ItemSpawner::detachEventListeners(EventBus & EventBus) {
         std::for_each(
             std::begin(eventHandlerDelegates),
             std::end(eventHandlerDelegates), 
             [&](const std::pair<EventListenerDelegate, EventType> & del) {
-                bool removed = eventManager.removeListener(del.first, del.second);
+                bool removed = EventBus.removeListener(del.first, del.second);
                 HIKARI_LOG(debug) << "ItemSpawner :: Removing event listener, type = " << del.second << ", succes = " << removed;
             }
         );

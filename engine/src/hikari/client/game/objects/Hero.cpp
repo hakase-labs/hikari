@@ -4,7 +4,7 @@
 #include "hikari/client/game/objects/HeroTeleportingMobilityState.hpp"
 #include "hikari/client/game/objects/HeroDamagedMobilityState.hpp"
 #include "hikari/client/game/objects/AnimatedSprite.hpp"
-#include "hikari/client/game/events/EventManager.hpp"
+#include "hikari/client/game/events/EventBus.hpp"
 #include "hikari/client/game/events/EventData.hpp"
 #include "hikari/client/game/events/EntityDeathEventData.hpp"
 #include "hikari/client/game/events/EntityStateChangeEventData.hpp"
@@ -63,7 +63,7 @@ namespace hikari {
             this->isFalling = false;
             this->isAirborn = false;
 
-            if(auto events = this->getEventManager().lock()) {
+            if(auto events = this->getEventBus().lock()) {
                 events->triggerEvent(EventDataPtr(new EntityStateChangeEventData(getId(), "landed")));
             }
 
@@ -122,7 +122,7 @@ namespace hikari {
                 body.setGravityApplicationThreshold(3);
 
                 // Only emit event when plunging in to a body of water.
-                if(auto events = this->getEventManager().lock()) {
+                if(auto events = this->getEventBus().lock()) {
                     events->triggerEvent(EventDataPtr(new EntityStateChangeEventData(getId(), "water")));
                 }
             }
@@ -313,7 +313,7 @@ namespace hikari {
     }
 
     void Hero::kill() {
-        if(auto events = getEventManager().lock()) {
+        if(auto events = getEventBus().lock()) {
             EventDataPtr imDeadNow(new EntityDeathEventData(getId(), EntityDeathEventData::Hero));
             events->queueEvent(imDeadNow);
         } else {

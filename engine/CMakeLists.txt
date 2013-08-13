@@ -179,8 +179,8 @@ set( HIKARI_CLIENT_GAME_EVENTS_SOURCE_FILES
     src/hikari/client/game/events/EntityDeathEventData.cpp
     src/hikari/client/game/events/EntityStateChangeEventData.cpp
     src/hikari/client/game/events/EventData.cpp
-    src/hikari/client/game/events/EventManager.cpp
-    src/hikari/client/game/events/EventManagerImpl.cpp
+    src/hikari/client/game/events/EventBus.cpp
+    src/hikari/client/game/events/EventBusImpl.cpp
     src/hikari/client/game/events/ObjectRemovedEventData.cpp
     src/hikari/client/game/events/TransitionCollisionEventData.cpp
     src/hikari/client/game/events/WeaponFireEventData.cpp

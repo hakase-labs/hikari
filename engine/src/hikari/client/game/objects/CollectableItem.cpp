@@ -1,5 +1,5 @@
 #include "hikari/client/game/objects/CollectableItem.hpp"
-#include "hikari/client/game/events/EventManager.hpp"
+#include "hikari/client/game/events/EventBus.hpp"
 #include "hikari/client/game/events/EntityDeathEventData.hpp"
 #include "hikari/client/game/Effect.hpp"
 
@@ -47,7 +47,7 @@ namespace hikari {
 
     void CollectableItem::onDeath() {
         HIKARI_LOG(debug2) << "CollectableItem::onDeath()";
-        if(auto eventManagetPtr = getEventManager().lock()) {
+        if(auto eventManagetPtr = getEventBus().lock()) {
             // TODO: May want to triggerEvent() instead; test and see.
             eventManagetPtr->queueEvent(EventDataPtr(new EntityDeathEventData(getId(), EntityDeathEventData::Item)));
         }

@@ -19,7 +19,7 @@ namespace hikari {
 
     class AnimationSet;
     class AnimatedSprite;
-    class EventManager;
+    class EventBus;
     class GameWorld; // Soon to replace reference to Room
     class Room;
     class Shot;
@@ -37,7 +37,7 @@ namespace hikari {
         static const float DEFAULT_MAXIMUM_AGE_IN_M_SECONDS;
 
         std::unique_ptr<AnimatedSprite> animatedSprite;
-        std::weak_ptr<EventManager> eventManager;
+        std::weak_ptr<EventBus> eventBus;
         std::weak_ptr<GameWorld> world;
         std::shared_ptr<Room> room;
 
@@ -55,7 +55,7 @@ namespace hikari {
         bool obstacleFlag; // Does this object act like an obstacle?
         bool shieldFlag;   // Does this object deflect projectiles right now?
         bool agelessFlag;  // Does this object not experience aging?
-        
+
         float age;
         float maximumAge;
 
@@ -118,8 +118,8 @@ namespace hikari {
         void setRoom(const std::shared_ptr<Room>& newRoom);
         const std::shared_ptr<Room>& getRoom() const;
 
-        void setEventManager(const std::weak_ptr<EventManager>& eventManager);
-        const std::weak_ptr<EventManager>& getEventManager() const;
+        void setEventBus(const std::weak_ptr<EventBus> & eventBus);
+        const std::weak_ptr<EventBus> & getEventBus() const;
 
         void setWorld(const std::weak_ptr<GameWorld>& worldRef);
         const std::weak_ptr<GameWorld>& getWorld() const;

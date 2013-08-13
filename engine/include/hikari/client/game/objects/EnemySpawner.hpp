@@ -32,8 +32,8 @@ namespace hikari {
         virtual ~EnemySpawner();
 
         virtual void performAction(GameWorld & world);
-        virtual void attachEventListeners(EventManager & eventManager);
-        virtual void detachEventListeners(EventManager & eventManager);
+        virtual void attachEventListeners(EventBus & EventBus);
+        virtual void detachEventListeners(EventBus & EventBus);
 
         void setSpawnLimit(int limit);
         void setSpawnRate(float rate);

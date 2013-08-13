@@ -1,7 +1,7 @@
 #include "hikari/client/game/objects/EnemySpawner.hpp"
 #include "hikari/client/game/objects/Enemy.hpp"
 #include "hikari/client/game/GameWorld.hpp"
-#include "hikari/client/game/events/EventManager.hpp"
+#include "hikari/client/game/events/EventBus.hpp"
 #include "hikari/client/game/events/ObjectRemovedEventData.hpp"
 
 #include "hikari/core/util/Log.hpp"
@@ -61,18 +61,18 @@ namespace hikari {
         }
     }
 
-    void EnemySpawner::attachEventListeners(EventManager & eventManager) {
+    void EnemySpawner::attachEventListeners(EventBus & EventBus) {
         auto objectRemovedDelegate = fastdelegate::MakeDelegate(this, &EnemySpawner::handleObjectRemovedEvent);
-        eventManager.addListener(objectRemovedDelegate, ObjectRemovedEventData::Type);
+        EventBus.addListener(objectRemovedDelegate, ObjectRemovedEventData::Type);
         eventHandlerDelegates.push_back(std::make_pair(objectRemovedDelegate, ObjectRemovedEventData::Type));
     }
 
-    void EnemySpawner::detachEventListeners(EventManager & eventManager) {
+    void EnemySpawner::detachEventListeners(EventBus & EventBus) {
         std::for_each(
             std::begin(eventHandlerDelegates),
             std::end(eventHandlerDelegates), 
             [&](const std::pair<EventListenerDelegate, EventType> & del) {
-                bool removed = eventManager.removeListener(del.first, del.second);
+                bool removed = EventBus.removeListener(del.first, del.second);
                 HIKARI_LOG(debug) << "EnemySpawner :: Removing event listener, type = " << del.second << ", succes = " << removed;
             }
         );

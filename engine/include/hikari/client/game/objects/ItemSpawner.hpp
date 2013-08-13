@@ -22,8 +22,8 @@ namespace hikari {
         virtual ~ItemSpawner();
 
         virtual void performAction(GameWorld & world);
-        virtual void attachEventListeners(EventManager & eventManager);
-        virtual void detachEventListeners(EventManager & eventManager);
+        virtual void attachEventListeners(EventBus & EventBus);
+        virtual void detachEventListeners(EventBus & EventBus);
 
         //
         // GameObject overrides

@@ -1,6 +1,6 @@
 #include "hikari/client/game/objects/Enemy.hpp"
 #include "hikari/client/game/objects/EnemyBrain.hpp"
-#include "hikari/client/game/events/EventManager.hpp"
+#include "hikari/client/game/events/EventBus.hpp"
 #include "hikari/client/game/events/EntityDeathEventData.hpp"
 #include "hikari/core/game/SpriteAnimator.hpp"
 #include "hikari/core/util/Log.hpp"
@@ -53,7 +53,7 @@ namespace hikari {
         Entity::update(dt);
 
         if(getHitPoints() <= 0.0f) {
-            if(auto eventManagetPtr = getEventManager().lock()) {
+            if(auto eventManagetPtr = getEventBus().lock()) {
                 eventManagetPtr->queueEvent(EventDataPtr(new EntityDeathEventData(getId(), EntityDeathEventData::Enemy)));
             }
         }

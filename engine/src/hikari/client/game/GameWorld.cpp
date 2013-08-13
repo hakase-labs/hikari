@@ -1,5 +1,5 @@
 #include "hikari/client/game/GameWorld.hpp"
-#include "hikari/client/game/events/EventManager.hpp"
+#include "hikari/client/game/events/EventBus.hpp"
 #include "hikari/client/game/events/ObjectRemovedEventData.hpp"
 #include "hikari/client/game/objects/GameObject.hpp"
 #include "hikari/client/game/objects/CollectableItem.hpp"
@@ -19,7 +19,7 @@
 namespace hikari {
 
     GameWorld::GameWorld() 
-        : eventManager()
+        : eventBus()
         , player(nullptr)
         , currentRoom(nullptr)
         , itemFactory()
@@ -49,12 +49,12 @@ namespace hikari {
         // no-op
     }
 
-    void GameWorld::setEventManager(const std::weak_ptr<EventManager>& eventManager) {
-        this->eventManager = eventManager;
+    void GameWorld::setEventBus(const std::weak_ptr<EventBus>& eventBus) {
+        this->eventBus = eventBus;
     }
 
-    const std::weak_ptr<EventManager>& GameWorld::getEventManager() const {
-        return eventManager;
+    const std::weak_ptr<EventBus>& GameWorld::getEventBus() const {
+        return eventBus;
     }
 
     void GameWorld::setCurrentRoom(const std::shared_ptr<Room> & room) {
@@ -229,7 +229,7 @@ namespace hikari {
             objectRegistry.emplace(std::make_pair(objectToBeAdded->getId(), objectToBeAdded));
 
             objectToBeAdded->setRoom(getCurrentRoom());
-            objectToBeAdded->setEventManager(getEventManager());
+            objectToBeAdded->setEventBus(getEventBus());
 
             queuedItemAdditions.pop_front();
         }
@@ -242,7 +242,7 @@ namespace hikari {
             objectRegistry.emplace(std::make_pair(objectToBeAdded->getId(), objectToBeAdded));
 
             objectToBeAdded->setRoom(getCurrentRoom());
-            objectToBeAdded->setEventManager(getEventManager());
+            objectToBeAdded->setEventBus(getEventBus());
 
             queuedEnemyAdditions.pop_front();
         }
@@ -265,14 +265,14 @@ namespace hikari {
             objectRegistry.emplace(std::make_pair(objectToBeAdded->getId(), objectToBeAdded));
 
             objectToBeAdded->setRoom(getCurrentRoom());
-            objectToBeAdded->setEventManager(getEventManager());
+            objectToBeAdded->setEventBus(getEventBus());
 
             queuedProjectileAdditions.pop_front();
         }
     }
 
     void GameWorld::processRemovals() {
-        auto eventManagerPtr = eventManager.lock();
+        auto eventBusPtr = eventBus.lock();
 
         while(!queuedRemovals.empty()) {
             auto objectToBeRemoved = queuedRemovals.front();
@@ -284,10 +284,10 @@ namespace hikari {
             
             queuedRemovals.pop_front();
 
-            //objectToBeRemoved->setEventManager(std::weak_ptr<EventManager>());
+            //objectToBeRemoved->setEventBus(std::weak_ptr<EventBus>());
 
-            if(eventManagerPtr) {
-                eventManagerPtr->queueEvent(std::make_shared<ObjectRemovedEventData>(objectToBeRemoved->getId()));
+            if(eventBusPtr) {
+                eventBusPtr->queueEvent(std::make_shared<ObjectRemovedEventData>(objectToBeRemoved->getId()));
             }
         }
 
@@ -301,10 +301,10 @@ namespace hikari {
             
             queuedItemRemovals.pop_front();
 
-            objectToBeRemoved->setEventManager(std::weak_ptr<EventManager>());
+            objectToBeRemoved->setEventBus(std::weak_ptr<EventBus>());
 
-            if(eventManagerPtr) {
-                eventManagerPtr->queueEvent(std::make_shared<ObjectRemovedEventData>(objectToBeRemoved->getId()));
+            if(eventBusPtr) {
+                eventBusPtr->queueEvent(std::make_shared<ObjectRemovedEventData>(objectToBeRemoved->getId()));
             }
         }
 
@@ -318,10 +318,10 @@ namespace hikari {
             
             queuedEnemyRemovals.pop_front();
 
-            objectToBeRemoved->setEventManager(std::weak_ptr<EventManager>());
+            objectToBeRemoved->setEventBus(std::weak_ptr<EventBus>());
 
-            if(eventManagerPtr) {
-                eventManagerPtr->queueEvent(std::make_shared<ObjectRemovedEventData>(objectToBeRemoved->getId()));
+            if(eventBusPtr) {
+                eventBusPtr->queueEvent(std::make_shared<ObjectRemovedEventData>(objectToBeRemoved->getId()));
             }
         }
 
@@ -335,8 +335,8 @@ namespace hikari {
             
             queuedParticleRemovals.pop_front();
 
-            if(eventManagerPtr) {
-                eventManagerPtr->queueEvent(std::make_shared<ObjectRemovedEventData>(objectToBeRemoved->getId()));
+            if(eventBusPtr) {
+                eventBusPtr->queueEvent(std::make_shared<ObjectRemovedEventData>(objectToBeRemoved->getId()));
             }
         }
 
@@ -350,10 +350,10 @@ namespace hikari {
             
             queuedProjectileRemovals.pop_front();
 
-            objectToBeRemoved->setEventManager(std::weak_ptr<EventManager>());
+            objectToBeRemoved->setEventBus(std::weak_ptr<EventBus>());
 
-            if(eventManagerPtr) {
-                eventManagerPtr->queueEvent(std::make_shared<ObjectRemovedEventData>(objectToBeRemoved->getId()));
+            if(eventBusPtr) {
+                eventBusPtr->queueEvent(std::make_shared<ObjectRemovedEventData>(objectToBeRemoved->getId()));
             }
         }
     }

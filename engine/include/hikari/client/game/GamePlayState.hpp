@@ -60,7 +60,7 @@ namespace hikari {
     class Hero;
     class TileMapCollisionResolver;
     class Spawner;
-    class EventManager;
+    class EventBus;
     class KeyboardInput;
     class WeaponTable;
     class DamageTable;
@@ -88,7 +88,7 @@ namespace hikari {
         GameController & controller;
         std::weak_ptr<AudioService> audioService;
         std::weak_ptr<GuiService> guiService;
-        std::shared_ptr<EventManager> eventManager;
+        std::shared_ptr<EventBus> eventBus;
         std::weak_ptr<WeaponTable> weaponTable;
         std::weak_ptr<DamageTable> damageTable;
         std::weak_ptr<GameProgress> gameProgress;

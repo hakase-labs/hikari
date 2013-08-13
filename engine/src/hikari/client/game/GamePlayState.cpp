@@ -27,7 +27,7 @@
 #include "hikari/client/Services.hpp"
 #include "hikari/client/audio/AudioService.hpp"
 #include "hikari/client/game/KeyboardInput.hpp"
-#include "hikari/client/game/events/EventManagerImpl.hpp"
+#include "hikari/client/game/events/EventBusImpl.hpp"
 #include "hikari/client/game/events/EventListenerDelegate.hpp"
 #include "hikari/client/game/events/EntityDamageEventData.hpp"
 #include "hikari/client/game/events/EntityDeathEventData.hpp"
@@ -83,7 +83,7 @@ namespace hikari {
         , controller(controller)
         , audioService(services.locateService<AudioService>(Services::AUDIO))
         , guiService(services.locateService<GuiService>(Services::GUISERVICE))
-        , eventManager(new EventManagerImpl("GamePlayEvents", false))
+        , eventBus(new EventBusImpl("GamePlayEvents", false))
         , weaponTable(services.locateService<WeaponTable>(Services::WEAPONTABLE))
         , damageTable(services.locateService<DamageTable>(Services::DAMAGETABLE))
         , gameProgress(services.locateService<GameProgress>(Services::GAMEPROGRESS))
@@ -156,11 +156,11 @@ namespace hikari {
             hero->setPosition(100.0f, 100.0f);
             hero->setActionSpot(Vector2<float>(6.0, -8.0));
             hero->setActionController(std::make_shared<PlayerInputHeroActionController>(userInput));
-            hero->setEventManager(std::weak_ptr<EventManager>(eventManager));
+            hero->setEventBus(std::weak_ptr<EventBus>(eventBus));
         }
 
         world.setPlayer(hero);
-        world.setEventManager(std::weak_ptr<EventManager>(eventManager));
+        world.setEventBus(std::weak_ptr<EventBus>(eventBus));
 
         const auto itemFactoryWeak  = services.locateService<ItemFactory>(Services::ITEMFACTORY);
         const auto enemyFactoryWeak = services.locateService<EnemyFactory>(Services::ENEMYFACTORY);
@@ -179,8 +179,8 @@ namespace hikari {
             std::begin(eventHandlerDelegates),
             std::end(eventHandlerDelegates), 
             [&](const std::pair<EventListenerDelegate, EventType> & del) {
-                if(eventManager) {
-                    bool removed = eventManager->removeListener(del.first, del.second);
+                if(eventBus) {
+                    bool removed = eventBus->removeListener(del.first, del.second);
                     HIKARI_LOG(debug) << "Removing event listener, type = " << del.second << ", succes = " << removed;
                 }
             }
@@ -288,8 +288,8 @@ namespace hikari {
 
         userInput->update();
 
-        if(eventManager) {
-            eventManager->processEvents();
+        if(eventBus) {
+            eventBus->processEvents();
         }
 
         if(subState) {
@@ -410,8 +410,8 @@ namespace hikari {
             std::end(itemSpawners),
             [&](std::weak_ptr<Spawner> & s) {
                 if(auto ptr = s.lock()) {
-                    ptr->detachEventListeners(*eventManager.get());
-                    ptr->attachEventListeners(*eventManager.get());
+                    ptr->detachEventListeners(*eventBus.get());
+                    ptr->attachEventListeners(*eventBus.get());
                     ptr->setAwake(false);
                 }
             }
@@ -698,25 +698,25 @@ namespace hikari {
     }
 
     void GamePlayState::bindEventHandlers() {
-        if(eventManager) {
+        if(eventBus) {
             auto weaponFireDelegate = fastdelegate::MakeDelegate(this, &GamePlayState::handleWeaponFireEvent);
-            eventManager->addListener(weaponFireDelegate, WeaponFireEventData::Type);
+            eventBus->addListener(weaponFireDelegate, WeaponFireEventData::Type);
             eventHandlerDelegates.push_back(std::make_pair(weaponFireDelegate, WeaponFireEventData::Type));
 
             auto entityDamageDelegate = fastdelegate::MakeDelegate(this, &GamePlayState::handleEntityDamageEvent);
-            eventManager->addListener(entityDamageDelegate, EntityDamageEventData::Type);
+            eventBus->addListener(entityDamageDelegate, EntityDamageEventData::Type);
             eventHandlerDelegates.push_back(std::make_pair(entityDamageDelegate, EntityDamageEventData::Type));
 
             auto entityDeathDelegate = fastdelegate::MakeDelegate(this, &GamePlayState::handleEntityDeathEvent);
-            eventManager->addListener(entityDeathDelegate, EntityDeathEventData::Type);
+            eventBus->addListener(entityDeathDelegate, EntityDeathEventData::Type);
             eventHandlerDelegates.push_back(std::make_pair(entityDeathDelegate, EntityDeathEventData::Type));
 
             auto entityStateChangeDelegate = fastdelegate::MakeDelegate(this, &GamePlayState::handleEntityStateChangeEvent);
-            eventManager->addListener(entityStateChangeDelegate, EntityStateChangeEventData::Type);
+            eventBus->addListener(entityStateChangeDelegate, EntityStateChangeEventData::Type);
             eventHandlerDelegates.push_back(std::make_pair(entityStateChangeDelegate, EntityStateChangeEventData::Type));
 
             auto objectRemovedDelegate = fastdelegate::FastDelegate1<EventDataPtr>(&letMeKnowItsGone);
-            eventManager->addListener(objectRemovedDelegate, ObjectRemovedEventData::Type);
+            eventBus->addListener(objectRemovedDelegate, ObjectRemovedEventData::Type);
             eventHandlerDelegates.push_back(std::make_pair(objectRemovedDelegate, ObjectRemovedEventData::Type));
         }
     }
