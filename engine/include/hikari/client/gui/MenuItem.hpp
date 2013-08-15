@@ -12,6 +12,9 @@ namespace gui {
         std::string name;
         bool selected;
 
+    protected:
+        void adjustSize();
+
     public:
         MenuItem();
         explicit MenuItem(const std::string & name);

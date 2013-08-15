@@ -134,6 +134,7 @@ set( GUICHAN_HAKASE_DIR "${PROJECT_SOURCE_DIR}/extlibs/guichan-hakase" )
 set( GUICHAN_HAKASE_SOURCE_FILES
     ${GUICHAN_HAKASE_DIR}/src/guichan/hakase/fixedimagefont.cpp
     ${GUICHAN_HAKASE_DIR}/src/guichan/hakase/functoractionlistener.cpp
+    ${GUICHAN_HAKASE_DIR}/src/guichan/hakase/functorselectionlistener.cpp
     ${GUICHAN_HAKASE_DIR}/src/guichan/hakase/functordeathlistener.cpp
     ${GUICHAN_HAKASE_DIR}/src/guichan/hakase/functorfocuslistener.cpp
     ${GUICHAN_HAKASE_DIR}/src/guichan/hakase/functorwidgetlistener.cpp

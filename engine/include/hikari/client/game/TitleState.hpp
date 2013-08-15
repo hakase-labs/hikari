@@ -13,6 +13,8 @@ namespace Json {
 namespace gcn {
     class Container;
     class Label;
+    class ActionListener;
+    class SelectionListener;
 }
 
 namespace hikari {
@@ -32,6 +34,8 @@ namespace hikari {
         std::unique_ptr<gcn::Container> guiContainer;
         std::unique_ptr<gcn::Label> guiLabel;
         std::unique_ptr<gui::Menu> guiMenu;
+        std::unique_ptr<gcn::ActionListener> guiActionListener;
+        std::unique_ptr<gcn::SelectionListener> guiSelectionListener;
 
         void buildGui();
 

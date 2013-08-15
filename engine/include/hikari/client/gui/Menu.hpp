@@ -1,15 +1,15 @@
 #ifndef HIKARI_CLIENT_GUI_MENU
 #define HIKARI_CLIENT_GUI_MENU
 
-#include <list>
+#include <vector>
 #include <memory>
 #include <string>
 #include <guichan/widgets/container.hpp>
 #include <guichan/keylistener.hpp>
 
 namespace gcn {
-    class Image;
     class KeyEvent;
+    class SelectionListener;
 }
 
 namespace hikari {
@@ -19,24 +19,63 @@ namespace gui {
 
     class Menu : public gcn::Container, public gcn::KeyListener {
     private:
-        std::list<std::shared_ptr<MenuItem>> items;
+        std::vector<std::shared_ptr<MenuItem>> items;
+        std::list<gcn::SelectionListener*> selectionListeners;
 
         bool enableSelectionWrap;
         int selectedIndex;
 
     protected:
-        std::list<std::shared_ptr<MenuItem>> & getItems();
+        std::vector<std::shared_ptr<MenuItem>> & getItems();
+        int getNextIndex(int start);
+        int getPreviousIndex(int start);
+
+        void selectMenuItem(int itemIndex);
+
+        /**
+         * Distributes a value changed event to all selection listeners
+         * of the menu.
+         */
+        void distributeSelectionChangedEvent();
 
     public:
         Menu();
-        explicit Menu(const std::list<std::shared_ptr<MenuItem>> & items);
+        explicit Menu(const std::vector<std::shared_ptr<MenuItem>> & items);
         virtual ~Menu();
 
         int getSelectedIndex() const;
         void setSelectedIndex(int index);
 
+        void selectNextItem();
+        void selectPreviousItem();
+
         void addItem(const std::shared_ptr<MenuItem> & item);
         void removeItem(const std::shared_ptr<MenuItem> & item);
+        int getItemCount() const;
+        std::shared_ptr<MenuItem> getMenuItemAt(int index) const;
+
+        bool isWrappingEnabled() const;
+        void enableWrapping();
+        void disableWrapping();
+
+        /**
+         * Adds a selection listener to the menu. When the selection
+         * changes an event will be sent to all selection listeners of the
+         * list box.
+         *
+         * If you delete your selection listener, be sure to also remove it
+         * using removeSelectionListener().
+         *
+         * @param selectionListener The selection listener to add.
+         */
+        void addSelectionListener(gcn::SelectionListener* selectionListener);
+
+        /**
+         * Removes a selection listener from the menu.
+         *
+         * @param selectionListener The selection listener to remove.
+         */
+        void removeSelectionListener(gcn::SelectionListener* selectionListener);
 
         // Inherited from Widget
         virtual void draw(gcn::Graphics* graphics);

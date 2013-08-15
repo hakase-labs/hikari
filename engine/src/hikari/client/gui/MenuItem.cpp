@@ -1,6 +1,7 @@
 #include "hikari/client/gui/MenuItem.hpp"
 
 #include <guichan/graphics.hpp>
+#include <guichan/font.hpp>
 
 namespace hikari {
 namespace gui {
@@ -10,6 +11,7 @@ namespace gui {
         , name("")
         , selected(false)
     {
+        adjustSize();
     }
 
     MenuItem::MenuItem(const std::string & name)
@@ -17,9 +19,15 @@ namespace gui {
         , name(name)
         , selected(false)
     {
+        adjustSize();
     }
 
     MenuItem::~MenuItem() {
+    }
+
+    void MenuItem::adjustSize() {
+        setWidth(getFont()->getWidth(getName()));
+        setHeight(getFont()->getHeight());
     }
 
     const std::string & MenuItem::getName() const {
@@ -28,6 +36,7 @@ namespace gui {
 
     void MenuItem::setName(const std::string & name) {
         this->name = name;
+        adjustSize();
     }
 
     bool MenuItem::isSelected() const {
@@ -44,7 +53,11 @@ namespace gui {
 
     void MenuItem::draw(gcn::Graphics* graphics) {
         graphics->setColor(isSelected() ? getSelectionColor() : getForegroundColor());
+        
         graphics->fillRectangle(0, 0, getWidth(), getHeight());
+        
+        graphics->setFont(getFont());
+        graphics->drawText(getName(), 0, 0, gcn::Graphics::Left);
     }
 
 } // hikari::gui

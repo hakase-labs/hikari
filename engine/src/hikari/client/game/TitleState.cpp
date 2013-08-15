@@ -11,6 +11,9 @@
 #include <guichan/widgets/container.hpp>
 #include <guichan/widgets/label.hpp>
 
+#include <guichan/hakase/functoractionlistener.hpp>
+#include <guichan/hakase/functorselectionlistener.hpp>
+
 #include <json/value.h>
 
 #include <SFML/Graphics.hpp>
@@ -25,6 +28,8 @@ namespace hikari {
         , guiContainer(new gcn::Container())
         , guiLabel(new gcn::Label())
         , guiMenu(new gui::Menu())
+        , guiActionListener(nullptr)
+        , guiSelectionListener(nullptr)
     {
         buildGui();
     }
@@ -34,6 +39,20 @@ namespace hikari {
     }
 
     void TitleState::buildGui() {
+        guiActionListener.reset(new gcn::FunctorActionListener([&](const gcn::ActionEvent& event) {
+            auto item = guiMenu->getMenuItemAt(guiMenu->getSelectedIndex());
+
+            if(item) {
+                std::cout << "Actioned on #" << guiMenu->getSelectedIndex() << ", " << item->getName() << std::endl;
+            } else {
+                std::cout << "Actioned on #" << guiMenu->getSelectedIndex() << std::endl;
+            }
+        }));
+
+        guiSelectionListener.reset(new gcn::FunctorSelectionListener([&](const gcn::SelectionEvent & event) {
+            std::cout << "Selection changed! " << guiMenu->getSelectedIndex() << std::endl;
+        }));
+
         guiContainer->setBaseColor(gcn::Color(0, 0, 0));
         guiContainer->setOpaque(true);
         guiContainer->setWidth(256);
@@ -45,32 +64,30 @@ namespace hikari {
         guiMenu->setWidth(guiContainer->getWidth() - 32);
         guiMenu->setHeight((guiContainer->getHeight() / 2) - 32);
         guiMenu->setBackgroundColor(gcn::Color(45, 45, 45));
+        guiMenu->addActionListener(guiActionListener.get());
+        guiMenu->addSelectionListener(guiSelectionListener.get());
+        guiMenu->enableWrapping();
 
-        std::shared_ptr<gui::MenuItem> firstItem(new gui::MenuItem("FIRST ITEM"));
-        firstItem->setWidth(60);
-        firstItem->setHeight(8);
-        firstItem->setForegroundColor(gcn::Color(250, 250, 250));
-        firstItem->setSelectionColor(gcn::Color(250, 128, 128));
-        guiMenu->addItem(firstItem);
+        std::shared_ptr<gui::MenuItem> gameStartMenuItem(new gui::MenuItem("GAME START"));
+        gameStartMenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
+        gameStartMenuItem->setSelectionColor(gcn::Color(250, 128, 128));
+        guiMenu->addItem(gameStartMenuItem);
 
-        std::shared_ptr<gui::MenuItem> secondItem(new gui::MenuItem("SECOND ITEM"));
-        secondItem->setWidth(60);
-        secondItem->setHeight(8);
-        secondItem->setY(8);
-        secondItem->setForegroundColor(gcn::Color(250, 250, 250));
-        secondItem->setSelectionColor(gcn::Color(250, 128, 128));
-        guiMenu->addItem(secondItem);
+        std::shared_ptr<gui::MenuItem> passWordMenuItem(new gui::MenuItem("PASS WORD"));
+        passWordMenuItem->setY(16);
+        passWordMenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
+        passWordMenuItem->setSelectionColor(gcn::Color(0, 128, 128));
+        guiMenu->addItem(passWordMenuItem);
 
-        std::shared_ptr<gui::MenuItem> thirdItem(new gui::MenuItem("THIRD ITEM"));
-        thirdItem->setWidth(60);
-        thirdItem->setHeight(8);
-        thirdItem->setY(16);
-        thirdItem->setForegroundColor(gcn::Color(250, 250, 250));
-        thirdItem->setSelectionColor(gcn::Color(250, 128, 128));
-        guiMenu->addItem(thirdItem);
+        std::shared_ptr<gui::MenuItem> quitMenuItem(new gui::MenuItem("QUIT"));
+        quitMenuItem->setY(32);
+        quitMenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
+        quitMenuItem->setSelectionColor(gcn::Color(250, 128, 128));
+        guiMenu->addItem(quitMenuItem);
+
+        guiMenu->setSelectedIndex(0);
 
         guiContainer->add(guiMenu.get(), 16, 128);
-
         guiContainer->add(guiLabel.get(), 30, 30);
     }
 
