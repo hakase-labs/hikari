@@ -525,10 +525,10 @@
     <ClInclude Include="include\hikari\client\game\events\EventListenerDelegate.hpp">
       <Filter>Header Files\client\game\events</Filter>
     </ClInclude>
-    <ClInclude Include="include\hikari\client\game\events\EventManager.hpp">
+    <ClInclude Include="include\hikari\client\game\events\EventBus.hpp">
       <Filter>Header Files\client\game\events</Filter>
     </ClInclude>
-    <ClInclude Include="include\hikari\client\game\events\EventManagerImpl.hpp">
+    <ClInclude Include="include\hikari\client\game\events\EventBusImpl.hpp">
       <Filter>Header Files\client\game\events</Filter>
     </ClInclude>
     <ClInclude Include="include\hikari\client\game\objects\FactoryHelpers.hpp">
@@ -968,10 +968,10 @@
     <ClCompile Include="src\hikari\client\game\events\TransitionCollisionEventData.cpp">
       <Filter>Source Files\client\game\events</Filter>
     </ClCompile>
-    <ClCompile Include="src\hikari\client\game\events\EventManager.cpp">
+    <ClCompile Include="src\hikari\client\game\events\EventBus.cpp">
       <Filter>Source Files\client\game\events</Filter>
     </ClCompile>
-    <ClCompile Include="src\hikari\client\game\events\EventManagerImpl.cpp">
+    <ClCompile Include="src\hikari\client\game\events\EventBusImpl.cpp">
       <Filter>Source Files\client\game\events</Filter>
     </ClCompile>
     <ClCompile Include="src\hikari\client\game\objects\FactoryHelpers.cpp">

@@ -28,8 +28,6 @@ namespace hikari {
     }
 
     void Room::traceLadders() {
-        std::list<std::pair<int, int>> ladderTops;
-
         for(int x = 0; x < getWidth(); ++x) {
             bool topFound = false;
             bool bottomFound = false;

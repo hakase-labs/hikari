@@ -1,5 +1,5 @@
-#ifndef HIKARI_CLIENT_EVENTMANAGER
-#define HIKARI_CLIENT_EVENTMANAGER
+#ifndef HIKARI_CLIENT_EVENTBUS
+#define HIKARI_CLIENT_EVENTBUS
 
 #include "hikari/client/game/events/EventData.hpp"
 #include "hikari/client/game/events/EventListenerDelegate.hpp"
@@ -8,16 +8,16 @@
 namespace hikari {
 
     /**
-     * Interface for all event managers.
+     * Interface for all event busses.
      */
-    class EventManager {
+    class EventBus {
     public:
         enum Constants {
             INFINITE = 0xffffffff
         };
 
-        explicit EventManager(const std::string & name, bool setAsGlobal);
-        virtual ~EventManager();
+        explicit EventBus(const std::string & name, bool setAsGlobal);
+        virtual ~EventBus();
 
         /**
          * Registers a delegate function that will get called when the event type
@@ -71,4 +71,4 @@ namespace hikari {
 
 } // hikari
 
-#endif // HIKARI_CLIENT_EVENTMANAGER
+#endif // HIKARI_CLIENT_EVENTBUS

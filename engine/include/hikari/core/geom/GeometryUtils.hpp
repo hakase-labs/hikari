@@ -59,6 +59,12 @@ namespace geom {
                 rect.getTop() > box.getBottom() || rect.getBottom() < box.getTop());
     }
 
+    /**
+     * Returns the intersection of two BoundingBoxes. If the two BoundingBoxes 
+     * do not actually intersect then the result is undefined.
+     *
+     * @return new BoundingBox representing the intersection of a and b
+     */
     template <typename T>
     BoundingBox<T> intersection(const BoundingBox<T>& a, const BoundingBox<T>& b) {
         T top = std::max(a.getTop(), b.getTop());

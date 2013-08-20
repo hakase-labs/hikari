@@ -116,6 +116,8 @@ set( GUICHAN_SOURCE_FILES
     ${GUICHAN_DIR}/src/widgets/window.cpp
 )
 
+source_group(extlibs\\guichan FILES ${GUICHAN_SOURCE_FILES})
+
 set( GUICHAN_SFML_DIR "${PROJECT_SOURCE_DIR}/extlibs/guichan-sfml" )
 set( GUICHAN_SFML_SOURCE_FILES
     ${GUICHAN_SFML_DIR}/src/guichan/sfml.cpp
@@ -126,37 +128,71 @@ set( GUICHAN_SFML_SOURCE_FILES
     ${GUICHAN_SFML_DIR}/src/guichan/sfml/sfmlinput.cpp
 )
 
+source_group(extlibs\\guichan-sfml FILES ${GUICHAN_SFML_SOURCE_FILES})
+
 set( GUICHAN_HAKASE_DIR "${PROJECT_SOURCE_DIR}/extlibs/guichan-hakase" )
 set( GUICHAN_HAKASE_SOURCE_FILES
     ${GUICHAN_HAKASE_DIR}/src/guichan/hakase/fixedimagefont.cpp
     ${GUICHAN_HAKASE_DIR}/src/guichan/hakase/functoractionlistener.cpp
+    ${GUICHAN_HAKASE_DIR}/src/guichan/hakase/functorselectionlistener.cpp
     ${GUICHAN_HAKASE_DIR}/src/guichan/hakase/functordeathlistener.cpp
     ${GUICHAN_HAKASE_DIR}/src/guichan/hakase/functorfocuslistener.cpp
     ${GUICHAN_HAKASE_DIR}/src/guichan/hakase/functorwidgetlistener.cpp
 )
 
-set( ENGINE_SOURCE_FILES
+source_group(extlibs\\guichan-hakase FILES ${GUICHAN_HAKASE_SOURCE_FILES})
+
+set( HIKARI_CLIENT_SOURCE_FILES
     src/hikari/client/Main.cpp
+    src/hikari/client/Client.cpp
     src/hikari/client/ClientConfig.cpp
     src/hikari/client/CommandProcessor.cpp
-    src/hikari/client/game/GameConfig.cpp
+)
+
+source_group(hikari\\client FILES ${HIKARI_CLIENT_SOURCE_FILES})
+
+set( HIKARI_CLIENT_GAME_SOURCE_FILES
+    src/hikari/client/game/DamageTable.cpp
     src/hikari/client/game/Effect.cpp
+    src/hikari/client/game/GameConfig.cpp
+    src/hikari/client/game/GamePlayState.cpp
+    src/hikari/client/game/GameProgress.cpp
+    src/hikari/client/game/GameWorld.cpp
+    src/hikari/client/game/GuiTestState.cpp
+    src/hikari/client/game/KeyboardInput.cpp
+    src/hikari/client/game/PasswordState.cpp
+    src/hikari/client/game/RealTimeInput.cpp
+    src/hikari/client/game/Shot.cpp
+    src/hikari/client/game/SpawnProjectileWeaponAction.cpp
+    src/hikari/client/game/SpriteTestState.cpp
+    src/hikari/client/game/StageSelectState.cpp
+    src/hikari/client/game/TitleState.cpp
     src/hikari/client/game/Weapon.cpp
     src/hikari/client/game/WeaponAction.cpp
-    src/hikari/client/game/SpawnProjectileWeaponAction.cpp
-    src/hikari/client/game/Shot.cpp
     src/hikari/client/game/WeaponTable.cpp
-    src/hikari/client/game/DamageTable.cpp
+)
+
+source_group(hikari\\client\\game FILES ${HIKARI_CLIENT_GAME_SOURCE_FILES})
+
+set( HIKARI_CLIENT_GAME_EVENTS_SOURCE_FILES
     src/hikari/client/game/events/BaseEventData.cpp
-    src/hikari/client/game/events/EventData.cpp
-    src/hikari/client/game/events/EventManager.cpp
-    src/hikari/client/game/events/EventManagerImpl.cpp
     src/hikari/client/game/events/EntityDamageEventData.cpp
     src/hikari/client/game/events/EntityDeathEventData.cpp
     src/hikari/client/game/events/EntityStateChangeEventData.cpp
+    src/hikari/client/game/events/EventData.cpp
+    src/hikari/client/game/events/EventBus.cpp
+    src/hikari/client/game/events/EventBusImpl.cpp
+    src/hikari/client/game/events/ObjectRemovedEventData.cpp
     src/hikari/client/game/events/TransitionCollisionEventData.cpp
     src/hikari/client/game/events/WeaponFireEventData.cpp
-    src/hikari/client/game/events/ObjectRemovedEventData.cpp
+)
+
+source_group(hikari\\client\\game\\events FILES ${HIKARI_CLIENT_GAME_EVENTS_SOURCE_FILES})
+
+
+set( HIKARI_CLIENT_GAME_OBJECTS_SOURCE_FILES
+    src/hikari/client/game/objects/GameObject.cpp
+    src/hikari/client/game/objects/Hero.cpp
     src/hikari/client/game/objects/AnimatedSprite.cpp
     src/hikari/client/game/objects/brains/ScriptedEnemyBrain.cpp
     src/hikari/client/game/objects/CollectableItem.cpp
@@ -185,49 +221,54 @@ set( ENGINE_SOURCE_FILES
     src/hikari/client/game/objects/EnemySpawner.cpp
     src/hikari/client/game/objects/EnemyFactory.cpp
     src/hikari/client/game/objects/Spawner.cpp
+)
+
+source_group(hikari\\client\\game\\objects FILES ${HIKARI_CLIENT_GAME_OBJECTS_SOURCE_FILES})
+
+set( HIKARI_CLIENT_SCRIPTING_SOURCE_FILES
     src/hikari/client/scripting/AudioServiceScriptProxy.cpp
     src/hikari/client/scripting/SquirrelService.cpp
-    src/hikari/core/game/CollisionInfo.cpp
-    src/hikari/core/game/Direction.cpp
-    src/hikari/core/game/Movable.cpp
-    src/hikari/core/game/TileMapCollisionResolver.cpp
-    src/hikari/core/util/AnimationSetCache.cpp
-    src/hikari/core/util/exception/HikariException.cpp
-    src/hikari/core/util/exception/ServiceNotRegisteredException.cpp
-    src/hikari/core/util/FileSystem.cpp
-    src/hikari/core/util/HashedString.cpp
-    src/hikari/core/util/Log.cpp
-    src/hikari/core/util/Timer.cpp
-    src/hikari/test/core/geom/Vector2DTest.cpp
+)
+
+source_group(hikari\\client\\scripting FILES ${HIKARI_CLIENT_SCRIPTING_SOURCE_FILES})
+
+set( HIKARI_CLIENT_AUDIO_SOURCE_FILES
     src/hikari/client/audio/AudioService.cpp
-    src/hikari/client/game/GameWorld.cpp
-    src/hikari/client/game/objects/Hero.cpp
-    src/hikari/core/game/AnimationPlaybackException.cpp
-    src/hikari/core/game/AnimationSet.cpp
-    src/hikari/core/game/TileAnimator.cpp
     src/hikari/client/audio/NSFSoundStream.cpp
-    src/hikari/client/Client.cpp
-    src/hikari/client/game/GamePlayState.cpp
-    src/hikari/client/game/GameProgress.cpp
-    src/hikari/client/game/GuiTestState.cpp
-    src/hikari/client/game/KeyboardInput.cpp
-    src/hikari/client/game/objects/GameObject.cpp
-    src/hikari/client/game/RealTimeInput.cpp
-    src/hikari/client/game/SpriteTestState.cpp
-    src/hikari/client/game/StageSelectState.cpp
-    src/hikari/client/game/PasswordState.cpp
-    src/hikari/client/game/TitleState.cpp
+)
+
+source_group(hikari\\client\\audio FILES ${HIKARI_CLIENT_AUDIO_SOURCE_FILES})
+
+set( HIKARI_CLIENT_GUI_SOURCE_FILES
     src/hikari/client/gui/CommandConsole.cpp
-    src/hikari/client/gui/EnergyMeter.cpp
-    src/hikari/client/gui/Widget.cpp
-    src/hikari/client/gui/HikariImageLoader.cpp
     src/hikari/client/gui/EnergyGauge.cpp
-    src/hikari/client/gui/Panel.cpp
+    src/hikari/client/gui/EnergyMeter.cpp
     src/hikari/client/gui/GuiService.cpp
+    src/hikari/client/gui/HikariImageLoader.cpp
+    src/hikari/client/gui/Panel.cpp
+    src/hikari/client/gui/Widget.cpp
+    src/hikari/client/gui/MenuItem.cpp
+    src/hikari/client/gui/Menu.cpp
+    src/hikari/client/gui/Icon.cpp
+)
+
+source_group(hikari\\client\\gui FILES ${HIKARI_CLIENT_GUI_SOURCE_FILES})
+
+set( HIKARI_CORE_SOURCE_FILES
+    src/hikari/core/Hikari.cpp
+)
+
+source_group(hikari\\core FILES ${HIKARI_CORE_SOURCE_FILES})
+
+set( HIKARI_CORE_GAME_SOURCE_FILES
     src/hikari/core/game/Animation.cpp
     src/hikari/core/game/AnimationFrame.cpp
     src/hikari/core/game/AnimationLoader.cpp
+    src/hikari/core/game/AnimationPlaybackException.cpp
+    src/hikari/core/game/AnimationSet.cpp
     src/hikari/core/game/Animator.cpp
+    src/hikari/core/game/CollisionInfo.cpp
+    src/hikari/core/game/Direction.cpp
     src/hikari/core/game/GameController.cpp
     src/hikari/core/game/GameControllerException.cpp
     src/hikari/core/game/map/Camera.cpp
@@ -238,10 +279,22 @@ set( ENGINE_SOURCE_FILES
     src/hikari/core/game/map/RoomTransition.cpp
     src/hikari/core/game/map/Tileset.cpp
     src/hikari/core/game/map/TilesetLoader.cpp
+    src/hikari/core/game/Movable.cpp
     src/hikari/core/game/SpriteAnimator.cpp
-    src/hikari/core/gui/ImageFont.cpp
-    src/hikari/core/Hikari.cpp
-    src/hikari/core/math/NESNumber.cpp
+    src/hikari/core/game/TileAnimator.cpp
+    src/hikari/core/game/TileMapCollisionResolver.cpp
+)
+
+source_group(hikari\\core\\game FILES ${HIKARI_CORE_GAME_SOURCE_FILES})
+
+set( HIKARI_CORE_UTIL_SOURCE_FILES
+    src/hikari/core/util/AnimationSetCache.cpp
+    src/hikari/core/util/exception/HikariException.cpp
+    src/hikari/core/util/exception/ServiceNotRegisteredException.cpp
+    src/hikari/core/util/FileSystem.cpp
+    src/hikari/core/util/HashedString.cpp
+    src/hikari/core/util/Log.cpp
+    src/hikari/core/util/Timer.cpp
     src/hikari/core/util/ImageCache.cpp
     src/hikari/core/util/JsonUtil.cpp
     src/hikari/core/util/PhysFS.cpp
@@ -249,9 +302,30 @@ set( ENGINE_SOURCE_FILES
     src/hikari/core/util/RedirectStream.cpp
     src/hikari/core/util/StringUtils.cpp
     src/hikari/core/util/TilesetCache.cpp
+    src/hikari/core/gui/ImageFont.cpp
 )
 
-# SOURCE_GROUP(hikari FILES ${ENGINE_SOURCE_FILES})
+source_group(hikari\\core\\util FILES ${HIKARI_CORE_UTIL_SOURCE_FILES})
+
+set( HIKARI_CORE_MATH_SOURCE_FILES
+    src/hikari/core/math/NESNumber.cpp
+)
+
+source_group(hikari\\core\\math FILES ${HIKARI_CORE_MATH_SOURCE_FILES})
+
+set( ENGINE_SOURCE_FILES
+    ${HIKARI_CLIENT_SOURCE_FILES}
+    ${HIKARI_CLIENT_GAME_SOURCE_FILES}
+    ${HIKARI_CLIENT_GAME_EVENTS_SOURCE_FILES}
+    ${HIKARI_CLIENT_GAME_OBJECTS_SOURCE_FILES}
+    ${HIKARI_CLIENT_SCRIPTING_SOURCE_FILES}
+    ${HIKARI_CLIENT_AUDIO_SOURCE_FILES}
+    ${HIKARI_CLIENT_GUI_SOURCE_FILES}
+    ${HIKARI_CORE_SOURCE_FILES}
+    ${HIKARI_CORE_GAME_SOURCE_FILES}
+    ${HIKARI_CORE_UTIL_SOURCE_FILES}
+    ${HIKARI_CORE_MATH_SOURCE_FILES}
+)
 
 set( HIKARI_SOURCE_FILES
     ${GME_SOURCE_FILES}
@@ -285,20 +359,15 @@ include_directories( ${INCLUDE_DIRS} )
 
 add_executable( hikari ${HIKARI_SOURCE_FILES} ${INCLUDE_DIRS} )
 
-
-
 #
 # Copy content files to output directory
 #
 add_custom_command(
   TARGET hikari
   POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E echo "Copying content..."
+  COMMAND ${CMAKE_COMMAND} -E echo "Copying content to output directory."
   COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/content" $<TARGET_FILE_DIR:hikari>
 )
-
-MESSAGE(STATUS "Gonna copy ${PROJECT_SOURCE_DIR}/content to " $<TARGET_FILE_DIR:hikari>)
-
 
 #
 # We want to link statically on Windows

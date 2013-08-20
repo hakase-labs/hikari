@@ -3,18 +3,8 @@
 namespace hikari {
 
     RealTimeInput::RealTimeInput()
-        : previousUp(false)
-        , previousRight(false)
-        , previousDown(false)
-        , previousLeft(false)
-        , previousShoot(false)
-        , previousJump(false)
-        , currentUp(false)
-        , currentRight(false)
-        , currentDown(false)
-        , currentLeft(false)
-        , currentShoot(false)
-        , currentJump(false)
+        : currentState()
+        , previousState()
         , keybindings()
     {
         // Set up defaut key bindings
@@ -24,6 +14,9 @@ namespace hikari {
         bindKey(Input::BUTTON_LEFT,  sf::Keyboard::Left);
         bindKey(Input::BUTTON_SHOOT, sf::Keyboard::A);
         bindKey(Input::BUTTON_JUMP,  sf::Keyboard::S);
+        bindKey(Input::BUTTON_START, sf::Keyboard::Return);
+        bindKey(Input::BUTTON_SELECT, sf::Keyboard::RShift);
+        bindKey(Input::BUTTON_CANCEL, sf::Keyboard::Escape);
     }
 
     const bool RealTimeInput::isUp(const Button &button) const {
@@ -33,22 +26,31 @@ namespace hikari {
     const bool RealTimeInput::isDown(const Button &button) const {
         switch(button) {
             case Input::BUTTON_UP:
-                return currentUp;
+                return currentState.buttonUp;
                 break;
             case Input::BUTTON_RIGHT:
-                return currentRight;
+                return currentState.buttonRight;
                 break;
             case Input::BUTTON_DOWN:
-                return currentDown;
+                return currentState.buttonDown;
                 break;
             case Input::BUTTON_LEFT:
-                return currentLeft;
+                return currentState.buttonLeft;
                 break;
             case Input::BUTTON_SHOOT:
-                return currentShoot;
+                return currentState.buttonShoot;
                 break;
             case Input::BUTTON_JUMP:
-                return currentJump;
+                return currentState.buttonJump;
+                break;
+            case Input::BUTTON_START:
+                return currentState.buttonStart;
+                break;
+            case Input::BUTTON_SELECT:
+                return currentState.buttonSelect;
+                break;
+            case Input::BUTTON_CANCEL:
+                return currentState.buttonCancel;
                 break;
             default:
                 return !BUTTON_PUSHED;
@@ -59,22 +61,31 @@ namespace hikari {
     const bool RealTimeInput::isHeld(const Button &button) const {
         switch(button) {
             case Input::BUTTON_UP:
-                return (currentUp & previousUp);
+                return (currentState.buttonUp & previousState.buttonUp);
                 break;
             case Input::BUTTON_RIGHT:
-                return (currentRight & previousRight);
+                return (currentState.buttonRight & previousState.buttonRight);
                 break;
             case Input::BUTTON_DOWN:
-                return (currentDown & previousDown);
+                return (currentState.buttonDown & previousState.buttonDown);
                 break;
             case Input::BUTTON_LEFT:
-                return (currentLeft & previousLeft);
+                return (currentState.buttonLeft & previousState.buttonLeft);
                 break;
             case Input::BUTTON_SHOOT:
-                return (currentShoot & previousShoot);
+                return (currentState.buttonShoot & previousState.buttonShoot);
                 break;
             case Input::BUTTON_JUMP:
-                return (currentJump & previousJump);
+                return (currentState.buttonJump & previousState.buttonJump);
+                break;
+            case Input::BUTTON_START:
+                return (currentState.buttonStart & previousState.buttonStart);
+                break;
+            case Input::BUTTON_SELECT:
+                return (currentState.buttonSelect & previousState.buttonSelect);
+                break;
+            case Input::BUTTON_CANCEL:
+                return (currentState.buttonCancel & previousState.buttonCancel);
                 break;
             default:
                 return !BUTTON_PUSHED;
@@ -85,22 +96,31 @@ namespace hikari {
     const bool RealTimeInput::wasPressed(const Button &button) const {
         switch(button) {
             case Input::BUTTON_UP:
-                return (currentUp == BUTTON_PUSHED) && (previousUp != BUTTON_PUSHED);
+                return (currentState.buttonUp == BUTTON_PUSHED) && (previousState.buttonUp != BUTTON_PUSHED);
                 break;
             case Input::BUTTON_RIGHT:
-                return (currentRight == BUTTON_PUSHED) && (previousRight != BUTTON_PUSHED);
+                return (currentState.buttonRight == BUTTON_PUSHED) && (previousState.buttonRight != BUTTON_PUSHED);
                 break;
             case Input::BUTTON_DOWN:
-                return (currentDown == BUTTON_PUSHED) && (previousDown != BUTTON_PUSHED);
+                return (currentState.buttonDown == BUTTON_PUSHED) && (previousState.buttonDown != BUTTON_PUSHED);
                 break;
             case Input::BUTTON_LEFT:
-                return (currentLeft == BUTTON_PUSHED) && (previousLeft != BUTTON_PUSHED);
+                return (currentState.buttonLeft == BUTTON_PUSHED) && (previousState.buttonLeft != BUTTON_PUSHED);
                 break;
             case Input::BUTTON_SHOOT:
-                return (currentShoot && !previousShoot);
+                return (currentState.buttonShoot && !previousState.buttonShoot);
                 break;
             case Input::BUTTON_JUMP:
-                return (currentJump && !previousJump);
+                return (currentState.buttonJump && !previousState.buttonJump);
+                break;
+            case Input::BUTTON_START:
+                return (currentState.buttonStart && !previousState.buttonStart);
+                break;
+            case Input::BUTTON_SELECT:
+                return (currentState.buttonSelect && !previousState.buttonSelect);
+                break;
+            case Input::BUTTON_CANCEL:
+                return (currentState.buttonCancel && !previousState.buttonCancel);
                 break;
             default:
                 return !BUTTON_PUSHED;
@@ -111,22 +131,31 @@ namespace hikari {
     const bool RealTimeInput::wasReleased(const Button &button) const {
         switch(button) {
             case Input::BUTTON_UP:
-                return (currentUp != BUTTON_PUSHED) && (previousUp == BUTTON_PUSHED);
+                return (currentState.buttonUp != BUTTON_PUSHED) && (previousState.buttonUp == BUTTON_PUSHED);
                 break;
             case Input::BUTTON_RIGHT:
-                return (currentRight != BUTTON_PUSHED) && (previousRight == BUTTON_PUSHED);
+                return (currentState.buttonRight != BUTTON_PUSHED) && (previousState.buttonRight == BUTTON_PUSHED);
                 break;
             case Input::BUTTON_DOWN:
-                return (currentDown != BUTTON_PUSHED) && (previousDown == BUTTON_PUSHED);
+                return (currentState.buttonDown != BUTTON_PUSHED) && (previousState.buttonDown == BUTTON_PUSHED);
                 break;
             case Input::BUTTON_LEFT:
-                return (currentLeft != BUTTON_PUSHED) && (previousLeft == BUTTON_PUSHED);
+                return (currentState.buttonLeft != BUTTON_PUSHED) && (previousState.buttonLeft == BUTTON_PUSHED);
                 break;
             case Input::BUTTON_SHOOT:
-                return (!currentShoot && previousShoot);
+                return (!currentState.buttonShoot && previousState.buttonShoot);
                 break;
             case Input::BUTTON_JUMP:
-                return (!currentJump && previousJump);
+                return (!currentState.buttonJump && previousState.buttonJump);
+                break;
+            case Input::BUTTON_START:
+                return (!currentState.buttonStart && previousState.buttonStart);
+                break;
+            case Input::BUTTON_SELECT:
+                return (!currentState.buttonSelect && previousState.buttonSelect);
+                break;
+            case Input::BUTTON_CANCEL:
+                return (!currentState.buttonCancel && previousState.buttonCancel);
                 break;
             default:
                 return !BUTTON_PUSHED;
@@ -135,19 +164,17 @@ namespace hikari {
     }
 
     void RealTimeInput::update() {
-        previousUp    = currentUp;
-        previousRight = currentRight;
-        previousDown  = currentDown;
-        previousLeft  = currentLeft;
-        previousShoot = currentShoot;
-        previousJump  = currentJump;
+        previousState = currentState;
 
-        currentUp    = sf::Keyboard::isKeyPressed(keybindings[Input::BUTTON_UP]);
-        currentRight = sf::Keyboard::isKeyPressed(keybindings[Input::BUTTON_RIGHT]);
-        currentDown  = sf::Keyboard::isKeyPressed(keybindings[Input::BUTTON_DOWN]);
-        currentLeft  = sf::Keyboard::isKeyPressed(keybindings[Input::BUTTON_LEFT]);
-        currentShoot = sf::Keyboard::isKeyPressed(keybindings[Input::BUTTON_SHOOT]);
-        currentJump  = sf::Keyboard::isKeyPressed(keybindings[Input::BUTTON_JUMP]);
+        currentState.buttonUp     = sf::Keyboard::isKeyPressed(keybindings[Input::BUTTON_UP]);
+        currentState.buttonRight  = sf::Keyboard::isKeyPressed(keybindings[Input::BUTTON_RIGHT]);
+        currentState.buttonDown   = sf::Keyboard::isKeyPressed(keybindings[Input::BUTTON_DOWN]);
+        currentState.buttonLeft   = sf::Keyboard::isKeyPressed(keybindings[Input::BUTTON_LEFT]);
+        currentState.buttonShoot  = sf::Keyboard::isKeyPressed(keybindings[Input::BUTTON_SHOOT]);
+        currentState.buttonJump   = sf::Keyboard::isKeyPressed(keybindings[Input::BUTTON_JUMP]);
+        currentState.buttonStart  = sf::Keyboard::isKeyPressed(keybindings[Input::BUTTON_START]);
+        currentState.buttonSelect = sf::Keyboard::isKeyPressed(keybindings[Input::BUTTON_SELECT]);
+        currentState.buttonCancel = sf::Keyboard::isKeyPressed(keybindings[Input::BUTTON_CANCEL]);
     }
 
     void RealTimeInput::bindKey(const Button & button, sf::Keyboard::Key key) {

@@ -1,4 +1,4 @@
-#include "hikari/client/game/events/EventManagerImpl.hpp"
+#include "hikari/client/game/events/EventBusImpl.hpp"
 #include "hikari/client/game/events/EventData.hpp"
 #include "hikari/core/util/Log.hpp"
 
@@ -6,17 +6,17 @@
 
 namespace hikari {
 
-    EventManagerImpl::EventManagerImpl(const std::string & name, bool setAsGlobal)
-        : EventManager(name, setAsGlobal)
+    EventBusImpl::EventBusImpl(const std::string & name, bool setAsGlobal)
+        : EventBus(name, setAsGlobal)
     {
         activeQueueIndex = 0;
     }
 
-    EventManagerImpl::~EventManagerImpl() {
+    EventBusImpl::~EventBusImpl() {
         // Do nothing!
     }
 
-    bool EventManagerImpl::addListener(const EventListenerDelegate & eventDelegate, const EventType & type) {
+    bool EventBusImpl::addListener(const EventListenerDelegate & eventDelegate, const EventType & type) {
         // This will create a list of one doesn't exist.
         EventListenerList & eventListenerList = eventListeners[type];
 
@@ -32,7 +32,7 @@ namespace hikari {
         return true;
     }
 
-    bool EventManagerImpl::removeListener(const EventListenerDelegate & eventDelegate, const EventType & type) {
+    bool EventBusImpl::removeListener(const EventListenerDelegate & eventDelegate, const EventType & type) {
         bool success = false;
 
         auto findIt = eventListeners.find(type);
@@ -53,7 +53,7 @@ namespace hikari {
         return success;
     }
     
-    bool EventManagerImpl::triggerEvent(const EventDataPtr & event) const {
+    bool EventBusImpl::triggerEvent(const EventDataPtr & event) const {
         bool processed = false;
 
         auto findIt = eventListeners.find(event->getEventType());
@@ -73,7 +73,7 @@ namespace hikari {
         return processed;
     }
     
-    bool EventManagerImpl::queueEvent(const EventDataPtr & event) {
+    bool EventBusImpl::queueEvent(const EventDataPtr & event) {
         // ASSERT activeQueueIndex >= 0
         // ASSERT activeQueueIndex < 2
         
@@ -87,7 +87,7 @@ namespace hikari {
         return false;
     }
     
-    bool EventManagerImpl::cancelEvent(const EventType & type, bool allOfType) {
+    bool EventBusImpl::cancelEvent(const EventType & type, bool allOfType) {
         // ASSERT activeQueueIndex >= 0
         // ASSERT activeQueueIndex < 2
         
@@ -119,7 +119,7 @@ namespace hikari {
         return success;
     }
     
-    bool EventManagerImpl::processEvents(unsigned long maxMillis) {
+    bool EventBusImpl::processEvents(unsigned long maxMillis) {
         int queueToProcessIndex = activeQueueIndex;
 
         // Swap active queue and clear the new queue

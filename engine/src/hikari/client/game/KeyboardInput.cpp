@@ -3,18 +3,9 @@
 namespace hikari {
 
     KeyboardInput::KeyboardInput()
-        : previousUp(false)
-        , previousRight(false)
-        , previousDown(false)
-        , previousLeft(false)
-        , previousShoot(false)
-        , previousJump(false)
-        , currentUp(false)
-        , currentRight(false)
-        , currentDown(false)
-        , currentLeft(false)
-        , currentShoot(false)
-        , currentJump(false) {
+        : currentState()
+        , previousState()
+    {
 
     }
         
@@ -25,22 +16,31 @@ namespace hikari {
     const bool KeyboardInput::isDown(const Button &button) const {
         switch(button) {
             case Input::BUTTON_UP:
-                return currentUp;
+                return currentState.buttonUp;
                 break;
             case Input::BUTTON_RIGHT:
-                return currentRight;
+                return currentState.buttonRight;
                 break;
             case Input::BUTTON_DOWN:
-                return currentDown;
+                return currentState.buttonDown;
                 break;
             case Input::BUTTON_LEFT:
-                return currentLeft;
+                return currentState.buttonLeft;
                 break;
             case Input::BUTTON_SHOOT:
-                return currentShoot;
+                return currentState.buttonShoot;
                 break;
             case Input::BUTTON_JUMP:
-                return currentJump;
+                return currentState.buttonJump;
+                break;
+            case Input::BUTTON_START:
+                return currentState.buttonStart;
+                break;
+            case Input::BUTTON_SELECT:
+                return currentState.buttonSelect;
+                break;
+            case Input::BUTTON_CANCEL:
+                return currentState.buttonCancel;
                 break;
             default:
                 return !BUTTON_PUSHED;
@@ -51,22 +51,31 @@ namespace hikari {
     const bool KeyboardInput::isHeld(const Button &button) const {
         switch(button) {
             case Input::BUTTON_UP:
-                return (currentUp & previousUp);
+                return (currentState.buttonUp & previousState.buttonUp);
                 break;
             case Input::BUTTON_RIGHT:
-                return (currentRight & previousRight);
+                return (currentState.buttonRight & previousState.buttonRight);
                 break;
             case Input::BUTTON_DOWN:
-                return (currentDown & previousDown);
+                return (currentState.buttonDown & previousState.buttonDown);
                 break;
             case Input::BUTTON_LEFT:
-                return (currentLeft & previousLeft);
+                return (currentState.buttonLeft & previousState.buttonLeft);
                 break;
             case Input::BUTTON_SHOOT:
-                return (currentShoot & previousShoot);
+                return (currentState.buttonShoot & previousState.buttonShoot);
                 break;
             case Input::BUTTON_JUMP:
-                return (currentJump & previousJump);
+                return (currentState.buttonJump & previousState.buttonJump);
+                break;
+            case Input::BUTTON_START:
+                return (currentState.buttonStart & previousState.buttonStart);
+                break;
+            case Input::BUTTON_SELECT:
+                return (currentState.buttonSelect & previousState.buttonSelect);
+                break;
+            case Input::BUTTON_CANCEL:
+                return (currentState.buttonCancel & previousState.buttonCancel);
                 break;
             default:
                 return !BUTTON_PUSHED;
@@ -77,22 +86,31 @@ namespace hikari {
     const bool KeyboardInput::wasPressed(const Button &button) const {
         switch(button) {
             case Input::BUTTON_UP:
-                return (currentUp == BUTTON_PUSHED) && (previousUp != BUTTON_PUSHED);
+                return (currentState.buttonUp == BUTTON_PUSHED) && (previousState.buttonUp != BUTTON_PUSHED);
                 break;
             case Input::BUTTON_RIGHT:
-                return (currentRight == BUTTON_PUSHED) && (previousRight != BUTTON_PUSHED);
+                return (currentState.buttonRight == BUTTON_PUSHED) && (previousState.buttonRight != BUTTON_PUSHED);
                 break;
             case Input::BUTTON_DOWN:
-                return (currentDown == BUTTON_PUSHED) && (previousDown != BUTTON_PUSHED);
+                return (currentState.buttonDown == BUTTON_PUSHED) && (previousState.buttonDown != BUTTON_PUSHED);
                 break;
             case Input::BUTTON_LEFT:
-                return (currentLeft == BUTTON_PUSHED) && (previousLeft != BUTTON_PUSHED);
+                return (currentState.buttonLeft == BUTTON_PUSHED) && (previousState.buttonLeft != BUTTON_PUSHED);
                 break;
             case Input::BUTTON_SHOOT:
-                return (currentShoot && !previousShoot);
+                return (currentState.buttonShoot && !previousState.buttonShoot);
                 break;
             case Input::BUTTON_JUMP:
-                return (currentJump && !previousJump);
+                return (currentState.buttonJump && !previousState.buttonJump);
+                break;
+            case Input::BUTTON_START:
+                return (currentState.buttonStart && !previousState.buttonStart);
+                break;
+            case Input::BUTTON_SELECT:
+                return (currentState.buttonSelect && !previousState.buttonSelect);
+                break;
+            case Input::BUTTON_CANCEL:
+                return (currentState.buttonCancel && !previousState.buttonCancel);
                 break;
             default:
                 return !BUTTON_PUSHED;
@@ -103,22 +121,31 @@ namespace hikari {
     const bool KeyboardInput::wasReleased(const Button &button) const {
         switch(button) {
             case Input::BUTTON_UP:
-                return (currentUp != BUTTON_PUSHED) && (previousUp == BUTTON_PUSHED);
+                return (currentState.buttonUp != BUTTON_PUSHED) && (previousState.buttonUp == BUTTON_PUSHED);
                 break;
             case Input::BUTTON_RIGHT:
-                return (currentRight != BUTTON_PUSHED) && (previousRight == BUTTON_PUSHED);
+                return (currentState.buttonRight != BUTTON_PUSHED) && (previousState.buttonRight == BUTTON_PUSHED);
                 break;
             case Input::BUTTON_DOWN:
-                return (currentDown != BUTTON_PUSHED) && (previousDown == BUTTON_PUSHED);
+                return (currentState.buttonDown != BUTTON_PUSHED) && (previousState.buttonDown == BUTTON_PUSHED);
                 break;
             case Input::BUTTON_LEFT:
-                return (currentLeft != BUTTON_PUSHED) && (previousLeft == BUTTON_PUSHED);
+                return (currentState.buttonLeft != BUTTON_PUSHED) && (previousState.buttonLeft == BUTTON_PUSHED);
                 break;
             case Input::BUTTON_SHOOT:
-                return (!currentShoot && previousShoot);
+                return (!currentState.buttonShoot && previousState.buttonShoot);
                 break;
             case Input::BUTTON_JUMP:
-                return (!currentJump && previousJump);
+                return (!currentState.buttonJump && previousState.buttonJump);
+                break;
+            case Input::BUTTON_START:
+                return (!currentState.buttonStart && previousState.buttonStart);
+                break;
+            case Input::BUTTON_SELECT:
+                return (!currentState.buttonSelect && previousState.buttonSelect);
+                break;
+            case Input::BUTTON_CANCEL:
+                return (!currentState.buttonCancel && previousState.buttonCancel);
                 break;
             default:
                 return !BUTTON_PUSHED;
@@ -132,28 +159,28 @@ namespace hikari {
             HIKARI_LOG(debug3) << "Key event KeyPressed";
             switch(keyboardEvent.key.code) {
                 case sf::Keyboard::Up:
-                    previousUp = currentUp;
-                    currentUp = BUTTON_PUSHED;
+                    // previousUp = currentUp;
+                    currentState.buttonUp = BUTTON_PUSHED;
                     break;
                 case sf::Keyboard::Right:
-                    previousRight = currentRight;
-                    currentRight = BUTTON_PUSHED;
+                    // previousRight = currentState.buttonRight;
+                    currentState.buttonRight = BUTTON_PUSHED;
                     break;
                 case sf::Keyboard::Down:
-                    previousDown = currentDown;
-                    currentDown = BUTTON_PUSHED;
+                    // previousDown = currentState.buttonDown;
+                    currentState.buttonDown = BUTTON_PUSHED;
                     break;
                 case sf::Keyboard::Left:
-                    previousLeft = currentLeft;
-                    currentLeft = BUTTON_PUSHED;
+                    // previousLeft = currentState.buttonLeft;
+                    currentState.buttonLeft = BUTTON_PUSHED;
                     break;
                 case sf::Keyboard::A:
-                    previousShoot = currentShoot;
-                    currentShoot = BUTTON_PUSHED;
+                    // previousShoot = currentState.buttonShoot;
+                    currentState.buttonShoot = BUTTON_PUSHED;
                     break;
                 case sf::Keyboard::S:
-                    previousJump = currentJump;
-                    currentJump = BUTTON_PUSHED;
+                    // previousJump = currentState.buttonJump;
+                    currentState.buttonJump = BUTTON_PUSHED;
                     break;
                 default:
                     break;
@@ -162,28 +189,28 @@ namespace hikari {
             HIKARI_LOG(debug3) << "Key event KeyReleased";
             switch(keyboardEvent.key.code) {
                 case sf::Keyboard::Up:
-                    previousUp = currentUp;
-                    currentUp = !BUTTON_PUSHED;
+                    // previousUp = currentUp;
+                    currentState.buttonUp = !BUTTON_PUSHED;
                     break;
                 case sf::Keyboard::Right:
-                    previousRight = currentRight;
-                    currentRight = !BUTTON_PUSHED;
+                    // previousRight = currentState.buttonRight;
+                    currentState.buttonRight = !BUTTON_PUSHED;
                     break;
                 case sf::Keyboard::Down:
-                    previousDown = currentDown;
-                    currentDown = !BUTTON_PUSHED;
+                    // previousDown = currentState.buttonDown;
+                    currentState.buttonDown = !BUTTON_PUSHED;
                     break;
                 case sf::Keyboard::Left:
-                    previousLeft = currentLeft;
-                    currentLeft = !BUTTON_PUSHED;
+                    // previousLeft = currentState.buttonLeft;
+                    currentState.buttonLeft = !BUTTON_PUSHED;
                     break;
                 case sf::Keyboard::A:
-                    previousShoot = currentShoot;
-                    currentShoot = !BUTTON_PUSHED;
+                    // previousShoot = currentState.buttonShoot;
+                    currentState.buttonShoot = !BUTTON_PUSHED;
                     break;
                 case sf::Keyboard::S:
-                    previousJump = currentJump;
-                    currentJump = !BUTTON_PUSHED;
+                    // previousJump = currentState.buttonJump;
+                    currentState.buttonJump = !BUTTON_PUSHED;
                     break;
                 default:
                     break;
@@ -192,11 +219,13 @@ namespace hikari {
     }
 
     void KeyboardInput::update(float dt) {
-        previousUp = currentUp;
-        previousRight = currentRight;
-        previousDown = currentDown;
-        previousLeft = currentLeft;
-        previousShoot = currentShoot;
-        previousJump = currentJump;
+        // previousUp = currentUp;
+        // previousRight = currentRight;
+        // previousDown = currentDown;
+        // previousLeft = currentLeft;
+        // previousShoot = currentShoot;
+        // previousJump = currentJump;
+
+        previousState = currentState;
     }
 } // hikari

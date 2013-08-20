@@ -1,7 +1,7 @@
 #include "hikari/client/game/objects/Entity.hpp"
 #include "hikari/client/game/objects/AnimatedSprite.hpp"
 #include "hikari/client/game/Shot.hpp"
-#include "hikari/client/game/events/EventManager.hpp"
+#include "hikari/client/game/events/EventBus.hpp"
 #include "hikari/client/game/events/WeaponFireEventData.hpp"
 #include "hikari/core/game/map/Room.hpp"
 #include "hikari/core/game/map/Tileset.hpp"
@@ -25,7 +25,7 @@ namespace hikari {
     Entity::Entity(int id, std::shared_ptr<Room> room)
         : GameObject(id)
         , animatedSprite(new AnimatedSprite())
-        , eventManager()
+        , eventBus()
         , world()
         , room(room)
         , direction(Directions::None)
@@ -61,7 +61,7 @@ namespace hikari {
     Entity::Entity(const Entity& proto)
         : GameObject(GameObject::generateObjectId())
         , animatedSprite(nullptr)
-        , eventManager(proto.eventManager)
+        , eventBus(proto.eventBus)
         , world(proto.world)
         , room(proto.room)
         , direction(proto.direction)
@@ -183,7 +183,7 @@ namespace hikari {
 
     void Entity::fireWeapon() {
         if(canFireWeapon()) {
-            if(auto events = eventManager.lock()) {
+            if(auto events = eventBus.lock()) {
                 
                 // Adjust offset for direction
                 Vector2<float> offset = getActionSpot();
@@ -202,7 +202,7 @@ namespace hikari {
                     )
                 );
             } else {
-                HIKARI_LOG(debug4) << "Entity::fireWeapon failed; no EventManager. id = " << getId();
+                HIKARI_LOG(debug4) << "Entity::fireWeapon failed; no EventBus. id = " << getId();
             }
         }
     }
@@ -231,12 +231,12 @@ namespace hikari {
         return world;
     }
 
-    void Entity::setEventManager(const std::weak_ptr<EventManager>& eventManager) {
-        this->eventManager = eventManager;
+    void Entity::setEventBus(const std::weak_ptr<EventBus> & eventBus) {
+        this->eventBus = eventBus;
     }
 
-    const std::weak_ptr<EventManager>& Entity::getEventManager() const {
-        return eventManager;
+    const std::weak_ptr<EventBus> & Entity::getEventBus() const {
+        return eventBus;
     }
 
     const Direction Entity::getDirection() const {

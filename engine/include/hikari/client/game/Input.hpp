@@ -24,7 +24,10 @@ namespace hikari {
             BUTTON_DOWN = (1 << 2),
             BUTTON_LEFT = (1 << 3),
             BUTTON_SHOOT = (1 << 4),
-            BUTTON_JUMP = (1 << 5)
+            BUTTON_JUMP = (1 << 5),
+            BUTTON_START = (1 << 6),
+            BUTTON_SELECT = (1 << 7),
+            BUTTON_CANCEL = (1 << 8)
         };
 
         virtual ~Input() { }

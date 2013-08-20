@@ -59,7 +59,7 @@ namespace hikari {
                 } else {
                     HIKARI_LOG(debug2) << "Could not find a constructor for '" << scriptClassName << "'.";
                 }
-            } catch(Sqrat::Exception squirrelException) {
+            } catch(Sqrat::Exception & squirrelException) {
                 HIKARI_LOG(debug1) << "Could not create an instance of '" << scriptClassName << "'. Reason: " << squirrelException.Message();
             }
         }

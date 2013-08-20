@@ -17,7 +17,7 @@ namespace hikari {
             int i = 0;
             for(std::string::const_iterator itr = glyphs.begin(), end = glyphs.end(); 
                 itr < end; 
-                itr++, i++) {
+                ++itr, ++i) {
                     char glyph = (*itr);
                     glyphMap[glyph] = sf::IntRect(i * glyphWidth, 0, glyphWidth, glyphHeight);
             }
@@ -40,7 +40,7 @@ namespace hikari {
 
         for(std::string::const_iterator itr = text.begin(), end = text.end(); 
             itr < end; 
-            itr++, i++) {
+            ++itr, ++i) {
                 char glyph = (*itr);
 
                 // Adjust for new lines.

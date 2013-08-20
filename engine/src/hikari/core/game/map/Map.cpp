@@ -75,7 +75,7 @@ namespace hikari {
             it = roomRectangles.begin(),
             end = roomRectangles.end();
             it < end;
-            it++, index++)
+            ++it, ++index)
         {
             if((*it).contains(x, y)) {
                 return index;
@@ -91,7 +91,7 @@ namespace hikari {
             it = rooms.begin(),
             end = rooms.end();
             it < end;
-            it++)
+            ++it)
         {
             const RoomPtr& thisRoom = (*it);
 
