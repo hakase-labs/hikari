@@ -59,7 +59,7 @@ namespace hikari {
                     isValid = false;
                     HIKARI_LOG(debug2) << "Could not find a constructor for '" << effectClassName << "'.";
                 }
-            } catch(Sqrat::Exception squirrelException) {
+            } catch(Sqrat::Exception & squirrelException) {
                 isValid = false;
                 HIKARI_LOG(debug1) << "Could not create an instance of '" << effectClassName << "'. Reason: " << squirrelException.Message();
             }

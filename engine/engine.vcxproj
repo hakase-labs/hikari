@@ -61,8 +61,8 @@
     <ClCompile Include="src\hikari\client\game\Effect.cpp" />
     <ClCompile Include="src\hikari\client\game\events\BaseEventData.cpp" />
     <ClCompile Include="src\hikari\client\game\events\EventData.cpp" />
-    <ClCompile Include="src\hikari\client\game\events\EventManager.cpp" />
-    <ClCompile Include="src\hikari\client\game\events\EventManagerImpl.cpp" />
+    <ClCompile Include="src\hikari\client\game\events\EventBus.cpp" />
+    <ClCompile Include="src\hikari\client\game\events\EventBusImpl.cpp" />
     <ClCompile Include="src\hikari\client\game\events\TransitionCollisionEventData.cpp" />
     <ClCompile Include="src\hikari\client\game\objects\brains\ScriptedEnemyBrain.cpp" />
     <ClCompile Include="src\hikari\client\game\objects\CollectableItem.cpp" />
@@ -168,8 +168,8 @@
     <ClInclude Include="include\hikari\client\game\events\BaseEventData.hpp" />
     <ClInclude Include="include\hikari\client\game\events\EventData.hpp" />
     <ClInclude Include="include\hikari\client\game\events\EventListenerDelegate.hpp" />
-    <ClInclude Include="include\hikari\client\game\events\EventManager.hpp" />
-    <ClInclude Include="include\hikari\client\game\events\EventManagerImpl.hpp" />
+    <ClInclude Include="include\hikari\client\game\events\EventBus.hpp" />
+    <ClInclude Include="include\hikari\client\game\events\EventBusImpl.hpp" />
     <ClInclude Include="include\hikari\client\game\events\TransitionCollisionEventData.hpp" />
     <ClInclude Include="include\hikari\client\game\GamePlayState.hpp" />
     <ClInclude Include="include\hikari\client\game\GameProgress.hpp" />

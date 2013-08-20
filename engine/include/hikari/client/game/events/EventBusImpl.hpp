@@ -1,16 +1,16 @@
-#ifndef HIKARI_CLIENT_EVENTMANAGERIMPL
-#define HIKARI_CLIENT_EVENTMANAGERIMPL
+#ifndef HIKARI_CLIENT_EventBusIMPL
+#define HIKARI_CLIENT_EventBusIMPL
 
-#include "hikari/client/game/events/EventManager.hpp"
+#include "hikari/client/game/events/EventBus.hpp"
 #include <list>
 #include <map>
 
 namespace hikari {
 
     /**
-     * EventManager implementation.
+     * EventBus implementation.
      */
-    class EventManagerImpl : public EventManager {
+    class EventBusImpl : public EventBus {
     private:
         typedef std::list<EventListenerDelegate> EventListenerList;
         typedef std::map<EventType, EventListenerList> EventListenerMap;
@@ -22,8 +22,8 @@ namespace hikari {
         int activeQueueIndex;
         
     public:
-        explicit EventManagerImpl(const std::string & name, bool setAsGlobal);
-        virtual ~EventManagerImpl();
+        explicit EventBusImpl(const std::string & name, bool setAsGlobal);
+        virtual ~EventBusImpl();
 
         virtual bool addListener(const EventListenerDelegate & eventDelegate, const EventType & type);
         virtual bool removeListener(const EventListenerDelegate & eventDelegate, const EventType & type);
@@ -35,4 +35,4 @@ namespace hikari {
 
 } // hikari
 
-#endif // HIKARI_CLIENT_EVENTMANAGERIMPL
+#endif // HIKARI_CLIENT_EventBusIMPL

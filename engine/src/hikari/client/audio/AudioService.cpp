@@ -37,9 +37,7 @@ namespace hikari {
     }
 
     bool AudioService::isValidConfiguration(const Json::Value &configuration) const {
-        bool valid = false;
-
-        valid = configuration.isMember("music") 
+        bool valid = configuration.isMember("music") 
                 && configuration.isMember("samples") 
                 && configuration["music"].isString() 
                 && configuration["samples"].isString();

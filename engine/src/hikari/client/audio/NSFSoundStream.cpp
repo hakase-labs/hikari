@@ -12,7 +12,7 @@ namespace hikari {
         : sf::SoundStream()
         , masterBufferSize(bufferSize)
         , samplerCount(samplerCount)
-        , activeSampler(0)
+        // , activeSampler(0)
         , masterBuffer(new short[masterBufferSize])
         , sampleBuffers()
         , sampleEmus()

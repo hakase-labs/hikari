@@ -2,7 +2,7 @@
 #include "hikari/client/game/objects/HeroIdleMobilityState.hpp"
 #include "hikari/client/game/objects/HeroWalkingMobilityState.hpp"
 #include "hikari/client/game/objects/HeroAirbornMobilityState.hpp"
-#include "hikari/client/game/events/EventManager.hpp"
+#include "hikari/client/game/events/EventBus.hpp"
 #include "hikari/client/game/events/EventData.hpp"
 #include "hikari/client/game/events/EntityStateChangeEventData.hpp"
 
@@ -44,7 +44,7 @@ namespace hikari {
 
         hero.chooseAnimation();
 
-        if(auto events = hero.getEventManager().lock()) {
+        if(auto events = hero.getEventBus().lock()) {
             events->triggerEvent(EventDataPtr(new EntityStateChangeEventData(hero.getId(), "sliding")));
         }
     }

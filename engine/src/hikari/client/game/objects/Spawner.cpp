@@ -33,11 +33,11 @@ namespace hikari {
 
     }
 
-    void Spawner::attachEventListeners(EventManager & eventManager) {
+    void Spawner::attachEventListeners(EventBus & EventBus) {
 
     }
 
-    void Spawner::detachEventListeners(EventManager & eventManager) {
+    void Spawner::detachEventListeners(EventBus & EventBus) {
 
     }
 

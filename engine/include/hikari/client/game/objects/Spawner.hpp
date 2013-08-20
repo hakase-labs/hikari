@@ -12,7 +12,7 @@
 
 namespace hikari {
 
-    class EventManager;
+    class EventBus;
     
     /**
         A Spawner is responsible for spawning one or more objects in the game
@@ -55,8 +55,8 @@ namespace hikari {
 
         virtual void performAction(GameWorld & world);
 
-        virtual void attachEventListeners(EventManager & eventManager);
-        virtual void detachEventListeners(EventManager & eventManager);
+        virtual void attachEventListeners(EventBus & EventBus);
+        virtual void detachEventListeners(EventBus & EventBus);
 
         virtual void attachToInstance(const std::shared_ptr<GameObject> & instance);
 
