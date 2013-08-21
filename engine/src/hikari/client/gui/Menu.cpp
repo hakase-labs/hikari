@@ -1,5 +1,6 @@
 #include "hikari/client/gui/Menu.hpp"
 #include "hikari/client/gui/MenuItem.hpp"
+#include "hikari/client/game/Input.hpp"
 
 #include <guichan/graphics.hpp>
 #include <guichan/selectionlistener.hpp>
@@ -20,7 +21,7 @@ namespace gui {
     {
         setFocusable(true);
         setSelectedIndex(0);
-        // addKeyListener(this);
+        addKeyListener(this);
     }
 
     Menu::Menu(const std::vector<std::shared_ptr<MenuItem>> & items)
@@ -33,10 +34,14 @@ namespace gui {
     {
         setFocusable(true);
         setSelectedIndex(0);
-        // addKeyListener(this);
+        addKeyListener(this);
     }
 
     Menu::~Menu() {
+    }
+
+    void Menu::setInput(const std::weak_ptr<hikari::Input> & input) {
+        this->input = input;
     }
 
     std::vector<std::shared_ptr<MenuItem>> & Menu::getItems() {
@@ -219,16 +224,19 @@ namespace gui {
     }
 
     void Menu::keyPressed(gcn::KeyEvent& keyEvent) {
-        gcn::Key key = keyEvent.getKey();
+        // Only listen to keyboard events if there is no input assigned
+        if(input.expired()) {
+            gcn::Key key = keyEvent.getKey();
 
-        if(key.getValue() == gcn::Key::Up) {
-            selectPreviousItem();
-            keyEvent.consume();
-        } else if(key.getValue() == gcn::Key::Down) {
-            selectNextItem();
-            keyEvent.consume();
-        } else if(key.getValue() == gcn::Key::Enter) {
-            distributeActionEvent();
+            if(key.getValue() == gcn::Key::Up) {
+                selectPreviousItem();
+                keyEvent.consume();
+            } else if(key.getValue() == gcn::Key::Down) {
+                selectNextItem();
+                keyEvent.consume();
+            } else if(key.getValue() == gcn::Key::Enter) {
+                distributeActionEvent();
+            }
         }
     }
 
@@ -251,7 +259,17 @@ namespace gui {
     }
 
     void Menu::processInputState() {
-        // Nothing to do
+        if(auto inputPtr = input.lock()) {
+            if(inputPtr->wasPressed(Input::BUTTON_UP)) {
+                selectPreviousItem();
+            } else if(inputPtr->wasPressed(Input::BUTTON_DOWN)) {
+                selectNextItem();
+            }
+
+            if(inputPtr->wasPressed(Input::BUTTON_SHOOT) || inputPtr->wasPressed(Input::BUTTON_START)) {
+                distributeActionEvent();
+            }
+        }
     }
 
 } // hikari::gui

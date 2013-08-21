@@ -329,7 +329,7 @@ namespace hikari {
                         quit = true;
                     }
 
-                    if(event.type == sf::Event::KeyPressed) {
+                    if(event.type == sf::Event::KeyPressed || event.type == sf::Event::KeyReleased) {
                         controller.handleEvent(event);
                     }
 

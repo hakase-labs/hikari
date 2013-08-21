@@ -44,10 +44,10 @@ namespace gui {
     }
 
     void Icon::draw(gcn::Graphics* graphics) {
-        if(isOpaque()) {
+        //if(isOpaque()) {
             graphics->setColor(getBaseColor());
             graphics->fillRectangle(getX(), getX(), getWidth(), getHeight());
-        }
+        //}
 
         if(mImage) {
             graphics->drawImage(

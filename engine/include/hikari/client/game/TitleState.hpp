@@ -28,6 +28,7 @@ namespace hikari {
     class GuiService;
     class ServiceLocator;
     class GameController;
+    class KeyboardInput;
 
     class TitleState : public GameState {
     private:
@@ -35,6 +36,7 @@ namespace hikari {
         GameController & controller;
         std::weak_ptr<GuiService> guiService;
         std::weak_ptr<AudioService> audioService;
+        std::shared_ptr<KeyboardInput> keyboardInput;
         std::unique_ptr<gcn::Container> guiContainer;
         std::unique_ptr<gcn::Label> guiLabel;
         std::unique_ptr<gui::Menu> guiMenu;

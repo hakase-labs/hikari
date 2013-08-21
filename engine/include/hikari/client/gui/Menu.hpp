@@ -50,6 +50,8 @@ namespace gui {
         explicit Menu(const std::vector<std::shared_ptr<MenuItem>> & items);
         virtual ~Menu();
 
+        void setInput(const std::weak_ptr<hikari::Input> & input);
+
         int getSelectedIndex() const;
         void setSelectedIndex(int index);
 

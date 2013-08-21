@@ -1,4 +1,5 @@
 #include "hikari/client/game/TitleState.hpp"
+#include "hikari/client/game/KeyboardInput.hpp"
 #include "hikari/client/audio/AudioService.hpp"
 #include "hikari/client/gui/GuiService.hpp"
 #include "hikari/client/gui/Menu.hpp"
@@ -29,6 +30,7 @@ namespace hikari {
         , controller(controller)
         , guiService(services.locateService<GuiService>(Services::GUISERVICE))
         , audioService(services.locateService<AudioService>(Services::AUDIO))
+        , keyboardInput(new KeyboardInput())
         , guiContainer(new gcn::Container())
         , guiLabel(new gcn::Label())
         , guiMenu(new gui::Menu())
@@ -121,13 +123,16 @@ namespace hikari {
         guiMenu->addItem(quitMenuItem);
 
         guiMenu->setSelectedIndex(0);
+        guiMenu->setInput(keyboardInput);
 
         guiContainer->add(guiMenu.get(), 16, 128);
         guiContainer->add(guiLabel.get(), 30, 30);
     }
 
     void TitleState::handleEvent(sf::Event &event) {
-
+        if(event.type == sf::Event::KeyPressed || event.type == sf::Event::KeyReleased) {
+            keyboardInput->processEvent(event);
+        }
     }
 
     void TitleState::render(sf::RenderTarget &target) {
@@ -135,6 +140,8 @@ namespace hikari {
     }
 
     bool TitleState::update(const float &dt) {
+        keyboardInput->update(dt);
+        guiMenu->logic();
         return goToNextState;
     }
 
@@ -148,7 +155,7 @@ namespace hikari {
         }
 
         goToNextState = false;
-        guiMenu->addSelectionListener(guiSelectionListener.get());
+        //guiMenu->addSelectionListener(guiSelectionListener.get());
     }
 
     void TitleState::onExit() {
@@ -159,7 +166,7 @@ namespace hikari {
             topContainer.remove(guiContainer.get());
         }
 
-        guiMenu->removeSelectionListener(guiSelectionListener.get());
+        //guiMenu->removeSelectionListener(guiSelectionListener.get());
     }
 
     const std::string & TitleState::getName() const {
