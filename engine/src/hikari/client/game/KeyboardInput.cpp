@@ -156,61 +156,61 @@ namespace hikari {
     void KeyboardInput::processEvent(const sf::Event &keyboardEvent) {
         HIKARI_LOG(debug2) << "Key event being processed!";
         if(keyboardEvent.type == sf::Event::KeyPressed) {
-            HIKARI_LOG(debug3) << "Key event KeyPressed";
             switch(keyboardEvent.key.code) {
                 case sf::Keyboard::Up:
-                    // previousUp = currentUp;
                     currentState.buttonUp = BUTTON_PUSHED;
                     break;
                 case sf::Keyboard::Right:
-                    // previousRight = currentState.buttonRight;
                     currentState.buttonRight = BUTTON_PUSHED;
                     break;
                 case sf::Keyboard::Down:
-                    // previousDown = currentState.buttonDown;
                     currentState.buttonDown = BUTTON_PUSHED;
                     break;
                 case sf::Keyboard::Left:
-                    // previousLeft = currentState.buttonLeft;
                     currentState.buttonLeft = BUTTON_PUSHED;
                     break;
                 case sf::Keyboard::A:
-                    // previousShoot = currentState.buttonShoot;
                     currentState.buttonShoot = BUTTON_PUSHED;
+                    currentState.buttonStart = BUTTON_PUSHED;
                     break;
                 case sf::Keyboard::S:
-                    // previousJump = currentState.buttonJump;
                     currentState.buttonJump = BUTTON_PUSHED;
+                    break;
+                case sf::Keyboard::Return:
+                    currentState.buttonStart = BUTTON_PUSHED;
+                    break;
+                case sf::Keyboard::Escape:
+                    currentState.buttonCancel = BUTTON_PUSHED;
                     break;
                 default:
                     break;
             }
         } else if(keyboardEvent.type == sf::Event::KeyReleased) {
-            HIKARI_LOG(debug3) << "Key event KeyReleased";
             switch(keyboardEvent.key.code) {
                 case sf::Keyboard::Up:
-                    // previousUp = currentUp;
                     currentState.buttonUp = !BUTTON_PUSHED;
                     break;
                 case sf::Keyboard::Right:
-                    // previousRight = currentState.buttonRight;
                     currentState.buttonRight = !BUTTON_PUSHED;
                     break;
                 case sf::Keyboard::Down:
-                    // previousDown = currentState.buttonDown;
                     currentState.buttonDown = !BUTTON_PUSHED;
                     break;
                 case sf::Keyboard::Left:
-                    // previousLeft = currentState.buttonLeft;
                     currentState.buttonLeft = !BUTTON_PUSHED;
                     break;
                 case sf::Keyboard::A:
-                    // previousShoot = currentState.buttonShoot;
+                    currentState.buttonStart = !BUTTON_PUSHED;
                     currentState.buttonShoot = !BUTTON_PUSHED;
                     break;
                 case sf::Keyboard::S:
-                    // previousJump = currentState.buttonJump;
                     currentState.buttonJump = !BUTTON_PUSHED;
+                    break;
+                case sf::Keyboard::Return:
+                    currentState.buttonStart = !BUTTON_PUSHED;
+                    break;
+                case sf::Keyboard::Escape:
+                    currentState.buttonCancel = !BUTTON_PUSHED;
                     break;
                 default:
                     break;
@@ -219,13 +219,6 @@ namespace hikari {
     }
 
     void KeyboardInput::update(float dt) {
-        // previousUp = currentUp;
-        // previousRight = currentRight;
-        // previousDown = currentDown;
-        // previousLeft = currentLeft;
-        // previousShoot = currentShoot;
-        // previousJump = currentJump;
-
         previousState = currentState;
     }
 } // hikari
