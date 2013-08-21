@@ -11,18 +11,39 @@ namespace hikari {
     private:
         static const bool BUTTON_PUSHED = true;
 
-        bool previousUp;
-        bool previousRight;
-        bool previousDown;
-        bool previousLeft;
-        bool previousShoot;
-        bool previousJump;
-        bool currentUp;
-        bool currentRight;
-        bool currentDown;
-        bool currentLeft;
-        bool currentShoot;
-        bool currentJump;
+        struct ButtonState {
+            bool buttonUp;
+            bool buttonRight;
+            bool buttonDown;
+            bool buttonLeft;
+            bool buttonShoot;
+            bool buttonJump;
+            bool buttonStart;
+            bool buttonSelect;
+            bool buttonCancel;
+
+            ButtonState() {
+                reset();
+            }
+
+            /**
+             * Resets the state of all buttons to false.
+             */
+            void reset() {
+                buttonUp = false;
+                buttonRight = false;
+                buttonDown = false;
+                buttonLeft = false;
+                buttonShoot = false;
+                buttonJump = false;
+                buttonStart = false;
+                buttonSelect = false;
+                buttonCancel = false;
+            }
+        };
+
+        ButtonState currentState;
+        ButtonState previousState;
 
     public:
         KeyboardInput(/* key mapping */);

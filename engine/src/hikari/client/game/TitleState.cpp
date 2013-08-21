@@ -3,6 +3,7 @@
 #include "hikari/client/gui/GuiService.hpp"
 #include "hikari/client/gui/Menu.hpp"
 #include "hikari/client/gui/MenuItem.hpp"
+#include "hikari/client/gui/Icon.hpp"
 #include "hikari/client/Services.hpp"
 
 #include "hikari/core/game/GameController.hpp"
@@ -27,9 +28,11 @@ namespace hikari {
         , name(name)
         , controller(controller)
         , guiService(services.locateService<GuiService>(Services::GUISERVICE))
+        , audioService(services.locateService<AudioService>(Services::AUDIO))
         , guiContainer(new gcn::Container())
         , guiLabel(new gcn::Label())
         , guiMenu(new gui::Menu())
+        , guiIcon(new gui::Icon("assets/images/cursor-stage-select.png"))
         , guiActionListener(nullptr)
         , guiSelectionListener(nullptr)
         , goToNextState(false)
@@ -67,12 +70,23 @@ namespace hikari {
 
         guiSelectionListener.reset(new gcn::FunctorSelectionListener([&](const gcn::SelectionEvent & event) {
             std::cout << "Selection changed! " << guiMenu->getSelectedIndex() << std::endl;
+
+            if(auto audio = audioService.lock()) {
+                audio->playSample(27);
+            }
         }));
 
         guiContainer->setBaseColor(gcn::Color(0, 0, 0));
         guiContainer->setOpaque(true);
         guiContainer->setWidth(256);
         guiContainer->setHeight(240);
+
+        guiIcon->setWidth(30);
+        guiIcon->setHeight(30);
+        guiIcon->setX(16);
+        guiIcon->setY(16);
+
+        guiContainer->add(guiIcon.get());
 
         guiLabel->setCaption("Title Screen");
         guiLabel->adjustSize();
@@ -81,7 +95,6 @@ namespace hikari {
         guiMenu->setHeight((guiContainer->getHeight() / 2) - 32);
         guiMenu->setBackgroundColor(gcn::Color(45, 45, 45));
         guiMenu->addActionListener(guiActionListener.get());
-        guiMenu->addSelectionListener(guiSelectionListener.get());
         guiMenu->enableWrapping();
 
         std::shared_ptr<gui::MenuItem> gameStartMenuItem(new gui::MenuItem("GAME START"));
@@ -135,6 +148,7 @@ namespace hikari {
         }
 
         goToNextState = false;
+        guiMenu->addSelectionListener(guiSelectionListener.get());
     }
 
     void TitleState::onExit() {
@@ -144,6 +158,8 @@ namespace hikari {
 
             topContainer.remove(guiContainer.get());
         }
+
+        guiMenu->removeSelectionListener(guiSelectionListener.get());
     }
 
     const std::string & TitleState::getName() const {

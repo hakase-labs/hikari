@@ -20,7 +20,7 @@ namespace gui {
     {
         setFocusable(true);
         setSelectedIndex(0);
-        addKeyListener(this);
+        // addKeyListener(this);
     }
 
     Menu::Menu(const std::vector<std::shared_ptr<MenuItem>> & items)
@@ -33,7 +33,7 @@ namespace gui {
     {
         setFocusable(true);
         setSelectedIndex(0);
-        addKeyListener(this);
+        // addKeyListener(this);
     }
 
     Menu::~Menu() {
@@ -213,6 +213,11 @@ namespace gui {
         graphics->fillRectangle(0, 0, getWidth(), getHeight());
     }
 
+    void Menu::logic() {
+        processInputState();
+        Widget::logic();
+    }
+
     void Menu::keyPressed(gcn::KeyEvent& keyEvent) {
         gcn::Key key = keyEvent.getKey();
 
@@ -243,6 +248,10 @@ namespace gui {
             gcn::SelectionEvent event(this);
             (*iter)->valueChanged(event);
         }
+    }
+
+    void Menu::processInputState() {
+        // Nothing to do
     }
 
 } // hikari::gui
