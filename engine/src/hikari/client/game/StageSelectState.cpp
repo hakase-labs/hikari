@@ -2,6 +2,7 @@
 #include "hikari/client/audio/AudioService.hpp"
 #include "hikari/client/game/GameProgress.hpp"
 #include "hikari/client/gui/GuiService.hpp"
+#include "hikari/client/gui/Icon.hpp"
 #include "hikari/client/Services.hpp"
 
 #include "hikari/core/game/GameController.hpp"
@@ -49,6 +50,8 @@ namespace hikari {
         , guiContainer(new gcn::Container())
         , guiSelectedCellLabel(new gcn::Label())
         , guiCursorIcon()
+        , guiBackground()
+        , guiForeground()
         , cursorRow(DEFAULT_CURSOR_ROW)
         , cursorColumn(DEFAULT_CURSOR_COLUMN)
     {
@@ -123,6 +126,9 @@ namespace hikari {
         guiSelectedCellLabel->setCaption("(" + StringUtils::toString(cursorColumn) + ", " + StringUtils::toString(cursorRow) + ")");
         guiSelectedCellLabel->adjustSize();
 
+        guiBackground.reset(new gui::Icon("assets/images/bg-stage-select.png"));
+
+        guiContainer->add(guiBackground.get());
         guiContainer->add(guiSelectedCellLabel.get());
         guiContainer->add(guiCursorIcon.get());
     }
