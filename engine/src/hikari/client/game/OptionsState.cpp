@@ -1,4 +1,4 @@
-#include "hikari/client/game/TitleState.hpp"
+#include "hikari/client/game/OptionsState.hpp"
 #include "hikari/client/audio/AudioService.hpp"
 #include "hikari/client/gui/GuiService.hpp"
 #include "hikari/client/gui/Menu.hpp"
@@ -22,7 +22,7 @@
 
 namespace hikari {
 
-    TitleState::TitleState(const std::string &name, const Json::Value &params, GameController & controller, ServiceLocator &services)
+    OptionsState::OptionsState(const std::string &name, const Json::Value &params, GameController & controller, ServiceLocator &services)
         : GameState()
         , name(name)
         , controller(controller)
@@ -37,27 +37,19 @@ namespace hikari {
         buildGui();
     }
 
-    TitleState::~TitleState() {
+    OptionsState::~OptionsState() {
 
     }
 
-    void TitleState::buildGui() {
+    void OptionsState::buildGui() {
         guiActionListener.reset(new gcn::FunctorActionListener([&](const gcn::ActionEvent& event) {
             auto item = guiMenu->getMenuItemAt(guiMenu->getSelectedIndex());
 
             if(item) {
                 std::cout << "Actioned on #" << guiMenu->getSelectedIndex() << ", " << item->getName() << std::endl;
 
-                const std::string & menuItemName = item->getName();
-
-                if(menuItemName == "GAME START") {
-                    controller.setNextState("stageselect");
-                    goToNextState = true;
-                } else if(menuItemName == "PASS WORD") {
-                    controller.setNextState("password");
-                    goToNextState = true;
-                } else if(menuItemName == "OPTIONS") {
-                    controller.setNextState("options");
+                if(item->getName() == "BACK") {
+                    controller.setNextState("title");
                     goToNextState = true;
                 }
             } else {
@@ -69,12 +61,12 @@ namespace hikari {
             std::cout << "Selection changed! " << guiMenu->getSelectedIndex() << std::endl;
         }));
 
-        guiContainer->setBaseColor(gcn::Color(0, 0, 0));
+        guiContainer->setBaseColor(gcn::Color(0, 25, 25));
         guiContainer->setOpaque(true);
         guiContainer->setWidth(256);
         guiContainer->setHeight(240);
 
-        guiLabel->setCaption("Title Screen");
+        guiLabel->setCaption("Options Screen");
         guiLabel->adjustSize();
 
         guiMenu->setWidth(guiContainer->getWidth() - 32);
@@ -84,28 +76,10 @@ namespace hikari {
         guiMenu->addSelectionListener(guiSelectionListener.get());
         guiMenu->enableWrapping();
 
-        std::shared_ptr<gui::MenuItem> gameStartMenuItem(new gui::MenuItem("GAME START"));
+        std::shared_ptr<gui::MenuItem> gameStartMenuItem(new gui::MenuItem("BACK"));
         gameStartMenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
         gameStartMenuItem->setSelectionColor(gcn::Color(250, 128, 128));
         guiMenu->addItem(gameStartMenuItem);
-
-        std::shared_ptr<gui::MenuItem> passWordMenuItem(new gui::MenuItem("PASS WORD"));
-        passWordMenuItem->setY(16);
-        passWordMenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
-        passWordMenuItem->setSelectionColor(gcn::Color(0, 128, 128));
-        guiMenu->addItem(passWordMenuItem);
-
-        std::shared_ptr<gui::MenuItem> optionsMenuItem(new gui::MenuItem("OPTIONS"));
-        optionsMenuItem->setY(32);
-        optionsMenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
-        optionsMenuItem->setSelectionColor(gcn::Color(250, 128, 128));
-        guiMenu->addItem(optionsMenuItem);
-
-        std::shared_ptr<gui::MenuItem> quitMenuItem(new gui::MenuItem("QUIT"));
-        quitMenuItem->setY(40);
-        quitMenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
-        quitMenuItem->setSelectionColor(gcn::Color(250, 128, 128));
-        guiMenu->addItem(quitMenuItem);
 
         guiMenu->setSelectedIndex(0);
 
@@ -113,19 +87,19 @@ namespace hikari {
         guiContainer->add(guiLabel.get(), 30, 30);
     }
 
-    void TitleState::handleEvent(sf::Event &event) {
+    void OptionsState::handleEvent(sf::Event &event) {
 
     }
 
-    void TitleState::render(sf::RenderTarget &target) {
+    void OptionsState::render(sf::RenderTarget &target) {
 
     }
 
-    bool TitleState::update(const float &dt) {
+    bool OptionsState::update(const float &dt) {
         return goToNextState;
     }
 
-    void TitleState::onEnter() {
+    void OptionsState::onEnter() {
         // Attach our GUI
         if(auto gui = guiService.lock()) {
             auto & topContainer = gui->getRootContainer();
@@ -137,7 +111,7 @@ namespace hikari {
         goToNextState = false;
     }
 
-    void TitleState::onExit() {
+    void OptionsState::onExit() {
         // Remove our GUI
         if(auto gui = guiService.lock()) {
             auto & topContainer = gui->getRootContainer();
@@ -146,7 +120,7 @@ namespace hikari {
         }
     }
 
-    const std::string & TitleState::getName() const {
+    const std::string & OptionsState::getName() const {
         return name;
     }
 

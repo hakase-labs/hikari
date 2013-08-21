@@ -14,6 +14,7 @@ namespace hikari {
     const char* GameConfig::PROPERTY_TMPL_WEAPON = "weapons";
     const char* GameConfig::PROPERTY_INITIAL_STATE = "initialState";
     const char* GameConfig::PROPERTY_STARTUP_SCRIPTS = "environment";
+    const char* GameConfig::PROPERTY_WEAPONS = "weapons";
 
     const char* GameConfig::DEFAULT_ITEM_PATH = "items.json";
     const char* GameConfig::DEFAULT_ENEMY_PATH = "enemy.json";
@@ -32,6 +33,7 @@ namespace hikari {
         , weaponTemplatePath(DEFAULT_WEAPON_PATH)
         , initialState(DEFAULT_INITIAL_STATE)
         , startupScripts()
+        , heroWeaponNames()
     {
 
     }
@@ -44,6 +46,7 @@ namespace hikari {
         , weaponTemplatePath(DEFAULT_WEAPON_PATH)
         , initialState(DEFAULT_INITIAL_STATE)
         , startupScripts()
+        , heroWeaponNames()
     {
         extractValuesFromJson(configJson);
     }
@@ -57,6 +60,17 @@ namespace hikari {
 
                 for(std::size_t i = 0; i < count; ++i) {
                     startupScripts.push_back(scriptArray[i].asString());
+                }
+
+            }
+
+            // Weapons
+            if(configJson.isMember(PROPERTY_WEAPONS)) {
+                const Json::Value & weaponArray = configJson.get(PROPERTY_WEAPONS, Json::Value());
+                std::size_t count = weaponArray.size();
+
+                for(std::size_t i = 0; i < count; ++i) {
+                    heroWeaponNames.push_back(weaponArray[i].asString());
                 }
 
             }
@@ -104,4 +118,7 @@ namespace hikari {
         return startupScripts;
     }
 
+    const std::vector<std::string> & GameConfig::getHeroWeaponNames() const {
+        return heroWeaponNames;
+    }
 } // hikari

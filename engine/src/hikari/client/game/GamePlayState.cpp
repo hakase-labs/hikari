@@ -325,7 +325,7 @@ namespace hikari {
         Movable::setGravity(0.25f);
 
         // Determine which stage we're on and set that to the current level...
-        if((currentMap = maps.at("map-pearl.json"))) {
+        if((currentMap = maps.at("map-test4.json"))) {
             currentTileset = currentMap->getTileset();
         }
 
@@ -1254,12 +1254,17 @@ namespace hikari {
                     HIKARI_LOG(debug3) << "Hero should take " << damageAmount << " damage!";
 
                     if(hero->isVulnerable()) {
-                        hero->performStun();
-
                         if(auto gp = gamePlayState.gameProgress.lock()) {
                             gp->setPlayerEnergy(
                                 gp->getPlayerEnergy() - 5
                             );
+
+                            HIKARI_LOG(debug4) << "My energy is " << gp->getPlayerEnergy();
+
+                            // Only stun if you're not dead
+                            if(gp->getPlayerEnergy() > 0) {
+                                hero->performStun();
+                            }
                         }
                     }
                 }

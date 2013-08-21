@@ -10,12 +10,14 @@
 
 namespace hikari {
 
-    PasswordState::PasswordState(const std::string &name, const Json::Value &params, ServiceLocator &services)
+    PasswordState::PasswordState(const std::string &name, const Json::Value &params, GameController & controller, ServiceLocator &services)
         : name(name)
+        , controller(controller)
         , passwordGrid(new gui::Panel())
         , guiWrapper(new gcn::Container())
         , testLabel(new gcn::Label())
         , guiService(services.locateService<GuiService>(Services::GUISERVICE))
+        , goToNextState(false)
     {
         guiWrapper->setWidth(256);
         guiWrapper->setHeight(240);
@@ -45,7 +47,7 @@ namespace hikari {
     }
 
     bool PasswordState::update(const float &dt) {
-        return false;
+        return goToNextState;
     }
 
     void PasswordState::onEnter() {
@@ -54,6 +56,8 @@ namespace hikari {
 
             topContainer.add(guiWrapper.get(), 0, 0);
         }
+
+        goToNextState = false;
     }
 
     void PasswordState::onExit() {

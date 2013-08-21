@@ -7,6 +7,7 @@
 
 #include "hikari/client/game/PasswordState.hpp"
 #include "hikari/client/game/TitleState.hpp"
+#include "hikari/client/game/OptionsState.hpp"
 #include "hikari/client/game/WeaponTable.hpp"
 #include "hikari/client/game/DamageTable.hpp"
 #include "hikari/client/game/objects/EnemyFactory.hpp"
@@ -137,13 +138,15 @@ namespace hikari {
         // Create controller and game states
         StatePtr stageSelectState(new StageSelectState("stageselect", gameConfigJson["states"]["select"], controller, services));
         StatePtr gamePlayState(new GamePlayState("gameplay", controller, gameConfigJson, services));
-        StatePtr passwordState(new PasswordState("password", gameConfigJson, services));
-        StatePtr titleState(new TitleState("title", gameConfigJson, services));
+        StatePtr passwordState(new PasswordState("password", gameConfigJson, controller, services));
+        StatePtr titleState(new TitleState("title", gameConfigJson, controller, services));
+        StatePtr optionsState(new OptionsState("options", gameConfigJson, controller, services));
 
         controller.addState(stageSelectState->getName(), stageSelectState);
         controller.addState(gamePlayState->getName(), gamePlayState);
         controller.addState(passwordState->getName(), passwordState);
         controller.addState(titleState->getName(), titleState);
+        controller.addState(optionsState->getName(), optionsState);
 
         controller.setState(gameConfig.getInitialState());
     }

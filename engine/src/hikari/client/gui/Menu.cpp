@@ -130,8 +130,6 @@ namespace gui {
             int nextIndex = getNextIndex(startingPoint);
 
             while(nextIndex != startingPoint) {
-                
-
                 if(items.at(nextIndex)->isEnabled()) {
                     setSelectedIndex(nextIndex);
                     break;
@@ -150,8 +148,6 @@ namespace gui {
             int previousIndex = getPreviousIndex(startingPoint);
 
             while(previousIndex != startingPoint) {
-                
-
                 if(items.at(previousIndex)->isEnabled()) {
                     setSelectedIndex(previousIndex);
                     break;
@@ -187,7 +183,7 @@ namespace gui {
             setSelectedIndex(getSelectedIndex());
         }
     }
-    
+
     int Menu::getItemCount() const {
         return items.size();
     }
@@ -243,7 +239,7 @@ namespace gui {
         auto iter = std::begin(selectionListeners);
         auto end = std::end(selectionListeners);
 
-        for (; iter != end; ++iter) {
+        for(; iter != end; ++iter) {
             gcn::SelectionEvent event(this);
             (*iter)->valueChanged(event);
         }
