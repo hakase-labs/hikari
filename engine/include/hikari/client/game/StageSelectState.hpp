@@ -51,6 +51,8 @@ namespace hikari {
         std::unique_ptr<::gcn::Icon> guiCursorIcon;
         std::unique_ptr<gui::Icon> guiForeground;
         std::unique_ptr<gui::Icon> guiBackground;
+        std::unique_ptr<gui::Icon> guiLeftEye;
+        std::unique_ptr<gui::Icon> guiRightEye;
 
         sf::Sprite background;
         sf::Sprite foreground;
