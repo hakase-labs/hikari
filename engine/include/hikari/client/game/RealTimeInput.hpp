@@ -76,7 +76,7 @@ namespace hikari {
          * Updates the state of the virtual gamepad by reading the keyboard
          * state. This should be called at the beginning of every frame.
          */
-        void update();
+        virtual void update(float dt);
 
         /**
          * Binds a particular keyboard key to a button.

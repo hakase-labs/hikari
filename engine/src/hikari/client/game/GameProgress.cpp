@@ -35,7 +35,7 @@ namespace hikari {
         return count;
     }
 
-    unsigned char GameProgress::getLives() const {
+    int GameProgress::getLives() const {
         return lives;
     }
 
@@ -102,7 +102,7 @@ namespace hikari {
         }
     }
 
-    void GameProgress::setLives(unsigned char value) {
+    void GameProgress::setLives(int value) {
         lives = value;
     }
 

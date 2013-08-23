@@ -1,5 +1,6 @@
 #include "hikari/client/gui/Menu.hpp"
 #include "hikari/client/gui/MenuItem.hpp"
+#include "hikari/client/game/Input.hpp"
 
 #include <guichan/graphics.hpp>
 #include <guichan/selectionlistener.hpp>
@@ -37,6 +38,10 @@ namespace gui {
     }
 
     Menu::~Menu() {
+    }
+
+    void Menu::setInput(const std::weak_ptr<hikari::Input> & input) {
+        this->input = input;
     }
 
     std::vector<std::shared_ptr<MenuItem>> & Menu::getItems() {
@@ -130,8 +135,6 @@ namespace gui {
             int nextIndex = getNextIndex(startingPoint);
 
             while(nextIndex != startingPoint) {
-                
-
                 if(items.at(nextIndex)->isEnabled()) {
                     setSelectedIndex(nextIndex);
                     break;
@@ -150,8 +153,6 @@ namespace gui {
             int previousIndex = getPreviousIndex(startingPoint);
 
             while(previousIndex != startingPoint) {
-                
-
                 if(items.at(previousIndex)->isEnabled()) {
                     setSelectedIndex(previousIndex);
                     break;
@@ -187,7 +188,7 @@ namespace gui {
             setSelectedIndex(getSelectedIndex());
         }
     }
-    
+
     int Menu::getItemCount() const {
         return items.size();
     }
@@ -217,17 +218,25 @@ namespace gui {
         graphics->fillRectangle(0, 0, getWidth(), getHeight());
     }
 
-    void Menu::keyPressed(gcn::KeyEvent& keyEvent) {
-        gcn::Key key = keyEvent.getKey();
+    void Menu::logic() {
+        processInputState();
+        Widget::logic();
+    }
 
-        if(key.getValue() == gcn::Key::Up) {
-            selectPreviousItem();
-            keyEvent.consume();
-        } else if(key.getValue() == gcn::Key::Down) {
-            selectNextItem();
-            keyEvent.consume();
-        } else if(key.getValue() == gcn::Key::Enter) {
-            distributeActionEvent();
+    void Menu::keyPressed(gcn::KeyEvent& keyEvent) {
+        // Only listen to keyboard events if there is no input assigned
+        if(input.expired()) {
+            gcn::Key key = keyEvent.getKey();
+
+            if(key.getValue() == gcn::Key::Up) {
+                selectPreviousItem();
+                keyEvent.consume();
+            } else if(key.getValue() == gcn::Key::Down) {
+                selectNextItem();
+                keyEvent.consume();
+            } else if(key.getValue() == gcn::Key::Enter) {
+                distributeActionEvent();
+            }
         }
     }
 
@@ -243,9 +252,23 @@ namespace gui {
         auto iter = std::begin(selectionListeners);
         auto end = std::end(selectionListeners);
 
-        for (; iter != end; ++iter) {
+        for(; iter != end; ++iter) {
             gcn::SelectionEvent event(this);
             (*iter)->valueChanged(event);
+        }
+    }
+
+    void Menu::processInputState() {
+        if(auto inputPtr = input.lock()) {
+            if(inputPtr->wasPressed(Input::BUTTON_UP)) {
+                selectPreviousItem();
+            } else if(inputPtr->wasPressed(Input::BUTTON_DOWN)) {
+                selectNextItem();
+            }
+
+            if(inputPtr->wasPressed(Input::BUTTON_SHOOT) || inputPtr->wasPressed(Input::BUTTON_START)) {
+                distributeActionEvent();
+            }
         }
     }
 

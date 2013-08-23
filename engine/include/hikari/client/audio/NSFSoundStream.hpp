@@ -92,6 +92,8 @@ namespace hikari {
         ////////////////////////////////////////////////////////////
         int getTrackCount() const;
 
+        void stopAllSamplers();
+
         ////////////////////////////////////////////////////////////
         /// \brief Gets the track title of the currently-playing track if it has one
         ///

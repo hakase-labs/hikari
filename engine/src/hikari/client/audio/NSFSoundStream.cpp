@@ -245,6 +245,18 @@ namespace hikari {
         return trackCount; // sampleEmus[0]->track_count();
     }
 
+    void NSFSoundStream::stopAllSamplers() {
+        activeSamplers.remove_if([&](const SamplerPair & pair) -> bool {
+            bool ended = (pair.first)->track_ended();
+            int track = (pair.first)->current_track();
+
+            availableSamplers.push(pair);
+            samplerSlots.erase(track);
+
+            return true;
+        });
+    }
+
     const std::string NSFSoundStream::getTrackName() {
         sf::Lock lock(mutex);
         handleError(sampleEmus[0]->track_info(trackInfo.get()));

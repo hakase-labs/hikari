@@ -159,6 +159,7 @@ set( HIKARI_CLIENT_GAME_SOURCE_FILES
     src/hikari/client/game/GameProgress.cpp
     src/hikari/client/game/GameWorld.cpp
     src/hikari/client/game/GuiTestState.cpp
+    src/hikari/client/game/InputService.cpp
     src/hikari/client/game/KeyboardInput.cpp
     src/hikari/client/game/PasswordState.cpp
     src/hikari/client/game/RealTimeInput.cpp
@@ -167,6 +168,7 @@ set( HIKARI_CLIENT_GAME_SOURCE_FILES
     src/hikari/client/game/SpriteTestState.cpp
     src/hikari/client/game/StageSelectState.cpp
     src/hikari/client/game/TitleState.cpp
+    src/hikari/client/game/OptionsState.cpp
     src/hikari/client/game/Weapon.cpp
     src/hikari/client/game/WeaponAction.cpp
     src/hikari/client/game/WeaponTable.cpp

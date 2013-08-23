@@ -35,6 +35,7 @@ namespace hikari {
 
     namespace gui {
         // Forward-declare any GUI classes here
+        class Icon;
     }
 
     class StageSelectState : public GameState {
@@ -48,6 +49,10 @@ namespace hikari {
         std::unique_ptr<::gcn::Container> guiContainer;
         std::unique_ptr<::gcn::Label> guiSelectedCellLabel;
         std::unique_ptr<::gcn::Icon> guiCursorIcon;
+        std::unique_ptr<gui::Icon> guiForeground;
+        std::unique_ptr<gui::Icon> guiBackground;
+        std::unique_ptr<gui::Icon> guiLeftEye;
+        std::unique_ptr<gui::Icon> guiRightEye;
 
         sf::Sprite background;
         sf::Sprite foreground;

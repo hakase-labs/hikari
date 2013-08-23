@@ -12,7 +12,7 @@ namespace hikari {
         static const unsigned char NumWeapons = NumBosses + 3; // Need to determine this.
         static const unsigned char MaxEnergy = 52;
 
-        unsigned char lives;
+        int lives;
         unsigned char eTanks;
         unsigned char mTanks;
         unsigned char playerEnergy;
@@ -30,7 +30,7 @@ namespace hikari {
         //
         const unsigned char getBossCount() const;
         const unsigned char getDefeatedBossCount() const;
-        unsigned char getLives() const;
+        int getLives() const;
         unsigned char getETanks() const;
         unsigned char getMTanks() const;
         int getPlayerEnergy() const;
@@ -46,7 +46,7 @@ namespace hikari {
         // Setters
         //
         void setBossDefeated(unsigned char boss, bool defeated);
-        void setLives(unsigned char value);
+        void setLives(int value);
         void setETanks(unsigned char value);
         void setMTanks(unsigned char value);
         void setPlayerEnergy(int value);
