@@ -7,6 +7,7 @@ namespace gui {
     Icon::Icon()
         : gcn::Icon()
         , imageSubrectangle()
+        , opaqueFlag(false)
     {
 
     }
@@ -14,18 +15,20 @@ namespace gui {
     Icon::Icon(const std::string& filename)
         : gcn::Icon( filename)
         , imageSubrectangle()
+        , opaqueFlag(false)
     {
         if(mImage) {
-            imageSubrectangle = gcn::Rectangle(0, 0, mImage->getWidth(), mImage->getHeight());
+            setSubrectangle(gcn::Rectangle(0, 0, mImage->getWidth(), mImage->getHeight()));
         }
     }
 
     Icon::Icon(const gcn::Image* image)
         : gcn::Icon(image)
         , imageSubrectangle()
+        , opaqueFlag(false)
     {
         if(mImage) {
-            imageSubrectangle = gcn::Rectangle(0, 0, mImage->getWidth(), mImage->getHeight());
+            setSubrectangle(gcn::Rectangle(0, 0, mImage->getWidth(), mImage->getHeight()));
         }
     }
 
@@ -43,10 +46,19 @@ namespace gui {
         setHeight(imageSubrectangle.height);
     }
 
+
+    bool Icon::isOpaque() const {
+        return opaqueFlag;
+    }
+
+    void Icon::setOpaque(bool opaque) {
+        opaqueFlag = opaque;
+    }
+
     void Icon::draw(gcn::Graphics* graphics) {
         if(isOpaque()) {
             graphics->setColor(getBaseColor());
-            graphics->fillRectangle(getX(), getX(), getWidth(), getHeight());
+            graphics->fillRectangle(0, 0, getWidth(), getHeight());
         }
 
         if(mImage) {
@@ -54,8 +66,8 @@ namespace gui {
                 mImage,
                 imageSubrectangle.x,
                 imageSubrectangle.y,
-                getX(),
-                getY(),
+                0,
+                0,
                 imageSubrectangle.width,
                 imageSubrectangle.height
             );

@@ -10,6 +10,7 @@ namespace gui {
     class Icon : public gcn::Icon {
     private:
         gcn::Rectangle imageSubrectangle;
+        bool opaqueFlag;
 
     public:
         /**
@@ -39,6 +40,10 @@ namespace gui {
         gcn::Rectangle getSubrectangle() const;
 
         void setSubrectangle(const gcn::Rectangle & rect);
+
+        bool isOpaque() const;
+
+        void setOpaque(bool opaque);
 
         // Inherited from Widget
         virtual void draw(gcn::Graphics* graphics);

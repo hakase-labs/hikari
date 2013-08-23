@@ -77,6 +77,14 @@ namespace hikari {
          * @return        true if the button was just released
          */
         virtual const bool wasReleased(const Button &button) const = 0;
+
+        /**
+         * Updates the internals of an input. Some implementations may
+         * need to update internal state per frame.
+         *
+         * @param dt the delta time since last update
+         */
+        virtual void update(float dt) = 0;
     };
     
 } // hikari

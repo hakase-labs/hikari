@@ -2,6 +2,7 @@
 #include "hikari/client/audio/AudioService.hpp"
 #include "hikari/client/game/GameProgress.hpp"
 #include "hikari/client/gui/GuiService.hpp"
+#include "hikari/client/gui/Icon.hpp"
 #include "hikari/client/Services.hpp"
 
 #include "hikari/core/game/GameController.hpp"
@@ -49,6 +50,10 @@ namespace hikari {
         , guiContainer(new gcn::Container())
         , guiSelectedCellLabel(new gcn::Label())
         , guiCursorIcon()
+        , guiForeground()
+        , guiBackground()
+        , guiLeftEye()
+        , guiRightEye()
         , cursorRow(DEFAULT_CURSOR_ROW)
         , cursorColumn(DEFAULT_CURSOR_COLUMN)
     {
@@ -114,7 +119,7 @@ namespace hikari {
 
     void StageSelectState::buildGui() {
         guiContainer->setSize(256, 240);
-        guiContainer->setBaseColor(0x1122AA);
+        guiContainer->setBaseColor(0x1f22AA);
         guiContainer->setOpaque(false);
         guiContainer->setVisible(true);
 
@@ -123,6 +128,16 @@ namespace hikari {
         guiSelectedCellLabel->setCaption("(" + StringUtils::toString(cursorColumn) + ", " + StringUtils::toString(cursorRow) + ")");
         guiSelectedCellLabel->adjustSize();
 
+        guiBackground.reset(new gui::Icon("assets/images/bg-stage-select.png"));
+        guiForeground.reset(new gui::Icon("assets/images/fg-stage-select.png"));
+
+        guiLeftEye.reset(new gui::Icon("assets/images/eye-stage-select.png"));
+        guiRightEye.reset(new gui::Icon("assets/images/eye-stage-select.png"));
+
+        guiContainer->add(guiBackground.get());
+        guiContainer->add(guiForeground.get());
+        guiContainer->add(guiLeftEye.get());
+        guiContainer->add(guiRightEye.get());
         guiContainer->add(guiSelectedCellLabel.get());
         guiContainer->add(guiCursorIcon.get());
     }
@@ -151,9 +166,9 @@ namespace hikari {
     
     void StageSelectState::render(sf::RenderTarget &target) {
         //target.draw(background);
-        target.draw(leftEye);
-        target.draw(rightEye);
-        target.draw(foreground);
+        //target.draw(leftEye);
+        //target.draw(rightEye);
+        //target.draw(foreground);
         
         // guiFont->renderText(target, "PUSH   START", 80, 8);
         // guiFont->renderText(target, "MAN", 48, 88);
@@ -178,9 +193,13 @@ namespace hikari {
 
         const Point2D<float> &leftEyePosition = eyePosition.first;
         leftEye.setPosition(leftEyePosition.getX(), leftEyePosition.getY());
+        guiLeftEye->setX(static_cast<int>(leftEyePosition.getX()));
+        guiLeftEye->setY(static_cast<int>(leftEyePosition.getY()));
 
         const Point2D<float> &rightEyePosition = eyePosition.second;
         rightEye.setPosition(rightEyePosition.getX(), rightEyePosition.getY());
+        guiRightEye->setX(static_cast<int>(rightEyePosition.getX()));
+        guiRightEye->setY(static_cast<int>(rightEyePosition.getY()));
 
         // Set cursor position
         const Point2D<float> &cursorPosition = cursorPositions.at(cursorIndex);
@@ -196,7 +215,7 @@ namespace hikari {
         
         // Start music
         if(auto audio = audioService.lock()) {
-            audio->playMusic(3);
+            audio->playMusic(15);
         }
 
         // Reset cursor to default location

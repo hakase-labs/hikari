@@ -10,10 +10,13 @@
 
 #include <SFML/Graphics.hpp>
 
+#include <memory>
 #include <string>
  
 namespace hikari {
- 
+
+    class KeyboardInput;
+
     class Client {
     private:
         static const std::string APP_TITLE;
@@ -55,6 +58,7 @@ namespace hikari {
         GameConfig gameConfig;
         GameController controller;
         ServiceLocator services;
+        std::shared_ptr<KeyboardInput> globalInput;
         sf::VideoMode videoMode;
         sf::RenderWindow window;
         sf::RenderTexture screenBuffer;

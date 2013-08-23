@@ -13,14 +13,19 @@ namespace gcn {
 }
 
 namespace hikari {
+
+    class Input;
+
 namespace gui {
 
     class MenuItem;
+    class InputListener;
 
     class Menu : public gcn::Container, public gcn::KeyListener {
     private:
         std::vector<std::shared_ptr<MenuItem>> items;
         std::list<gcn::SelectionListener*> selectionListeners;
+        std::weak_ptr<hikari::Input> input;
 
         bool enableSelectionWrap;
         int selectedIndex;
@@ -38,10 +43,14 @@ namespace gui {
          */
         void distributeSelectionChangedEvent();
 
+        virtual void processInputState();
+
     public:
         Menu();
         explicit Menu(const std::vector<std::shared_ptr<MenuItem>> & items);
         virtual ~Menu();
+
+        void setInput(const std::weak_ptr<hikari::Input> & input);
 
         int getSelectedIndex() const;
         void setSelectedIndex(int index);
@@ -79,6 +88,7 @@ namespace gui {
 
         // Inherited from Widget
         virtual void draw(gcn::Graphics* graphics);
+        virtual void logic();
 
         // Inherited from KeyListener
         virtual void keyPressed(gcn::KeyEvent& keyEvent);

@@ -35,6 +35,11 @@
         "projectiles" : "assets/templates/projectiles.json",
         "weapons" : "assets/weapons/weapons.json"
     },
+    "weapons" : [
+        "Mega Buster",
+        "Triple Mega Buster",
+        "Buster Spark"
+    ],
     "states" : {
         "introduction" : {},
         "title" : {},

@@ -22,6 +22,7 @@ namespace hikari {
         static const char* PROPERTY_TMPL_WEAPON;
         static const char* PROPERTY_INITIAL_STATE;
         static const char* PROPERTY_STARTUP_SCRIPTS;
+        static const char* PROPERTY_WEAPONS;
 
         // Default values
         static const char* DEFAULT_ITEM_PATH;
@@ -40,6 +41,7 @@ namespace hikari {
         std::string weaponTemplatePath;
         std::string initialState;
         std::vector<std::string> startupScripts;
+        std::vector<std::string> heroWeaponNames;
 
         void extractValuesFromJson(const Json::Value& configJson);
     public:
@@ -53,6 +55,7 @@ namespace hikari {
         const std::string & getWeaponTemplatePath() const;
         const std::string & getInitialState() const;
         const std::vector<std::string> & getStartUpScripts() const;
+        const std::vector<std::string> & getHeroWeaponNames() const;
     };
 
 } // hikari

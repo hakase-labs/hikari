@@ -4,9 +4,12 @@
 #include "hikari/client/game/GameProgress.hpp"
 #include "hikari/client/game/StageSelectState.hpp"
 #include "hikari/client/game/GamePlayState.hpp"
+#include "hikari/client/game/KeyboardInput.hpp"
+#include "hikari/client/game/InputService.hpp"
 
 #include "hikari/client/game/PasswordState.hpp"
 #include "hikari/client/game/TitleState.hpp"
+#include "hikari/client/game/OptionsState.hpp"
 #include "hikari/client/game/WeaponTable.hpp"
 #include "hikari/client/game/DamageTable.hpp"
 #include "hikari/client/game/objects/EnemyFactory.hpp"
@@ -49,6 +52,7 @@ namespace hikari {
         , clientConfig()
         , gameConfig()
         , services()
+        , globalInput(new KeyboardInput())
         , videoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BITS_PER_PIXEL)
         , window()
         , screenBuffer()
@@ -137,13 +141,15 @@ namespace hikari {
         // Create controller and game states
         StatePtr stageSelectState(new StageSelectState("stageselect", gameConfigJson["states"]["select"], controller, services));
         StatePtr gamePlayState(new GamePlayState("gameplay", controller, gameConfigJson, services));
-        StatePtr passwordState(new PasswordState("password", gameConfigJson, services));
-        StatePtr titleState(new TitleState("title", gameConfigJson, services));
+        StatePtr passwordState(new PasswordState("password", gameConfigJson, controller, services));
+        StatePtr titleState(new TitleState("title", gameConfigJson, controller, services));
+        StatePtr optionsState(new OptionsState("options", gameConfigJson, controller, services));
 
         controller.addState(stageSelectState->getName(), stageSelectState);
         controller.addState(gamePlayState->getName(), gamePlayState);
         controller.addState(passwordState->getName(), passwordState);
         controller.addState(titleState->getName(), titleState);
+        controller.addState(optionsState->getName(), optionsState);
 
         controller.setState(gameConfig.getInitialState());
     }
@@ -173,6 +179,7 @@ namespace hikari {
         auto particleFactory   = std::make_shared<ParticleFactory>(animationSetCache, imageCache);
         auto weaponTable       = std::make_shared<WeaponTable>();
         auto damageTable       = std::make_shared<DamageTable>();
+        auto inputService      = std::make_shared<InputService>(globalInput);
 
         services.registerService(Services::AUDIO,             audioService);
         services.registerService(Services::GAMEPROGRESS,      gameProgress);
@@ -187,6 +194,7 @@ namespace hikari {
         services.registerService(Services::PARTICLEFACTORY,   particleFactory);
         services.registerService(Services::WEAPONTABLE,       weaponTable);
         services.registerService(Services::DAMAGETABLE,       damageTable);
+        services.registerService("INPUT",       inputService);
 
         AnimationLoader::setImageCache(std::weak_ptr<ImageCache>(imageCache));
 
@@ -326,7 +334,8 @@ namespace hikari {
                         quit = true;
                     }
 
-                    if(event.type == sf::Event::KeyPressed) {
+                    if(event.type == sf::Event::KeyPressed || event.type == sf::Event::KeyReleased) {
+                        globalInput->processEvent(event);
                         controller.handleEvent(event);
                     }
 
@@ -340,6 +349,8 @@ namespace hikari {
                 }
 
                 controller.update(dt * speedMultiplier);
+                globalInput->update(dt);
+
                 accumulator -= dt;
                 totalRuntime += dt;
             }
