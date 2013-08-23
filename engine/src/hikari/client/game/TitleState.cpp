@@ -123,16 +123,13 @@ namespace hikari {
         guiMenu->addItem(quitMenuItem);
 
         guiMenu->setSelectedIndex(0);
-        guiMenu->setInput(keyboardInput);
 
         guiContainer->add(guiMenu.get(), 16, 128);
         guiContainer->add(guiLabel.get(), 30, 30);
     }
 
     void TitleState::handleEvent(sf::Event &event) {
-        // if(event.type == sf::Event::KeyPressed || event.type == sf::Event::KeyReleased) {
-        //     keyboardInput->processEvent(event);
-        // }
+
     }
 
     void TitleState::render(sf::RenderTarget &target) {
@@ -140,7 +137,6 @@ namespace hikari {
     }
 
     bool TitleState::update(const float &dt) {
-        //keyboardInput->update(dt);
         guiMenu->logic();
         return goToNextState;
     }

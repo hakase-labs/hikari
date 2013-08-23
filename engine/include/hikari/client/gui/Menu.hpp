@@ -25,8 +25,7 @@ namespace gui {
     private:
         std::vector<std::shared_ptr<MenuItem>> items;
         std::list<gcn::SelectionListener*> selectionListeners;
-        std::weak_ptr<hikari::Input> input;
-
+        
         bool enableSelectionWrap;
         int selectedIndex;
 
@@ -43,14 +42,10 @@ namespace gui {
          */
         void distributeSelectionChangedEvent();
 
-        virtual void processInputState();
-
     public:
         Menu();
         explicit Menu(const std::vector<std::shared_ptr<MenuItem>> & items);
         virtual ~Menu();
-
-        void setInput(const std::weak_ptr<hikari::Input> & input);
 
         int getSelectedIndex() const;
         void setSelectedIndex(int index);
