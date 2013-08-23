@@ -54,6 +54,7 @@ namespace hikari {
     }
 
     void AudioService::stopMusic() {
+        musicStream.stopAllSamplers();
         musicStream.stop();
     }
 

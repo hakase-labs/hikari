@@ -27,12 +27,14 @@ namespace hikari {
     class GuiService;
     class ServiceLocator;
     class GameController;
+    class Input;
 
     class OptionsState : public GameState {
     private:
         std::string name;
         GameController & controller;
         std::weak_ptr<GuiService> guiService;
+        std::shared_ptr<Input> input;
         std::unique_ptr<gcn::Container> guiContainer;
         std::unique_ptr<gcn::Label> guiLabel;
         std::unique_ptr<gui::Menu> guiMenu;

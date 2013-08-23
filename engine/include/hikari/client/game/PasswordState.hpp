@@ -19,6 +19,8 @@ namespace Json {
 namespace hikari {
 
     class GuiService;
+    class Input;
+    class AudioService;
     
     namespace gui {
         class Panel;
@@ -31,6 +33,8 @@ namespace hikari {
     private:
         std::string name;
         GameController & controller;
+        std::weak_ptr<AudioService> audioService;
+        std::shared_ptr<Input> keyboardInput;
         std::unique_ptr<gui::Panel> passwordGrid;
         std::unique_ptr<gcn::Container> guiWrapper;
         std::unique_ptr<gcn::Label> testLabel;

@@ -286,7 +286,7 @@ namespace hikari {
     bool GamePlayState::update(const float &dt) {
         gotoNextState = false;
 
-        userInput->update();
+        userInput->update(dt);
 
         if(eventBus) {
             eventBus->processEvents();

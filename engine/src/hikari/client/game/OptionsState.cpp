@@ -1,4 +1,6 @@
 #include "hikari/client/game/OptionsState.hpp"
+#include "hikari/client/game/InputService.hpp"
+#include "hikari/client/game/Input.hpp"
 #include "hikari/client/audio/AudioService.hpp"
 #include "hikari/client/gui/GuiService.hpp"
 #include "hikari/client/gui/Menu.hpp"
@@ -27,6 +29,7 @@ namespace hikari {
         , name(name)
         , controller(controller)
         , guiService(services.locateService<GuiService>(Services::GUISERVICE))
+        , input(services.locateService<InputService>("INPUT"))
         , guiContainer(new gcn::Container())
         , guiLabel(new gcn::Label())
         , guiMenu(new gui::Menu())
@@ -75,6 +78,7 @@ namespace hikari {
         guiMenu->addActionListener(guiActionListener.get());
         guiMenu->addSelectionListener(guiSelectionListener.get());
         guiMenu->enableWrapping();
+        guiMenu->setInput(input);
 
         std::shared_ptr<gui::MenuItem> gameStartMenuItem(new gui::MenuItem("BACK"));
         gameStartMenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
@@ -96,6 +100,7 @@ namespace hikari {
     }
 
     bool OptionsState::update(const float &dt) {
+        guiMenu->logic();
         return goToNextState;
     }
 

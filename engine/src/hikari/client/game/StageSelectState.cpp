@@ -215,7 +215,7 @@ namespace hikari {
         
         // Start music
         if(auto audio = audioService.lock()) {
-            audio->playMusic(3);
+            audio->playMusic(15);
         }
 
         // Reset cursor to default location
