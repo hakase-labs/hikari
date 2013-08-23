@@ -4,6 +4,8 @@
 #include "hikari/client/game/GameProgress.hpp"
 #include "hikari/client/game/StageSelectState.hpp"
 #include "hikari/client/game/GamePlayState.hpp"
+#include "hikari/client/game/KeyboardInput.hpp"
+#include "hikari/client/game/InputService.hpp"
 
 #include "hikari/client/game/PasswordState.hpp"
 #include "hikari/client/game/TitleState.hpp"
@@ -50,6 +52,7 @@ namespace hikari {
         , clientConfig()
         , gameConfig()
         , services()
+        , globalInput(new KeyboardInput())
         , videoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BITS_PER_PIXEL)
         , window()
         , screenBuffer()
@@ -176,6 +179,7 @@ namespace hikari {
         auto particleFactory   = std::make_shared<ParticleFactory>(animationSetCache, imageCache);
         auto weaponTable       = std::make_shared<WeaponTable>();
         auto damageTable       = std::make_shared<DamageTable>();
+        auto inputService      = std::make_shared<InputService>(globalInput);
 
         services.registerService(Services::AUDIO,             audioService);
         services.registerService(Services::GAMEPROGRESS,      gameProgress);
@@ -190,6 +194,7 @@ namespace hikari {
         services.registerService(Services::PARTICLEFACTORY,   particleFactory);
         services.registerService(Services::WEAPONTABLE,       weaponTable);
         services.registerService(Services::DAMAGETABLE,       damageTable);
+        services.registerService("INPUT",       inputService);
 
         AnimationLoader::setImageCache(std::weak_ptr<ImageCache>(imageCache));
 
@@ -330,6 +335,7 @@ namespace hikari {
                     }
 
                     if(event.type == sf::Event::KeyPressed || event.type == sf::Event::KeyReleased) {
+                        globalInput->processEvent(event);
                         controller.handleEvent(event);
                     }
 
@@ -343,6 +349,8 @@ namespace hikari {
                 }
 
                 controller.update(dt * speedMultiplier);
+                globalInput->update(dt);
+
                 accumulator -= dt;
                 totalRuntime += dt;
             }

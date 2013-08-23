@@ -163,7 +163,7 @@ namespace hikari {
         }
     }
 
-    void RealTimeInput::update() {
+    void RealTimeInput::update(float dt) {
         previousState = currentState;
 
         currentState.buttonUp     = sf::Keyboard::isKeyPressed(keybindings[Input::BUTTON_UP]);

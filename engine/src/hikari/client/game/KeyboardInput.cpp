@@ -154,8 +154,9 @@ namespace hikari {
     }
 
     void KeyboardInput::processEvent(const sf::Event &keyboardEvent) {
-        HIKARI_LOG(debug2) << "Key event being processed!";
         if(keyboardEvent.type == sf::Event::KeyPressed) {
+                    HIKARI_LOG(debug3) << "Pressed a key!";
+
             switch(keyboardEvent.key.code) {
                 case sf::Keyboard::Up:
                     currentState.buttonUp = BUTTON_PUSHED;
@@ -186,6 +187,8 @@ namespace hikari {
                     break;
             }
         } else if(keyboardEvent.type == sf::Event::KeyReleased) {
+                    HIKARI_LOG(debug3) << "Released a key!";
+
             switch(keyboardEvent.key.code) {
                 case sf::Keyboard::Up:
                     currentState.buttonUp = !BUTTON_PUSHED;
