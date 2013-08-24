@@ -78,7 +78,6 @@ namespace hikari {
         guiMenu->addActionListener(guiActionListener.get());
         guiMenu->addSelectionListener(guiSelectionListener.get());
         guiMenu->enableWrapping();
-        guiMenu->setInput(input);
 
         std::shared_ptr<gui::MenuItem> gameStartMenuItem(new gui::MenuItem("BACK"));
         gameStartMenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
