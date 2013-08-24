@@ -24,6 +24,11 @@
 
 namespace hikari {
 
+    const std::string TitleState::ITEM_GAME_START = "GAME START";
+    const std::string TitleState::ITEM_PASS_WORD = "PASS WORD";
+    const std::string TitleState::ITEM_OPTIONS = "OPTIONS";
+    const std::string TitleState::ITEM_QUIT = "QUIT";
+
     TitleState::TitleState(const std::string &name, const Json::Value &params, GameController & controller, ServiceLocator &services)
         : GameState()
         , name(name)
@@ -55,13 +60,13 @@ namespace hikari {
 
                 const std::string & menuItemName = item->getName();
 
-                if(menuItemName == "GAME START") {
+                if(menuItemName == ITEM_GAME_START) {
                     controller.setNextState("stageselect");
                     goToNextState = true;
-                } else if(menuItemName == "PASS WORD") {
+                } else if(menuItemName == ITEM_PASS_WORD) {
                     controller.setNextState("password");
                     goToNextState = true;
-                } else if(menuItemName == "OPTIONS") {
+                } else if(menuItemName == ITEM_OPTIONS) {
                     controller.setNextState("options");
                     goToNextState = true;
                 }
@@ -99,24 +104,24 @@ namespace hikari {
         guiMenu->addActionListener(guiActionListener.get());
         guiMenu->enableWrapping();
 
-        std::shared_ptr<gui::MenuItem> gameStartMenuItem(new gui::MenuItem("GAME START"));
+        std::shared_ptr<gui::MenuItem> gameStartMenuItem(new gui::MenuItem(ITEM_GAME_START));
         gameStartMenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
         gameStartMenuItem->setSelectionColor(gcn::Color(250, 128, 128));
         guiMenu->addItem(gameStartMenuItem);
 
-        std::shared_ptr<gui::MenuItem> passWordMenuItem(new gui::MenuItem("PASS WORD"));
+        std::shared_ptr<gui::MenuItem> passWordMenuItem(new gui::MenuItem(ITEM_PASS_WORD));
         passWordMenuItem->setY(16);
         passWordMenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
         passWordMenuItem->setSelectionColor(gcn::Color(0, 128, 128));
         guiMenu->addItem(passWordMenuItem);
 
-        std::shared_ptr<gui::MenuItem> optionsMenuItem(new gui::MenuItem("OPTIONS"));
+        std::shared_ptr<gui::MenuItem> optionsMenuItem(new gui::MenuItem(ITEM_OPTIONS));
         optionsMenuItem->setY(32);
         optionsMenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
         optionsMenuItem->setSelectionColor(gcn::Color(250, 128, 128));
         guiMenu->addItem(optionsMenuItem);
 
-        std::shared_ptr<gui::MenuItem> quitMenuItem(new gui::MenuItem("QUIT"));
+        std::shared_ptr<gui::MenuItem> quitMenuItem(new gui::MenuItem(ITEM_QUIT));
         quitMenuItem->setY(40);
         quitMenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
         quitMenuItem->setSelectionColor(gcn::Color(250, 128, 128));
