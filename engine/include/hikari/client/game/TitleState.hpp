@@ -32,6 +32,11 @@ namespace hikari {
 
     class TitleState : public GameState {
     private:
+        const static std::string ITEM_GAME_START;
+        const static std::string ITEM_PASS_WORD;
+        const static std::string ITEM_OPTIONS;
+        const static std::string ITEM_QUIT;
+
         std::string name;
         GameController & controller;
         std::weak_ptr<GuiService> guiService;

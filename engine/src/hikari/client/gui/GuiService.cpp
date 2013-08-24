@@ -1,5 +1,6 @@
 #include "hikari/client/gui/GuiService.hpp"
 #include "hikari/client/gui/HikariImageLoader.hpp"
+#include "hikari/client/gui/InputHelper.hpp"
 #include "hikari/client/Services.hpp"
 #include "hikari/core/util/FileSystem.hpp"
 #include "hikari/core/util/ImageCache.hpp"
@@ -73,6 +74,18 @@ namespace hikari {
         // The HUD container is always the "front"-most widget.
         rootWidget->add(rootContainer.get());
         rootWidget->add(hudContainer.get());
+
+        // Set up key mappings
+        // TODO: Get actual key mappings
+        gui::InputHelper::setMappedButtonForKey(gcn::Key::Up, Input::BUTTON_UP);
+        gui::InputHelper::setMappedButtonForKey(gcn::Key::Right, Input::BUTTON_RIGHT);
+        gui::InputHelper::setMappedButtonForKey(gcn::Key::Down, Input::BUTTON_DOWN);
+        gui::InputHelper::setMappedButtonForKey(gcn::Key::Left, Input::BUTTON_LEFT);
+        gui::InputHelper::setMappedButtonForKey('A', /* gcn::Key::A */ Input::BUTTON_SHOOT);
+        gui::InputHelper::setMappedButtonForKey('S', /* gcn::Key::S */ Input::BUTTON_JUMP);
+        gui::InputHelper::setMappedButtonForKey(gcn::Key::Enter, Input::BUTTON_START);
+        gui::InputHelper::setMappedButtonForKey(gcn::Key::RightShift, Input::BUTTON_SELECT);
+        gui::InputHelper::setMappedButtonForKey(gcn::Key::Escape, Input::BUTTON_CANCEL);
     }
 
     GuiService::~GuiService() {

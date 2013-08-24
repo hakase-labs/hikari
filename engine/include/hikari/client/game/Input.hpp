@@ -19,6 +19,7 @@ namespace hikari {
         typedef int Button;
 
         enum Constants {
+            BUTTON_NONE = 0,
             BUTTON_UP = (1 << 0),
             BUTTON_RIGHT = (1 << 1),
             BUTTON_DOWN = (1 << 2),

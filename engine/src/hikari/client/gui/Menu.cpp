@@ -1,5 +1,6 @@
 #include "hikari/client/gui/Menu.hpp"
 #include "hikari/client/gui/MenuItem.hpp"
+#include "hikari/client/gui/InputHelper.hpp"
 #include "hikari/client/game/Input.hpp"
 
 #include <guichan/graphics.hpp>
@@ -38,10 +39,6 @@ namespace gui {
     }
 
     Menu::~Menu() {
-    }
-
-    void Menu::setInput(const std::weak_ptr<hikari::Input> & input) {
-        this->input = input;
     }
 
     std::vector<std::shared_ptr<MenuItem>> & Menu::getItems() {
@@ -219,24 +216,21 @@ namespace gui {
     }
 
     void Menu::logic() {
-        processInputState();
         Widget::logic();
     }
 
     void Menu::keyPressed(gcn::KeyEvent& keyEvent) {
-        // Only listen to keyboard events if there is no input assigned
-        if(input.expired()) {
-            gcn::Key key = keyEvent.getKey();
+        hikari::Input::Button button = 
+            InputHelper::getMappedButtonForKey(keyEvent.getKey());
 
-            if(key.getValue() == gcn::Key::Up) {
-                selectPreviousItem();
-                keyEvent.consume();
-            } else if(key.getValue() == gcn::Key::Down) {
-                selectNextItem();
-                keyEvent.consume();
-            } else if(key.getValue() == gcn::Key::Enter) {
-                distributeActionEvent();
-            }
+        if(button == Input::BUTTON_UP) {
+            selectPreviousItem();
+            keyEvent.consume();
+        } else if(button == Input::BUTTON_DOWN) {
+            selectNextItem();
+            keyEvent.consume();
+        } else if(button == Input::BUTTON_START || button == Input::BUTTON_SHOOT) {
+            distributeActionEvent();
         }
     }
 
@@ -255,20 +249,6 @@ namespace gui {
         for(; iter != end; ++iter) {
             gcn::SelectionEvent event(this);
             (*iter)->valueChanged(event);
-        }
-    }
-
-    void Menu::processInputState() {
-        if(auto inputPtr = input.lock()) {
-            if(inputPtr->wasPressed(Input::BUTTON_UP)) {
-                selectPreviousItem();
-            } else if(inputPtr->wasPressed(Input::BUTTON_DOWN)) {
-                selectNextItem();
-            }
-
-            if(inputPtr->wasPressed(Input::BUTTON_SHOOT) || inputPtr->wasPressed(Input::BUTTON_START)) {
-                distributeActionEvent();
-            }
         }
     }
 

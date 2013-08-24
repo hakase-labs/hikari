@@ -252,6 +252,7 @@ set( HIKARI_CLIENT_GUI_SOURCE_FILES
     src/hikari/client/gui/MenuItem.cpp
     src/hikari/client/gui/Menu.cpp
     src/hikari/client/gui/Icon.cpp
+    src/hikari/client/gui/InputHelper.cpp
 )
 
 source_group(hikari\\client\\gui FILES ${HIKARI_CLIENT_GUI_SOURCE_FILES})
