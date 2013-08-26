@@ -379,7 +379,7 @@ if(WIN32)
     set(SFML_STATIC_LIBRARIES TRUE)
 endif(WIN32)
 
-find_package(SFML 2 COMPONENTS graphics window system audio REQUIRED)
+find_package(SFML 2 COMPONENTS graphics window audio system REQUIRED)
 
 if(SFML_FOUND)
     if(APPLE)

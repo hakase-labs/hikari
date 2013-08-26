@@ -12,7 +12,12 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
 if(WIN32)
     # always link statically on Windows
     set(SFML_STATIC_LIBRARIES TRUE)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W3")
+
+    if(NOT CMAKE_COMPILER_IS_GNUCC)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W3")
+    else()
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -O -g")
+    endif()
 else()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -O -g")
 endif()
