@@ -78,7 +78,7 @@ namespace hikari {
         // There are 9 positions; 18 points total (one for left, one for right eye)
         const Json::Value &jsonEyePositions = params[PROPERTY_EYE_POSITIONS];
         if(jsonEyePositions.size() == NUM_OF_PORTRAITS) {
-            for(int i = 0; i < NUM_OF_PORTRAITS; ++i) {
+            for(unsigned int i = 0; i < NUM_OF_PORTRAITS; ++i) {
                 const Json::Value &jsonEyePosition = jsonEyePositions[i];
                 float leftEyeX = static_cast<float>(jsonEyePosition[0u].get(PROPERTY_X, 0).asInt());
                 float leftEyeY = static_cast<float>(jsonEyePosition[0u].get(PROPERTY_Y, 0).asInt());
@@ -95,7 +95,7 @@ namespace hikari {
         // Load cursor positions
         const Json::Value &jsonCursorPositions = params[PROPERTY_CURSOR_POSITIONS];
         if(jsonCursorPositions.size() == NUM_OF_PORTRAITS) {
-            for(int i = 0; i < NUM_OF_PORTRAITS; ++i) {
+            for(unsigned int i = 0; i < NUM_OF_PORTRAITS; ++i) {
                 const Json::Value &jsonCursorPosition = jsonCursorPositions[i];
                 float cursorX = static_cast<float>(jsonCursorPosition.get(PROPERTY_X, 0).asInt());
                 float cursorY = static_cast<float>(jsonCursorPosition.get(PROPERTY_Y, 0).asInt());
@@ -163,13 +163,13 @@ namespace hikari {
             guiSelectedCellLabel->adjustSize();
         }
     }
-    
+
     void StageSelectState::render(sf::RenderTarget &target) {
         //target.draw(background);
         //target.draw(leftEye);
         //target.draw(rightEye);
         //target.draw(foreground);
-        
+
         // guiFont->renderText(target, "PUSH   START", 80, 8);
         // guiFont->renderText(target, "MAN", 48, 88);
         // guiFont->renderText(target, "MAN", 128, 88);
@@ -212,7 +212,7 @@ namespace hikari {
 
     void StageSelectState::onEnter() {
         startGamePlay = false;
-        
+
         // Start music
         if(auto audio = audioService.lock()) {
             audio->playMusic(15);

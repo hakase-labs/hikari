@@ -64,7 +64,7 @@ namespace gui {
         int nextIndex = startingPoint + 1;
 
         if(enableSelectionWrap) {
-            std::size_t itemCount = getItemCount();
+            int itemCount = static_cast<int>(getItemCount());
 
             if(itemCount == 0) {
                 nextIndex = 0;
@@ -87,7 +87,7 @@ namespace gui {
         int previousIndex = startingPoint - 1;
 
         if(enableSelectionWrap) {
-            std::size_t itemCount = getItemCount();
+            int itemCount = static_cast<int>(getItemCount());
 
             if(itemCount == 0) {
                 previousIndex = 0;
@@ -190,7 +190,7 @@ namespace gui {
         return items.size();
     }
 
-    std::shared_ptr<MenuItem> Menu::getMenuItemAt(int index) const {
+    std::shared_ptr<MenuItem> Menu::getMenuItemAt(unsigned int index) const {
         if(index >= 0 && index < items.size()) {
             return items.at(index);
         }
@@ -220,7 +220,7 @@ namespace gui {
     }
 
     void Menu::keyPressed(gcn::KeyEvent& keyEvent) {
-        hikari::Input::Button button = 
+        hikari::Input::Button button =
             InputHelper::getMappedButtonForKey(keyEvent.getKey());
 
         if(button == Input::BUTTON_UP) {
