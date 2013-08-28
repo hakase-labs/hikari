@@ -145,10 +145,8 @@ namespace hikari {
     void StageSelectState::handleEvent(sf::Event &event) {
         if(event.type == sf::Event::KeyPressed) {
             if(event.key.code == sf::Keyboard::Up) {
-                //gameProgress->setCurrentBoss(gameProgress->getCurrentBoss() + 1);
                 cursorRow = std::max(0, cursorRow - 1);
             } else if(event.key.code == sf::Keyboard::Down) {
-                //gameProgress->setCurrentBoss(gameProgress->getCurrentBoss() - 1);
                 cursorRow = std::min(NUM_OF_CURSOR_ROWS - 1, cursorRow + 1);
             } else if(event.key.code == sf::Keyboard::Left) {
                 cursorColumn = std::max(0, cursorColumn - 1);
@@ -157,6 +155,12 @@ namespace hikari {
             } else if(event.key.code == sf::Keyboard::Return) {
                 controller.setNextState("gameplay");
                 startGamePlay = true;
+            }
+
+            calculateCursorIndex();
+
+            if(auto gp = gameProgress.lock()) {
+                gp->setCurrentBoss(cursorIndex);
             }
 
             guiSelectedCellLabel->setCaption("(" + StringUtils::toString(cursorColumn) + ", " + StringUtils::toString(cursorRow) + ")");

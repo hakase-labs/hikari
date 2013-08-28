@@ -439,9 +439,16 @@ namespace hikari {
         Movable::setCollisionResolver(collisionResolver);
         Movable::setGravity(0.25f);
 
-        // Determine which stage we're on and set that to the current level...
-        if((currentMap = maps.at("map-test4.json"))) {
-            currentTileset = currentMap->getTileset();
+        std::vector<std::string> mapList;
+        mapList.push_back("map-pearl.json");
+        mapList.push_back("map-test4.json");
+        mapList.push_back("map-test3.json");
+
+        if(auto gp = gameProgress.lock()) {
+            // Determine which stage we're on and set that to the current level...
+            if((currentMap = maps.at(mapList.at(gp->getCurrentBoss() % mapList.size())))) {
+                currentTileset = currentMap->getTileset();
+            }
         }
 
         startStage();
@@ -864,9 +871,10 @@ namespace hikari {
                     progress->setLives(progress->getLives() - 1);
 
                     // All the way dead
-                    if(progress->getLives() == 0) {
+                    if(progress->getLives() < 0) {
                         HIKARI_LOG(debug2) << "Hero has died all of his lives, go to password screen.";
                         // TODO: Reset number of lives here to the default.
+                        progress->resetLivesToDefault();
                         controller.setNextState("stageselect");
                         gotoNextState = true;
                     }
