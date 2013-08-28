@@ -227,6 +227,7 @@ namespace hikari {
             auto & topContainer = gui->getRootContainer();
 
             topContainer.add(guiContainer.get(), 0, 0);
+            guiContainer->setEnabled(true);
         }
     }
 
@@ -241,6 +242,7 @@ namespace hikari {
             auto & topContainer = gui->getRootContainer();
 
             topContainer.remove(guiContainer.get());
+            guiContainer->setEnabled(false);
         }
     }
 

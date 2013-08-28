@@ -36,6 +36,8 @@
 #include "hikari/client/game/events/WeaponFireEventData.hpp"
 #include "hikari/client/game/events/ObjectRemovedEventData.hpp"
 #include "hikari/client/gui/GuiService.hpp"
+#include "hikari/client/gui/Menu.hpp"
+#include "hikari/client/gui/MenuItem.hpp"
 #include "hikari/core/game/GameController.hpp"
 #include "hikari/core/game/AnimationSet.hpp"
 #include "hikari/core/game/AnimationLoader.hpp"
@@ -62,6 +64,9 @@
 
 #include <guichan/widgets/container.hpp>
 #include <guichan/widgets/label.hpp>
+
+#include <guichan/hakase/functoractionlistener.hpp>
+#include <guichan/hakase/functorselectionlistener.hpp>
 
 #include <sqrat.h>
 
@@ -106,6 +111,9 @@ namespace hikari {
         , guiLivesLabel(new gcn::Label())
         , guiETanksLabel(new gcn::Label())
         , guiReadyLabel(new gcn::Label())
+        , guiWeaponMenu(new gui::Menu())
+        , guiWeaponMenuActionListener(nullptr)
+        , guiWeaponMenuSelectionListener(nullptr)
         , keyboardInput(new KeyboardInput())
         , maps()
         , itemSpawners()
@@ -236,12 +244,113 @@ namespace hikari {
         guiReadyLabel->setVisible(false);
 
         guiContainer->add(guiReadyLabel.get());
+
+        guiWeaponMenu->setWidth(guiContainer->getWidth() - 32);
+        guiWeaponMenu->setHeight((guiContainer->getHeight() / 2) - 32);
+        guiWeaponMenu->setBackgroundColor(gcn::Color(45, 45, 45));
+        guiWeaponMenu->enableWrapping();
+        guiWeaponMenu->setVisible(true);
+
+        std::shared_ptr<gui::MenuItem> weapon1MenuItem(new gui::MenuItem("Weapon 1"));
+        weapon1MenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
+        weapon1MenuItem->setSelectionColor(gcn::Color(250, 128, 128));
+        weapon1MenuItem->setX(0);
+        weapon1MenuItem->setY(0);
+        guiWeaponMenu->addItem(weapon1MenuItem);
+
+        std::shared_ptr<gui::MenuItem> weapon2MenuItem(new gui::MenuItem("Weapon 2"));
+        weapon2MenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
+        weapon2MenuItem->setSelectionColor(gcn::Color(250, 128, 128));
+        weapon2MenuItem->setX(0);
+        weapon2MenuItem->setY(16);
+        guiWeaponMenu->addItem(weapon2MenuItem);
+
+        std::shared_ptr<gui::MenuItem> weapon3MenuItem(new gui::MenuItem("Weapon 3"));
+        weapon3MenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
+        weapon3MenuItem->setSelectionColor(gcn::Color(250, 128, 128));
+        weapon3MenuItem->setX(0);
+        weapon3MenuItem->setY(32);
+        guiWeaponMenu->addItem(weapon3MenuItem);
+
+        std::shared_ptr<gui::MenuItem> weapon4MenuItem(new gui::MenuItem("Weapon 4"));
+        weapon4MenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
+        weapon4MenuItem->setSelectionColor(gcn::Color(250, 128, 128));
+        weapon4MenuItem->setX(0);
+        weapon4MenuItem->setY(48);
+        guiWeaponMenu->addItem(weapon4MenuItem);
+
+        std::shared_ptr<gui::MenuItem> weapon5MenuItem(new gui::MenuItem("Weapon 5"));
+        weapon5MenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
+        weapon5MenuItem->setSelectionColor(gcn::Color(250, 128, 128));
+        weapon5MenuItem->setX(0);
+        weapon5MenuItem->setY(64);
+        guiWeaponMenu->addItem(weapon5MenuItem);
+
+        std::shared_ptr<gui::MenuItem> weapon6MenuItem(new gui::MenuItem("Weapon 6"));
+        weapon6MenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
+        weapon6MenuItem->setSelectionColor(gcn::Color(250, 128, 128));
+        weapon6MenuItem->setX(88);
+        weapon6MenuItem->setY(0);
+        guiWeaponMenu->addItem(weapon6MenuItem);
+
+        std::shared_ptr<gui::MenuItem> weapon7MenuItem(new gui::MenuItem("Weapon 7"));
+        weapon7MenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
+        weapon7MenuItem->setSelectionColor(gcn::Color(250, 128, 128));
+        weapon7MenuItem->setX(88);
+        weapon7MenuItem->setY(16);
+        guiWeaponMenu->addItem(weapon7MenuItem);
+
+        std::shared_ptr<gui::MenuItem> weapon8MenuItem(new gui::MenuItem("Weapon 8"));
+        weapon8MenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
+        weapon8MenuItem->setSelectionColor(gcn::Color(250, 128, 128));
+        weapon8MenuItem->setX(88);
+        weapon8MenuItem->setY(32);
+        guiWeaponMenu->addItem(weapon8MenuItem);
+
+        std::shared_ptr<gui::MenuItem> weapon9MenuItem(new gui::MenuItem("Weapon 9"));
+        weapon9MenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
+        weapon9MenuItem->setSelectionColor(gcn::Color(250, 128, 128));
+        weapon9MenuItem->setX(88);
+        weapon9MenuItem->setY(48);
+        guiWeaponMenu->addItem(weapon9MenuItem);
+
+        std::shared_ptr<gui::MenuItem> weapon10MenuItem(new gui::MenuItem("Weapon 10"));
+        weapon10MenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
+        weapon10MenuItem->setSelectionColor(gcn::Color(250, 128, 128));
+        weapon10MenuItem->setX(88);
+        weapon10MenuItem->setY(64);
+        guiWeaponMenu->addItem(weapon10MenuItem);
+
+        guiMenuPanel->add(guiWeaponMenu.get(), 8, 8);
+
+        guiWeaponMenuActionListener.reset(new gcn::FunctorActionListener([&](const gcn::ActionEvent& event) {
+            auto item = guiWeaponMenu->getMenuItemAt(guiWeaponMenu->getSelectedIndex());
+            // std::cout << "Actioned on #" << guiWeaponMenu->getSelectedIndex() << std::endl;           
+        }));
+
+        guiWeaponMenuSelectionListener.reset(new gcn::FunctorSelectionListener([&](const gcn::SelectionEvent & event) {
+            // std::cout << "Selection changed! " << guiWeaponMenu->getSelectedIndex() << std::endl;
+
+            // if(auto audio = audioService.lock()) {
+            //     audio->playSample(27);
+            // }
+        }));
+
+        guiWeaponMenu->setEnabled(true);
+        guiWeaponMenu->addActionListener(guiWeaponMenuActionListener.get());
+        guiWeaponMenu->addSelectionListener(guiWeaponMenuSelectionListener.get());
+        guiWeaponMenu->setSelectedIndex(0);
+
+        guiContainer->setEnabled(true);
+        guiMenuPanel->setEnabled(true);
     }
 
     void GamePlayState::handleEvent(sf::Event &event) {
         if((event.type == sf::Event::KeyPressed) && event.key.code == sf::Keyboard::Return) {
             isViewingMenu = !isViewingMenu;
             guiMenuPanel->setVisible(isViewingMenu);
+            guiWeaponMenu->requestFocus();
+            hero->setWeaponId(guiWeaponMenu->getSelectedIndex()); 
         }
 
         if((event.type == sf::Event::KeyPressed) && event.key.code == sf::Keyboard::BackSpace) {
@@ -286,6 +395,10 @@ namespace hikari {
     bool GamePlayState::update(const float &dt) {
         gotoNextState = false;
 
+        //if(guiWeaponMenu) {
+            guiWeaponMenu->logic();
+        //}
+
         userInput->update(dt);
 
         if(eventBus) {
@@ -319,6 +432,8 @@ namespace hikari {
             auto & topContainer = gui->getRootContainer();
 
             topContainer.add(guiContainer.get(), 0, 0);
+            guiWeaponMenu->setEnabled(true);
+            guiWeaponMenu->requestFocus();
         }
 
         Movable::setCollisionResolver(collisionResolver);
@@ -337,6 +452,7 @@ namespace hikari {
             auto & topContainer = gui->getRootContainer();
 
             topContainer.remove(guiContainer.get());
+            guiWeaponMenu->setEnabled(false);
         }
     }
 

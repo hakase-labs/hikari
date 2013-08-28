@@ -8,6 +8,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <iostream>
 
 namespace hikari {
 namespace gui {
@@ -191,7 +192,7 @@ namespace gui {
     }
 
     std::shared_ptr<MenuItem> Menu::getMenuItemAt(unsigned int index) const {
-        if(index >= 0 && index < items.size()) {
+        if(index < items.size()) {
             return items.at(index);
         }
 
@@ -216,10 +217,12 @@ namespace gui {
     }
 
     void Menu::logic() {
+        //std::cout << "Menu::logic" << std::endl;
         Widget::logic();
     }
 
     void Menu::keyPressed(gcn::KeyEvent& keyEvent) {
+        std::cout << "Menu::keyPressed" << std::endl;
         hikari::Input::Button button =
             InputHelper::getMappedButtonForKey(keyEvent.getKey());
 

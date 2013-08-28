@@ -152,7 +152,9 @@ namespace hikari {
             auto & topContainer = gui->getRootContainer();
 
             topContainer.add(guiContainer.get(), 0, 0);
+            guiMenu->setEnabled(true);
             guiMenu->requestFocus();
+            
         }
 
         if(auto audio = audioService.lock()) {
@@ -169,6 +171,7 @@ namespace hikari {
             auto & topContainer = gui->getRootContainer();
 
             topContainer.remove(guiContainer.get());
+            guiMenu->setEnabled(false);
         }
 
         if(auto audio = audioService.lock()) {
