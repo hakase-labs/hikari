@@ -218,8 +218,10 @@ namespace hikari {
                                                 )
                                             )
                                         );
+                auto spawnLimit   = json.get("spawnLimit", 1).asInt();
+                auto spawnRate    = static_cast<float>(json.get("spawnRate", 1.0).asDouble());
 
-                spawner.reset(new EnemySpawner(type));
+                spawner.reset(new EnemySpawner(type, spawnLimit, spawnRate));
                 spawner->setPosition(Vector2<float>(static_cast<float>(x), static_cast<float>(y)));
                 spawner->setDirection(direction);
 

@@ -12,6 +12,7 @@ set( INCLUDE_DIRS
 set( REQUIRED_HIKARI_SOURCE_FILES
     ${ENGINE_BASE_DIR}/src/hikari/client/game/events/EventBus.cpp
     ${ENGINE_BASE_DIR}/src/hikari/client/game/events/EventBusImpl.cpp
+    ${ENGINE_BASE_DIR}/src/hikari/client/game/events/EventListenerDelegate.cpp
     ${ENGINE_BASE_DIR}/src/hikari/client/game/events/EventData.cpp
     ${ENGINE_BASE_DIR}/src/hikari/client/game/events/BaseEventData.cpp
     ${ENGINE_BASE_DIR}/src/hikari/core/util/Log.cpp

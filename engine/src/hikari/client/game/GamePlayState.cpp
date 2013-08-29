@@ -443,6 +443,7 @@ namespace hikari {
         mapList.push_back("map-pearl.json");
         mapList.push_back("map-test4.json");
         mapList.push_back("map-test3.json");
+        mapList.push_back("map-test2.json");
 
         if(auto gp = gameProgress.lock()) {
             // Determine which stage we're on and set that to the current level...
@@ -541,7 +542,7 @@ namespace hikari {
         );
     }
 
-    void GamePlayState::checkSpawners() {
+    void GamePlayState::checkSpawners(float dt) {
         const auto & cameraView = camera.getView();
 
         //
@@ -551,8 +552,9 @@ namespace hikari {
         std::for_each(
             std::begin(itemSpawners),
             std::end(itemSpawners),
-            [this, &cameraView](std::weak_ptr<Spawner> & s) {
+            [this, &cameraView, &dt](std::weak_ptr<Spawner> & s) {
                 if(auto spawner = s.lock()) {
+                    spawner->update(dt);
                     const auto & spawnerPosition = spawner->getPosition();
 
                     if(spawner->isActive()) {
@@ -822,23 +824,23 @@ namespace hikari {
 
     void GamePlayState::bindEventHandlers() {
         if(eventBus) {
-            auto weaponFireDelegate = fastdelegate::MakeDelegate(this, &GamePlayState::handleWeaponFireEvent);
+            auto weaponFireDelegate = EventListenerDelegate(std::bind(&GamePlayState::handleWeaponFireEvent, this, std::placeholders::_1)); // fastdelegate::MakeDelegate(this, &GamePlayState::handleWeaponFireEvent);
             eventBus->addListener(weaponFireDelegate, WeaponFireEventData::Type);
             eventHandlerDelegates.push_back(std::make_pair(weaponFireDelegate, WeaponFireEventData::Type));
 
-            auto entityDamageDelegate = fastdelegate::MakeDelegate(this, &GamePlayState::handleEntityDamageEvent);
+            auto entityDamageDelegate = EventListenerDelegate(std::bind(&GamePlayState::handleEntityDamageEvent, this, std::placeholders::_1));
             eventBus->addListener(entityDamageDelegate, EntityDamageEventData::Type);
             eventHandlerDelegates.push_back(std::make_pair(entityDamageDelegate, EntityDamageEventData::Type));
 
-            auto entityDeathDelegate = fastdelegate::MakeDelegate(this, &GamePlayState::handleEntityDeathEvent);
+            auto entityDeathDelegate = EventListenerDelegate(std::bind(&GamePlayState::handleEntityDeathEvent, this, std::placeholders::_1));
             eventBus->addListener(entityDeathDelegate, EntityDeathEventData::Type);
             eventHandlerDelegates.push_back(std::make_pair(entityDeathDelegate, EntityDeathEventData::Type));
 
-            auto entityStateChangeDelegate = fastdelegate::MakeDelegate(this, &GamePlayState::handleEntityStateChangeEvent);
+            auto entityStateChangeDelegate = EventListenerDelegate(std::bind(&GamePlayState::handleEntityStateChangeEvent, this, std::placeholders::_1));
             eventBus->addListener(entityStateChangeDelegate, EntityStateChangeEventData::Type);
             eventHandlerDelegates.push_back(std::make_pair(entityStateChangeDelegate, EntityStateChangeEventData::Type));
 
-            auto objectRemovedDelegate = fastdelegate::FastDelegate1<EventDataPtr>(&letMeKnowItsGone);
+            auto objectRemovedDelegate = EventListenerDelegate(&letMeKnowItsGone);
             eventBus->addListener(objectRemovedDelegate, ObjectRemovedEventData::Type);
             eventHandlerDelegates.push_back(std::make_pair(objectRemovedDelegate, ObjectRemovedEventData::Type));
         }
@@ -1560,7 +1562,7 @@ namespace hikari {
 
         renderer->setCullRegion(Rectangle2D<int>(cameraX, cameraY, cameraWidth, cameraHeight));
 
-        gamePlayState.checkSpawners();
+        gamePlayState.checkSpawners(dt);
 
         //
         // Check if hero has touched any transitions

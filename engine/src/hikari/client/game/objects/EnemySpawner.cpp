@@ -18,6 +18,7 @@ namespace hikari {
         , hasLivingSpawn(false)
         , spawnLimit(spawnLimit)
         , spawnRate(spawnRate)
+        , spawnRateAccumulator(0.0f)
     {
 
     }
@@ -46,7 +47,7 @@ namespace hikari {
     }
 
     void EnemySpawner::performAction(GameWorld & world) {
-        if(!hasLivingSpawn) {
+        if(canSpawn()) {
             if(auto spawnedObject = world.spawnEnemy(enemyType)) {
                 int objectId = spawnedObject->getId();
                 spawnedObject->reset();
@@ -57,12 +58,14 @@ namespace hikari {
 
                 spawnedEnemyIds.push_back(objectId);
                 hasLivingSpawn = true;
+
+                spawnRateAccumulator = 0.0f;
             }
         }
     }
 
     void EnemySpawner::attachEventListeners(EventBus & EventBus) {
-        auto objectRemovedDelegate = fastdelegate::MakeDelegate(this, &EnemySpawner::handleObjectRemovedEvent);
+        auto objectRemovedDelegate = EventListenerDelegate(std::bind(&EnemySpawner::handleObjectRemovedEvent, this, std::placeholders::_1)); // fastdelegate::MakeDelegate(this, &EnemySpawner::handleObjectRemovedEvent);
         EventBus.addListener(objectRemovedDelegate, ObjectRemovedEventData::Type);
         eventHandlerDelegates.push_back(std::make_pair(objectRemovedDelegate, ObjectRemovedEventData::Type));
     }
@@ -88,6 +91,12 @@ namespace hikari {
         spawnRate = rate;
     }
 
+    bool EnemySpawner::canSpawn() const {
+        bool hasEnoughTimePassed = spawnRateAccumulator >= spawnRate;
+        bool hasReachedSpawnLimit = spawnedEnemyIds.size() < spawnLimit;
+        return hasEnoughTimePassed && hasReachedSpawnLimit;
+    }
+
     void EnemySpawner::onActivated() {
         GameObject::onActivated();
 
@@ -101,6 +110,10 @@ namespace hikari {
         hasLivingSpawn = false;
 
         HIKARI_LOG(debug3) << "EnemySpawner::onDeactivated(), id = " << getId();
+    }
+
+    void EnemySpawner::update(float dt) {
+        spawnRateAccumulator += dt;
     }
 
 } // hikari

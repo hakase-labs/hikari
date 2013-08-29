@@ -202,7 +202,7 @@ namespace hikari {
          *
          * @see linkSpawners
          */
-        void checkSpawners();
+        void checkSpawners(float dt);
 
         /**
          * Cleans up any stale objects between room transitions and level restarts.

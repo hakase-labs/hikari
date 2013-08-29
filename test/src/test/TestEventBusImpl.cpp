@@ -72,7 +72,7 @@ namespace helpers {
 TEST_CASE( "EventBusImpl/addListener", "A listener is added and the manager returns true" ) {
     std::unique_ptr<hikari::EventBus> eventBus(new hikari::EventBusImpl("global", true));
 
-    fastdelegate::FastDelegate1<hikari::EventDataPtr> delegatedFunction(&::helpers::testAddListener);
+    hikari::EventListenerDelegate delegatedFunction(&::helpers::testAddListener);
 
     REQUIRE( eventBus->addListener(delegatedFunction, ::helpers::MockEventDataA::Type) );
 }
@@ -80,7 +80,7 @@ TEST_CASE( "EventBusImpl/addListener", "A listener is added and the manager retu
 TEST_CASE( "EventBusImpl/addListener (multiple times)", "A listener is cannot be added to the manager multiple times" ) {
     std::unique_ptr<hikari::EventBus> eventBus(new hikari::EventBusImpl("global", true));
 
-    fastdelegate::FastDelegate1<hikari::EventDataPtr> delegatedFunction(&::helpers::testAddListener);
+    hikari::EventListenerDelegate delegatedFunction(&::helpers::testAddListener);
 
     eventBus->addListener(delegatedFunction, ::helpers::MockEventDataA::Type);
 
@@ -90,7 +90,7 @@ TEST_CASE( "EventBusImpl/addListener (multiple times)", "A listener is cannot be
 TEST_CASE( "EventBusImpl/removeListener", "A listener is removed and the manager returns true" ) {
     std::unique_ptr<hikari::EventBus> eventBus(new hikari::EventBusImpl("global", true));
 
-    fastdelegate::FastDelegate1<hikari::EventDataPtr> delegatedFunction(&::helpers::testAddListener);
+    hikari::EventListenerDelegate delegatedFunction(&::helpers::testAddListener);
 
     eventBus->addListener(delegatedFunction, ::helpers::MockEventDataA::Type);
 
@@ -100,7 +100,7 @@ TEST_CASE( "EventBusImpl/removeListener", "A listener is removed and the manager
 TEST_CASE( "EventBusImpl/removeListener (mismatched type)", "A listener is not removed and the manager returns false" ) {
     std::unique_ptr<hikari::EventBus> eventBus(new hikari::EventBusImpl("global", true));
 
-    fastdelegate::FastDelegate1<hikari::EventDataPtr> delegatedFunction(&::helpers::testAddListener);
+    hikari::EventListenerDelegate delegatedFunction(&::helpers::testAddListener);
     ::hikari::EventType correctType = ::helpers::MockEventDataA::Type;
     ::hikari::EventType incorrectType = ::helpers::MockEventDataB::Type;
 
@@ -112,7 +112,7 @@ TEST_CASE( "EventBusImpl/removeListener (mismatched type)", "A listener is not r
 TEST_CASE( "EventBusImpl/triggerEvent", "Any listeners for the event type will be called" ) {
     std::unique_ptr<hikari::EventBus> eventBus(new hikari::EventBusImpl("global", true));
 
-    fastdelegate::FastDelegate1<hikari::EventDataPtr> delegatedFunction(&::helpers::testAddListener);
+    hikari::EventListenerDelegate delegatedFunction(&::helpers::testAddListener);
 
     eventBus->addListener(delegatedFunction, ::helpers::MockEventDataA::Type);
 
@@ -126,7 +126,7 @@ TEST_CASE( "EventBusImpl/triggerEvent", "Any listeners for the event type will b
 TEST_CASE( "EventBusImpl/queueEvent", "The event is enqueued and true is returned" ) {
     std::unique_ptr<hikari::EventBus> eventBus(new hikari::EventBusImpl("global", true));
 
-    fastdelegate::FastDelegate1<hikari::EventDataPtr> delegatedFunction(&::helpers::testAddListener);
+    hikari::EventListenerDelegate delegatedFunction(&::helpers::testAddListener);
 
     eventBus->addListener(delegatedFunction, ::helpers::MockEventDataA::Type);
 
@@ -136,7 +136,7 @@ TEST_CASE( "EventBusImpl/queueEvent", "The event is enqueued and true is returne
 TEST_CASE( "EventBusImpl/queueEvent (check listeners)", "The event is enqueued but any listeners for the event type will not be called" ) {
     std::unique_ptr<hikari::EventBus> eventBus(new hikari::EventBusImpl("global", true));
 
-    fastdelegate::FastDelegate1<hikari::EventDataPtr> delegatedFunction(&::helpers::testAddListener);
+    hikari::EventListenerDelegate delegatedFunction(&::helpers::testAddListener);
 
     eventBus->addListener(delegatedFunction, ::helpers::MockEventDataA::Type);
 
@@ -150,7 +150,7 @@ TEST_CASE( "EventBusImpl/queueEvent (check listeners)", "The event is enqueued b
 TEST_CASE( "EventBusImpl/cancelEvent (normal use case)", "The enqueued instance of the event is cancelled and true is returned" ) {
     std::unique_ptr<hikari::EventBus> eventBus(new hikari::EventBusImpl("global", true));
 
-    fastdelegate::FastDelegate1<hikari::EventDataPtr> delegatedFunction(&::helpers::testAddListener);
+    hikari::EventListenerDelegate delegatedFunction(&::helpers::testAddListener);
 
     eventBus->addListener(delegatedFunction, ::helpers::MockEventDataA::Type);
 
@@ -166,7 +166,7 @@ TEST_CASE( "EventBusImpl/cancelEvent (normal use case)", "The enqueued instance 
 TEST_CASE( "EventBusImpl/cancelEvent (cancel only one, leave others)", "The enqueued instance of the event is cancelled and true is returned" ) {
     std::unique_ptr<hikari::EventBus> eventBus(new hikari::EventBusImpl("global", true));
 
-    fastdelegate::FastDelegate1<hikari::EventDataPtr> delegatedFunction(&::helpers::testAddListener);
+    hikari::EventListenerDelegate delegatedFunction(&::helpers::testAddListener);
 
     eventBus->addListener(delegatedFunction, ::helpers::MockEventDataA::Type);
 
@@ -187,7 +187,7 @@ TEST_CASE( "EventBusImpl/cancelEvent (cancel only one, leave others)", "The enqu
 TEST_CASE( "EventBusImpl/cancelEvent (cancel all of type)", "The enqueued instances of the event is cancelled and true is returned" ) {
     std::unique_ptr<hikari::EventBus> eventBus(new hikari::EventBusImpl("global", true));
 
-    fastdelegate::FastDelegate1<hikari::EventDataPtr> delegatedFunction(&::helpers::testAddListener);
+    hikari::EventListenerDelegate delegatedFunction(&::helpers::testAddListener);
 
     eventBus->addListener(delegatedFunction, ::helpers::MockEventDataA::Type);
 
@@ -214,7 +214,7 @@ TEST_CASE( "EventBusImpl/cancelEvent (invalid cancellation)", "The event is not 
 TEST_CASE( "EventBusImpl/cancelEvent (doesn't trigger handlers)", "The enqueued instance of the event is cancelled and no handlers are executed" ) {
     std::unique_ptr<hikari::EventBus> eventBus(new hikari::EventBusImpl("global", true));
 
-    fastdelegate::FastDelegate1<hikari::EventDataPtr> delegatedFunction(&::helpers::testAddListener);
+    hikari::EventListenerDelegate delegatedFunction(&::helpers::testAddListener);
 
     eventBus->addListener(delegatedFunction, ::helpers::MockEventDataA::Type);
 
@@ -235,4 +235,4 @@ TEST_CASE( "EventBusImpl/processEvents (empty queue)", "Returns true if the queu
     REQUIRE( eventBus->processEvents() );
 }
 
-// addListener(const EventListenerDelegate & eventDelegate, const EventType & type) = 0;
+// addListener(const hikari::EventListenerDelegate & eventDelegate, const EventType & type) = 0;

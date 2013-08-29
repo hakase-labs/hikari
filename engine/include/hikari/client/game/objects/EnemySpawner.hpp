@@ -22,6 +22,7 @@ namespace hikari {
         bool hasLivingSpawn; // Indicates whether ths spawner has living "children"
         int spawnLimit;      // How many enemies this spawner will spawn at once time
         float spawnRate;     // How long to wait before spawning another enemy
+        float spawnRateAccumulator;
 
         void handleObjectRemovedEvent(EventDataPtr event);
 
@@ -38,11 +39,14 @@ namespace hikari {
         void setSpawnLimit(int limit);
         void setSpawnRate(float rate);
 
+        bool canSpawn() const;
+
         //
         // GameObject overrides
         //
         virtual void onActivated();
         virtual void onDeactivated();
+        virtual void update(float dt);
     };
 
 } // hikari
