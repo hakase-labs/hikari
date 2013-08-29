@@ -39,7 +39,7 @@ namespace hikari {
         void setSpawnLimit(int limit);
         void setSpawnRate(float rate);
 
-        bool canSpawn() const;
+        virtual bool canSpawn() const;
 
         //
         // GameObject overrides

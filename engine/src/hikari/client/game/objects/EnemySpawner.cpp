@@ -9,7 +9,7 @@
 namespace hikari {
 
     const int EnemySpawner::DEFAULT_SPAWN_LIMIT = 1;    // only spawn a single instance
-    const float EnemySpawner::DEFAULT_SPAWN_RATE = 1.0; // expressed in seconds
+    const float EnemySpawner::DEFAULT_SPAWN_RATE = 0.0; // expressed in seconds
 
     EnemySpawner::EnemySpawner(const std::string & enemyType, int spawnLimit, float spawnRate)
         : Spawner()
@@ -37,7 +37,7 @@ namespace hikari {
 
         if(std::find(std::begin(spawnedEnemyIds), std::end(spawnedEnemyIds), deadEntityId) != std::end(spawnedEnemyIds)) {
             HIKARI_LOG(debug4) << "EnemySpawner's enemy was consumed! id = " << eventData->getObjectId();
-            //setActive(false);
+
             spawnedEnemyIds.erase(
                 std::remove(std::begin(spawnedEnemyIds), std::end(spawnedEnemyIds), deadEntityId)
             );
@@ -47,25 +47,25 @@ namespace hikari {
     }
 
     void EnemySpawner::performAction(GameWorld & world) {
-        if(canSpawn()) {
-            if(auto spawnedObject = world.spawnEnemy(enemyType)) {
-                int objectId = spawnedObject->getId();
-                spawnedObject->reset();
-                spawnedObject->setPosition(getPosition());
-                spawnedObject->setActive(true);
+        if(auto spawnedObject = world.spawnEnemy(enemyType)) {
+            int objectId = spawnedObject->getId();
+            spawnedObject->reset();
+            spawnedObject->setPosition(getPosition());
+            spawnedObject->setActive(true);
 
-                world.queueObjectAddition(std::shared_ptr<Enemy>(std::move(spawnedObject)));
+            world.queueObjectAddition(std::shared_ptr<Enemy>(std::move(spawnedObject)));
 
-                spawnedEnemyIds.push_back(objectId);
-                hasLivingSpawn = true;
+            spawnedEnemyIds.push_back(objectId);
+            hasLivingSpawn = true;
 
-                spawnRateAccumulator = 0.0f;
-            }
+            // This resets the counter so that the spawner properly waits
+            // to spawn another object.
+            spawnRateAccumulator = spawnRate;
         }
     }
 
     void EnemySpawner::attachEventListeners(EventBus & EventBus) {
-        auto objectRemovedDelegate = EventListenerDelegate(std::bind(&EnemySpawner::handleObjectRemovedEvent, this, std::placeholders::_1)); // fastdelegate::MakeDelegate(this, &EnemySpawner::handleObjectRemovedEvent);
+        auto objectRemovedDelegate = EventListenerDelegate(std::bind(&EnemySpawner::handleObjectRemovedEvent, this, std::placeholders::_1));
         EventBus.addListener(objectRemovedDelegate, ObjectRemovedEventData::Type);
         eventHandlerDelegates.push_back(std::make_pair(objectRemovedDelegate, ObjectRemovedEventData::Type));
     }
@@ -92,9 +92,13 @@ namespace hikari {
     }
 
     bool EnemySpawner::canSpawn() const {
-        bool hasEnoughTimePassed = spawnRateAccumulator >= spawnRate;
+        bool hasEnoughTimePassed = spawnRateAccumulator == 0.0f;
         bool hasReachedSpawnLimit = spawnedEnemyIds.size() < spawnLimit;
-        return hasEnoughTimePassed && hasReachedSpawnLimit;
+        // Special case: the spawner can only spawn one object and it already has
+        // TODO: This could be dealth with differently, i.e.: using a flag to
+        // indicate if this behavior is desired (once vs continuous spawning)
+        bool hasAlreadySpawnedThisCycle = isAwake() && (spawnLimit == 1);
+        return !hasAlreadySpawnedThisCycle && hasEnoughTimePassed && hasReachedSpawnLimit;
     }
 
     void EnemySpawner::onActivated() {
@@ -108,12 +112,16 @@ namespace hikari {
 
         spawnedEnemyIds.clear();
         hasLivingSpawn = false;
+        spawnRateAccumulator = 0.0f;
 
         HIKARI_LOG(debug3) << "EnemySpawner::onDeactivated(), id = " << getId();
     }
 
     void EnemySpawner::update(float dt) {
-        spawnRateAccumulator += dt;
+        spawnRateAccumulator -= dt;
+
+        // Make sure that our accumulator doesn't go passed 0 (negative)
+        spawnRateAccumulator = std::max(spawnRateAccumulator, 0.0f);
     }
 
 } // hikari

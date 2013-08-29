@@ -61,6 +61,10 @@ namespace hikari {
         }
     }
 
+    bool Spawner::canSpawn() const {
+        return !isAwake();
+    }
+
     void Spawner::onWake() {
         HIKARI_LOG(debug3) << "Spawner::onWake(), id = " << getId();
     }

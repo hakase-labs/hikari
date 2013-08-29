@@ -63,6 +63,8 @@ namespace hikari {
         bool isAwake() const;
         void setAwake(bool awake);
 
+        virtual bool canSpawn() const;
+
         virtual void onWake();
         virtual void onSleep();
 

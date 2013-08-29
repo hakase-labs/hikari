@@ -563,8 +563,9 @@ namespace hikari {
                                 spawner->setAwake(false);
                             }
                         }
-                        else {
-                            if(cameraView.contains(spawnerPosition.getX(), spawnerPosition.getY())) {
+                        
+                        if(cameraView.contains(spawnerPosition.getX(), spawnerPosition.getY())) {
+                            if(spawner->canSpawn()) {
                                 spawner->setAwake(true);
                                 spawner->performAction(world);
                             }
@@ -824,7 +825,7 @@ namespace hikari {
 
     void GamePlayState::bindEventHandlers() {
         if(eventBus) {
-            auto weaponFireDelegate = EventListenerDelegate(std::bind(&GamePlayState::handleWeaponFireEvent, this, std::placeholders::_1)); // fastdelegate::MakeDelegate(this, &GamePlayState::handleWeaponFireEvent);
+            auto weaponFireDelegate = EventListenerDelegate(std::bind(&GamePlayState::handleWeaponFireEvent, this, std::placeholders::_1));
             eventBus->addListener(weaponFireDelegate, WeaponFireEventData::Type);
             eventHandlerDelegates.push_back(std::make_pair(weaponFireDelegate, WeaponFireEventData::Type));
 
