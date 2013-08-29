@@ -20,10 +20,9 @@ namespace hikari {
     private:
         std::vector<int> spawnedEnemyIds;
         std::string enemyType;
-        bool hasLivingSpawn;          // Indicates whether ths spawner has living "children"
-        unsigned int spawnLimit;      // How many enemies this spawner will spawn at once time
+        unsigned int spawnLimit;      // How many enemies this spawner will spawn at one time
         float spawnRate;              // How long to wait before spawning another enemy
-        float spawnRateAccumulator;
+        float spawnRateAccumulator;   // Counter between spawns
 
         void handleObjectRemovedEvent(EventDataPtr event);
 

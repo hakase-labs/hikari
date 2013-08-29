@@ -15,7 +15,6 @@ namespace hikari {
         : Spawner()
         , spawnedEnemyIds()
         , enemyType(enemyType)
-        , hasLivingSpawn(false)
         , spawnLimit(spawnLimit)
         , spawnRate(spawnRate)
         , spawnRateAccumulator(0.0f)
@@ -41,8 +40,6 @@ namespace hikari {
             spawnedEnemyIds.erase(
                 std::remove(std::begin(spawnedEnemyIds), std::end(spawnedEnemyIds), deadEntityId)
             );
-
-            hasLivingSpawn = !spawnedEnemyIds.empty();
         } 
     }
 
@@ -56,7 +53,6 @@ namespace hikari {
             world.queueObjectAddition(std::shared_ptr<Enemy>(std::move(spawnedObject)));
 
             spawnedEnemyIds.push_back(objectId);
-            hasLivingSpawn = true;
 
             // This resets the counter so that the spawner properly waits
             // to spawn another object.
@@ -121,7 +117,6 @@ namespace hikari {
         GameObject::onDeactivated();
 
         spawnedEnemyIds.clear();
-        hasLivingSpawn = false;
         spawnRateAccumulator = 0.0f;
 
         HIKARI_LOG(debug3) << "EnemySpawner::onDeactivated(), id = " << getId();
