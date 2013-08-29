@@ -8,10 +8,10 @@
 
 namespace hikari {
 
-    const int EnemySpawner::DEFAULT_SPAWN_LIMIT = 1;    // only spawn a single instance
+    const unsigned int EnemySpawner::DEFAULT_SPAWN_LIMIT = 1;    // only spawn a single instance
     const float EnemySpawner::DEFAULT_SPAWN_RATE = 0.0; // expressed in seconds
 
-    EnemySpawner::EnemySpawner(const std::string & enemyType, int spawnLimit, float spawnRate)
+    EnemySpawner::EnemySpawner(const std::string & enemyType, unsigned int spawnLimit, float spawnRate)
         : Spawner()
         , spawnedEnemyIds()
         , enemyType(enemyType)
@@ -83,12 +83,22 @@ namespace hikari {
         eventHandlerDelegates.clear();
     }
 
-    void EnemySpawner::setSpawnLimit(int limit) {
+    void EnemySpawner::setSpawnLimit(unsigned int limit) {
         spawnLimit = limit;
+
+        if(spawnLimit < 1) {
+            HIKARI_LOG(warning) << "A spawner (#" << getId() << ") was given a limit less than 1; setting to 1";
+            spawnLimit = 1;
+        }
     }
 
     void EnemySpawner::setSpawnRate(float rate) {
         spawnRate = rate;
+
+        if(spawnRate < 0.0f) {
+            HIKARI_LOG(warning) << "A spawner (#" << getId() << ") was given a spawn rate less than 0; setting to 0";
+            spawnRate = 0.0f;
+        }
     }
 
     bool EnemySpawner::canSpawn() const {
