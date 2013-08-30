@@ -66,8 +66,6 @@ set( SQUIRREL_FILES
 
 set( SQRAT_DIR "${PROJECT_SOURCE_DIR}/extlibs/sqrat" )
 
-set( FASTDELEGATE_DIR "${PROJECT_SOURCE_DIR}/extlibs/fastdelegate" )
-
 set( GUICHAN_DIR "${PROJECT_SOURCE_DIR}/extlibs/guichan" )
 set( GUICHAN_SOURCE_FILES
     # Guichan core
@@ -181,6 +179,7 @@ set( HIKARI_CLIENT_GAME_EVENTS_SOURCE_FILES
     src/hikari/client/game/events/EntityDamageEventData.cpp
     src/hikari/client/game/events/EntityDeathEventData.cpp
     src/hikari/client/game/events/EntityStateChangeEventData.cpp
+    src/hikari/client/game/events/EventListenerDelegate.cpp
     src/hikari/client/game/events/EventData.cpp
     src/hikari/client/game/events/EventBus.cpp
     src/hikari/client/game/events/EventBusImpl.cpp
@@ -351,7 +350,6 @@ set( INCLUDE_DIRS
     ${SQUIRREL_DIR}/squirrel
     ${SQUIRREL_DIR}/sqstdlib
     ${SQRAT_DIR}/include
-    ${FASTDELEGATE_DIR}
     ${GUICHAN_DIR}/include
     ${GUICHAN_DIR}/include/guichan
     ${GUICHAN_SFML_DIR}/include
@@ -379,7 +377,7 @@ if(WIN32)
     set(SFML_STATIC_LIBRARIES TRUE)
 endif(WIN32)
 
-find_package(SFML 2 COMPONENTS graphics window system audio REQUIRED)
+find_package(SFML 2 COMPONENTS graphics window audio system REQUIRED)
 
 if(SFML_FOUND)
     if(APPLE)

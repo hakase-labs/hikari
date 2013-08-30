@@ -62,7 +62,7 @@ namespace gcn
     {
         fillGlyphMap(glyphs);
     }
-    
+
     void FixedImageFont::fillGlyphMap(const std::string& glyphs)
     {
         mGlyphMap.clear();
@@ -72,10 +72,11 @@ namespace gcn
         for (auto itr = glyphs.cbegin(), end = glyphs.cend(); itr != end; itr++, i++)
         {
             auto glyph = (*itr);
-            
-            mGlyphMap.emplace(
+
+            //mGlyphMap.emplace(
+            mGlyphMap.insert(
                 std::make_pair(
-                    glyph, 
+                    glyph,
                     Rectangle(i * mGlyphWidth, 0, mGlyphWidth, mGlyphHeight)));
         }
     }
@@ -107,19 +108,19 @@ namespace gcn
                         // No need to push a clip rectangle because gcn::Graphics::drawImage does it for us.
 
                         graphics->drawImage(
-                                mGlyphImage, 
-                                glyphRectangle.x, 
-                                glyphRectangle.y, 
-                                dx, 
-                                dy, 
-                                mGlyphWidth, 
+                                mGlyphImage,
+                                glyphRectangle.x,
+                                glyphRectangle.y,
+                                dx,
+                                dy,
+                                mGlyphWidth,
                                 mGlyphHeight);
                     }
 
                     dx += mGlyphWidth;
                 }
 
-                
+
             }
         }
     }

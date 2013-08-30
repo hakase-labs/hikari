@@ -53,7 +53,7 @@ namespace hikari {
         // catch these exceptions and return false instead? Good/bad?
         try {
             gme_type_t file_type = gme_identify_extension(fileName.c_str());
-            
+
             if(!file_type) {
                 return false;
             }
@@ -146,7 +146,7 @@ namespace hikari {
                     // This mixing strategy came from: http://www.vttoth.com/CMS/index.php/technical-notes/68
                     // And supporting information from: http://cboard.cprogramming.com/c-programming/103456-mixing-pcm-samples-dealing-clicks-overflow.html
                     //mixedValue = mixedValue + buffer[i] - ((mixedValue * buffer[i]) / 65535);
-                    
+
                     // Method dreived from: http://stackoverflow.com/a/10029792
                     float a = (mixedValue + 32767.0f) / 65536.0f;
                     float b = (buffer[i] + 32767.0f) / 65536.0f;
@@ -241,13 +241,12 @@ namespace hikari {
 
             trackCount = emu->track_count();
         }
-        
+
         return trackCount; // sampleEmus[0]->track_count();
     }
 
     void NSFSoundStream::stopAllSamplers() {
         activeSamplers.remove_if([&](const SamplerPair & pair) -> bool {
-            bool ended = (pair.first)->track_ended();
             int track = (pair.first)->current_track();
 
             availableSamplers.push(pair);

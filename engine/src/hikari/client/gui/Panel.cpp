@@ -13,6 +13,7 @@ namespace gui {
         , shadowColor(gcn::Color(0, 0, 255, 64))
         , drawShadow(false)
     {
+        setFocusable(true);
     }
 
     Panel::~Panel() {

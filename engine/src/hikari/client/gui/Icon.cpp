@@ -56,10 +56,10 @@ namespace gui {
     }
 
     void Icon::draw(gcn::Graphics* graphics) {
-        if(isOpaque()) {
-            graphics->setColor(getBaseColor());
-            graphics->fillRectangle(0, 0, getWidth(), getHeight());
-        }
+        // if(isOpaque()) {
+        //     graphics->setColor(getBaseColor());
+        //     graphics->fillRectangle(0, 0, getWidth(), getHeight());
+        // }
 
         if(mImage) {
             graphics->drawImage(

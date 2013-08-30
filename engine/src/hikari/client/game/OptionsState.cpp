@@ -84,6 +84,12 @@ namespace hikari {
         gameStartMenuItem->setSelectionColor(gcn::Color(250, 128, 128));
         guiMenu->addItem(gameStartMenuItem);
 
+        std::shared_ptr<gui::MenuItem> doStuffMenuItem(new gui::MenuItem("DO STUFF"));
+        doStuffMenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
+        doStuffMenuItem->setSelectionColor(gcn::Color(250, 128, 128));
+        doStuffMenuItem->setY(16);
+        guiMenu->addItem(doStuffMenuItem);
+
         guiMenu->setSelectedIndex(0);
 
         guiContainer->add(guiMenu.get(), 16, 128);
@@ -109,6 +115,7 @@ namespace hikari {
             auto & topContainer = gui->getRootContainer();
 
             topContainer.add(guiContainer.get(), 0, 0);
+            guiMenu->setEnabled(true);
             guiMenu->requestFocus();
         }
 
@@ -121,6 +128,7 @@ namespace hikari {
             auto & topContainer = gui->getRootContainer();
 
             topContainer.remove(guiContainer.get());
+            guiMenu->setEnabled(false);
         }
     }
 
