@@ -41,10 +41,6 @@ namespace hikari {
 
     }
 
-    void Spawner::attachToInstance(const std::shared_ptr<GameObject> & instance) {
-
-    }
-
     bool Spawner::isAwake() const {
         return awake;
     }
@@ -59,6 +55,10 @@ namespace hikari {
                 onSleep();
             }
         }
+    }
+
+    bool Spawner::canSpawn() const {
+        return !isAwake();
     }
 
     void Spawner::onWake() {

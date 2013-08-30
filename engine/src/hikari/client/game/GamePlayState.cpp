@@ -36,6 +36,8 @@
 #include "hikari/client/game/events/WeaponFireEventData.hpp"
 #include "hikari/client/game/events/ObjectRemovedEventData.hpp"
 #include "hikari/client/gui/GuiService.hpp"
+#include "hikari/client/gui/Menu.hpp"
+#include "hikari/client/gui/MenuItem.hpp"
 #include "hikari/core/game/GameController.hpp"
 #include "hikari/core/game/AnimationSet.hpp"
 #include "hikari/core/game/AnimationLoader.hpp"
@@ -62,6 +64,9 @@
 
 #include <guichan/widgets/container.hpp>
 #include <guichan/widgets/label.hpp>
+
+#include <guichan/hakase/functoractionlistener.hpp>
+#include <guichan/hakase/functorselectionlistener.hpp>
 
 #include <sqrat.h>
 
@@ -106,6 +111,9 @@ namespace hikari {
         , guiLivesLabel(new gcn::Label())
         , guiETanksLabel(new gcn::Label())
         , guiReadyLabel(new gcn::Label())
+        , guiWeaponMenu(new gui::Menu())
+        , guiWeaponMenuActionListener(nullptr)
+        , guiWeaponMenuSelectionListener(nullptr)
         , keyboardInput(new KeyboardInput())
         , maps()
         , itemSpawners()
@@ -147,7 +155,7 @@ namespace hikari {
             //
             auto heroId = GameObject::generateObjectId();
             auto heroAnimationSet = animationCache->get("assets/animations/rockman-32.json");
-            
+
             hero = std::make_shared<Hero>(heroId, nullptr);
             hero->setActive(true);
             hero->setAnimationSet(heroAnimationSet);
@@ -177,7 +185,7 @@ namespace hikari {
 
         std::for_each(
             std::begin(eventHandlerDelegates),
-            std::end(eventHandlerDelegates), 
+            std::end(eventHandlerDelegates),
             [&](const std::pair<EventListenerDelegate, EventType> & del) {
                 if(eventBus) {
                     bool removed = eventBus->removeListener(del.first, del.second);
@@ -236,12 +244,113 @@ namespace hikari {
         guiReadyLabel->setVisible(false);
 
         guiContainer->add(guiReadyLabel.get());
+
+        guiWeaponMenu->setWidth(guiContainer->getWidth() - 32);
+        guiWeaponMenu->setHeight((guiContainer->getHeight() / 2) - 32);
+        guiWeaponMenu->setBackgroundColor(gcn::Color(45, 45, 45));
+        guiWeaponMenu->enableWrapping();
+        guiWeaponMenu->setVisible(true);
+
+        std::shared_ptr<gui::MenuItem> weapon1MenuItem(new gui::MenuItem("Weapon 1"));
+        weapon1MenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
+        weapon1MenuItem->setSelectionColor(gcn::Color(250, 128, 128));
+        weapon1MenuItem->setX(0);
+        weapon1MenuItem->setY(0);
+        guiWeaponMenu->addItem(weapon1MenuItem);
+
+        std::shared_ptr<gui::MenuItem> weapon2MenuItem(new gui::MenuItem("Weapon 2"));
+        weapon2MenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
+        weapon2MenuItem->setSelectionColor(gcn::Color(250, 128, 128));
+        weapon2MenuItem->setX(0);
+        weapon2MenuItem->setY(16);
+        guiWeaponMenu->addItem(weapon2MenuItem);
+
+        std::shared_ptr<gui::MenuItem> weapon3MenuItem(new gui::MenuItem("Weapon 3"));
+        weapon3MenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
+        weapon3MenuItem->setSelectionColor(gcn::Color(250, 128, 128));
+        weapon3MenuItem->setX(0);
+        weapon3MenuItem->setY(32);
+        guiWeaponMenu->addItem(weapon3MenuItem);
+
+        std::shared_ptr<gui::MenuItem> weapon4MenuItem(new gui::MenuItem("Weapon 4"));
+        weapon4MenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
+        weapon4MenuItem->setSelectionColor(gcn::Color(250, 128, 128));
+        weapon4MenuItem->setX(0);
+        weapon4MenuItem->setY(48);
+        guiWeaponMenu->addItem(weapon4MenuItem);
+
+        std::shared_ptr<gui::MenuItem> weapon5MenuItem(new gui::MenuItem("Weapon 5"));
+        weapon5MenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
+        weapon5MenuItem->setSelectionColor(gcn::Color(250, 128, 128));
+        weapon5MenuItem->setX(0);
+        weapon5MenuItem->setY(64);
+        guiWeaponMenu->addItem(weapon5MenuItem);
+
+        std::shared_ptr<gui::MenuItem> weapon6MenuItem(new gui::MenuItem("Weapon 6"));
+        weapon6MenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
+        weapon6MenuItem->setSelectionColor(gcn::Color(250, 128, 128));
+        weapon6MenuItem->setX(88);
+        weapon6MenuItem->setY(0);
+        guiWeaponMenu->addItem(weapon6MenuItem);
+
+        std::shared_ptr<gui::MenuItem> weapon7MenuItem(new gui::MenuItem("Weapon 7"));
+        weapon7MenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
+        weapon7MenuItem->setSelectionColor(gcn::Color(250, 128, 128));
+        weapon7MenuItem->setX(88);
+        weapon7MenuItem->setY(16);
+        guiWeaponMenu->addItem(weapon7MenuItem);
+
+        std::shared_ptr<gui::MenuItem> weapon8MenuItem(new gui::MenuItem("Weapon 8"));
+        weapon8MenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
+        weapon8MenuItem->setSelectionColor(gcn::Color(250, 128, 128));
+        weapon8MenuItem->setX(88);
+        weapon8MenuItem->setY(32);
+        guiWeaponMenu->addItem(weapon8MenuItem);
+
+        std::shared_ptr<gui::MenuItem> weapon9MenuItem(new gui::MenuItem("Weapon 9"));
+        weapon9MenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
+        weapon9MenuItem->setSelectionColor(gcn::Color(250, 128, 128));
+        weapon9MenuItem->setX(88);
+        weapon9MenuItem->setY(48);
+        guiWeaponMenu->addItem(weapon9MenuItem);
+
+        std::shared_ptr<gui::MenuItem> weapon10MenuItem(new gui::MenuItem("Weapon 10"));
+        weapon10MenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
+        weapon10MenuItem->setSelectionColor(gcn::Color(250, 128, 128));
+        weapon10MenuItem->setX(88);
+        weapon10MenuItem->setY(64);
+        guiWeaponMenu->addItem(weapon10MenuItem);
+
+        guiMenuPanel->add(guiWeaponMenu.get(), 8, 8);
+
+        guiWeaponMenuActionListener.reset(new gcn::FunctorActionListener([&](const gcn::ActionEvent& event) {
+            auto item = guiWeaponMenu->getMenuItemAt(guiWeaponMenu->getSelectedIndex());
+            // std::cout << "Actioned on #" << guiWeaponMenu->getSelectedIndex() << std::endl;           
+        }));
+
+        guiWeaponMenuSelectionListener.reset(new gcn::FunctorSelectionListener([&](const gcn::SelectionEvent & event) {
+            // std::cout << "Selection changed! " << guiWeaponMenu->getSelectedIndex() << std::endl;
+
+            // if(auto audio = audioService.lock()) {
+            //     audio->playSample(27);
+            // }
+        }));
+
+        guiWeaponMenu->setEnabled(true);
+        guiWeaponMenu->addActionListener(guiWeaponMenuActionListener.get());
+        guiWeaponMenu->addSelectionListener(guiWeaponMenuSelectionListener.get());
+        guiWeaponMenu->setSelectedIndex(0);
+
+        guiContainer->setEnabled(true);
+        guiMenuPanel->setEnabled(true);
     }
 
     void GamePlayState::handleEvent(sf::Event &event) {
         if((event.type == sf::Event::KeyPressed) && event.key.code == sf::Keyboard::Return) {
             isViewingMenu = !isViewingMenu;
             guiMenuPanel->setVisible(isViewingMenu);
+            guiWeaponMenu->requestFocus();
+            hero->setWeaponId(guiWeaponMenu->getSelectedIndex()); 
         }
 
         if((event.type == sf::Event::KeyPressed) && event.key.code == sf::Keyboard::BackSpace) {
@@ -286,6 +395,10 @@ namespace hikari {
     bool GamePlayState::update(const float &dt) {
         gotoNextState = false;
 
+        //if(guiWeaponMenu) {
+            guiWeaponMenu->logic();
+        //}
+
         userInput->update(dt);
 
         if(eventBus) {
@@ -319,14 +432,24 @@ namespace hikari {
             auto & topContainer = gui->getRootContainer();
 
             topContainer.add(guiContainer.get(), 0, 0);
+            guiWeaponMenu->setEnabled(true);
+            guiWeaponMenu->requestFocus();
         }
 
         Movable::setCollisionResolver(collisionResolver);
         Movable::setGravity(0.25f);
 
-        // Determine which stage we're on and set that to the current level...
-        if((currentMap = maps.at("map-test4.json"))) {
-            currentTileset = currentMap->getTileset();
+        std::vector<std::string> mapList;
+        mapList.push_back("map-pearl.json");
+        mapList.push_back("map-test4.json");
+        mapList.push_back("map-test3.json");
+        mapList.push_back("map-test2.json");
+
+        if(auto gp = gameProgress.lock()) {
+            // Determine which stage we're on and set that to the current level...
+            if((currentMap = maps.at(mapList.at(gp->getCurrentBoss() % mapList.size())))) {
+                currentTileset = currentMap->getTileset();
+            }
         }
 
         startStage();
@@ -337,6 +460,7 @@ namespace hikari {
             auto & topContainer = gui->getRootContainer();
 
             topContainer.remove(guiContainer.get());
+            guiWeaponMenu->setEnabled(false);
         }
     }
 
@@ -418,7 +542,7 @@ namespace hikari {
         );
     }
 
-    void GamePlayState::checkSpawners() {
+    void GamePlayState::checkSpawners(float dt) {
         const auto & cameraView = camera.getView();
 
         //
@@ -428,8 +552,9 @@ namespace hikari {
         std::for_each(
             std::begin(itemSpawners),
             std::end(itemSpawners),
-            [this, &cameraView](std::weak_ptr<Spawner> & s) {
+            [this, &cameraView, &dt](std::weak_ptr<Spawner> & s) {
                 if(auto spawner = s.lock()) {
+                    spawner->update(dt);
                     const auto & spawnerPosition = spawner->getPosition();
 
                     if(spawner->isActive()) {
@@ -438,8 +563,9 @@ namespace hikari {
                                 spawner->setAwake(false);
                             }
                         }
-                        else {
-                            if(cameraView.contains(spawnerPosition.getX(), spawnerPosition.getY())) {
+                        
+                        if(cameraView.contains(spawnerPosition.getX(), spawnerPosition.getY())) {
+                            if(spawner->canSpawn()) {
                                 spawner->setAwake(true);
                                 spawner->performAction(world);
                             }
@@ -481,13 +607,13 @@ namespace hikari {
                 lowerBound = upperBound;
             }
         }
- 
+
         return bonus;
     }
 
     void GamePlayState::spawnDeathExplosion(EntityDeathType::Type type, const Vector2<float> & position) {
         if(type == EntityDeathType::Hero) {
-            // This type of explosion shoots in 8 directions. Thwo explosions per 
+            // This type of explosion shoots in 8 directions. Thwo explosions per
             // direction; one fast and one slow. It's the death thath appens to Rock
             // as well as Robot Masters.
             std::list<Vector2<float>> velocities;
@@ -664,29 +790,29 @@ namespace hikari {
         const auto & activeItems = world.getActiveItems();
 
         std::for_each(
-            std::begin(activeItems), 
-            std::end(activeItems), 
+            std::begin(activeItems),
+            std::end(activeItems),
             std::bind(&CollectableItem::render, std::placeholders::_1, ReferenceWrapper<sf::RenderTarget>(target)));
 
         const auto & activeEnemies = world.getActiveEnemies();
 
         std::for_each(
-            std::begin(activeEnemies), 
-            std::end(activeEnemies), 
+            std::begin(activeEnemies),
+            std::end(activeEnemies),
             std::bind(&Enemy::render, std::placeholders::_1, ReferenceWrapper<sf::RenderTarget>(target)));
 
         const auto & activeParticles = world.getActiveParticles();
 
         std::for_each(
-            std::begin(activeParticles), 
-            std::end(activeParticles), 
+            std::begin(activeParticles),
+            std::end(activeParticles),
             std::bind(&Particle::render, std::placeholders::_1, ReferenceWrapper<sf::RenderTarget>(target)));
 
         const auto & activeProjectiles = world.getActiveProjectiles();
 
         std::for_each(
-            std::begin(activeProjectiles), 
-            std::end(activeProjectiles), 
+            std::begin(activeProjectiles),
+            std::end(activeProjectiles),
             std::bind(&Projectile::render, std::placeholders::_1, ReferenceWrapper<sf::RenderTarget>(target)));
 
         // Restore UI view
@@ -699,23 +825,23 @@ namespace hikari {
 
     void GamePlayState::bindEventHandlers() {
         if(eventBus) {
-            auto weaponFireDelegate = fastdelegate::MakeDelegate(this, &GamePlayState::handleWeaponFireEvent);
+            auto weaponFireDelegate = EventListenerDelegate(std::bind(&GamePlayState::handleWeaponFireEvent, this, std::placeholders::_1));
             eventBus->addListener(weaponFireDelegate, WeaponFireEventData::Type);
             eventHandlerDelegates.push_back(std::make_pair(weaponFireDelegate, WeaponFireEventData::Type));
 
-            auto entityDamageDelegate = fastdelegate::MakeDelegate(this, &GamePlayState::handleEntityDamageEvent);
+            auto entityDamageDelegate = EventListenerDelegate(std::bind(&GamePlayState::handleEntityDamageEvent, this, std::placeholders::_1));
             eventBus->addListener(entityDamageDelegate, EntityDamageEventData::Type);
             eventHandlerDelegates.push_back(std::make_pair(entityDamageDelegate, EntityDamageEventData::Type));
 
-            auto entityDeathDelegate = fastdelegate::MakeDelegate(this, &GamePlayState::handleEntityDeathEvent);
+            auto entityDeathDelegate = EventListenerDelegate(std::bind(&GamePlayState::handleEntityDeathEvent, this, std::placeholders::_1));
             eventBus->addListener(entityDeathDelegate, EntityDeathEventData::Type);
             eventHandlerDelegates.push_back(std::make_pair(entityDeathDelegate, EntityDeathEventData::Type));
 
-            auto entityStateChangeDelegate = fastdelegate::MakeDelegate(this, &GamePlayState::handleEntityStateChangeEvent);
+            auto entityStateChangeDelegate = EventListenerDelegate(std::bind(&GamePlayState::handleEntityStateChangeEvent, this, std::placeholders::_1));
             eventBus->addListener(entityStateChangeDelegate, EntityStateChangeEventData::Type);
             eventHandlerDelegates.push_back(std::make_pair(entityStateChangeDelegate, EntityStateChangeEventData::Type));
 
-            auto objectRemovedDelegate = fastdelegate::FastDelegate1<EventDataPtr>(&letMeKnowItsGone);
+            auto objectRemovedDelegate = EventListenerDelegate(&letMeKnowItsGone);
             eventBus->addListener(objectRemovedDelegate, ObjectRemovedEventData::Type);
             eventHandlerDelegates.push_back(std::make_pair(objectRemovedDelegate, ObjectRemovedEventData::Type));
         }
@@ -748,16 +874,17 @@ namespace hikari {
                     progress->setLives(progress->getLives() - 1);
 
                     // All the way dead
-                    if(progress->getLives() == 0) {
+                    if(progress->getLives() < 0) {
                         HIKARI_LOG(debug2) << "Hero has died all of his lives, go to password screen.";
                         // TODO: Reset number of lives here to the default.
+                        progress->resetLivesToDefault();
                         controller.setNextState("stageselect");
                         gotoNextState = true;
                     }
                 }
 
                 spawnDeathExplosion(hero->getDeathType(), hero->getPosition());
-                
+
                 HIKARI_LOG(debug) << "Hero died. Starting over.";
 
                 if(auto sound = audioService.lock()) {
@@ -825,7 +952,7 @@ namespace hikari {
                     HIKARI_LOG(debug4) << "Hero's shot count: " << hero->getActiveShotCount();
                 } else {
                     // It could be an enemy...
-                    // So we need to somehow get the enemy by ID and make it 
+                    // So we need to somehow get the enemy by ID and make it
                     // observe the shot. It would be nice to do this without
                     // casting.
                     // TODO: CLEAN ME / CASTING
@@ -837,7 +964,7 @@ namespace hikari {
                         }
                     }
                 }
-                
+
 
                 if(auto sound = audioService.lock()) {
                     sound->playSample(21);
@@ -933,7 +1060,7 @@ namespace hikari {
                 static_cast<float>(gp->getPlayerEnergy())
             );
         }
-        
+
         sf::Color overlayColor = sf::Color(fadeOverlay.getFillColor());
         overlayColor.a = 255;
 
@@ -948,9 +1075,9 @@ namespace hikari {
             Point2D<int> spawnPosition = gamePlayState.currentRoom->getHeroSpawnPosition();
             spawnPosition.setX(spawnPosition.getX() + gamePlayState.currentRoom->getBounds().getX());
             spawnPosition.setY(spawnPosition.getY() + gamePlayState.currentRoom->getBounds().getY());
-            
+
             gamePlayState.camera.lookAt(
-                static_cast<float>(spawnPosition.getX()), 
+                static_cast<float>(spawnPosition.getX()),
                 static_cast<float>(spawnPosition.getY())
             );
 
@@ -1147,7 +1274,7 @@ namespace hikari {
 
             gamePlayState.guiETanksLabel->setCaption("ETanks " + StringUtils::toString(static_cast<int>(progress->getETanks())));
             gamePlayState.guiETanksLabel->adjustSize();
-        }       
+        }
 
         // Remove any enemies that may have been there from before
         auto & staleEnemies = gamePlayState.world.getActiveEnemies();
@@ -1155,9 +1282,9 @@ namespace hikari {
         std::for_each(std::begin(staleEnemies), std::end(staleEnemies), [&](const std::shared_ptr<Enemy> & enemy) {
             HIKARI_LOG(debug2) << "Removing stale enemy, id = " << enemy->getId();
             gamePlayState.world.queueObjectRemoval(enemy);
-        }); 
+        });
     }
-    
+
     void GamePlayState::PlayingSubState::exit() {
 
     }
@@ -1166,7 +1293,7 @@ namespace hikari {
         auto& camera = gamePlayState.camera;
 
         auto playerPosition = gamePlayState.world.getPlayerPosition();
-        
+
         Sqrat::RootTable()
             .SetValue("heroX", playerPosition.getX())
             .SetValue("heroY", playerPosition.getY());
@@ -1179,8 +1306,8 @@ namespace hikari {
         const auto & activeItems = gamePlayState.world.getActiveItems();
 
         std::for_each(
-            std::begin(activeItems), 
-            std::end(activeItems), 
+            std::begin(activeItems),
+            std::end(activeItems),
             [this, &camera, &dt](const std::shared_ptr<CollectableItem> & item) {
                 item->update(dt);
 
@@ -1219,8 +1346,8 @@ namespace hikari {
         const auto & activeEnemies = gamePlayState.world.getActiveEnemies();
 
         std::for_each(
-            std::begin(activeEnemies), 
-            std::end(activeEnemies), 
+            std::begin(activeEnemies),
+            std::end(activeEnemies),
             [this, &camera, &dt](const std::shared_ptr<Enemy> & enemy) {
                 enemy->update(dt);
 
@@ -1250,7 +1377,7 @@ namespace hikari {
                         damageAmount = dt->getDamageFor(damageKey.damagerType);
                     }
                     // END DAMAGE RESOLVER LOGIC
-                    
+
                     HIKARI_LOG(debug3) << "Hero should take " << damageAmount << " damage!";
 
                     if(hero->isVulnerable()) {
@@ -1271,14 +1398,14 @@ namespace hikari {
 
         });
 
-        // 
+        //
         // Update particles
-        // 
+        //
         const auto & activeParticles = gamePlayState.world.getActiveParticles();
 
         std::for_each(
-            std::begin(activeParticles), 
-            std::end(activeParticles), 
+            std::begin(activeParticles),
+            std::end(activeParticles),
             [this, &camera, &dt](const std::shared_ptr<Particle> & particle) {
                 particle->update(dt);
 
@@ -1300,8 +1427,8 @@ namespace hikari {
         const auto & activeProjectiles = gamePlayState.world.getActiveProjectiles();
 
         std::for_each(
-            std::begin(activeProjectiles), 
-            std::end(activeProjectiles), 
+            std::begin(activeProjectiles),
+            std::end(activeProjectiles),
             [this, &activeEnemies, &camera, &dt](const std::shared_ptr<Projectile> & projectile) {
                 projectile->update(dt);
 
@@ -1318,8 +1445,8 @@ namespace hikari {
 
                     // Check for collision with enemies
                     std::for_each(
-                        std::begin(activeEnemies), 
-                        std::end(activeEnemies), 
+                        std::begin(activeEnemies),
+                        std::end(activeEnemies),
                         [&](const std::shared_ptr<Enemy> & enemy) {
                             if(!projectile->isInert()) {
                                 if(projectile->getBoundingBox().intersects(enemy->getBoundingBox())) {
@@ -1334,14 +1461,14 @@ namespace hikari {
                                     } else {
                                         HIKARI_LOG(debug3) << "Hero bullet " << projectile->getId() << " hit an enemy " << enemy->getId();
                                         projectile->setActive(false);
-                                        gamePlayState.world.queueObjectRemoval(projectile); 
+                                        gamePlayState.world.queueObjectRemoval(projectile);
 
                                         DamageKey damageKey;
                                         damageKey.damagerType = projectile->getDamageId();
                                         damageKey.damageeType = enemy->getDamageId();
 
                                         HIKARI_LOG(debug3) << "Hero bullet damage id = " << projectile->getDamageId();
-                                        
+
                                         // TODO: Perform damage lookup and apply it to hero.
                                         // Trigger enemy damage
                                         float damageAmount = 0.0f;
@@ -1351,7 +1478,7 @@ namespace hikari {
                                         }
 
                                         HIKARI_LOG(debug3) << "Enemy took " << damageAmount;
-                                        
+
                                         enemy->takeDamage(damageAmount);
 
                                         if(auto sound = gamePlayState.audioService.lock()) {
@@ -1370,9 +1497,9 @@ namespace hikari {
                     if(projectile->getBoundingBox().intersects(hero->getBoundingBox())) {
                         HIKARI_LOG(debug3) << "Enemy bullet " << projectile->getId() << " hit the hero!";
 
-                        DamageKey damageKey;
-                        damageKey.damagerType = projectile->getDamageId();
-                        damageKey.damageeType = hero->getDamageId();
+                        // DamageKey damageKey;
+                        // damageKey.damagerType = projectile->getDamageId();
+                        // damageKey.damageeType = hero->getDamageId();
 
                         // TODO: Perform damage lookup and apply it to hero.
 
@@ -1407,7 +1534,7 @@ namespace hikari {
 
                 while(index != end) {
                     const BoundingBox<float> & ladder = *index;
-                    
+
                     if(gamePlayState.hero->getBoundingBox().intersects(ladder)) {
                        gamePlayState.hero->requestClimbingAttachment(ladder);
                     }
@@ -1436,7 +1563,7 @@ namespace hikari {
 
         renderer->setCullRegion(Rectangle2D<int>(cameraX, cameraY, cameraWidth, cameraHeight));
 
-        gamePlayState.checkSpawners();
+        gamePlayState.checkSpawners(dt);
 
         //
         // Check if hero has touched any transitions
@@ -1488,7 +1615,7 @@ namespace hikari {
         if(gamePlayState.isHeroAlive) {
             gamePlayState.renderHero(target);
         }
-    
+
         gamePlayState.renderHud(target);
     }
 
@@ -1543,7 +1670,7 @@ namespace hikari {
             // This is an error case; there was no next room to go to.
             HIKARI_LOG(error) << "Tried to transition to non-existent room #" << transition.getToRegion();
             transitionFinished = true;
-        }        
+        }
     }
 
     std::shared_ptr<Room> GamePlayState::TransitionSubState::findNextRoom() const {
@@ -1579,7 +1706,7 @@ namespace hikari {
 
     void GamePlayState::TransitionSubState::exit() {
         HIKARI_LOG(debug) << "TransitionSubState::exit()";
-        
+
         auto & camera = gamePlayState.camera;
 
         camera.lockVertical(true);

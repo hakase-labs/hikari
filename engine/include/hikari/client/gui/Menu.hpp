@@ -56,7 +56,7 @@ namespace gui {
         void addItem(const std::shared_ptr<MenuItem> & item);
         void removeItem(const std::shared_ptr<MenuItem> & item);
         int getItemCount() const;
-        std::shared_ptr<MenuItem> getMenuItemAt(int index) const;
+        std::shared_ptr<MenuItem> getMenuItemAt(unsigned int index) const;
 
         bool isWrappingEnabled() const;
         void enableWrapping();

@@ -4,6 +4,8 @@
 
 namespace hikari {
 
+    const int GameProgress::DEFAULT_NUM_LIVES = 3;
+
     GameProgress::GameProgress()
         : lives(3)
         , eTanks(0)
@@ -138,6 +140,10 @@ namespace hikari {
         if(weapon < getWeaponCount()) {
             weaponsEnabled[weapon] = enable;
         }
+    }
+
+    void GameProgress::resetLivesToDefault() {
+        setLives(DEFAULT_NUM_LIVES);
     }
 
 } // hikari

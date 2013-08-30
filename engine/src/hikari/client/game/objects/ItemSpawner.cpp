@@ -45,7 +45,7 @@ namespace hikari {
     }
 
     void ItemSpawner::attachEventListeners(EventBus & EventBus) {
-        auto entityDeathDelegate = fastdelegate::MakeDelegate(this, &ItemSpawner::handleEntityDeathEvent);
+        auto entityDeathDelegate = EventListenerDelegate(std::bind(&ItemSpawner::handleEntityDeathEvent, this, std::placeholders::_1)); // fastdelegate::MakeDelegate(this, &ItemSpawner::handleEntityDeathEvent);
         EventBus.addListener(entityDeathDelegate, EntityDeathEventData::Type);
         eventHandlerDelegates.push_back(std::make_pair(entityDeathDelegate, EntityDeathEventData::Type));
     }

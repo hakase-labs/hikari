@@ -34,6 +34,8 @@ namespace Json {
 namespace gcn {
     class Container;
     class Label;
+    class ActionListener;
+    class SelectionListener;
 }
 
 namespace hikari {
@@ -42,6 +44,7 @@ namespace hikari {
         class EnergyMeter;
         class EnergyGauge;
         class Panel;
+        class Menu;
     }
 
     class AudioService;
@@ -111,6 +114,9 @@ namespace hikari {
         std::unique_ptr<gcn::Label> guiLivesLabel;
         std::unique_ptr<gcn::Label> guiETanksLabel;
         std::unique_ptr<gcn::Label> guiReadyLabel;
+        std::unique_ptr<gui::Menu> guiWeaponMenu;
+        std::unique_ptr<gcn::ActionListener> guiWeaponMenuActionListener;
+        std::unique_ptr<gcn::SelectionListener> guiWeaponMenuSelectionListener;
         std::unique_ptr<KeyboardInput> keyboardInput;
         std::map< std::string, std::shared_ptr<Map> > maps;
         std::vector<std::weak_ptr<Spawner>> itemSpawners;
@@ -196,7 +202,7 @@ namespace hikari {
          *
          * @see linkSpawners
          */
-        void checkSpawners();
+        void checkSpawners(float dt);
 
         /**
          * Cleans up any stale objects between room transitions and level restarts.

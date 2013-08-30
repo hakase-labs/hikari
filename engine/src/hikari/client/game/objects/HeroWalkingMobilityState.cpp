@@ -40,57 +40,47 @@ namespace hikari {
 
             lastDirection = hero.getDirection();
 
-            if(!isDecelerating) {
-                if(controller->shouldMoveLeft() && !controller->shouldMoveRight()) {
-                    hero.setDirection(Directions::Left);
-                    hero.setVelocityX(-(hero.walkVelocity.getX()));
-                }
+            if(controller->shouldMoveLeft() && !controller->shouldMoveRight()) {
+                hero.setDirection(Directions::Left);
+                hero.setVelocityX(-(hero.walkVelocity.getX()));
+            }
 
-                if(controller->shouldMoveRight() && !controller->shouldMoveLeft()) {
-                    hero.setDirection(Directions::Right);
-                    hero.setVelocityX(hero.walkVelocity.getX());
-                }
+            if(controller->shouldMoveRight() && !controller->shouldMoveLeft()) {
+                hero.setDirection(Directions::Right);
+                hero.setVelocityX(hero.walkVelocity.getX());
+            }
 
-                // Handle direction switching (reset acceleration)
-                if(hero.getDirection() != lastDirection) {
-                    hero.isFullyAccelerated = false;
-                    hero.getAnimatedSprite()->rewind();
-                    accelerationDelay = 0;
-                }
+            // Handle direction switching (reset acceleration)
+            if(hero.getDirection() != lastDirection) {
+                hero.isFullyAccelerated = false;
+                hero.getAnimatedSprite()->rewind();
+                accelerationDelay = 0;
+            }
 
-                // Handle acceleration
-                if(!hero.isFullyAccelerated) {
-                    hero.body.setApplyHorizontalVelocity(accelerationDelay == 0);
+            // Handle acceleration
+            if(!hero.isFullyAccelerated) {
+                hero.body.setApplyHorizontalVelocity(accelerationDelay == 0);
 
-                    hero.isFullyAccelerated = !(accelerationDelay < accelerationDelayThreshold);
-                    accelerationDelay += 1; // dt;
+                hero.isFullyAccelerated = !(accelerationDelay < accelerationDelayThreshold);
+                accelerationDelay += 1; // dt;
 
-                    HIKARI_LOG(debug4) << "Accellerating...";
+                HIKARI_LOG(debug4) << "Accellerating...";
 
-                    hero.chooseAnimation();
-                } else {
-                    hero.body.setApplyHorizontalVelocity(true);
-                    hero.chooseAnimation();
-                }
+                hero.chooseAnimation();
+            } else {
+                hero.body.setApplyHorizontalVelocity(true);
+                hero.chooseAnimation();
             }
 
             //
             // Other state conditions
             //
+            bool movingInBothDirections = controller->shouldMoveLeft() && controller->shouldMoveRight();
+            bool movingInNoDirections = !controller->shouldMoveLeft() && !controller->shouldMoveRight();
 
             // Moving in both directions at the same time causes Rock to idle.
-            if(controller->shouldMoveLeft() && controller->shouldMoveRight()) {
-                if(!isDecelerating) {
-                    isDecelerating = true;
-                } else {
-                    hero.isDecelerating = true;
-                    hero.requestMobilityStateChange(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
-                    return MobilityState::NEXT;
-                }
-            }
-
-            // Not moving in either direction, so go back to standing.
-            if(!controller->shouldMoveLeft() && !controller->shouldMoveRight()){
+            // Or not moving in either direction, so go back to standing.
+            if(movingInBothDirections || movingInNoDirections) {
                 if(!isDecelerating) {
                     isDecelerating = true;
                 } else {
