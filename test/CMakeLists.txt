@@ -6,7 +6,6 @@ set( ENGINE_BASE_DIR "${PROJECT_SOURCE_DIR}/engine" )
 set( INCLUDE_DIRS
     ${TEST_BASE_DIR}/include
     ${ENGINE_BASE_DIR}/include
-    ${PROJECT_SOURCE_DIR}/extlibs/fastdelegate
 )
 
 set( REQUIRED_HIKARI_SOURCE_FILES

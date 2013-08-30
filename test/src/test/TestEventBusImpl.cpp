@@ -5,8 +5,6 @@
 #include <hikari/client/game/events/EventData.hpp>
 #include <hikari/client/game/events/BaseEventData.hpp>
 
-#include <FastDelegate.h>
-
 #include <memory>
 
 //

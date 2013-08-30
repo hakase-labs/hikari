@@ -66,8 +66,6 @@ set( SQUIRREL_FILES
 
 set( SQRAT_DIR "${PROJECT_SOURCE_DIR}/extlibs/sqrat" )
 
-set( FASTDELEGATE_DIR "${PROJECT_SOURCE_DIR}/extlibs/fastdelegate" )
-
 set( GUICHAN_DIR "${PROJECT_SOURCE_DIR}/extlibs/guichan" )
 set( GUICHAN_SOURCE_FILES
     # Guichan core
@@ -352,7 +350,6 @@ set( INCLUDE_DIRS
     ${SQUIRREL_DIR}/squirrel
     ${SQUIRREL_DIR}/sqstdlib
     ${SQRAT_DIR}/include
-    ${FASTDELEGATE_DIR}
     ${GUICHAN_DIR}/include
     ${GUICHAN_DIR}/include/guichan
     ${GUICHAN_SFML_DIR}/include
