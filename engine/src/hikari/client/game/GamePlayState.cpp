@@ -558,18 +558,36 @@ namespace hikari {
                     const auto & spawnerPosition = spawner->getPosition();
 
                     if(spawner->isActive()) {
-                        if(spawner->isAwake()) {
-                            if(!cameraView.contains(spawnerPosition.getX(), spawnerPosition.getY())) {
+                        // If it's on screen
+                        if(cameraView.contains(spawnerPosition.getX(), spawnerPosition.getY())) {
+                            if(spawner->isAwake()) {
+                                if(spawner->canSpawn()) {
+                                    spawner->performAction(world);
+                                }
+                            } else {
+                                spawner->setAwake(true);
+                            }
+                        } else {
+                            if(spawner->canSleep()) {
                                 spawner->setAwake(false);
                             }
                         }
-                        
-                        if(cameraView.contains(spawnerPosition.getX(), spawnerPosition.getY())) {
-                            if(spawner->canSpawn()) {
-                                spawner->setAwake(true);
-                                spawner->performAction(world);
-                            }
-                        }
+
+                        // if(spawner->isAwake()) {
+                        //     if(!cameraView.contains(spawnerPosition.getX(), spawnerPosition.getY())) {
+                        //         if(spawner->canSleep()) {
+                        //             spawner->setAwake(false);
+                        //         }
+                        //     }
+                        // } else {
+                        //     if(cameraView.contains(spawnerPosition.getX(), spawnerPosition.getY())) {
+                        //         spawner->setAwake(true);
+
+                        //         if(spawner->canSpawn()) {
+                        //             spawner->performAction(world);
+                        //         }
+                        //     }
+                        // }
                     }
                 }
             }
@@ -737,9 +755,8 @@ namespace hikari {
     }
 
     void GamePlayState::startRound() {
-        //world.removeAllObjects();
         if(auto gp = gameProgress.lock()) {
-            gp->setPlayerEnergy(56);
+            gp->resetPlayerEnergyToDefault();
         }
 
         if(currentMap) {
