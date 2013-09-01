@@ -124,7 +124,7 @@ namespace hikari {
         guiSelectedCellLabel->setCaption("(" + StringUtils::toString(cursorColumn) + ", " + StringUtils::toString(cursorRow) + ")");
         guiSelectedCellLabel->adjustSize();
 
-        guiBackground.reset(new gui::Icon{"assets/images/bg-stage-select.png"});
+        guiBackground.reset(new gui::Icon("assets/images/bg-stage-select.png"));
         guiForeground.reset(new gui::Icon("assets/images/fg-stage-select.png"));
 
         guiLeftEye.reset(new gui::Icon("assets/images/eye-stage-select.png"));

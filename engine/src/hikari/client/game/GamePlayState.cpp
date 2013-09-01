@@ -736,6 +736,7 @@ namespace hikari {
 
                     std::for_each(std::begin(spawners), std::end(spawners), [](std::shared_ptr<Spawner> & spawner) {
                         if(spawner) {
+                            spawner->reset();
                             spawner->setActive(true);
                             spawner->setAwake(false);
 

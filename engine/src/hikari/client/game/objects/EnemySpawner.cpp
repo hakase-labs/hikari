@@ -131,10 +131,17 @@ namespace hikari {
 
     void EnemySpawner::onWake() {
         wasReawoken = true;
+        spawnRateAccumulator = 0.0f;
     }
 
     void EnemySpawner::onSleep() {
         wasReawoken = false;
+    }
+
+    void EnemySpawner::reset() {
+        spawnRateAccumulator = 0.0f;
+        wasReawoken = false;
+        spawnedEnemyIds.clear();
     }
 
     void EnemySpawner::onActivated() {

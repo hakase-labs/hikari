@@ -14,6 +14,7 @@ namespace hikari {
     private:
         int spawnedItemId;
         std::string itemName;
+        bool canSpawnAgain;
 
         void handleEntityDeathEvent(EventDataPtr event);
 
@@ -24,6 +25,10 @@ namespace hikari {
         virtual void performAction(GameWorld & world);
         virtual void attachEventListeners(EventBus & EventBus);
         virtual void detachEventListeners(EventBus & EventBus);
+
+        virtual bool canSpawn() const;
+
+        virtual void onSleep();
 
         //
         // GameObject overrides

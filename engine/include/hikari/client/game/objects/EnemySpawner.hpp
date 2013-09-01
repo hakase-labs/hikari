@@ -76,6 +76,7 @@ namespace hikari {
 
         virtual void onWake();
         virtual void onSleep();
+        virtual void reset();
 
         //
         // GameObject overrides
