@@ -21,10 +21,6 @@
 
 namespace hikari {
 
-    //std::string name;
-    //    sf::View view;
-    ////    std::shared_ptr<GameProgress> gameProgress;
-    //    std::shared_ptr<ImageFont> guiFont;
     const char* StageSelectState::PROPERTY_BACKGROUND = "background";
     const char* StageSelectState::PROPERTY_FOREGROUND = "foreground";
     const char* StageSelectState::PROPERTY_CURSOR_SPRITE = "cursor";
@@ -77,8 +73,8 @@ namespace hikari {
         // Load eye positions
         // There are 9 positions; 18 points total (one for left, one for right eye)
         const Json::Value &jsonEyePositions = params[PROPERTY_EYE_POSITIONS];
-        if(jsonEyePositions.size() == NUM_OF_PORTRAITS) {
-            for(unsigned int i = 0; i < NUM_OF_PORTRAITS; ++i) {
+        if(static_cast<int>(jsonEyePositions.size()) == NUM_OF_PORTRAITS) {
+            for(int i = 0; i < NUM_OF_PORTRAITS; ++i) {
                 const Json::Value &jsonEyePosition = jsonEyePositions[i];
                 float leftEyeX = static_cast<float>(jsonEyePosition[0u].get(PROPERTY_X, 0).asInt());
                 float leftEyeY = static_cast<float>(jsonEyePosition[0u].get(PROPERTY_Y, 0).asInt());
@@ -94,8 +90,8 @@ namespace hikari {
 
         // Load cursor positions
         const Json::Value &jsonCursorPositions = params[PROPERTY_CURSOR_POSITIONS];
-        if(jsonCursorPositions.size() == NUM_OF_PORTRAITS) {
-            for(unsigned int i = 0; i < NUM_OF_PORTRAITS; ++i) {
+        if(static_cast<int>(jsonCursorPositions.size()) == NUM_OF_PORTRAITS) {
+            for(int i = 0; i < NUM_OF_PORTRAITS; ++i) {
                 const Json::Value &jsonCursorPosition = jsonCursorPositions[i];
                 float cursorX = static_cast<float>(jsonCursorPosition.get(PROPERTY_X, 0).asInt());
                 float cursorY = static_cast<float>(jsonCursorPosition.get(PROPERTY_Y, 0).asInt());
@@ -128,7 +124,7 @@ namespace hikari {
         guiSelectedCellLabel->setCaption("(" + StringUtils::toString(cursorColumn) + ", " + StringUtils::toString(cursorRow) + ")");
         guiSelectedCellLabel->adjustSize();
 
-        guiBackground.reset(new gui::Icon("assets/images/bg-stage-select.png"));
+        guiBackground.reset(new gui::Icon{"assets/images/bg-stage-select.png"});
         guiForeground.reset(new gui::Icon("assets/images/fg-stage-select.png"));
 
         guiLeftEye.reset(new gui::Icon("assets/images/eye-stage-select.png"));
