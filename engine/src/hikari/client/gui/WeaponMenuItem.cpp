@@ -66,11 +66,11 @@ namespace gui {
         if(!isSelected()) {
             boxOutlineColor = gcn::Color(188, 188, 188);
             boxBackgroundColor = gcn::Color(116, 116, 116);
-            gauge->setForegroundColor(gcn::Color(0x00e8d8));
-            gauge->setBackgroundColor(gcn::Color(0, 112, 236));
-        } else {
             gauge->setForegroundColor(gcn::Color(0xfcfcfc));
             gauge->setBackgroundColor(gcn::Color(0xfcd8a8));
+        } else {
+            gauge->setForegroundColor(gcn::Color(0x00e8d8));
+            gauge->setBackgroundColor(gcn::Color(0, 112, 236));
         }
 
         // Draw icon box

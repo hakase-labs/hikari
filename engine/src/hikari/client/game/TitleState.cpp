@@ -39,7 +39,8 @@ namespace hikari {
         , guiContainer(new gcn::Container())
         , guiLabel(new gcn::Label())
         , guiMenu(new gui::Menu())
-        , guiIcon(new gui::Icon("assets/images/cursor-stage-select.png"))
+        , guiIcon(new gui::Icon("assets/images/gui-title-logo.png"))
+        , guiCursorIcon(new gui::Icon("assets/images/sp-gui-atlas.png"))
         , guiActionListener(nullptr)
         , guiSelectionListener(nullptr)
         , goToNextState(false)
@@ -52,6 +53,10 @@ namespace hikari {
     }
 
     void TitleState::buildGui() {
+        guiCursorIcon->setSubrectangle(gcn::Rectangle(0, 0, 4, 8));
+        guiCursorIcon->setWidth(4);
+        guiCursorIcon->setHeight(8);
+
         guiActionListener.reset(new gcn::FunctorActionListener([&](const gcn::ActionEvent& event) {
             auto item = guiMenu->getMenuItemAt(guiMenu->getSelectedIndex());
 
@@ -78,59 +83,86 @@ namespace hikari {
         guiSelectionListener.reset(new gcn::FunctorSelectionListener([&](const gcn::SelectionEvent & event) {
             std::cout << "Selection changed! " << guiMenu->getSelectedIndex() << std::endl;
 
+            int selectedIndex = guiMenu->getSelectedIndex();
+            auto menuItem = guiMenu->getMenuItemAt(selectedIndex);
+
+            if(menuItem) {
+                int spacing = 2;
+                int absX = 0;
+                int absY = 0;
+                menuItem->getAbsolutePosition(absX, absY);
+
+                guiCursorIcon->setX(absX - guiCursorIcon->getWidth() - spacing);
+                guiCursorIcon->setY(absY);
+            }
+
             if(auto audio = audioService.lock()) {
                 audio->playSample(27);
             }
         }));
+
+        guiCursorIcon->setX(8);
+        guiCursorIcon->setY(8);
 
         guiContainer->setBaseColor(gcn::Color(0, 0, 0));
         guiContainer->setOpaque(true);
         guiContainer->setWidth(256);
         guiContainer->setHeight(240);
 
-        guiIcon->setWidth(30);
-        guiIcon->setHeight(30);
-        guiIcon->setX(16);
-        guiIcon->setY(16);
+        guiIcon->setWidth(182);
+        guiIcon->setHeight(81);
+        guiIcon->setX((guiContainer->getWidth() / 2) - (guiIcon->getWidth() / 2));
+        guiIcon->setY(40);
 
         guiContainer->add(guiIcon.get());
 
-        guiLabel->setCaption("Title Screen");
+        guiLabel->setCaption("UNRELEASED v0.0.1");
         guiLabel->adjustSize();
+        guiLabel->setX(8);
+        guiLabel->setY(224);
 
         guiMenu->setWidth(guiContainer->getWidth() - 32);
         guiMenu->setHeight((guiContainer->getHeight() / 2) - 32);
-        guiMenu->setBackgroundColor(gcn::Color(45, 45, 45));
+        guiMenu->setBackgroundColor(gcn::Color(0, 0, 0, 0));
         guiMenu->addActionListener(guiActionListener.get());
         guiMenu->enableWrapping();
 
         std::shared_ptr<gui::MenuItem> gameStartMenuItem(new gui::MenuItem(ITEM_GAME_START));
         gameStartMenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
-        gameStartMenuItem->setSelectionColor(gcn::Color(250, 128, 128));
+        gameStartMenuItem->setSelectionColor(gcn::Color(0, 0, 0, 0));
         guiMenu->addItem(gameStartMenuItem);
 
         std::shared_ptr<gui::MenuItem> passWordMenuItem(new gui::MenuItem(ITEM_PASS_WORD));
         passWordMenuItem->setY(16);
         passWordMenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
-        passWordMenuItem->setSelectionColor(gcn::Color(0, 128, 128));
+        passWordMenuItem->setSelectionColor(gcn::Color(0, 0, 0, 0));
         guiMenu->addItem(passWordMenuItem);
 
         std::shared_ptr<gui::MenuItem> optionsMenuItem(new gui::MenuItem(ITEM_OPTIONS));
         optionsMenuItem->setY(32);
         optionsMenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
-        optionsMenuItem->setSelectionColor(gcn::Color(250, 128, 128));
+        optionsMenuItem->setSelectionColor(gcn::Color(0, 0, 0, 0));
         guiMenu->addItem(optionsMenuItem);
 
         std::shared_ptr<gui::MenuItem> quitMenuItem(new gui::MenuItem(ITEM_QUIT));
-        quitMenuItem->setY(40);
+        quitMenuItem->setY(48);
         quitMenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
-        quitMenuItem->setSelectionColor(gcn::Color(250, 128, 128));
+        quitMenuItem->setSelectionColor(gcn::Color(0, 0, 0, 0));
         guiMenu->addItem(quitMenuItem);
 
         guiMenu->setSelectedIndex(0);
 
-        guiContainer->add(guiMenu.get(), 16, 128);
-        guiContainer->add(guiLabel.get(), 30, 30);
+        guiContainer->add(guiMenu.get(), 48, guiIcon->getHeight() + guiIcon->getY() + 16);
+        guiContainer->add(guiLabel.get());
+        guiContainer->add(guiCursorIcon.get());
+        
+        // Set the initial position of the cursor
+        int spacing = 2;
+        int absX = 0;
+        int absY = 0;
+        gameStartMenuItem->getAbsolutePosition(absX, absY);
+        guiCursorIcon->setX(absX - guiCursorIcon->getWidth() - spacing);
+        guiCursorIcon->setY(absY);
     }
 
     void TitleState::handleEvent(sf::Event &event) {
@@ -154,6 +186,7 @@ namespace hikari {
             topContainer.add(guiContainer.get(), 0, 0);
             guiMenu->setEnabled(true);
             guiMenu->requestFocus();
+            guiMenu->setSelectedIndex(0);
             
         }
 
@@ -162,7 +195,7 @@ namespace hikari {
         }
 
         goToNextState = false;
-        //guiMenu->addSelectionListener(guiSelectionListener.get());
+        guiMenu->addSelectionListener(guiSelectionListener.get());
     }
 
     void TitleState::onExit() {
@@ -178,7 +211,7 @@ namespace hikari {
             audio->stopMusic();
         }
 
-        //guiMenu->removeSelectionListener(guiSelectionListener.get());
+        guiMenu->removeSelectionListener(guiSelectionListener.get());
     }
 
     const std::string & TitleState::getName() const {

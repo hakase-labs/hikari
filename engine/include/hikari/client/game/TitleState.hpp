@@ -46,6 +46,7 @@ namespace hikari {
         std::unique_ptr<gcn::Label> guiLabel;
         std::unique_ptr<gui::Menu> guiMenu;
         std::unique_ptr<gui::Icon> guiIcon;
+        std::unique_ptr<gui::Icon> guiCursorIcon;
         std::unique_ptr<gcn::ActionListener> guiActionListener;
         std::unique_ptr<gcn::SelectionListener> guiSelectionListener;
 
