@@ -60,5 +60,9 @@ namespace gui {
         graphics->drawText(getName(), 0, 0, gcn::Graphics::Left);
     }
 
+    gcn::Rectangle MenuItem::getChildrenArea() {
+        return gcn::Rectangle(0, 0, getWidth(), getHeight());
+    }
+
 } // hikari::gui
 } // hikari
