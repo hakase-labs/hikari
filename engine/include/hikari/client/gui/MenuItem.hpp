@@ -13,7 +13,7 @@ namespace gui {
         bool selected;
 
     protected:
-        void adjustSize();
+        virtual void adjustSize();
 
     public:
         MenuItem();
@@ -29,6 +29,7 @@ namespace gui {
 
         // Inherited from Widget
         virtual void draw(gcn::Graphics* graphics);
+        gcn::Rectangle getChildrenArea();
     };
 
 } // hikari::gui
