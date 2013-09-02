@@ -249,6 +249,7 @@ set( HIKARI_CLIENT_GUI_SOURCE_FILES
     src/hikari/client/gui/Panel.cpp
     src/hikari/client/gui/Widget.cpp
     src/hikari/client/gui/MenuItem.cpp
+    src/hikari/client/gui/WeaponMenuItem.cpp
     src/hikari/client/gui/Menu.cpp
     src/hikari/client/gui/Icon.cpp
     src/hikari/client/gui/InputHelper.cpp
