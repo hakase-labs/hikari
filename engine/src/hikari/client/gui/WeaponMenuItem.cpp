@@ -11,7 +11,7 @@ namespace gui {
 
     const int WeaponMenuItem::DEFAULT_SELECT_BOX_WIDTH = 16;
     const int WeaponMenuItem::DEFAULT_SELECT_BOX_HEIGHT = 16;
-    const int WeaponMenuItem::DEFAULT_SELECT_BOX_SPACING = 8;
+    const int WeaponMenuItem::DEFAULT_SELECT_BOX_SPACING = 9;
 
     WeaponMenuItem::WeaponMenuItem()
         : MenuItem()

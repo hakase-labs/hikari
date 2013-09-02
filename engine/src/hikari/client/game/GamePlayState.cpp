@@ -246,8 +246,8 @@ namespace hikari {
             guiMenuPanel->setVisible(false);
             guiMenuPanel->add(guiWeaponMenuBackground.get(), 0, 0);
             guiMenuPanel->add(guiMenuLifeEnergyGauge.get(), 104, 32);
-            guiMenuPanel->add(guiLivesLabel.get(), 8, 240 - 24);
-            guiMenuPanel->add(guiETanksLabel.get(), 8, 240 - 16);
+            guiMenuPanel->add(guiLivesLabel.get(), 208 + 1, 192 + 8);
+            guiMenuPanel->add(guiETanksLabel.get(), 56 + 1, 192 + 8);
 
             guiLivesLabel->setVisible(true);
             guiETanksLabel->setVisible(true);
@@ -262,6 +262,9 @@ namespace hikari {
             guiContainer->add(guiReadyLabel.get());
 
             if(auto weaponItemFont = guiSvc->getFontByName("weapon-menu")) {
+                guiLivesLabel->setFont(weaponItemFont.get());
+                guiETanksLabel->setFont(weaponItemFont.get());
+
                 std::shared_ptr<gui::WeaponMenuItem> weapon1MenuItem(new gui::WeaponMenuItem("M.BUSTER"));
                 weapon1MenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
                 weapon1MenuItem->setSelectionColor(gcn::Color(250, 128, 128));
@@ -284,6 +287,8 @@ namespace hikari {
                 weapon3MenuItem->setX(0);
                 weapon3MenuItem->setY(32);
                 weapon3MenuItem->setFont(weaponItemFont.get());
+                weapon3MenuItem->setEnabled(false);
+                weapon3MenuItem->setVisible(false);
                 guiWeaponMenu->addItem(weapon3MenuItem);
 
                 std::shared_ptr<gui::WeaponMenuItem> weapon4MenuItem(new gui::WeaponMenuItem("Weapon 4"));
@@ -1323,10 +1328,12 @@ namespace hikari {
         postDeathTimer = 0.0f;
 
         if(auto progress = gamePlayState.gameProgress.lock()) {
-            gamePlayState.guiLivesLabel->setCaption("Lives " + StringUtils::toString(static_cast<int>(progress->getLives())));
+            std::string livesCaption = (progress->getLives() < 10 ? "0" : "") + StringUtils::toString(static_cast<int>(progress->getLives()));
+            gamePlayState.guiLivesLabel->setCaption(livesCaption);
             gamePlayState.guiLivesLabel->adjustSize();
 
-            gamePlayState.guiETanksLabel->setCaption("ETanks " + StringUtils::toString(static_cast<int>(progress->getETanks())));
+            std::string etanksCaption = (progress->getETanks() < 10 ? "0" : "") + StringUtils::toString(static_cast<int>(progress->getETanks()));
+            gamePlayState.guiETanksLabel->setCaption(etanksCaption);
             gamePlayState.guiETanksLabel->adjustSize();
         }
 
