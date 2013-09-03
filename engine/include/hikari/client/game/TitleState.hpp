@@ -53,6 +53,7 @@ namespace hikari {
         bool goToNextState;
 
         void buildGui();
+        void positionCursorOnItem();
 
     public:
         TitleState(const std::string &name, const Json::Value &params, GameController & controller, ServiceLocator &services);

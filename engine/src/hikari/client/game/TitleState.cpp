@@ -83,18 +83,7 @@ namespace hikari {
         guiSelectionListener.reset(new gcn::FunctorSelectionListener([&](const gcn::SelectionEvent & event) {
             std::cout << "Selection changed! " << guiMenu->getSelectedIndex() << std::endl;
 
-            int selectedIndex = guiMenu->getSelectedIndex();
-            auto menuItem = guiMenu->getMenuItemAt(selectedIndex);
-
-            if(menuItem) {
-                int spacing = 2;
-                int absX = 0;
-                int absY = 0;
-                menuItem->getAbsolutePosition(absX, absY);
-
-                guiCursorIcon->setX(absX - guiCursorIcon->getWidth() - spacing);
-                guiCursorIcon->setY(absY);
-            }
+            positionCursorOnItem();
 
             if(auto audio = audioService.lock()) {
                 audio->playSample(27);
@@ -157,12 +146,22 @@ namespace hikari {
         guiContainer->add(guiCursorIcon.get());
         
         // Set the initial position of the cursor
+        positionCursorOnItem();
+    }
+
+    void TitleState::positionCursorOnItem() {
+        int itemIndex = guiMenu->getSelectedIndex();
+        std::shared_ptr<gui::MenuItem> menuItem = guiMenu->getMenuItemAt(itemIndex);
+
         int spacing = 2;
         int absX = 0;
         int absY = 0;
-        gameStartMenuItem->getAbsolutePosition(absX, absY);
-        guiCursorIcon->setX(absX - guiCursorIcon->getWidth() - spacing);
-        guiCursorIcon->setY(absY);
+
+        if(menuItem) {
+            menuItem->getAbsolutePosition(absX, absY);
+            guiCursorIcon->setX(absX - guiCursorIcon->getWidth() - spacing);
+            guiCursorIcon->setY(absY);
+        }
     }
 
     void TitleState::handleEvent(sf::Event &event) {
@@ -187,8 +186,9 @@ namespace hikari {
             guiMenu->setEnabled(true);
             guiMenu->requestFocus();
             guiMenu->setSelectedIndex(0);
-            
         }
+
+        positionCursorOnItem();
 
         if(auto audio = audioService.lock()) {
             audio->playMusic(0);
