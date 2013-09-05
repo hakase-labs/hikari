@@ -20,6 +20,8 @@ namespace Services {
     const static std::string PARTICLEFACTORY = "ParticleFactory";
     const static std::string WEAPONTABLE = "WeaponTable";
     const static std::string DAMAGETABLE = "DamageTable";
+    const static std::string INPUT = "Input";
+    const static std::string EVENTBUS = "EventBus";
 
 } // hikari::Services
 } // hikari
