@@ -183,9 +183,11 @@ set( HIKARI_CLIENT_GAME_EVENTS_SOURCE_FILES
     src/hikari/client/game/events/EventData.cpp
     src/hikari/client/game/events/EventBus.cpp
     src/hikari/client/game/events/EventBusImpl.cpp
+    src/hikari/client/game/events/GameQuitEventData.cpp
     src/hikari/client/game/events/ObjectRemovedEventData.cpp
     src/hikari/client/game/events/TransitionCollisionEventData.cpp
     src/hikari/client/game/events/WeaponFireEventData.cpp
+    src/hikari/client/game/EventBusService.cpp
 )
 
 source_group(hikari\\client\\game\\events FILES ${HIKARI_CLIENT_GAME_EVENTS_SOURCE_FILES})
@@ -272,6 +274,7 @@ set( HIKARI_CORE_GAME_SOURCE_FILES
     src/hikari/core/game/Animator.cpp
     src/hikari/core/game/CollisionInfo.cpp
     src/hikari/core/game/Direction.cpp
+    src/hikari/core/game/StateTransition.cpp
     src/hikari/core/game/GameController.cpp
     src/hikari/core/game/GameControllerException.cpp
     src/hikari/core/game/map/Camera.cpp
