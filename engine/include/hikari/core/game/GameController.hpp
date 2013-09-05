@@ -6,6 +6,7 @@
 #include <memory>
 #include "hikari/core/Platform.hpp"
 #include "hikari/core/game/GameState.hpp"
+#include "hikari/core/game/StateTransition.hpp"
 
 #if (_WIN32 && _MSC_VER)
     #pragma warning(push)
@@ -19,14 +20,19 @@ namespace sf {
 namespace hikari {
 
     typedef std::shared_ptr<GameState> StatePtr;
+    class StateTransition;
 
     class HIKARI_API GameController {
     private:
         StatePtr state;
+        StatePtr enqueuedNextState;
         std::string currState;
         std::string prevState;
         std::string nextState;
         std::map< std::string, StatePtr > states;
+        std::unique_ptr<StateTransition> stateTransition;
+
+        void gotoNextState();
 
         /**
             DefaultGameState is used by a GameController instance as it's current state
@@ -47,6 +53,15 @@ namespace hikari {
             virtual const std::string &getName() const;
         };
 
+        class DefaultStateTransition : public StateTransition {
+        public:
+            DefaultStateTransition();
+            virtual ~DefaultStateTransition();
+
+            virtual void render(sf::RenderTarget &target);
+            virtual void update(float dt);
+        };
+
     public:
         GameController();
 
@@ -60,6 +75,9 @@ namespace hikari {
             The name supplied will also be set as the "next" state.
         */
         void setState(const std::string &name);
+        void setState(const StatePtr & statePtr);
+
+        void requestStateChange(const std::string & stateName, std::unique_ptr<StateTransition> stateTransition = std::unique_ptr<StateTransition>(new DefaultStateTransition()));
 
         /**
             Sets the next state to transition to but does not cause the current state to

@@ -932,7 +932,7 @@ namespace hikari {
                         HIKARI_LOG(debug2) << "Hero has died all of his lives, go to password screen.";
                         // TODO: Reset number of lives here to the default.
                         progress->resetLivesToDefault();
-                        controller.setNextState("stageselect");
+                        controller.requestStateChange("stageselect");
                         gotoNextState = true;
                     }
                 }

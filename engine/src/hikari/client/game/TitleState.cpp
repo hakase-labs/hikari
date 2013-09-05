@@ -1,5 +1,7 @@
 #include "hikari/client/game/TitleState.hpp"
 #include "hikari/client/game/InputService.hpp"
+#include "hikari/client/game/EventBusService.hpp"
+#include "hikari/client/game/events/GameQuitEventData.hpp"
 #include "hikari/client/audio/AudioService.hpp"
 #include "hikari/client/gui/GuiService.hpp"
 #include "hikari/client/gui/Menu.hpp"
@@ -35,7 +37,8 @@ namespace hikari {
         , controller(controller)
         , guiService(services.locateService<GuiService>(Services::GUISERVICE))
         , audioService(services.locateService<AudioService>(Services::AUDIO))
-        , keyboardInput(services.locateService<InputService>("INPUT"))
+        , globalEventBus(services.locateService<EventBusService>(Services::EVENTBUS))
+        , keyboardInput(services.locateService<InputService>(Services::INPUT))
         , guiContainer(new gcn::Container())
         , guiLabel(new gcn::Label())
         , guiMenu(new gui::Menu())
@@ -66,14 +69,19 @@ namespace hikari {
                 const std::string & menuItemName = item->getName();
 
                 if(menuItemName == ITEM_GAME_START) {
-                    controller.setNextState("stageselect");
+                    controller.requestStateChange("stageselect");
                     goToNextState = true;
                 } else if(menuItemName == ITEM_PASS_WORD) {
-                    controller.setNextState("password");
+                    controller.requestStateChange("password");
                     goToNextState = true;
                 } else if(menuItemName == ITEM_OPTIONS) {
-                    controller.setNextState("options");
+                    //controller.requestStateChange("options");
+                    controller.requestStateChange("options");
                     goToNextState = true;
+                } else if(menuItemName == ITEM_QUIT) {
+                    if(auto events = globalEventBus.lock()) {
+                        events->triggerEvent(EventDataPtr(new GameQuitEventData(GameQuitEventData::QUIT_NOW)));
+                    }
                 }
             } else {
                 std::cout << "Actioned on #" << guiMenu->getSelectedIndex() << std::endl;

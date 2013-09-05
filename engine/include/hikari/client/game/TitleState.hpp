@@ -25,6 +25,7 @@ namespace hikari {
     }
 
     class AudioService;
+    class EventBus;
     class GuiService;
     class ServiceLocator;
     class GameController;
@@ -41,6 +42,7 @@ namespace hikari {
         GameController & controller;
         std::weak_ptr<GuiService> guiService;
         std::weak_ptr<AudioService> audioService;
+        std::weak_ptr<EventBus> globalEventBus;
         std::shared_ptr<Input> keyboardInput;
         std::unique_ptr<gcn::Container> guiContainer;
         std::unique_ptr<gcn::Label> guiLabel;

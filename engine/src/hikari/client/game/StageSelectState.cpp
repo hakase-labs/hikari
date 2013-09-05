@@ -149,7 +149,7 @@ namespace hikari {
             } else if(event.key.code == sf::Keyboard::Right) {
                 cursorColumn = std::min(NUM_OF_CURSOR_COLUMNS - 1, cursorColumn + 1);
             } else if(event.key.code == sf::Keyboard::Return) {
-                controller.setNextState("gameplay");
+                controller.requestStateChange("gameplay");
                 startGamePlay = true;
             }
 
