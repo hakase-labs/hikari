@@ -6,6 +6,10 @@
 #include "hikari/client/game/GamePlayState.hpp"
 #include "hikari/client/game/KeyboardInput.hpp"
 #include "hikari/client/game/InputService.hpp"
+#include "hikari/client/game/EventBusService.hpp"
+#include "hikari/client/game/events/EventBusImpl.hpp"
+#include "hikari/client/game/events/EventListenerDelegate.hpp"
+#include "hikari/client/game/events/GameQuitEventData.hpp"
 
 #include "hikari/client/game/PasswordState.hpp"
 #include "hikari/client/game/TitleState.hpp"
@@ -53,13 +57,16 @@ namespace hikari {
         , gameConfig()
         , services()
         , globalInput(new KeyboardInput())
+        , globalEventBus(new EventBusImpl("GlobalEvents", true))
         , videoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BITS_PER_PIXEL)
         , window()
         , screenBuffer()
+        , quitGame(false)
     {
         initLogging(argc, argv);
         initFileSystem(argc, argv);
         initConfig();
+        initEventBus();
     }
 
     Client::~Client() {
@@ -103,6 +110,15 @@ namespace hikari {
         } else {
             HIKARI_LOG(fatal) << "Couldn't find game configuration file '" << PATH_GAME_CONFIG_FILE << "'";
         }
+    }
+
+    void Client::initEventBus() {
+        EventListenerDelegate quitRequestDelegate([&](EventDataPtr evt) {
+            HIKARI_LOG(info) << "Quit requested!";
+            quitGame = true;
+        });
+
+        globalEventBus->addListener(quitRequestDelegate, GameQuitEventData::Type);
     }
  
     void Client::initFileSystem(int argc, char** argv) {
@@ -158,7 +174,7 @@ namespace hikari {
         // #ifdef DEBUG
         ::hikari::Log::setReportingLevel(debug4);
         // #else
-        // ::hikari::Log::setReportingLevel(warning);
+        //::hikari::Log::setReportingLevel(warning);
         // #endif
     }
  
@@ -180,6 +196,7 @@ namespace hikari {
         auto weaponTable       = std::make_shared<WeaponTable>();
         auto damageTable       = std::make_shared<DamageTable>();
         auto inputService      = std::make_shared<InputService>(globalInput);
+        auto eventBusService   = std::make_shared<EventBusService>(globalEventBus);
 
         services.registerService(Services::AUDIO,             audioService);
         services.registerService(Services::GAMEPROGRESS,      gameProgress);
@@ -194,7 +211,8 @@ namespace hikari {
         services.registerService(Services::PARTICLEFACTORY,   particleFactory);
         services.registerService(Services::WEAPONTABLE,       weaponTable);
         services.registerService(Services::DAMAGETABLE,       damageTable);
-        services.registerService("INPUT",       inputService);
+        services.registerService(Services::INPUT,             inputService);
+        services.registerService(Services::EVENTBUS,          eventBusService);
 
         AnimationLoader::setImageCache(std::weak_ptr<ImageCache>(imageCache));
 
@@ -303,7 +321,8 @@ namespace hikari {
     void Client::loop() {
         sf::Clock clock;
         sf::Event event;
-        bool quit = false;
+
+        quitGame = false;
 
         const float dt = 1.0f/60.0f;
         float totalRuntime = 0.0f;
@@ -316,7 +335,7 @@ namespace hikari {
 
         gcn::Gui & gui = guiService->getGui();
 
-        while(!quit) {
+        while(!quitGame) {
 
             //
             // Logic
@@ -331,7 +350,7 @@ namespace hikari {
             while(accumulator >= dt) {
                 while(window.pollEvent(event)) {
                     if(event.type == sf::Event::Closed) {
-                        quit = true;
+                        quitGame = true;
                     }
 
                     if(event.type == sf::Event::KeyPressed || event.type == sf::Event::KeyReleased) {
@@ -349,6 +368,8 @@ namespace hikari {
                 }
 
                 controller.update(dt * speedMultiplier);
+                // Update input after the game controller so you don't accidentally
+                // skip an event that took place.
                 globalInput->update(dt);
 
                 accumulator -= dt;

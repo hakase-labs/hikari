@@ -15,6 +15,7 @@
  
 namespace hikari {
 
+    class EventBus;
     class KeyboardInput;
 
     class Client {
@@ -33,6 +34,8 @@ namespace hikari {
          * Initializes the client from the configuration file.
          */
         void initConfig();
+
+        void initEventBus();
 
         /**
          * Initializes the virtual file system used to load content files.
@@ -59,10 +62,12 @@ namespace hikari {
         GameController controller;
         ServiceLocator services;
         std::shared_ptr<KeyboardInput> globalInput;
+        std::shared_ptr<EventBus> globalEventBus;
         sf::VideoMode videoMode;
         sf::RenderWindow window;
         sf::RenderTexture screenBuffer;
         sf::View screenBufferView;
+        bool quitGame;
  
     public:
         Client(int argc, char** argv);
