@@ -29,7 +29,7 @@ namespace hikari {
         , name(name)
         , controller(controller)
         , guiService(services.locateService<GuiService>(Services::GUISERVICE))
-        , input(services.locateService<InputService>("INPUT"))
+        , input(services.locateService<InputService>(Services::INPUT))
         , guiContainer(new gcn::Container())
         , guiLabel(new gcn::Label())
         , guiMenu(new gui::Menu())
@@ -52,7 +52,7 @@ namespace hikari {
                 std::cout << "Actioned on #" << guiMenu->getSelectedIndex() << ", " << item->getName() << std::endl;
 
                 if(item->getName() == "BACK") {
-                    controller.setNextState("title");
+                    controller.requestStateChange("title");
                     goToNextState = true;
                 }
             } else {
@@ -101,7 +101,9 @@ namespace hikari {
     }
 
     void OptionsState::render(sf::RenderTarget &target) {
-
+        if(auto gui = guiService.lock()) {
+            gui->renderRootContainer();
+        }
     }
 
     bool OptionsState::update(const float &dt) {

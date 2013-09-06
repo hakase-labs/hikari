@@ -17,7 +17,7 @@ namespace hikari {
         : name(name)
         , controller(controller)
         , audioService(services.locateService<AudioService>(Services::AUDIO))
-        , keyboardInput(services.locateService<InputService>("INPUT"))
+        , keyboardInput(services.locateService<InputService>(Services::INPUT))
         , passwordGrid(new gui::Panel())
         , guiWrapper(new gcn::Container())
         , testLabel(new gcn::Label())
@@ -50,12 +50,14 @@ namespace hikari {
     }
 
     void PasswordState::render(sf::RenderTarget &target) {
-
+        if(auto gui = guiService.lock()) {
+            gui->renderRootContainer();
+        }
     }
 
     bool PasswordState::update(const float &dt) {
         if(keyboardInput->wasPressed(Input::BUTTON_CANCEL)) {
-            controller.setNextState("title");
+            controller.requestStateChange("title");
             goToNextState = true;
         }
 

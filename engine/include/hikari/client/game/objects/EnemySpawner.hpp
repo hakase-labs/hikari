@@ -23,6 +23,8 @@ namespace hikari {
         unsigned int spawnLimit;      // How many enemies this spawner will spawn at one time
         float spawnRate;              // How long to wait before spawning another enemy
         float spawnRateAccumulator;   // Counter between spawns
+        bool continuousFlag;          // Spawns continuously (doesn't need to go off screen and come back on)
+        bool wasReawoken;             // True after going to sleep and waking up
 
         void handleObjectRemovedEvent(EventDataPtr event);
 
@@ -57,6 +59,8 @@ namespace hikari {
          */
         void setSpawnRate(float rate);
 
+        void setContinuous(bool continuous);
+
         /**
          * Determines if an Enemy can be spawned. This takes into account the
          * spawn limit and rate for the EnemySpawner.
@@ -65,6 +69,14 @@ namespace hikari {
          *         otherwise
          */
         virtual bool canSpawn() const;
+
+        virtual bool canSleep() const;
+
+        bool isContinuous() const;
+
+        virtual void onWake();
+        virtual void onSleep();
+        virtual void reset();
 
         //
         // GameObject overrides

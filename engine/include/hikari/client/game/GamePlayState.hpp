@@ -45,6 +45,7 @@ namespace hikari {
         class EnergyGauge;
         class Panel;
         class Menu;
+        class Icon;
     }
 
     class AudioService;
@@ -111,6 +112,8 @@ namespace hikari {
         std::unique_ptr<gui::EnergyGauge> guiHeroEnergyGauge;
         std::unique_ptr<gui::EnergyGauge> guiWeaponEnergyGauge;
         std::unique_ptr<gui::Panel> guiMenuPanel;
+        std::unique_ptr<gui::Icon> guiWeaponMenuBackground;
+        std::unique_ptr<gui::EnergyGauge> guiMenuLifeEnergyGauge;
         std::unique_ptr<gcn::Label> guiLivesLabel;
         std::unique_ptr<gcn::Label> guiETanksLabel;
         std::unique_ptr<gcn::Label> guiReadyLabel;
@@ -130,6 +133,7 @@ namespace hikari {
         sf::RectangleShape transitionMarker;
         sf::RectangleShape leftBar;
         bool drawInfamousBlackBar;
+        bool canViewMenu;
         bool isViewingMenu;
         bool hasReachedMidpoint;
         bool hasReachedBossCorridor;

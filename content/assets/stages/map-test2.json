@@ -1959,14 +1959,17 @@
           "x": 388,
           "y": 1100,
           "direction": "Left",
-          "spawnLimit": 4,
-          "spawnRate": 3.0
+          "spawnLimit": 1,
+          "spawnRate": 3.0,
+          "continuous": true
         },
         {
           "type": "Telly",
           "x": 398,
           "y": 1050,
-          "direction": "Right"
+          "direction": "Right",
+          "spawnLimit": 3,
+          "spawnRate": 3.0
         },
         {
           "type": "Telly",

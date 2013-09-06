@@ -25,6 +25,7 @@ namespace hikari {
     }
 
     class AudioService;
+    class EventBus;
     class GuiService;
     class ServiceLocator;
     class GameController;
@@ -41,17 +42,20 @@ namespace hikari {
         GameController & controller;
         std::weak_ptr<GuiService> guiService;
         std::weak_ptr<AudioService> audioService;
+        std::weak_ptr<EventBus> globalEventBus;
         std::shared_ptr<Input> keyboardInput;
         std::unique_ptr<gcn::Container> guiContainer;
         std::unique_ptr<gcn::Label> guiLabel;
         std::unique_ptr<gui::Menu> guiMenu;
         std::unique_ptr<gui::Icon> guiIcon;
+        std::unique_ptr<gui::Icon> guiCursorIcon;
         std::unique_ptr<gcn::ActionListener> guiActionListener;
         std::unique_ptr<gcn::SelectionListener> guiSelectionListener;
 
         bool goToNextState;
 
         void buildGui();
+        void positionCursorOnItem();
 
     public:
         TitleState(const std::string &name, const Json::Value &params, GameController & controller, ServiceLocator &services);

@@ -221,9 +221,16 @@ namespace hikari {
                 auto spawnLimit   = json.get("spawnLimit", 1).asUInt();
                 auto spawnRate    = static_cast<float>(json.get("spawnRate", 1.0).asDouble());
 
-                spawner.reset(new EnemySpawner(type, spawnLimit, spawnRate));
-                spawner->setPosition(Vector2<float>(static_cast<float>(x), static_cast<float>(y)));
-                spawner->setDirection(direction);
+                auto enemySpawner = std::make_shared<EnemySpawner>(type, spawnLimit, spawnRate);
+                enemySpawner->setPosition(Vector2<float>(static_cast<float>(x), static_cast<float>(y)));
+                enemySpawner->setDirection(direction);
+
+                if(json.isMember("continuous")) {
+                    bool isContinuous = json["continuous"].asBool();
+                    enemySpawner->setContinuous(isContinuous);
+                }
+
+                spawner = enemySpawner;
 
                 return spawner;
             }

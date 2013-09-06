@@ -113,6 +113,13 @@ namespace hikari {
         virtual bool canSpawn() const;
 
         /**
+         * Determines if the spawner is able to go to sleep. Under some
+         * conditions spawners can be prevented from going to sleep prematurely.
+         * @return [description]
+         */
+        virtual bool canSleep() const;
+
+        /**
          * Called when a Spawner is awoken from sleep.
          */
         virtual void onWake();
