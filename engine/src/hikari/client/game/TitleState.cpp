@@ -13,6 +13,7 @@
 #include "hikari/core/util/ServiceLocator.hpp"
 #include "hikari/core/util/Log.hpp"
 
+#include <guichan/gui.hpp>
 #include <guichan/widgets/container.hpp>
 #include <guichan/widgets/label.hpp>
 
@@ -177,7 +178,9 @@ namespace hikari {
     }
 
     void TitleState::render(sf::RenderTarget &target) {
-
+        if(auto gui = guiService.lock()) {
+            gui->renderRootContainer();
+        }
     }
 
     bool TitleState::update(const float &dt) {

@@ -423,6 +423,10 @@ namespace hikari {
             subState->render(target);
         }
 
+        if(auto gui = guiService.lock()) {
+            gui->renderRootContainer();
+        }
+
         if(drawInfamousBlackBar) {
             target.draw(leftBar);
         }

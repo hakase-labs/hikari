@@ -101,7 +101,9 @@ namespace hikari {
     }
 
     void OptionsState::render(sf::RenderTarget &target) {
-
+        if(auto gui = guiService.lock()) {
+            gui->renderRootContainer();
+        }
     }
 
     bool OptionsState::update(const float &dt) {

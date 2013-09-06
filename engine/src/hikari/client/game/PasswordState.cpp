@@ -50,7 +50,9 @@ namespace hikari {
     }
 
     void PasswordState::render(sf::RenderTarget &target) {
-
+        if(auto gui = guiService.lock()) {
+            gui->renderRootContainer();
+        }
     }
 
     bool PasswordState::update(const float &dt) {

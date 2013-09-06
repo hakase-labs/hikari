@@ -390,9 +390,7 @@ namespace hikari {
             //     guiFpsLabel->adjustSize();
             // }
 
-            if(gui.getTop()) {
-                gui.draw();
-            }
+            guiService->renderHudContainer();
 
             // console.render(screenBuffer);
 

@@ -165,6 +165,9 @@ namespace hikari {
     }
 
     void StageSelectState::render(sf::RenderTarget &target) {
+        if(auto gui = guiService.lock()) {
+            gui->renderRootContainer();
+        }
         //target.draw(background);
         //target.draw(leftEye);
         //target.draw(rightEye);
