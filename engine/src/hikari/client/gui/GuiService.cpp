@@ -166,4 +166,22 @@ namespace hikari {
         return font;
     }
 
+    void GuiService::renderRootContainer() {
+        bool isHudVisible = hudContainer->isVisible();
+        hudContainer->setVisible(false);
+
+        gui->draw();
+
+        hudContainer->setVisible(isHudVisible);
+    }
+
+    void GuiService::renderHudContainer() {
+        bool isRootVisible = rootContainer->isVisible();
+        rootContainer->setVisible(false);
+
+        gui->draw();
+
+        rootContainer->setVisible(isRootVisible);
+    }
+
 } // hikari
