@@ -18,8 +18,11 @@ namespace hikari {
         , spawnLimit(spawnLimit)
         , spawnRate(spawnRate)
         , spawnRateAccumulator(0.0f)
+        , continuousFlag(spawnLimit > 1)
+        , wasReawoken(false)
     {
-
+        // By default spawners are continuous if they have a spawnLimit higher
+        // than 1.
     }
 
     EnemySpawner::~EnemySpawner() {
@@ -57,6 +60,8 @@ namespace hikari {
             // This resets the counter so that the spawner properly waits
             // to spawn another object.
             spawnRateAccumulator = spawnRate;
+
+            wasReawoken = false;
         }
     }
 
@@ -97,14 +102,46 @@ namespace hikari {
         }
     }
 
+    void EnemySpawner::setContinuous(bool continuous) {
+        continuousFlag = continuous;
+    }
+
     bool EnemySpawner::canSpawn() const {
         bool hasEnoughTimePassed = spawnRateAccumulator == 0.0f;
-        bool hasReachedSpawnLimit = spawnedEnemyIds.size() < spawnLimit;
-        // Special case: the spawner can only spawn one object and it already has
-        // TODO: This could be dealth with differently, i.e.: using a flag to
-        // indicate if this behavior is desired (once vs continuous spawning)
-        bool hasAlreadySpawnedThisCycle = isAwake() && (spawnLimit == 1);
-        return !hasAlreadySpawnedThisCycle && hasEnoughTimePassed && hasReachedSpawnLimit;
+        bool hasNotReachedLimit = spawnedEnemyIds.size() < spawnLimit;
+
+        if(isContinuous()) {
+            return hasEnoughTimePassed && hasNotReachedLimit;
+        } else {
+            if(wasReawoken) {
+                return isAwake() && hasNotReachedLimit;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    bool EnemySpawner::canSleep() const {
+        return spawnedEnemyIds.size() == 0;
+    }
+
+    bool EnemySpawner::isContinuous() const {
+        return continuousFlag;
+    }
+
+    void EnemySpawner::onWake() {
+        wasReawoken = true;
+        spawnRateAccumulator = 0.0f;
+    }
+
+    void EnemySpawner::onSleep() {
+        wasReawoken = false;
+    }
+
+    void EnemySpawner::reset() {
+        spawnRateAccumulator = 0.0f;
+        wasReawoken = false;
+        spawnedEnemyIds.clear();
     }
 
     void EnemySpawner::onActivated() {

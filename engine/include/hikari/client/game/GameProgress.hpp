@@ -10,7 +10,7 @@ namespace hikari {
     private:
         static const unsigned char NumBosses = 8;
         static const unsigned char NumWeapons = NumBosses + 3; // Need to determine this.
-        static const unsigned char MaxEnergy = 52;
+        static const unsigned char DEFAULT_PLAYER_ENERGY;
         static const int DEFAULT_NUM_LIVES;
 
         int lives;
@@ -60,6 +60,8 @@ namespace hikari {
         // Methods
         //
         void resetLivesToDefault();
+        void resetPlayerEnergyToDefault();
+        void resetWeaponEnergyToDefault();
     };
 
 } // hikari

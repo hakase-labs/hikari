@@ -12,6 +12,7 @@ namespace hikari {
         : Spawner()
         , spawnedItemId(-1)
         , itemName(itemName)
+        , canSpawnAgain(true)
     {
 
     }
@@ -41,6 +42,8 @@ namespace hikari {
             spawnedObject->setActive(true);
 
             world.queueObjectAddition(spawnedObject);
+
+            canSpawnAgain = false;
         }
     }
 
@@ -61,6 +64,14 @@ namespace hikari {
         );
 
         eventHandlerDelegates.clear();
+    }
+
+    bool ItemSpawner::canSpawn() const {
+        return isActive() && canSpawnAgain;
+    }
+
+    void ItemSpawner::onSleep() {
+        canSpawnAgain = true;
     }
 
     void ItemSpawner::onActivated() {

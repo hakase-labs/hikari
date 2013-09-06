@@ -246,6 +246,8 @@ namespace hikari {
     }
 
     void NSFSoundStream::stopAllSamplers() {
+        sf::Lock lock(mutex);
+
         activeSamplers.remove_if([&](const SamplerPair & pair) -> bool {
             int track = (pair.first)->current_track();
 

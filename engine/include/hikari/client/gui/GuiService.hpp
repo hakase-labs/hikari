@@ -61,6 +61,9 @@ namespace hikari {
         gcn::Container & getRootContainer();
 
         std::shared_ptr<gcn::Font> getFontByName(const std::string & fontName) const;
+
+        void renderRootContainer();
+        void renderHudContainer();
     };
 
 } // hikari

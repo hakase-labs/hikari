@@ -5,12 +5,13 @@
 namespace hikari {
 
     const int GameProgress::DEFAULT_NUM_LIVES = 3;
+    const unsigned char GameProgress::DEFAULT_PLAYER_ENERGY = 56;
 
     GameProgress::GameProgress()
         : lives(3)
         , eTanks(0)
         , mTanks(0)
-        , playerEnergy(GameProgress::MaxEnergy)
+        , playerEnergy(DEFAULT_PLAYER_ENERGY)
         , currentBoss(0)
         , currentWeapon(0)
     {
@@ -144,6 +145,16 @@ namespace hikari {
 
     void GameProgress::resetLivesToDefault() {
         setLives(DEFAULT_NUM_LIVES);
+    }
+
+    void GameProgress::resetPlayerEnergyToDefault() {
+        setPlayerEnergy(DEFAULT_PLAYER_ENERGY);
+    }
+
+    void GameProgress::resetWeaponEnergyToDefault() {
+        for(unsigned char i = 0; i < getWeaponCount(); ++i) {
+            setWeaponEnergy(i, 100);
+        }
     }
 
 } // hikari

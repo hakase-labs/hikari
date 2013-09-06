@@ -22,8 +22,8 @@
                 "glyphSize" : 8
             },
             "weapon-menu" : {
-                "image" : "assets/images/gui-font.png",
-                "glyphs" : " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
+                "image" : "assets/images/menu-font.png",
+                "glyphs" : " 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz.",
                 "glyphSize" : 8
             }
         }
