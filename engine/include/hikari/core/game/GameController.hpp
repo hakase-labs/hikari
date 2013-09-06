@@ -30,7 +30,8 @@ namespace hikari {
         std::string prevState;
         std::string nextState;
         std::map< std::string, StatePtr > states;
-        std::unique_ptr<StateTransition> stateTransition;
+        std::unique_ptr<StateTransition> outTransition;
+        std::unique_ptr<StateTransition> inTransition;
 
         void gotoNextState();
 
@@ -77,7 +78,10 @@ namespace hikari {
         void setState(const std::string &name);
         void setState(const StatePtr & statePtr);
 
-        void requestStateChange(const std::string & stateName, std::unique_ptr<StateTransition> stateTransition = std::unique_ptr<StateTransition>(new DefaultStateTransition()));
+        void requestStateChange(const std::string & stateName);
+        void requestStateChange(const std::string & stateName,
+                std::unique_ptr<StateTransition> outTransition,
+                std::unique_ptr<StateTransition> inTransition);
 
         /**
             Sets the next state to transition to but does not cause the current state to

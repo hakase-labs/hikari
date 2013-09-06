@@ -1,6 +1,7 @@
 #include "hikari/core/game/GameController.hpp"
 #include "hikari/core/game/GameControllerException.hpp"
 #include "hikari/core/game/StateTransition.hpp"
+#include "hikari/core/game/FadeStateTransition.hpp"
 #include "hikari/core/util/Log.hpp"
 #include <iostream>
 
@@ -65,17 +66,35 @@ namespace hikari {
         nextState = name;
     }
 
-    void GameController::requestStateChange(const std::string & stateName, std::unique_ptr<StateTransition> stateTransition) {
+    void GameController::requestStateChange(const std::string & stateName) {
+        requestStateChange(
+            stateName,
+            std::unique_ptr<StateTransition>(new FadeStateTransition(FadeStateTransition::FADE_OUT, sf::Color::Black, (1.0f/60.0f*13.0f))),
+            std::unique_ptr<StateTransition>(new FadeStateTransition(FadeStateTransition::FADE_IN, sf::Color::Black, (1.0f/60.0f*13.0f)))
+        );
+    }
+
+    void GameController::requestStateChange(const std::string & stateName,
+            std::unique_ptr<StateTransition> outTransition,
+            std::unique_ptr<StateTransition> inTransition) {
+
         auto found = states.find(stateName);
+
         HIKARI_LOG(debug) << "State change requested";
         if(found != std::end(states)) {
             HIKARI_LOG(debug) << "Found the next state: " << stateName;
             enqueuedNextState = found->second;
 
-            if(stateTransition) {
-                stateTransition->setExitingState(state);
-                stateTransition->setEnteringState(enqueuedNextState);
-                this->stateTransition = std::move(stateTransition);
+            if(outTransition) {
+                outTransition->setExitingState(state);
+                outTransition->setEnteringState(enqueuedNextState);
+                this->outTransition = std::move(outTransition);
+            }
+
+            if(inTransition) {
+                inTransition->setExitingState(state);
+                inTransition->setEnteringState(enqueuedNextState);
+                this->inTransition = std::move(inTransition);
             }
         }
     }
@@ -93,10 +112,16 @@ namespace hikari {
             throw GameControllerException("Current game state is null, cannot render.");
         }
 
-        if(stateTransition) {
-            stateTransition->render(target);
+        if(outTransition) {
+            HIKARI_LOG(debug4) << "Rendering state outTransition";
+            outTransition->render(target);
         } else {
-            state->render(target);
+            if(inTransition) {
+                HIKARI_LOG(debug4) << "Rendering state inTransition";
+                inTransition->render(target);
+            } else {
+                state->render(target);                
+            }
         }
     }
 
@@ -106,20 +131,28 @@ namespace hikari {
         }
 
         if(enqueuedNextState) {
-            if(stateTransition) {
-                HIKARI_LOG(debug4) << "Has transition";
-                if(stateTransition->isComplete()) {
+            if(outTransition) {
+                HIKARI_LOG(debug4) << "Has out transition";
+                if(outTransition->isComplete()) {
                     HIKARI_LOG(debug4) << "Transition complete!";
-                    stateTransition.reset();
+                    outTransition.reset();
                     gotoNextState();
                 } else {
-                    stateTransition->update(dt);
+                    outTransition->update(dt);
                 }
-            } else {
-                gotoNextState();
             }
         } else {
-            state->update(dt);
+            if(inTransition) {
+                HIKARI_LOG(debug4) << "Has in transition";
+                if(inTransition->isComplete()) {
+                    HIKARI_LOG(debug4) << "In transition complete!";
+                    inTransition.reset();
+                } else {
+                    inTransition->update(dt);
+                }
+            } else {
+                state->update(dt);
+            }
         }
     }
 
