@@ -2,6 +2,7 @@
 #include "hikari/core/game/GameControllerException.hpp"
 #include "hikari/core/game/StateTransition.hpp"
 #include "hikari/core/game/FadeStateTransition.hpp"
+#include "hikari/core/game/SliceStateTransition.hpp"
 #include "hikari/core/util/Log.hpp"
 #include <iostream>
 
@@ -69,8 +70,10 @@ namespace hikari {
     void GameController::requestStateChange(const std::string & stateName) {
         requestStateChange(
             stateName,
-            std::unique_ptr<StateTransition>(new FadeStateTransition(FadeStateTransition::FADE_OUT, sf::Color::Black, (1.0f/60.0f*13.0f))),
-            std::unique_ptr<StateTransition>(new FadeStateTransition(FadeStateTransition::FADE_IN, sf::Color::Black, (1.0f/60.0f*13.0f)))
+            std::unique_ptr<StateTransition>(new SliceStateTransition(SliceStateTransition::SLICE_LEFT, 1.0f)),
+            std::unique_ptr<StateTransition>(new DefaultStateTransition())
+            // std::unique_ptr<StateTransition>(new FadeStateTransition(FadeStateTransition::FADE_OUT, sf::Color::Black, (1.0f/60.0f*13.0f))),
+            // std::unique_ptr<StateTransition>(new FadeStateTransition(FadeStateTransition::FADE_IN, sf::Color::Black, (1.0f/60.0f*13.0f)))
         );
     }
 

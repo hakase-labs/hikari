@@ -38,6 +38,8 @@ namespace hikari {
         , goToNextState(false)
     {
         buildGui();
+
+        
     }
 
     OptionsState::~OptionsState() {
@@ -102,7 +104,7 @@ namespace hikari {
 
     void OptionsState::render(sf::RenderTarget &target) {
         if(auto gui = guiService.lock()) {
-            gui->renderRootContainer();
+            gui->renderRootContainer(target);
         }
     }
 

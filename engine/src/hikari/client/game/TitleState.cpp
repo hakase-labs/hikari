@@ -179,7 +179,7 @@ namespace hikari {
 
     void TitleState::render(sf::RenderTarget &target) {
         if(auto gui = guiService.lock()) {
-            gui->renderRootContainer();
+            gui->renderRootContainer(target);
         }
     }
 

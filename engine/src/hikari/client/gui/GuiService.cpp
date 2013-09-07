@@ -175,6 +175,15 @@ namespace hikari {
         hudContainer->setVisible(isHudVisible);
     }
 
+    void GuiService::renderRootContainer(sf::RenderTarget & target) {
+        sf::RenderTarget & oldTarget = graphics->getRenderTarget();
+
+        graphics->setRenderTarget(target);
+        renderRootContainer();
+
+        graphics->setRenderTarget(oldTarget);
+    }
+
     void GuiService::renderHudContainer() {
         bool isRootVisible = rootContainer->isVisible();
         rootContainer->setVisible(false);

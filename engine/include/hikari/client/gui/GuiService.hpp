@@ -14,6 +14,7 @@ namespace gcn {
     class Image;
     class ImageLoader;
     class SFMLInput;
+    class SFMLGraphics;
     class FixedImageFont;
     class Font;
     class Gui;
@@ -39,7 +40,7 @@ namespace hikari {
     private:
         sf::RenderTarget & renderTarget;
         std::unique_ptr<gcn::Gui> gui; 
-        std::unique_ptr<gcn::Graphics> graphics;
+        std::unique_ptr<gcn::SFMLGraphics> graphics;
         std::unique_ptr<gcn::SFMLInput> input;
         std::unique_ptr<gcn::ImageLoader> imageLoader;
         std::unique_ptr<gcn::Container> rootWidget;
@@ -63,6 +64,7 @@ namespace hikari {
         std::shared_ptr<gcn::Font> getFontByName(const std::string & fontName) const;
 
         void renderRootContainer();
+        void renderRootContainer(sf::RenderTarget & target);
         void renderHudContainer();
     };
 
