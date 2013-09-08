@@ -70,10 +70,10 @@ namespace hikari {
     void GameController::requestStateChange(const std::string & stateName) {
         requestStateChange(
             stateName,
-            std::unique_ptr<StateTransition>(new SliceStateTransition(SliceStateTransition::SLICE_LEFT, 1.0f)),
-            std::unique_ptr<StateTransition>(new DefaultStateTransition())
-            // std::unique_ptr<StateTransition>(new FadeStateTransition(FadeStateTransition::FADE_OUT, sf::Color::Black, (1.0f/60.0f*13.0f))),
-            // std::unique_ptr<StateTransition>(new FadeStateTransition(FadeStateTransition::FADE_IN, sf::Color::Black, (1.0f/60.0f*13.0f)))
+            // std::unique_ptr<StateTransition>(new SliceStateTransition(SliceStateTransition::SLICE_LEFT, 1.066666666666667f)),
+            // std::unique_ptr<StateTransition>(new DefaultStateTransition(DefaultStateTransition::ENTERING))
+            std::unique_ptr<StateTransition>(new FadeStateTransition(FadeStateTransition::FADE_OUT, sf::Color::Black, (1.0f/60.0f*13.0f))),
+            std::unique_ptr<StateTransition>(new FadeStateTransition(FadeStateTransition::FADE_IN, sf::Color::Black, (1.0f/60.0f*13.0f)))
         );
     }
 
@@ -116,15 +116,11 @@ namespace hikari {
         }
 
         if(outTransition) {
-            HIKARI_LOG(debug4) << "Rendering state outTransition";
             outTransition->render(target);
+        } else if(inTransition) {
+            inTransition->render(target);
         } else {
-            if(inTransition) {
-                HIKARI_LOG(debug4) << "Rendering state inTransition";
-                inTransition->render(target);
-            } else {
-                state->render(target);                
-            }
+            state->render(target);                
         }
     }
 
@@ -188,7 +184,9 @@ namespace hikari {
         return name;
     }
 
-    GameController::DefaultStateTransition::DefaultStateTransition() {
+    GameController::DefaultStateTransition::DefaultStateTransition(StateDirection direction)
+        : direction(direction)
+    {
         setComplete(true);
     }
 
@@ -197,8 +195,14 @@ namespace hikari {
     }
 
     void GameController::DefaultStateTransition::render(sf::RenderTarget &target) {
-        if(exitingState) {
-            exitingState->render(target);
+        if(direction == ENTERING) {
+            if(enteringState) {
+                enteringState->render(target);
+            }
+        } else {
+            if(exitingState) {
+                exitingState->render(target);
+            }
         }
     }
 
