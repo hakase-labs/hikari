@@ -26,6 +26,7 @@
 #include "hikari/client/scripting/AudioServiceScriptProxy.hpp"
 
 #include "hikari/core/game/AnimationLoader.hpp"
+#include "hikari/core/game/SliceStateTransition.hpp"
 #include "hikari/core/game/map/MapLoader.hpp"
 #include "hikari/core/game/map/TilesetLoader.hpp"
 #include "hikari/core/util/AnimationSetCache.hpp"
@@ -260,6 +261,8 @@ namespace hikari {
         screenBufferView.setCenter(
             static_cast<float>(SCREEN_WIDTH / 2),
             static_cast<float>(SCREEN_HEIGHT / 2));
+
+        SliceStateTransition::createSharedTextures();
     }
  
     void Client::deinitFileSystem() {
@@ -401,6 +404,8 @@ namespace hikari {
             window.draw(renderSprite);
             window.display();
         }
+        
+        SliceStateTransition::destroySharedTextures();
 
         HIKARI_LOG(debug) << "Quitting; total run time = " << totalRuntime << " seconds.";
     }

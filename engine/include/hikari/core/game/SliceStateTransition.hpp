@@ -4,6 +4,7 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/RenderTexture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
+#include <memory>
 
 namespace hikari {
 
@@ -15,21 +16,23 @@ namespace hikari {
         };
 
     private:
+        static std::unique_ptr<sf::RenderTexture> exitingStateTexture;
+        static std::unique_ptr<sf::RenderTexture> enteringStateTexture;
+
         SliceDirection direction;
         const float duration;
         float accumulator;
-        sf::RectangleShape overlay;
-        sf::RenderTexture exitingStateTexture;
-        sf::RenderTexture enteringStateTexture;
         sf::Sprite exitingStateSpriteLayerTop;
         sf::Sprite exitingStateSpriteLayerMiddle;
         sf::Sprite exitingStateSpriteLayerBottom;
-
         sf::Sprite enteringStateSpriteLayer;
 
     public:
         SliceStateTransition(SliceDirection direction, float duration);
         virtual ~SliceStateTransition();
+
+        static void createSharedTextures();
+        static void destroySharedTextures();
 
         virtual void render(sf::RenderTarget &target);
         virtual void update(float dt);

@@ -6,14 +6,26 @@
 
 namespace hikari {
 
+    std::unique_ptr<sf::RenderTexture> SliceStateTransition::exitingStateTexture(nullptr);
+    std::unique_ptr<sf::RenderTexture> SliceStateTransition::enteringStateTexture(nullptr);
+
+    void SliceStateTransition::createSharedTextures() {
+        exitingStateTexture.reset(new sf::RenderTexture());
+        exitingStateTexture->create(256, 240);
+        enteringStateTexture.reset(new sf::RenderTexture());
+        enteringStateTexture->create(256, 240);
+    }
+
+    void SliceStateTransition::destroySharedTextures() {
+        exitingStateTexture.reset();
+        enteringStateTexture.reset();
+    }
+
     SliceStateTransition::SliceStateTransition(SliceDirection direction, float duration)
         : StateTransition()
         , direction(direction)
         , duration(duration)
         , accumulator(0.0f)
-        , overlay(sf::Vector2f(256.0f, 240.0f))
-        , exitingStateTexture()
-        , enteringStateTexture()
         , exitingStateSpriteLayerTop()
         , exitingStateSpriteLayerMiddle()
         , exitingStateSpriteLayerBottom()
@@ -21,19 +33,13 @@ namespace hikari {
     {
         setComplete(false);
 
-        exitingStateTexture.create(256, 240);
-        enteringStateTexture.create(256, 240);
-        exitingStateSpriteLayerTop.setTexture(exitingStateTexture.getTexture());
+        exitingStateSpriteLayerTop.setTexture(exitingStateTexture->getTexture());
         exitingStateSpriteLayerTop.setTextureRect(sf::IntRect(0, 0, 256, 240 / 3));
-        exitingStateSpriteLayerMiddle.setTexture(exitingStateTexture.getTexture());
+        exitingStateSpriteLayerMiddle.setTexture(exitingStateTexture->getTexture());
         exitingStateSpriteLayerMiddle.setTextureRect(sf::IntRect(0, 240 / 3, 256, 240 / 3));
-        exitingStateSpriteLayerBottom.setTexture(exitingStateTexture.getTexture());
+        exitingStateSpriteLayerBottom.setTexture(exitingStateTexture->getTexture());
         exitingStateSpriteLayerBottom.setTextureRect(sf::IntRect(0, 240 / 3 * 2, 256, 240 / 3));
-        // exitingStateSpriteLayer.setColor(sf::Color::Red);
-        enteringStateSpriteLayer.setTexture(enteringStateTexture.getTexture());
-        enteringStateSpriteLayer.setColor(sf::Color::Green);
-
-        // overlay.setFillColor(color);
+        enteringStateSpriteLayer.setTexture(enteringStateTexture->getTexture());
     }
 
     SliceStateTransition::~SliceStateTransition() {
@@ -47,29 +53,31 @@ namespace hikari {
 
         //target.setView(overlayView);
         // target.draw(overlay);
-        if(direction == SLICE_LEFT) {
-            if(enteringState) {
-                enteringStateTexture.clear(sf::Color::Green);
-                enteringState->render(enteringStateTexture);
-                enteringStateTexture.display();
-                target.draw(enteringStateSpriteLayer);
+        //if(!isComplete()) {
+            if(direction == SLICE_LEFT) {
+                if(enteringState) {
+                    enteringStateTexture->clear(sf::Color::Transparent);
+                    enteringState->render(*enteringStateTexture);
+                    enteringStateTexture->display();
+                    target.draw(enteringStateSpriteLayer);
+                }
+                if(exitingState) {
+                    exitingStateTexture->clear(sf::Color::Transparent);
+                    exitingState->render(*exitingStateTexture);
+                    exitingStateTexture->display();
+                    target.draw(exitingStateSpriteLayerTop);
+                    target.draw(exitingStateSpriteLayerMiddle);
+                    target.draw(exitingStateSpriteLayerBottom);
+                }
+            } else {
+                // if(enteringState) {
+                //     enteringStateTexture.clear(sf::Color::Green);
+                //     enteringState->render(enteringStateTexture);
+                //     enteringStateTexture.display();
+                //     target.draw(enteringStateSpriteLayer);
+                // }
             }
-            if(exitingState) {
-                exitingStateTexture.clear(sf::Color::Blue);
-                exitingState->render(exitingStateTexture);
-                exitingStateTexture.display();
-                target.draw(exitingStateSpriteLayerTop);
-                target.draw(exitingStateSpriteLayerMiddle);
-                target.draw(exitingStateSpriteLayerBottom);
-            }
-        } else {
-            // if(enteringState) {
-            //     enteringStateTexture.clear(sf::Color::Green);
-            //     enteringState->render(enteringStateTexture);
-            //     enteringStateTexture.display();
-            //     target.draw(enteringStateSpriteLayer);
-            // }
-        }
+        //}
 
         //target.setView(oldView);
     }
@@ -81,36 +89,24 @@ namespace hikari {
 
         exitingStateSpriteLayerTop.setPosition(
             sf::Vector2f(
-                -1 * (percentComplete * 256),
+                1 * (percentComplete * 256),
                 0
             )
         );
 
         exitingStateSpriteLayerMiddle.setPosition(
             sf::Vector2f(
-                1 * (percentComplete * 256),
+                -1 * (percentComplete * 256),
                 240 / 3
             )
         );
 
         exitingStateSpriteLayerBottom.setPosition(
             sf::Vector2f(
-                -1 * (percentComplete * 256),
+                1 * (percentComplete * 256),
                 240 / 3 * 2
             )
         );
-
-        // sf::Color color = overlay.getFillColor();
-
-        // if(direction == FADE_OUT) {
-        //     HIKARI_LOG(debug4) << "Fade out!!";
-        //     color.a = std::min(255, static_cast<int>((accumulator / duration) * 255.0));
-        // } else {
-        //     HIKARI_LOG(debug4) << "Fade in!!";
-        //     color.a = std::max(0, 255 - static_cast<int>((accumulator / duration) * 255.0));
-        // }
-        
-        // overlay.setFillColor(color);
 
         if(accumulator >= duration) {
             setComplete(true);
