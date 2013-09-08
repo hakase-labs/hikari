@@ -44,14 +44,12 @@ namespace hikari {
     }
 
     void PasswordState::handleEvent(sf::Event &event) {
-        // if(event.type == sf::Event::KeyPressed || event.type == sf::Event::KeyReleased) {
-        //     keyboardInput->processEvent(event);
-        // }
+
     }
 
     void PasswordState::render(sf::RenderTarget &target) {
         if(auto gui = guiService.lock()) {
-            gui->renderRootContainer();
+            gui->renderAsTop(guiWrapper.get(), target);
         }
     }
 
@@ -61,16 +59,14 @@ namespace hikari {
             goToNextState = true;
         }
 
-        // keyboardInput->update(dt);
-
         return goToNextState;
     }
 
     void PasswordState::onEnter() {
         if(auto gui = guiService.lock()) {
             auto & topContainer = gui->getRootContainer();
-
             topContainer.add(guiWrapper.get(), 0, 0);
+            guiWrapper->setEnabled(true);
         }
 
         if(auto audio = audioService.lock()) {
@@ -83,12 +79,12 @@ namespace hikari {
     void PasswordState::onExit() {
         if(auto gui = guiService.lock()) {
             auto & topContainer = gui->getRootContainer();
-
             topContainer.remove(guiWrapper.get());
+            guiWrapper->setEnabled(false);
         }
-
+        
         if(auto audio = audioService.lock()) {
-            audio->stopMusic(   );
+            audio->stopMusic();
         }
     }
 

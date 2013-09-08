@@ -166,7 +166,7 @@ namespace hikari {
 
     void StageSelectState::render(sf::RenderTarget &target) {
         if(auto gui = guiService.lock()) {
-            gui->renderRootContainer();
+            gui->renderAsTop(guiContainer.get(), target);
         }
         //target.draw(background);
         //target.draw(leftEye);
@@ -225,7 +225,6 @@ namespace hikari {
         cursorColumn = DEFAULT_CURSOR_COLUMN;
         cursorRow = DEFAULT_CURSOR_ROW;
 
-        // Attach our GUI
         if(auto gui = guiService.lock()) {
             auto & topContainer = gui->getRootContainer();
 

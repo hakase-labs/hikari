@@ -424,7 +424,7 @@ namespace hikari {
         }
 
         if(auto gui = guiService.lock()) {
-            gui->renderRootContainer();
+            gui->renderAsTop(guiContainer.get(), target);
         }
 
         if(drawInfamousBlackBar) {
@@ -470,8 +470,8 @@ namespace hikari {
     void GamePlayState::onEnter() {
         if(auto gui = guiService.lock()) {
             auto & topContainer = gui->getRootContainer();
-
             topContainer.add(guiContainer.get(), 0, 0);
+            guiContainer->setEnabled(true);
             guiWeaponMenu->setEnabled(true);
             guiWeaponMenu->requestFocus();
         }
@@ -498,8 +498,8 @@ namespace hikari {
     void GamePlayState::onExit() {
         if(auto gui = guiService.lock()) {
             auto & topContainer = gui->getRootContainer();
-
             topContainer.remove(guiContainer.get());
+            guiContainer->setEnabled(false);
             guiWeaponMenu->setEnabled(false);
         }
     }

@@ -276,6 +276,7 @@ set( HIKARI_CORE_GAME_SOURCE_FILES
     src/hikari/core/game/Direction.cpp
     src/hikari/core/game/StateTransition.cpp
     src/hikari/core/game/FadeStateTransition.cpp
+    src/hikari/core/game/SliceStateTransition.cpp
     src/hikari/core/game/GameController.cpp
     src/hikari/core/game/GameControllerException.cpp
     src/hikari/core/game/map/Camera.cpp
