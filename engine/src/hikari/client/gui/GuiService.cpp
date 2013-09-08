@@ -184,6 +184,17 @@ namespace hikari {
         graphics->setRenderTarget(oldTarget);
     }
 
+    void GuiService::renderAsTop(gcn::Widget * widget, sf::RenderTarget & target) {
+        if(widget) {
+            sf::RenderTarget & oldTarget = graphics->getRenderTarget();
+
+            graphics->setRenderTarget(target);
+            widget->_draw(graphics.get());
+
+            graphics->setRenderTarget(oldTarget);
+        }
+    }
+
     void GuiService::renderHudContainer() {
         bool isRootVisible = rootContainer->isVisible();
         rootContainer->setVisible(false);

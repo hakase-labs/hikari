@@ -18,6 +18,7 @@ namespace gcn {
     class FixedImageFont;
     class Font;
     class Gui;
+    class Widget;
 }
 
 namespace Json {
@@ -65,6 +66,7 @@ namespace hikari {
 
         void renderRootContainer();
         void renderRootContainer(sf::RenderTarget & target);
+        void renderAsTop(gcn::Widget * widget, sf::RenderTarget & target);
         void renderHudContainer();
     };
 
