@@ -102,7 +102,7 @@ namespace hikari {
 
     void OptionsState::render(sf::RenderTarget &target) {
         if(auto gui = guiService.lock()) {
-            gui->renderRootContainer();
+            gui->renderAsTop(guiContainer.get(), target);
         }
     }
 
@@ -117,10 +117,12 @@ namespace hikari {
             auto & topContainer = gui->getRootContainer();
 
             topContainer.add(guiContainer.get(), 0, 0);
+            guiContainer->setEnabled(true);
+            guiContainer->requestFocus();
             guiMenu->setEnabled(true);
             guiMenu->requestFocus();
         }
-
+        
         goToNextState = false;
     }
 
@@ -131,6 +133,7 @@ namespace hikari {
 
             topContainer.remove(guiContainer.get());
             guiMenu->setEnabled(false);
+            guiContainer->setEnabled(false);
         }
     }
 

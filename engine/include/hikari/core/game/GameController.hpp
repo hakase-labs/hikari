@@ -56,7 +56,16 @@ namespace hikari {
 
         class DefaultStateTransition : public StateTransition {
         public:
-            DefaultStateTransition();
+            enum StateDirection {
+                EXITING = 0,
+                ENTERING = 1
+            };
+
+        private:
+            StateDirection direction;
+        
+        public:
+            DefaultStateTransition(StateDirection direction);
             virtual ~DefaultStateTransition();
 
             virtual void render(sf::RenderTarget &target);
