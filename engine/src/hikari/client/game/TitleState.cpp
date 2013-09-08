@@ -76,7 +76,6 @@ namespace hikari {
                     controller.requestStateChange("password");
                     goToNextState = true;
                 } else if(menuItemName == ITEM_OPTIONS) {
-                    //controller.requestStateChange("options");
                     controller.requestStateChange("options");
                     goToNextState = true;
                 } else if(menuItemName == ITEM_QUIT) {
@@ -179,7 +178,7 @@ namespace hikari {
 
     void TitleState::render(sf::RenderTarget &target) {
         if(auto gui = guiService.lock()) {
-            gui->renderRootContainer(target);
+            gui->renderAsTop(guiContainer.get(), target);
         }
     }
 
@@ -192,8 +191,8 @@ namespace hikari {
         // Attach our GUI
         if(auto gui = guiService.lock()) {
             auto & topContainer = gui->getRootContainer();
-
             topContainer.add(guiContainer.get(), 0, 0);
+            guiContainer->setEnabled(true);
             guiMenu->setEnabled(true);
             guiMenu->requestFocus();
             guiMenu->setSelectedIndex(0);
@@ -213,8 +212,8 @@ namespace hikari {
         // Remove our GUI
         if(auto gui = guiService.lock()) {
             auto & topContainer = gui->getRootContainer();
-
             topContainer.remove(guiContainer.get());
+            guiContainer->setEnabled(false);
             guiMenu->setEnabled(false);
         }
 
