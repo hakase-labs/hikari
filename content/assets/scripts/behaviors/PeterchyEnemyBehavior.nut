@@ -5,7 +5,7 @@ class PeterchyEnemyBehavior extends EnemyBehavior {
     direction = Directions.Left;
 
     constructor(classConfig = {}) {
-        base.constructor(config);
+        base.constructor(classConfig);
         ::log("PeterchyEnemyBehavior constructor called.");
     }
 

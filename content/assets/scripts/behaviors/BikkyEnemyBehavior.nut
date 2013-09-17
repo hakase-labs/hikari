@@ -5,7 +5,7 @@
         enteringNewState = false;
 
         constructor(classConfig = {}) {
-            base.constructor(config);
+            base.constructor(classConfig);
             ::log("BikkyEnemyBehavior constructor called.");
         }
 
