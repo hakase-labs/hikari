@@ -3,7 +3,7 @@ class KomasaburoEnemyBehavior extends EnemyBehavior {
     timer = 0.0;
     enteringNewState = false;
 
-    constructor(config = {}) {
+    constructor(classConfig = {}) {
         base.constructor(config);
         ::log("KomasaburoEnemyBehavior constructor called.");
     }

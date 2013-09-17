@@ -4,7 +4,7 @@ class OctopusBatteryEnemyBehavior extends EnemyBehavior {
     enteringNewState = false;
     direction = Directions.Up;
 
-    constructor(config = {}) {
+    constructor(classConfig = {}) {
         base.constructor(config);
         ::log("OctopusBatteryEnemyBehavior constructor called.");
     }

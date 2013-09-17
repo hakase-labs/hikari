@@ -2,7 +2,7 @@ class TellyEnemyBehavior extends EnemyBehavior {
     timer = 0.0;
     direction = Directions.Up;
 
-    constructor(config = {}) {
+    constructor(classConfig = {}) {
         base.constructor(config);
         ::log("TellyEnemyBehavior constructor called.");
     }

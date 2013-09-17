@@ -4,7 +4,7 @@ class PeterchyEnemyBehavior extends EnemyBehavior {
     enteringNewState = false;
     direction = Directions.Left;
 
-    constructor(config = {}) {
+    constructor(classConfig = {}) {
         base.constructor(config);
         ::log("PeterchyEnemyBehavior constructor called.");
     }
