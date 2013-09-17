@@ -1,3 +1,25 @@
+/**
+ * Implementation of the Octopus Battery behavior. Sleeps and wakes. When awake,
+ * walks in a direction until it hits a wall. Hitting a wall causes it to sleep,
+ * and after waking it walks in the opposite direction.
+ *
+ *        ####################
+ *        ##^^^^        ^^^^##
+ *          ################
+ *  ####    ####^^^^^^^^####    ####
+ *  ##^^####^^^^########^^^^####^^##
+ *  ##^^##^^^^##^^^^^^^^##^^^^##^^##
+ *  ##  ##^^##^^^^    ^^^^##^^##  ##
+ *  ##  ##^^################^^##  ##
+ *  ##  ##^^##    ####    ##^^##  ##
+ *  ##  ##^^##            ##^^##  ##
+ *  ##^^##^^^^##        ##^^^^##^^##
+ *  ##^^####^^^^########^^^^####^^##
+ *  ####    ####^^^^^^^^####    ####
+ *          ################
+ *        ##^^^^        ^^^^##
+ *        ####################
+ */
 class OctopusBatteryEnemyBehavior extends EnemyBehavior {
     state = State.IDLE;
     timer = 0.0;
@@ -11,7 +33,6 @@ class OctopusBatteryEnemyBehavior extends EnemyBehavior {
 
     function update(dt) {
         if(host != null) {
-            //::log("My timer = " + timer);
             local dir = host.direction;
             switch(state) {
                 case State.IDLE:
