@@ -3,6 +3,7 @@
 
 #include "hikari/client/game/objects/EnemyBrain.hpp"
 #include <squirrel.h>
+#include <sqrat.h>
 
 namespace hikari {
 
@@ -15,6 +16,12 @@ namespace hikari {
      */
     class ScriptedEnemyBrain : public EnemyBrain {
     private:
+        static const char * FUNCTION_NAME_ATTACH;
+        static const char * FUNCTION_NAME_DETACH;
+        static const char * FUNCTION_NAME_HANDLECOLLISION;
+        static const char * FUNCTION_NAME_UPDATE;
+        static const char * BASE_CLASS_NAME;
+
         /** A handle to the Squirrel VM */
         HSQUIRRELVM vm;
 
