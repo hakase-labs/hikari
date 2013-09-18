@@ -137,6 +137,7 @@ namespace hikari {
         , hasReachedBossCorridor(false)
         , isHeroAlive(false)
         , gotoNextState(false)
+        , isRestoringEnergy(false)
     {
         loadAllMaps(services.locateService<MapLoader>(hikari::Services::MAPLOADER), params);
 
@@ -402,8 +403,6 @@ namespace hikari {
         }
 
         if((event.type == sf::Event::KeyPressed) && event.key.code == sf::Keyboard::T) {
-            hero->performStun();
-
             if(auto gp = gameProgress.lock()) {
                 gp->setPlayerEnergy(0);
             }
@@ -446,15 +445,19 @@ namespace hikari {
         }
 
         if(subState) {
-            // "Pause" th substate if the menu is being shown
-            if(!isViewingMenu) {
+            if(isRestoringEnergy) {
+                // Do the energy sequence
+            } else {
+                // "Pause" the substate if the menu is being shown
+                if(!isViewingMenu) {
 
-                // Handle state change request actions...
-                SubState::StateChangeAction action = subState->update(dt);
+                    // Handle state change request actions...
+                    SubState::StateChangeAction action = subState->update(dt);
 
-                if(SubState::NEXT == action) {
-                    if(nextSubState) {
-                        changeSubState(std::move(nextSubState));
+                    if(SubState::NEXT == action) {
+                        if(nextSubState) {
+                            changeSubState(std::move(nextSubState));
+                        }
                     }
                 }
             }

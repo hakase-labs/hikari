@@ -139,6 +139,7 @@ namespace hikari {
         bool hasReachedBossCorridor;
         bool isHeroAlive;
         bool gotoNextState;
+        bool isRestoringEnergy;
 
         //
         // Resource Management
