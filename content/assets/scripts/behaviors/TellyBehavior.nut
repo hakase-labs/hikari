@@ -1,12 +1,39 @@
+/**
+ * Implementation for the Telly enemy behavior. Slowly seeks the hero, only
+ * moving on one axis at a time -- whichever axis has greater distance from the
+ * enemy to the hero.
+ *
+ *      HHHHHHHHHHHHHHHHHHHHHHHH
+ *    HH^^^^  ^^        ^^  ^^^^HH
+ *  HH^^^^HH  ^^        ^^  HH^^^^HH
+ *  HH^^^^HHHH^^        ^^HHHH^^^^HH
+ *  HH^^^^^^  ^^        ^^  ^^^^^^HH
+ *    HHHHHHHHHHHHHHHHHHHHHHHHHHHH
+ *    HHHH      HHHHHHHH      HHHH
+ *    HH    HHHH  HHHH  HHHH    HH
+ *    HH    HHHH  HHHH  HHHH    HH
+ *    HHHH      HHHHHHHH      HHHH
+ *    HHHHHHHHHHHHHHHHHHHHHHHHHHHH
+ *  HH^^^^^^  ^^        ^^  ^^^^^^HH
+ *  HH^^^^HHHH^^        ^^HHHH^^^^HH
+ *  HH^^^^HH  ^^        ^^  HH^^^^HH
+ *    HH^^^^  ^^        ^^  ^^^^HH
+ *      HHHHHHHHHHHHHHHHHHHHHHHH
+ */
 class TellyEnemyBehavior extends EnemyBehavior {
     timer = 0.0;
     direction = Directions.Up;
 
-    constructor(config = {}) {
-        base.constructor(config);
+    constructor(classConfig = {}) {
+        base.constructor(classConfig);
         ::log("TellyEnemyBehavior constructor called.");
     }
 
+    /**
+     * Updates the Telly and occasionally causes the course to be adjusted.
+     * 
+     * @param  {Float} dt the detal time for this update
+     */
     function update(dt) {
         if(host != null) {
             timer += dt;
@@ -32,6 +59,11 @@ class TellyEnemyBehavior extends EnemyBehavior {
         }
     }
 
+    /**
+     * Adjusts the direction and velocity in order to move toward the hero. The
+     * axis that has the greatest distance from the hero is the one that will be
+     * moved along.
+     */
     function adjustCourse() {
         local hostX = host.getX();
         local hostY = host.getY();

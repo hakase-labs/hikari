@@ -165,6 +165,9 @@ set( HIKARI_CLIENT_GAME_SOURCE_FILES
     src/hikari/client/game/SpawnProjectileWeaponAction.cpp
     src/hikari/client/game/SpriteTestState.cpp
     src/hikari/client/game/StageSelectState.cpp
+    src/hikari/client/game/Task.cpp
+    src/hikari/client/game/BaseTask.cpp
+    src/hikari/client/game/FunctionTask.cpp
     src/hikari/client/game/TitleState.cpp
     src/hikari/client/game/OptionsState.cpp
     src/hikari/client/game/Weapon.cpp

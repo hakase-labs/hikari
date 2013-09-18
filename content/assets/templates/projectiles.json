@@ -34,6 +34,7 @@
         "gravitated": true,
         "phasing": false,
         "ageless": false,
-        "maximumAge": 2.0
+        "maximumAge": 2.0,
+        "reflectionType": "x"
     }
 ]

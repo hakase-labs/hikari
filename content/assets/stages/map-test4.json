@@ -941,6 +941,12 @@
           "x": 144,
           "y": 80,
           "direction": "Right"
+        },
+        {
+            "type": "Octopus Battery",
+            "x": 128,
+            "y": 80,
+            "direction": "Down"
         }
       ],
       "items": [],

@@ -10,10 +10,19 @@ namespace hikari {
     class Motion;
 
     class Projectile : public Entity, public Cloneable<Projectile> {
+    public:
+        enum ReflectionType {
+            NO_REFLECTION,
+            REFLECT_X,
+            REFLECT_Y,
+            REFLECT_XY
+        };
+
     private:
         static const std::shared_ptr<Motion> DeflectedMotion;
         std::shared_ptr<Motion> motion;
         bool inert;
+        ReflectionType reflectionType;
 
     public:
         Projectile(int id = GameObject::generateObjectId(), std::shared_ptr<Room> room = nullptr);
@@ -31,6 +40,9 @@ namespace hikari {
 
         void setMotion(const std::shared_ptr<Motion> motion);
         const std::shared_ptr<Motion>& getMotion() const;
+
+        void setReflectionType(ReflectionType type);
+        ReflectionType getReflectionType() const;
 
         /**
          * Sets whether the projectile is inert or not. When a projectile is
