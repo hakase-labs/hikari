@@ -7,6 +7,12 @@
 
 namespace hikari {
 
+    const char * ScriptedEnemyBrain::FUNCTION_NAME_ATTACH = "attachHost";
+    const char * ScriptedEnemyBrain::FUNCTION_NAME_DETACH = "detachHost";
+    const char * ScriptedEnemyBrain::FUNCTION_NAME_HANDLECOLLISION = "handleWorldCollision";
+    const char * ScriptedEnemyBrain::FUNCTION_NAME_UPDATE = "update";
+    const char * ScriptedEnemyBrain::BASE_CLASS_NAME = "EnemyBehavior";
+
     ScriptedEnemyBrain::ScriptedEnemyBrain(SquirrelService& squirrel, const std::string& scriptClassName, const Sqrat::Table& config)
         : vm(squirrel.getVmInstance())
         , scriptClassName(scriptClassName)
@@ -49,10 +55,10 @@ namespace hikari {
                     instance = constructor.Evaluate<Sqrat::Object>(configRef);
 
                     if(!instance.IsNull()) {
-                        proxyAttach = Sqrat::Function(instance, "attachHost");
-                        proxyDetach = Sqrat::Function(instance, "detachHost");
-                        proxyUpdate = Sqrat::Function(instance, "update");
-                        proxyHandleWorldCollision = Sqrat::Function(instance, "handleWorldCollision");
+                        proxyAttach = Sqrat::Function(instance, FUNCTION_NAME_ATTACH);
+                        proxyDetach = Sqrat::Function(instance, FUNCTION_NAME_DETACH);
+                        proxyUpdate = Sqrat::Function(instance, FUNCTION_NAME_UPDATE);
+                        proxyHandleWorldCollision = Sqrat::Function(instance, FUNCTION_NAME_HANDLECOLLISION);
                     } else {
                         HIKARI_LOG(debug2) << "Constructor for '" << scriptClassName << "' did not return the correct object type.";
                     }

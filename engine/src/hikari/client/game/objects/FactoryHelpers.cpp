@@ -373,7 +373,8 @@ namespace FactoryHelpers {
                                         const auto boundingBoxObject = templateObject["boundingBox"];
                                         const auto ageless           = templateObject.get("ageless", true).asBool(); 
                                         const auto maximumAge        = static_cast<float>(templateObject.get("maximumAge", 0.0f).asDouble());  
-                                        
+                                        const auto reflectionType    = templateObject.get("reflectionType", "none").asString();
+
                                         hikari::BoundingBoxF boundingBox(
                                             0.0f,
                                             0.0f,
@@ -397,6 +398,16 @@ namespace FactoryHelpers {
                                         instance->setDamageId(damageId);
                                         instance->setAgeless(ageless);
                                         instance->setMaximumAge(maximumAge);
+
+                                        if(reflectionType == "none") {
+                                            // Default; do nothing
+                                        } else if(reflectionType == "x") {
+                                            instance->setReflectionType(Projectile::REFLECT_X);
+                                        } else if(reflectionType == "y") {
+                                            instance->setReflectionType(Projectile::REFLECT_Y);
+                                        } else if(reflectionType == "xy") {
+                                            instance->setReflectionType(Projectile::REFLECT_XY);
+                                        }
 
                                         factoryPtr->registerPrototype(name, instance);
                                     }

@@ -15,6 +15,7 @@ namespace hikari {
     Projectile::Projectile(int id, std::shared_ptr<Room> room) 
         : Entity(id, room) 
         , inert(false)
+        , reflectionType(NO_REFLECTION)
     {
         body.setGravitated(false);
         body.setHasWorldCollision(false);
@@ -23,6 +24,7 @@ namespace hikari {
     Projectile::Projectile(const Projectile& proto)
         : Entity(proto)
         , inert(false)
+        , reflectionType(proto.reflectionType)
     {
         setActive(false);
     }
@@ -63,7 +65,25 @@ namespace hikari {
     }
 
     void Projectile::handleCollision(Movable& body, CollisionInfo& info) {
+        if(getReflectionType() == REFLECT_X || getReflectionType() == REFLECT_XY) {
+            if(info.isCollisionX) {
+                if(info.directionX == Directions::Left) {
+                    setDirection(Directions::Right);
+                } else if(info.directionX == Directions::Right) {
+                    setDirection(Directions::Left);
+                }
+            }
+        } 
 
+        if(getReflectionType() == REFLECT_Y || getReflectionType() == REFLECT_XY) {
+            if(info.isCollisionY) {
+                if(info.directionY == Directions::Up) {
+                    setDirection(Directions::Down);
+                } else if(info.directionY == Directions::Down) {
+                    setDirection(Directions::Up);
+                }
+            }
+        }
     }
 
     void Projectile::setMotion(const std::shared_ptr<Motion> motion) {
@@ -72,6 +92,14 @@ namespace hikari {
 
     const std::shared_ptr<Motion>& Projectile::getMotion() const {
         return motion;
+    }
+
+    void Projectile::setReflectionType(ReflectionType type) {
+        reflectionType = type;
+    }
+
+    Projectile::ReflectionType Projectile::getReflectionType() const {
+        return reflectionType;
     }
 
     void Projectile::setInert(bool inert) {
