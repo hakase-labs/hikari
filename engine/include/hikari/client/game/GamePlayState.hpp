@@ -364,11 +364,14 @@ namespace hikari {
             static const float transitionSpeedY;
             static const float heroTranslationSpeedX;
             static const float heroTranslationSpeedY;
+            static const float bossDoorDelay;
 
             float transitionEndX;
             float transitionEndY;
             int transitionFrames;
             bool transitionFinished;
+            float bossDoorDelayIn;
+            float bossDoorDelayOut;
 
             RoomTransition transition;
             Rectangle2D<int> nextRoomCullRegion;

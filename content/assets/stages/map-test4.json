@@ -5,8 +5,8 @@
   "specialRooms": {
     "starting": 0,
     "midpoint": 0,
-    "bossCorridor": 7,
-    "bossChamber": 8
+    "bossCorridor": 1,
+    "bossChamber": 2
   },
   "rooms": [
     {
@@ -952,6 +952,7 @@
       "items": [],
       "transitions": [
         {
+          "boss": true,
           "to": 1,
           "width": 2,
           "height": 7,
