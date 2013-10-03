@@ -58,43 +58,72 @@ namespace hikari {
         const int getGridSize() const;
         const Rectangle2D<int>& getBounds() const;
         const Rectangle2D<int>& getCameraBounds() const;
+
+        /**
+         * Gets a reference to the point within the room where the hero should
+         * be spawned. 
+         * 
+         * This is typically used if the stage round starts in this room and the
+         * player needs to be spawned somewhere. This poisition is where Rock 
+         * will teleport down to when a round starts.
+         *
+         * @return point where the hero should spawn in this room
+         */
         const Point2D<int>& getHeroSpawnPosition() const;
 
         /**
-            Gets the tile located at the position (tileX, tileY). If the
-            position is outside of the bounds of the map, -1 is returned.
-
-            All positions are relative to the top left corner of the map data,
-            where the top left corner is defined as (0, 0).
-
-            @param tileX the x-coordinate of the tile to get
-            @param tileY the y-coordinate of the tile to get
-        */
+         * Gets the tile located at the position (tileX, tileY). If the
+         * position is outside of the bounds of the map, -1 is returned.
+         *
+         * All positions are relative to the top left corner of the map data,
+         * where the top left corner is defined as (0, 0).
+         * 
+         * @param  tileX the x-coordinate of the tile to get
+         * @param  tileY tileY the y-coordinate of the tile to get
+         * @return       tile found at (tileX, tileY)
+         */
         const int getTileAt(int tileX, int tileY) const;
 
         /**
-            Gets the attribute located at the position (attrX, attrY). If the
-            position is outside of the bounds of the map, -1 is returned.
-
-            All positions are relative to the top left corner of the map data,
-            where the top left corner is defined as (0, 0).
-
-            @param attrX the x-coordinate of the attribute to get
-            @param attrY the y-coordinate of the attribute to get
+         * Gets the attribute located at the position (attrX, attrY). If the
+         * position is outside of the bounds of the map, -1 is returned.
+         * 
+         * All positions are relative to the top left corner of the map data,
+         * where the top left corner is defined as (0, 0).
+         * 
+         * @param attrX the x-coordinate of the attribute to get
+         * @param attrY the y-coordinate of the attribute to get
+         * @return      attribute flags found at (tileX, tileY)
         */
         const int getAttributeAt(int tileX, int tileY) const;
 
         /**
-         * Gets the list of the room's transitions.
+         * Gets a reference to the list of the room's transitions.
+         *
+         * @see hikari::RoomTransition
+         * @return reference to list of RoomTransitions
          */
         const std::vector<RoomTransition>& getTransitions() const;
 
+        /**
+         * Gets a reference to the list of shared pointers to the Spawners in 
+         * this room.
+         *
+         * @see hikari::Spawner
+         * @return vector of smart pointers to all Spawners
+         */
         const std::vector<std::shared_ptr<Spawner>>& getSpawners() const;
 
+        /**
+         * Gets a reference to the list of rectangles representing the ladders
+         * in the room.
+         *
+         * @return list of ladder rectangles
+         */
         const std::list<BoundingBox<float>> & getLadders() const;
 
         /**
-         * Gets a list of the Spawner objects in this Room.
+         * Gets a list of weak pointers to the Spawner objects in this Room.
          *
          * @see hikari::Spawner
          * @return list of Spawners
