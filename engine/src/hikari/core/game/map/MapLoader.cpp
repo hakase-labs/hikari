@@ -242,7 +242,7 @@ namespace hikari {
     }
 
     RoomTransition MapLoader::constructTransition(const Json::Value &json) const {
-        bool isBossEntrance = json.get("boss", false).asBool();
+        bool isDoor = json.get("boss", false).asBool();
         
         // TODO: Do we need this?
         int from = -1;
@@ -269,7 +269,7 @@ namespace hikari {
             dir = RoomTransition::DirectionTeleport;
         }
 
-        return RoomTransition(from, to, width, height, x, y, dir, isBossEntrance);
+        return RoomTransition(from, to, width, height, x, y, dir, isDoor);
     }
 
     Rectangle2D<int> MapLoader::constructCameraBounds(const Json::Value &json, 

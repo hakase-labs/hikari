@@ -1661,9 +1661,9 @@ namespace hikari {
 
             // Boss entrances can be triggered by merely touching, but regular
             // transitions require rock to be fully contained before triggering.
-            if(transition.isBossEntrance()) {
+            if(transition.isDoor()) {
                 if(transitionBounds.intersects(hero->getBoundingBox())) {
-                    HIKARI_LOG(debug) << "Transitioning from room " << currentRoom->getId() << " to boss corridor " << transition.getToRegion();
+                    HIKARI_LOG(debug) << "Transitioning from room " << currentRoom->getId() << " through a door " << transition.getToRegion();
                     gamePlayState.requestSubStateChange(std::unique_ptr<SubState>(new TransitionSubState(gamePlayState, transition)));
                     return SubState::NEXT;
                 }
@@ -1708,7 +1708,7 @@ namespace hikari {
     const float GamePlayState::TransitionSubState::transitionSpeedY = 3.0f / (1.0f / 60.0f);
     const float GamePlayState::TransitionSubState::heroTranslationSpeedX = (51.0f / 64.0f) / (1.0f / 60.0f);
     const float GamePlayState::TransitionSubState::heroTranslationSpeedY = (21.0f / 80.0f) / (1.0f / 60.0f);
-    const float GamePlayState::TransitionSubState::bossDoorDelay = (1.0f);// / (1.0f / 60.0f);
+    const float GamePlayState::TransitionSubState::doorDelay = (1.0f);// / (1.0f / 60.0f);
 
     GamePlayState::TransitionSubState::TransitionSubState(GamePlayState & gamePlayState, RoomTransition transition)
         : SubState(gamePlayState)
@@ -1716,8 +1716,8 @@ namespace hikari {
         , transitionEndY(0.0f)
         , transitionFrames(0)
         , transitionFinished(false)
-        , bossDoorDelayIn(0.0f)
-        , bossDoorDelayOut(0.0f)
+        , doorDelayIn(0.0f)
+        , doorDelayOut(0.0f)
         , transition(transition)
         , nextRoomCullRegion()
         , nextRoom(nullptr)
@@ -1770,9 +1770,9 @@ namespace hikari {
 
         HIKARI_LOG(debug) << "TransitionSubState::enter()";
 
-        if(transition.isBossEntrance()) {
+        if(transition.isDoor()) {
             // Open the door sequence
-            bossDoorDelayOut = bossDoorDelayIn = bossDoorDelay;
+            doorDelayOut = doorDelayIn = doorDelay;
         }
 
         auto & camera = gamePlayState.camera;
@@ -1814,8 +1814,8 @@ namespace hikari {
         float camX = camera.getX();
 
         // For boss doors there is a delay before the camera transition
-        if(bossDoorDelayIn > 0.0f) {
-            bossDoorDelayIn -= dt;
+        if(doorDelayIn > 0.0f) {
+            doorDelayIn -= dt;
         } else {
             switch(transition.getDirection()) {
                 case RoomTransition::DirectionUp:
@@ -1877,8 +1877,8 @@ namespace hikari {
 
         if(transitionFinished) {
             // For boss doors there is a delay after the camera transition.
-            if(bossDoorDelayOut > 0.0f) {
-                bossDoorDelayOut -= dt;
+            if(doorDelayOut > 0.0f) {
+                doorDelayOut -= dt;
             } else {
                 gamePlayState.requestSubStateChange(std::unique_ptr<SubState>(new PlayingSubState(gamePlayState)));
                 return SubState::NEXT;
