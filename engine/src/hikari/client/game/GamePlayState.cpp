@@ -1334,6 +1334,12 @@ namespace hikari {
         gamePlayState.isHeroAlive = true;
         postDeathTimer = 0.0f;
 
+        // Check if we just entered the room where the boss battle will take place
+        if(gamePlayState.currentRoom == gamePlayState.currentMap->getBossChamberRoom()) {
+            // We're going to start fighting the boss
+            HIKARI_LOG(debug3) << "We just entered the boss chamber. Time to start the battle!";
+        }
+
         if(auto progress = gamePlayState.gameProgress.lock()) {
             std::string livesCaption = (progress->getLives() < 10 ? "0" : "") + StringUtils::toString(static_cast<int>(progress->getLives()));
             gamePlayState.guiLivesLabel->setCaption(livesCaption);
@@ -1641,10 +1647,10 @@ namespace hikari {
         for(auto transitionIt = currentRoomTransitions.begin(), end = currentRoomTransitions.end(); transitionIt != end; transitionIt++) {
             const RoomTransition& transition = *transitionIt;
 
-            int regionLeft   = ((currentRoom->getX() + transition.getX()) * 16);
-            int regionTop    = ((currentRoom->getY() + transition.getY()) * 16);
-            int regionWidth  = transition.getWidth() * 16;
-            int regionHeight = transition.getHeight() * 16;
+            int regionLeft   = ((currentRoom->getX() + transition.getX()) * currentRoom->getGridSize());
+            int regionTop    = ((currentRoom->getY() + transition.getY()) * currentRoom->getGridSize());
+            int regionWidth  = transition.getWidth() * currentRoom->getGridSize();
+            int regionHeight = transition.getHeight() * currentRoom->getGridSize();
 
             BoundingBox<float> transitionBounds(
                 static_cast<float>(regionLeft),
@@ -1653,7 +1659,15 @@ namespace hikari {
                 static_cast<float>(regionHeight)
             );
 
-            if(transitionBounds.contains(hero->getBoundingBox())) {
+            // Boss entrances can be triggered by merely touching, but regular
+            // transitions require rock to be fully contained before triggering.
+            if(transition.isBossEntrance()) {
+                if(transitionBounds.intersects(hero->getBoundingBox())) {
+                    HIKARI_LOG(debug) << "Transitioning from room " << currentRoom->getId() << " to boss corridor " << transition.getToRegion();
+                    gamePlayState.requestSubStateChange(std::unique_ptr<SubState>(new TransitionSubState(gamePlayState, transition)));
+                    return SubState::NEXT;
+                }
+            } else if(transitionBounds.contains(hero->getBoundingBox())) {
                 HIKARI_LOG(debug) << "Transitioning from room " << currentRoom->getId() << " to room " << transition.getToRegion();
                 gamePlayState.requestSubStateChange(std::unique_ptr<SubState>(new TransitionSubState(gamePlayState, transition)));
                 return SubState::NEXT;
@@ -1694,6 +1708,7 @@ namespace hikari {
     const float GamePlayState::TransitionSubState::transitionSpeedY = 3.0f / (1.0f / 60.0f);
     const float GamePlayState::TransitionSubState::heroTranslationSpeedX = (51.0f / 64.0f) / (1.0f / 60.0f);
     const float GamePlayState::TransitionSubState::heroTranslationSpeedY = (21.0f / 80.0f) / (1.0f / 60.0f);
+    const float GamePlayState::TransitionSubState::bossDoorDelay = (1.0f);// / (1.0f / 60.0f);
 
     GamePlayState::TransitionSubState::TransitionSubState(GamePlayState & gamePlayState, RoomTransition transition)
         : SubState(gamePlayState)
@@ -1701,6 +1716,8 @@ namespace hikari {
         , transitionEndY(0.0f)
         , transitionFrames(0)
         , transitionFinished(false)
+        , bossDoorDelayIn(0.0f)
+        , bossDoorDelayOut(0.0f)
         , transition(transition)
         , nextRoomCullRegion()
         , nextRoom(nullptr)
@@ -1753,6 +1770,11 @@ namespace hikari {
 
         HIKARI_LOG(debug) << "TransitionSubState::enter()";
 
+        if(transition.isBossEntrance()) {
+            // Open the door sequence
+            bossDoorDelayOut = bossDoorDelayIn = bossDoorDelay;
+        }
+
         auto & camera = gamePlayState.camera;
 
         switch(transition.getDirection()) {
@@ -1791,66 +1813,76 @@ namespace hikari {
         float camY = camera.getY();
         float camX = camera.getX();
 
-        switch(transition.getDirection()) {
-            case RoomTransition::DirectionUp:
-                if(camY > transitionEndY) {
-                    camera.move(0.0f, -transitionSpeedY * dt);
-                    transitionFrames++;
+        // For boss doors there is a delay before the camera transition
+        if(bossDoorDelayIn > 0.0f) {
+            bossDoorDelayIn -= dt;
+        } else {
+            switch(transition.getDirection()) {
+                case RoomTransition::DirectionUp:
+                    if(camY > transitionEndY) {
+                        camera.move(0.0f, -transitionSpeedY * dt);
+                        transitionFrames++;
 
-                    auto heroTranslateY = -heroTranslationSpeedY * dt;
-                    hero->setPosition(hero->getPosition().getX(), hero->getPosition().getY() + heroTranslateY);
-                    hero->playAnimation(dt);
-                } else {
-                    transitionFinished = true;
-                }
-                break;
-            case RoomTransition::DirectionForward:
-                camera.lockHorizontal(false);
-                if(camX < transitionEndX) {
-                    camera.move(transitionSpeedX * dt, 0.0f);
-                    transitionFrames++;
+                        auto heroTranslateY = -heroTranslationSpeedY * dt;
+                        hero->setPosition(hero->getPosition().getX(), hero->getPosition().getY() + heroTranslateY);
+                        hero->playAnimation(dt);
+                    } else {
+                        transitionFinished = true;
+                    }
+                    break;
+                case RoomTransition::DirectionForward:
+                    camera.lockHorizontal(false);
+                    if(camX < transitionEndX) {
+                        camera.move(transitionSpeedX * dt, 0.0f);
+                        transitionFrames++;
 
-                    auto heroTranslateX = heroTranslationSpeedX * dt;
-                    hero->setPosition(hero->getPosition().getX() + heroTranslateX, hero->getPosition().getY());
-                    hero->playAnimation(dt);
-                } else {
-                    transitionFinished = true;
-                }
-                break;
-            case RoomTransition::DirectionDown:
-                camera.lockVertical(false);
-                if(camY < transitionEndY) {
-                    camera.move(0.0f, transitionSpeedY * dt);
-                    transitionFrames++;
+                        auto heroTranslateX = heroTranslationSpeedX * dt;
+                        hero->setPosition(hero->getPosition().getX() + heroTranslateX, hero->getPosition().getY());
+                        hero->playAnimation(dt);
+                    } else {
+                        transitionFinished = true;
+                    }
+                    break;
+                case RoomTransition::DirectionDown:
+                    camera.lockVertical(false);
+                    if(camY < transitionEndY) {
+                        camera.move(0.0f, transitionSpeedY * dt);
+                        transitionFrames++;
 
-                    auto heroTranslateY = heroTranslationSpeedY * dt;
-                    hero->setPosition(hero->getPosition().getX(), hero->getPosition().getY() + heroTranslateY);
-                    hero->playAnimation(dt);
-                } else {
-                    transitionFinished = true;
-                }
-                break;
-            case RoomTransition::DirectionBackward:
-                camera.lockHorizontal(false);
-                if(camX > transitionEndX) {
-                    camera.move(-transitionSpeedX * dt, 0.0f);
-                    transitionFrames++;
+                        auto heroTranslateY = heroTranslationSpeedY * dt;
+                        hero->setPosition(hero->getPosition().getX(), hero->getPosition().getY() + heroTranslateY);
+                        hero->playAnimation(dt);
+                    } else {
+                        transitionFinished = true;
+                    }
+                    break;
+                case RoomTransition::DirectionBackward:
+                    camera.lockHorizontal(false);
+                    if(camX > transitionEndX) {
+                        camera.move(-transitionSpeedX * dt, 0.0f);
+                        transitionFrames++;
 
-                    auto heroTranslateX = -heroTranslationSpeedX * dt;
-                    hero->setPosition(hero->getPosition().getX() + heroTranslateX, hero->getPosition().getY());
-                    hero->playAnimation(dt);
-                } else {
+                        auto heroTranslateX = -heroTranslationSpeedX * dt;
+                        hero->setPosition(hero->getPosition().getX() + heroTranslateX, hero->getPosition().getY());
+                        hero->playAnimation(dt);
+                    } else {
+                        transitionFinished = true;
+                    }
+                    break;
+                default:
                     transitionFinished = true;
-                }
-                break;
-            default:
-                transitionFinished = true;
-                break;
+                    break;
+            }
         }
 
         if(transitionFinished) {
-            gamePlayState.requestSubStateChange(std::unique_ptr<SubState>(new PlayingSubState(gamePlayState)));
-            return SubState::NEXT;
+            // For boss doors there is a delay after the camera transition.
+            if(bossDoorDelayOut > 0.0f) {
+                bossDoorDelayOut -= dt;
+            } else {
+                gamePlayState.requestSubStateChange(std::unique_ptr<SubState>(new PlayingSubState(gamePlayState)));
+                return SubState::NEXT;
+            }
         }
 
         return SubState::CONTINUE;
