@@ -31,6 +31,7 @@
 #include "hikari/client/game/events/EventBusImpl.hpp"
 #include "hikari/client/game/events/EventListenerDelegate.hpp"
 #include "hikari/client/game/events/EntityDamageEventData.hpp"
+#include "hikari/client/game/events/DoorEventData.hpp"
 #include "hikari/client/game/events/EntityDeathEventData.hpp"
 #include "hikari/client/game/events/EntityStateChangeEventData.hpp"
 #include "hikari/client/game/events/EventData.hpp"
@@ -46,6 +47,7 @@
 #include "hikari/core/game/TileMapCollisionResolver.hpp"
 #include "hikari/core/game/map/MapLoader.hpp"
 #include "hikari/core/game/map/MapRenderer.hpp"
+#include "hikari/core/game/map/Door.hpp"
 #include "hikari/core/game/map/Room.hpp"
 #include "hikari/core/game/map/RoomTransition.hpp"
 #include "hikari/core/geom/GeometryUtils.hpp"
@@ -905,6 +907,10 @@ namespace hikari {
             auto objectRemovedDelegate = EventListenerDelegate(&letMeKnowItsGone);
             eventBus->addListener(objectRemovedDelegate, ObjectRemovedEventData::Type);
             eventHandlerDelegates.push_back(std::make_pair(objectRemovedDelegate, ObjectRemovedEventData::Type));
+
+            auto doorEventDelegate = EventListenerDelegate(std::bind(&GamePlayState::handleDoorEvent, this, std::placeholders::_1));
+            eventBus->addListener(doorEventDelegate, DoorEventData::Type);
+            eventHandlerDelegates.push_back(std::make_pair(doorEventDelegate, DoorEventData::Type));
         }
     }
 
@@ -1074,6 +1080,13 @@ namespace hikari {
                     world.queueObjectAddition(clone);
                 }
             }
+        }
+    }
+
+    void GamePlayState::handleDoorEvent(EventDataPtr evt) {
+        // auto eventData = std::static_pointer_cast<DoorEventData>(evt);
+        if(auto sound = audioService.lock()) {
+            sound->playSample(29);
         }
     }
 
@@ -1516,6 +1529,10 @@ namespace hikari {
 
                 // Check Hero -> Enemy projectiles
                 if(projectile->getFaction() == Faction::Hero) {
+                    auto & context = *this; // TODO: This makes intellisense errors go away but it seems kludgy.
+                                            // In VS2010, this is the Intellisense error: 
+                                            //     "Error : a nonstatic member reference must be relative to a specific object"
+                                            // However, despite the error the code compiles fine.
 
                     // Check for collision with enemies
                     std::for_each(
@@ -1528,14 +1545,14 @@ namespace hikari {
                                          // Deflect projectile
                                         projectile->deflect();
 
-                                        if(auto sound = gamePlayState.audioService.lock()) {
+                                        if(auto sound = context.gamePlayState.audioService.lock()) {
                                             HIKARI_LOG(debug4) << "PLAYING SAMPLE weapon DEFLECTED";
                                             sound->playSample(25); // SAMPLE_HERO_DEATH
                                         }
                                     } else {
                                         HIKARI_LOG(debug3) << "Hero bullet " << projectile->getId() << " hit an enemy " << enemy->getId();
                                         projectile->setActive(false);
-                                        gamePlayState.world.queueObjectRemoval(projectile);
+                                        context.gamePlayState.world.queueObjectRemoval(projectile);
 
                                         DamageKey damageKey;
                                         damageKey.damagerType = projectile->getDamageId();
@@ -1547,7 +1564,7 @@ namespace hikari {
                                         // Trigger enemy damage
                                         float damageAmount = 0.0f;
 
-                                        if(auto dt = gamePlayState.damageTable.lock()) {
+                                        if(auto dt = context.gamePlayState.damageTable.lock()) {
                                             damageAmount = dt->getDamageFor(damageKey.damagerType);
                                         }
 
@@ -1555,7 +1572,7 @@ namespace hikari {
 
                                         enemy->takeDamage(damageAmount);
 
-                                        if(auto sound = gamePlayState.audioService.lock()) {
+                                        if(auto sound = context.gamePlayState.audioService.lock()) {
                                             sound->playSample(24); // SAMPLE_HERO_DEATH
                                         }
                                     }
@@ -1661,9 +1678,9 @@ namespace hikari {
 
             // Boss entrances can be triggered by merely touching, but regular
             // transitions require rock to be fully contained before triggering.
-            if(transition.isBossEntrance()) {
+            if(transition.isDoor()) {
                 if(transitionBounds.intersects(hero->getBoundingBox())) {
-                    HIKARI_LOG(debug) << "Transitioning from room " << currentRoom->getId() << " to boss corridor " << transition.getToRegion();
+                    HIKARI_LOG(debug) << "Transitioning from room " << currentRoom->getId() << " through a door " << transition.getToRegion();
                     gamePlayState.requestSubStateChange(std::unique_ptr<SubState>(new TransitionSubState(gamePlayState, transition)));
                     return SubState::NEXT;
                 }
@@ -1708,7 +1725,7 @@ namespace hikari {
     const float GamePlayState::TransitionSubState::transitionSpeedY = 3.0f / (1.0f / 60.0f);
     const float GamePlayState::TransitionSubState::heroTranslationSpeedX = (51.0f / 64.0f) / (1.0f / 60.0f);
     const float GamePlayState::TransitionSubState::heroTranslationSpeedY = (21.0f / 80.0f) / (1.0f / 60.0f);
-    const float GamePlayState::TransitionSubState::bossDoorDelay = (1.0f);// / (1.0f / 60.0f);
+    const float GamePlayState::TransitionSubState::doorDelay = 4.0f * (1.0f / 60.0f) * 4.0; // 4 frames each section, 4 sections
 
     GamePlayState::TransitionSubState::TransitionSubState(GamePlayState & gamePlayState, RoomTransition transition)
         : SubState(gamePlayState)
@@ -1716,17 +1733,27 @@ namespace hikari {
         , transitionEndY(0.0f)
         , transitionFrames(0)
         , transitionFinished(false)
-        , bossDoorDelayIn(0.0f)
-        , bossDoorDelayOut(0.0f)
+        , doorDelayIn(0.0f)
+        , doorDelayOut(0.0f)
         , transition(transition)
         , nextRoomCullRegion()
         , nextRoom(nullptr)
+        , entranceDoor(nullptr)
+        , exitDoor(nullptr)
     {
         auto & camera = gamePlayState.camera;
+
+        if(transition.isDoor()) {
+            exitDoor = gamePlayState.currentRoom->getExitDoor();
+        }
 
         nextRoom = findNextRoom();
 
         if(nextRoom) {
+            if(transition.isDoor()) {
+                entranceDoor = nextRoom->getEntranceDoor();
+            }
+
             nextRoomCullRegion.setWidth(static_cast<int>(camera.getView().getWidth()));
             nextRoomCullRegion.setHeight(static_cast<int>(camera.getView().getHeight()));
 
@@ -1770,9 +1797,27 @@ namespace hikari {
 
         HIKARI_LOG(debug) << "TransitionSubState::enter()";
 
-        if(transition.isBossEntrance()) {
+        if(transition.isDoor()) {
             // Open the door sequence
-            bossDoorDelayOut = bossDoorDelayIn = bossDoorDelay;
+            doorDelayOut = doorDelayIn = doorDelay;
+
+            // Attempt to open current room's exit door (since you're leaving 
+            // that room for another)
+            if(exitDoor) {
+                HIKARI_LOG(debug4) << "Opening exit door in current room";
+                exitDoor->open();
+
+                if(gamePlayState.eventBus) {
+                    gamePlayState.eventBus->triggerEvent(EventDataPtr(new DoorEventData(exitDoor)));
+                }
+            } else {
+                HIKARI_LOG(debug4) << "Current room has no exit door";
+            }
+
+            if(entranceDoor) {
+                HIKARI_LOG(debug4) << "Opening entrance door in next room";
+                entranceDoor->setOpen(); // Make it fully open automatically
+            }
         }
 
         auto & camera = gamePlayState.camera;
@@ -1814,8 +1859,8 @@ namespace hikari {
         float camX = camera.getX();
 
         // For boss doors there is a delay before the camera transition
-        if(bossDoorDelayIn > 0.0f) {
-            bossDoorDelayIn -= dt;
+        if(doorDelayIn > 0.0f) {
+            doorDelayIn -= dt;
         } else {
             switch(transition.getDirection()) {
                 case RoomTransition::DirectionUp:
@@ -1877,8 +1922,28 @@ namespace hikari {
 
         if(transitionFinished) {
             // For boss doors there is a delay after the camera transition.
-            if(bossDoorDelayOut > 0.0f) {
-                bossDoorDelayOut -= dt;
+            if(doorDelayOut > 0.0f) {
+
+                if(doorDelayOut == doorDelay) {
+                    // Attempt to open current room's exit door (since you're leaving 
+                    // that room for another)
+                    if(entranceDoor) {
+                        HIKARI_LOG(debug4) << "Closing entrance door in next room";
+                        entranceDoor->close();
+
+                        if(gamePlayState.eventBus) {
+                            gamePlayState.eventBus->triggerEvent(EventDataPtr(new DoorEventData(exitDoor)));
+                        }
+                    } else {
+                        HIKARI_LOG(debug4) << "Next room has no entrance door";
+                    }
+
+                    if(exitDoor) {
+                        HIKARI_LOG(debug4) << "Closing exit door in previous room";
+                        exitDoor->setClosed();
+                    }
+                }
+                doorDelayOut -= dt;
             } else {
                 gamePlayState.requestSubStateChange(std::unique_ptr<SubState>(new PlayingSubState(gamePlayState)));
                 return SubState::NEXT;

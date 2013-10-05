@@ -179,6 +179,7 @@ source_group(hikari\\client\\game FILES ${HIKARI_CLIENT_GAME_SOURCE_FILES})
 
 set( HIKARI_CLIENT_GAME_EVENTS_SOURCE_FILES
     src/hikari/client/game/events/BaseEventData.cpp
+    src/hikari/client/game/events/DoorEventData.cpp
     src/hikari/client/game/events/EntityDamageEventData.cpp
     src/hikari/client/game/events/EntityDeathEventData.cpp
     src/hikari/client/game/events/EntityStateChangeEventData.cpp
@@ -286,6 +287,7 @@ set( HIKARI_CORE_GAME_SOURCE_FILES
     src/hikari/core/game/map/Map.cpp
     src/hikari/core/game/map/MapLoader.cpp
     src/hikari/core/game/map/MapRenderer.cpp
+    src/hikari/core/game/map/Door.cpp
     src/hikari/core/game/map/Room.cpp
     src/hikari/core/game/map/RoomTransition.cpp
     src/hikari/core/game/map/Tileset.cpp

@@ -2,8 +2,8 @@
 
 namespace hikari {
 
-    RoomTransition::RoomTransition(int from, int to, int width, int height, int x, int y, Direction dir, bool bossEntrance)
-        : bossEntrance(bossEntrance)
+    RoomTransition::RoomTransition(int from, int to, int width, int height, int x, int y, Direction dir, bool doorFlag)
+        : doorFlag(doorFlag)
         , fromRegion(from)
         , toRegion(to)
         , bounds(x, y, width, height)
@@ -11,8 +11,8 @@ namespace hikari {
     
     }
 
-    bool RoomTransition::isBossEntrance() const {
-        return bossEntrance;
+    bool RoomTransition::isDoor() const {
+        return doorFlag;
     }
     
     int RoomTransition::getFromRegion() const {
