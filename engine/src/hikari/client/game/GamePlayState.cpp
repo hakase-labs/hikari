@@ -31,6 +31,7 @@
 #include "hikari/client/game/events/EventBusImpl.hpp"
 #include "hikari/client/game/events/EventListenerDelegate.hpp"
 #include "hikari/client/game/events/EntityDamageEventData.hpp"
+#include "hikari/client/game/events/DoorEventData.hpp"
 #include "hikari/client/game/events/EntityDeathEventData.hpp"
 #include "hikari/client/game/events/EntityStateChangeEventData.hpp"
 #include "hikari/client/game/events/EventData.hpp"
@@ -906,6 +907,10 @@ namespace hikari {
             auto objectRemovedDelegate = EventListenerDelegate(&letMeKnowItsGone);
             eventBus->addListener(objectRemovedDelegate, ObjectRemovedEventData::Type);
             eventHandlerDelegates.push_back(std::make_pair(objectRemovedDelegate, ObjectRemovedEventData::Type));
+
+            auto doorEventDelegate = EventListenerDelegate(std::bind(&GamePlayState::handleDoorEvent, this, std::placeholders::_1));
+            eventBus->addListener(doorEventDelegate, DoorEventData::Type);
+            eventHandlerDelegates.push_back(std::make_pair(doorEventDelegate, DoorEventData::Type));
         }
     }
 
@@ -1075,6 +1080,13 @@ namespace hikari {
                     world.queueObjectAddition(clone);
                 }
             }
+        }
+    }
+
+    void GamePlayState::handleDoorEvent(EventDataPtr evt) {
+        // auto eventData = std::static_pointer_cast<DoorEventData>(evt);
+        if(auto sound = audioService.lock()) {
+            sound->playSample(29);
         }
     }
 
@@ -1709,7 +1721,7 @@ namespace hikari {
     const float GamePlayState::TransitionSubState::transitionSpeedY = 3.0f / (1.0f / 60.0f);
     const float GamePlayState::TransitionSubState::heroTranslationSpeedX = (51.0f / 64.0f) / (1.0f / 60.0f);
     const float GamePlayState::TransitionSubState::heroTranslationSpeedY = (21.0f / 80.0f) / (1.0f / 60.0f);
-    const float GamePlayState::TransitionSubState::doorDelay = (1.0f);// / (1.0f / 60.0f);
+    const float GamePlayState::TransitionSubState::doorDelay = 4.0f * (1.0f / 60.0f) * 4.0; // 4 frames each section, 4 sections
 
     GamePlayState::TransitionSubState::TransitionSubState(GamePlayState & gamePlayState, RoomTransition transition)
         : SubState(gamePlayState)
@@ -1790,6 +1802,10 @@ namespace hikari {
             if(exitDoor) {
                 HIKARI_LOG(debug4) << "Opening exit door in current room";
                 exitDoor->open();
+
+                if(gamePlayState.eventBus) {
+                    gamePlayState.eventBus->triggerEvent(EventDataPtr(new DoorEventData(exitDoor)));
+                }
             } else {
                 HIKARI_LOG(debug4) << "Current room has no exit door";
             }
@@ -1910,6 +1926,10 @@ namespace hikari {
                     if(entranceDoor) {
                         HIKARI_LOG(debug4) << "Closing entrance door in next room";
                         entranceDoor->close();
+
+                        if(gamePlayState.eventBus) {
+                            gamePlayState.eventBus->triggerEvent(EventDataPtr(new DoorEventData(exitDoor)));
+                        }
                     } else {
                         HIKARI_LOG(debug4) << "Next room has no entrance door";
                     }

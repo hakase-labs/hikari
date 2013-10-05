@@ -274,6 +274,7 @@ namespace hikari {
         void handleEntityDeathEvent(EventDataPtr evt);
         void handleWeaponFireEvent(EventDataPtr evt);
         void handleEntityStateChangeEvent(EventDataPtr evt);
+        void handleDoorEvent(EventDataPtr evt);
 
         //
         // GUI
