@@ -58,6 +58,7 @@ namespace hikari {
     class ImageCache;
     class SquirrelService;
     class RealTimeInput;
+    class Door;
     class Room;
     class Map;
     class MapRenderer;
@@ -376,6 +377,8 @@ namespace hikari {
             RoomTransition transition;
             Rectangle2D<int> nextRoomCullRegion;
             std::shared_ptr<Room> nextRoom;
+            std::shared_ptr<Door> entranceDoor;
+            std::shared_ptr<Door> exitDoor;
 
             std::shared_ptr<Room> findNextRoom() const;
         public:

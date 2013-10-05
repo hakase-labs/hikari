@@ -286,6 +286,7 @@ set( HIKARI_CORE_GAME_SOURCE_FILES
     src/hikari/core/game/map/Map.cpp
     src/hikari/core/game/map/MapLoader.cpp
     src/hikari/core/game/map/MapRenderer.cpp
+    src/hikari/core/game/map/Door.cpp
     src/hikari/core/game/map/Room.cpp
     src/hikari/core/game/map/RoomTransition.cpp
     src/hikari/core/game/map/Tileset.cpp

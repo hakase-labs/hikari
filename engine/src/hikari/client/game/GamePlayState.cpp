@@ -46,6 +46,7 @@
 #include "hikari/core/game/TileMapCollisionResolver.hpp"
 #include "hikari/core/game/map/MapLoader.hpp"
 #include "hikari/core/game/map/MapRenderer.hpp"
+#include "hikari/core/game/map/Door.hpp"
 #include "hikari/core/game/map/Room.hpp"
 #include "hikari/core/game/map/RoomTransition.hpp"
 #include "hikari/core/geom/GeometryUtils.hpp"
@@ -1721,12 +1722,22 @@ namespace hikari {
         , transition(transition)
         , nextRoomCullRegion()
         , nextRoom(nullptr)
+        , entranceDoor(nullptr)
+        , exitDoor(nullptr)
     {
         auto & camera = gamePlayState.camera;
+
+        if(transition.isDoor()) {
+            exitDoor = gamePlayState.currentRoom->getExitDoor();
+        }
 
         nextRoom = findNextRoom();
 
         if(nextRoom) {
+            if(transition.isDoor()) {
+                entranceDoor = nextRoom->getEntranceDoor();
+            }
+
             nextRoomCullRegion.setWidth(static_cast<int>(camera.getView().getWidth()));
             nextRoomCullRegion.setHeight(static_cast<int>(camera.getView().getHeight()));
 
@@ -1773,6 +1784,20 @@ namespace hikari {
         if(transition.isDoor()) {
             // Open the door sequence
             doorDelayOut = doorDelayIn = doorDelay;
+
+            // Attempt to open current room's exit door (since you're leaving 
+            // that room for another)
+            if(exitDoor) {
+                HIKARI_LOG(debug4) << "Opening exit door in current room";
+                exitDoor->open();
+            } else {
+                HIKARI_LOG(debug4) << "Current room has no exit door";
+            }
+
+            if(entranceDoor) {
+                HIKARI_LOG(debug4) << "Opening entrance door in next room";
+                entranceDoor->setOpen(); // Make it fully open automatically
+            }
         }
 
         auto & camera = gamePlayState.camera;
@@ -1878,6 +1903,22 @@ namespace hikari {
         if(transitionFinished) {
             // For boss doors there is a delay after the camera transition.
             if(doorDelayOut > 0.0f) {
+
+                if(doorDelayOut == doorDelay) {
+                    // Attempt to open current room's exit door (since you're leaving 
+                    // that room for another)
+                    if(entranceDoor) {
+                        HIKARI_LOG(debug4) << "Closing entrance door in next room";
+                        entranceDoor->close();
+                    } else {
+                        HIKARI_LOG(debug4) << "Next room has no entrance door";
+                    }
+
+                    if(exitDoor) {
+                        HIKARI_LOG(debug4) << "Closing exit door in previous room";
+                        exitDoor->setClosed();
+                    }
+                }
                 doorDelayOut -= dt;
             } else {
                 gamePlayState.requestSubStateChange(std::unique_ptr<SubState>(new PlayingSubState(gamePlayState)));

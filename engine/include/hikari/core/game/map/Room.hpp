@@ -18,6 +18,7 @@
 namespace hikari {
 
     class Spawner;
+    class Door;
 
     class HIKARI_API Room {
     private:
@@ -35,6 +36,8 @@ namespace hikari {
         std::vector<RoomTransition> transitions;
         std::vector<std::shared_ptr<Spawner>> spawners;
         std::list<BoundingBox<float>> ladders;
+        std::shared_ptr<Door> entranceDoor;
+        std::shared_ptr<Door> exitDoor;
 
         const inline bool isInBounds(const int &x, const int &y) const;
 
@@ -47,8 +50,11 @@ namespace hikari {
     public:
         const static int NO_TILE = -1;
 
-        Room(const int &id, const int &x, const int &y, const int &width, const int &height, const int &gridSize, const Point2D<int> &heroSpawnPosition, const Rectangle2D<int> &cameraBounds,
-            const std::vector<int> &tile, const std::vector<int> &attr, const std::vector<RoomTransition> &transitions, const std::vector<std::shared_ptr<Spawner>> &spawners);
+        Room(int id, int x, int y, int width, int height, int gridSize, const Point2D<int> &heroSpawnPosition, const Rectangle2D<int> &cameraBounds,
+            const std::vector<int> &tile, const std::vector<int> &attr, const std::vector<RoomTransition> &transitions, const std::vector<std::shared_ptr<Spawner>> &spawners,
+            const std::shared_ptr<Door> & entranceDoor, const std::shared_ptr<Door> & exitDoor);
+
+        ~Room();
 
         const int getId() const;
         const int getX() const;
@@ -129,6 +135,24 @@ namespace hikari {
          * @return list of Spawners
          */
         std::vector<std::weak_ptr<Spawner>> getSpawnerList() const;
+
+        /**
+         * Gets the room's entrance door, if it has one. If the room has no
+         * entrance door then the returned pointer will be a nullptr.
+         *
+         * @see getExit
+         * @return pointer to entrance Door or nullptr
+         */
+        const std::shared_ptr<Door> & getEntranceDoor();
+
+        /**
+         * Gets the room's exit door, if it has one. If the room has no exit 
+         * door then the returned pointer will be a nullptr.
+         *
+         * @see getEntrance
+         * @return pointer to exit Door or nullptr
+         */
+        const std::shared_ptr<Door> & getExitDoor();
     };
 
 } // hikari

@@ -14,6 +14,7 @@ namespace hikari {
 
     class TilesetCache;
     class Map;
+    class Door;
     class Room;
     class RoomTransition;
     class Spawner;
@@ -58,6 +59,14 @@ namespace hikari {
         static const char* PROPERTY_NAME_ROOM_ITEMS_X;
         static const char* PROPERTY_NAME_ROOM_ITEMS_Y;
         static const char* PROPERTY_NAME_ROOM_TRANSITIONS;
+        static const char* PROPERTY_NAME_ROOM_DOORS;
+        static const char* PROPERTY_NAME_ROOM_DOORS_X;
+        static const char* PROPERTY_NAME_ROOM_DOORS_Y;
+        static const char* PROPERTY_NAME_ROOM_DOORS_WIDTH;
+        static const char* PROPERTY_NAME_ROOM_DOORS_HEIGHT;
+        static const char* PROPERTY_NAME_ROOM_DOORS_ENTRANCE;
+        static const char* PROPERTY_NAME_ROOM_DOORS_EXIT;
+
 
         static const int DEFAULT_HERO_SPAWN_X;
         static const int DEFAULT_HERO_SPAWN_Y;
@@ -72,6 +81,7 @@ namespace hikari {
         MapPtr constructMap(const Json::Value &json) const;
         RoomPtr constructRoom(const Json::Value &json, int gridSize) const;
         SpawnerPtr constructSpawner(const Json::Value &json, SpawnType type) const;
+        std::unique_ptr<Door> constructDoor(const Json::Value & json) const;
         RoomTransition constructTransition(const Json::Value &json) const;
         Rectangle2D<int> constructCameraBounds(const Json::Value &json, 
                 int roomX, int roomY, int gridSize) const;

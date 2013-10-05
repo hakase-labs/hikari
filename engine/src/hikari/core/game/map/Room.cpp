@@ -1,4 +1,5 @@
 #include "hikari/core/game/map/Room.hpp"
+#include "hikari/core/game/map/Door.hpp"
 #include "hikari/core/game/map/Tileset.hpp"
 #include "hikari/core/util/Log.hpp"
 #include <memory>
@@ -7,9 +8,14 @@
 
 namespace hikari {
 
-    Room::Room(const int &id, const int &x, const int &y, 
-        const int &width, const int &height, const int &gridSize, const Point2D<int> &heroSpawnPosition, const Rectangle2D<int> &cameraBounds,
-        const std::vector<int> &tile, const std::vector<int> &attr, const std::vector<RoomTransition> &transitions, const std::vector<std::shared_ptr<Spawner>> &spawners)
+    Room::Room(int id, int x, int y, int width, int height, int gridSize, 
+            const Point2D<int> &heroSpawnPosition, const Rectangle2D<int> &cameraBounds,
+            const std::vector<int> &tile, const std::vector<int> &attr,
+            const std::vector<RoomTransition> &transitions,
+            const std::vector<std::shared_ptr<Spawner>> &spawners,
+            const std::shared_ptr<Door> & entranceDoor,
+            const std::shared_ptr<Door> & exitDoor
+    )
         : id(id)
         , x(x)
         , y(y)
@@ -23,8 +29,14 @@ namespace hikari {
         , attr(attr)
         , transitions(transitions)
         , spawners(spawners)
+        , entranceDoor(entranceDoor)
+        , exitDoor(exitDoor)
     {
         traceLadders();
+    }
+
+    Room::~Room() {
+
     }
 
     void Room::traceLadders() {
@@ -168,6 +180,14 @@ namespace hikari {
         });
 
         return output;
+    }
+
+    const std::shared_ptr<Door> & Room::getEntranceDoor() {
+        return entranceDoor;
+    }
+
+    const std::shared_ptr<Door> & Room::getExitDoor() {
+        return exitDoor;
     }
 
 } // hikari
