@@ -308,7 +308,7 @@ namespace hikari {
     }
 
     RoomTransition MapLoader::constructTransition(const Json::Value &json) const {
-        bool isDoor = json.get("boss", false).asBool();
+        bool isDoor = json.get("door", false).asBool();
         
         // TODO: Do we need this?
         int from = -1;
