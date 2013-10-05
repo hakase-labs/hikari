@@ -1529,6 +1529,10 @@ namespace hikari {
 
                 // Check Hero -> Enemy projectiles
                 if(projectile->getFaction() == Faction::Hero) {
+                    auto & context = *this; // TODO: This makes intellisense errors go away but it seems kludgy.
+                                            // In VS2010, this is the Intellisense error: 
+                                            //     "Error : a nonstatic member reference must be relative to a specific object"
+                                            // However, despite the error the code compiles fine.
 
                     // Check for collision with enemies
                     std::for_each(
@@ -1541,14 +1545,14 @@ namespace hikari {
                                          // Deflect projectile
                                         projectile->deflect();
 
-                                        if(auto sound = gamePlayState.audioService.lock()) {
+                                        if(auto sound = context.gamePlayState.audioService.lock()) {
                                             HIKARI_LOG(debug4) << "PLAYING SAMPLE weapon DEFLECTED";
                                             sound->playSample(25); // SAMPLE_HERO_DEATH
                                         }
                                     } else {
                                         HIKARI_LOG(debug3) << "Hero bullet " << projectile->getId() << " hit an enemy " << enemy->getId();
                                         projectile->setActive(false);
-                                        gamePlayState.world.queueObjectRemoval(projectile);
+                                        context.gamePlayState.world.queueObjectRemoval(projectile);
 
                                         DamageKey damageKey;
                                         damageKey.damagerType = projectile->getDamageId();
@@ -1560,7 +1564,7 @@ namespace hikari {
                                         // Trigger enemy damage
                                         float damageAmount = 0.0f;
 
-                                        if(auto dt = gamePlayState.damageTable.lock()) {
+                                        if(auto dt = context.gamePlayState.damageTable.lock()) {
                                             damageAmount = dt->getDamageFor(damageKey.damagerType);
                                         }
 
@@ -1568,7 +1572,7 @@ namespace hikari {
 
                                         enemy->takeDamage(damageAmount);
 
-                                        if(auto sound = gamePlayState.audioService.lock()) {
+                                        if(auto sound = context.gamePlayState.audioService.lock()) {
                                             sound->playSample(24); // SAMPLE_HERO_DEATH
                                         }
                                     }
