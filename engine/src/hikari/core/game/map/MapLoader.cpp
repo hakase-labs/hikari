@@ -89,7 +89,7 @@ namespace hikari {
         try {
             tileset = tilesetCache->get(tilesetName);
         } catch(std::runtime_error & err) {
-            HIKARI_LOG(fatal) << "Couldn't load a tileset while constructing a map.";
+            HIKARI_LOG(fatal) << "Couldn't load a tileset while constructing a map. (" << err.what() << ")";
         }
 
         // Parse rooms
