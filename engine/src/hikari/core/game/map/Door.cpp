@@ -4,8 +4,11 @@
 
 namespace hikari {
 
+    const float Door::DOOR_SECTION_DELAY_SECONDS = (1.0f / 60.0f) * 4.0f; // 4 frames
+    const int Door::DOOR_SECTION_COUNT = 4;                               // 4 sections in a door
+
     Door::Door(int x, int y, int width, int height)
-        : openFlag(false) // Doors always start closed
+        : openFlag(false)  // Doors always start closed
         , closedFlag(true) // Doors always start closed
         , bounds(x, y, width, height)
     {

@@ -9,6 +9,8 @@ namespace hikari {
 
     class HIKARI_API Door : public Updatable {
     private:
+        static const float DOOR_SECTION_DELAY_SECONDS;
+        static const int DOOR_SECTION_COUNT;
         bool openFlag;
         bool closedFlag;
         BoundingBox<int> bounds;
