@@ -16,9 +16,9 @@ namespace hikari {
             DirectionTeleport = 4
         };
         
-        RoomTransition(int from, int to, int width, int height, int x, int y, Direction dir, bool bossEntrance);
+        RoomTransition(int from, int to, int width, int height, int x, int y, Direction dir, bool doorFlag);
         
-        bool isBossEntrance() const;
+        bool isDoor() const;
         int getFromRegion() const;
         int getToRegion() const;
         int getWidth() const;
@@ -28,7 +28,7 @@ namespace hikari {
         Direction getDirection() const;
     
     private:
-        bool bossEntrance;
+        bool doorFlag;
         int fromRegion;
         int toRegion;
         Rectangle2D<int> bounds;

@@ -1,4 +1,5 @@
 #include "hikari/core/game/map/MapRenderer.hpp"
+#include "hikari/core/game/map/Door.hpp"
 #include "hikari/core/game/map/Room.hpp"
 #include "hikari/core/game/map/Tileset.hpp"
 #include <SFML/Graphics.hpp>
@@ -11,6 +12,8 @@
 
 namespace hikari {
     
+    bool MapRenderer::isDebugLadderRenderingEnabled = true;
+    bool MapRenderer::isDebugDoorRenderingEnabled = true;
     const int MapRenderer::TILE_OVERDRAW = 1;
 
     MapRenderer::MapRenderer(const RoomPtr &room, const TileDataPtr &tileData)
@@ -69,17 +72,55 @@ namespace hikari {
             }
         }
 
-        sf::RectangleShape ladderRect;
-        ladderRect.setFillColor(sf::Color(128, 128, 0, 96));
-        ladderRect.setOutlineColor(sf::Color(255, 255, 255, 128));
-        ladderRect.setOutlineThickness(1.0f);
+        // Render ladder outlines if debug rendering is enabled
+        if(isDebugLadderRenderingEnabled) {
+            sf::RectangleShape ladderRect;
+            ladderRect.setFillColor(sf::Color(128, 128, 0, 96));
+            ladderRect.setOutlineColor(sf::Color(255, 255, 255, 128));
+            ladderRect.setOutlineThickness(1.0f);
 
-        std::for_each(std::begin(room->getLadders()), std::end(room->getLadders()), [this, &ladderRect, &target](const BoundingBox<float> & ladder) {
-            ladderRect.setPosition(sf::Vector2f(ladder.getLeft(), ladder.getTop()));
-            ladderRect.setSize(sf::Vector2f(ladder.getWidth(), ladder.getHeight()));
+            std::for_each(std::begin(room->getLadders()), std::end(room->getLadders()), [this, &ladderRect, &target](const BoundingBox<float> & ladder) {
+                ladderRect.setPosition(sf::Vector2f(ladder.getLeft(), ladder.getTop()));
+                ladderRect.setSize(sf::Vector2f(ladder.getWidth(), ladder.getHeight()));
 
-            target.draw(ladderRect);
-        });
+                target.draw(ladderRect);
+            });
+        }
+
+        if(isDebugDoorRenderingEnabled) {
+            const auto & entranceDoor = room->getEntranceDoor();
+            const auto & exitDoor = room->getExitDoor();
+
+            if(entranceDoor || exitDoor) {
+                sf::RectangleShape doorRect;
+                doorRect.setOutlineColor(sf::Color(255, 255, 255, 192));
+                doorRect.setOutlineThickness(1.0f); 
+
+                if(entranceDoor) {
+                    doorRect.setFillColor(sf::Color(0, 192, 32, 96));
+                    doorRect.setPosition(
+                        sf::Vector2f(entranceDoor->getX() * 16.0f, entranceDoor->getY() * 16.0f)
+                    );
+                    doorRect.setSize(
+                        sf::Vector2f(entranceDoor->getWidth() * 16.0f, entranceDoor->getHeight() * 16.0f)
+                    );
+                    doorRect.move(room->getX() * 16.0f, room->getY() * 16.0f);
+                    target.draw(doorRect);
+                }
+                
+                if(exitDoor) {
+                    doorRect.setFillColor(sf::Color(192, 0, 32, 96));
+                    doorRect.setPosition(
+                        sf::Vector2f(exitDoor->getX() * 16.0f, exitDoor->getY() * 16.0f)
+                    );
+                    doorRect.setSize(
+                        sf::Vector2f(exitDoor->getWidth() * 16.0f, exitDoor->getHeight() * 16.0f)
+                    );
+                    doorRect.move(room->getX() * 16.0f, room->getY() * 16.0f);
+                    target.draw(doorRect);
+                }        
+            }
+        }
     }
 
     inline void MapRenderer::cullTiles() {

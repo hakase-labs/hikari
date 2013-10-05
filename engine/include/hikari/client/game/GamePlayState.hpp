@@ -58,6 +58,7 @@ namespace hikari {
     class ImageCache;
     class SquirrelService;
     class RealTimeInput;
+    class Door;
     class Room;
     class Map;
     class MapRenderer;
@@ -273,6 +274,7 @@ namespace hikari {
         void handleEntityDeathEvent(EventDataPtr evt);
         void handleWeaponFireEvent(EventDataPtr evt);
         void handleEntityStateChangeEvent(EventDataPtr evt);
+        void handleDoorEvent(EventDataPtr evt);
 
         //
         // GUI
@@ -364,18 +366,20 @@ namespace hikari {
             static const float transitionSpeedY;
             static const float heroTranslationSpeedX;
             static const float heroTranslationSpeedY;
-            static const float bossDoorDelay;
+            static const float doorDelay;
 
             float transitionEndX;
             float transitionEndY;
             int transitionFrames;
             bool transitionFinished;
-            float bossDoorDelayIn;
-            float bossDoorDelayOut;
+            float doorDelayIn;
+            float doorDelayOut;
 
             RoomTransition transition;
             Rectangle2D<int> nextRoomCullRegion;
             std::shared_ptr<Room> nextRoom;
+            std::shared_ptr<Door> entranceDoor;
+            std::shared_ptr<Door> exitDoor;
 
             std::shared_ptr<Room> findNextRoom() const;
         public:
