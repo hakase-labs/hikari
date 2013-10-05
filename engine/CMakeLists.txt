@@ -179,6 +179,7 @@ source_group(hikari\\client\\game FILES ${HIKARI_CLIENT_GAME_SOURCE_FILES})
 
 set( HIKARI_CLIENT_GAME_EVENTS_SOURCE_FILES
     src/hikari/client/game/events/BaseEventData.cpp
+    src/hikari/client/game/events/DoorEventData.cpp
     src/hikari/client/game/events/EntityDamageEventData.cpp
     src/hikari/client/game/events/EntityDeathEventData.cpp
     src/hikari/client/game/events/EntityStateChangeEventData.cpp
