@@ -1879,7 +1879,13 @@ namespace hikari {
         float camY = camera.getY();
         float camX = camera.getX();
 
-        gamePlayState.updateDoors(dt);
+        if(exitDoor) {
+            exitDoor->update(dt);
+        }
+        
+        if(entranceDoor) {
+            entranceDoor->update(dt);
+        }
 
         // For boss doors there is a delay before the camera transition
         if(doorDelayIn > 0.0f) {
