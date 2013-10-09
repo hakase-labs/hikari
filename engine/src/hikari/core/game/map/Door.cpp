@@ -2,6 +2,8 @@
 #include "hikari/core/math/Vector2.hpp"
 #include "hikari/core/util/Log.hpp"
 
+#include <SFML/Graphics/RenderTarget.hpp>
+
 namespace hikari {
 
     const float Door::DOOR_SECTION_DELAY_SECONDS = (1.0f / 60.0f) * 4.0f; // 4 frames
@@ -11,8 +13,9 @@ namespace hikari {
         : openFlag(false)  // Doors always start closed
         , closedFlag(true) // Doors always start closed
         , bounds(x, y, width, height)
+        , animatedSprite()
     {
-
+        animatedSprite.setPosition(Vector2<float>(x * 16.0f, y * 16.0f));
     }
 
     Door::~Door() {
@@ -33,6 +36,23 @@ namespace hikari {
 
     int Door::getHeight() const {
         return bounds.getHeight();
+    }
+
+    bool Door::isOpen() const {
+        return openFlag;
+    }
+
+    bool Door::isClosed() const {
+        return closedFlag;
+    }
+
+    void Door::setAnimationSet(const std::shared_ptr<AnimationSet> & newAnimationSet) {
+        animatedSprite.setAnimationSet(newAnimationSet);
+        changeAnimation("idle");
+    }
+
+    void Door::changeAnimation(const std::string& animationName) {
+        animatedSprite.setAnimation(animationName);
     }
 
     void Door::open() {
@@ -56,7 +76,11 @@ namespace hikari {
     }
 
     void Door::update(float dt) {
+        animatedSprite.update(dt);
+    }
 
+    void Door::render(sf::RenderTarget & target) const {
+        animatedSprite.render(target);
     }
 
 } // hikari
