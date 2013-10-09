@@ -35,7 +35,7 @@ namespace hikari {
         animator.update(dt);
     }
 
-    void AnimatedSprite::render(sf::RenderTarget &target) {
+    void AnimatedSprite::render(sf::RenderTarget &target) const {
         target.draw(sprite);
     }
 
