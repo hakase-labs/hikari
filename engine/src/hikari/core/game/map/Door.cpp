@@ -12,8 +12,10 @@ namespace hikari {
     Door::Door(int x, int y, int width, int height)
         : openFlag(false)  // Doors always start closed
         , closedFlag(true) // Doors always start closed
+        , timer(0.0f)
         , bounds(x, y, width, height)
         , animatedSprite()
+        , doorState(DOOR_CLOSED)
     {
         animatedSprite.setPosition(Vector2<float>(x * 16.0f, y * 16.0f));
     }
@@ -39,11 +41,11 @@ namespace hikari {
     }
 
     bool Door::isOpen() const {
-        return openFlag;
+        return DOOR_OPEN == doorState;
     }
 
     bool Door::isClosed() const {
-        return closedFlag;
+        return DOOR_CLOSED == doorState;
     }
 
     void Door::setAnimationSet(const std::shared_ptr<AnimationSet> & newAnimationSet) {
@@ -57,25 +59,46 @@ namespace hikari {
 
     void Door::open() {
         HIKARI_LOG(debug4) << "Door opening!";
+        changeAnimation("jumping");
+
+        doorState = DOOR_OPENING;
     }
 
     void Door::close() {
         HIKARI_LOG(debug4) << "Door closing!";
+        changeAnimation("idle");
+
+        doorState = DOOR_CLOSING;
     }
 
     void Door::setOpen() {
         HIKARI_LOG(debug4) << "Door opened immediately!";
-        closedFlag = false;
-        openFlag = true;
+        doorState = DOOR_OPEN;
     }
 
     void Door::setClosed() {
         HIKARI_LOG(debug4) << "Door closed immediately!";
-        closedFlag = true;
-        openFlag = false;
+        doorState = DOOR_CLOSED;
     }
 
     void Door::update(float dt) {
+        if(timer > 0.0f) {
+            timer -= dt;
+        } else {
+            switch(doorState) {
+                case DOOR_OPENING:
+                    setOpen();
+                    break;
+
+                case DOOR_CLOSING:
+                    setClosed();
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
         animatedSprite.update(dt);
     }
 
