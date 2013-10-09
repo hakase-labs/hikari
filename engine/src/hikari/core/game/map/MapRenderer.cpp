@@ -104,8 +104,9 @@ namespace hikari {
                     doorRect.setSize(
                         sf::Vector2f(entranceDoor->getWidth() * 16.0f, entranceDoor->getHeight() * 16.0f)
                     );
-                    doorRect.move(room->getX() * 16.0f, room->getY() * 16.0f);
+
                     target.draw(doorRect);
+                    entranceDoor->render(target);
                 }
                 
                 if(exitDoor) {
@@ -116,8 +117,9 @@ namespace hikari {
                     doorRect.setSize(
                         sf::Vector2f(exitDoor->getWidth() * 16.0f, exitDoor->getHeight() * 16.0f)
                     );
-                    doorRect.move(room->getX() * 16.0f, room->getY() * 16.0f);
+
                     target.draw(doorRect);
+                    exitDoor->render(target);
                 }        
             }
         }
