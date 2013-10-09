@@ -185,7 +185,7 @@ namespace hikari {
         auto animationSetCache = std::make_shared<AnimationSetCache>(animationLoader);
         auto tilesetLoader     = std::make_shared<TilesetLoader>(imageCache, animationLoader);
         auto tilesetCache      = std::make_shared<TilesetCache>(tilesetLoader);
-        auto mapLoader         = std::make_shared<MapLoader>(tilesetCache);
+        auto mapLoader         = std::make_shared<MapLoader>(animationSetCache, imageCache, tilesetCache);
         auto gameProgress      = std::make_shared<GameProgress>();
         auto audioService      = std::make_shared<AudioService>(gameConfigJson["assets"]["audio"]);
         auto squirrelService   = std::make_shared<SquirrelService>(clientConfig.getScriptingStackSize());
