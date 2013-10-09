@@ -258,6 +258,11 @@ namespace hikari {
          */
         void checkCollisionWithTransition();
 
+        /**
+         * Updates doors of the current room if it has any.
+         */
+        void updateDoors(float dt);
+
         //
         // Rendering
         //

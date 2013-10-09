@@ -819,6 +819,21 @@ namespace hikari {
         changeSubState(std::unique_ptr<SubState>(new ReadySubState(*this)));
     }
 
+    void GamePlayState::updateDoors(float dt) {
+        if(currentRoom) {
+            auto & exitDoor = currentRoom->getExitDoor();
+            auto & entranceDoor = currentRoom->getEntranceDoor();
+
+            if(exitDoor) {
+                exitDoor->update(dt);
+            }
+
+            if(entranceDoor) {
+                entranceDoor->update(dt);
+            }
+        }
+    }
+
     void GamePlayState::checkCollisionWithTransition() { }
 
     void GamePlayState::renderMap(sf::RenderTarget &target) const {
@@ -1231,6 +1246,8 @@ namespace hikari {
             return SubState::NEXT;
         }
 
+        gamePlayState.updateDoors(dt);
+
         return SubState::CONTINUE;
     }
 
@@ -1319,6 +1336,8 @@ namespace hikari {
             gamePlayState.requestSubStateChange(std::unique_ptr<SubState>(new PlayingSubState(gamePlayState)));
             return SubState::NEXT;
         }
+
+        gamePlayState.updateDoors(dt);
 
         return SubState::CONTINUE;
     }
@@ -1603,6 +1622,8 @@ namespace hikari {
                 }
         });
 
+        gamePlayState.updateDoors(dt);
+
         // Hero died so we need to restart
         if(!gamePlayState.isHeroAlive) {
             postDeathTimer += dt;
@@ -1858,6 +1879,8 @@ namespace hikari {
         float camY = camera.getY();
         float camX = camera.getX();
 
+        gamePlayState.updateDoors(dt);
+
         // For boss doors there is a delay before the camera transition
         if(doorDelayIn > 0.0f) {
             doorDelayIn -= dt;
@@ -1868,7 +1891,7 @@ namespace hikari {
                         camera.move(0.0f, -transitionSpeedY * dt);
                         transitionFrames++;
 
-                        auto heroTranslateY = -heroTranslationSpeedY * dt;
+                        float heroTranslateY = -heroTranslationSpeedY * dt;
                         hero->setPosition(hero->getPosition().getX(), hero->getPosition().getY() + heroTranslateY);
                         hero->playAnimation(dt);
                     } else {
@@ -1881,7 +1904,7 @@ namespace hikari {
                         camera.move(transitionSpeedX * dt, 0.0f);
                         transitionFrames++;
 
-                        auto heroTranslateX = heroTranslationSpeedX * dt;
+                        float heroTranslateX = heroTranslationSpeedX * dt;
                         hero->setPosition(hero->getPosition().getX() + heroTranslateX, hero->getPosition().getY());
                         hero->playAnimation(dt);
                     } else {
@@ -1894,7 +1917,7 @@ namespace hikari {
                         camera.move(0.0f, transitionSpeedY * dt);
                         transitionFrames++;
 
-                        auto heroTranslateY = heroTranslationSpeedY * dt;
+                        float heroTranslateY = heroTranslationSpeedY * dt;
                         hero->setPosition(hero->getPosition().getX(), hero->getPosition().getY() + heroTranslateY);
                         hero->playAnimation(dt);
                     } else {
@@ -1907,7 +1930,7 @@ namespace hikari {
                         camera.move(-transitionSpeedX * dt, 0.0f);
                         transitionFrames++;
 
-                        auto heroTranslateX = -heroTranslationSpeedX * dt;
+                        float heroTranslateX = -heroTranslationSpeedX * dt;
                         hero->setPosition(hero->getPosition().getX() + heroTranslateX, hero->getPosition().getY());
                         hero->playAnimation(dt);
                     } else {
@@ -1943,6 +1966,7 @@ namespace hikari {
                         exitDoor->setClosed();
                     }
                 }
+
                 doorDelayOut -= dt;
             } else {
                 gamePlayState.requestSubStateChange(std::unique_ptr<SubState>(new PlayingSubState(gamePlayState)));
