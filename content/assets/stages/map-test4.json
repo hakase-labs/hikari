@@ -963,8 +963,8 @@
       ],
       "doors": {
         "exit": {
-            "width": 2,
-            "height": 7,
+            "width": 1,
+            "height": 4,
             "x": 29,
             "y": 1
         }
@@ -1490,9 +1490,9 @@
       "doors": {
         "entrance": {
             "width": 1,
-            "height": 7,
+            "height": 4,
             "x": 0,
-            "y": 0
+            "y": 1
         }
       }
     },

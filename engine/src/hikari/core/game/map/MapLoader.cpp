@@ -251,7 +251,7 @@ namespace hikari {
 
         std::unique_ptr<Door> doorInstance(new Door(x + offsetX, y + offsetY, width, height));
         
-        auto animationSetPtr = animationSetCache->get("assets/animations/bikky.json");
+        auto animationSetPtr = animationSetCache->get("assets/animations/door.json");
         // auto spriteTexture = imageCache->get(animationSetPtr->getImageFileName());
                                         
         doorInstance->setAnimationSet(animationSetPtr);

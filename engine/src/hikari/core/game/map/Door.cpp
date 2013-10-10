@@ -50,7 +50,7 @@ namespace hikari {
 
     void Door::setAnimationSet(const std::shared_ptr<AnimationSet> & newAnimationSet) {
         animatedSprite.setAnimationSet(newAnimationSet);
-        changeAnimation("idle");
+        changeAnimation("closed");
     }
 
     void Door::changeAnimation(const std::string& animationName) {
@@ -59,30 +59,39 @@ namespace hikari {
 
     void Door::open() {
         HIKARI_LOG(debug4) << "Door opening!";
-        changeAnimation("jumping");
+        changeAnimation("opening");
 
         doorState = DOOR_OPENING;
+        timer = DOOR_SECTION_DELAY_SECONDS * DOOR_SECTION_COUNT;
     }
 
     void Door::close() {
         HIKARI_LOG(debug4) << "Door closing!";
-        changeAnimation("idle");
+        changeAnimation("closing");
 
         doorState = DOOR_CLOSING;
+        timer = DOOR_SECTION_DELAY_SECONDS * DOOR_SECTION_COUNT;
     }
 
     void Door::setOpen() {
         HIKARI_LOG(debug4) << "Door opened immediately!";
+        changeAnimation("open");
+
         doorState = DOOR_OPEN;
+        timer = 0.0f;
     }
 
     void Door::setClosed() {
         HIKARI_LOG(debug4) << "Door closed immediately!";
+        changeAnimation("closed");
+
         doorState = DOOR_CLOSED;
+        timer = 0.0f;
     }
 
     void Door::update(float dt) {
         if(timer > 0.0f) {
+            HIKARI_LOG(debug4) << "Door waiting... " << timer;
             timer -= dt;
         } else {
             switch(doorState) {
