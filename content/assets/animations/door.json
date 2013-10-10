@@ -5,7 +5,6 @@
         "closed": {
             "repeat": false,
             "keyframe": 0,
-            "syncGroup": 0,
             "frames": [ 
                 { 
                     "x" : 0, 
@@ -21,7 +20,6 @@
         "open": {
             "repeat": false,
             "keyframe": 0,
-            "syncGroup": 1,
             "frames": [ 
                 { 
                     "x" : 0, 
@@ -37,7 +35,6 @@
         "opening": {
             "repeat": false,
             "keyframe": 0,
-            "syncGroup": 2,
             "frames": [ 
                 { 
                     "x" : 0, 
@@ -46,7 +43,7 @@
                     "height" : 64, 
                     "hotspotX" : 0, 
                     "hotspotY" : 0, 
-                    "length" : 0.0667
+                    "length" : 0.0167
                 },
                 { 
                     "x" : 0, 
@@ -55,7 +52,7 @@
                     "height" : 48, 
                     "hotspotX" : 0, 
                     "hotspotY" : 0, 
-                    "length" : 0.0167
+                    "length" : 0.0667
                 },
                 { 
                     "x" : 0, 
@@ -80,7 +77,6 @@
         "closing": {
             "repeat": false,
             "keyframe": 0,
-            "syncGroup": 3,
             "frames": [
                 { 
                     "x" : 0, 
@@ -89,7 +85,7 @@
                     "height" : 16, 
                     "hotspotX" : 0, 
                     "hotspotY" : 0, 
-                    "length" : 0.0667
+                    "length" : 0.0167
                 },
                 { 
                     "x" : 0, 
