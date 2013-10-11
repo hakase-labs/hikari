@@ -10,9 +10,7 @@ namespace hikari {
     const int Door::DOOR_SECTION_COUNT = 4;                               // 4 sections in a door
 
     Door::Door(int x, int y, int width, int height)
-        : openFlag(false)  // Doors always start closed
-        , closedFlag(true) // Doors always start closed
-        , timer(0.0f)
+        : timer(0.0f)
         , bounds(x, y, width, height)
         , animatedSprite()
         , doorState(DOOR_CLOSED)
@@ -91,7 +89,6 @@ namespace hikari {
 
     void Door::update(float dt) {
         if(timer > 0.0f) {
-            HIKARI_LOG(debug4) << "Door waiting... " << timer;
             timer -= dt;
         } else {
             switch(doorState) {

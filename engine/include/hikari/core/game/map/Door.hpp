@@ -22,12 +22,10 @@ namespace hikari {
             DOOR_OPEN,
             DOOR_CLOSING
         };
-        
+
     private:
         static const float DOOR_SECTION_DELAY_SECONDS;
         static const int DOOR_SECTION_COUNT;
-        bool openFlag;
-        bool closedFlag;
         float timer;
         BoundingBox<int> bounds;
         AnimatedSprite animatedSprite;
