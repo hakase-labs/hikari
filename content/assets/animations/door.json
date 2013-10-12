@@ -1,0 +1,120 @@
+{
+    "name": "Door",
+    "image": "assets/images/sp-doors.png",
+    "animations": {
+        "closed": {
+            "repeat": false,
+            "keyframe": 0,
+            "frames": [ 
+                { 
+                    "x" : 0, 
+                    "y" : 0, 
+                    "width" : 16, 
+                    "height" : 64, 
+                    "hotspotX" : 0, 
+                    "hotspotY" : 0, 
+                    "length" : 1.0
+                }
+            ]
+        },
+        "open": {
+            "repeat": false,
+            "keyframe": 0,
+            "frames": [ 
+                { 
+                    "x" : 0, 
+                    "y" : 0, 
+                    "width" : 16, 
+                    "height" : 0, 
+                    "hotspotX" : 0, 
+                    "hotspotY" : 0, 
+                    "length" : 1.0
+                }
+            ]
+        },
+        "opening": {
+            "repeat": false,
+            "keyframe": 0,
+            "frames": [ 
+                { 
+                    "x" : 0, 
+                    "y" : 0, 
+                    "width" : 16, 
+                    "height" : 64, 
+                    "hotspotX" : 0, 
+                    "hotspotY" : 0, 
+                    "length" : 0.0167
+                },
+                { 
+                    "x" : 0, 
+                    "y" : 0, 
+                    "width" : 16, 
+                    "height" : 48, 
+                    "hotspotX" : 0, 
+                    "hotspotY" : 0, 
+                    "length" : 0.0667
+                },
+                { 
+                    "x" : 0, 
+                    "y" : 0, 
+                    "width" : 16, 
+                    "height" : 32, 
+                    "hotspotX" : 0, 
+                    "hotspotY" : 0, 
+                    "length" : 0.0667
+                },
+                { 
+                    "x" : 0, 
+                    "y" : 0, 
+                    "width" : 16, 
+                    "height" : 16, 
+                    "hotspotX" : 0, 
+                    "hotspotY" : 0, 
+                    "length" : 0.0667
+                }
+            ]
+        },
+        "closing": {
+            "repeat": false,
+            "keyframe": 0,
+            "frames": [
+                { 
+                    "x" : 0, 
+                    "y" : 0, 
+                    "width" : 16, 
+                    "height" : 16, 
+                    "hotspotX" : 0, 
+                    "hotspotY" : 0, 
+                    "length" : 0.0167
+                },
+                { 
+                    "x" : 0, 
+                    "y" : 0, 
+                    "width" : 16, 
+                    "height" : 32, 
+                    "hotspotX" : 0, 
+                    "hotspotY" : 0, 
+                    "length" : 0.0667
+                },
+                { 
+                    "x" : 0, 
+                    "y" : 0, 
+                    "width" : 16, 
+                    "height" : 48, 
+                    "hotspotX" : 0, 
+                    "hotspotY" : 0, 
+                    "length" : 0.0667
+                },
+                { 
+                    "x" : 0, 
+                    "y" : 0, 
+                    "width" : 16, 
+                    "height" : 64, 
+                    "hotspotX" : 0, 
+                    "hotspotY" : 0, 
+                    "length" : 0.0667
+                }
+            ]
+        }
+    }
+}

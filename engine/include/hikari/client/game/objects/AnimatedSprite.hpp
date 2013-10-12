@@ -36,7 +36,7 @@ namespace hikari {
         //
         virtual void update(float dt);
 
-        void render(sf::RenderTarget &target);
+        void render(sf::RenderTarget &target) const;
 
         void setAnimation(const std::string & animationName);
         void setAnimationSet(const std::weak_ptr<AnimationSet> & animationSetPtr);
