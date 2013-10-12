@@ -7,6 +7,8 @@
 #include "hikari/client/game/objects/Spawner.hpp"
 #include "hikari/client/game/objects/ItemSpawner.hpp"
 #include "hikari/client/game/objects/EnemySpawner.hpp"
+#include "hikari/core/util/AnimationSetCache.hpp"
+#include "hikari/core/util/ImageCache.hpp"
 #include "hikari/core/util/StringUtils.hpp"
 #include "hikari/core/util/TilesetCache.hpp"
 #include "hikari/core/util/PhysFS.hpp"
@@ -65,8 +67,13 @@ namespace hikari {
     const int MapLoader::DEFAULT_HERO_SPAWN_X = 0;
     const int MapLoader::DEFAULT_HERO_SPAWN_Y = 0;
 
-    MapLoader::MapLoader(const std::shared_ptr<TilesetCache> &tilesetCache)
-        : tilesetCache(tilesetCache) {
+    MapLoader::MapLoader(const std::shared_ptr<AnimationSetCache> & animationSetCache,
+        const std::shared_ptr<ImageCache> & imageCache,
+        const std::shared_ptr<TilesetCache> &tilesetCache
+    )
+        : animationSetCache(animationSetCache)
+        , imageCache(imageCache)
+        , tilesetCache(tilesetCache) {
 
     }
 
@@ -205,12 +212,12 @@ namespace hikari {
 
             if(doorsJson.isMember(PROPERTY_NAME_ROOM_DOORS_ENTRANCE)) {
                 HIKARI_LOG(debug4) << "The room has an entrance.";
-                entranceDoor = constructDoor(doorsJson[PROPERTY_NAME_ROOM_DOORS_ENTRANCE]);
+                entranceDoor = constructDoor(doorsJson[PROPERTY_NAME_ROOM_DOORS_ENTRANCE], x, y);
             }
 
             if(doorsJson.isMember(PROPERTY_NAME_ROOM_DOORS_EXIT)) {
                 HIKARI_LOG(debug4) << "The room has an exit.";
-                exitDoor = constructDoor(doorsJson[PROPERTY_NAME_ROOM_DOORS_EXIT]);
+                exitDoor = constructDoor(doorsJson[PROPERTY_NAME_ROOM_DOORS_EXIT], x, y);
             }
         }
 
@@ -236,12 +243,20 @@ namespace hikari {
         return result;
     }
 
-    std::unique_ptr<Door> MapLoader::constructDoor(const Json::Value & json) const {
+    std::unique_ptr<Door> MapLoader::constructDoor(const Json::Value & json, int offsetX, int offsetY) const {
         int x = json.get(PROPERTY_NAME_ROOM_DOORS_X, 0).asInt();
         int y = json.get(PROPERTY_NAME_ROOM_DOORS_Y, 0).asInt();
         int width = json.get(PROPERTY_NAME_ROOM_DOORS_WIDTH, 1).asInt();
         int height = json.get(PROPERTY_NAME_ROOM_DOORS_HEIGHT, 3).asInt();
-        return std::unique_ptr<Door>(new Door(x, y, width, height));
+
+        std::unique_ptr<Door> doorInstance(new Door(x + offsetX, y + offsetY, width, height));
+        
+        auto animationSetPtr = animationSetCache->get("assets/animations/door.json");
+        // auto spriteTexture = imageCache->get(animationSetPtr->getImageFileName());
+                                        
+        doorInstance->setAnimationSet(animationSetPtr);
+
+        return doorInstance;
     }
 
     SpawnerPtr MapLoader::constructSpawner(const Json::Value &json, SpawnType type) const {

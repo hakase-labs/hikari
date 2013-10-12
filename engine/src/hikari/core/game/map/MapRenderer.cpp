@@ -13,7 +13,7 @@
 namespace hikari {
     
     bool MapRenderer::isDebugLadderRenderingEnabled = true;
-    bool MapRenderer::isDebugDoorRenderingEnabled = true;
+    bool MapRenderer::isDebugDoorRenderingEnabled = false;
     const int MapRenderer::TILE_OVERDRAW = 1;
 
     MapRenderer::MapRenderer(const RoomPtr &room, const TileDataPtr &tileData)
@@ -87,14 +87,22 @@ namespace hikari {
             });
         }
 
-        if(isDebugDoorRenderingEnabled) {
-            const auto & entranceDoor = room->getEntranceDoor();
-            const auto & exitDoor = room->getExitDoor();
+        const auto & entranceDoor = room->getEntranceDoor();
+        const auto & exitDoor = room->getExitDoor();
 
-            if(entranceDoor || exitDoor) {
+        if(entranceDoor || exitDoor) {
+            if(entranceDoor) {
+                entranceDoor->render(target);
+            }
+
+            if(exitDoor) {
+                exitDoor->render(target);
+            }
+
+            if(isDebugDoorRenderingEnabled) {
                 sf::RectangleShape doorRect;
                 doorRect.setOutlineColor(sf::Color(255, 255, 255, 192));
-                doorRect.setOutlineThickness(1.0f); 
+                doorRect.setOutlineThickness(1.0f);
 
                 if(entranceDoor) {
                     doorRect.setFillColor(sf::Color(0, 192, 32, 96));
@@ -104,8 +112,8 @@ namespace hikari {
                     doorRect.setSize(
                         sf::Vector2f(entranceDoor->getWidth() * 16.0f, entranceDoor->getHeight() * 16.0f)
                     );
-                    doorRect.move(room->getX() * 16.0f, room->getY() * 16.0f);
-                    target.draw(doorRect);
+
+                    target.draw(doorRect);    
                 }
                 
                 if(exitDoor) {
@@ -116,9 +124,9 @@ namespace hikari {
                     doorRect.setSize(
                         sf::Vector2f(exitDoor->getWidth() * 16.0f, exitDoor->getHeight() * 16.0f)
                     );
-                    doorRect.move(room->getX() * 16.0f, room->getY() * 16.0f);
-                    target.draw(doorRect);
-                }        
+
+                    target.draw(doorRect);    
+                }     
             }
         }
     }
