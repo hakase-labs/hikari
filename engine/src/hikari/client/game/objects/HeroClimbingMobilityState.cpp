@@ -1,7 +1,7 @@
 #include "hikari/client/game/objects/HeroClimbingMobilityState.hpp"
 #include "hikari/client/game/objects/HeroAirbornMobilityState.hpp"
 #include "hikari/client/game/objects/HeroIdleMobilityState.hpp"
-#include "hikari/client/game/objects/AnimatedSprite.hpp"
+#include "hikari/client/game/objects/PalettedAnimatedSprite.hpp"
 #include "hikari/core/game/SpriteAnimator.hpp"
 #include "hikari/core/game/map/Room.hpp"
 #include "hikari/core/util/Log.hpp"

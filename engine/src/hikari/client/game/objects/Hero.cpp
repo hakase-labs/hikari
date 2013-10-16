@@ -3,7 +3,7 @@
 #include "hikari/client/game/objects/HeroIdleMobilityState.hpp"
 #include "hikari/client/game/objects/HeroTeleportingMobilityState.hpp"
 #include "hikari/client/game/objects/HeroDamagedMobilityState.hpp"
-#include "hikari/client/game/objects/AnimatedSprite.hpp"
+#include "hikari/client/game/objects/PalettedAnimatedSprite.hpp"
 #include "hikari/client/game/events/EventBus.hpp"
 #include "hikari/client/game/events/EventData.hpp"
 #include "hikari/client/game/events/EntityDeathEventData.hpp"

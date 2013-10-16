@@ -1,5 +1,5 @@
 #include "hikari/client/game/objects/Entity.hpp"
-#include "hikari/client/game/objects/AnimatedSprite.hpp"
+#include "hikari/client/game/objects/PalettedAnimatedSprite.hpp"
 #include "hikari/client/game/Shot.hpp"
 #include "hikari/client/game/events/EventBus.hpp"
 #include "hikari/client/game/events/WeaponFireEventData.hpp"
@@ -24,7 +24,7 @@ namespace hikari {
 
     Entity::Entity(int id, std::shared_ptr<Room> room)
         : GameObject(id)
-        , animatedSprite(new AnimatedSprite())
+        , animatedSprite(new PalettedAnimatedSprite())
         , eventBus()
         , world()
         , room(room)
@@ -86,7 +86,7 @@ namespace hikari {
             std::bind(&Entity::handleCollision, this, std::placeholders::_1, std::placeholders::_2));
 
         // Clone the animation information if present
-        animatedSprite.reset(proto.animatedSprite ? new AnimatedSprite(*proto.animatedSprite.get()) : new AnimatedSprite());
+        animatedSprite.reset(proto.animatedSprite ? new PalettedAnimatedSprite(*proto.animatedSprite.get()) : new PalettedAnimatedSprite());
 
         #ifdef HIKARI_DEBUG_ENTITIES
         boxOutline = proto.boxOutline;
@@ -97,7 +97,7 @@ namespace hikari {
     Entity::~Entity() {
     }
 
-    std::unique_ptr<AnimatedSprite> & Entity::getAnimatedSprite() {
+    std::unique_ptr<PalettedAnimatedSprite> & Entity::getAnimatedSprite() {
         return animatedSprite;
     }
 
