@@ -11,7 +11,8 @@
             "originY": 7
         },
         "ageless": false,
-        "maximumAge": 3000
+        "maximumAge": 3000,
+        "paletteIndex": -1
     },
     {
         "name": "Extra Life",
@@ -25,7 +26,8 @@
             "originY": 7
         },
         "ageless": false,
-        "maximumAge": 3000
+        "maximumAge": 3000,
+        "paletteIndex": -1
     },
     {
         "name": "Large Weapon Energy",
@@ -39,7 +41,8 @@
             "originY": 7
         },
         "ageless": false,
-        "maximumAge": 3000
+        "maximumAge": 3000,
+        "paletteIndex": -1
     },
     {
         "name": "Small Weapon Energy",
@@ -53,7 +56,8 @@
             "originY": 3
         },
         "ageless": false,
-        "maximumAge": 3000
+        "maximumAge": 3000,
+        "paletteIndex": -1
     },
     {
         "name": "Large Health Energy",

@@ -133,6 +133,19 @@ namespace FactoryHelpers {
                                 item->setMaximumAge(static_cast<float>(maximumAge));
                                 item->setDamageId(damageId);
 
+                                // Check if using a palette is necessary
+                                if(templateObject.isMember("paletteIndex")) {
+                                    const auto paletteIndex = templateObject["paletteIndex"].asInt();
+
+                                    if(paletteIndex == -1) {
+                                        item->setUsePalette(true);
+                                        item->setUseSharedPalette(true);
+                                    } else {
+                                        item->setUsePalette(true);
+                                        item->setPaletteIndex(paletteIndex);
+                                    }
+                                }
+
                                 factoryPtr->registerPrototype(name, item);
                             }
                         }
@@ -235,6 +248,19 @@ namespace FactoryHelpers {
                                         instance->setDamageId(damageId);
                                         instance->setHitPoints(hitPoints);
                                         instance->setActive(true);
+
+                                        // Check if using a palette is necessary
+                                        if(templateObject.isMember("paletteIndex")) {
+                                            const auto paletteIndex = templateObject["paletteIndex"].asInt();
+
+                                            if(paletteIndex == -1) {
+                                                instance->setUsePalette(true);
+                                                instance->setUseSharedPalette(true);
+                                            } else {
+                                                instance->setUsePalette(true);
+                                                instance->setPaletteIndex(paletteIndex);
+                                            }
+                                        }
 
                                         factoryPtr->registerPrototype(name, instance);
                                         HIKARI_LOG(debug2) << "Registered prototype for \"" << name << "\" enemy.";
