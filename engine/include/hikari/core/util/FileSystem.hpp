@@ -16,13 +16,6 @@ namespace hikari {
 
         typedef std::vector<std::string> StringVector;
 
-        struct OpenMode {
-            enum Type {
-                Read,
-                Write
-            };
-        };
-
         /**
          * Opens a file as read-only.
          * @param fileName the path and name of the file to open

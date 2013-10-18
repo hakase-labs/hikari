@@ -19,6 +19,7 @@ namespace hikari {
 
     class AnimationSet;
     class AnimatedSprite;
+    class PalettedAnimatedSprite;
     class EventBus;
     class GameWorld; // Soon to replace reference to Room
     class Room;
@@ -36,7 +37,7 @@ namespace hikari {
         static const float DEFAULT_AGE_IN_M_SECONDS;
         static const float DEFAULT_MAXIMUM_AGE_IN_M_SECONDS;
 
-        std::unique_ptr<AnimatedSprite> animatedSprite;
+        std::unique_ptr<PalettedAnimatedSprite> animatedSprite;
         std::weak_ptr<EventBus> eventBus;
         std::weak_ptr<GameWorld> world;
         std::shared_ptr<Room> room;
@@ -68,7 +69,7 @@ namespace hikari {
 
     protected:
         Movable body;
-        std::unique_ptr<AnimatedSprite> & getAnimatedSprite();
+        std::unique_ptr<PalettedAnimatedSprite> & getAnimatedSprite();
         //const std::shared_ptr<Room> & getRoom() const;
 
         virtual void renderEntity(sf::RenderTarget &target);
@@ -98,6 +99,15 @@ namespace hikari {
 
         void setAnimationSet(const std::shared_ptr<AnimationSet> & newAnimationSet);
         void changeAnimation(const std::string& animationName);
+
+        bool isUsingSharedPalette() const;
+        void setUseSharedPalette(bool flag);
+
+        bool isUsingPalette() const;
+        void setUsePalette(bool flag);
+
+        int getPaletteIndex() const;
+        void setPaletteIndex(int index);
         
         void setDirection(const Direction& dir);
         const Direction getDirection() const;

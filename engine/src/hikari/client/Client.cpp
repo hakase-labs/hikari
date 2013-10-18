@@ -21,6 +21,7 @@
 #include "hikari/client/game/objects/ItemFactory.hpp"
 #include "hikari/client/game/objects/ProjectileFactory.hpp"
 #include "hikari/client/game/objects/ParticleFactory.hpp"
+#include "hikari/client/game/objects/PalettedAnimatedSprite.hpp"
 #include "hikari/client/gui/GuiService.hpp"
 #include "hikari/client/scripting/SquirrelService.hpp"
 #include "hikari/client/scripting/AudioServiceScriptProxy.hpp"
@@ -147,13 +148,9 @@ namespace hikari {
     void Client::initGame() {
         loadScriptingEnvironment();
         loadObjectTemplates();
+        loadDamageTable();
 
-        if(auto damageTable = services.locateService<DamageTable>(Services::DAMAGETABLE).lock()) {
-            damageTable->addEntry(0, 0.0f);
-            damageTable->addEntry(1, 10.0f);
-            damageTable->addEntry(4, 6.0f);
-            damageTable->addEntry(7, 1.0f);
-        }
+        PalettedAnimatedSprite::setShaderFile("assets/shaders/palette.frag");
 
         // Create controller and game states
         StatePtr stageSelectState(new StageSelectState("stageselect", gameConfigJson["states"]["select"], controller, services));
@@ -321,6 +318,15 @@ namespace hikari {
         }
     }
 
+    void Client::loadDamageTable() {
+        if(auto damageTable = services.locateService<DamageTable>(Services::DAMAGETABLE).lock()) {
+            damageTable->addEntry(0, 0.0f);
+            damageTable->addEntry(1, 10.0f);
+            damageTable->addEntry(4, 6.0f);
+            damageTable->addEntry(7, 1.0f);
+        }
+    }
+
     void Client::loop() {
         sf::Clock clock;
         sf::Event event;
@@ -405,6 +411,7 @@ namespace hikari {
             window.display();
         }
         
+        PalettedAnimatedSprite::destroySharedResources();
         SliceStateTransition::destroySharedTextures();
 
         HIKARI_LOG(debug) << "Quitting; total run time = " << totalRuntime << " seconds.";

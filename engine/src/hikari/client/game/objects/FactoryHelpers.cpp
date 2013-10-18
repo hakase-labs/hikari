@@ -403,6 +403,7 @@ namespace FactoryHelpers {
                                             // Default; do nothing
                                         } else if(reflectionType == "x") {
                                             instance->setReflectionType(Projectile::REFLECT_X);
+                                            
                                         } else if(reflectionType == "y") {
                                             instance->setReflectionType(Projectile::REFLECT_Y);
                                         } else if(reflectionType == "xy") {

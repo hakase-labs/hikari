@@ -1,6 +1,6 @@
 {
     "name": "Rockman-32x32",
-    "image": "assets/images/rockman-32.png",
+    "image": "assets/images/rockman-32_2.png",
     "animations": {
         "idle": {
             "aliases": ["standing"],

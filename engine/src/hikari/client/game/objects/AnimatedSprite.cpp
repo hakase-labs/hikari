@@ -31,6 +31,10 @@ namespace hikari {
         setAnimation(proto.currentAnimation);
     }
 
+    AnimatedSprite::~AnimatedSprite() {
+        
+    }
+
     void AnimatedSprite::update(float dt) {
         animator.update(dt);
     }

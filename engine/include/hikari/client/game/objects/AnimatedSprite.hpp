@@ -19,8 +19,10 @@ namespace hikari {
     class AnimationSet;
 
     class AnimatedSprite {
-    private:
+    protected:
         sf::Sprite sprite;
+
+    private:
         std::string currentAnimation;
         std::weak_ptr<AnimationSet> animationSet;
         SpriteAnimator animator;
@@ -30,13 +32,14 @@ namespace hikari {
     public:
         AnimatedSprite();
         AnimatedSprite(const AnimatedSprite & proto);
+        virtual ~AnimatedSprite();
 
         //
         // Inherited from hikari::Updatable
         //
         virtual void update(float dt);
 
-        void render(sf::RenderTarget &target) const;
+        virtual void render(sf::RenderTarget &target) const;
 
         void setAnimation(const std::string & animationName);
         void setAnimationSet(const std::weak_ptr<AnimationSet> & animationSetPtr);
