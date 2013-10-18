@@ -16,6 +16,7 @@
 #include "hikari/client/game/objects/ProjectileFactory.hpp"
 #include "hikari/client/game/objects/Particle.hpp"
 #include "hikari/client/game/objects/ParticleFactory.hpp"
+#include "hikari/client/game/objects/PalettedAnimatedSprite.hpp"
 #include "hikari/client/game/Effect.hpp"
 #include "hikari/client/game/Weapon.hpp"
 #include "hikari/client/game/Shot.hpp"
@@ -937,6 +938,8 @@ namespace hikari {
             if(auto sound = audioService.lock()) {
                 sound->playSample(22); // SAMPLE_HERO_DAMAGE
             }
+
+            PalettedAnimatedSprite::setSharedPaletteIndex((PalettedAnimatedSprite::getSharedPaletteIndex() + 1) % 6);
         }
     }
 
@@ -1699,7 +1702,7 @@ namespace hikari {
             );
 
             // Boss entrances can be triggered by merely touching, but regular
-            // transitions require rock to be fully contained before triggering.
+            // transitions require Rock to be fully contained before triggering.
             if(transition.isDoor()) {
                 if(transitionBounds.intersects(hero->getBoundingBox())) {
                     HIKARI_LOG(debug) << "Transitioning from room " << currentRoom->getId() << " through a door " << transition.getToRegion();

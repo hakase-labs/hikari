@@ -53,6 +53,7 @@ namespace hikari {
  
         void loadScriptingEnvironment();
         void loadObjectTemplates();
+        void loadDamageTable();
 
         void loop();
         
