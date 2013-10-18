@@ -99,6 +99,15 @@ namespace hikari {
 
         void setAnimationSet(const std::shared_ptr<AnimationSet> & newAnimationSet);
         void changeAnimation(const std::string& animationName);
+
+        bool isUsingSharedPalette() const;
+        void setUseSharedPalette(bool flag);
+
+        bool isUsingPalette() const;
+        void setUsePalette(bool flag);
+
+        int getPaletteIndex() const;
+        void setPaletteIndex(int index);
         
         void setDirection(const Direction& dir);
         const Direction getDirection() const;

@@ -113,6 +113,48 @@ namespace hikari {
         }
     }
 
+    bool Entity::isUsingSharedPalette() const {
+        if(animatedSprite) {
+            return animatedSprite->isUsingSharedPalette();
+        }
+
+        return false;
+    }
+
+    void Entity::setUseSharedPalette(bool flag) {
+        if(animatedSprite) {
+            animatedSprite->setUseSharedPalette(flag);
+        }
+    }
+
+    bool Entity::isUsingPalette() const {
+        if(animatedSprite) {
+            return animatedSprite->isUsingPalette();
+        }
+
+        return false;
+    }
+
+    void Entity::setUsePalette(bool flag) {
+        if(animatedSprite) {
+            animatedSprite->setUsePalette(flag);
+        }
+    }
+
+    int Entity::getPaletteIndex() const {
+        if(animatedSprite) {
+            return animatedSprite->getPaletteIndex();
+        }
+
+        return -1;
+    }
+
+    void Entity::setPaletteIndex(int index) {
+        if(animatedSprite) {
+            animatedSprite->setPaletteIndex(index);
+        }
+    }
+
     const Vector2<float>& Entity::getPosition() const {
         return getBoundingBox().getPosition();
     }

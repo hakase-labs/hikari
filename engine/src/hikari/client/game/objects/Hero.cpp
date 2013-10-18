@@ -98,6 +98,9 @@ namespace hikari {
 
         changeMobilityState(std::unique_ptr<MobilityState>(new IdleMobilityState(*this)));
         changeShootingState(std::unique_ptr<ShootingState>(new NotShootingState(*this)));
+
+        getAnimatedSprite()->setUsePalette(true);
+        getAnimatedSprite()->setUseSharedPalette(true);
     }
 
     Hero::~Hero() {
