@@ -50,19 +50,19 @@ namespace hikari {
         colors.push_back(palette3);
         colors.push_back(palette4);
 
-        setColorTable(colors);
+        createColorTable(colors);
     }
 
-    void PalettedAnimatedSprite::setColorTable(const std::vector<std::vector<sf::Color>> & colors) {
+    void PalettedAnimatedSprite::createColorTable(const std::vector<std::vector<sf::Color>> & colors) {
         if(!colorTableImage) {
             colorTableImage.reset(new sf::Image());
         }
 
         colorTableImage->create(8, 16, sf::Color(0, 0, 255, 255));
 
-        for(int row = 0; row < colors.size(); ++row) {
+        for(unsigned int row = 0; row < colors.size(); ++row) {
             const auto & paletteRow = colors[row];
-            for(int column = 0; column < paletteRow.size(); ++column) {
+            for(unsigned int column = 0; column < paletteRow.size(); ++column) {
                 const auto color = paletteRow[column];
 
                 colorTableImage->setPixel(column, row, color);
@@ -78,6 +78,11 @@ namespace hikari {
         pixelShader->setParameter("colorTableTexture", *colorTableTexture);
         pixelShader->setParameter("colorTableWidth", static_cast<float>(colorTableImage->getSize().x));
         pixelShader->setParameter("colorTableHeight", static_cast<float>(colorTableImage->getSize().y));
+    }
+
+    void PalettedAnimatedSprite::destroySharedResources() {
+        colorTableTexture.release();
+        pixelShader.release();
     }
 
     void PalettedAnimatedSprite::setSharedPaletteIndex(int index) {
