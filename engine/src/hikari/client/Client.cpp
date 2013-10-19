@@ -448,6 +448,7 @@ namespace hikari {
             window.display();
         }
         
+        PalettedAnimatedSprite::destroySharedResources();
         SliceStateTransition::destroySharedTextures();
 
         HIKARI_LOG(debug) << "Quitting; total run time = " << totalRuntime << " seconds.";

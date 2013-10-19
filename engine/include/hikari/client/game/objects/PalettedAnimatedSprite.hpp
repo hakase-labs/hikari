@@ -29,11 +29,11 @@ namespace hikari {
         int paletteIndex;
         bool usePalette;
         bool useSharedPalette;
-    protected:
 
     public:
         static void setShaderFile(const std::string & file);
-        static void setColorTable(const std::vector<std::vector<sf::Color>> & colors);
+        static void createColorTable(const std::vector<std::vector<sf::Color>> & colors);
+        static void destroySharedResources();
         static void setSharedPaletteIndex(int index);
         static int getSharedPaletteIndex();
 
