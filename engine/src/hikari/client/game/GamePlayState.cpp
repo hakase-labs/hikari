@@ -805,7 +805,12 @@ namespace hikari {
     void GamePlayState::startRound() {
         if(auto gp = gameProgress.lock()) {
             gp->resetPlayerEnergyToDefault();
+            gp->setCurrentWeapon(0);
         }
+
+        // Reset direction to face right
+        hero->setDirection(Directions::Right);
+        hero->setWeaponId(0);
 
         if(currentMap) {
             // Boss corridor has highest priority
