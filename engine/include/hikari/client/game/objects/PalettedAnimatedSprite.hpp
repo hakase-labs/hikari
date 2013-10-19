@@ -23,6 +23,8 @@ namespace hikari {
 
         // The index of the "shared palette", used to color multiple things (hero, powerups, etc.)
         static int sharedPaletteIndex;
+        static const unsigned int colorTableWidth;
+        static const unsigned int colorTableHeight;
 
         int paletteIndex;
         bool usePalette;

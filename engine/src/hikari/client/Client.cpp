@@ -16,6 +16,7 @@
 #include "hikari/client/game/OptionsState.hpp"
 #include "hikari/client/game/WeaponTable.hpp"
 #include "hikari/client/game/DamageTable.hpp"
+#include "hikari/client/game/PaletteHelpers.hpp"
 #include "hikari/client/game/objects/EnemyFactory.hpp"
 #include "hikari/client/game/objects/FactoryHelpers.hpp"
 #include "hikari/client/game/objects/ItemFactory.hpp"
@@ -36,6 +37,8 @@
 #include "hikari/core/util/Log.hpp"
 #include "hikari/core/util/PhysFS.hpp"
 #include "hikari/core/util/TilesetCache.hpp"
+
+#include <SFML/Graphics/Color.hpp>
 
 #include <guichan/gui.hpp>
 
@@ -146,11 +149,10 @@ namespace hikari {
     }
  
     void Client::initGame() {
+        loadPalettes();
         loadScriptingEnvironment();
         loadObjectTemplates();
         loadDamageTable();
-
-        PalettedAnimatedSprite::setShaderFile("assets/shaders/palette.frag");
 
         // Create controller and game states
         StatePtr stageSelectState(new StageSelectState("stageselect", gameConfigJson["states"]["select"], controller, services));
@@ -264,6 +266,12 @@ namespace hikari {
  
     void Client::deinitFileSystem() {
         PhysFS::deinit();
+    }
+
+    void Client::loadPalettes() {
+        PalettedAnimatedSprite::setShaderFile("assets/shaders/palette.frag");
+        PalettedAnimatedSprite::createColorTable(
+            PaletteHelpers::loadPaletteFile("assets/palettes.json"));
     }
  
     void Client::loadScriptingEnvironment() {
