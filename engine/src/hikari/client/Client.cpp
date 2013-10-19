@@ -37,6 +37,8 @@
 #include "hikari/core/util/PhysFS.hpp"
 #include "hikari/core/util/TilesetCache.hpp"
 
+#include <SFML/Graphics/Color.hpp>
+
 #include <guichan/gui.hpp>
 
 #include <json/reader.h>
@@ -146,11 +148,10 @@ namespace hikari {
     }
  
     void Client::initGame() {
+        loadPalettes();
         loadScriptingEnvironment();
         loadObjectTemplates();
         loadDamageTable();
-
-        PalettedAnimatedSprite::setShaderFile("assets/shaders/palette.frag");
 
         // Create controller and game states
         StatePtr stageSelectState(new StageSelectState("stageselect", gameConfigJson["states"]["select"], controller, services));
@@ -264,6 +265,39 @@ namespace hikari {
  
     void Client::deinitFileSystem() {
         PhysFS::deinit();
+    }
+
+    void Client::loadPalettes() {
+        PalettedAnimatedSprite::setShaderFile("assets/shaders/palette.frag");
+
+        auto colors = std::vector<std::vector<sf::Color>>();
+        auto palette0 = std::vector<sf::Color>(8, sf::Color(0, 0, 0, 0));         // transparent
+        auto palette1 = std::vector<sf::Color>(8, sf::Color(0, 0, 0, 255));       // black
+        auto palette2 = std::vector<sf::Color>(8, sf::Color(255, 255, 255, 255)); // white
+        
+        auto palette3 = std::vector<sf::Color>();                                // rockman (normal)
+        palette3.push_back(sf::Color(0,   0,   0,   255));  // black (outline)
+        palette3.push_back(sf::Color(0,   0,   0,   255));  // black (eyes)
+        palette3.push_back(sf::Color(255, 255, 255, 255));  // white
+        palette3.push_back(sf::Color(255, 228, 164, 255));  // tan
+        palette3.push_back(sf::Color(0,   112, 236, 255));  // dark blue
+        palette3.push_back(sf::Color(56,  188, 255, 255));  // light blue
+
+        auto palette4 = std::vector<sf::Color>();                                // rockman (quickman)
+        palette4.push_back(sf::Color(0,   0,   0,   255));  // black (outline)
+        palette4.push_back(sf::Color(0,   0,   0,   255));  // black (eyes)
+        palette4.push_back(sf::Color(255, 255, 255, 255));  // white
+        palette4.push_back(sf::Color(255, 228, 164, 255));  // tan
+        palette4.push_back(sf::Color(255, 0,   255, 255));  // magenta
+        palette4.push_back(sf::Color(255, 156, 255, 255));  // pink
+
+        colors.push_back(palette0);
+        colors.push_back(palette1);
+        colors.push_back(palette2);
+        colors.push_back(palette3);
+        colors.push_back(palette4);
+
+        PalettedAnimatedSprite::setColorTable(colors);
     }
  
     void Client::loadScriptingEnvironment() {

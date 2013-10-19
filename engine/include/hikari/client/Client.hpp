@@ -50,7 +50,8 @@ namespace hikari {
         void initWindow();
  
         void deinitFileSystem();
- 
+        
+        void loadPalettes();
         void loadScriptingEnvironment();
         void loadObjectTemplates();
         void loadDamageTable();
