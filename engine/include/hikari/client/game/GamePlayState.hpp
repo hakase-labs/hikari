@@ -18,6 +18,7 @@
 
 #include <memory>
 
+#include <queue>
 #include <string>
 #include <list>
 #include <map>
@@ -71,6 +72,7 @@ namespace hikari {
     class DamageTable;
     class Particle;
     class CollectableItem;
+    class Task;
 
     /**
      * GamePlayState is the class where actual stages are played. Most of the
@@ -127,6 +129,7 @@ namespace hikari {
         std::vector<std::weak_ptr<Spawner>> deactivatedItemSpawners;
         std::vector<std::pair<EventListenerDelegate, EventType>> eventHandlerDelegates;
         std::list<std::pair<int, std::string>> bonusChancesTable;
+        std::queue<std::shared_ptr<Task>> taskQueue;
         GameWorld world;
         Camera camera;
         sf::View view;
