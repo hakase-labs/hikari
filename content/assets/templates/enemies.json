@@ -1,5 +1,33 @@
 [
     {
+        "name": "Dada",
+        "damageId": 4,
+        "hitPoints": 1.0,
+        "behavior": {
+            "type": "scripted",
+            "name": "DadaEnemyBehavior",
+            "config": {
+
+            }
+        },
+        "animationSet": "assets/animations/dada.json",
+        "boundingBox": {
+            "width": 14,
+            "height": 20,
+            "originX": 7,
+            "originY": 7
+        },
+        "states": {
+            "default": {
+                
+            }
+        },
+        "characteristics": {
+            "gravitated": true,
+            "phasing": false
+        }
+    },
+    {
         "name": "Telly",
         "damageId": 4,
         "hitPoints": 1.0,
