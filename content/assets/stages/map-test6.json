@@ -129,12 +129,10 @@
       },
       "enemies": [
         {
-            "type": "Dada",
-            "x": 300,
-            "y": 32,
-            "direction": "Left",
-            "spawnLimit": 3,
-            "spawnRate": 3.0
+            "type": "Metool",
+            "x": 390,
+            "y": 132,
+            "direction": "Left"
         }
       ],
       "items": [],

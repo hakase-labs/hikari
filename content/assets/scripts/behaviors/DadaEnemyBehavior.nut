@@ -4,12 +4,31 @@
  * previous two. The Dada bounces off of walls too and has googly eyes. Cool!
  */
 class DadaEnemyBehavior extends EnemyBehavior {
+    /**
+     * The velocity to apply vertically when performing a "small" jump.
+     * @type {Number}
+     */
     static SMALL_JUMP_VELOCITY = -2.325;
+    /**
+     * The velocity to apply vertically when performing a "large" jump.
+     * @type {Number}
+     */
     static LARGE_JUMP_VELOCITY = -4.825;
+    /**
+     * How fast to move horizontally when seeking the player.
+     * @type {Number}
+     */
     static MOVEMENT_VELOCITY_X = 0.5;
 
+    //
+    // Instance variables
+    //
+
+    /**
+     * The count of jumps, which increases each time the Dada hits the ground.
+     * @type {Number}
+     */
     jumpCounter = 0;
-    direction = Directions.Left;
 
     constructor(classConfig = {}) {
         base.constructor(classConfig);
@@ -80,7 +99,6 @@ class DadaEnemyBehavior extends EnemyBehavior {
 
     /**
      * Causes the Dada to perform a low (smaller) jump.
-     * @return {[type]} [description]
      */
     function lowJump() {
         if(host) {

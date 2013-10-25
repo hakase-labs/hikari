@@ -402,14 +402,7 @@ namespace hikari {
             controller.render(screenBuffer);
             window.setView(screenBufferView);
 
-            // if(showFPS) {
-            //     guiFpsLabel->setCaption(StringUtils::toString(fps));
-            //     guiFpsLabel->adjustSize();
-            // }
-
             guiService->renderHudContainer();
-
-            // console.render(screenBuffer);
 
             screenBuffer.display();
 
