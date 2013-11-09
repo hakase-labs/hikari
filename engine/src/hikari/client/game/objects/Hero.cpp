@@ -179,7 +179,7 @@ namespace hikari {
             {
                 int bodyPositionTile = room->getAttributeAt(
                     static_cast<int>(getPosition().getX()) / gridSize,
-                    static_cast<int>(getPosition().getY() - 8) / gridSize);
+                    static_cast<int>(getPosition().getY()) / gridSize);
 
                 if((bodyPositionTile != Room::NO_TILE) && TileAttribute::hasAttribute(bodyPositionTile, TileAttribute::WATER)) {
                     isUnderWater = true;

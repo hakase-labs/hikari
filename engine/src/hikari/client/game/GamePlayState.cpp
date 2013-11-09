@@ -29,6 +29,8 @@
 #include "hikari/client/Services.hpp"
 #include "hikari/client/audio/AudioService.hpp"
 #include "hikari/client/game/KeyboardInput.hpp"
+#include "hikari/client/game/Task.hpp"
+#include "hikari/client/game/FunctionTask.hpp"
 #include "hikari/client/game/events/EventBusImpl.hpp"
 #include "hikari/client/game/events/EventListenerDelegate.hpp"
 #include "hikari/client/game/events/EntityDamageEventData.hpp"
@@ -127,6 +129,7 @@ namespace hikari {
         , deactivatedItemSpawners()
         , eventHandlerDelegates()
         , bonusChancesTable()
+        , taskQueue()
         , world()
         , camera(Rectangle2D<float>(0.0f, 0.0f, 256.0f, 240.0f))
         , view()
@@ -447,27 +450,36 @@ namespace hikari {
             eventBus->processEvents();
         }
 
-        if(subState) {
-            if(isRestoringEnergy) {
-                // Do the energy sequence
-            } else {
-                // "Pause" the substate if the menu is being shown
-                if(!isViewingMenu) {
+        if(!taskQueue.empty()) {
+            auto & task = taskQueue.front();
+            task->update(dt);
 
-                    // Handle state change request actions...
-                    SubState::StateChangeAction action = subState->update(dt);
+            if(task->isComplete()) {
+                taskQueue.pop();
+            }
+        } else {
+            if(subState) {
+                if(isRestoringEnergy) {
+                    // Do the energy sequence
+                } else {
+                    // "Pause" the substate if the menu is being shown
+                    if(!isViewingMenu) {
 
-                    if(SubState::NEXT == action) {
-                        if(nextSubState) {
-                            changeSubState(std::move(nextSubState));
+                        // Handle state change request actions...
+                        SubState::StateChangeAction action = subState->update(dt);
+
+                        if(SubState::NEXT == action) {
+                            if(nextSubState) {
+                                changeSubState(std::move(nextSubState));
+                            }
                         }
                     }
                 }
             }
-        }
 
-        if(currentTileset) {
-            currentTileset->update(dt);
+            if(currentTileset) {
+                currentTileset->update(dt);
+            }
         }
 
         return gotoNextState;
@@ -811,6 +823,11 @@ namespace hikari {
         // Reset direction to face right
         hero->setDirection(Directions::Right);
         hero->setWeaponId(0);
+
+        taskQueue.push(std::make_shared<FunctionTask>(1, [](float dt) -> bool {
+            HIKARI_LOG(hikari::debug4) << "Logged from a function in the task queue!";
+            return true;
+        }));
 
         if(currentMap) {
             // Boss corridor has highest priority

@@ -1,0 +1,50 @@
+{
+    "name": "Dada",
+    "image": "assets/images/sp-enemies.png",
+    "animations": {
+        "default": {
+            "aliases": ["idle", "jumping", "walking"],
+            "repeat": true,
+            "keyframe": 0,
+            "syncGroup": 0,
+            "frames": [ 
+                { 
+                    "x" : 208, 
+                    "y" : 0, 
+                    "width" : 24, 
+                    "height" : 32, 
+                    "hotspotX" : 12, 
+                    "hotspotY" : 16, 
+                    "length" : 0.05
+                },
+                { 
+                    "x" : 232, 
+                    "y" : 32, 
+                    "width" : 24, 
+                    "height" : 32, 
+                    "hotspotX" : 12, 
+                    "hotspotY" : 16, 
+                    "length" : 0.05
+                },
+                { 
+                    "x" : 232, 
+                    "y" : 0, 
+                    "width" : 24, 
+                    "height" : 32, 
+                    "hotspotX" : 12, 
+                    "hotspotY" : 16, 
+                    "length" : 0.05
+                },
+                { 
+                    "x" : 208, 
+                    "y" : 32, 
+                    "width" : 24, 
+                    "height" : 32, 
+                    "hotspotX" : 12, 
+                    "hotspotY" : 16, 
+                    "length" : 0.05
+                }
+            ]
+        }
+    }
+}

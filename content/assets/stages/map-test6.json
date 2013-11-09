@@ -127,7 +127,14 @@
         "width": 16,
         "height": 15
       },
-      "enemies": [],
+      "enemies": [
+        {
+            "type": "Metool",
+            "x": 390,
+            "y": 132,
+            "direction": "Left"
+        }
+      ],
       "items": [],
       "transitions": [
         {

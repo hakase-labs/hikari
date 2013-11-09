@@ -89,6 +89,23 @@ class EnemyBehavior {
     function handleWorldCollision(side) {
 
     }
+
+    /**
+     * Causes the enemy to turn toward the player.
+     */
+    function facePlayer() {
+        if(host != null) {
+            local hostX = host.getX();
+            local targetX = ::heroX;
+
+            // If I'm to the right of the hero, face left, otherwise face right
+            if(hostX > targetX) {
+                host.direction = Directions.Left;
+            } else {
+                host.direction = Directions.Right;
+            }
+        }
+    }
 }
 
 ::log("EnemyBehavior.nut executed!");

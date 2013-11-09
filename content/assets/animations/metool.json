@@ -1,0 +1,48 @@
+{
+    "name": "Metool",
+    "image": "assets/images/sp-enemies.png",
+    "animations": {
+        "default": {
+            "aliases": ["idle", "guarding"],
+            "repeat": true,
+            "keyframe": 0,
+            "syncGroup": 0,
+            "frames": [ 
+                { 
+                    "x" : 0, 
+                    "y" : 120, 
+                    "width" : 24, 
+                    "height" : 24, 
+                    "hotspotX" : 9, 
+                    "hotspotY" : 20, 
+                    "length" : 0.05
+                }
+            ]
+        },
+        "shooting": {
+            "repeat": false,
+            "keyframe": 0,
+            "syncGroup": 10,
+            "frames": [ 
+                { 
+                    "x" : 24, 
+                    "y" : 120, 
+                    "width" : 24, 
+                    "height" : 24, 
+                    "hotspotX" : 9, 
+                    "hotspotY" : 20, 
+                    "length" : 0.05
+                },
+                { 
+                    "x" : 48, 
+                    "y" : 120, 
+                    "width" : 24, 
+                    "height" : 24, 
+                    "hotspotX" : 9, 
+                    "hotspotY" : 20, 
+                    "length" : 0.05
+                }
+            ]
+        }
+    }
+}

@@ -39,7 +39,7 @@ namespace PaletteHelpers {
                     const int blue  = colorComponents[2u].asInt();
                     const int alpha = colorComponents[3u].asInt();
 
-                    paletteEntry.emplace_back(red, green, blue, alpha);
+                    paletteEntry.emplace_back(sf::Color(red, green, blue, alpha));
                 }
 
                 palette.push_back(paletteEntry);
