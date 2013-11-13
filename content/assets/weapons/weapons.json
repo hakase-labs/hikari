@@ -92,15 +92,15 @@
         ]
     },
     {
-        "name": "Buster Spark",
-        "projectileType": "Plasma Bullet",
+        "name": "Erekin Spark",
+        "projectileType": "Erekin Spark",
         "limit": 3,
         "usageCost": 0,
-        "usageSound": "Plasma Bullet",
+        "usageSound": "Erekin Spark",
         "usageActions": [
             { 
                 "type": "spawnProjectile",
-                "projectileType": "Plasma Bullet",
+                "projectileType": "Erekin Spark",
                 "direction": "inherit",
                 "motion": {
                     "type": "Linear",
@@ -109,7 +109,7 @@
             },
             { 
                 "type": "spawnProjectile",
-                "projectileType": "Plasma Bullet",
+                "projectileType": "Erekin Spark",
                 "direction": "inherit",
                 "motion": {
                     "type": "Linear",
@@ -118,7 +118,7 @@
             },
             { 
                 "type": "spawnProjectile",
-                "projectileType": "Plasma Bullet",
+                "projectileType": "Erekin Spark",
                 "direction": "inherit",
                 "motion": {
                     "type": "Linear",
@@ -127,7 +127,7 @@
             },
             { 
                 "type": "spawnProjectile",
-                "projectileType": "Plasma Bullet",
+                "projectileType": "Erekin Spark",
                 "direction": "inherit",
                 "motion": {
                     "type": "Linear",
@@ -136,7 +136,7 @@
             },
             { 
                 "type": "spawnProjectile",
-                "projectileType": "Plasma Bullet",
+                "projectileType": "Erekin Spark",
                 "direction": "inherit",
                 "motion": {
                     "type": "Linear",
@@ -145,7 +145,7 @@
             },
             { 
                 "type": "spawnProjectile",
-                "projectileType": "Plasma Bullet",
+                "projectileType": "Erekin Spark",
                 "direction": "inherit",
                 "motion": {
                     "type": "Linear",
@@ -154,7 +154,7 @@
             },
             { 
                 "type": "spawnProjectile",
-                "projectileType": "Plasma Bullet",
+                "projectileType": "Erekin Spark",
                 "direction": "inherit",
                 "motion": {
                     "type": "Linear",
@@ -163,11 +163,49 @@
             },
             { 
                 "type": "spawnProjectile",
-                "projectileType": "Plasma Bullet",
+                "projectileType": "Erekin Spark",
                 "direction": "inherit",
                 "motion": {
                     "type": "Linear",
                     "velocity": [-1.4140625, -1.4140625]
+                }
+            }
+        ]
+    },
+    {
+        "name": "Metool Triple Shot",
+        "label": "METOOL",
+        "projectileType": "Metool Plasma Bullet",
+        "damageId": 1,
+        "limit": 3,
+        "usageCost": 0,
+        "usageSound": "None",
+        "usageActions": [
+            { 
+                "type": "spawnProjectile",
+                "projectileType": "Metool Plasma Bullet",
+                "direction": "inherit",
+                "motion": {
+                    "type": "Linear",
+                    "velocity": [0.98046875, -1.3125]
+                }
+            },
+            { 
+                "type": "spawnProjectile",
+                "projectileType": "Metool Plasma Bullet",
+                "direction": "inherit",
+                "motion": {
+                    "type": "Linear",
+                    "velocity": [1.19921875, 0.0]
+                }
+            },
+            { 
+                "type": "spawnProjectile",
+                "projectileType": "Metool Plasma Bullet",
+                "direction": "inherit",
+                "motion": {
+                    "type": "Linear",
+                    "velocity": [0.98046875, 1.3125]
                 }
             }
         ]

@@ -18,6 +18,22 @@
                 }
             ]
         },
+        "metool-plasma-bullet": {
+            "repeat": false,
+            "keyframe": 0,
+            "syncGroup": 50,
+            "frames": [ 
+                { 
+                    "x" : 8, 
+                    "y" : 0, 
+                    "width" : 8, 
+                    "height" : 8, 
+                    "hotspotX" : 4, 
+                    "hotspotY" : 4, 
+                    "length" : 1.0
+                }
+            ]
+        },
         "shadow-blade": {
             "repeat": true,
             "keyframe": 0,
@@ -83,6 +99,31 @@
                     "hotspotX" : 8, 
                     "hotspotY" : 16, 
                     "length" : 0.1
+                }
+            ]
+        },
+        "erekin-spark": {
+            "repeat": true,
+            "keyframe": 0,
+            "syncGroup": 300,
+            "frames": [ 
+                { 
+                    "x" : 48, 
+                    "y" : 0, 
+                    "width" : 8, 
+                    "height" : 8, 
+                    "hotspotX" : 4, 
+                    "hotspotY" : 4, 
+                    "length" : 0.0834
+                },
+                { 
+                    "x" : 56, 
+                    "y" : 0, 
+                    "width" : 8, 
+                    "height" : 8, 
+                    "hotspotX" : 4, 
+                    "hotspotY" : 4, 
+                    "length" : 0.0834
                 }
             ]
         }
