@@ -4,7 +4,7 @@
 #include "hikari/core/Platform.hpp"
 #include "hikari/core/game/Updatable.hpp"
 #include "hikari/core/geom/BoundingBox.hpp"
-#include "hikari/client/game/objects/animatedSprite.hpp"
+#include "hikari/client/game/objects/AnimatedSprite.hpp"
 
 #include <memory>
 
