@@ -8,18 +8,19 @@ class DadaEnemyBehavior extends EnemyBehavior {
      * The velocity to apply vertically when performing a "small" jump.
      * @type {Number}
      */
-    static SMALL_JUMP_VELOCITY = -2.325;
+    static SMALL_JUMP_VELOCITY = -3.265625; // 3hi, 68lo
     /**
      * The velocity to apply vertically when performing a "large" jump.
      * @type {Number}
      */
-    static LARGE_JUMP_VELOCITY = -4.825;
+    static LARGE_JUMP_VELOCITY = -7.9140625; // 7hi, 234lo
     /**
      * How fast to move horizontally when seeking the player.
      * @type {Number}
      */
-    static MOVEMENT_VELOCITY_X = 0.5;
+    static MOVEMENT_VELOCITY_X = 1.5; // 1hi, 128lo
 
+    static LARGE_JUMP_LIMIT = 3;
     //
     // Instance variables
     //
@@ -70,9 +71,9 @@ class DadaEnemyBehavior extends EnemyBehavior {
         if(side == Directions.Down) {
             facePlayer();
 
-            jumpCounter += 1;
+            jumpCounter++;
             
-            if(jumpCounter == 2) {
+            if(jumpCounter >= LARGE_JUMP_LIMIT) {
                 highJump();
                 jumpCounter = 0;
             } else {

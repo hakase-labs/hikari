@@ -11,6 +11,28 @@
         }
     },
     {
+        "name": "Metool Plasma Bullet",
+        "animationSet": "assets/animations/projectiles.json",
+        "animationName": "metool-plasma-bullet",
+        "boundingBox": {
+            "width": 6,
+            "height": 6,
+            "originX": 3,
+            "originY": 3
+        }
+    },
+    {
+        "name": "Erekin Spark",
+        "animationSet": "assets/animations/projectiles.json",
+        "animationName": "erekin-spark",
+        "boundingBox": {
+            "width": 6,
+            "height": 6,
+            "originX": 3,
+            "originY": 3
+        }
+    },
+    {
         "name": "Shadow Blade",
         "animationSet": "assets/animations/projectiles.json",
         "animationName": "shadow-blade",

@@ -294,8 +294,6 @@ namespace hikari {
                 weapon3MenuItem->setX(0);
                 weapon3MenuItem->setY(32);
                 weapon3MenuItem->setFont(weaponItemFont.get());
-                weapon3MenuItem->setEnabled(false);
-                weapon3MenuItem->setVisible(false);
                 guiWeaponMenu->addItem(weapon3MenuItem);
 
                 std::shared_ptr<gui::WeaponMenuItem> weapon4MenuItem(new gui::WeaponMenuItem("Weapon 4"));
@@ -369,8 +367,28 @@ namespace hikari {
             }));
 
             guiWeaponMenuSelectionListener.reset(new gcn::FunctorSelectionListener([&](const gcn::SelectionEvent & event) {
-                // std::cout << "Selection changed! " << guiWeaponMenu->getSelectedIndex() << std::endl;
+                std::cout << "Selection changed! " << guiWeaponMenu->getSelectedIndex() << std::endl;
 
+                // TODO: For now just use the index of the item in the menu.
+                // auto item = guiWeaponMenu->getMenuItemAt(guiWeaponMenu->getSelectedIndex());
+                auto selectedWeaponIndex = guiWeaponMenu->getSelectedIndex(); 
+
+                if(auto weapons = weaponTable.lock()) {
+                    std::cout << "Weapon table is good." << std::endl;
+                    auto weaponWeak = weapons->getWeaponById(selectedWeaponIndex);
+                    
+                    if(auto weapon = weaponWeak.lock()) {
+                        int paletteId = weapon->getPaletteId();
+
+                        std::cout << "Weapon pointer is good, paletteId = " << paletteId << std::endl;
+
+                        if(paletteId == -1) {
+                            paletteId = 3; // Fix the index so it defaults to the blue palette
+                        }
+
+                        PalettedAnimatedSprite::setSharedPaletteIndex(paletteId);
+                    }
+                }
                 // if(auto audio = audioService.lock()) {
                 //     audio->playSample(27);
                 // }
@@ -498,6 +516,7 @@ namespace hikari {
         Movable::setGravity(0.25f);
 
         std::vector<std::string> mapList;
+        mapList.push_back("map-pearlman.json");
         mapList.push_back("map-test6.json");
         mapList.push_back("map-pearl.json");
         mapList.push_back("map-test4.json");
@@ -818,6 +837,7 @@ namespace hikari {
         if(auto gp = gameProgress.lock()) {
             gp->resetPlayerEnergyToDefault();
             gp->setCurrentWeapon(0);
+            PalettedAnimatedSprite::setSharedPaletteIndex(3);
         }
 
         // Reset direction to face right
@@ -960,8 +980,6 @@ namespace hikari {
             if(auto sound = audioService.lock()) {
                 sound->playSample(22); // SAMPLE_HERO_DAMAGE
             }
-
-            PalettedAnimatedSprite::setSharedPaletteIndex((PalettedAnimatedSprite::getSharedPaletteIndex() + 1) % 6);
         }
     }
 

@@ -10,14 +10,16 @@
 
 namespace hikari {
 
+  const int Weapon::DEFAULT_PALETTE_ID = -1;
   const float Weapon::DEFAULT_USAGE_COST = 0.0f;
   const char * Weapon::DEFAULT_PROJECTILE_TYPE = "None";
   const char * Weapon::DEFAULT_USAGE_SOUND = "None";
 
-  Weapon::Weapon(const std::string & name, unsigned int limit, int damageId, float usageCost)
+  Weapon::Weapon(const std::string & name, unsigned int limit, int damageId, int paletteId, float usageCost)
     : usageCost(usageCost)
     , limit(limit)
     , damageId(damageId)
+    , paletteId(paletteId)
     , name(name)
     , projectileType()
     , usageSound()
@@ -42,6 +44,10 @@ namespace hikari {
     return damageId;
   }
 
+  int Weapon::getPaletteId() const {
+    return paletteId;
+  }
+
   const std::string & Weapon::getName() const {
     return name;
   }
@@ -61,10 +67,10 @@ namespace hikari {
   void Weapon::setActions(const std::vector<std::shared_ptr<WeaponAction>> & actions) {
     this->actions = actions;
   }
-  
+
   Shot Weapon::fire(GameWorld & world, WeaponFireEventData & eventData) const {
     HIKARI_LOG(debug4) << "Weapon::fire executed. name=" << getName();
-    
+
     std::list<std::weak_ptr<GameObject>> spawnedObjects;
 
     std::for_each(std::begin(actions), std::end(actions), [this, &world, &eventData, &spawnedObjects](const std::shared_ptr<WeaponAction> & action) {

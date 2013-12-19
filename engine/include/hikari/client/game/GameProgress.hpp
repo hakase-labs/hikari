@@ -3,8 +3,11 @@
 
 #include "hikari/core/Platform.hpp"
 #include "hikari/core/util/Service.hpp"
+#include <memory>
 
 namespace hikari {
+
+    class EventBus;
 
     class HIKARI_API GameProgress : public Service {
     private:
@@ -23,9 +26,15 @@ namespace hikari {
 
         bool bossesDefeated[NumBosses];
         bool weaponsEnabled[NumWeapons];
+
+        std::weak_ptr<EventBus> eventBus;
     public:
         GameProgress();
         virtual ~GameProgress();
+
+        void setEventBus(const std::weak_ptr<EventBus> & eventBus);
+        const std::weak_ptr<EventBus> & getEventBus() const;
+
         //
         // Getters
         //
