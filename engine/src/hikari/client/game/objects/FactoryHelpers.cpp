@@ -531,13 +531,14 @@ namespace FactoryHelpers {
 
                             const auto name           = templateObject["name"].asString();
                             const auto damageId       = templateObject.get("damageId", 0).asInt();
+                            const auto paletteId      = templateObject.get("paletteId", -1).asInt();
                             const auto projectileType = templateObject["projectileType"].asString();
                             const auto limit          = templateObject["limit"].asInt();
                             const auto usageCost      = static_cast<float>(templateObject["usageCost"].asDouble());
                             const auto usageSound     = templateObject["usageSound"].asString();
                             const auto usageActions   = templateObject["usageActions"];
 
-                            auto weaponInstance = std::make_shared<Weapon>(name, limit, damageId, usageCost);
+                            auto weaponInstance = std::make_shared<Weapon>(name, limit, damageId, paletteId, usageCost);
                             auto weaponActions = std::vector<std::shared_ptr<WeaponAction>>();
 
                             auto actionCount = usageActions.size();
