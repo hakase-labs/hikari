@@ -1,5 +1,6 @@
 #include "hikari/client/scripting/SquirrelService.hpp"
 #include "hikari/client/scripting/AudioServiceScriptProxy.hpp"
+#include "hikari/client/scripting/GameProgressScriptProxy.hpp"
 #include "hikari/client/game/objects/Entity.hpp"
 #include "hikari/client/game/objects/Enemy.hpp"
 #include "hikari/core/game/map/Room.hpp"
@@ -80,7 +81,8 @@ namespace hikari {
             //
             auto hikariTable = Sqrat::Table();
             auto internalTable = Sqrat::Table();
-            auto audioSystemTable = Sqrat::Table();
+            auto audioSystemProxyTable = Sqrat::Table();
+            auto gameProgressProxyTable = Sqrat::Table();
 
             //
             // Bind "internal" functions (not to be used directly by end-user scripts)
@@ -91,15 +93,27 @@ namespace hikari {
             //
             // Bind AudioSystem functions
             //
-            audioSystemTable.Func(_SC("playMusic"),       &AudioServiceScriptProxy::playMusic);
-            audioSystemTable.Func(_SC("stopMusic"),       &AudioServiceScriptProxy::stopMusic);
-            audioSystemTable.Func(_SC("playSample"),      &AudioServiceScriptProxy::playSample);
-            audioSystemTable.Func(_SC("stopAllSamples"),  &AudioServiceScriptProxy::stopAllSamples);
-            audioSystemTable.Func(_SC("isMusicLoaded"),   &AudioServiceScriptProxy::isMusicLoaded);
-            audioSystemTable.Func(_SC("isSamplesLoaded"), &AudioServiceScriptProxy::isSamplesLoaded);
+            audioSystemProxyTable.Func(_SC("playMusic"),       &AudioServiceScriptProxy::playMusic);
+            audioSystemProxyTable.Func(_SC("stopMusic"),       &AudioServiceScriptProxy::stopMusic);
+            audioSystemProxyTable.Func(_SC("playSample"),      &AudioServiceScriptProxy::playSample);
+            audioSystemProxyTable.Func(_SC("stopAllSamples"),  &AudioServiceScriptProxy::stopAllSamples);
+            audioSystemProxyTable.Func(_SC("isMusicLoaded"),   &AudioServiceScriptProxy::isMusicLoaded);
+            audioSystemProxyTable.Func(_SC("isSamplesLoaded"), &AudioServiceScriptProxy::isSamplesLoaded);
 
+            //
+            // Bind GameProgress functions
+            //
+            gameProgressProxyTable.Func(_SC("getLives"),  &GameProgressScriptProxy::getLives);
+            gameProgressProxyTable.Func(_SC("getETanks"), &GameProgressScriptProxy::getETanks);
+            gameProgressProxyTable.Func(_SC("getMTanks"), &GameProgressScriptProxy::getMTanks);
+            gameProgressProxyTable.Func(_SC("setLives"),  &GameProgressScriptProxy::setLives);
+            gameProgressProxyTable.Func(_SC("setETanks"), &GameProgressScriptProxy::setETanks);
+            gameProgressProxyTable.Func(_SC("setMTanks"), &GameProgressScriptProxy::setMTanks);
+
+            // Expose the tables in the ::hikari object
             hikariTable.Bind(_SC("internal"), internalTable);
-            hikariTable.Bind(_SC("sound"), audioSystemTable);
+            hikariTable.Bind(_SC("sound"),    audioSystemProxyTable);
+            hikariTable.Bind(_SC("game"),     gameProgressProxyTable);
 
             Sqrat::RootTable().Bind(_SC("hikari"), hikariTable);
 

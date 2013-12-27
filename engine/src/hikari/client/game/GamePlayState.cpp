@@ -363,7 +363,7 @@ namespace hikari {
 
             guiWeaponMenuActionListener.reset(new gcn::FunctorActionListener([&](const gcn::ActionEvent& event) {
                 auto item = guiWeaponMenu->getMenuItemAt(guiWeaponMenu->getSelectedIndex());
-                // std::cout << "Actioned on #" << guiWeaponMenu->getSelectedIndex() << std::endl;           
+                // std::cout << "Actioned on #" << guiWeaponMenu->getSelectedIndex() << std::endl;
             }));
 
             guiWeaponMenuSelectionListener.reset(new gcn::FunctorSelectionListener([&](const gcn::SelectionEvent & event) {
@@ -371,12 +371,12 @@ namespace hikari {
 
                 // TODO: For now just use the index of the item in the menu.
                 // auto item = guiWeaponMenu->getMenuItemAt(guiWeaponMenu->getSelectedIndex());
-                auto selectedWeaponIndex = guiWeaponMenu->getSelectedIndex(); 
+                auto selectedWeaponIndex = guiWeaponMenu->getSelectedIndex();
 
                 if(auto weapons = weaponTable.lock()) {
                     std::cout << "Weapon table is good." << std::endl;
                     auto weaponWeak = weapons->getWeaponById(selectedWeaponIndex);
-                    
+
                     if(auto weapon = weaponWeak.lock()) {
                         int paletteId = weapon->getPaletteId();
 
@@ -411,7 +411,7 @@ namespace hikari {
             }
             guiMenuPanel->setVisible(isViewingMenu);
             guiWeaponMenu->requestFocus();
-            hero->setWeaponId(guiWeaponMenu->getSelectedIndex()); 
+            hero->setWeaponId(guiWeaponMenu->getSelectedIndex());
         }
 
         if((event.type == sf::Event::KeyPressed) && event.key.code == sf::Keyboard::BackSpace) {
@@ -1411,16 +1411,6 @@ namespace hikari {
             HIKARI_LOG(debug3) << "We just entered the boss chamber. Time to start the battle!";
         }
 
-        if(auto progress = gamePlayState.gameProgress.lock()) {
-            std::string livesCaption = (progress->getLives() < 10 ? "0" : "") + StringUtils::toString(static_cast<int>(progress->getLives()));
-            gamePlayState.guiLivesLabel->setCaption(livesCaption);
-            gamePlayState.guiLivesLabel->adjustSize();
-
-            std::string etanksCaption = (progress->getETanks() < 10 ? "0" : "") + StringUtils::toString(static_cast<int>(progress->getETanks()));
-            gamePlayState.guiETanksLabel->setCaption(etanksCaption);
-            gamePlayState.guiETanksLabel->adjustSize();
-        }
-
         // Remove any enemies that may have been there from before
         auto & staleEnemies = gamePlayState.world.getActiveEnemies();
 
@@ -1588,7 +1578,7 @@ namespace hikari {
                 // Check Hero -> Enemy projectiles
                 if(projectile->getFaction() == Faction::Hero) {
                     auto & context = *this; // TODO: This makes intellisense errors go away but it seems kludgy.
-                                            // In VS2010, this is the Intellisense error: 
+                                            // In VS2010, this is the Intellisense error:
                                             //     "Error : a nonstatic member reference must be relative to a specific object"
                                             // However, despite the error the code compiles fine.
 
@@ -1761,6 +1751,16 @@ namespace hikari {
             gamePlayState.guiHeroEnergyGauge->setValue(
                 static_cast<float>(gp->getPlayerEnergy())
             );
+
+            if(gamePlayState.isViewingMenu) {
+                std::string livesCaption = (gp->getLives() < 10 ? "0" : "") + StringUtils::toString(static_cast<int>(gp->getLives()));
+                gamePlayState.guiLivesLabel->setCaption(livesCaption);
+                gamePlayState.guiLivesLabel->adjustSize();
+
+                std::string etanksCaption = (gp->getETanks() < 10 ? "0" : "") + StringUtils::toString(static_cast<int>(gp->getETanks()));
+                gamePlayState.guiETanksLabel->setCaption(etanksCaption);
+                gamePlayState.guiETanksLabel->adjustSize();
+            }
         }
 
         return SubState::CONTINUE;
@@ -1861,7 +1861,7 @@ namespace hikari {
             // Open the door sequence
             doorDelayOut = doorDelayIn = doorDelay;
 
-            // Attempt to open current room's exit door (since you're leaving 
+            // Attempt to open current room's exit door (since you're leaving
             // that room for another)
             if(exitDoor) {
                 HIKARI_LOG(debug4) << "Opening exit door in current room";
@@ -1993,7 +1993,7 @@ namespace hikari {
             if(doorDelayOut > 0.0f) {
 
                 if(doorDelayOut == doorDelay) {
-                    // Attempt to open current room's exit door (since you're leaving 
+                    // Attempt to open current room's exit door (since you're leaving
                     // that room for another)
                     if(entranceDoor) {
                         HIKARI_LOG(debug4) << "Closing entrance door in next room";
