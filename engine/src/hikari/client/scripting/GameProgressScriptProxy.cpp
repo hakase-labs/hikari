@@ -29,7 +29,7 @@ namespace hikari {
         return 0;
     }
 
-    unsigned char GameProgressScriptProxy::getETanks() {
+    int GameProgressScriptProxy::getETanks() {
         if(auto progress = gameProgress.lock()) {
             return progress->getETanks();
         }
@@ -37,7 +37,7 @@ namespace hikari {
         return 0;
     }
 
-    unsigned char GameProgressScriptProxy::getMTanks() {
+    int GameProgressScriptProxy::getMTanks() {
         if(auto progress = gameProgress.lock()) {
             return progress->getMTanks();
         }
@@ -51,13 +51,13 @@ namespace hikari {
         }
     }
 
-    void GameProgressScriptProxy::setETanks(unsigned char value) {
+    void GameProgressScriptProxy::setETanks(int value) {
         if(auto progress = gameProgress.lock()) {
             progress->setETanks(value);
         }
     }
 
-    void GameProgressScriptProxy::setMTanks(unsigned char value) {
+    void GameProgressScriptProxy::setMTanks(int value) {
         if(auto progress = gameProgress.lock()) {
             progress->setMTanks(value);
         }

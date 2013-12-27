@@ -28,12 +28,12 @@ namespace hikari {
         static void setWrappedService(const std::weak_ptr<GameProgress> & gameProgress);
 
         static int getLives();
-        static unsigned char getETanks();
-        static unsigned char getMTanks();
+        static int getETanks();
+        static int getMTanks();
 
         static void setLives(int value);
-        static void setETanks(unsigned char value);
-        static void setMTanks(unsigned char value);
+        static void setETanks(int value);
+        static void setMTanks(int value);
     };
 
 } // hikari
