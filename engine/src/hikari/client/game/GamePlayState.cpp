@@ -480,9 +480,19 @@ namespace hikari {
                 if(isRestoringEnergy) {
                     // Do the energy sequence
                 } else {
-                    // "Pause" the substate if the menu is being shown
-                    if(!isViewingMenu) {
+                    if(isViewingMenu) {
+                        if(auto gp = gameProgress.lock()) {
+                            std::string livesCaption = (gp->getLives() < 10 ? "0" : "") + StringUtils::toString(static_cast<int>(gp->getLives()));
+                            guiLivesLabel->setVisible(true);
+                            guiLivesLabel->setCaption(livesCaption);
+                            guiLivesLabel->adjustSize();
 
+                            std::string etanksCaption = (gp->getETanks() < 10 ? "0" : "") + StringUtils::toString(static_cast<int>(gp->getETanks()));
+                            guiETanksLabel->setCaption(etanksCaption);
+                            guiETanksLabel->adjustSize();
+                        }
+                    } else {
+                        // "Pause" the substate if the menu is being shown
                         // Handle state change request actions...
                         SubState::StateChangeAction action = subState->update(dt);
 
@@ -1751,16 +1761,6 @@ namespace hikari {
             gamePlayState.guiHeroEnergyGauge->setValue(
                 static_cast<float>(gp->getPlayerEnergy())
             );
-
-            if(gamePlayState.isViewingMenu) {
-                std::string livesCaption = (gp->getLives() < 10 ? "0" : "") + StringUtils::toString(static_cast<int>(gp->getLives()));
-                gamePlayState.guiLivesLabel->setCaption(livesCaption);
-                gamePlayState.guiLivesLabel->adjustSize();
-
-                std::string etanksCaption = (gp->getETanks() < 10 ? "0" : "") + StringUtils::toString(static_cast<int>(gp->getETanks()));
-                gamePlayState.guiETanksLabel->setCaption(etanksCaption);
-                gamePlayState.guiETanksLabel->adjustSize();
-            }
         }
 
         return SubState::CONTINUE;

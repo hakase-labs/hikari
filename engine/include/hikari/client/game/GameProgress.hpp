@@ -17,8 +17,8 @@ namespace hikari {
         static const int DEFAULT_NUM_LIVES;
 
         int lives;
-        unsigned char eTanks;
-        unsigned char mTanks;
+        int eTanks;
+        int mTanks;
         unsigned char playerEnergy;
         unsigned char weaponEnergies[NumWeapons];
         unsigned char currentBoss;
@@ -41,8 +41,8 @@ namespace hikari {
         const unsigned char getBossCount() const;
         const unsigned char getDefeatedBossCount() const;
         int getLives() const;
-        unsigned char getETanks() const;
-        unsigned char getMTanks() const;
+        int getETanks() const;
+        int getMTanks() const;
         int getPlayerEnergy() const;
         unsigned char getCurrentBoss() const;
         unsigned char getCurrentWeapon() const;
@@ -57,8 +57,8 @@ namespace hikari {
         //
         void setBossDefeated(unsigned char boss, bool defeated);
         void setLives(int value);
-        void setETanks(unsigned char value);
-        void setMTanks(unsigned char value);
+        void setETanks(int value);
+        void setMTanks(int value);
         void setPlayerEnergy(int value);
         void setCurrentBoss(unsigned char boss);
         void setCurrentWeapon(unsigned char weapon);

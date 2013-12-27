@@ -51,11 +51,11 @@ namespace hikari {
         return lives;
     }
 
-    unsigned char GameProgress::getETanks() const {
+    int GameProgress::getETanks() const {
         return eTanks;
     }
 
-    unsigned char GameProgress::getMTanks() const {
+    int GameProgress::getMTanks() const {
         return mTanks;
     }
 
@@ -118,11 +118,11 @@ namespace hikari {
         lives = value;
     }
 
-    void GameProgress::setETanks(unsigned char value) {
+    void GameProgress::setETanks(int value) {
         eTanks = value;
     }
 
-    void GameProgress::setMTanks(unsigned char value) {
+    void GameProgress::setMTanks(int value) {
         mTanks = value;
     }
 
