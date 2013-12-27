@@ -26,6 +26,7 @@
 #include "hikari/client/gui/GuiService.hpp"
 #include "hikari/client/scripting/SquirrelService.hpp"
 #include "hikari/client/scripting/AudioServiceScriptProxy.hpp"
+#include "hikari/client/scripting/GameProgressScriptProxy.hpp"
 
 #include "hikari/core/game/AnimationLoader.hpp"
 #include "hikari/core/game/SliceStateTransition.hpp"
@@ -43,19 +44,19 @@
 #include <guichan/gui.hpp>
 
 #include <json/reader.h>
- 
+
 namespace hikari {
-  
+
     const std::string Client::APP_TITLE             = "hikari";
     const std::string Client::PATH_CONTENT          = "content.zip";
     const std::string Client::PATH_CUSTOM_CONTENT   = "custom.zip";
     const std::string Client::PATH_CONFIG_FILE      = "conf.json";
     const std::string Client::PATH_GAME_CONFIG_FILE = "game.json";
- 
+
     const unsigned int Client::SCREEN_WIDTH          = 256;
     const unsigned int Client::SCREEN_HEIGHT         = 240;
     const unsigned int Client::SCREEN_BITS_PER_PIXEL = 32;
- 
+
     Client::Client(int argc, char** argv)
         : gameConfigJson()
         , clientConfig()
@@ -77,7 +78,7 @@ namespace hikari {
     Client::~Client() {
         deinitFileSystem();
     }
- 
+
     void Client::initConfig() {
         // Load client config first
         if(FileSystem::exists(PATH_CONFIG_FILE)) {
@@ -125,7 +126,7 @@ namespace hikari {
 
         globalEventBus->addListener(quitRequestDelegate, GameQuitEventData::Type);
     }
- 
+
     void Client::initFileSystem(int argc, char** argv) {
         // Create virtual file system
         PhysFS::init(argv[0]);
@@ -147,7 +148,7 @@ namespace hikari {
 
         PhysFS::setWriteDir(PhysFS::getBaseDir());
     }
- 
+
     void Client::initGame() {
         loadPalettes();
         loadScriptingEnvironment();
@@ -169,7 +170,7 @@ namespace hikari {
 
         controller.setState(gameConfig.getInitialState());
     }
- 
+
     void Client::initLogging(int argc, char** argv) {
         // #ifdef DEBUG
         ::hikari::Log::setReportingLevel(debug4);
@@ -177,7 +178,7 @@ namespace hikari {
         //::hikari::Log::setReportingLevel(warning);
         // #endif
     }
- 
+
     void Client::initServices() {
         auto imageCache        = std::make_shared<ImageCache>(ImageCache::NO_SMOOTHING, ImageCache::USE_MASKING);
         auto animationLoader   = std::make_shared<AnimationLoader>(std::weak_ptr<ImageCache>(imageCache));
@@ -220,6 +221,7 @@ namespace hikari {
 
         // Script wrappers/proxy classes
         AudioServiceScriptProxy::setWrappedService(std::weak_ptr<AudioService>(audioService));
+        GameProgressScriptProxy::setWrappedService(std::weak_ptr<GameProgress>(gameProgress));
     }
 
     void Client::initWindow() {
@@ -249,7 +251,7 @@ namespace hikari {
         window.setVerticalSyncEnabled(clientConfig.isVsyncEnabled());
         window.setKeyRepeatEnabled(false);
 
-        // Screen buffer is hard-coded to be the size of the render area, in 
+        // Screen buffer is hard-coded to be the size of the render area, in
         // other words, it doesn't scale with the window size. When it is
         // rendered it will be stretched to fit the window. This makes it retain
         // its (desired) pixelated quality.
@@ -265,7 +267,7 @@ namespace hikari {
 
         SliceStateTransition::createSharedTextures();
     }
- 
+
     void Client::deinitFileSystem() {
         PhysFS::deinit();
     }
@@ -275,7 +277,7 @@ namespace hikari {
         PalettedAnimatedSprite::createColorTable(
             PaletteHelpers::loadPaletteFile("assets/palettes.json"));
     }
- 
+
     void Client::loadScriptingEnvironment() {
         if(auto squirrelService = services.locateService<SquirrelService>(Services::SCRIPTING).lock()) {
             const std::vector<std::string> & startupScripts = gameConfig.getStartUpScripts();
@@ -285,7 +287,7 @@ namespace hikari {
             });
         }
     }
- 
+
     void Client::loadObjectTemplates() {
         if(auto itemFactory = services.locateService<ItemFactory>(Services::ITEMFACTORY).lock()) {
             FactoryHelpers::populateCollectableItemFactory(
@@ -382,7 +384,7 @@ namespace hikari {
                     }
 
                     if(gui.getTop()) {
-                        gui.logic();    
+                        gui.logic();
                     }
                 }
 
@@ -398,7 +400,7 @@ namespace hikari {
             //
             // Rendering
             //
-            
+
             window.clear(sf::Color::Blue);
             screenBuffer.clear(sf::Color::Magenta);
             controller.render(screenBuffer);
@@ -413,7 +415,7 @@ namespace hikari {
             window.draw(renderSprite);
             window.display();
         }
-        
+
         PalettedAnimatedSprite::destroySharedResources();
         SliceStateTransition::destroySharedTextures();
 
@@ -429,5 +431,5 @@ namespace hikari {
 
         return 0;
     }
- 
+
 } // hikari
