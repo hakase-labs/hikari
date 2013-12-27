@@ -844,11 +844,6 @@ namespace hikari {
         hero->setDirection(Directions::Right);
         hero->setWeaponId(0);
 
-        taskQueue.push(std::make_shared<FunctionTask>(1, [](float dt) -> bool {
-            HIKARI_LOG(hikari::debug4) << "Logged from a function in the task queue!";
-            return true;
-        }));
-
         if(currentMap) {
             // Boss corridor has highest priority
             if(hasReachedBossCorridor) {
