@@ -111,7 +111,7 @@ namespace hikari {
                 HIKARI_LOG(fatal) << "Game configuration file could not be found or was corrupt.";
             } else {
                 gameConfigJson = value;
-                gameConfig = GameConfig(value);
+                gameConfig = std::make_shared<GameConfig>(value);
             }
         } else {
             HIKARI_LOG(fatal) << "Couldn't find game configuration file '" << PATH_GAME_CONFIG_FILE << "'";
@@ -157,7 +157,7 @@ namespace hikari {
 
         // Create controller and game states
         StatePtr stageSelectState(new StageSelectState("stageselect", gameConfigJson["states"]["select"], controller, services));
-        StatePtr gamePlayState(new GamePlayState("gameplay", controller, gameConfigJson, services));
+        StatePtr gamePlayState(new GamePlayState("gameplay", controller, gameConfigJson, gameConfig, services));
         StatePtr passwordState(new PasswordState("password", gameConfigJson, controller, services));
         StatePtr titleState(new TitleState("title", gameConfigJson, controller, services));
         StatePtr optionsState(new OptionsState("options", gameConfigJson, controller, services));
@@ -168,7 +168,7 @@ namespace hikari {
         controller.addState(titleState->getName(), titleState);
         controller.addState(optionsState->getName(), optionsState);
 
-        controller.setState(gameConfig.getInitialState());
+        controller.setState(gameConfig->getInitialState());
     }
 
     void Client::initLogging(int argc, char** argv) {
@@ -280,7 +280,7 @@ namespace hikari {
 
     void Client::loadScriptingEnvironment() {
         if(auto squirrelService = services.locateService<SquirrelService>(Services::SCRIPTING).lock()) {
-            const std::vector<std::string> & startupScripts = gameConfig.getStartUpScripts();
+            const std::vector<std::string> & startupScripts = gameConfig->getStartUpScripts();
 
             std::for_each(std::begin(startupScripts), std::end(startupScripts), [&](const std::string & scriptPath) {
                 squirrelService->runScriptFile(scriptPath);
@@ -291,7 +291,7 @@ namespace hikari {
     void Client::loadObjectTemplates() {
         if(auto itemFactory = services.locateService<ItemFactory>(Services::ITEMFACTORY).lock()) {
             FactoryHelpers::populateCollectableItemFactory(
-                gameConfig.getItemTemplatePath(),
+                gameConfig->getItemTemplatePath(),
                 std::weak_ptr<ItemFactory>(itemFactory),
                 services
             );
@@ -299,7 +299,7 @@ namespace hikari {
 
         if(auto enemyFactory = services.locateService<EnemyFactory>(Services::ENEMYFACTORY).lock()) {
             FactoryHelpers::populateEnemyFactory(
-                gameConfig.getEnemyTemplatePath(),
+                gameConfig->getEnemyTemplatePath(),
                 std::weak_ptr<EnemyFactory>(enemyFactory),
                 services
             );
@@ -307,7 +307,7 @@ namespace hikari {
 
         if(auto particleFactory = services.locateService<ParticleFactory>(Services::PARTICLEFACTORY).lock()) {
             FactoryHelpers::populateParticleFactory(
-                gameConfig.getParticleTemplatePath(),
+                gameConfig->getParticleTemplatePath(),
                 std::weak_ptr<ParticleFactory>(particleFactory),
                 services
             );
@@ -315,7 +315,7 @@ namespace hikari {
 
         if(auto projectileFactory = services.locateService<ProjectileFactory>(Services::PROJECTILEFACTORY).lock()) {
             FactoryHelpers::populateProjectileFactory(
-                gameConfig.getProjectileTemplatePath(),
+                gameConfig->getProjectileTemplatePath(),
                 std::weak_ptr<ProjectileFactory>(projectileFactory),
                 services
             );
@@ -323,7 +323,7 @@ namespace hikari {
 
         if(auto weaponTable = services.locateService<WeaponTable>(Services::WEAPONTABLE).lock()) {
             FactoryHelpers::populateWeaponTable(
-                gameConfig.getWeaponTemplatePath(),
+                gameConfig->getWeaponTemplatePath(),
                 std::weak_ptr<WeaponTable>(weaponTable),
                 services
             );

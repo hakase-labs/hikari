@@ -1,4 +1,5 @@
 #include "hikari/client/game/GamePlayState.hpp"
+#include "hikari/client/game/GameConfig.hpp"
 #include "hikari/client/game/GameProgress.hpp"
 #include "hikari/client/game/GameWorld.hpp"
 #include "hikari/client/game/RealTimeInput.hpp"
@@ -90,7 +91,7 @@ namespace hikari {
         HIKARI_LOG(debug1) << "Removed! id =" << eventData->getObjectId();
     }
 
-    GamePlayState::GamePlayState(const std::string &name, GameController & controller, const Json::Value &params, ServiceLocator &services)
+    GamePlayState::GamePlayState(const std::string &name, GameController & controller, const Json::Value &params, const std::weak_ptr<GameConfig> & gameConfig, ServiceLocator &services)
         : name(name)
         , controller(controller)
         , audioService(services.locateService<AudioService>(Services::AUDIO))
@@ -98,6 +99,7 @@ namespace hikari {
         , eventBus(new EventBusImpl("GamePlayEvents", false))
         , weaponTable(services.locateService<WeaponTable>(Services::WEAPONTABLE))
         , damageTable(services.locateService<DamageTable>(Services::DAMAGETABLE))
+        , gameConfig(gameConfig)
         , gameProgress(services.locateService<GameProgress>(Services::GAMEPROGRESS))
         , imageCache(services.locateService<ImageCache>(Services::IMAGECACHE))
         , userInput(new RealTimeInput())

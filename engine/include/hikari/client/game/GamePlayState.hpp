@@ -50,6 +50,7 @@ namespace hikari {
     }
 
     class AudioService;
+    class GameConfig;
     class GameController;
     class GameProgress;
     class GuiService;
@@ -98,6 +99,7 @@ namespace hikari {
         std::shared_ptr<EventBus> eventBus;
         std::weak_ptr<WeaponTable> weaponTable;
         std::weak_ptr<DamageTable> damageTable;
+        std::weak_ptr<GameConfig> gameConfig;
         std::weak_ptr<GameProgress> gameProgress;
         std::shared_ptr<ImageCache> imageCache;
         std::shared_ptr<RealTimeInput> userInput;
@@ -400,7 +402,7 @@ namespace hikari {
         };
 
     public:
-        GamePlayState(const std::string &name, GameController & controller, const Json::Value &params, ServiceLocator &services);
+        GamePlayState(const std::string &name, GameController & controller, const Json::Value &params, const std::weak_ptr<GameConfig> & gameConfig, ServiceLocator &services);
         virtual ~GamePlayState();
 
         virtual void handleEvent(sf::Event &event);

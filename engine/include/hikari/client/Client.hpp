@@ -60,7 +60,7 @@ namespace hikari {
         
         Json::Value gameConfigJson;
         ClientConfig clientConfig;
-        GameConfig gameConfig;
+        std::shared_ptr<GameConfig> gameConfig;
         GameController controller;
         ServiceLocator services;
         std::shared_ptr<KeyboardInput> globalInput;
