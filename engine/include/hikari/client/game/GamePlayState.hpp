@@ -221,11 +221,6 @@ namespace hikari {
         void cleanStaleObjects();
 
         /**
-         * Builds a table of probabilites for bonus drop items.
-         */
-        void populateBonusChancesTable();
-
-        /**
          * Spawns a "random" bonus item and returns a pointer to the instance.
          * If the random drop is "nothing" then a null pointer is returned.
          */

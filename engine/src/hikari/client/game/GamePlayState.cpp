@@ -156,10 +156,6 @@ namespace hikari {
         //
         buildGui();
 
-        populateBonusChancesTable();
-
-        // leftBar.setFillColor(sf::Color::Black);
-
         auto animationCacheWeak = services.locateService<AnimationSetCache>(Services::ANIMATIONSETCACHE);
 
         if(auto animationCache = animationCacheWeak.lock()) {
@@ -192,6 +188,8 @@ namespace hikari {
         world.setEnemyFactory(enemyFactoryWeak);
         world.setParticleFactory(particleFactoryWeak);
         world.setProjectileFactory(projectileFactoryWeak);
+
+        srand(time(nullptr));
     }
 
     GamePlayState::~GamePlayState() {
@@ -648,7 +646,6 @@ namespace hikari {
                     const auto & spawnerPosition = spawner->getPosition();
 
                     if(spawner->isActive()) {
-                        // If it's on screen
                         if(cameraView.contains(spawnerPosition.getX(), spawnerPosition.getY())) {
                             if(spawner->isAwake()) {
                                 if(spawner->canSpawn()) {
@@ -662,57 +659,35 @@ namespace hikari {
                                 spawner->setAwake(false);
                             }
                         }
-
-                        // if(spawner->isAwake()) {
-                        //     if(!cameraView.contains(spawnerPosition.getX(), spawnerPosition.getY())) {
-                        //         if(spawner->canSleep()) {
-                        //             spawner->setAwake(false);
-                        //         }
-                        //     }
-                        // } else {
-                        //     if(cameraView.contains(spawnerPosition.getX(), spawnerPosition.getY())) {
-                        //         spawner->setAwake(true);
-
-                        //         if(spawner->canSpawn()) {
-                        //             spawner->performAction(world);
-                        //         }
-                        //     }
-                        // }
                     }
                 }
             }
         );
     }
 
-    void GamePlayState::populateBonusChancesTable() {
-        srand(time(nullptr));
-        bonusChancesTable.push_back(std::make_pair(1,  "Extra Life"));
-        bonusChancesTable.push_back(std::make_pair(2,  "Large Health Energy"));
-        bonusChancesTable.push_back(std::make_pair(2,  "Large Weapon Energy"));
-        bonusChancesTable.push_back(std::make_pair(15, "Small Health Energy"));
-        bonusChancesTable.push_back(std::make_pair(15, "Small Weapon Energy"));
-    }
-
     std::shared_ptr<CollectableItem> GamePlayState::spawnBonusItem(int bonusTableIndex) {
         std::shared_ptr<CollectableItem> bonus;
 
-        int roll = rand() % 100;
+        if(const auto & gameConfigPtr = gameConfig.lock()) {
+            const auto & chanceTable = gameConfigPtr->getItemChancePairs();
+            int roll = rand() % 100;
 
-        if(bonusChancesTable.size() > 0) {
-            int lowerBound = 0;
+            if(chanceTable.size() > 0) {
+                int lowerBound = 0;
 
-            for(auto it = std::begin(bonusChancesTable), end = std::end(bonusChancesTable); it != end; it++) {
-                const auto & chance = *it;
+                for(auto it = std::begin(chanceTable), end = std::end(chanceTable); it != end; it++) {
+                    const auto & chance = *it;
 
-                int upperBound = lowerBound + chance.first;
+                    int upperBound = lowerBound + chance.second;
 
-                if(roll >= lowerBound && roll < upperBound) {
-                    bonus = world.spawnCollectableItem(chance.second);
-                    break;
+                    if(roll >= lowerBound && roll < upperBound) {
+                        bonus = world.spawnCollectableItem(chance.first);
+                        break;
+                    }
+
+                    // Advance the lower bound
+                    lowerBound = upperBound;
                 }
-
-                // Advance the lower bound
-                lowerBound = upperBound;
             }
         }
 
