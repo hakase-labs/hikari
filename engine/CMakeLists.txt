@@ -377,9 +377,9 @@ add_executable( hikari ${HIKARI_SOURCE_FILES} ${INCLUDE_DIRS} )
 #
 # Copy content files to output directory
 #
-add_custom_command(
-  TARGET hikari
-  POST_BUILD
+add_custom_target(
+  content
+  ALL
   COMMAND ${CMAKE_COMMAND} -E echo "Copying content to output directory."
   COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/content" $<TARGET_FILE_DIR:hikari>
 )

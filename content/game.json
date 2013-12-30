@@ -40,6 +40,13 @@
         "Triple Mega Buster",
         "Buster Spark"
     ],
+    "itemChances": [
+        { "Extra Life" : 1 },
+        { "Large Health Energy" : 2 },
+        { "Large Weapon Energy" : 2 },
+        { "Small Health Energy" : 15 },
+        { "Small Weapon Energy" : 15 }
+    ],
     "states" : {
         "introduction" : {},
         "title" : {},

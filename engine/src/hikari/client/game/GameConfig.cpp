@@ -15,6 +15,7 @@ namespace hikari {
     const char* GameConfig::PROPERTY_INITIAL_STATE = "initialState";
     const char* GameConfig::PROPERTY_STARTUP_SCRIPTS = "environment";
     const char* GameConfig::PROPERTY_WEAPONS = "weapons";
+    const char* GameConfig::PROPERTY_ITEM_CHANCES = "itemChances";
 
     const char* GameConfig::DEFAULT_ITEM_PATH = "items.json";
     const char* GameConfig::DEFAULT_ENEMY_PATH = "enemy.json";
@@ -34,6 +35,7 @@ namespace hikari {
         , initialState(DEFAULT_INITIAL_STATE)
         , startupScripts()
         , heroWeaponNames()
+        , itemChancePairs()
     {
 
     }
@@ -47,6 +49,7 @@ namespace hikari {
         , initialState(DEFAULT_INITIAL_STATE)
         , startupScripts()
         , heroWeaponNames()
+        , itemChancePairs()
     {
         extractValuesFromJson(configJson);
     }
@@ -71,6 +74,21 @@ namespace hikari {
 
                 for(std::size_t i = 0; i < count; ++i) {
                     heroWeaponNames.push_back(weaponArray[i].asString());
+                }
+
+            }
+
+            // Item chances
+            if(configJson.isMember(PROPERTY_ITEM_CHANCES)) {
+                const Json::Value & itemChanceArray = configJson.get(PROPERTY_ITEM_CHANCES, Json::Value());
+                std::size_t count = itemChanceArray.size();
+
+                for(std::size_t i = 0; i < count; ++i) {
+                    const auto & members = itemChanceArray[i].getMemberNames();
+                    itemChancePairs.push_back(std::make_pair(
+                        members[0],
+                        itemChanceArray[i].get(members[0], 0).asInt()
+                    ));
                 }
 
             }
@@ -120,5 +138,9 @@ namespace hikari {
 
     const std::vector<std::string> & GameConfig::getHeroWeaponNames() const {
         return heroWeaponNames;
+    }
+
+    const std::vector<std::pair<std::string, int>> & GameConfig::getItemChancePairs() const {
+        return itemChancePairs;
     }
 } // hikari
