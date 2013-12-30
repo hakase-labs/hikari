@@ -1136,6 +1136,14 @@ namespace hikari {
         }
     }
 
+    void GamePlayState::refillPlayerEnergy(int amount) {
+        taskQueue.push(std::make_shared<RefillHealthTask>(amount, audioService, gameProgress));
+    }
+
+    void GamePlayState::refillWeaponEnergy(int amount) {
+        // TODO
+    }
+
     // ************************************************************************
     // Definition of sub-states
     // ************************************************************************

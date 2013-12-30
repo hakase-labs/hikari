@@ -407,6 +407,12 @@ namespace hikari {
         virtual void onEnter();
         virtual void onExit();
         virtual const std::string &getName() const;
+
+        //
+        // More game mechanics stuff
+        //
+        void refillPlayerEnergy(int amount);
+        void refillWeaponEnergy(int amount);
     };
 
 } // hikari
