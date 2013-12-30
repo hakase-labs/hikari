@@ -1,6 +1,7 @@
 #include "hikari/client/scripting/SquirrelService.hpp"
 #include "hikari/client/scripting/AudioServiceScriptProxy.hpp"
 #include "hikari/client/scripting/GameProgressScriptProxy.hpp"
+#include "hikari/client/scripting/GamePlayStateScriptProxy.hpp"
 #include "hikari/client/game/objects/Entity.hpp"
 #include "hikari/client/game/objects/Enemy.hpp"
 #include "hikari/core/game/map/Room.hpp"
@@ -82,7 +83,7 @@ namespace hikari {
             auto hikariTable = Sqrat::Table();
             auto internalTable = Sqrat::Table();
             auto audioSystemProxyTable = Sqrat::Table();
-            auto gameProgressProxyTable = Sqrat::Table();
+            auto gameProxyTable = Sqrat::Table();
 
             //
             // Bind "internal" functions (not to be used directly by end-user scripts)
@@ -103,17 +104,20 @@ namespace hikari {
             //
             // Bind GameProgress functions
             //
-            gameProgressProxyTable.Func(_SC("getLives"),  &GameProgressScriptProxy::getLives);
-            gameProgressProxyTable.Func(_SC("getETanks"), &GameProgressScriptProxy::getETanks);
-            gameProgressProxyTable.Func(_SC("getMTanks"), &GameProgressScriptProxy::getMTanks);
-            gameProgressProxyTable.Func(_SC("setLives"),  &GameProgressScriptProxy::setLives);
-            gameProgressProxyTable.Func(_SC("setETanks"), &GameProgressScriptProxy::setETanks);
-            gameProgressProxyTable.Func(_SC("setMTanks"), &GameProgressScriptProxy::setMTanks);
+            gameProxyTable.Func(_SC("getLives"),  &GameProgressScriptProxy::getLives);
+            gameProxyTable.Func(_SC("getETanks"), &GameProgressScriptProxy::getETanks);
+            gameProxyTable.Func(_SC("getMTanks"), &GameProgressScriptProxy::getMTanks);
+            gameProxyTable.Func(_SC("setLives"),  &GameProgressScriptProxy::setLives);
+            gameProxyTable.Func(_SC("setETanks"), &GameProgressScriptProxy::setETanks);
+            gameProxyTable.Func(_SC("setMTanks"), &GameProgressScriptProxy::setMTanks);
+            // Same table, different proxy
+            gameProxyTable.Func(_SC("refillHealth"), &GamePlayStateScriptProxy::refillPlayerEnergy);
+            gameProxyTable.Func(_SC("refillWeapon"), &GamePlayStateScriptProxy::refillWeaponEnergy);
 
             // Expose the tables in the ::hikari object
             hikariTable.Bind(_SC("internal"), internalTable);
             hikariTable.Bind(_SC("sound"),    audioSystemProxyTable);
-            hikariTable.Bind(_SC("game"),     gameProgressProxyTable);
+            hikariTable.Bind(_SC("game"),     gameProxyTable);
 
             Sqrat::RootTable().Bind(_SC("hikari"), hikariTable);
 
