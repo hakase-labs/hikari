@@ -32,6 +32,7 @@
 #include "hikari/client/game/KeyboardInput.hpp"
 #include "hikari/client/game/Task.hpp"
 #include "hikari/client/game/FunctionTask.hpp"
+#include "hikari/client/game/RefillHealthTask.hpp"
 #include "hikari/client/game/events/EventBusImpl.hpp"
 #include "hikari/client/game/events/EventListenerDelegate.hpp"
 #include "hikari/client/game/events/EntityDamageEventData.hpp"
@@ -226,20 +227,20 @@ namespace hikari {
             guiBossEnergyGauge->setForegroundColor(gcn::Color(0xfc9838));
 
             // Mega man's energy gauge
-            guiHeroEnergyGauge->setMaximumValue(56.0f);
-            guiHeroEnergyGauge->setValue(56.0f);
+            guiHeroEnergyGauge->setMaximumValue(28.0f);
+            guiHeroEnergyGauge->setValue(28.0f);
             guiHeroEnergyGauge->setVisible(false);
 
             // Current weapon's energy gauge
-            guiWeaponEnergyGauge->setMaximumValue(56.0f);
-            guiWeaponEnergyGauge->setValue(56.0f);
+            guiWeaponEnergyGauge->setMaximumValue(28.0f);
+            guiWeaponEnergyGauge->setValue(28.0f);
             guiWeaponEnergyGauge->setVisible(true);
             guiWeaponEnergyGauge->setBackgroundColor(0x002a88);
             guiWeaponEnergyGauge->setForegroundColor(0xadadad);
 
             // "Life" energy gague on the weapon menu
-            guiMenuLifeEnergyGauge->setMaximumValue(56.0f);
-            guiMenuLifeEnergyGauge->setValue(56.0f);
+            guiMenuLifeEnergyGauge->setMaximumValue(28.0f);
+            guiMenuLifeEnergyGauge->setValue(28.0f);
             guiMenuLifeEnergyGauge->setVisible(true);
             guiMenuLifeEnergyGauge->setOrientation(gui::Orientation::HORIZONTAL);
             guiMenuLifeEnergyGauge->setWidth(56);
@@ -404,6 +405,25 @@ namespace hikari {
         }
     }
 
+    void GamePlayState::updateGui() {
+        if(auto gp = gameProgress.lock()) {
+            guiHeroEnergyGauge->setValue(
+                static_cast<float>(gp->getPlayerEnergy())
+            );
+
+            if(isViewingMenu) {
+                std::string livesCaption = (gp->getLives() < 10 ? "0" : "") + StringUtils::toString(static_cast<int>(gp->getLives()));
+                guiLivesLabel->setVisible(true);
+                guiLivesLabel->setCaption(livesCaption);
+                guiLivesLabel->adjustSize();
+
+                std::string etanksCaption = (gp->getETanks() < 10 ? "0" : "") + StringUtils::toString(static_cast<int>(gp->getETanks()));
+                guiETanksLabel->setCaption(etanksCaption);
+                guiETanksLabel->adjustSize();
+            }
+        }
+    }
+
     void GamePlayState::handleEvent(sf::Event &event) {
         if((event.type == sf::Event::KeyPressed) && event.key.code == sf::Keyboard::Return) {
             if(canViewMenu) {
@@ -458,9 +478,7 @@ namespace hikari {
     bool GamePlayState::update(const float &dt) {
         gotoNextState = false;
 
-        //if(guiWeaponMenu) {
-            guiWeaponMenu->logic();
-        //}
+        guiWeaponMenu->logic();
 
         userInput->update(dt);
 
@@ -477,29 +495,14 @@ namespace hikari {
             }
         } else {
             if(subState) {
-                if(isRestoringEnergy) {
-                    // Do the energy sequence
-                } else {
-                    if(isViewingMenu) {
-                        if(auto gp = gameProgress.lock()) {
-                            std::string livesCaption = (gp->getLives() < 10 ? "0" : "") + StringUtils::toString(static_cast<int>(gp->getLives()));
-                            guiLivesLabel->setVisible(true);
-                            guiLivesLabel->setCaption(livesCaption);
-                            guiLivesLabel->adjustSize();
+                if(!isViewingMenu) {
+                    // "Pause" the substate if the menu is being shown
+                    // Handle state change request actions...
+                    SubState::StateChangeAction action = subState->update(dt);
 
-                            std::string etanksCaption = (gp->getETanks() < 10 ? "0" : "") + StringUtils::toString(static_cast<int>(gp->getETanks()));
-                            guiETanksLabel->setCaption(etanksCaption);
-                            guiETanksLabel->adjustSize();
-                        }
-                    } else {
-                        // "Pause" the substate if the menu is being shown
-                        // Handle state change request actions...
-                        SubState::StateChangeAction action = subState->update(dt);
-
-                        if(SubState::NEXT == action) {
-                            if(nextSubState) {
-                                changeSubState(std::move(nextSubState));
-                            }
+                    if(SubState::NEXT == action) {
+                        if(nextSubState) {
+                            changeSubState(std::move(nextSubState));
                         }
                     }
                 }
@@ -509,6 +512,8 @@ namespace hikari {
                 currentTileset->update(dt);
             }
         }
+
+        updateGui();
 
         return gotoNextState;
     }
@@ -1505,7 +1510,7 @@ namespace hikari {
                     if(hero->isVulnerable()) {
                         if(auto gp = gamePlayState.gameProgress.lock()) {
                             gp->setPlayerEnergy(
-                                gp->getPlayerEnergy() - 5
+                                gp->getPlayerEnergy() - damageAmount
                             );
 
                             HIKARI_LOG(debug4) << "My energy is " << gp->getPlayerEnergy();
@@ -1735,9 +1740,9 @@ namespace hikari {
                 hero->kill();
             }
 
-            gamePlayState.guiHeroEnergyGauge->setValue(
-                static_cast<float>(gp->getPlayerEnergy())
-            );
+            // gamePlayState.guiHeroEnergyGauge->setValue(
+            //     static_cast<float>(gp->getPlayerEnergy())
+            // );
         }
 
         return SubState::CONTINUE;

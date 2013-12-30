@@ -285,6 +285,7 @@ namespace hikari {
         // GUI
         //
         void buildGui();
+        void updateGui();
 
         /**
          * GamePlayState::SubState encapsulates a part of gameplay that operates
