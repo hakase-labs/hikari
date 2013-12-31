@@ -21,6 +21,7 @@ namespace hikari {
     , damageId(damageId)
     , paletteId(paletteId)
     , name(name)
+    , label("WEAPON")
     , projectileType()
     , usageSound()
     , actions()
@@ -52,6 +53,10 @@ namespace hikari {
     return name;
   }
 
+  const std::string & Weapon::getLabel() const {
+    return label;
+  }
+
   void Weapon::setName(const std::string & name) {
     this->name = name;
   }
@@ -62,6 +67,10 @@ namespace hikari {
 
   void Weapon::setSound(const std::string & sound) {
     this->usageSound = sound;
+  }
+
+  void Weapon::setLabel(const std::string & label) {
+    this->label = label;
   }
 
   void Weapon::setActions(const std::vector<std::shared_ptr<WeaponAction>> & actions) {

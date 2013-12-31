@@ -26,6 +26,7 @@ namespace hikari {
     int damageId;
     int paletteId;              /// Which palette should Rockman have if he's using this weapon?
     std::string name;           /// The unique name of this weapon.
+    std::string label;       /// The unique label of this weapon.
     std::string projectileType; /// The identifier of a particular projectile.
     std::string usageSound;     /// The name of the sample to play when the weapon is used.
     std::vector<std::shared_ptr<WeaponAction>> actions;
@@ -49,9 +50,11 @@ namespace hikari {
     int getDamageId() const;
     int getPaletteId() const;
     const std::string & getName() const;
+    const std::string & getLabel() const;
     const std::string & getProjectileType() const;
     const std::string & getUsageSound() const;
 
+    void setLabel(const std::string & label);
     void setActions(const std::vector<std::shared_ptr<WeaponAction>> & actions);
     virtual Shot fire(GameWorld & world, WeaponFireEventData & eventData) const;
   };
