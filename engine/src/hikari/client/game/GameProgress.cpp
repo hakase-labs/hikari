@@ -21,6 +21,9 @@ namespace hikari {
         std::fill(std::begin(weaponEnergies), std::end(weaponEnergies), DEFAULT_WEAPON_ENERGY);
         std::fill(std::begin(weaponsEnabled), std::end(weaponsEnabled), false);
         std::fill(std::begin(bossesDefeated), std::end(bossesDefeated), false);
+
+        // Mega Buster is always the 0th weapon, so enable it
+        enableWeapon(0, true);
     }
 
     GameProgress::~GameProgress() { }
