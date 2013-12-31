@@ -48,7 +48,7 @@ namespace gui {
     }
 
     void EnergyGauge::setValue(float value) {
-        this->value = std::min(value, getMaximumValue());
+        this->value = std::max(0.0f, std::min(value, getMaximumValue()));
     }
 
     void EnergyGauge::setMaximumValue(float maximumValue) {
@@ -74,7 +74,7 @@ namespace gui {
             graphics->fillRectangle(highlightStartX, 0, highlightThickness, getHeight());
 
             graphics->setColor(getBaseColor());
-        
+
             // Draw horizontal ticks
             for(unsigned int row = 0, height = getHeight(); row < height; ++row) {
                 if(row % 2 == 1) {
@@ -96,7 +96,7 @@ namespace gui {
             graphics->fillRectangle(0, highlightStartY, getWidth(), highlightThickness);
 
             graphics->setColor(getBaseColor());
-        
+
             // Draw horizontal ticks
             for(unsigned int column = 0, width = getWidth(); column < width; ++column) {
                 if(column % 2 == 1) {

@@ -7,6 +7,7 @@ namespace hikari {
 
     const int GameProgress::DEFAULT_NUM_LIVES = 3;
     const unsigned char GameProgress::DEFAULT_PLAYER_ENERGY = 28;
+    const int GameProgress::DEFAULT_WEAPON_ENERGY = 28;
 
     GameProgress::GameProgress()
         : lives(3)
@@ -17,9 +18,9 @@ namespace hikari {
         , currentBoss(0)
         , currentWeapon(0)
     {
-        std::fill(weaponEnergies, weaponEnergies + sizeof(weaponEnergies), 0);
-        std::fill(weaponsEnabled, weaponsEnabled + sizeof(weaponsEnabled), false);
-        std::fill(bossesDefeated, bossesDefeated + sizeof(bossesDefeated), false);
+        std::fill(std::begin(weaponEnergies), std::end(weaponEnergies), DEFAULT_WEAPON_ENERGY);
+        std::fill(std::begin(weaponsEnabled), std::end(weaponsEnabled), false);
+        std::fill(std::begin(bossesDefeated), std::end(bossesDefeated), false);
     }
 
     GameProgress::~GameProgress() { }
@@ -80,7 +81,7 @@ namespace hikari {
         return currentWeapon;
     }
 
-    unsigned char GameProgress::getWeaponEnergy(unsigned char weapon) const {
+    int GameProgress::getWeaponEnergy(unsigned char weapon) const {
         if(weapon < getWeaponCount()) {
             return weaponEnergies[weapon];
         }
@@ -157,11 +158,12 @@ namespace hikari {
                 // );
             }
         }
-        
+
     }
 
-    void GameProgress::setWeaponEnergy(unsigned char weapon, unsigned char value) {
+    void GameProgress::setWeaponEnergy(unsigned char weapon, int value) {
         if(weapon < getWeaponCount()) {
+            value = std::max(0, value);
             weaponEnergies[weapon] = value;
         }
     }
@@ -182,7 +184,7 @@ namespace hikari {
 
     void GameProgress::resetWeaponEnergyToDefault() {
         for(unsigned char i = 0; i < getWeaponCount(); ++i) {
-            setWeaponEnergy(i, 100);
+            setWeaponEnergy(i, DEFAULT_WEAPON_ENERGY);
         }
     }
 

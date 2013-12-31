@@ -26,7 +26,7 @@
         "damageId": 7,
         "paletteId": 4,
         "limit": 3,
-        "usageCost": 0,
+        "usageCost": 2.0,
         "usageSound": "Plasma Bullet",
         "usageActions": [
             { 
@@ -97,7 +97,7 @@
         "name": "Erekin Spark",
         "projectileType": "Erekin Spark",
         "limit": 3,
-        "usageCost": 0,
+        "usageCost": 3.0,
         "usageSound": "Erekin Spark",
         "usageActions": [
             { 
@@ -180,7 +180,7 @@
         "projectileType": "Metool Plasma Bullet",
         "damageId": 1,
         "limit": 3,
-        "usageCost": 0,
+        "usageCost": 1.0,
         "usageSound": "None",
         "usageActions": [
             { 

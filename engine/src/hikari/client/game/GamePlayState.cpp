@@ -369,22 +369,7 @@ namespace hikari {
 
             guiWeaponMenuSelectionListener.reset(new gcn::FunctorSelectionListener([&](const gcn::SelectionEvent & event) {
                 // TODO: For now just use the index of the item in the menu.
-                // auto item = guiWeaponMenu->getMenuItemAt(guiWeaponMenu->getSelectedIndex());
                 auto selectedWeaponIndex = guiWeaponMenu->getSelectedIndex();
-
-                if(auto weapons = weaponTable.lock()) {
-                    auto weaponWeak = weapons->getWeaponById(selectedWeaponIndex);
-
-                    if(auto weapon = weaponWeak.lock()) {
-                        int paletteId = weapon->getPaletteId();
-
-                        if(paletteId == -1) {
-                            paletteId = 3; // Fix the index so it defaults to the blue palette
-                        }
-
-                        PalettedAnimatedSprite::setSharedPaletteIndex(paletteId);
-                    }
-                }
             }));
 
             guiWeaponMenu->setEnabled(true);
@@ -419,21 +404,19 @@ namespace hikari {
             bool showWeaponMeter = currentWeapon != 0;
             guiWeaponEnergyGauge->setVisible(showWeaponMeter);
 
-            if(showWeaponMeter) {
-                // TODO: Change color of gauge
+            if(auto weapons = weaponTable.lock()) {
+                auto weaponWeak = weapons->getWeaponById(currentWeapon);
 
-                if(auto weapons = weaponTable.lock()) {
-                    auto weaponWeak = weapons->getWeaponById(currentWeapon);
+                if(auto weapon = weaponWeak.lock()) {
+                    int paletteId = weapon->getPaletteId();
 
-                    if(auto weapon = weaponWeak.lock()) {
-                        int paletteId = weapon->getPaletteId();
+                    if(paletteId == -1) {
+                        paletteId = 3; // Fix the index so it defaults to the blue palette
+                    }
 
-                        if(paletteId == -1) {
-                            paletteId = 3; // Fix the index so it defaults to the blue palette
-                        }
+                    PalettedAnimatedSprite::setSharedPaletteIndex(paletteId);
 
-                        PalettedAnimatedSprite::setSharedPaletteIndex(paletteId);
-
+                    if(showWeaponMeter) {
                         // Update weapon gauge colors
                         auto & colorTable = PalettedAnimatedSprite::getColorTable();
 
@@ -449,6 +432,8 @@ namespace hikari {
                             guiWeaponEnergyGauge->setBackgroundColor(dark);
                             guiWeaponEnergyGauge->setForegroundColor(light);
                         }
+
+                        guiWeaponEnergyGauge->setValue(gp->getWeaponEnergy(currentWeapon));
                     }
                 }
             }
@@ -865,12 +850,11 @@ namespace hikari {
         if(auto gp = gameProgress.lock()) {
             gp->resetPlayerEnergyToDefault();
             gp->setCurrentWeapon(0);
-            PalettedAnimatedSprite::setSharedPaletteIndex(3);
+            hero->setWeaponId(gp->getCurrentWeapon());
         }
 
         // Reset direction to face right
         hero->setDirection(Directions::Right);
-        hero->setWeaponId(0);
 
         if(currentMap) {
             // Boss corridor has highest priority
@@ -1013,9 +997,6 @@ namespace hikari {
             if(isHeroAlive) {
                 isHeroAlive = false;
 
-                //hero->setActive(false);
-                //hero->setPosition(0.0f, 0.0f);
-
                 if(auto progress = gameProgress.lock()) {
                     progress->setPlayerEnergy(0);
 
@@ -1025,7 +1006,6 @@ namespace hikari {
                     // All the way dead
                     if(progress->getLives() < 0) {
                         HIKARI_LOG(debug2) << "Hero has died all of his lives, go to password screen.";
-                        // TODO: Reset number of lives here to the default.
                         progress->resetLivesToDefault();
                         controller.requestStateChange("stageselect");
                         gotoNextState = true;
@@ -1091,20 +1071,30 @@ namespace hikari {
         if(auto weapons = weaponTable.lock()) {
             auto weaponWeak = weapons->getWeaponById(eventData->getWeaponId());
             if(auto weapon = weaponWeak.lock()) {
-                Shot shot = weapon->fire(world, *eventData.get());
-
                 // This is dirty and I don't like it, so I should design a better
                 // way to accomplish this part.
                 if(eventData->getShooterId() == hero->getId()) {
-                    hero->observeShot(shot);
+                    if(auto gp = gameProgress.lock()) {
+                        int currentWeapon = gp->getCurrentWeapon();
+                        unsigned int weaponEnergy = gp->getWeaponEnergy(currentWeapon);
 
-                    HIKARI_LOG(debug4) << "Hero's shot count: " << hero->getActiveShotCount();
+                        if(weaponEnergy > 0) {
+                            Shot shot = weapon->fire(world, *eventData.get());
+                            hero->observeShot(shot);
+
+                            // Use up the weapon energy
+                            gp->setWeaponEnergy(currentWeapon, weaponEnergy - weapon->getUsageCost());
+
+                            HIKARI_LOG(debug4) << "Hero's shot count: " << hero->getActiveShotCount();
+                        }
+                    }
                 } else {
                     // It could be an enemy...
                     // So we need to somehow get the enemy by ID and make it
                     // observe the shot. It would be nice to do this without
                     // casting.
                     // TODO: CLEAN ME / CASTING
+                    Shot shot = weapon->fire(world, *eventData.get());
                     std::weak_ptr<GameObject> possibleEnemyPtr = world.getObjectById(eventData->getShooterId());
 
                     if(auto enemyGoPtr = possibleEnemyPtr.lock()) {
@@ -1113,7 +1103,6 @@ namespace hikari {
                         }
                     }
                 }
-
 
                 if(auto sound = audioService.lock()) {
                     sound->playSample(21);
@@ -1130,9 +1119,6 @@ namespace hikari {
 
         if(eventData->getEntityId() == hero->getId()) {
             if(eventData->getStateName() == "water") {
-                // if(auto sound = audioService.lock()) {
-                //     sound->playSample(19);
-                // }
                 if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Splash")) {
                     clone->setPosition(Vector2<float>(
                         hero->getPosition().getX(),
@@ -1166,7 +1152,6 @@ namespace hikari {
     }
 
     void GamePlayState::handleDoorEvent(EventDataPtr evt) {
-        // auto eventData = std::static_pointer_cast<DoorEventData>(evt);
         if(auto sound = audioService.lock()) {
             sound->playSample(29);
         }
@@ -1332,10 +1317,6 @@ namespace hikari {
         if(renderFadeOverlay) {
             target.draw(fadeOverlay);
         }
-
-        if(renderReadyText) {
-            // gamePlayState.guiFont->renderText(target, "READY", 108, 121);
-        }
     }
 
     //
@@ -1359,7 +1340,6 @@ namespace hikari {
         auto& hero = gamePlayState.hero;
         auto& currentRoom = gamePlayState.currentRoom;
 
-        // gamePlayState.isHeroAlive = true;
         gamePlayState.guiHeroEnergyGauge->setVisible(true);
 
         if(currentRoom) {
