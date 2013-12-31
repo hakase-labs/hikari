@@ -368,20 +368,15 @@ namespace hikari {
             }));
 
             guiWeaponMenuSelectionListener.reset(new gcn::FunctorSelectionListener([&](const gcn::SelectionEvent & event) {
-                std::cout << "Selection changed! " << guiWeaponMenu->getSelectedIndex() << std::endl;
-
                 // TODO: For now just use the index of the item in the menu.
                 // auto item = guiWeaponMenu->getMenuItemAt(guiWeaponMenu->getSelectedIndex());
                 auto selectedWeaponIndex = guiWeaponMenu->getSelectedIndex();
 
                 if(auto weapons = weaponTable.lock()) {
-                    std::cout << "Weapon table is good." << std::endl;
                     auto weaponWeak = weapons->getWeaponById(selectedWeaponIndex);
 
                     if(auto weapon = weaponWeak.lock()) {
                         int paletteId = weapon->getPaletteId();
-
-                        std::cout << "Weapon pointer is good, paletteId = " << paletteId << std::endl;
 
                         if(paletteId == -1) {
                             paletteId = 3; // Fix the index so it defaults to the blue palette
@@ -390,9 +385,6 @@ namespace hikari {
                         PalettedAnimatedSprite::setSharedPaletteIndex(paletteId);
                     }
                 }
-                // if(auto audio = audioService.lock()) {
-                //     audio->playSample(27);
-                // }
             }));
 
             guiWeaponMenu->setEnabled(true);
@@ -429,6 +421,36 @@ namespace hikari {
 
             if(showWeaponMeter) {
                 // TODO: Change color of gauge
+
+                if(auto weapons = weaponTable.lock()) {
+                    auto weaponWeak = weapons->getWeaponById(currentWeapon);
+
+                    if(auto weapon = weaponWeak.lock()) {
+                        int paletteId = weapon->getPaletteId();
+
+                        if(paletteId == -1) {
+                            paletteId = 3; // Fix the index so it defaults to the blue palette
+                        }
+
+                        PalettedAnimatedSprite::setSharedPaletteIndex(paletteId);
+
+                        // Update weapon gauge colors
+                        auto & colorTable = PalettedAnimatedSprite::getColorTable();
+
+                        if(colorTable.size() > paletteId) {
+                            auto & palette = colorTable.at(paletteId);
+                            auto & darkColor = palette.at(4);
+                            auto & lightColor = palette.at(5);
+
+                            // Convert components to an RGB value
+                            int dark = (darkColor.r << 16) + (darkColor.g << 8) + darkColor.b;
+                            int light = (lightColor.r << 16) + (lightColor.g << 8) + lightColor.b;
+
+                            guiWeaponEnergyGauge->setBackgroundColor(dark);
+                            guiWeaponEnergyGauge->setForegroundColor(light);
+                        }
+                    }
+                }
             }
         }
     }

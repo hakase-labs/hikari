@@ -19,6 +19,7 @@ namespace hikari {
     const unsigned int PalettedAnimatedSprite::colorTableHeight = 32;
 
     int PalettedAnimatedSprite::sharedPaletteIndex = 0;
+    std::vector<std::vector<sf::Color>> PalettedAnimatedSprite::colorTable = std::vector<std::vector<sf::Color>>();
 
     void PalettedAnimatedSprite::setShaderFile(const std::string & file) {
         const std::string shaderCode = FileSystem::readFileAsString(file);
@@ -28,6 +29,8 @@ namespace hikari {
     }
 
     void PalettedAnimatedSprite::createColorTable(const std::vector<std::vector<sf::Color>> & colors) {
+        PalettedAnimatedSprite::colorTable = colors;
+
         if(!colorTableImage) {
             colorTableImage.reset(new sf::Image());
         }
@@ -65,6 +68,10 @@ namespace hikari {
 
     int PalettedAnimatedSprite::getSharedPaletteIndex() {
         return sharedPaletteIndex;
+    }
+
+    const std::vector<std::vector<sf::Color>> & PalettedAnimatedSprite::getColorTable() {
+        return PalettedAnimatedSprite::colorTable;
     }
 
     PalettedAnimatedSprite::PalettedAnimatedSprite()

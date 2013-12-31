@@ -20,6 +20,7 @@ namespace hikari {
         static std::unique_ptr<sf::Shader> pixelShader;
         static std::unique_ptr<sf::Image> colorTableImage;
         static std::unique_ptr<sf::Texture> colorTableTexture;
+        static std::vector<std::vector<sf::Color>> colorTable;
 
         // The index of the "shared palette", used to color multiple things (hero, powerups, etc.)
         static int sharedPaletteIndex;
@@ -36,6 +37,7 @@ namespace hikari {
         static void destroySharedResources();
         static void setSharedPaletteIndex(int index);
         static int getSharedPaletteIndex();
+        static const std::vector<std::vector<sf::Color>> & getColorTable();
 
         PalettedAnimatedSprite();
         PalettedAnimatedSprite(const PalettedAnimatedSprite & proto);
