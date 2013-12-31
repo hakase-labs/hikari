@@ -432,6 +432,8 @@ namespace hikari {
                             guiWeaponEnergyGauge->setBackgroundColor(dark);
                             guiWeaponEnergyGauge->setForegroundColor(light);
                         }
+
+                        guiWeaponEnergyGauge->setValue(gp->getWeaponEnergy(currentWeapon));
                     }
                 }
             }
@@ -1069,20 +1071,30 @@ namespace hikari {
         if(auto weapons = weaponTable.lock()) {
             auto weaponWeak = weapons->getWeaponById(eventData->getWeaponId());
             if(auto weapon = weaponWeak.lock()) {
-                Shot shot = weapon->fire(world, *eventData.get());
-
                 // This is dirty and I don't like it, so I should design a better
                 // way to accomplish this part.
                 if(eventData->getShooterId() == hero->getId()) {
-                    hero->observeShot(shot);
+                    if(auto gp = gameProgress.lock()) {
+                        int currentWeapon = gp->getCurrentWeapon();
+                        unsigned int weaponEnergy = gp->getWeaponEnergy(currentWeapon);
 
-                    HIKARI_LOG(debug4) << "Hero's shot count: " << hero->getActiveShotCount();
+                        if(weaponEnergy > 0) {
+                            Shot shot = weapon->fire(world, *eventData.get());
+                            hero->observeShot(shot);
+
+                            // Use up the weapon energy
+                            gp->setWeaponEnergy(currentWeapon, weaponEnergy - weapon->getUsageCost());
+
+                            HIKARI_LOG(debug4) << "Hero's shot count: " << hero->getActiveShotCount();
+                        }
+                    }
                 } else {
                     // It could be an enemy...
                     // So we need to somehow get the enemy by ID and make it
                     // observe the shot. It would be nice to do this without
                     // casting.
                     // TODO: CLEAN ME / CASTING
+                    Shot shot = weapon->fire(world, *eventData.get());
                     std::weak_ptr<GameObject> possibleEnemyPtr = world.getObjectById(eventData->getShooterId());
 
                     if(auto enemyGoPtr = possibleEnemyPtr.lock()) {
