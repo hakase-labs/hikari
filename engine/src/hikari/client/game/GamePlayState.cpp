@@ -214,15 +214,15 @@ namespace hikari {
             guiContainer->setHeight(240);
             guiContainer->setOpaque(false);
             guiContainer->setBackgroundColor(gcn::Color(0, 0, 0, 0));
-            //guiContainer->add(guiBossEnergyGauge.get(), 32, 16);
+            guiContainer->add(guiBossEnergyGauge.get(), 32, 16);
             guiContainer->add(guiHeroEnergyGauge.get(), 16, 16);
             guiContainer->add(guiWeaponEnergyGauge.get(), 8, 16);
             guiContainer->add(guiMenuPanel.get(), 0, 0);
 
             // The reddish energy gauge for bosses
-            guiBossEnergyGauge->setMaximumValue(3.0f);
-            guiBossEnergyGauge->setValue(3.0f);
-            guiBossEnergyGauge->setVisible(true);
+            guiBossEnergyGauge->setMaximumValue(28.0f);
+            guiBossEnergyGauge->setValue(28.0f);
+            guiBossEnergyGauge->setVisible(false);
             guiBossEnergyGauge->setBackgroundColor(gcn::Color(0xe40058));
             guiBossEnergyGauge->setForegroundColor(gcn::Color(0xfc9838));
 
@@ -336,6 +336,10 @@ namespace hikari {
                 static_cast<float>(gp->getPlayerEnergy())
             );
 
+            guiMenuLifeEnergyGauge->setValue(
+                static_cast<float>(gp->getPlayerEnergy())
+            );
+
             if(isViewingMenu) {
                 std::string livesCaption = (gp->getLives() < 10 ? "0" : "") + StringUtils::toString(static_cast<int>(gp->getLives()));
                 guiLivesLabel->setVisible(true);
@@ -345,6 +349,18 @@ namespace hikari {
                 std::string etanksCaption = (gp->getETanks() < 10 ? "0" : "") + StringUtils::toString(static_cast<int>(gp->getETanks()));
                 guiETanksLabel->setCaption(etanksCaption);
                 guiETanksLabel->adjustSize();
+
+                // Update the energy levels of each gauge
+                for(unsigned int i = 0; i < guiWeaponMenu->getItemCount(); ++i) {
+                    const auto & item = guiWeaponMenu->getMenuItemAt(i);
+                    int currentWeaponId = 0;
+
+                    if(const auto & weaponMenuItem = std::dynamic_pointer_cast<gui::WeaponMenuItem>(item)) {
+                        currentWeaponId = weaponMenuItem->getWeaponId();
+
+                        weaponMenuItem->setValue(gp->getWeaponEnergy(currentWeaponId));
+                    }
+                }
             }
 
             int currentWeapon = gp->getCurrentWeapon();

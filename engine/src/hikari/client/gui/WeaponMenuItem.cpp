@@ -47,6 +47,7 @@ namespace gui {
         gauge->setHeight(8);
         gauge->setX(24);
         gauge->setY(8);
+        gauge->setMaximumValue(28.0f);
 
         add(gauge.get());
     }
@@ -63,6 +64,34 @@ namespace gui {
 
     int WeaponMenuItem::getWeaponId() const {
         return weaponId;
+    }
+
+    float WeaponMenuItem::getMaximumValue() const {
+        if(gauge) {
+            return gauge->getMaximumValue();
+        }
+
+        return 0.0f;
+    }
+
+    float WeaponMenuItem::getValue() const {
+        if(gauge) {
+            return gauge->getValue();
+        }
+
+        return 0.0f;
+    }
+
+    void WeaponMenuItem::setMaximumValue(float maxValue) {
+        if(gauge) {
+            gauge->setMaximumValue(maxValue);
+        }
+    }
+
+    void WeaponMenuItem::setValue(float value) {
+        if(gauge) {
+            gauge->setValue(value);
+        }
     }
 
     void WeaponMenuItem::draw(gcn::Graphics* graphics) {

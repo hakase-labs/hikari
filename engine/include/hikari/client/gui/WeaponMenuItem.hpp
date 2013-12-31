@@ -35,6 +35,11 @@ namespace gui {
 
         int getWeaponId() const;
 
+        float getMaximumValue() const;
+        float getValue() const;
+        void setMaximumValue(float maxValue);
+        void setValue(float maxValue);
+
         // Inherited from Widget
         virtual void draw(gcn::Graphics* graphics);
     };
