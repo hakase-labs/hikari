@@ -273,85 +273,33 @@ namespace hikari {
                 guiLivesLabel->setFont(weaponItemFont.get());
                 guiETanksLabel->setFont(weaponItemFont.get());
 
-                std::shared_ptr<gui::WeaponMenuItem> weapon1MenuItem(new gui::WeaponMenuItem("M.BUSTER"));
-                weapon1MenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
-                weapon1MenuItem->setSelectionColor(gcn::Color(250, 128, 128));
-                weapon1MenuItem->setX(0);
-                weapon1MenuItem->setY(0);
-                weapon1MenuItem->setFont(weaponItemFont.get());
-                guiWeaponMenu->addItem(weapon1MenuItem);
+                if(auto config = gameConfig.lock()) {
+                    const auto & weaponNames = config->getHeroWeaponNames();
 
-                std::shared_ptr<gui::WeaponMenuItem> weapon2MenuItem(new gui::WeaponMenuItem("PEARL"));
-                weapon2MenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
-                weapon2MenuItem->setSelectionColor(gcn::Color(250, 128, 128));
-                weapon2MenuItem->setX(0);
-                weapon2MenuItem->setY(16);
-                weapon2MenuItem->setFont(weaponItemFont.get());
-                guiWeaponMenu->addItem(weapon2MenuItem);
+                    if(auto weapons = weaponTable.lock()) {
+                        int index = 0;
 
-                std::shared_ptr<gui::WeaponMenuItem> weapon3MenuItem(new gui::WeaponMenuItem("Weapon 3"));
-                weapon3MenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
-                weapon3MenuItem->setSelectionColor(gcn::Color(250, 128, 128));
-                weapon3MenuItem->setX(0);
-                weapon3MenuItem->setY(32);
-                weapon3MenuItem->setFont(weaponItemFont.get());
-                guiWeaponMenu->addItem(weapon3MenuItem);
+                        std::for_each(
+                            std::begin(weaponNames),
+                            std::end(weaponNames),
+                            [&](const std::string & name) {
+                                const auto & weapon = weapons->getWeaponByName(name);
+                                const auto weaponId = weapons->getWeaponIdByName(name);
 
-                std::shared_ptr<gui::WeaponMenuItem> weapon4MenuItem(new gui::WeaponMenuItem("Weapon 4"));
-                weapon4MenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
-                weapon4MenuItem->setSelectionColor(gcn::Color(250, 128, 128));
-                weapon4MenuItem->setX(0);
-                weapon4MenuItem->setY(48);
-                weapon4MenuItem->setFont(weaponItemFont.get());
-                guiWeaponMenu->addItem(weapon4MenuItem);
+                                if(const auto & weaponPtr = weapon.lock()) {
+                                    std::shared_ptr<gui::WeaponMenuItem> weaponMenuItem(new gui::WeaponMenuItem(weaponPtr->getLabel(), weaponId));
+                                    weaponMenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
+                                    weaponMenuItem->setSelectionColor(gcn::Color(250, 128, 128));
+                                    weaponMenuItem->setX(index < 5 ? 0 : 112);
+                                    weaponMenuItem->setY(index < 5 ? index * 16 : (index - 5) * 16);
+                                    weaponMenuItem->setFont(weaponItemFont.get());
+                                    guiWeaponMenu->addItem(weaponMenuItem);
+                                }
 
-                std::shared_ptr<gui::WeaponMenuItem> weapon5MenuItem(new gui::WeaponMenuItem("Weapon 5"));
-                weapon5MenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
-                weapon5MenuItem->setSelectionColor(gcn::Color(250, 128, 128));
-                weapon5MenuItem->setX(0);
-                weapon5MenuItem->setY(64);
-                weapon5MenuItem->setFont(weaponItemFont.get());
-                guiWeaponMenu->addItem(weapon5MenuItem);
-
-                std::shared_ptr<gui::WeaponMenuItem> weapon6MenuItem(new gui::WeaponMenuItem("Weapon 6"));
-                weapon6MenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
-                weapon6MenuItem->setSelectionColor(gcn::Color(250, 128, 128));
-                weapon6MenuItem->setX(112);
-                weapon6MenuItem->setY(0);
-                weapon6MenuItem->setFont(weaponItemFont.get());
-                guiWeaponMenu->addItem(weapon6MenuItem);
-
-                std::shared_ptr<gui::WeaponMenuItem> weapon7MenuItem(new gui::WeaponMenuItem("Weapon 7"));
-                weapon7MenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
-                weapon7MenuItem->setSelectionColor(gcn::Color(250, 128, 128));
-                weapon7MenuItem->setX(112);
-                weapon7MenuItem->setY(16);
-                weapon7MenuItem->setFont(weaponItemFont.get());
-                guiWeaponMenu->addItem(weapon7MenuItem);
-
-                std::shared_ptr<gui::WeaponMenuItem> weapon8MenuItem(new gui::WeaponMenuItem("Weapon 8"));
-                weapon8MenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
-                weapon8MenuItem->setSelectionColor(gcn::Color(250, 128, 128));
-                weapon8MenuItem->setX(112);
-                weapon8MenuItem->setY(32);
-                weapon8MenuItem->setFont(weaponItemFont.get());
-                guiWeaponMenu->addItem(weapon8MenuItem);
-
-                std::shared_ptr<gui::WeaponMenuItem> weapon9MenuItem(new gui::WeaponMenuItem("Weapon 9"));
-                weapon9MenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
-                weapon9MenuItem->setSelectionColor(gcn::Color(250, 128, 128));
-                weapon9MenuItem->setX(112);
-                weapon9MenuItem->setY(48);
-                weapon9MenuItem->setFont(weaponItemFont.get());
-                guiWeaponMenu->addItem(weapon9MenuItem);
-
-                std::shared_ptr<gui::WeaponMenuItem> weapon10MenuItem(new gui::WeaponMenuItem("Weapon 10"));
-                weapon10MenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
-                weapon10MenuItem->setSelectionColor(gcn::Color(250, 128, 128));
-                weapon10MenuItem->setX(112);
-                weapon10MenuItem->setY(64);
-                weapon10MenuItem->setFont(weaponItemFont.get());
-                guiWeaponMenu->addItem(weapon10MenuItem);
+                                index++;
+                        });
+                    }
+                }
             }
 
             guiWeaponMenu->setWidth(guiContainer->getWidth() - 32);
@@ -451,7 +399,21 @@ namespace hikari {
             guiWeaponMenu->requestFocus();
 
             if(auto gp = gameProgress.lock()) {
-                gp->setCurrentWeapon(guiWeaponMenu->getSelectedIndex());
+                const auto & item = guiWeaponMenu->getMenuItemAt(guiWeaponMenu->getSelectedIndex());
+                int currentWeaponId = 0;
+
+                // So, here's a very convoluted thing that's going on:
+                // Weapons have a ID, which is assigned automatically when all of the weapons are
+                // parsed and loaded when the game starts. The weapons in the menu are stored by
+                // name in game.json, which are then looked up to get their ID. Both the name and
+                // ID are stored in the MenuItem. When a menu item is selected, we get the weapon
+                // ID from it, and then store that as the "current weapon".
+
+                if(const auto & weaponMenuItem = std::dynamic_pointer_cast<gui::WeaponMenuItem>(item)) {
+                    currentWeaponId = weaponMenuItem->getWeaponId();
+                }
+
+                gp->setCurrentWeapon(currentWeaponId);
                 hero->setWeaponId(gp->getCurrentWeapon());
             }
         }
