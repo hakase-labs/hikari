@@ -527,6 +527,15 @@ namespace hikari {
             if((currentMap = maps.at(mapList.at(gp->getCurrentBoss() % mapList.size())))) {
                 currentTileset = currentMap->getTileset();
             }
+
+            // Enable / disable weapon menu items based on GameProgress
+            int menuItemCount = guiWeaponMenu->getItemCount();
+
+            for(int i = 0; i < menuItemCount; ++i) {
+                const auto & menuItem = guiWeaponMenu->getMenuItemAt(i);
+                menuItem->setVisible(gp->weaponIsEnabled(i));
+                menuItem->setEnabled(gp->weaponIsEnabled(i));
+            }
         }
 
         updateGui();
