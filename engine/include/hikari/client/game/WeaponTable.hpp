@@ -31,6 +31,18 @@ namespace hikari {
      * for a given ID then a null pointer is returned.
      */
     std::weak_ptr<Weapon> getWeaponById(int weaponId) const;
+
+    /**
+     * Returns a Weapon by looking it up using its name. If no Weapon is found
+     * for a given name then a null pointer is returned.
+     */
+    std::weak_ptr<Weapon> getWeaponByName(const std::string & name) const;
+
+    /**
+     * Returns the ID of a weapon by looking it up by name. If the weapon cannot
+     * be found, then -1 is returned.
+     */
+    int getWeaponIdByName(const std::string & name) const;
   };
 
 } // hikari
