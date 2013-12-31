@@ -31,7 +31,10 @@
     },
     {
         "name": "Large Weapon Energy",
-        "effect": "NothingEffect",
+        "effect": "ModifyWeaponEnergyEffect",
+        "effectConfig": {
+            "amount": 10
+        },
         "animationSet": "assets/animations/items.json",
         "animationName": "weapon-energy-large",
         "boundingBox": {
@@ -46,7 +49,10 @@
     },
     {
         "name": "Small Weapon Energy",
-        "effect": "NothingEffect",
+        "effect": "ModifyWeaponEnergyEffect",
+        "effectConfig": {
+            "amount": 2
+        },
         "animationSet": "assets/animations/items.json",
         "animationName": "weapon-energy-small",
         "boundingBox": {

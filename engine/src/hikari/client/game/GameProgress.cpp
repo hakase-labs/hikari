@@ -88,6 +88,10 @@ namespace hikari {
         return 0;
     }
 
+    int GameProgress::getWeaponMaxEnergy() const {
+        return DEFAULT_WEAPON_ENERGY;
+    }
+
     unsigned char GameProgress::getWeakestWeapon() const {
         unsigned char weakest = 0;
 
