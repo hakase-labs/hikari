@@ -285,6 +285,7 @@ namespace hikari {
         // GUI
         //
         void buildGui();
+        void updateGui();
 
         /**
          * GamePlayState::SubState encapsulates a part of gameplay that operates
@@ -406,6 +407,12 @@ namespace hikari {
         virtual void onEnter();
         virtual void onExit();
         virtual const std::string &getName() const;
+
+        //
+        // More game mechanics stuff
+        //
+        void refillPlayerEnergy(int amount);
+        void refillWeaponEnergy(int amount);
     };
 
 } // hikari

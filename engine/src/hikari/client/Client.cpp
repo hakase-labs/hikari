@@ -27,6 +27,7 @@
 #include "hikari/client/scripting/SquirrelService.hpp"
 #include "hikari/client/scripting/AudioServiceScriptProxy.hpp"
 #include "hikari/client/scripting/GameProgressScriptProxy.hpp"
+#include "hikari/client/scripting/GamePlayStateScriptProxy.hpp"
 
 #include "hikari/core/game/AnimationLoader.hpp"
 #include "hikari/core/game/SliceStateTransition.hpp"
@@ -155,9 +156,11 @@ namespace hikari {
         loadObjectTemplates();
         loadDamageTable();
 
+        auto gamePlayState = std::make_shared<GamePlayState>("gameplay", controller, gameConfigJson, gameConfig, services);
+        GamePlayStateScriptProxy::setWrappedService(gamePlayState);
+
         // Create controller and game states
         StatePtr stageSelectState(new StageSelectState("stageselect", gameConfigJson["states"]["select"], controller, services));
-        StatePtr gamePlayState(new GamePlayState("gameplay", controller, gameConfigJson, gameConfig, services));
         StatePtr passwordState(new PasswordState("password", gameConfigJson, controller, services));
         StatePtr titleState(new TitleState("title", gameConfigJson, controller, services));
         StatePtr optionsState(new OptionsState("options", gameConfigJson, controller, services));
@@ -334,6 +337,7 @@ namespace hikari {
         if(auto damageTable = services.locateService<DamageTable>(Services::DAMAGETABLE).lock()) {
             damageTable->addEntry(0, 0.0f);
             damageTable->addEntry(1, 10.0f);
+            damageTable->addEntry(2, 4.0f);
             damageTable->addEntry(4, 6.0f);
             damageTable->addEntry(7, 1.0f);
         }

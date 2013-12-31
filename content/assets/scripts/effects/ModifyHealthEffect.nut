@@ -17,6 +17,7 @@ class ModifyHealthEffect extends EffectBase {
     function applyEffect() {
         ::log("ModifyHealthEffect::applyEffect called.");
         ::log("You life was modified by " + amount + "!");
+        ::hikari.game.refillHealth(amount);
     }
 
     function unapplyEffect() {

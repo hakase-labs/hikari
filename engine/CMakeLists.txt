@@ -168,6 +168,7 @@ set( HIKARI_CLIENT_GAME_SOURCE_FILES
     src/hikari/client/game/Task.cpp
     src/hikari/client/game/BaseTask.cpp
     src/hikari/client/game/FunctionTask.cpp
+    src/hikari/client/game/RefillHealthTask.cpp
     src/hikari/client/game/TitleState.cpp
     src/hikari/client/game/OptionsState.cpp
     src/hikari/client/game/Weapon.cpp
@@ -237,6 +238,7 @@ source_group(hikari\\client\\game\\objects FILES ${HIKARI_CLIENT_GAME_OBJECTS_SO
 set( HIKARI_CLIENT_SCRIPTING_SOURCE_FILES
     src/hikari/client/scripting/AudioServiceScriptProxy.cpp
     src/hikari/client/scripting/GameProgressScriptProxy.cpp
+    src/hikari/client/scripting/GamePlayStateScriptProxy.cpp
     src/hikari/client/scripting/SquirrelService.cpp
 )
 
