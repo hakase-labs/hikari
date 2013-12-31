@@ -530,6 +530,7 @@ namespace FactoryHelpers {
                             const auto & templateObject = root[i];
 
                             const auto name           = templateObject["name"].asString();
+                            const auto label          = templateObject.get("label", "U.WEAPON").asString();
                             const auto damageId       = templateObject.get("damageId", 0).asInt();
                             const auto paletteId      = templateObject.get("paletteId", -1).asInt();
                             const auto projectileType = templateObject["projectileType"].asString();
@@ -548,6 +549,7 @@ namespace FactoryHelpers {
                             }
 
                             weaponInstance->setActions(weaponActions);
+                            weaponInstance->setLabel(label);
                             table->addWeapon(weaponInstance);
                         }
                     }
