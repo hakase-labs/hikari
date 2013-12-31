@@ -420,17 +420,19 @@ namespace hikari {
                         // Update weapon gauge colors
                         auto & colorTable = PalettedAnimatedSprite::getColorTable();
 
-                        if(colorTable.size() > paletteId) {
-                            auto & palette = colorTable.at(paletteId);
-                            auto & darkColor = palette.at(4);
-                            auto & lightColor = palette.at(5);
+                        if(paletteId > 0) {
+                            if(colorTable.size() > static_cast<unsigned int>(paletteId)) {
+                                auto & palette = colorTable.at(paletteId);
+                                auto & darkColor = palette.at(4);
+                                auto & lightColor = palette.at(5);
 
-                            // Convert components to an RGB value
-                            int dark = (darkColor.r << 16) + (darkColor.g << 8) + darkColor.b;
-                            int light = (lightColor.r << 16) + (lightColor.g << 8) + lightColor.b;
+                                // Convert components to an RGB value
+                                int dark = (darkColor.r << 16) + (darkColor.g << 8) + darkColor.b;
+                                int light = (lightColor.r << 16) + (lightColor.g << 8) + lightColor.b;
 
-                            guiWeaponEnergyGauge->setBackgroundColor(dark);
-                            guiWeaponEnergyGauge->setForegroundColor(light);
+                                guiWeaponEnergyGauge->setBackgroundColor(dark);
+                                guiWeaponEnergyGauge->setForegroundColor(light);
+                            }
                         }
 
                         guiWeaponEnergyGauge->setValue(gp->getWeaponEnergy(currentWeapon));
@@ -1007,6 +1009,7 @@ namespace hikari {
                     if(progress->getLives() < 0) {
                         HIKARI_LOG(debug2) << "Hero has died all of his lives, go to password screen.";
                         progress->resetLivesToDefault();
+                        progress->resetWeaponEnergyToDefault();
                         controller.requestStateChange("stageselect");
                         gotoNextState = true;
                     }
@@ -1158,11 +1161,21 @@ namespace hikari {
     }
 
     void GamePlayState::refillPlayerEnergy(int amount) {
-        taskQueue.push(std::make_shared<RefillHealthTask>(amount, audioService, gameProgress));
+        taskQueue.push(std::make_shared<RefillHealthTask>(
+            RefillHealthTask::PLAYER_ENERGY,
+            amount,
+            audioService,
+            gameProgress)
+        );
     }
 
     void GamePlayState::refillWeaponEnergy(int amount) {
-        // TODO
+        taskQueue.push(std::make_shared<RefillHealthTask>(
+            RefillHealthTask::WEAPON_ENERGY,
+            amount,
+            audioService,
+            gameProgress)
+        );
     }
 
     // ************************************************************************
