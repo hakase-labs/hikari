@@ -814,6 +814,7 @@ namespace hikari {
         if(auto gp = gameProgress.lock()) {
             gp->resetPlayerEnergyToDefault();
             gp->setCurrentWeapon(0);
+            guiWeaponMenu->setSelectedIndex(0);
             hero->setWeaponId(gp->getCurrentWeapon());
         }
 
