@@ -216,7 +216,7 @@ namespace hikari {
             guiContainer->setBackgroundColor(gcn::Color(0, 0, 0, 0));
             //guiContainer->add(guiBossEnergyGauge.get(), 32, 16);
             guiContainer->add(guiHeroEnergyGauge.get(), 16, 16);
-            //guiContainer->add(guiWeaponEnergyGauge.get(), 8, 16);
+            guiContainer->add(guiWeaponEnergyGauge.get(), 8, 16);
             guiContainer->add(guiMenuPanel.get(), 0, 0);
 
             // The reddish energy gauge for bosses
@@ -421,6 +421,15 @@ namespace hikari {
                 guiETanksLabel->setCaption(etanksCaption);
                 guiETanksLabel->adjustSize();
             }
+
+            int currentWeapon = gp->getCurrentWeapon();
+
+            bool showWeaponMeter = currentWeapon != 0;
+            guiWeaponEnergyGauge->setVisible(showWeaponMeter);
+
+            if(showWeaponMeter) {
+                // TODO: Change color of gauge
+            }
         }
     }
 
@@ -431,7 +440,11 @@ namespace hikari {
             }
             guiMenuPanel->setVisible(isViewingMenu);
             guiWeaponMenu->requestFocus();
-            hero->setWeaponId(guiWeaponMenu->getSelectedIndex());
+
+            if(auto gp = gameProgress.lock()) {
+                gp->setCurrentWeapon(guiWeaponMenu->getSelectedIndex());
+                hero->setWeaponId(gp->getCurrentWeapon());
+            }
         }
 
         if((event.type == sf::Event::KeyPressed) && event.key.code == sf::Keyboard::BackSpace) {
@@ -545,6 +558,7 @@ namespace hikari {
             }
         }
 
+        updateGui();
         startStage();
     }
 
