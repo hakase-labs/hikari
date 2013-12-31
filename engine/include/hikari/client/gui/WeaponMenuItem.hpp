@@ -19,6 +19,7 @@ namespace gui {
         int selectBoxWidth;
         int selectBoxHeight;
         int selectBoxSpacing;
+        int weaponId;
         std::unique_ptr<EnergyGauge> gauge;
         std::unique_ptr<Icon> selectedIcon;
         std::unique_ptr<Icon> unselectedIcon;
@@ -29,8 +30,10 @@ namespace gui {
 
     public:
         WeaponMenuItem();
-        explicit WeaponMenuItem(const std::string & name);
+        explicit WeaponMenuItem(const std::string & name, int weaponId);
         virtual ~WeaponMenuItem();
+
+        int getWeaponId() const;
 
         // Inherited from Widget
         virtual void draw(gcn::Graphics* graphics);
