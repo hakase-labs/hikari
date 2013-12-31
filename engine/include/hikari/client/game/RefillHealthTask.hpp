@@ -11,9 +11,14 @@ namespace hikari {
 
     class RefillHealthTask : public BaseTask {
     public:
+        enum RefillType {
+            PLAYER_ENERGY,
+            WEAPON_ENERGY
+        };
 
     private:
         const static float DELAY_PER_HEALTH_TICK;
+        RefillType type;
         int refillAmount;
         int refillCounter;
         float delayTimer;
@@ -21,7 +26,7 @@ namespace hikari {
         std::weak_ptr<GameProgress> gameProgress;
 
     public:
-        RefillHealthTask(int refillAmount,
+        RefillHealthTask(RefillType type, int refillAmount,
             const std::weak_ptr<AudioService> & audioService,
             const std::weak_ptr<GameProgress> & gameProgress);
 

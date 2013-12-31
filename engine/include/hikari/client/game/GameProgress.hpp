@@ -51,6 +51,7 @@ namespace hikari {
         unsigned char getCurrentWeapon() const;
         unsigned char getWeaponCount() const;
         int getWeaponEnergy(unsigned char weapon) const;
+        int getWeaponMaxEnergy() const;
         unsigned char getWeakestWeapon() const;
         bool bossIsDefeated(unsigned char boss) const;
         bool weaponIsEnabled(unsigned char weapon) const;
