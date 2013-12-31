@@ -18,17 +18,19 @@ namespace gui {
         , selectBoxWidth(DEFAULT_SELECT_BOX_WIDTH)
         , selectBoxHeight(DEFAULT_SELECT_BOX_HEIGHT)
         , selectBoxSpacing(DEFAULT_SELECT_BOX_SPACING)
+        , weaponId(-1)
         , gauge(new EnergyGauge())
     {
         initGauge();
         adjustSize();
     }
 
-    WeaponMenuItem::WeaponMenuItem(const std::string & name)
+    WeaponMenuItem::WeaponMenuItem(const std::string & name, int weaponId)
         : MenuItem(name)
         , selectBoxWidth(DEFAULT_SELECT_BOX_WIDTH)
         , selectBoxHeight(DEFAULT_SELECT_BOX_HEIGHT)
         , selectBoxSpacing(DEFAULT_SELECT_BOX_SPACING)
+        , weaponId(weaponId)
         , gauge(new EnergyGauge())
     {
         initGauge();
@@ -57,6 +59,10 @@ namespace gui {
         int gaugeWidth = gauge->getWidth();
 
         setWidth(std::max(labelWidth, gaugeWidth) + selectBoxWidth + selectBoxSpacing);
+    }
+
+    int WeaponMenuItem::getWeaponId() const {
+        return weaponId;
     }
 
     void WeaponMenuItem::draw(gcn::Graphics* graphics) {
