@@ -169,6 +169,7 @@ set( HIKARI_CLIENT_GAME_SOURCE_FILES
     src/hikari/client/game/BaseTask.cpp
     src/hikari/client/game/FunctionTask.cpp
     src/hikari/client/game/RefillHealthTask.cpp
+    src/hikari/client/game/FadeColorTask.cpp
     src/hikari/client/game/TitleState.cpp
     src/hikari/client/game/OptionsState.cpp
     src/hikari/client/game/Weapon.cpp
