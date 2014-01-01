@@ -138,6 +138,7 @@ namespace hikari {
         sf::RectangleShape spawnerMarker;
         sf::RectangleShape transitionMarker;
         sf::RectangleShape leftBar;
+        sf::RectangleShape fadeOverlay;
         bool drawInfamousBlackBar;
         bool canViewMenu;
         bool isViewingMenu;
