@@ -10,8 +10,7 @@ namespace hikari {
         : StateTransition()
         , direction(direction)
         , overlay(sf::Vector2f(256.0f, 240.0f))
-        , duration(duration)
-        , accumulator(0.0f)
+        , fadeTask(direction == FADE_OUT ? FadeColorTask::FADE_OUT : FadeColorTask::FADE_IN, overlay, duration)
     {
         setComplete(false);
 
@@ -24,13 +23,6 @@ namespace hikari {
     }
 
     void FadeStateTransition::render(sf::RenderTarget &target) {
-        // if(exitingState && direction == FADE_OUT) {
-        //     exitingState->render(target);
-        // }
-
-        // if(exitingState && direction == FADE_OUT) {
-        //     exitingState->render(target);
-        // }
         if(direction == FADE_OUT) {
             if(exitingState) {
                 exitingState->render(target);
@@ -51,23 +43,8 @@ namespace hikari {
     }
 
     void FadeStateTransition::update(float dt) {
-        accumulator += dt;
-
-        sf::Color color = overlay.getFillColor();
-
-        if(direction == FADE_OUT) {
-            HIKARI_LOG(debug4) << "Fade out!!";
-            color.a = std::min(255, static_cast<int>((accumulator / duration) * 255.0));
-        } else {
-            HIKARI_LOG(debug4) << "Fade in!!";
-            color.a = std::max(0, 255 - static_cast<int>((accumulator / duration) * 255.0));
-        }
-        
-        overlay.setFillColor(color);
-
-        if(accumulator >= duration) {
-            setComplete(true);
-        }
+        fadeTask.update(dt);
+        setComplete(fadeTask.isComplete());
     }
 
 } // hikari

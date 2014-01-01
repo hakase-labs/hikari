@@ -33,6 +33,7 @@
 #include "hikari/client/game/Task.hpp"
 #include "hikari/client/game/FunctionTask.hpp"
 #include "hikari/client/game/RefillHealthTask.hpp"
+#include "hikari/client/game/FadeColorTask.hpp"
 #include "hikari/client/game/events/EventBusImpl.hpp"
 #include "hikari/client/game/events/EventListenerDelegate.hpp"
 #include "hikari/client/game/events/EntityDamageEventData.hpp"
@@ -351,7 +352,7 @@ namespace hikari {
                 guiETanksLabel->adjustSize();
 
                 // Update the energy levels of each gauge
-                for(unsigned int i = 0; i < guiWeaponMenu->getItemCount(); ++i) {
+                for(int i = 0; i < guiWeaponMenu->getItemCount(); ++i) {
                     const auto & item = guiWeaponMenu->getMenuItemAt(i);
                     int currentWeaponId = 0;
 
@@ -1243,6 +1244,9 @@ namespace hikari {
 
             renderer->setCullRegion(Rectangle2D<int>(cameraX, cameraY, cameraWidth, cameraHeight));
         }
+
+        // Fade in
+        gamePlayState.taskQueue.push(std::make_shared<FadeColorTask>(FadeColorTask::FADE_IN, fadeOverlay, (1.0f/60.0f) * 13.0f));
     }
 
     void GamePlayState::ReadySubState::exit() {
@@ -1254,26 +1258,7 @@ namespace hikari {
 
         timer += dt;
 
-        if(timer >= (0.0f * frameMs)) {
-            sf::Color overlayColor = sf::Color(fadeOverlay.getFillColor());
-            overlayColor.a = 255 - 255 / 4;
-
-            fadeOverlay.setFillColor(overlayColor);
-        }
-
-        if(timer >= (5.0f * frameMs)) {
-            sf::Color overlayColor = sf::Color(fadeOverlay.getFillColor());
-            overlayColor.a = 255 - 255 / 2;
-
-            fadeOverlay.setFillColor(overlayColor);
-        }
-
-        if(timer >= (9.0f * frameMs)) {
-            sf::Color overlayColor = sf::Color(fadeOverlay.getFillColor());
-            overlayColor.a = 255 - ((255 / 4) + (255 / 2));
-
-            fadeOverlay.setFillColor(overlayColor);
-        }
+        // Fading is done by a FadeColorTask, see GamePlayState::ReadySubState::enter()
 
         if(timer >= (13.0f * frameMs)) {
             renderFadeOverlay = false;
