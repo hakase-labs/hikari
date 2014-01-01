@@ -140,6 +140,7 @@ namespace hikari {
         , spawnerMarker()
         , transitionMarker()
         , leftBar(sf::Vector2f(8.0f, 240.0f))
+        , fadeOverlay(sf::Vector2f(256.0f, 240.0f))
         , drawInfamousBlackBar(false)
         , canViewMenu(false)
         , isViewingMenu(false)
@@ -329,6 +330,8 @@ namespace hikari {
             guiContainer->setEnabled(true);
             guiMenuPanel->setEnabled(true);
         }
+
+        fadeOverlay.setFillColor(sf::Color(0, 0, 0, 0));
     }
 
     void GamePlayState::updateGui() {
@@ -410,10 +413,23 @@ namespace hikari {
     void GamePlayState::handleEvent(sf::Event &event) {
         if((event.type == sf::Event::KeyPressed) && event.key.code == sf::Keyboard::Return) {
             if(canViewMenu) {
-                isViewingMenu = !isViewingMenu;
+                taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
+                    drawInfamousBlackBar = true;
+                    return true;
+                }));
+                taskQueue.push(std::make_shared<FadeColorTask>(FadeColorTask::FADE_OUT, fadeOverlay, (1.0f/60.0f) * 13.0f));
+                taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
+                    isViewingMenu = !isViewingMenu;
+                    guiMenuPanel->setVisible(isViewingMenu);
+                    guiWeaponMenu->requestFocus();
+                    return true;
+                }));
+                taskQueue.push(std::make_shared<FadeColorTask>(FadeColorTask::FADE_IN, fadeOverlay, (1.0f/60.0f) * 13.0f));
+                taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
+                    drawInfamousBlackBar = false;
+                    return true;
+                }));
             }
-            guiMenuPanel->setVisible(isViewingMenu);
-            guiWeaponMenu->requestFocus();
 
             if(auto gp = gameProgress.lock()) {
                 const auto & item = guiWeaponMenu->getMenuItemAt(guiWeaponMenu->getSelectedIndex());
@@ -452,14 +468,6 @@ namespace hikari {
                 gp->setPlayerEnergy(0);
             }
         }
-
-        if((event.type == sf::Event::KeyPressed) && event.key.code == sf::Keyboard::Q) {
-            hero->setWeaponId(hero->getWeaponId() - 1);
-        }
-
-        if((event.type == sf::Event::KeyPressed) && event.key.code == sf::Keyboard::W) {
-            hero->setWeaponId(hero->getWeaponId() + 1);
-        }
     }
 
     void GamePlayState::render(sf::RenderTarget &target) {
@@ -472,7 +480,8 @@ namespace hikari {
         }
 
         if(drawInfamousBlackBar) {
-            target.draw(leftBar);
+            // target.draw(leftBar);
+            target.draw(fadeOverlay);
         }
     }
 
