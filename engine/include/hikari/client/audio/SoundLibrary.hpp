@@ -33,6 +33,7 @@ namespace hikari {
         std::unordered_map<std::string, std::shared_ptr<MusicEntry>> music;
         std::unordered_map<std::string, std::shared_ptr<SampleEntry>> samples;
         std::vector<SamplerPair> samplers;
+        std::shared_ptr<SampleEntry> currentlyPlayingSample;
 
         void loadLibrary();
 
@@ -41,11 +42,22 @@ namespace hikari {
 
         bool isEnabled() const;
 
-        void addMusic(const std::string & name, MusicEntry entry);
-        void addSample(const std::string & name, SampleEntry entry);
+        void addMusic(const std::string & name, std::shared_ptr<MusicEntry> entry);
+        void addSample(const std::string & name, std::shared_ptr<SampleEntry> entry);
 
-        void playMusic(const std::string & name);
-        void playSample(const std::string & name);
+        /**
+         * Tries to play a music by looking it up by name. If the music is found,
+         * a valid NSFSoundStream pointer is returned. Otherwise, a nullptr is
+         * returned and no music is played.
+         */
+        std::shared_ptr<NSFSoundStream> playMusic(const std::string & name);
+
+        /**
+         * Tries to play a sample by looking it up by name. If the sample is found,
+         * a valid NSFSoundStream pointer is returned. Otherwise, a nullptr is
+         * returned and no sample is played.
+         */
+        std::shared_ptr<NSFSoundStream> playSample(const std::string & name);
 
         void stopMusic();
         void stopSample();
