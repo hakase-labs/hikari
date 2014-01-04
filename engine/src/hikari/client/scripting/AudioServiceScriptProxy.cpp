@@ -21,20 +21,33 @@ namespace hikari {
         AudioServiceScriptProxy::audioService = audioService;
     }
 
-    void AudioServiceScriptProxy::playMusic(int id) {
+    // void AudioServiceScriptProxy::playMusic(int id) {
+    //     if(auto audio = audioService.lock()) {
+    //         audio->playMusic(id);
+    //     }
+    // }
+
+    void AudioServiceScriptProxy::playMusic(const std::string & name) {
         if(auto audio = audioService.lock()) {
-            audio->playMusic(id);
+            audio->playMusic(name);
         }
     }
+
     void AudioServiceScriptProxy::stopMusic() {
         if(auto audio = audioService.lock()) {
             audio->stopMusic();
         }
     }
 
-    void AudioServiceScriptProxy::playSample(int id) {
+    // void AudioServiceScriptProxy::playSample(int id) {
+    //     if(auto audio = audioService.lock()) {
+    //         audio->playSample(id);
+    //     }
+    // }
+
+    void AudioServiceScriptProxy::playSample(const std::string & name) {
         if(auto audio = audioService.lock()) {
-            audio->playSample(id);
+            audio->playSample(name);
         }
     }
 

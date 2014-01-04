@@ -985,7 +985,7 @@ namespace hikari {
 
         if(eventData->getEntityId() == hero->getId()) {
             if(auto sound = audioService.lock()) {
-                sound->playSample(22); // SAMPLE_HERO_DAMAGE
+                sound->playSample("Rockman (Damage)");
             }
         }
     }
@@ -1020,7 +1020,7 @@ namespace hikari {
                 if(auto sound = audioService.lock()) {
                     sound->stopMusic();
                     sound->stopAllSamples();
-                    sound->playSample(23); // SAMPLE_HERO_DEATH
+                    sound->playSample("Rockman (Death)");
                 }
             }
         } else if(eventData->getEntityType() == EntityDeathEventData::Enemy) {
@@ -1106,7 +1106,8 @@ namespace hikari {
                 }
 
                 if(auto sound = audioService.lock()) {
-                    sound->playSample(21);
+                    // sound->playSample(21);
+                    sound->playSample("Rockman (Shooting)");
                 }
 
             } else {
@@ -1130,17 +1131,20 @@ namespace hikari {
                 }
 
                 if(auto sound = audioService.lock()) {
-                    sound->playSample(31);
+                    // sound->playSample(31);
+                    sound->playSample("Splash");
                 }
             }
 
             if(eventData->getStateName() == "landed") {
                 if(auto sound = audioService.lock()) {
-                    sound->playSample(19);
+                    // sound->playSample(19);
+                    sound->playSample("Rockman (Landing)");
                 }
             } else if(eventData->getStateName() == "teleporting") {
                 if(auto sound = audioService.lock()) {
-                    sound->playSample(52);
+                    // sound->playSample(52);
+                    sound->playSample("Teleport");
                 }
             } else if(eventData->getStateName() == "sliding") {
                 if(std::shared_ptr<Particle> clone = world.spawnParticle("Sliding Dust")) {
@@ -1154,7 +1158,8 @@ namespace hikari {
 
     void GamePlayState::handleDoorEvent(EventDataPtr evt) {
         if(auto sound = audioService.lock()) {
-            sound->playSample(29);
+            // sound->playSample(29);
+            sound->playSample("Door Open/Close");
         }
     }
 
@@ -1231,6 +1236,7 @@ namespace hikari {
         if(auto sound = gamePlayState.audioService.lock()) {
             HIKARI_LOG(debug) << "Playing music for the level!";
             sound->playMusic(gamePlayState.currentMap->getMusicId());
+            sound->playMusic("Magnet Man");
         }
 
         if(gamePlayState.currentRoom) {
@@ -1606,7 +1612,7 @@ namespace hikari {
 
                                         if(auto sound = context.gamePlayState.audioService.lock()) {
                                             HIKARI_LOG(debug4) << "PLAYING SAMPLE weapon DEFLECTED";
-                                            sound->playSample(25); // SAMPLE_HERO_DEATH
+                                            sound->playSample("Deflected");
                                         }
                                     } else {
                                         HIKARI_LOG(debug3) << "Hero bullet " << projectile->getId() << " hit an enemy " << enemy->getId();
@@ -1632,7 +1638,7 @@ namespace hikari {
                                         enemy->takeDamage(damageAmount);
 
                                         if(auto sound = context.gamePlayState.audioService.lock()) {
-                                            sound->playSample(24); // SAMPLE_HERO_DEATH
+                                            sound->playSample("Enemy (Damage)");
                                         }
                                     }
                                 }

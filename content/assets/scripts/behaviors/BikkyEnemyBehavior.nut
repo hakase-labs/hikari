@@ -21,7 +21,7 @@
                             host.velocityX = 0;
                             host.isShielded = true;
                             enteringNewState = false;
-                            ::hikari.sound.playSample(32);
+                            ::hikari.sound.playSample("Bikky (Landing)");
                         }
 
                         if(timer >= 1.0) {

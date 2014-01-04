@@ -4,7 +4,8 @@
         "fonts" : "assets/fonts.json",
         "audio" : {
             "music" : "assets/sound/mega-man-3-nes-[NSF-ID2016].nsf",
-            "samples" : "assets/sound/mega-man-3-nes-[NSF-ID2016].nsf"
+            "samples" : "assets/sound/mega-man-3-nes-[NSF-ID2016].nsf",
+            "library" : "assets/sound/library.json"
         },
         "tilesets" : "assets/tilesets.json",
         "stages" : "assets/stages"

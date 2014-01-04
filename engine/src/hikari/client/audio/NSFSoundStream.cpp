@@ -105,6 +105,7 @@ namespace hikari {
         sf::Lock lock(mutex);
 
         auto * mixedBuffer = masterBuffer.get();
+        bool keepGoing = true;
 
         // Generate samples for any playing emulators
         // for(int bufferIndex = 0; bufferIndex < samplerCount; ++bufferIndex) {
@@ -123,6 +124,10 @@ namespace hikari {
 
             return ended;
         });
+
+        if(activeSamplers.size() == 0) {
+            keepGoing = false;
+        }
 
         std::for_each(std::begin(activeSamplers), std::end(activeSamplers), [&](SamplerPair & pair) {
             auto & emu = pair.first;
@@ -183,7 +188,7 @@ namespace hikari {
         Data.sampleCount = masterBufferSize;
 
         // Never stop streaming...
-        return true;
+        return keepGoing;
     }
 
     void NSFSoundStream::handleError(const char* str) const {

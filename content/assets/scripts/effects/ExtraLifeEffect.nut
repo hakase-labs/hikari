@@ -5,7 +5,7 @@ class ExtraLifeEffect extends EffectBase {
 
     function applyEffect() {
         ::hikari.game.setLives(::hikari.game.getLives() + 1);
-        ::hikari.sound.playSample(20);
+        ::hikari.sound.playSample("Power Up");
     }
 
     function unapplyEffect() {

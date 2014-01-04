@@ -25,9 +25,11 @@ namespace hikari {
         static std::weak_ptr<AudioService> getWrappedService();
         static void setWrappedService(const std::weak_ptr<AudioService> & audioService);
 
-        static void playMusic(int id);
+        // static void playMusic(int id);
+        static void playMusic(const std::string & name);
         static void stopMusic();
-        static void playSample(int id);
+        // static void playSample(int id);
+        static void playSample(const std::string & name);
         static void stopAllSamples();
 
         static bool isMusicLoaded();

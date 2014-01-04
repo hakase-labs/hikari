@@ -28,6 +28,10 @@ namespace hikari {
 
     class SoundLibrary {
     private:
+        static const unsigned int MUSIC_BUFFER_SIZE;
+        static const unsigned int SAMPLE_BUFFER_SIZE;
+        static const unsigned int AUDIO_SAMPLE_RATE;
+        
         bool isEnabledFlag;
         const std::string file;
         std::unordered_map<std::string, std::shared_ptr<MusicEntry>> music;

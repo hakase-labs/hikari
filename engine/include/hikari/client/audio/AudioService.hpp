@@ -4,11 +4,16 @@
 #include "hikari/core/util/Service.hpp"
 #include "hikari/client/audio/NSFSoundStream.hpp"
 
+#include <memory>
+#include <string>
+
 namespace Json {
     class Value;
 }
 
 namespace hikari {
+
+    class SoundLibrary;
 
     class AudioService : public Service {
     private:
@@ -22,6 +27,8 @@ namespace hikari {
         NSFSoundStream musicStream;
         NSFSoundStream sampleStream;
 
+        std::unique_ptr<SoundLibrary> library;
+
         bool isValidConfiguration(const Json::Value &configuration) const;
 
     public:
@@ -32,8 +39,10 @@ namespace hikari {
         virtual ~AudioService();
         
         void playMusic(MusicId id);
+        void playMusic(const std::string & name);
         void stopMusic();
         void playSample(SampleId id);
+        void playSample(const std::string & name);
         void stopAllSamples();
 
         bool isMusicLoaded() const;
