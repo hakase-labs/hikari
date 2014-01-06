@@ -247,6 +247,7 @@ source_group(hikari\\client\\scripting FILES ${HIKARI_CLIENT_SCRIPTING_SOURCE_FI
 
 set( HIKARI_CLIENT_AUDIO_SOURCE_FILES
     src/hikari/client/audio/AudioService.cpp
+    src/hikari/client/audio/GMESoundStream.cpp
     src/hikari/client/audio/NSFSoundStream.cpp
     src/hikari/client/audio/SoundLibrary.cpp
 )

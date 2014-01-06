@@ -1,5 +1,6 @@
 #include "hikari/client/audio/AudioService.hpp"
 #include "hikari/client/audio/SoundLibrary.hpp"
+#include "hikari/client/audio/GMESoundStream.hpp"
 
 #include <json/value.h>
 

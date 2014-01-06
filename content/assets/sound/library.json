@@ -9,7 +9,7 @@
     ],
     "samples": [
       { "track": 19, "name": "Rockman (Landing)", "priority": 0 },
-      { "track": 20, "name": "Power Up", "priority": 0 },
+      { "track": 20, "name": "Power Up", "priority": 3 },
       { "track": 21, "name": "Rockman (Shooting)", "priority": 1 },
       { "track": 22, "name": "Rockman (Damage)", "priority": 2 },
       { "track": 23, "name": "Rockman (Death)", "priority": 3 },

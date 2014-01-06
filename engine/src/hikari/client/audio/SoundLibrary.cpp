@@ -1,5 +1,5 @@
 #include "hikari/client/audio/SoundLibrary.hpp"
-#include "hikari/client/audio/NSFSoundStream.hpp"
+#include "hikari/client/audio/GMESoundStream.hpp"
 #include "hikari/core/util/FileSystem.hpp"
 #include "hikari/core/util/Log.hpp"
 
@@ -48,8 +48,8 @@ namespace hikari {
                 //
                 // Create the sound stream/emulators
                 //
-                auto musicStream = std::make_shared<NSFSoundStream>(MUSIC_BUFFER_SIZE, 1);
-                auto sampleStream = std::make_shared<NSFSoundStream>(SAMPLE_BUFFER_SIZE, 1);
+                auto musicStream = std::make_shared<GMESoundStream>(MUSIC_BUFFER_SIZE);
+                auto sampleStream = std::make_shared<GMESoundStream>(SAMPLE_BUFFER_SIZE);
                 musicStream->open(nsfFile);
                 sampleStream->open(nsfFile);
 
@@ -115,7 +115,7 @@ namespace hikari {
         samples.insert(std::make_pair(name, entry));
     }
 
-    std::shared_ptr<NSFSoundStream> SoundLibrary::playMusic(const std::string & name) {
+    std::shared_ptr<GMESoundStream> SoundLibrary::playMusic(const std::string & name) {
         const auto & iterator = music.find(name);
 
         if(iterator != std::end(music)) {
@@ -130,10 +130,10 @@ namespace hikari {
             return stream;
         }
 
-        return std::shared_ptr<NSFSoundStream>(nullptr);
+        return std::shared_ptr<GMESoundStream>(nullptr);
     }
 
-    std::shared_ptr<NSFSoundStream> SoundLibrary::playSample(const std::string & name) {
+    std::shared_ptr<GMESoundStream> SoundLibrary::playSample(const std::string & name) {
         const auto & iterator = samples.find(name);
 
         if(iterator != std::end(samples)) {
@@ -164,7 +164,7 @@ namespace hikari {
 
                     if(sampleEntry->priority < currentlyPlayingSample->priority) {
                         // We're trying to play a sample with lower priority so just bail out.
-                        return std::shared_ptr<NSFSoundStream>(nullptr);
+                        return std::shared_ptr<GMESoundStream>(nullptr);
                     }
                 }
             }
@@ -179,7 +179,7 @@ namespace hikari {
             return stream;
         }
 
-        return std::shared_ptr<NSFSoundStream>(nullptr);
+        return std::shared_ptr<GMESoundStream>(nullptr);
     }
 
     void SoundLibrary::stopMusic() {
@@ -193,7 +193,7 @@ namespace hikari {
     void SoundLibrary::stopSample() {
         std::for_each(std::begin(samplers), std::end(samplers), [](SamplerPair & sampler) {
             if(const auto & sampleSampler = sampler.sampleStream) {
-                sampleSampler->stopAllSamplers();
+                // sampleSampler->stopAllSamplers();
                 sampleSampler->stop();
             }
         });

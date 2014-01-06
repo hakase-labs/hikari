@@ -8,7 +8,7 @@
 
 namespace hikari {
 
-    class NSFSoundStream;
+    class GMESoundStream;
 
     struct MusicEntry {
         unsigned int track;
@@ -22,8 +22,8 @@ namespace hikari {
     };
 
     struct SamplerPair {
-        std::shared_ptr<NSFSoundStream> musicStream;
-        std::shared_ptr<NSFSoundStream> sampleStream;
+        std::shared_ptr<GMESoundStream> musicStream;
+        std::shared_ptr<GMESoundStream> sampleStream;
     };
 
     class SoundLibrary {
@@ -31,7 +31,7 @@ namespace hikari {
         static const unsigned int MUSIC_BUFFER_SIZE;
         static const unsigned int SAMPLE_BUFFER_SIZE;
         static const unsigned int AUDIO_SAMPLE_RATE;
-        
+
         bool isEnabledFlag;
         const std::string file;
         std::unordered_map<std::string, std::shared_ptr<MusicEntry>> music;
@@ -51,17 +51,17 @@ namespace hikari {
 
         /**
          * Tries to play a music by looking it up by name. If the music is found,
-         * a valid NSFSoundStream pointer is returned. Otherwise, a nullptr is
+         * a valid GMESoundStream pointer is returned. Otherwise, a nullptr is
          * returned and no music is played.
          */
-        std::shared_ptr<NSFSoundStream> playMusic(const std::string & name);
+        std::shared_ptr<GMESoundStream> playMusic(const std::string & name);
 
         /**
          * Tries to play a sample by looking it up by name. If the sample is found,
-         * a valid NSFSoundStream pointer is returned. Otherwise, a nullptr is
+         * a valid GMESoundStream pointer is returned. Otherwise, a nullptr is
          * returned and no sample is played.
          */
-        std::shared_ptr<NSFSoundStream> playSample(const std::string & name);
+        std::shared_ptr<GMESoundStream> playSample(const std::string & name);
 
         void stopMusic();
         void stopSample();
