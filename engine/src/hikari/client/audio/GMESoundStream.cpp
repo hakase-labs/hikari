@@ -39,11 +39,9 @@ namespace hikari {
         // To honor the contract of returning false on failure,
         // catch these exceptions and return false instead? Good/bad?
         try {
-            //HandleError(gme_identify_file(fileName.c_str(), &file_type));
             gme_type_t file_type = gme_identify_extension(fileName.c_str());
             if(!file_type) {
                 return false;
-                //throw std::runtime_error("Unsupported music type");
             }
 
             emu.reset(file_type->new_emu());
@@ -51,7 +49,6 @@ namespace hikari {
 
             if(!emu.get()) {
                 return false;
-                //throw std::runtime_error("Out of memory");
             }
             
             handleError(emu->set_sample_rate(SAMPLE_RATE));
@@ -64,18 +61,18 @@ namespace hikari {
         initialize(2, SAMPLE_RATE);
         setCurrentTrack(0);
 
-        int count = emu->track_count();
-        for(int i = 0; i < count; i++) {
-            track_info_t info;
+        // int count = emu->track_count();
+        // for(int i = 0; i < count; i++) {
+        //     track_info_t info;
             
-            emu->track_info(&info, i);
+        //     emu->track_info(&info, i);
 
-            std::string song(info.song);
-            std::string comment(info.comment);
-            std::string length(StringUtils::toString<long>(info.length));
+        //     std::string song(info.song);
+        //     std::string comment(info.comment);
+        //     std::string length(StringUtils::toString<long>(info.length));
 
-            std::cout << i << '\t' << song << '\t' << comment << '\t' << length << std::endl;
-        }
+        //     std::cout << i << '\t' << song << '\t' << comment << '\t' << length << std::endl;
+        // }
 
         return true;
     }
@@ -159,14 +156,12 @@ namespace hikari {
             }
         }
 
-        bool loaded = buffer->loadFromSamples(
+        buffer->loadFromSamples(
             &samples[0],    // Spec gaurantees that std::vector's memory is contiguous
             samples.size(),
             2,
             SAMPLE_RATE
         );
-
-        HIKARI_LOG(debug) << "DID IT LOAD? " << loaded << ", size = " << samples.size();
 
         return buffer;
     }
