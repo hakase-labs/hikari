@@ -3,15 +3,16 @@
 #include "hikari/core/game/map/Tileset.hpp"
 
 #include <algorithm>
+#include <string>
 
 namespace hikari {
 
     const Rectangle2D<int> Map::INVALID_ROOM_RECT = Rectangle2D<int>();
 
-    Map::Map(const TileDataPtr &tileset, const int &gridSize, int musicId, const std::vector<RoomPtr> &rooms,
+    Map::Map(const TileDataPtr &tileset, const int &gridSize, const std::string & musicName, const std::vector<RoomPtr> &rooms,
             unsigned int startingRoomIndex, unsigned int midpointRoomIndex, unsigned int bossCorridorRoomIndex, unsigned int bossChamberRoomIndex)
         : gridSize(gridSize)
-        , musicId(musicId)
+        , musicName(musicName)
         , startingRoomIndex(startingRoomIndex)
         , midpointRoomIndex(midpointRoomIndex)
         , bossCorridorRoomIndex(bossCorridorRoomIndex)
@@ -30,8 +31,8 @@ namespace hikari {
         return gridSize;
     }
 
-    int Map::getMusicId() const {
-        return musicId;
+    const std::string & Map::getMusicName() const {
+        return musicName;
     }
 
     RoomPtr Map::getStartingRoom() const {

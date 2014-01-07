@@ -1235,8 +1235,8 @@ namespace hikari {
 
         if(auto sound = gamePlayState.audioService.lock()) {
             HIKARI_LOG(debug) << "Playing music for the level!";
-            sound->playMusic(gamePlayState.currentMap->getMusicId());
-            sound->playMusic("Magnet Man");
+            sound->playMusic(gamePlayState.currentMap->getMusicName());
+            // sound->playMusic("Magnet Man");
         }
 
         if(gamePlayState.currentRoom) {

@@ -25,6 +25,7 @@ namespace hikari {
     const char* MapLoader::PROPERTY_NAME_TILESET = "tileset";
     const char* MapLoader::PROPERTY_NAME_GRIDSIZE = "gridsize";
     const char* MapLoader::PROPERTY_NAME_MUSICID = "musicId";
+    const char* MapLoader::PROPERTY_NAME_MUSICNAME = "musicName";
     const char* MapLoader::PROPERTY_NAME_ROOMS = "rooms";
     const char* MapLoader::PROPERTY_NAME_SPECIAL_ROOMS = "specialRooms";
     const char* MapLoader::PROPERTY_NAME_SPECIAL_ROOM_STARTING = "starting";
@@ -89,6 +90,7 @@ namespace hikari {
         std::string tilesetName = json[PROPERTY_NAME_TILESET].asString();
         int gridSize = json[PROPERTY_NAME_GRIDSIZE].asInt();
         int musicId = json[PROPERTY_NAME_MUSICID].asInt();
+        std::string musicName = json.get(PROPERTY_NAME_MUSICNAME, "None").asString();
         int roomCount = json[PROPERTY_NAME_ROOMS].size();
 
         TileDataPtr tileset = nullptr;
@@ -126,7 +128,7 @@ namespace hikari {
             new Map(
                 tileset,
                 gridSize,
-                musicId,
+                musicName,
                 rooms,
                 startingRoomIndex,
                 midpointRoomIndex,
