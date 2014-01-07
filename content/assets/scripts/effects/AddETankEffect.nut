@@ -5,7 +5,7 @@ class AddETankEffect extends EffectBase {
 
     function applyEffect() {
         ::hikari.game.setETanks(::hikari.game.getETanks() + 1);
-        ::hikari.sound.playSample(20);
+        ::hikari.sound.playSample("Power Up");
     }
 
     function unapplyEffect() {

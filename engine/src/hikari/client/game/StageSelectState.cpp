@@ -139,15 +139,21 @@ namespace hikari {
     }
 
     void StageSelectState::handleEvent(sf::Event &event) {
+        bool playSample = false;
+
         if(event.type == sf::Event::KeyPressed) {
             if(event.key.code == sf::Keyboard::Up) {
                 cursorRow = std::max(0, cursorRow - 1);
+                playSample = true;
             } else if(event.key.code == sf::Keyboard::Down) {
                 cursorRow = std::min(NUM_OF_CURSOR_ROWS - 1, cursorRow + 1);
+                playSample = true;
             } else if(event.key.code == sf::Keyboard::Left) {
                 cursorColumn = std::max(0, cursorColumn - 1);
+                playSample = true;
             } else if(event.key.code == sf::Keyboard::Right) {
                 cursorColumn = std::min(NUM_OF_CURSOR_COLUMNS - 1, cursorColumn + 1);
+                playSample = true;
             } else if(event.key.code == sf::Keyboard::Return) {
                 controller.requestStateChange("gameplay");
                 startGamePlay = true;
@@ -157,6 +163,12 @@ namespace hikari {
 
             if(auto gp = gameProgress.lock()) {
                 gp->setCurrentBoss(cursorIndex);
+            }
+
+            if(playSample) {
+                if(auto audio = audioService.lock()) {
+                    audio->playSample("Menu Item Select");
+                }
             }
 
             guiSelectedCellLabel->setCaption("(" + StringUtils::toString(cursorColumn) + ", " + StringUtils::toString(cursorRow) + ")");
@@ -218,7 +230,7 @@ namespace hikari {
 
         // Start music
         if(auto audio = audioService.lock()) {
-            audio->playMusic(15);
+            audio->playMusic("Stage Select (MM2)");
         }
 
         // Reset cursor to default location

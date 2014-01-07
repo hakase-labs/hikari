@@ -94,7 +94,7 @@ namespace hikari {
             positionCursorOnItem();
 
             if(auto audio = audioService.lock()) {
-                audio->playSample(27);
+                audio->playSample("Menu Item Select");
             }
         }));
 
@@ -201,7 +201,7 @@ namespace hikari {
         positionCursorOnItem();
 
         if(auto audio = audioService.lock()) {
-            audio->playMusic(0);
+            audio->playMusic("Title Screen");
         }
 
         goToNextState = false;

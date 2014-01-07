@@ -1,0 +1,85 @@
+[
+  {
+    "file": "assets/sound/dr_cossack_2.nsf",
+    "title": "Famitracker Test",
+    "music": [
+      { "track": 0, "name": "None" }
+    ],
+    "samples": [
+    ]
+  },
+  {
+    "file": "assets/sound/mega-man-2-nes-[NSF-ID2018].nsf",
+    "title": "Mega Man Test Sounds",
+    "music": [
+      { "track": 3, "name": "Stage Select (MM2)" },
+      { "track": 4, "name": "Boss Selected (MM2)" },
+      { "track": 5, "name": "Metal Man" },
+      { "track": 6, "name": "Air Man" },
+      { "track": 7, "name": "Bubble Man" },
+      { "track": 8, "name": "Quick Man" },
+      { "track": 9, "name": "Crash Man" },
+      { "track": 10, "name": "Flash Man" },
+      { "track": 11, "name": "Heat Man" },
+      { "track": 12, "name": "Wood Man" },
+      { "track": 13, "name": "Boss Battle (MM2)" },
+      { "track": 14, "name": "Boss Defeated (MM2)" },
+      { "track": 16, "name": "Weapon Get (MM2)" },
+      { "track": 17, "name": "Dr. Wily Intro (MM2)" },
+      { "track": 18, "name": "Wily Stage 1 (MM2)" },
+      { "track": 19, "name": "Wily Stage 2 (MM2)" },
+      { "track": 20, "name": "Final Boss Defeated (MM2)" }
+    ],
+    "samples": [
+    ]
+  },
+  {
+    "file": "assets/sound/mega-man-3-nes-[NSF-ID2016].nsf",
+    "title": "Mega Man 3 Sounds",
+    "music": [
+      { "track": 0, "name": "Title Screen" },
+      { "track": 1, "name": "Needle Man" },
+      { "track": 2, "name": "Magnet Man" },
+      { "track": 3, "name": "Gemini Man" },
+      { "track": 4, "name": "Hard Man" },
+      { "track": 5, "name": "Top Man" },
+      { "track": 6, "name": "Snake Man" },
+      { "track": 7, "name": "Spark Man" },
+      { "track": 8, "name": "Shadow Man" },
+      { "track": 9, "name": "Wily Stage 1" },
+      { "track": 10, "name": "Wily Stage 2" },
+      { "track": 11, "name": "Wily Stage 3" },
+      { "track": 12, "name": "Boss Battle" },
+      { "track": 13, "name": "Final Battle" },
+      { "track": 14, "name": "Password (MM3)" },
+      { "track": 15, "name": "Credits (MM3)" },
+      { "track": 16, "name": "Stage Select (MM3)" },
+      { "track": 18, "name": "Outro (MM3)" },
+      { "track": 51, "name": "Boss Selected (MM3)" },
+      { "track": 53, "name": "Weapon Get (MM3)" },
+      { "track": 55, "name": "Final Boss Defeated (MM3)" },
+      { "track": 56, "name": "Boss Defeated (MM3)" }
+    ],
+    "samples": [
+      { "track": 19, "name": "Rockman (Landing)", "priority": 0 },
+      { "track": 20, "name": "Power Up", "priority": 3 },
+      { "track": 21, "name": "Rockman (Shooting)", "priority": 0 },
+      { "track": 22, "name": "Rockman (Damage)", "priority": 0 },
+      { "track": 23, "name": "Rockman (Death)", "priority": 3 },
+      { "track": 24, "name": "Enemy (Damage)", "priority": 1 },
+      { "track": 25, "name": "Deflected", "priority": 0 },
+      { "track": 26, "name": "Menu Open", "priority": 0 },
+      { "track": 27, "name": "Menu Item Select", "priority": 3 },
+      { "track": 28, "name": "Energy Refill", "priority": 3 },
+      { "track": 29, "name": "Door Open/Close", "priority": 3 },
+      { "track": 30, "name": "Canon Shoot", "priority": 0 },
+      { "track": 31, "name": "Splash", "priority": 1 },
+      { "track": 32, "name": "Bikky (Landing)", "priority": 0 },
+      { "track": 35, "name": "Disappearing Block", "priority": 2 },
+      { "track": 39, "name": "Explosion (Medium)", "priority": 2 },
+      { "track": 46, "name": "Shadow Blade", "priority": 1 },
+      { "track": 50, "name": "Power Obtained", "priority": 3 },
+      { "track": 52, "name": "Teleport", "priority": 3 }
+    ]
+  }
+]
