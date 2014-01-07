@@ -47,7 +47,7 @@ namespace hikari {
                 refillCounter -= 1;
 
                 if(const auto & audio = audioService.lock()) {
-                    audio->playSample(28); // SAMPLE_REFILL
+                    audio->playSample("Energy Refill");
                 }
 
                 if(const auto & progress = gameProgress.lock()) {
