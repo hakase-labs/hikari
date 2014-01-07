@@ -1,5 +1,14 @@
 [
   {
+    "file": "assets/sound/dr_cossack_2.nsf",
+    "title": "Famitracker Test",
+    "music": [
+      { "track": 0, "name": "None" }
+    ],
+    "samples": [
+    ]
+  },
+  {
     "file": "assets/sound/mega-man-2-nes-[NSF-ID2018].nsf",
     "title": "Mega Man Test Sounds",
     "music": [
@@ -54,16 +63,16 @@
     "samples": [
       { "track": 19, "name": "Rockman (Landing)", "priority": 0 },
       { "track": 20, "name": "Power Up", "priority": 3 },
-      { "track": 21, "name": "Rockman (Shooting)", "priority": 1 },
-      { "track": 22, "name": "Rockman (Damage)", "priority": 2 },
+      { "track": 21, "name": "Rockman (Shooting)", "priority": 0 },
+      { "track": 22, "name": "Rockman (Damage)", "priority": 0 },
       { "track": 23, "name": "Rockman (Death)", "priority": 3 },
-      { "track": 24, "name": "Enemy (Damage)", "priority": 2 },
-      { "track": 25, "name": "Deflected", "priority": 2 },
-      { "track": 26, "name": "Menu Open", "priority": 3 },
+      { "track": 24, "name": "Enemy (Damage)", "priority": 0 },
+      { "track": 25, "name": "Deflected", "priority": 0 },
+      { "track": 26, "name": "Menu Open", "priority": 0 },
       { "track": 27, "name": "Menu Item Select", "priority": 3 },
       { "track": 28, "name": "Energy Refill", "priority": 3 },
       { "track": 29, "name": "Door Open/Close", "priority": 3 },
-      { "track": 30, "name": "Canon Shoot", "priority": 1 },
+      { "track": 30, "name": "Canon Shoot", "priority": 0 },
       { "track": 31, "name": "Splash", "priority": 1 },
       { "track": 32, "name": "Bikky (Landing)", "priority": 0 },
       { "track": 35, "name": "Disappearing Block", "priority": 2 },
