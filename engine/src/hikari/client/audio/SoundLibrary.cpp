@@ -119,9 +119,13 @@ namespace hikari {
         const auto & iterator = music.find(name);
 
         if(iterator != std::end(music)) {
+            HIKARI_LOG(debug4) << "Found the music '" << name << "'.";
             const std::shared_ptr<MusicEntry> & musicEntry = (*iterator).second;
             const SamplerPair & samplerPair = samplers.at(musicEntry->samplerId);
             const auto & stream = samplerPair.musicStream;
+
+            HIKARI_LOG(debug4) << "MusicEntry: " << musicEntry << ", samplerId = " << musicEntry->samplerId;
+            HIKARI_LOG(debug4) << "Stream: " << samplerPair.musicStream << ", status = " << samplerPair.musicStream->getStatus();
 
             stopMusic();
             stream->setCurrentTrack(musicEntry->track);
@@ -129,6 +133,8 @@ namespace hikari {
 
             return stream;
         }
+
+        HIKARI_LOG(debug4) << "Didn't find the music '" << name << "'.";
 
         return std::shared_ptr<GMESoundStream>(nullptr);
     }
