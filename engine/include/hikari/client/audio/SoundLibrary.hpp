@@ -6,6 +6,11 @@
 #include <unordered_map>
 #include <vector>
 
+namespace sf {
+    class SoundBuffer;
+    class Sound;
+}
+
 namespace hikari {
 
     class GMESoundStream;
@@ -36,8 +41,10 @@ namespace hikari {
         const std::string file;
         std::unordered_map<std::string, std::shared_ptr<MusicEntry>> music;
         std::unordered_map<std::string, std::shared_ptr<SampleEntry>> samples;
+        std::unordered_map<std::string, std::shared_ptr<sf::SoundBuffer>> sampleSoundBuffers;
         std::vector<SamplerPair> samplers;
         std::shared_ptr<SampleEntry> currentlyPlayingSample;
+        std::unique_ptr<sf::Sound> soundPlayer;
 
         void loadLibrary();
 

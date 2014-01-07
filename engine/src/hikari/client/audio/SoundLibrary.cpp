@@ -7,6 +7,9 @@
 #include <functional>
 #include <string>
 
+#include <SFML/Audio/Sound.hpp>
+#include <SFML/Audio/SoundBuffer.hpp>
+
 #include <json/reader.h>
 #include <json/value.h>
 
@@ -14,15 +17,17 @@ namespace hikari {
 
     const unsigned int SoundLibrary::MUSIC_BUFFER_SIZE = 2048 * 2;  // some platforms need larger buffer
     const unsigned int SoundLibrary::SAMPLE_BUFFER_SIZE = 2048 * 2; // so we'll double it for now.
-    const unsigned int SoundLibrary::AUDIO_SAMPLE_RATE = 44000;
+    const unsigned int SoundLibrary::AUDIO_SAMPLE_RATE = 44100;
 
     SoundLibrary::SoundLibrary(const std::string & file)
         : isEnabledFlag(false)
         , file(file)
         , music()
         , samples()
+        , sampleSoundBuffers()
         , samplers()
-        , currentlyPlayingSample(nullptr) {
+        , currentlyPlayingSample(nullptr)
+        , soundPlayer(new sf::Sound()) {
         loadLibrary();
     }
 
@@ -75,7 +80,7 @@ namespace hikari {
                     musicEntry->samplerId = samplerIndex;
 
                     music.insert(std::make_pair(name, musicEntry));
-                    HIKARI_LOG(debug) << "-> loaded music \"" << name << "\"";
+                    HIKARI_LOG(debug) << "\t-> loaded music \"" << name << "\"";
                 }
 
                 //
@@ -93,8 +98,15 @@ namespace hikari {
                     sampleEntry->priority = sampleEntryJson[PROP_PRIORITY].asUInt();
                     sampleEntry->samplerId = samplerIndex;
 
+                    // Create a sound buffer and pre-render the sample into it.
+                    auto sampleSoundBuffer = std::shared_ptr<sf::SoundBuffer>(
+                            sampleStream->renderTrackToBuffer(sampleEntry->track));
+
+                    // Index the buffers my the same key (the name of the sample)
+                    sampleSoundBuffers.insert(std::make_pair(name, sampleSoundBuffer));
+
                     samples.insert(std::make_pair(name, sampleEntry));
-                    HIKARI_LOG(debug) << "-> loaded sample \"" << name << "\"";
+                    HIKARI_LOG(debug) << "\t-> loaded sample \"" << name << "\"";
 
                 }
             }
@@ -140,34 +152,63 @@ namespace hikari {
     }
 
     std::shared_ptr<GMESoundStream> SoundLibrary::playSample(const std::string & name) {
+        // const auto & iterator = samples.find(name);
+
+        // if(iterator != std::end(samples)) {
+        //     const std::shared_ptr<SampleEntry> & sampleEntry = (*iterator).second;
+        //     const SamplerPair & samplerPair = samplers.at(sampleEntry->samplerId);
+        //     const auto & stream = samplerPair.sampleStream;
+
+        //     // If a sample is currently playing, check to see if we should
+        //     // interrupt it or not. If it's not playing then don't bother.
+            
+            
+        //     // This needs to be worked out a little bit more.
+
+        //     if(currentlyPlayingSample) {
+        //         const SamplerPair & currentlyPlayingSamplerPair = samplers.at(currentlyPlayingSample->samplerId);
+        //         const auto & currentlyPlayingStream = currentlyPlayingSamplerPair.sampleStream;
+
+        //         if(currentlyPlayingStream->getStatus() == sf::SoundStream::Playing) {
+        //             // if(currentlyPlayingSample == sampleEntry) {
+        //             //     stopSample();
+        //             //     stream->setCurrentTrack(sampleEntry->track);
+        //             //     stream->play();
+
+        //             //     currentlyPlayingSample = sampleEntry;
+
+        //             //     return stream;
+        //             // }
+
+        //             if(sampleEntry->priority < currentlyPlayingSample->priority) {
+        //                 // We're trying to play a sample with lower priority so just bail out.
+        //                 return std::shared_ptr<GMESoundStream>(nullptr);
+        //             }
+        //         }
+        //     }
+            
+        //     //stopSample();
+        //     stream->setCurrentTrack(sampleEntry->track);
+        //     stream->play();
+
+        //     currentlyPlayingSample = sampleEntry;
+
+        //     return stream;
+        // }
+        // 
         const auto & iterator = samples.find(name);
 
         if(iterator != std::end(samples)) {
             const std::shared_ptr<SampleEntry> & sampleEntry = (*iterator).second;
-            const SamplerPair & samplerPair = samplers.at(sampleEntry->samplerId);
-            const auto & stream = samplerPair.sampleStream;
 
             // If a sample is currently playing, check to see if we should
             // interrupt it or not. If it's not playing then don't bother.
-            
-            
-            // This needs to be worked out a little bit more.
 
             if(currentlyPlayingSample) {
                 const SamplerPair & currentlyPlayingSamplerPair = samplers.at(currentlyPlayingSample->samplerId);
-                const auto & currentlyPlayingStream = currentlyPlayingSamplerPair.sampleStream;
+                // const auto & currentlyPlayingStream = currentlyPlayingSamplerPair.sampleStream;
 
-                if(currentlyPlayingStream->getStatus() == sf::SoundStream::Playing) {
-                    // if(currentlyPlayingSample == sampleEntry) {
-                    //     stopSample();
-                    //     stream->setCurrentTrack(sampleEntry->track);
-                    //     stream->play();
-
-                    //     currentlyPlayingSample = sampleEntry;
-
-                    //     return stream;
-                    // }
-
+                if(soundPlayer->getStatus() == sf::SoundStream::Playing) {
                     if(sampleEntry->priority < currentlyPlayingSample->priority) {
                         // We're trying to play a sample with lower priority so just bail out.
                         return std::shared_ptr<GMESoundStream>(nullptr);
@@ -175,15 +216,30 @@ namespace hikari {
                 }
             }
             
+            const auto & bufferIterator = sampleSoundBuffers.find(name);
 
-            stopSample();
-            stream->setCurrentTrack(sampleEntry->track);
-            stream->play();
+            if(bufferIterator != std::end(sampleSoundBuffers)) {
+                const std::shared_ptr<sf::SoundBuffer> & sampleBuffer = (*bufferIterator).second;
 
-            currentlyPlayingSample = sampleEntry;
+                soundPlayer->stop();
+                soundPlayer->setBuffer(*sampleBuffer.get());
+                soundPlayer->play();
 
-            return stream;
+                currentlyPlayingSample = sampleEntry;
+            }
+
+            return std::shared_ptr<GMESoundStream>(nullptr);
         }
+        
+        // const auto & iterator = sampleSoundBuffers.find(name);
+
+        // if(iterator != std::end(sampleSoundBuffers)) {
+        //     const std::shared_ptr<sf::SoundBuffer> & sampleBuffer = (*iterator).second;
+
+        //     soundPlayer->setBuffer(*sampleBuffer.get());
+        // }
+
+        // soundPlayer->play();
 
         return std::shared_ptr<GMESoundStream>(nullptr);
     }
