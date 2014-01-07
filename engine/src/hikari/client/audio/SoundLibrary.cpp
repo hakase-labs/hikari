@@ -58,11 +58,7 @@ namespace hikari {
                 musicStream->open(nsfFile);
                 sampleStream->open(nsfFile);
 
-                SamplerPair samplerPair;
-                samplerPair.musicStream = musicStream;
-                samplerPair.sampleStream = sampleStream;
-
-                samplers.push_back(samplerPair);
+                samplers.push_back(musicStream);
                 HIKARI_LOG(debug) << "Loaded sampler for " << nsfFile;
 
                 //
@@ -133,11 +129,9 @@ namespace hikari {
         if(iterator != std::end(music)) {
             HIKARI_LOG(debug4) << "Found the music '" << name << "'.";
             const std::shared_ptr<MusicEntry> & musicEntry = (*iterator).second;
-            const SamplerPair & samplerPair = samplers.at(musicEntry->samplerId);
-            const auto & stream = samplerPair.musicStream;
+            const auto & stream = samplers.at(musicEntry->samplerId);
 
             HIKARI_LOG(debug4) << "MusicEntry: " << musicEntry << ", samplerId = " << musicEntry->samplerId;
-            HIKARI_LOG(debug4) << "Stream: " << samplerPair.musicStream << ", status = " << samplerPair.musicStream->getStatus();
 
             stopMusic();
             stream->setCurrentTrack(musicEntry->track);
@@ -166,8 +160,8 @@ namespace hikari {
         //     // This needs to be worked out a little bit more.
 
         //     if(currentlyPlayingSample) {
-        //         const SamplerPair & currentlyPlayingSamplerPair = samplers.at(currentlyPlayingSample->samplerId);
-        //         const auto & currentlyPlayingStream = currentlyPlayingSamplerPair.sampleStream;
+                // const std::shared_ptr<GMESoundStream> & currentlyPlayingSamplerPair = samplers.at(currentlyPlayingSample->samplerId);
+                // const auto & currentlyPlayingStream = currentlyPlayingSamplerPair.sampleStream;
 
         //         if(currentlyPlayingStream->getStatus() == sf::SoundStream::Playing) {
         //             // if(currentlyPlayingSample == sampleEntry) {
@@ -205,9 +199,6 @@ namespace hikari {
             // interrupt it or not. If it's not playing then don't bother.
 
             if(currentlyPlayingSample) {
-                const SamplerPair & currentlyPlayingSamplerPair = samplers.at(currentlyPlayingSample->samplerId);
-                // const auto & currentlyPlayingStream = currentlyPlayingSamplerPair.sampleStream;
-
                 if(soundPlayer->getStatus() == sf::SoundStream::Playing) {
                     if(sampleEntry->priority < currentlyPlayingSample->priority) {
                         // We're trying to play a sample with lower priority so just bail out.
@@ -221,7 +212,7 @@ namespace hikari {
             if(bufferIterator != std::end(sampleSoundBuffers)) {
                 const std::shared_ptr<sf::SoundBuffer> & sampleBuffer = (*bufferIterator).second;
 
-                soundPlayer->stop();
+                // soundPlayer->stop();
                 soundPlayer->setBuffer(*sampleBuffer.get());
                 soundPlayer->play();
 
@@ -230,34 +221,19 @@ namespace hikari {
 
             return std::shared_ptr<GMESoundStream>(nullptr);
         }
-        
-        // const auto & iterator = sampleSoundBuffers.find(name);
-
-        // if(iterator != std::end(sampleSoundBuffers)) {
-        //     const std::shared_ptr<sf::SoundBuffer> & sampleBuffer = (*iterator).second;
-
-        //     soundPlayer->setBuffer(*sampleBuffer.get());
-        // }
-
-        // soundPlayer->play();
 
         return std::shared_ptr<GMESoundStream>(nullptr);
     }
 
     void SoundLibrary::stopMusic() {
-        std::for_each(std::begin(samplers), std::end(samplers), [](SamplerPair & sampler) {
-            if(const auto & musicSampler = sampler.musicStream) {
-                musicSampler->stop();
-            }
+        std::for_each(std::begin(samplers), std::end(samplers), [](const std::shared_ptr<GMESoundStream> & musicSampler) {
+            musicSampler->stop();
         });
     }
 
     void SoundLibrary::stopSample() {
-        std::for_each(std::begin(samplers), std::end(samplers), [](SamplerPair & sampler) {
-            if(const auto & sampleSampler = sampler.sampleStream) {
-                // sampleSampler->stopAllSamplers();
-                sampleSampler->stop();
-            }
+        std::for_each(std::begin(samplePlayers), std::end(samplePlayers), [](SamplePlayer & sampler) {
+            sampler.player->stop();
         });
     }
 

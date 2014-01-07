@@ -31,6 +31,11 @@ namespace hikari {
         std::shared_ptr<GMESoundStream> sampleStream;
     };
 
+    struct SamplePlayer {
+        std::shared_ptr<sf::SoundBuffer> buffer;
+        std::shared_ptr<sf::Sound> player;
+    };
+
     class SoundLibrary {
     private:
         static const unsigned int MUSIC_BUFFER_SIZE;
@@ -42,7 +47,8 @@ namespace hikari {
         std::unordered_map<std::string, std::shared_ptr<MusicEntry>> music;
         std::unordered_map<std::string, std::shared_ptr<SampleEntry>> samples;
         std::unordered_map<std::string, std::shared_ptr<sf::SoundBuffer>> sampleSoundBuffers;
-        std::vector<SamplerPair> samplers;
+        std::vector<std::shared_ptr<GMESoundStream>> samplers;
+        std::vector<SamplePlayer> samplePlayers; // Finish this
         std::shared_ptr<SampleEntry> currentlyPlayingSample;
         std::unique_ptr<sf::Sound> soundPlayer;
 
