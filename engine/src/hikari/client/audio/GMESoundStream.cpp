@@ -140,4 +140,35 @@ namespace hikari {
             emu->voice_names(), emu->voice_names() + getVoiceCount());
     }
 
+    std::unique_ptr<sf::SoundBuffer> GMESoundStream::renderTrackToBuffer(int track) {
+        sf::Lock lock(mutex);
+        std::unique_ptr<sf::SoundBuffer> buffer(new sf::SoundBuffer);
+        std::vector<short> samples;
+
+        emu->start_track(track);
+
+        std::size_t bufferSize = 512;
+
+        // TODO: Be careful that you don't try to render a looping track
+        //       or this could get really messy...
+        while(!emu->track_ended()) {
+            handleError(emu->play(bufferSize, myBuffer.get()));
+
+            for(int i = 0; i < bufferSize; ++i) {
+                samples.push_back(myBuffer[i]);
+            }
+        }
+
+        bool loaded = buffer->loadFromSamples(
+            &samples[0],    // Spec gaurantees that std::vector's memory is contiguous
+            samples.size(),
+            2,
+            SAMPLE_RATE
+        );
+
+        HIKARI_LOG(debug) << "DID IT LOAD? " << loaded << ", size = " << samples.size();
+
+        return buffer;
+    }
+
 } // hikari

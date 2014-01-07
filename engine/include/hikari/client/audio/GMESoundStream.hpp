@@ -12,6 +12,10 @@
 struct Music_Emu;
 struct track_info_t;
 
+namespace sf {
+    class SoundBuffer;
+}
+
 namespace hikari {
 
     /**
@@ -120,6 +124,8 @@ namespace hikari {
         ///
         ////////////////////////////////////////////////////////////
         std::vector<std::string> getVoiceNames() const;
+
+        std::unique_ptr<sf::SoundBuffer> renderTrackToBuffer(int track);
 
     private:
         ////////////////////////////////////////////////////////////
