@@ -2,6 +2,7 @@
   "tileset": "assets/tilesets/tiles-pearl.json",
   "gridsize": 16,
   "musicId" : 5,
+  "musicName" : "Needle Man",
   "specialRooms": {
     "starting": 0,
     "midpoint": 0,
