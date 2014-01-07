@@ -15,32 +15,33 @@ namespace hikari {
 
     class GMESoundStream;
 
-    struct MusicEntry {
-        unsigned int track;
-        unsigned int samplerId;
-    };
-
-    struct SampleEntry {
-        unsigned int track;
-        unsigned int priority;
-        unsigned int samplerId;
-    };
-
-    struct SamplerPair {
-        std::shared_ptr<GMESoundStream> musicStream;
-        std::shared_ptr<GMESoundStream> sampleStream;
-    };
-
-    struct SamplePlayer {
-        std::shared_ptr<sf::SoundBuffer> buffer;
-        std::shared_ptr<sf::Sound> player;
-    };
-
     class SoundLibrary {
     private:
         static const unsigned int MUSIC_BUFFER_SIZE;
         static const unsigned int SAMPLE_BUFFER_SIZE;
         static const unsigned int AUDIO_SAMPLE_RATE;
+
+        struct MusicEntry {
+            unsigned int track;
+            unsigned int samplerId;
+        };
+
+        struct SampleEntry {
+            unsigned int track;
+            unsigned int priority;
+            unsigned int samplerId;
+        };
+
+        struct SamplerPair {
+            std::shared_ptr<GMESoundStream> musicStream;
+            std::shared_ptr<GMESoundStream> sampleStream;
+        };
+
+        struct SamplePlayer {
+            std::shared_ptr<sf::SoundBuffer> buffer;
+            std::shared_ptr<sf::Sound> player;
+            unsigned int priority;
+        };
 
         bool isEnabledFlag;
         const std::string file;
@@ -48,9 +49,8 @@ namespace hikari {
         std::unordered_map<std::string, std::shared_ptr<SampleEntry>> samples;
         std::unordered_map<std::string, std::shared_ptr<sf::SoundBuffer>> sampleSoundBuffers;
         std::vector<std::shared_ptr<GMESoundStream>> samplers;
-        std::vector<SamplePlayer> samplePlayers; // Finish this
+        std::unordered_map<std::string, std::shared_ptr<SamplePlayer>> samplePlayers;
         std::shared_ptr<SampleEntry> currentlyPlayingSample;
-        std::unique_ptr<sf::Sound> soundPlayer;
 
         void loadLibrary();
 
@@ -58,9 +58,6 @@ namespace hikari {
         SoundLibrary(const std::string & file);
 
         bool isEnabled() const;
-
-        void addMusic(const std::string & name, std::shared_ptr<MusicEntry> entry);
-        void addSample(const std::string & name, std::shared_ptr<SampleEntry> entry);
 
         /**
          * Tries to play a music by looking it up by name. If the music is found,

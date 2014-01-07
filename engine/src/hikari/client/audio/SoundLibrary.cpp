@@ -26,8 +26,7 @@ namespace hikari {
         , samples()
         , sampleSoundBuffers()
         , samplers()
-        , currentlyPlayingSample(nullptr)
-        , soundPlayer(new sf::Sound()) {
+        , currentlyPlayingSample(nullptr) {
         loadLibrary();
     }
 
@@ -101,6 +100,13 @@ namespace hikari {
                     // Index the buffers my the same key (the name of the sample)
                     sampleSoundBuffers.insert(std::make_pair(name, sampleSoundBuffer));
 
+                    auto p = std::make_shared<SamplePlayer>();
+                    p->buffer = sampleSoundBuffer;
+                    p->player = std::make_shared<sf::Sound>(*sampleSoundBuffer.get());
+                    p->priority = sampleEntryJson[PROP_PRIORITY].asUInt();
+
+                    samplePlayers.insert(std::make_pair(name, p));
+
                     samples.insert(std::make_pair(name, sampleEntry));
                     HIKARI_LOG(debug) << "\t-> loaded sample \"" << name << "\"";
 
@@ -113,14 +119,6 @@ namespace hikari {
 
     bool SoundLibrary::isEnabled() const {
         return isEnabledFlag;
-    }
-
-    void SoundLibrary::addMusic(const std::string & name, std::shared_ptr<MusicEntry> entry) {
-        music.insert(std::make_pair(name, entry));
-    }
-
-    void SoundLibrary::addSample(const std::string & name, std::shared_ptr<SampleEntry> entry) {
-        samples.insert(std::make_pair(name, entry));
     }
 
     std::shared_ptr<GMESoundStream> SoundLibrary::playMusic(const std::string & name) {
@@ -146,80 +144,23 @@ namespace hikari {
     }
 
     std::shared_ptr<GMESoundStream> SoundLibrary::playSample(const std::string & name) {
-        // const auto & iterator = samples.find(name);
+        const auto & iterator = samplePlayers.find(name);
 
-        // if(iterator != std::end(samples)) {
-        //     const std::shared_ptr<SampleEntry> & sampleEntry = (*iterator).second;
-        //     const SamplerPair & samplerPair = samplers.at(sampleEntry->samplerId);
-        //     const auto & stream = samplerPair.sampleStream;
+        if(iterator != std::end(samplePlayers)) {
+            const std::shared_ptr<SamplePlayer> & samplePlayer = (*iterator).second;
+            const auto & player = samplePlayer->player;
 
-        //     // If a sample is currently playing, check to see if we should
-        //     // interrupt it or not. If it's not playing then don't bother.
-            
-            
-        //     // This needs to be worked out a little bit more.
+            // Stop any sounds currently playing with lower priority
+            std::for_each(std::begin(samplePlayers), std::end(samplePlayers), [&](decltype(samplePlayers)::value_type & pair) {
+                const auto & otherPlayer = pair.second;
 
-        //     if(currentlyPlayingSample) {
-                // const std::shared_ptr<GMESoundStream> & currentlyPlayingSamplerPair = samplers.at(currentlyPlayingSample->samplerId);
-                // const auto & currentlyPlayingStream = currentlyPlayingSamplerPair.sampleStream;
-
-        //         if(currentlyPlayingStream->getStatus() == sf::SoundStream::Playing) {
-        //             // if(currentlyPlayingSample == sampleEntry) {
-        //             //     stopSample();
-        //             //     stream->setCurrentTrack(sampleEntry->track);
-        //             //     stream->play();
-
-        //             //     currentlyPlayingSample = sampleEntry;
-
-        //             //     return stream;
-        //             // }
-
-        //             if(sampleEntry->priority < currentlyPlayingSample->priority) {
-        //                 // We're trying to play a sample with lower priority so just bail out.
-        //                 return std::shared_ptr<GMESoundStream>(nullptr);
-        //             }
-        //         }
-        //     }
-            
-        //     //stopSample();
-        //     stream->setCurrentTrack(sampleEntry->track);
-        //     stream->play();
-
-        //     currentlyPlayingSample = sampleEntry;
-
-        //     return stream;
-        // }
-        // 
-        const auto & iterator = samples.find(name);
-
-        if(iterator != std::end(samples)) {
-            const std::shared_ptr<SampleEntry> & sampleEntry = (*iterator).second;
-
-            // If a sample is currently playing, check to see if we should
-            // interrupt it or not. If it's not playing then don't bother.
-
-            if(currentlyPlayingSample) {
-                if(soundPlayer->getStatus() == sf::SoundStream::Playing) {
-                    if(sampleEntry->priority < currentlyPlayingSample->priority) {
-                        // We're trying to play a sample with lower priority so just bail out.
-                        return std::shared_ptr<GMESoundStream>(nullptr);
-                    }
+                if(otherPlayer->priority <= samplePlayer->priority) {
+                    otherPlayer->player->stop();
                 }
-            }
-            
-            const auto & bufferIterator = sampleSoundBuffers.find(name);
+            });
 
-            if(bufferIterator != std::end(sampleSoundBuffers)) {
-                const std::shared_ptr<sf::SoundBuffer> & sampleBuffer = (*bufferIterator).second;
-
-                // soundPlayer->stop();
-                soundPlayer->setBuffer(*sampleBuffer.get());
-                soundPlayer->play();
-
-                currentlyPlayingSample = sampleEntry;
-            }
-
-            return std::shared_ptr<GMESoundStream>(nullptr);
+            // Play (or restart) the sound we want to play
+            player->play();
         }
 
         return std::shared_ptr<GMESoundStream>(nullptr);
@@ -232,8 +173,11 @@ namespace hikari {
     }
 
     void SoundLibrary::stopSample() {
-        std::for_each(std::begin(samplePlayers), std::end(samplePlayers), [](SamplePlayer & sampler) {
-            sampler.player->stop();
+        std::for_each(std::begin(samplePlayers), std::end(samplePlayers), [](decltype(samplePlayers)::value_type & pair) {
+            const auto & otherPlayer = pair.second;
+            const std::shared_ptr<sf::Sound> player = otherPlayer->player;
+            
+            player->stop();
         });
     }
 
