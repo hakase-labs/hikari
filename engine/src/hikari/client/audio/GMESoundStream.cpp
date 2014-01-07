@@ -1,7 +1,8 @@
-#include <hikari/client/audio/GMESoundStream.hpp>
-#include <hikari/core/util/FileSystem.hpp>
-#include <hikari/core/util/PhysFS.hpp>
-#include <hikari/core/util/Log.hpp>
+#include "hikari/client/audio/GMESoundStream.hpp"
+#include "hikari/core/util/FileSystem.hpp"
+#include "hikari/core/util/StringUtils.hpp"
+#include "hikari/core/util/PhysFS.hpp"
+#include "hikari/core/util/Log.hpp"
 #include <Music_Emu.h>
 #include <gme.h>
 #include <iostream>
@@ -63,7 +64,7 @@ namespace hikari {
         initialize(2, SAMPLE_RATE);
         setCurrentTrack(0);
 
-        /*int count = emu->track_count();
+        int count = emu->track_count();
         for(int i = 0; i < count; i++) {
             track_info_t info;
             
@@ -71,10 +72,10 @@ namespace hikari {
 
             std::string song(info.song);
             std::string comment(info.comment);
+            std::string length(StringUtils::toString<long>(info.length));
 
-            std::cout << i << '\t' <<
-                song << '\t' << comment << std::endl;
-        }*/
+            std::cout << i << '\t' << song << '\t' << comment << '\t' << length << std::endl;
+        }
 
         return true;
     }
@@ -86,7 +87,7 @@ namespace hikari {
 
     bool GMESoundStream::onGetData(sf::SoundStream::Chunk& Data) {
         sf::Lock lock(mutex);
-        
+
         handleError(emu->play(myBufferSize, myBuffer.get()));
 
         Data.samples     = &myBuffer[0]; 
