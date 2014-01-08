@@ -25,7 +25,7 @@ namespace hikari {
             @return false if this state should keep running, true if it is time
             to transition to a new state
         */
-        virtual bool update(const float &dt) = 0;
+        virtual bool update(float dt) = 0;
         virtual void onEnter() = 0;
         virtual void onExit() = 0;
         virtual const std::string &getName() const = 0;

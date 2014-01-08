@@ -485,7 +485,7 @@ namespace hikari {
         }
     }
 
-    bool GamePlayState::update(const float &dt) {
+    bool GamePlayState::update(float dt) {
         gotoNextState = false;
 
         guiWeaponMenu->logic();
@@ -1268,7 +1268,7 @@ namespace hikari {
 
     }
 
-    GamePlayState::SubState::StateChangeAction GamePlayState::ReadySubState::update(const float & dt) {
+    GamePlayState::SubState::StateChangeAction GamePlayState::ReadySubState::update(float dt) {
         const float frameMs = (1.0f/60.0f);
 
         timer += dt;
@@ -1375,7 +1375,7 @@ namespace hikari {
 
     }
 
-    GamePlayState::SubState::StateChangeAction GamePlayState::TeleportSubState::update(const float & dt) {
+    GamePlayState::SubState::StateChangeAction GamePlayState::TeleportSubState::update(float dt) {
         auto& hero = gamePlayState.hero;
         auto& heroPosition = hero->getPosition();
 
@@ -1441,7 +1441,7 @@ namespace hikari {
 
     }
 
-    GamePlayState::SubState::StateChangeAction GamePlayState::PlayingSubState::update(const float & dt) {
+    GamePlayState::SubState::StateChangeAction GamePlayState::PlayingSubState::update(float dt) {
         auto& camera = gamePlayState.camera;
 
         auto playerPosition = gamePlayState.world.getPlayerPosition();
@@ -1918,7 +1918,7 @@ namespace hikari {
         gamePlayState.changeCurrentRoom(nextRoom);
     }
 
-    GamePlayState::SubState::StateChangeAction GamePlayState::TransitionSubState::update(const float & dt) {
+    GamePlayState::SubState::StateChangeAction GamePlayState::TransitionSubState::update(float dt) {
         auto & camera = gamePlayState.camera;
         auto & hero = gamePlayState.hero;
 

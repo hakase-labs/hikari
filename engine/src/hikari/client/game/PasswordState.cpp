@@ -53,7 +53,7 @@ namespace hikari {
         }
     }
 
-    bool PasswordState::update(const float &dt) {
+    bool PasswordState::update(float dt) {
         if(keyboardInput->wasPressed(Input::BUTTON_CANCEL)) {
             controller.requestStateChange("title");
             goToNextState = true;

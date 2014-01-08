@@ -53,7 +53,7 @@ namespace hikari {
         energyMeter->render(target);
     }
 
-    bool GuiTestState::update(const float &dt) {
+    bool GuiTestState::update(float dt) {
 #ifdef _DEBUG
         //std::cout << "GuiTestState::update(" << dt << ")" << std::endl;
 #endif

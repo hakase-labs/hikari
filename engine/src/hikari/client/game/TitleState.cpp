@@ -182,7 +182,7 @@ namespace hikari {
         }
     }
 
-    bool TitleState::update(const float &dt) {
+    bool TitleState::update(float dt) {
         guiMenu->logic();
         return goToNextState;
     }

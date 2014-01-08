@@ -6,9 +6,9 @@
 namespace hikari {
 
     StateTransition::StateTransition()
-        : exitingState(nullptr)
+        : completeFlag(false)
+        , exitingState(nullptr)
         , enteringState(nullptr)
-        , completeFlag(false)
     {
 
     }

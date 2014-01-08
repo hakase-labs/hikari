@@ -227,7 +227,7 @@ namespace hikari {
         // guiFont->renderText(target, "(" + StringUtils::toString<int>(cursorColumn) + ", " + StringUtils::toString<int>(cursorRow) + ")", 8, 224);
     }
 
-    bool StageSelectState::update(const float &dt) {
+    bool StageSelectState::update(float dt) {
         if(!taskQueue.empty()) {
             auto & task = taskQueue.front();
             task->update(dt);
