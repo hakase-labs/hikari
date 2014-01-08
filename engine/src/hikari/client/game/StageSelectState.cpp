@@ -1,6 +1,8 @@
 #include "hikari/client/game/StageSelectState.hpp"
 #include "hikari/client/audio/AudioService.hpp"
 #include "hikari/client/game/GameProgress.hpp"
+#include "hikari/client/game/Task.hpp"
+#include "hikari/client/game/FunctionTask.hpp"
 #include "hikari/client/gui/GuiService.hpp"
 #include "hikari/client/gui/Icon.hpp"
 #include "hikari/client/Services.hpp"
@@ -43,6 +45,7 @@ namespace hikari {
         , guiService(services.locateService<GuiService>(Services::GUISERVICE))
         , audioService(services.locateService<AudioService>(Services::AUDIO))
         , gameProgress(services.locateService<GameProgress>(Services::GAMEPROGRESS))
+        , taskQueue()
         , guiContainer(new gcn::Container())
         , guiSelectedCellLabel(new gcn::Label())
         , guiCursorIcon()
@@ -109,6 +112,29 @@ namespace hikari {
 
     }
 
+    void StageSelectState::selectCurrentPortrait() {
+        calculateCursorIndex();
+
+        // Set eye positions
+        std::pair< Point2D<float>, Point2D<float> > eyePosition = eyePositions.at(cursorIndex);
+
+        const Point2D<float> &leftEyePosition = eyePosition.first;
+        leftEye.setPosition(leftEyePosition.getX(), leftEyePosition.getY());
+        guiLeftEye->setX(static_cast<int>(leftEyePosition.getX()));
+        guiLeftEye->setY(static_cast<int>(leftEyePosition.getY()));
+
+        const Point2D<float> &rightEyePosition = eyePosition.second;
+        rightEye.setPosition(rightEyePosition.getX(), rightEyePosition.getY());
+        guiRightEye->setX(static_cast<int>(rightEyePosition.getX()));
+        guiRightEye->setY(static_cast<int>(rightEyePosition.getY()));
+
+        // Set cursor position
+        const Point2D<float> &cursorPosition = cursorPositions.at(cursorIndex);
+
+        guiCursorIcon->setX(cursorPosition.getX());
+        guiCursorIcon->setY(cursorPosition.getY());
+    }
+
     void StageSelectState::calculateCursorIndex() {
         cursorIndex = (cursorRow * NUM_OF_CURSOR_ROWS) + cursorColumn;
     }
@@ -159,7 +185,8 @@ namespace hikari {
                 startGamePlay = true;
             }
 
-            calculateCursorIndex();
+            // calculateCursorIndex();
+            selectCurrentPortrait();
 
             if(auto gp = gameProgress.lock()) {
                 gp->setCurrentBoss(cursorIndex);
@@ -201,26 +228,17 @@ namespace hikari {
     }
 
     bool StageSelectState::update(const float &dt) {
-        calculateCursorIndex();
+        if(!taskQueue.empty()) {
+            auto & task = taskQueue.front();
+            task->update(dt);
 
-        // Set eye positions
-        std::pair< Point2D<float>, Point2D<float> > eyePosition = eyePositions.at(cursorIndex);
-
-        const Point2D<float> &leftEyePosition = eyePosition.first;
-        leftEye.setPosition(leftEyePosition.getX(), leftEyePosition.getY());
-        guiLeftEye->setX(static_cast<int>(leftEyePosition.getX()));
-        guiLeftEye->setY(static_cast<int>(leftEyePosition.getY()));
-
-        const Point2D<float> &rightEyePosition = eyePosition.second;
-        rightEye.setPosition(rightEyePosition.getX(), rightEyePosition.getY());
-        guiRightEye->setX(static_cast<int>(rightEyePosition.getX()));
-        guiRightEye->setY(static_cast<int>(rightEyePosition.getY()));
-
-        // Set cursor position
-        const Point2D<float> &cursorPosition = cursorPositions.at(cursorIndex);
-
-        guiCursorIcon->setX(cursorPosition.getX());
-        guiCursorIcon->setY(cursorPosition.getY());
+            if(task->isComplete()) {
+                taskQueue.pop();
+            }
+        } else {
+            // calculateCursorIndex();
+            selectCurrentPortrait();
+        }
 
         return startGamePlay;
     }
@@ -243,6 +261,8 @@ namespace hikari {
             topContainer.add(guiContainer.get(), 0, 0);
             guiContainer->setEnabled(true);
         }
+
+        selectCurrentPortrait();
     }
 
     void StageSelectState::onExit() {
