@@ -65,6 +65,7 @@ namespace hikari {
         int cursorColumn;
         int cursorIndex;
         bool startGamePlay;
+        bool enableCursorMovement;
 
         std::vector< std::pair< Point2D<float>, Point2D<float> > > eyePositions;
         std::vector< Point2D<float> > cursorPositions;
