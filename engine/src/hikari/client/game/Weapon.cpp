@@ -37,6 +37,10 @@ namespace hikari {
     return usageCost;
   }
 
+  const std::string & Weapon::getUsageSound() const {
+    return usageSound;
+  }
+
   unsigned int Weapon::getLimit() const {
     return limit;
   }

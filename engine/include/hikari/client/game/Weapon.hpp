@@ -34,7 +34,6 @@ namespace hikari {
   protected:
     void setName(const std::string & name);
     void setProjectileType(const std::string & type);
-    void setSound(const std::string & sound);
 
   public:
     static const float DEFAULT_USAGE_COST;
@@ -55,6 +54,7 @@ namespace hikari {
     const std::string & getUsageSound() const;
 
     void setLabel(const std::string & label);
+    void setSound(const std::string & sound);
     void setActions(const std::vector<std::shared_ptr<WeaponAction>> & actions);
     virtual Shot fire(GameWorld & world, WeaponFireEventData & eventData) const;
   };

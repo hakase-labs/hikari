@@ -1107,7 +1107,7 @@ namespace hikari {
 
                 if(auto sound = audioService.lock()) {
                     // sound->playSample(21);
-                    sound->playSample("Rockman (Shooting)");
+                    sound->playSample(weapon->getUsageSound());
                 }
 
             } else {

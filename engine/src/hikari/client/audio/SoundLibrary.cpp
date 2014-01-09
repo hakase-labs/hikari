@@ -161,6 +161,8 @@ namespace hikari {
 
             // Play (or restart) the sound we want to play
             player->play();
+        } else {
+            HIKARI_LOG(debug4) << "Didn't find the sample '" << name << "'.";
         }
 
         return std::shared_ptr<GMESoundStream>(nullptr);

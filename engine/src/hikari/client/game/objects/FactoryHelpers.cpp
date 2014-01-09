@@ -550,6 +550,7 @@ namespace FactoryHelpers {
 
                             weaponInstance->setActions(weaponActions);
                             weaponInstance->setLabel(label);
+                            weaponInstance->setSound(usageSound);
                             table->addWeapon(weaponInstance);
                         }
                     }
