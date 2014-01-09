@@ -3,6 +3,7 @@
 #include "hikari/client/game/GameProgress.hpp"
 #include "hikari/client/game/Task.hpp"
 #include "hikari/client/game/FunctionTask.hpp"
+#include "hikari/client/game/WaitTask.hpp"
 #include "hikari/client/gui/GuiService.hpp"
 #include "hikari/client/gui/Icon.hpp"
 #include "hikari/client/Services.hpp"
@@ -183,11 +184,9 @@ namespace hikari {
                     cursorColumn = std::min(NUM_OF_CURSOR_COLUMNS - 1, cursorColumn + 1);
                     playSample = true;
                 } else if(event.key.code == sf::Keyboard::Return) {
-                    auto counter = std::make_shared<float>(0.0f);
+                    // Play the "selected" sound
                     taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
                         if(auto audio = audioService.lock()) {
-                            audio->stopMusic();
-                            audio->playMusic("Boss Selected (MM3)");
                             audio->playSample("Stage Selected");
                         }
 
@@ -196,12 +195,23 @@ namespace hikari {
                         return true;
                     }));
 
-                    taskQueue.push(std::make_shared<FunctionTask>(0, [&, counter](float dt) -> bool {
-                        *counter.get() += dt;
+                    // Wait half a second before continuing
+                    taskQueue.push(std::make_shared<WaitTask>(0.5f));
 
-                        return *counter.get() >= 7.0f;
+                    // Stop the regular music, start playing the boss intro music
+                    taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
+                        if(auto audio = audioService.lock()) {
+                            audio->stopMusic();
+                            audio->playMusic("Boss Selected (MM3)");
+                        }
+
+                        return true;
                     }));
 
+                    // Wait 7 seconds for the music to play
+                    taskQueue.push(std::make_shared<WaitTask>(7.0f));
+
+                    // Go to the next game state -- playing the game
                     taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
                         controller.requestStateChange("gameplay");
                         startGamePlay = true;
@@ -210,7 +220,6 @@ namespace hikari {
                     }));
                 }
 
-                // calculateCursorIndex();
                 selectCurrentPortrait();
 
                 if(auto gp = gameProgress.lock()) {
