@@ -70,7 +70,7 @@ namespace hikari {
         }
 
         if(auto audio = audioService.lock()) {
-            audio->playMusic(14);
+            audio->playMusic("Password (MM3)");
         }
 
         goToNextState = false;

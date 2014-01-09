@@ -186,7 +186,9 @@ namespace hikari {
                     auto counter = std::make_shared<float>(0.0f);
                     taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
                         if(auto audio = audioService.lock()) {
-                            audio->playSample("Disappearing Block");
+                            audio->stopMusic();
+                            audio->playMusic("Boss Selected (MM3)");
+                            audio->playSample("Stage Selected");
                         }
 
                         enableCursorMovement = false;
@@ -197,7 +199,7 @@ namespace hikari {
                     taskQueue.push(std::make_shared<FunctionTask>(0, [&, counter](float dt) -> bool {
                         *counter.get() += dt;
 
-                        return *counter.get() >= 3.0f;
+                        return *counter.get() >= 7.0f;
                     }));
 
                     taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
