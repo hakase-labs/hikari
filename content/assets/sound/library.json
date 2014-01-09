@@ -1,16 +1,17 @@
 [
   {
-    "file": "assets/sound/dr_cossack_2.nsf",
-    "title": "Famitracker Test",
+    "file": "assets/sound/mega-man-4-nes-[NSF-ID1520].nsf",
+    "title": "Mega Man 4 Sounds",
     "music": [
       { "track": 0, "name": "None" }
     ],
     "samples": [
+      { "track": 42, "name": "Stage Selected", "priority": 3 }
     ]
   },
   {
     "file": "assets/sound/mega-man-2-nes-[NSF-ID2018].nsf",
-    "title": "Mega Man Test Sounds",
+    "title": "Mega Man 2 Sounds",
     "music": [
       { "track": 3, "name": "Stage Select (MM2)" },
       { "track": 4, "name": "Boss Selected (MM2)" },
