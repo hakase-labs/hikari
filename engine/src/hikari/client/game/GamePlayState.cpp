@@ -415,6 +415,9 @@ namespace hikari {
         if((event.type == sf::Event::KeyPressed) && event.key.code == sf::Keyboard::Return) {
             if(canViewMenu) {
                 taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
+                    sf::Color color = fadeOverlay.getFillColor();
+                    color.a = 0;
+                    fadeOverlay.setFillColor(color);
                     drawInfamousBlackBar = true;
                     return true;
                 }));
@@ -888,6 +891,18 @@ namespace hikari {
             drawInfamousBlackBar = false;
             return true;
         }));
+
+        // Perform the check to see if we're all the way dead, and if we are, go
+        // to a different game state.
+        if(auto progress = gameProgress.lock()) {
+            if(progress->getLives() < 0) {
+                HIKARI_LOG(debug2) << "Hero has died all of his lives, go to password screen.";
+                progress->resetLivesToDefault();
+                progress->resetWeaponEnergyToDefault();
+                controller.requestStateChange("stageselect");
+                gotoNextState = true;
+            }
+        }
     }
 
     void GamePlayState::updateDoors(float dt) {
@@ -1024,13 +1039,13 @@ namespace hikari {
                     progress->setLives(progress->getLives() - 1);
 
                     // All the way dead
-                    if(progress->getLives() < 0) {
-                        HIKARI_LOG(debug2) << "Hero has died all of his lives, go to password screen.";
-                        progress->resetLivesToDefault();
-                        progress->resetWeaponEnergyToDefault();
-                        controller.requestStateChange("stageselect");
-                        gotoNextState = true;
-                    }
+                    // if(progress->getLives() < 0) {
+                    //     HIKARI_LOG(debug2) << "Hero has died all of his lives, go to password screen.";
+                    //     progress->resetLivesToDefault();
+                    //     progress->resetWeaponEnergyToDefault();
+                    //     controller.requestStateChange("stageselect");
+                    //     gotoNextState = true;
+                    // }
                 }
 
                 spawnDeathExplosion(hero->getDeathType(), hero->getPosition());
