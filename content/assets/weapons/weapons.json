@@ -6,7 +6,7 @@
         "projectileType": "Plasma Bullet",
         "limit": 3,
         "usageCost": 0,
-        "usageSound": "Plasma Bullet",
+        "usageSound": "Rockman (Shooting)",
         "usageActions": [
             { 
                 "type": "spawnProjectile",
@@ -27,7 +27,7 @@
         "paletteId": 4,
         "limit": 3,
         "usageCost": 2.0,
-        "usageSound": "Plasma Bullet",
+        "usageSound": "Rockman (Shooting)",
         "usageActions": [
             { 
                 "type": "spawnProjectile",
@@ -60,7 +60,7 @@
     },
     {
         "name": "Shadow Blade",
-        "label": "SHADOW",
+        "label": "S.BLADE",
         "projectileType": "Shadow Blade",
         "paletteId": 5,
         "limit": 1,
@@ -79,7 +79,7 @@
         "projectileType": "Komasaburo Top",
         "limit": 1,
         "usageCost": 3.0,
-        "usageSound": "Shadow Blade",
+        "usageSound": "None",
         "usageActions": [
             {
                 "type": "spawnProjectile",
@@ -95,6 +95,7 @@
     },
     {
         "name": "Erekin Spark",
+        "label": "E.SPARK",
         "projectileType": "Erekin Spark",
         "limit": 3,
         "usageCost": 3.0,

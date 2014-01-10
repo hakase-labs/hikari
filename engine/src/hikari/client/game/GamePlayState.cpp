@@ -34,6 +34,7 @@
 #include "hikari/client/game/FunctionTask.hpp"
 #include "hikari/client/game/RefillHealthTask.hpp"
 #include "hikari/client/game/FadeColorTask.hpp"
+#include "hikari/client/game/WaitTask.hpp"
 #include "hikari/client/game/events/EventBusImpl.hpp"
 #include "hikari/client/game/events/EventListenerDelegate.hpp"
 #include "hikari/client/game/events/EntityDamageEventData.hpp"
@@ -414,6 +415,9 @@ namespace hikari {
         if((event.type == sf::Event::KeyPressed) && event.key.code == sf::Keyboard::Return) {
             if(canViewMenu) {
                 taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
+                    sf::Color color = fadeOverlay.getFillColor();
+                    color.a = 0;
+                    fadeOverlay.setFillColor(color);
                     drawInfamousBlackBar = true;
                     return true;
                 }));
@@ -485,7 +489,7 @@ namespace hikari {
         }
     }
 
-    bool GamePlayState::update(const float &dt) {
+    bool GamePlayState::update(float dt) {
         gotoNextState = false;
 
         guiWeaponMenu->logic();
@@ -870,6 +874,37 @@ namespace hikari {
         changeSubState(std::unique_ptr<SubState>(new ReadySubState(*this)));
     }
 
+    void GamePlayState::endRound() {
+        sf::Color color = fadeOverlay.getFillColor();
+        color.a = 0;
+        fadeOverlay.setFillColor(color);
+        taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
+            drawInfamousBlackBar = true;
+            return true;
+        }));
+        taskQueue.push(std::make_shared<FadeColorTask>(FadeColorTask::FADE_OUT, fadeOverlay, (1.0f/60.0f) * 13.0f));
+        taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
+            startRound();
+            return true;
+        }));
+        taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
+            drawInfamousBlackBar = false;
+            return true;
+        }));
+
+        // Perform the check to see if we're all the way dead, and if we are, go
+        // to a different game state.
+        if(auto progress = gameProgress.lock()) {
+            if(progress->getLives() < 0) {
+                HIKARI_LOG(debug2) << "Hero has died all of his lives, go to password screen.";
+                progress->resetLivesToDefault();
+                progress->resetWeaponEnergyToDefault();
+                controller.requestStateChange("stageselect");
+                gotoNextState = true;
+            }
+        }
+    }
+
     void GamePlayState::updateDoors(float dt) {
         if(currentRoom) {
             auto & exitDoor = currentRoom->getExitDoor();
@@ -1004,13 +1039,13 @@ namespace hikari {
                     progress->setLives(progress->getLives() - 1);
 
                     // All the way dead
-                    if(progress->getLives() < 0) {
-                        HIKARI_LOG(debug2) << "Hero has died all of his lives, go to password screen.";
-                        progress->resetLivesToDefault();
-                        progress->resetWeaponEnergyToDefault();
-                        controller.requestStateChange("stageselect");
-                        gotoNextState = true;
-                    }
+                    // if(progress->getLives() < 0) {
+                    //     HIKARI_LOG(debug2) << "Hero has died all of his lives, go to password screen.";
+                    //     progress->resetLivesToDefault();
+                    //     progress->resetWeaponEnergyToDefault();
+                    //     controller.requestStateChange("stageselect");
+                    //     gotoNextState = true;
+                    // }
                 }
 
                 spawnDeathExplosion(hero->getDeathType(), hero->getPosition());
@@ -1058,6 +1093,8 @@ namespace hikari {
 
             if(projectilePtr) {
                 world.queueObjectRemoval(projectilePtr);
+
+                spawnDeathExplosion(projectilePtr->getDeathType(), projectilePtr->getPosition());
             }
         }
     }
@@ -1107,7 +1144,7 @@ namespace hikari {
 
                 if(auto sound = audioService.lock()) {
                     // sound->playSample(21);
-                    sound->playSample("Rockman (Shooting)");
+                    sound->playSample(weapon->getUsageSound());
                 }
 
             } else {
@@ -1268,7 +1305,7 @@ namespace hikari {
 
     }
 
-    GamePlayState::SubState::StateChangeAction GamePlayState::ReadySubState::update(const float & dt) {
+    GamePlayState::SubState::StateChangeAction GamePlayState::ReadySubState::update(float dt) {
         const float frameMs = (1.0f/60.0f);
 
         timer += dt;
@@ -1375,7 +1412,7 @@ namespace hikari {
 
     }
 
-    GamePlayState::SubState::StateChangeAction GamePlayState::TeleportSubState::update(const float & dt) {
+    GamePlayState::SubState::StateChangeAction GamePlayState::TeleportSubState::update(float dt) {
         auto& hero = gamePlayState.hero;
         auto& heroPosition = hero->getPosition();
 
@@ -1409,6 +1446,7 @@ namespace hikari {
     GamePlayState::PlayingSubState::PlayingSubState(GamePlayState & gamePlayState)
         : SubState(gamePlayState)
         , postDeathTimer(0.0f)
+        , gotoNextState(false)
     {
 
     }
@@ -1441,7 +1479,7 @@ namespace hikari {
 
     }
 
-    GamePlayState::SubState::StateChangeAction GamePlayState::PlayingSubState::update(const float & dt) {
+    GamePlayState::SubState::StateChangeAction GamePlayState::PlayingSubState::update(float dt) {
         auto& camera = gamePlayState.camera;
 
         auto playerPosition = gamePlayState.world.getPlayerPosition();
@@ -1676,8 +1714,13 @@ namespace hikari {
 
             // Wait 1 second after you died and then restart
             if(postDeathTimer >= 2.5f) {
-                gamePlayState.startRound();
-                return SubState::NEXT;
+                if(!gotoNextState) {
+                    gotoNextState = true;
+
+                    gamePlayState.endRound();
+                } else {
+                    return SubState::NEXT;
+                }
             }
         } else {
             // TODO: Note to self -- this seems pretty convoluted... probably change this soon please.
@@ -1918,7 +1961,7 @@ namespace hikari {
         gamePlayState.changeCurrentRoom(nextRoom);
     }
 
-    GamePlayState::SubState::StateChangeAction GamePlayState::TransitionSubState::update(const float & dt) {
+    GamePlayState::SubState::StateChangeAction GamePlayState::TransitionSubState::update(float dt) {
         auto & camera = gamePlayState.camera;
         auto & hero = gamePlayState.hero;
 

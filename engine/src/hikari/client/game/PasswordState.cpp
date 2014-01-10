@@ -53,7 +53,7 @@ namespace hikari {
         }
     }
 
-    bool PasswordState::update(const float &dt) {
+    bool PasswordState::update(float dt) {
         if(keyboardInput->wasPressed(Input::BUTTON_CANCEL)) {
             controller.requestStateChange("title");
             goToNextState = true;
@@ -70,7 +70,7 @@ namespace hikari {
         }
 
         if(auto audio = audioService.lock()) {
-            audio->playMusic(14);
+            audio->playMusic("Password (MM3)");
         }
 
         goToNextState = false;

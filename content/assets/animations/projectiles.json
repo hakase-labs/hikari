@@ -70,7 +70,7 @@
                     "width" : 16, 
                     "height" : 16, 
                     "hotspotX" : 8, 
-                    "hotspotY" : 16, 
+                    "hotspotY" : 8, 
                     "length" : 0.1
                 },
                 { 
@@ -79,7 +79,7 @@
                     "width" : 16, 
                     "height" : 16, 
                     "hotspotX" : 8, 
-                    "hotspotY" : 16, 
+                    "hotspotY" : 8, 
                     "length" : 0.1
                 },
                 { 
@@ -88,7 +88,7 @@
                     "width" : 16, 
                     "height" : 16, 
                     "hotspotX" : 8, 
-                    "hotspotY" : 16, 
+                    "hotspotY" : 8, 
                     "length" : 0.1
                 },
                 { 
@@ -97,7 +97,7 @@
                     "width" : 16, 
                     "height" : 16, 
                     "hotspotX" : 8, 
-                    "hotspotY" : 16, 
+                    "hotspotY" : 8, 
                     "length" : 0.1
                 }
             ]

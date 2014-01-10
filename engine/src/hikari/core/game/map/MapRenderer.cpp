@@ -12,7 +12,7 @@
 
 namespace hikari {
     
-    bool MapRenderer::isDebugLadderRenderingEnabled = true;
+    bool MapRenderer::isDebugLadderRenderingEnabled = false;
     bool MapRenderer::isDebugDoorRenderingEnabled = false;
     const int MapRenderer::TILE_OVERDRAW = 1;
 

@@ -168,7 +168,7 @@ namespace hikari {
 
     }
 
-    bool GameController::DefaultGameState::update(const float &dt) {
+    bool GameController::DefaultGameState::update(float dt) {
         return false;
     }
 

@@ -21,7 +21,6 @@ namespace hikari {
      */
     class HIKARI_API StateTransition {
     private:
-        
         bool completeFlag;
 
     protected:

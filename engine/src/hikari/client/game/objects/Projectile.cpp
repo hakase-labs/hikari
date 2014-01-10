@@ -113,6 +113,7 @@ namespace hikari {
     void Projectile::deflect() {
         setInert(true);
         setMotion(DeflectedMotion);
+        setPhasing(true);
     }
 
     void Projectile::onDeath() {

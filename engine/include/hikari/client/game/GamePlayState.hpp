@@ -255,6 +255,14 @@ namespace hikari {
         void startRound();
 
         /**
+         * Ends the current round and fades the screen out. After fading out,
+         * the round is started again.
+         *
+         * @see startRound
+         */
+        void endRound();
+
+        /**
          * Checks if the player is colliding with a transition region.
          */
         void checkCollisionWithTransition();
@@ -310,7 +318,7 @@ namespace hikari {
             virtual ~SubState() { };
             virtual void enter() = 0;
             virtual void exit() = 0;
-            virtual StateChangeAction update(const float & dt) = 0;
+            virtual StateChangeAction update(float dt) = 0;
             virtual void render(sf::RenderTarget &target) = 0;
         };
 
@@ -329,7 +337,7 @@ namespace hikari {
             virtual ~ReadySubState();
             virtual void enter();
             virtual void exit();
-            virtual StateChangeAction update(const float & dt);
+            virtual StateChangeAction update(float dt);
             virtual void render(sf::RenderTarget &target);
         };
 
@@ -345,7 +353,7 @@ namespace hikari {
             virtual ~TeleportSubState();
             virtual void enter();
             virtual void exit();
-            virtual StateChangeAction update(const float & dt);
+            virtual StateChangeAction update(float dt);
             virtual void render(sf::RenderTarget &target);
         };
 
@@ -355,12 +363,13 @@ namespace hikari {
         class PlayingSubState : public SubState {
         private:
             float postDeathTimer; // A timer that counts after you die
+            bool gotoNextState;
         public:
             PlayingSubState(GamePlayState & gamePlayState);
             virtual ~PlayingSubState();
             virtual void enter();
             virtual void exit();
-            virtual StateChangeAction update(const float & dt);
+            virtual StateChangeAction update(float dt);
             virtual void render(sf::RenderTarget &target);
         };
 
@@ -394,7 +403,7 @@ namespace hikari {
             virtual ~TransitionSubState();
             virtual void enter();
             virtual void exit();
-            virtual StateChangeAction update(const float & dt);
+            virtual StateChangeAction update(float dt);
             virtual void render(sf::RenderTarget &target);
         };
 
@@ -404,7 +413,7 @@ namespace hikari {
 
         virtual void handleEvent(sf::Event &event);
         virtual void render(sf::RenderTarget &target);
-        virtual bool update(const float &dt);
+        virtual bool update(float dt);
         virtual void onEnter();
         virtual void onExit();
         virtual const std::string &getName() const;

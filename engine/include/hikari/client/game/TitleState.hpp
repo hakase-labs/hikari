@@ -63,7 +63,7 @@ namespace hikari {
 
         virtual void handleEvent(sf::Event &event);
         virtual void render(sf::RenderTarget &target);
-        virtual bool update(const float &dt);
+        virtual bool update(float dt);
         virtual void onEnter();
         virtual void onExit();
         virtual const std::string &getName() const;

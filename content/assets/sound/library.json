@@ -1,16 +1,17 @@
 [
   {
-    "file": "assets/sound/dr_cossack_2.nsf",
-    "title": "Famitracker Test",
+    "file": "assets/sound/mega-man-4-nes-[NSF-ID1520].nsf",
+    "title": "Mega Man 4 Sounds",
     "music": [
       { "track": 0, "name": "None" }
     ],
     "samples": [
+      { "track": 42, "name": "Stage Selected", "priority": 3 }
     ]
   },
   {
     "file": "assets/sound/mega-man-2-nes-[NSF-ID2018].nsf",
-    "title": "Mega Man Test Sounds",
+    "title": "Mega Man 2 Sounds",
     "music": [
       { "track": 3, "name": "Stage Select (MM2)" },
       { "track": 4, "name": "Boss Selected (MM2)" },
@@ -64,7 +65,7 @@
       { "track": 19, "name": "Rockman (Landing)", "priority": 0 },
       { "track": 20, "name": "Power Up", "priority": 3 },
       { "track": 21, "name": "Rockman (Shooting)", "priority": 0 },
-      { "track": 22, "name": "Rockman (Damage)", "priority": 0 },
+      { "track": 22, "name": "Rockman (Damage)", "priority": 1 },
       { "track": 23, "name": "Rockman (Death)", "priority": 3 },
       { "track": 24, "name": "Enemy (Damage)", "priority": 1 },
       { "track": 25, "name": "Deflected", "priority": 0 },
@@ -77,6 +78,7 @@
       { "track": 32, "name": "Bikky (Landing)", "priority": 0 },
       { "track": 35, "name": "Disappearing Block", "priority": 2 },
       { "track": 39, "name": "Explosion (Medium)", "priority": 2 },
+      { "track": 45, "name": "Erekin Spark", "priority": 0},
       { "track": 46, "name": "Shadow Blade", "priority": 1 },
       { "track": 50, "name": "Power Obtained", "priority": 3 },
       { "track": 52, "name": "Teleport", "priority": 3 }

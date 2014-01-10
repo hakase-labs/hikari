@@ -1,6 +1,9 @@
 #include "hikari/client/game/StageSelectState.hpp"
 #include "hikari/client/audio/AudioService.hpp"
 #include "hikari/client/game/GameProgress.hpp"
+#include "hikari/client/game/Task.hpp"
+#include "hikari/client/game/FunctionTask.hpp"
+#include "hikari/client/game/WaitTask.hpp"
 #include "hikari/client/gui/GuiService.hpp"
 #include "hikari/client/gui/Icon.hpp"
 #include "hikari/client/Services.hpp"
@@ -43,6 +46,7 @@ namespace hikari {
         , guiService(services.locateService<GuiService>(Services::GUISERVICE))
         , audioService(services.locateService<AudioService>(Services::AUDIO))
         , gameProgress(services.locateService<GameProgress>(Services::GAMEPROGRESS))
+        , taskQueue()
         , guiContainer(new gcn::Container())
         , guiSelectedCellLabel(new gcn::Label())
         , guiCursorIcon()
@@ -52,6 +56,7 @@ namespace hikari {
         , guiRightEye()
         , cursorRow(DEFAULT_CURSOR_ROW)
         , cursorColumn(DEFAULT_CURSOR_COLUMN)
+        , enableCursorMovement(false)
     {
         std::weak_ptr<ImageCache> imageCache = services.locateService<ImageCache>(Services::IMAGECACHE);
 
@@ -109,6 +114,29 @@ namespace hikari {
 
     }
 
+    void StageSelectState::selectCurrentPortrait() {
+        calculateCursorIndex();
+
+        // Set eye positions
+        std::pair< Point2D<float>, Point2D<float> > eyePosition = eyePositions.at(cursorIndex);
+
+        const Point2D<float> &leftEyePosition = eyePosition.first;
+        leftEye.setPosition(leftEyePosition.getX(), leftEyePosition.getY());
+        guiLeftEye->setX(static_cast<int>(leftEyePosition.getX()));
+        guiLeftEye->setY(static_cast<int>(leftEyePosition.getY()));
+
+        const Point2D<float> &rightEyePosition = eyePosition.second;
+        rightEye.setPosition(rightEyePosition.getX(), rightEyePosition.getY());
+        guiRightEye->setX(static_cast<int>(rightEyePosition.getX()));
+        guiRightEye->setY(static_cast<int>(rightEyePosition.getY()));
+
+        // Set cursor position
+        const Point2D<float> &cursorPosition = cursorPositions.at(cursorIndex);
+
+        guiCursorIcon->setX(cursorPosition.getX());
+        guiCursorIcon->setY(cursorPosition.getY());
+    }
+
     void StageSelectState::calculateCursorIndex() {
         cursorIndex = (cursorRow * NUM_OF_CURSOR_ROWS) + cursorColumn;
     }
@@ -142,37 +170,71 @@ namespace hikari {
         bool playSample = false;
 
         if(event.type == sf::Event::KeyPressed) {
-            if(event.key.code == sf::Keyboard::Up) {
-                cursorRow = std::max(0, cursorRow - 1);
-                playSample = true;
-            } else if(event.key.code == sf::Keyboard::Down) {
-                cursorRow = std::min(NUM_OF_CURSOR_ROWS - 1, cursorRow + 1);
-                playSample = true;
-            } else if(event.key.code == sf::Keyboard::Left) {
-                cursorColumn = std::max(0, cursorColumn - 1);
-                playSample = true;
-            } else if(event.key.code == sf::Keyboard::Right) {
-                cursorColumn = std::min(NUM_OF_CURSOR_COLUMNS - 1, cursorColumn + 1);
-                playSample = true;
-            } else if(event.key.code == sf::Keyboard::Return) {
-                controller.requestStateChange("gameplay");
-                startGamePlay = true;
-            }
+            if(enableCursorMovement) {
+                if(event.key.code == sf::Keyboard::Up) {
+                    cursorRow = std::max(0, cursorRow - 1);
+                    playSample = true;
+                } else if(event.key.code == sf::Keyboard::Down) {
+                    cursorRow = std::min(NUM_OF_CURSOR_ROWS - 1, cursorRow + 1);
+                    playSample = true;
+                } else if(event.key.code == sf::Keyboard::Left) {
+                    cursorColumn = std::max(0, cursorColumn - 1);
+                    playSample = true;
+                } else if(event.key.code == sf::Keyboard::Right) {
+                    cursorColumn = std::min(NUM_OF_CURSOR_COLUMNS - 1, cursorColumn + 1);
+                    playSample = true;
+                } else if(event.key.code == sf::Keyboard::Return) {
+                    // Play the "selected" sound
+                    taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
+                        if(auto audio = audioService.lock()) {
+                            audio->playSample("Stage Selected");
+                        }
 
-            calculateCursorIndex();
+                        enableCursorMovement = false;
 
-            if(auto gp = gameProgress.lock()) {
-                gp->setCurrentBoss(cursorIndex);
-            }
+                        return true;
+                    }));
 
-            if(playSample) {
-                if(auto audio = audioService.lock()) {
-                    audio->playSample("Menu Item Select");
+                    // Wait half a second before continuing
+                    taskQueue.push(std::make_shared<WaitTask>(0.5f));
+
+                    // Stop the regular music, start playing the boss intro music
+                    taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
+                        if(auto audio = audioService.lock()) {
+                            audio->stopMusic();
+                            audio->playMusic("Boss Selected (MM3)");
+                        }
+
+                        return true;
+                    }));
+
+                    // Wait 7 seconds for the music to play
+                    taskQueue.push(std::make_shared<WaitTask>(7.0f));
+
+                    // Go to the next game state -- playing the game
+                    taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
+                        controller.requestStateChange("gameplay");
+                        startGamePlay = true;
+
+                        return true;
+                    }));
                 }
-            }
 
-            guiSelectedCellLabel->setCaption("(" + StringUtils::toString(cursorColumn) + ", " + StringUtils::toString(cursorRow) + ")");
-            guiSelectedCellLabel->adjustSize();
+                selectCurrentPortrait();
+
+                if(auto gp = gameProgress.lock()) {
+                    gp->setCurrentBoss(cursorIndex);
+                }
+
+                if(playSample) {
+                    if(auto audio = audioService.lock()) {
+                        audio->playSample("Menu Item Select");
+                    }
+                }
+
+                guiSelectedCellLabel->setCaption("(" + StringUtils::toString(cursorColumn) + ", " + StringUtils::toString(cursorRow) + ")");
+                guiSelectedCellLabel->adjustSize();
+            }
         }
     }
 
@@ -200,33 +262,25 @@ namespace hikari {
         // guiFont->renderText(target, "(" + StringUtils::toString<int>(cursorColumn) + ", " + StringUtils::toString<int>(cursorRow) + ")", 8, 224);
     }
 
-    bool StageSelectState::update(const float &dt) {
-        calculateCursorIndex();
+    bool StageSelectState::update(float dt) {
+        if(!taskQueue.empty()) {
+            auto & task = taskQueue.front();
+            task->update(dt);
 
-        // Set eye positions
-        std::pair< Point2D<float>, Point2D<float> > eyePosition = eyePositions.at(cursorIndex);
-
-        const Point2D<float> &leftEyePosition = eyePosition.first;
-        leftEye.setPosition(leftEyePosition.getX(), leftEyePosition.getY());
-        guiLeftEye->setX(static_cast<int>(leftEyePosition.getX()));
-        guiLeftEye->setY(static_cast<int>(leftEyePosition.getY()));
-
-        const Point2D<float> &rightEyePosition = eyePosition.second;
-        rightEye.setPosition(rightEyePosition.getX(), rightEyePosition.getY());
-        guiRightEye->setX(static_cast<int>(rightEyePosition.getX()));
-        guiRightEye->setY(static_cast<int>(rightEyePosition.getY()));
-
-        // Set cursor position
-        const Point2D<float> &cursorPosition = cursorPositions.at(cursorIndex);
-
-        guiCursorIcon->setX(cursorPosition.getX());
-        guiCursorIcon->setY(cursorPosition.getY());
+            if(task->isComplete()) {
+                taskQueue.pop();
+            }
+        } else {
+            // calculateCursorIndex();
+            selectCurrentPortrait();
+        }
 
         return startGamePlay;
     }
 
     void StageSelectState::onEnter() {
         startGamePlay = false;
+        enableCursorMovement = true;
 
         // Start music
         if(auto audio = audioService.lock()) {
@@ -243,9 +297,13 @@ namespace hikari {
             topContainer.add(guiContainer.get(), 0, 0);
             guiContainer->setEnabled(true);
         }
+
+        selectCurrentPortrait();
     }
 
     void StageSelectState::onExit() {
+        enableCursorMovement = false;
+
         // Stop music
         if(auto audio = audioService.lock()) {
             audio->stopMusic();

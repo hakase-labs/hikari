@@ -145,10 +145,9 @@ namespace hikari {
         emu->start_track(track);
 
         std::size_t bufferSize = 512;
+        std::size_t maximumSize = 4 * SAMPLE_RATE; // Cap samples at 4 seconds
 
-        // TODO: Be careful that you don't try to render a looping track
-        //       or this could get really messy...
-        while(!emu->track_ended()) {
+        while(!emu->track_ended() && samples.size() < maximumSize) {
             handleError(emu->play(bufferSize, myBuffer.get()));
 
             for(int i = 0; i < bufferSize; ++i) {

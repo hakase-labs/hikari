@@ -9,10 +9,10 @@
 #include <SFML/Graphics/View.hpp>
 
 #include <memory>
+#include <queue>
+#include <string>
 
 #include <json/value.h>
-
-#include <string>
 
 namespace sf {
     class Sprite;
@@ -32,6 +32,7 @@ namespace hikari {
     class ImageFont;
     class ServiceLocator;
     class GameController;
+    class Task;
 
     namespace gui {
         // Forward-declare any GUI classes here
@@ -46,6 +47,7 @@ namespace hikari {
         std::weak_ptr<GuiService> guiService;
         std::weak_ptr<AudioService> audioService;
         std::weak_ptr<GameProgress> gameProgress;
+        std::queue<std::shared_ptr<Task>> taskQueue;
         std::unique_ptr<gcn::Container> guiContainer;
         std::unique_ptr<gcn::Label> guiSelectedCellLabel;
         std::unique_ptr<gcn::Icon> guiCursorIcon;
@@ -63,6 +65,7 @@ namespace hikari {
         int cursorColumn;
         int cursorIndex;
         bool startGamePlay;
+        bool enableCursorMovement;
 
         std::vector< std::pair< Point2D<float>, Point2D<float> > > eyePositions;
         std::vector< Point2D<float> > cursorPositions;
@@ -84,6 +87,7 @@ namespace hikari {
         static const int DEFAULT_CURSOR_ROW;
         static const int DEFAULT_CURSOR_COLUMN;
 
+        void selectCurrentPortrait();
         void calculateCursorIndex();
         void buildGui();
 
@@ -93,7 +97,7 @@ namespace hikari {
 
         virtual void handleEvent(sf::Event &event);
         virtual void render(sf::RenderTarget &target);
-        virtual bool update(const float &dt);
+        virtual bool update(float dt);
         virtual void onEnter();
         virtual void onExit();
         virtual const std::string &getName() const;

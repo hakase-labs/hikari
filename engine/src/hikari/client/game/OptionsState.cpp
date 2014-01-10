@@ -106,7 +106,7 @@ namespace hikari {
         }
     }
 
-    bool OptionsState::update(const float &dt) {
+    bool OptionsState::update(float dt) {
         guiMenu->logic();
         return goToNextState;
     }

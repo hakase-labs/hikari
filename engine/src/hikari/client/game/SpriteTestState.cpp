@@ -75,7 +75,7 @@ namespace hikari {
         target.draw(positionPixel);
     }
 
-    bool SpriteTestState::update(const float &dt) {
+    bool SpriteTestState::update(float dt) {
         animationPlayer.update(dt);
         return false;
     }
