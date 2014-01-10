@@ -85,7 +85,7 @@ namespace hikari {
 
         MapPtr constructMap(const Json::Value &json) const;
         RoomPtr constructRoom(const Json::Value &json, int gridSize) const;
-        SpawnerPtr constructSpawner(const Json::Value &json, SpawnType type) const;
+        SpawnerPtr constructSpawner(const Json::Value &json, SpawnType type, int offsetX = 0, int offsetY = 0) const;
         std::unique_ptr<Door> constructDoor(const Json::Value & json, int offsetX = 0, int offsetY = 0) const;
         RoomTransition constructTransition(const Json::Value &json) const;
         Rectangle2D<int> constructCameraBounds(const Json::Value &json, 

@@ -24,7 +24,6 @@ namespace hikari {
 
     const char* MapLoader::PROPERTY_NAME_TILESET = "tileset";
     const char* MapLoader::PROPERTY_NAME_GRIDSIZE = "gridsize";
-    const char* MapLoader::PROPERTY_NAME_MUSICID = "musicId";
     const char* MapLoader::PROPERTY_NAME_MUSICNAME = "musicName";
     const char* MapLoader::PROPERTY_NAME_ROOMS = "rooms";
     const char* MapLoader::PROPERTY_NAME_SPECIAL_ROOMS = "specialRooms";
@@ -89,7 +88,6 @@ namespace hikari {
         // Parse map attributes
         std::string tilesetName = json[PROPERTY_NAME_TILESET].asString();
         int gridSize = json[PROPERTY_NAME_GRIDSIZE].asInt();
-        int musicId = json[PROPERTY_NAME_MUSICID].asInt();
         std::string musicName = json.get(PROPERTY_NAME_MUSICNAME, "None").asString();
         int roomCount = json[PROPERTY_NAME_ROOMS].size();
 
@@ -171,6 +169,12 @@ namespace hikari {
             }
         }
 
+        // The origin of the room, in pixels, for relative object offsets.
+        int roomOriginX = x * gridSize;
+        int roomOriginY = y * gridSize;
+
+        HIKARI_LOG(debug4) << "Room origin: (" << roomOriginX << ", " << roomOriginY << ")";
+
         //
         // Construct spawners
         //
@@ -181,7 +185,14 @@ namespace hikari {
         if(enemyCount > 0) {
             HIKARI_LOG(debug) << "Found " << enemyCount << " enemy declarations.";
             for(int enemyIndex = 0; enemyIndex < enemyCount; ++enemyIndex) {
-                spawners.emplace_back(constructSpawner(enemySpawnerArray[enemyIndex], SPAWN_ENEMY));
+                spawners.emplace_back(
+                    constructSpawner(
+                        enemySpawnerArray[enemyIndex],
+                        SPAWN_ENEMY,
+                        roomOriginX,
+                        roomOriginY
+                    )
+                );
             }
         }
 
@@ -190,7 +201,14 @@ namespace hikari {
         if(itemCount > 0) {
             HIKARI_LOG(debug) << "Found " << itemCount << " item declarations.";
             for(int itemIndex = 0; itemIndex < itemCount; ++itemIndex) {
-                spawners.emplace_back(constructSpawner(itemSpawnerArray[itemIndex], SPAWN_ITEM));
+                spawners.emplace_back(
+                    constructSpawner(
+                        itemSpawnerArray[itemIndex],
+                        SPAWN_ITEM,
+                        roomOriginX,
+                        roomOriginY
+                    )
+                );
             }
         }
 
@@ -261,8 +279,10 @@ namespace hikari {
         return doorInstance;
     }
 
-    SpawnerPtr MapLoader::constructSpawner(const Json::Value &json, SpawnType type) const {
+    SpawnerPtr MapLoader::constructSpawner(const Json::Value &json, SpawnType type, int offsetX, int offsetY) const {
         auto spawner = std::shared_ptr<Spawner>(nullptr);
+
+        HIKARI_LOG(debug4) << "constructSpawner offset: (" << offsetX << ", " << offsetY << ")";
 
         switch(type) {
             case SPAWN_ITEM: 
@@ -279,6 +299,9 @@ namespace hikari {
                                                 )
                                             )
                                         );
+
+                x += offsetX;
+                y += offsetY;
 
                 spawner.reset(new ItemSpawner(type));
                 spawner->setPosition(Vector2<float>(static_cast<float>(x), static_cast<float>(y)));
@@ -303,6 +326,11 @@ namespace hikari {
                                         );
                 auto spawnLimit   = json.get("spawnLimit", 1).asUInt();
                 auto spawnRate    = static_cast<float>(json.get("spawnRate", 1.0).asDouble());
+
+                x += offsetX;
+                y += offsetY;
+
+                HIKARI_LOG(debug4) << "Spawning enemy at (" << x << ", " << y << ")";
 
                 auto enemySpawner = std::make_shared<EnemySpawner>(type, spawnLimit, spawnRate);
                 enemySpawner->setPosition(Vector2<float>(static_cast<float>(x), static_cast<float>(y)));

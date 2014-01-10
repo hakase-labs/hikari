@@ -130,8 +130,32 @@
       "enemies": [
         {
             "type": "Metool",
-            "x": 390,
-            "y": 132,
+            "x": 128,
+            "y": 224,
+            "direction": "Left"
+        },
+        {
+            "type": "Metool",
+            "x": 144,
+            "y": 224,
+            "direction": "Left"
+        },
+        {
+            "type": "Metool",
+            "x": 160,
+            "y": 224,
+            "direction": "Left"
+        },
+        {
+            "type": "Metool",
+            "x": 176,
+            "y": 224,
+            "direction": "Left"
+        },
+        {
+            "type": "Metool",
+            "x": 192,
+            "y": 224,
             "direction": "Left"
         }
       ],
