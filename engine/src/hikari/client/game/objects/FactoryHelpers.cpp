@@ -20,6 +20,7 @@
 #include "hikari/client/game/WeaponTable.hpp"
 #include "hikari/client/game/objects/Motion.hpp"
 #include "hikari/client/game/objects/motions/LinearMotion.hpp"
+#include "hikari/client/game/objects/EntityDeathType.hpp"
 #include "hikari/client/scripting/SquirrelService.hpp"
 
 #include "hikari/core/game/map/Room.hpp"
@@ -400,6 +401,7 @@ namespace FactoryHelpers {
                                         const auto ageless           = templateObject.get("ageless", true).asBool(); 
                                         const auto maximumAge        = static_cast<float>(templateObject.get("maximumAge", 0.0f).asDouble());  
                                         const auto reflectionType    = templateObject.get("reflectionType", "none").asString();
+                                        const auto deathType         = templateObject.get("deathType", "Nothing").asString();
 
                                         hikari::BoundingBoxF boundingBox(
                                             0.0f,
@@ -434,6 +436,12 @@ namespace FactoryHelpers {
                                             instance->setReflectionType(Projectile::REFLECT_Y);
                                         } else if(reflectionType == "xy") {
                                             instance->setReflectionType(Projectile::REFLECT_XY);
+                                        }
+
+                                        if(deathType == "Nothing") {
+                                            // Default; do nothing
+                                        } else if(deathType == "Small") {
+                                            instance->setDeathType(EntityDeathType::Small);
                                         }
 
                                         factoryPtr->registerPrototype(name, instance);

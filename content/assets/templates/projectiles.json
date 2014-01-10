@@ -57,6 +57,7 @@
         "phasing": false,
         "ageless": false,
         "maximumAge": 2.0,
-        "reflectionType": "x"
+        "reflectionType": "x",
+        "deathType": "Small"
     }
 ]
