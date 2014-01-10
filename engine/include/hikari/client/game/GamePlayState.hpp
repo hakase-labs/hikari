@@ -255,6 +255,14 @@ namespace hikari {
         void startRound();
 
         /**
+         * Ends the current round and fades the screen out. After fading out,
+         * the round is started again.
+         *
+         * @see startRound
+         */
+        void endRound();
+
+        /**
          * Checks if the player is colliding with a transition region.
          */
         void checkCollisionWithTransition();
@@ -355,6 +363,7 @@ namespace hikari {
         class PlayingSubState : public SubState {
         private:
             float postDeathTimer; // A timer that counts after you die
+            bool gotoNextState;
         public:
             PlayingSubState(GamePlayState & gamePlayState);
             virtual ~PlayingSubState();

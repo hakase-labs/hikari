@@ -34,6 +34,7 @@
 #include "hikari/client/game/FunctionTask.hpp"
 #include "hikari/client/game/RefillHealthTask.hpp"
 #include "hikari/client/game/FadeColorTask.hpp"
+#include "hikari/client/game/WaitTask.hpp"
 #include "hikari/client/game/events/EventBusImpl.hpp"
 #include "hikari/client/game/events/EventListenerDelegate.hpp"
 #include "hikari/client/game/events/EntityDamageEventData.hpp"
@@ -870,6 +871,25 @@ namespace hikari {
         changeSubState(std::unique_ptr<SubState>(new ReadySubState(*this)));
     }
 
+    void GamePlayState::endRound() {
+        sf::Color color = fadeOverlay.getFillColor();
+        color.a = 0;
+        fadeOverlay.setFillColor(color);
+        taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
+            drawInfamousBlackBar = true;
+            return true;
+        }));
+        taskQueue.push(std::make_shared<FadeColorTask>(FadeColorTask::FADE_OUT, fadeOverlay, (1.0f/60.0f) * 13.0f));
+        taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
+            startRound();
+            return true;
+        }));
+        taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
+            drawInfamousBlackBar = false;
+            return true;
+        }));
+    }
+
     void GamePlayState::updateDoors(float dt) {
         if(currentRoom) {
             auto & exitDoor = currentRoom->getExitDoor();
@@ -1058,6 +1078,8 @@ namespace hikari {
 
             if(projectilePtr) {
                 world.queueObjectRemoval(projectilePtr);
+
+                spawnDeathExplosion(projectilePtr->getDeathType(), projectilePtr->getPosition());
             }
         }
     }
@@ -1409,6 +1431,7 @@ namespace hikari {
     GamePlayState::PlayingSubState::PlayingSubState(GamePlayState & gamePlayState)
         : SubState(gamePlayState)
         , postDeathTimer(0.0f)
+        , gotoNextState(false)
     {
 
     }
@@ -1676,8 +1699,13 @@ namespace hikari {
 
             // Wait 1 second after you died and then restart
             if(postDeathTimer >= 2.5f) {
-                gamePlayState.startRound();
-                return SubState::NEXT;
+                if(!gotoNextState) {
+                    gotoNextState = true;
+
+                    gamePlayState.endRound();
+                } else {
+                    return SubState::NEXT;
+                }
             }
         } else {
             // TODO: Note to self -- this seems pretty convoluted... probably change this soon please.
