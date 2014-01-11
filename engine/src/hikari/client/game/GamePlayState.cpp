@@ -1520,14 +1520,29 @@ namespace hikari {
                 const auto & hero = gamePlayState.hero;
 
                 if(hero->getBoundingBox().intersects(item->getBoundingBox())) {
-                    const auto & effect = item->getEffect();
+                    if(item->isObstacle()) {
+                        HIKARI_LOG(debug4) << "Rockman touching an obstacle! id: " << item->getId();
+                        if(hero->getVelocityX() > 0) {
+                            // Moving right
+                        } else if(hero->getVelocityX() < 0) {
+                            // Moving right
+                        }
 
-                    if(effect) {
-                        effect->apply();
+                        if(hero->getVelocityY() > 0) {
+                            // Moving down
+                        } else if(hero->getVelocityY() < 0) {
+                            // Moving up
+                        }
+                    } else {
+                        const auto & effect = item->getEffect();
+
+                        if(effect) {
+                            effect->apply();
+                        }
+
+                        item->setActive(false);
+                        item->onDeath();
                     }
-
-                    item->setActive(false);
-                    item->onDeath();
                 }
         });
 

@@ -129,6 +129,12 @@
       },
       "enemies": [
         {
+            "type": "Dada",
+            "x": 96,
+            "y": 128,
+            "direction": "Left"
+        },
+        {
             "type": "Metool",
             "x": 128,
             "y": 224,
