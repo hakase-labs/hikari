@@ -1950,14 +1950,14 @@
       "enemies": [
         {
           "type": "Telly",
-          "x": 288,
-          "y": 1000,
+          "x": 16,
+          "y": 16,
           "direction": "Right"
         },
         {
           "type": "Telly",
-          "x": 388,
-          "y": 1100,
+          "x": 32,
+          "y": 32,
           "direction": "Left",
           "spawnLimit": 1,
           "spawnRate": 3.0,
@@ -1965,47 +1965,47 @@
         },
         {
           "type": "Telly",
-          "x": 398,
-          "y": 1050,
+          "x": 48,
+          "y": 48,
           "direction": "Right",
           "spawnLimit": 3,
           "spawnRate": 3.0
         },
         {
           "type": "Telly",
-          "x": 298,
-          "y": 1200,
+          "x": 64,
+          "y": 64,
           "direction": "Left"
         },
         {
           "type": "Peterchy",
-          "x": 500,
-          "y": 1000,
+          "x": 96,
+          "y": 192,
           "direction": "Left"
         },
         {
           "type": "Komasaburo",
-          "x": 592,
-          "y": 1056,
+          "x": 336,
+          "y": 96,
           "direction": "Left"
         },
         {
           "type": "Bikky",
-          "x": 562,
-          "y": 1056,
+          "x": 306,
+          "y": 96,
           "direction": "Left"
         }
       ],
       "items": [
         {
           "type": "Extra Life",
-          "x": 288,
-          "y": 1130
+          "x": 20,
+          "y": 176
         },
         {
           "type": "E-Tank",
-          "x": 1240,
-          "y": 1146
+          "x": 984,
+          "y": 186
         }
       ],
       "transitions": [
