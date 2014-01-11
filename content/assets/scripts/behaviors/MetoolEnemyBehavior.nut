@@ -148,7 +148,7 @@
             if(stateTimer >= 1.0) {
                 local distanceX = abs(::heroX - host.getX());
 
-                if(distanceX <= ATTACK_RANGE_X) {
+                if(distanceX <= ATTACK_RANGE_X && !isHeroShooting) {
                     setState("attacking");
                 }
             }

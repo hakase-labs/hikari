@@ -1486,7 +1486,8 @@ namespace hikari {
 
         Sqrat::RootTable()
             .SetValue("heroX", playerPosition.getX())
-            .SetValue("heroY", playerPosition.getY());
+            .SetValue("heroY", playerPosition.getY())
+            .SetValue("isHeroShooting", gamePlayState.hero->isNowShooting());
 
         gamePlayState.world.update(dt);
 

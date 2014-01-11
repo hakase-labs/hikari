@@ -234,6 +234,10 @@ namespace hikari {
         return !isAirborn && !isSliding && !isStunned; /* TODO: Check if currently sliding too */
     }
 
+    bool Hero::isNowShooting() {
+        return isShooting;
+    }
+
     void Hero::playAnimation(float dt) {
         const auto & animSprite = getAnimatedSprite();
 
