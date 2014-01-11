@@ -1556,22 +1556,22 @@ namespace hikari {
                 const auto & hero = gamePlayState.hero;
 
                 if(enemy->getBoundingBox().intersects(hero->getBoundingBox())) {
-                    DamageKey damageKey;
-                    damageKey.damagerType = enemy->getDamageId();
-                    damageKey.damageeType = hero->getDamageId();
-
-                    // TODO: Perform damage lookup and apply it to hero.
-                    // START DAMAGE RESOLVER LOGIC
-                    float damageAmount = 0.0f;
-
-                    if(auto dt = gamePlayState.damageTable.lock()) {
-                        damageAmount = dt->getDamageFor(damageKey.damagerType);
-                    }
-                    // END DAMAGE RESOLVER LOGIC
-
-                    HIKARI_LOG(debug3) << "Hero should take " << damageAmount << " damage!";
-
                     if(hero->isVulnerable()) {
+                        DamageKey damageKey;
+                        damageKey.damagerType = enemy->getDamageId();
+                        damageKey.damageeType = hero->getDamageId();
+
+                        // TODO: Perform damage lookup and apply it to hero.
+                        // START DAMAGE RESOLVER LOGIC
+                        float damageAmount = 0.0f;
+
+                        if(auto dt = gamePlayState.damageTable.lock()) {
+                            damageAmount = dt->getDamageFor(damageKey.damagerType);
+                        }
+                        // END DAMAGE RESOLVER LOGIC
+
+                        HIKARI_LOG(debug3) << "Hero should take " << damageAmount << " damage!";
+
                         if(auto gp = gamePlayState.gameProgress.lock()) {
                             gp->setPlayerEnergy(
                                 gp->getPlayerEnergy() - damageAmount

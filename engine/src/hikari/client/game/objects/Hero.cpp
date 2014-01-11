@@ -329,7 +329,7 @@ namespace hikari {
     }
 
     bool Hero::isVulnerable() {
-        return !isInvincible;
+        return !isInvincible && !isStunned;
     }
 
     void Hero::changeMobilityState(std::unique_ptr<MobilityState> && newState) {
