@@ -1486,7 +1486,8 @@ namespace hikari {
 
         Sqrat::RootTable()
             .SetValue("heroX", playerPosition.getX())
-            .SetValue("heroY", playerPosition.getY());
+            .SetValue("heroY", playerPosition.getY())
+            .SetValue("isHeroShooting", gamePlayState.hero->isNowShooting());
 
         gamePlayState.world.update(dt);
 
@@ -1519,14 +1520,29 @@ namespace hikari {
                 const auto & hero = gamePlayState.hero;
 
                 if(hero->getBoundingBox().intersects(item->getBoundingBox())) {
-                    const auto & effect = item->getEffect();
+                    if(item->isObstacle()) {
+                        HIKARI_LOG(debug4) << "Rockman touching an obstacle! id: " << item->getId();
+                        if(hero->getVelocityX() > 0) {
+                            // Moving right
+                        } else if(hero->getVelocityX() < 0) {
+                            // Moving right
+                        }
 
-                    if(effect) {
-                        effect->apply();
+                        if(hero->getVelocityY() > 0) {
+                            // Moving down
+                        } else if(hero->getVelocityY() < 0) {
+                            // Moving up
+                        }
+                    } else {
+                        const auto & effect = item->getEffect();
+
+                        if(effect) {
+                            effect->apply();
+                        }
+
+                        item->setActive(false);
+                        item->onDeath();
                     }
-
-                    item->setActive(false);
-                    item->onDeath();
                 }
         });
 
@@ -1555,22 +1571,22 @@ namespace hikari {
                 const auto & hero = gamePlayState.hero;
 
                 if(enemy->getBoundingBox().intersects(hero->getBoundingBox())) {
-                    DamageKey damageKey;
-                    damageKey.damagerType = enemy->getDamageId();
-                    damageKey.damageeType = hero->getDamageId();
-
-                    // TODO: Perform damage lookup and apply it to hero.
-                    // START DAMAGE RESOLVER LOGIC
-                    float damageAmount = 0.0f;
-
-                    if(auto dt = gamePlayState.damageTable.lock()) {
-                        damageAmount = dt->getDamageFor(damageKey.damagerType);
-                    }
-                    // END DAMAGE RESOLVER LOGIC
-
-                    HIKARI_LOG(debug3) << "Hero should take " << damageAmount << " damage!";
-
                     if(hero->isVulnerable()) {
+                        DamageKey damageKey;
+                        damageKey.damagerType = enemy->getDamageId();
+                        damageKey.damageeType = hero->getDamageId();
+
+                        // TODO: Perform damage lookup and apply it to hero.
+                        // START DAMAGE RESOLVER LOGIC
+                        float damageAmount = 0.0f;
+
+                        if(auto dt = gamePlayState.damageTable.lock()) {
+                            damageAmount = dt->getDamageFor(damageKey.damagerType);
+                        }
+                        // END DAMAGE RESOLVER LOGIC
+
+                        HIKARI_LOG(debug3) << "Hero should take " << damageAmount << " damage!";
+
                         if(auto gp = gamePlayState.gameProgress.lock()) {
                             gp->setPlayerEnergy(
                                 gp->getPlayerEnergy() - damageAmount

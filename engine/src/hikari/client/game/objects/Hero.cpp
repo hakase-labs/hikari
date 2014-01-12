@@ -234,6 +234,10 @@ namespace hikari {
         return !isAirborn && !isSliding && !isStunned; /* TODO: Check if currently sliding too */
     }
 
+    bool Hero::isNowShooting() {
+        return isShooting;
+    }
+
     void Hero::playAnimation(float dt) {
         const auto & animSprite = getAnimatedSprite();
 
@@ -325,7 +329,7 @@ namespace hikari {
     }
 
     bool Hero::isVulnerable() {
-        return !isInvincible;
+        return !isInvincible && !isStunned;
     }
 
     void Hero::changeMobilityState(std::unique_ptr<MobilityState> && newState) {

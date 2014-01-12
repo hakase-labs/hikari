@@ -217,6 +217,7 @@ namespace hikari {
         void kill();
 
         bool isVulnerable();
+        bool isNowShooting();
 
         virtual void update(float dt);
         virtual void render(sf::RenderTarget &target);
