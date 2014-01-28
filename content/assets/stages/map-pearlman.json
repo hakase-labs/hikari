@@ -3227,7 +3227,12 @@
         "width": 80,
         "height": 15
       },
-      "enemies": [],
+      "enemies": [{
+        "type": "Destructable Block (1x2)",
+        "x": 320,
+        "y": 192,
+        "direction": "Left"
+      }],
       "items": [],
       "transitions": [
         {

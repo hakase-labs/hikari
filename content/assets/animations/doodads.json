@@ -1,0 +1,22 @@
+{
+    "name": "Doodads",
+    "image": "assets/images/sp-doodads.png",
+    "animations": {
+        "destructable-wall": {
+            "repeat": false,
+            "keyframe": 0,
+            "syncGroup": 0,
+            "frames": [ 
+                { 
+                    "x" : 32, 
+                    "y" : 0, 
+                    "width" : 16, 
+                    "height" : 32, 
+                    "hotspotX" : 8, 
+                    "hotspotY" : 16, 
+                    "length" : 1.0
+                }
+            ]
+        }
+    }
+}
