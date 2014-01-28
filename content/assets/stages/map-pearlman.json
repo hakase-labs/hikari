@@ -3738,7 +3738,25 @@
         "width": 16,
         "height": 15
       },
-      "enemies": [],
+      "enemies": [{
+            "type": "Metool",
+            "x": 64,
+            "y": 64,
+            "direction": "Left"
+        },
+        {
+            "type": "Metool",
+            "x": 224,
+            "y": 112,
+            "direction": "Right"
+        },
+        {
+            "type": "Metool",
+            "x": 72,
+            "y": 160,
+            "direction": "Left"
+        }
+      ],
       "items": [],
       "transitions": [
         {

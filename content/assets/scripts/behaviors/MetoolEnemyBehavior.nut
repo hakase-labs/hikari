@@ -114,6 +114,8 @@
             stateTimer = 0.0;
             enteringNewState = true;
 
+            ::log("setting state to " + stateName);
+
             if("guarding" == stateName) {
                 stateFunction = _stateGuarding;
             } else if("attacking" == stateName) {
@@ -137,6 +139,7 @@
                 if(host) {
                     host.isShielded = true;
                     host.changeAnimation("guarding");
+                    host.velocityX = 0.0;
                 }
             }
 
@@ -194,9 +197,14 @@
                 }
             }
 
+            host.velocityX = host.direction == Directions.Left ? -2.5 : 2.5;
+
             if(stateTimer >= 0.5) {
+                ::log("stateTimer >= 0.5");
                 setState("guarding");
             }
+            ::log("_stateWalking() ");
+            ::log(stateTimer.tostring());
         }
     }
 }());
