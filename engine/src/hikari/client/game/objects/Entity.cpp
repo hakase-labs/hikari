@@ -29,7 +29,7 @@ namespace hikari {
         , world()
         , room(room)
         , direction(Directions::None)
-        , faction(Faction::World)
+        , faction(Factions::World)
         , deathType(EntityDeathType::Nothing)
         , weaponId(0)
         , damageId(0)
@@ -199,11 +199,11 @@ namespace hikari {
         }
     }
 
-    void Entity::setFaction(Faction::Type newFaction) {
+    void Entity::setFaction(const Faction& newFaction) {
         faction = newFaction;
     }
 
-    Faction::Type Entity::getFaction() const {
+    const Faction Entity::getFaction() const {
         return faction;
     }
 

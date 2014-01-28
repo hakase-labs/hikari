@@ -288,6 +288,7 @@ set( HIKARI_CORE_GAME_SOURCE_FILES
     src/hikari/core/game/Animator.cpp
     src/hikari/core/game/CollisionInfo.cpp
     src/hikari/core/game/Direction.cpp
+    src/hikari/core/game/Faction.cpp
     src/hikari/core/game/StateTransition.cpp
     src/hikari/core/game/FadeStateTransition.cpp
     src/hikari/core/game/SliceStateTransition.cpp

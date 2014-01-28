@@ -1570,33 +1570,35 @@ namespace hikari {
                 //
                 const auto & hero = gamePlayState.hero;
 
-                if(enemy->getBoundingBox().intersects(hero->getBoundingBox())) {
-                    if(hero->isVulnerable()) {
-                        DamageKey damageKey;
-                        damageKey.damagerType = enemy->getDamageId();
-                        damageKey.damageeType = hero->getDamageId();
+                if(enemy->getFaction() == Factions::Enemy) {
+                    if(enemy->getBoundingBox().intersects(hero->getBoundingBox())) {
+                        if(hero->isVulnerable()) {
+                            DamageKey damageKey;
+                            damageKey.damagerType = enemy->getDamageId();
+                            damageKey.damageeType = hero->getDamageId();
 
-                        // TODO: Perform damage lookup and apply it to hero.
-                        // START DAMAGE RESOLVER LOGIC
-                        float damageAmount = 0.0f;
+                            // TODO: Perform damage lookup and apply it to hero.
+                            // START DAMAGE RESOLVER LOGIC
+                            float damageAmount = 0.0f;
 
-                        if(auto dt = gamePlayState.damageTable.lock()) {
-                            damageAmount = dt->getDamageFor(damageKey.damagerType);
-                        }
-                        // END DAMAGE RESOLVER LOGIC
+                            if(auto dt = gamePlayState.damageTable.lock()) {
+                                damageAmount = dt->getDamageFor(damageKey.damagerType);
+                            }
+                            // END DAMAGE RESOLVER LOGIC
 
-                        HIKARI_LOG(debug3) << "Hero should take " << damageAmount << " damage!";
+                            HIKARI_LOG(debug3) << "Hero should take " << damageAmount << " damage!";
 
-                        if(auto gp = gamePlayState.gameProgress.lock()) {
-                            gp->setPlayerEnergy(
-                                gp->getPlayerEnergy() - damageAmount
-                            );
+                            if(auto gp = gamePlayState.gameProgress.lock()) {
+                                gp->setPlayerEnergy(
+                                    gp->getPlayerEnergy() - damageAmount
+                                );
 
-                            HIKARI_LOG(debug4) << "My energy is " << gp->getPlayerEnergy();
+                                HIKARI_LOG(debug4) << "My energy is " << gp->getPlayerEnergy();
 
-                            // Only stun if you're not dead
-                            if(gp->getPlayerEnergy() > 0) {
-                                hero->performStun();
+                                // Only stun if you're not dead
+                                if(gp->getPlayerEnergy() > 0) {
+                                    hero->performStun();
+                                }
                             }
                         }
                     }
@@ -1647,7 +1649,7 @@ namespace hikari {
                 }
 
                 // Check Hero -> Enemy projectiles
-                if(projectile->getFaction() == Faction::Hero) {
+                if(projectile->getFaction() == Factions::Hero) {
                     auto & context = *this; // TODO: This makes intellisense errors go away but it seems kludgy.
                                             // In VS2010, this is the Intellisense error:
                                             //     "Error : a nonstatic member reference must be relative to a specific object"
@@ -1699,7 +1701,7 @@ namespace hikari {
                             }
                         }
                     );
-                } else if(projectile->getFaction() == Faction::Enemy) {
+                } else if(projectile->getFaction() == Factions::Enemy) {
 
                     const auto & hero = gamePlayState.hero;
 

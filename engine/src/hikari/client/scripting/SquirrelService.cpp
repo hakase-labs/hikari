@@ -3,6 +3,7 @@
 #include "hikari/client/scripting/GameProgressScriptProxy.hpp"
 #include "hikari/client/scripting/GamePlayStateScriptProxy.hpp"
 #include "hikari/client/game/objects/Entity.hpp"
+#include "hikari/client/game/objects/Faction.hpp"
 #include "hikari/client/game/objects/Enemy.hpp"
 #include "hikari/core/game/map/Room.hpp"
 #include "hikari/core/game/Direction.hpp"
@@ -124,13 +125,21 @@ namespace hikari {
             //
             // Constant/Enum bindings
             //
-            Sqrat::ConstTable().Enum(_SC("Directions"), Sqrat::Enumeration()
-                .Const(_SC("None"), Directions::None)
-                .Const(_SC("Up"), Directions::Up)
-                .Const(_SC("Right"), Directions::Right)
-                .Const(_SC("Down"), Directions::Down)
-                .Const(_SC("Left"), Directions::Left)
-            );
+            Sqrat::ConstTable()
+                .Enum(_SC("Directions"), Sqrat::Enumeration()
+                    .Const(_SC("None"), Directions::None)
+                    .Const(_SC("Up"), Directions::Up)
+                    .Const(_SC("Right"), Directions::Right)
+                    .Const(_SC("Down"), Directions::Down)
+                    .Const(_SC("Left"), Directions::Left)
+                )
+                .Enum(_SC("Factions"), Sqrat::Enumeration()
+                    .Const(_SC("World"), Factions::World)
+                    .Const(_SC("Hero"), Factions::Hero)
+                    .Const(_SC("Enemy"), Factions::Enemy)
+                );
+
+
 
             //
             // Utility bindings
@@ -156,6 +165,7 @@ namespace hikari {
                     .Prop<bool>(_SC("isShielded"), &Enemy::isShielded, &Enemy::setShielded)
                     .Prop<int>(_SC("weaponId"), &Enemy::getWeaponId, &Enemy::setWeaponId)
                     .Prop<const Direction>(_SC("direction"), &Enemy::getDirection, &Enemy::setDirection)
+                    .Prop<const Faction>(_SC("faction"), &Entity::getFaction, &Entity::setFaction)
                     .Func(_SC("changeAnimation"), &Enemy::changeAnimation)
                     .Func(_SC("getId"), &Enemy::getId)
                     .Func(_SC("getActiveShotCount"), &Entity::getActiveShotCount)

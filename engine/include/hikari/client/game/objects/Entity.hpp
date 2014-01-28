@@ -48,7 +48,7 @@ namespace hikari {
         #endif // HIKARI_DEBUG_ENTITIES
 
         Direction direction;
-        Faction::Type faction;
+        Faction faction;
         EntityDeathType::Type deathType;
         int weaponId;
         int damageId;
@@ -112,8 +112,8 @@ namespace hikari {
         void setDirection(const Direction& dir);
         const Direction getDirection() const;
 
-        void setFaction(Faction::Type newFaction);
-        Faction::Type getFaction() const;
+        void setFaction(const Faction& newFaction);
+        const Faction getFaction() const;
 
         void setDeathType(EntityDeathType::Type newDeathType);
         EntityDeathType::Type getDeathType() const;

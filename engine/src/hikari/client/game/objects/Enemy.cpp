@@ -17,7 +17,7 @@ namespace hikari {
         setAgeless(true);
         setGravitated(true);
         setPhasing(false);
-        setFaction(Faction::Enemy);
+        setFaction(Factions::Enemy);
         setDeathType(EntityDeathType::Small);
     }
 
