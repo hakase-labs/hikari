@@ -899,7 +899,7 @@ namespace hikari {
                 HIKARI_LOG(debug2) << "Hero has died all of his lives, go to password screen.";
                 progress->resetLivesToDefault();
                 progress->resetWeaponEnergyToDefault();
-                controller.requestStateChange("stageselect");
+                controller.requestStateChange("gameover");
                 gotoNextState = true;
             }
         }

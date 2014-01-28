@@ -154,6 +154,7 @@ set( HIKARI_CLIENT_GAME_SOURCE_FILES
     src/hikari/client/game/Effect.cpp
     src/hikari/client/game/GameConfig.cpp
     src/hikari/client/game/GamePlayState.cpp
+    src/hikari/client/game/GameOverState.cpp
     src/hikari/client/game/GameProgress.cpp
     src/hikari/client/game/GameWorld.cpp
     src/hikari/client/game/GuiTestState.cpp

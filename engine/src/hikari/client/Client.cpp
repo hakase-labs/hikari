@@ -4,6 +4,7 @@
 #include "hikari/client/game/GameProgress.hpp"
 #include "hikari/client/game/StageSelectState.hpp"
 #include "hikari/client/game/GamePlayState.hpp"
+#include "hikari/client/game/GameOverState.hpp"
 #include "hikari/client/game/KeyboardInput.hpp"
 #include "hikari/client/game/InputService.hpp"
 #include "hikari/client/game/EventBusService.hpp"
@@ -161,12 +162,14 @@ namespace hikari {
 
         // Create controller and game states
         StatePtr stageSelectState(new StageSelectState("stageselect", gameConfigJson["states"]["select"], controller, services));
+        StatePtr gameOverState(new GameOverState("gameover", gameConfigJson, controller, services));
         StatePtr passwordState(new PasswordState("password", gameConfigJson, controller, services));
         StatePtr titleState(new TitleState("title", gameConfigJson, controller, services));
         StatePtr optionsState(new OptionsState("options", gameConfigJson, controller, services));
 
         controller.addState(stageSelectState->getName(), stageSelectState);
         controller.addState(gamePlayState->getName(), gamePlayState);
+        controller.addState(gameOverState->getName(), gameOverState);
         controller.addState(passwordState->getName(), passwordState);
         controller.addState(titleState->getName(), titleState);
         controller.addState(optionsState->getName(), optionsState);
