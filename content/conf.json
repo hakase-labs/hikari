@@ -1,6 +1,6 @@
 { 
     "vsync" : true,
-    "videoMode" : "1x",
+    "videoMode" : "3x",
     "showfps" : true,
     "bindings" : {
         "keyboard" : {

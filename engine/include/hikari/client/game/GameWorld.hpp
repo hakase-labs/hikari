@@ -109,6 +109,8 @@ namespace hikari {
         const std::vector<std::shared_ptr<Particle>> & getActiveParticles() const;
         const std::vector<std::shared_ptr<Projectile>> & getActiveProjectiles() const;
 
+        std::vector<std::shared_ptr<Enemy>> getObstacles() const;
+
         void setPlayer(const std::shared_ptr<Hero>& player);
 
         /**

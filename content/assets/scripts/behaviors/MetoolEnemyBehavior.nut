@@ -114,8 +114,6 @@
             stateTimer = 0.0;
             enteringNewState = true;
 
-            ::log("setting state to " + stateName);
-
             if("guarding" == stateName) {
                 stateFunction = _stateGuarding;
             } else if("attacking" == stateName) {
@@ -133,7 +131,6 @@
          */
         function _stateGuarding() {
             if(enteringNewState) {
-                ::log("_stateGuarding");
                 enteringNewState = false;
 
                 if(host) {
@@ -164,7 +161,6 @@
          */
         function _stateAttacking() {
             if(enteringNewState) {
-                ::log("_stateAttacking");
                 enteringNewState = false;
 
                 if(host) {
@@ -189,7 +185,6 @@
 
         function _stateWalking() {
             if(enteringNewState) {
-                ::log("_stateWalking");
                 enteringNewState = false;
 
                 if(host) {
@@ -200,11 +195,8 @@
             host.velocityX = host.direction == Directions.Left ? -2.5 : 2.5;
 
             if(stateTimer >= 0.5) {
-                ::log("stateTimer >= 0.5");
                 setState("guarding");
             }
-            ::log("_stateWalking() ");
-            ::log(stateTimer.tostring());
         }
     }
 }());

@@ -1298,7 +1298,7 @@ namespace hikari {
         }
 
         // Fade in
-        gamePlayState.taskQueue.push(std::make_shared<FadeColorTask>(FadeColorTask::FADE_IN, fadeOverlay, (1.0f/60.0f) * 13.0f));
+        //gamePlayState.taskQueue.push(std::make_shared<FadeColorTask>(FadeColorTask::FADE_IN, fadeOverlay, (1.0f/60.0f) * 13.0f));
     }
 
     void GamePlayState::ReadySubState::exit() {
@@ -1761,6 +1761,63 @@ namespace hikari {
                 }
 
                 gamePlayState.hero->update(dt);
+
+                //
+                // BEGIN code that checks hero vs obstacles
+                // We check against them after updating the hero so there is no
+                // jerky motion since we reposition the hero after he is moved.
+                //
+                auto obstacles = gamePlayState.world.getObstacles();
+
+                std::for_each(
+                    std::begin(obstacles),
+                    std::end(obstacles),
+                    [&](const std::shared_ptr<Enemy>& obstacle) {
+                        if(obstacle->getFaction() == Factions::World) {
+                            if(obstacle->isObstacle()) {
+                                if(obstacle->getBoundingBox().intersects(gamePlayState.hero->getBoundingBox())) {
+                                    HIKARI_LOG(debug4) << "Touching an obstacle!";
+
+                                    // Test vertical first
+                                    // if(gamePlayState.hero->getVelocityY() > 0) { // Moving down
+                                    //     auto oldPos = gamePlayState.hero->getPosition();
+                                    //     auto offset = gamePlayState.hero->getBoundingBox().getOrigin();
+                                    //     auto obstacleTopEdge = obstacle->getBoundingBox().getTop();
+                                    //     oldPos.setY(obstacleTopEdge + offset.getY() - 1);
+                                    //     gamePlayState.hero->setPosition(oldPos);
+                                    //     gamePlayState.hero->setVelocityY(0);
+                                    // } else if(gamePlayState.hero->getVelocityY() < 0) { // Moving up
+                                    //     auto oldPos = gamePlayState.hero->getPosition();
+                                    //     auto offset = gamePlayState.hero->getBoundingBox().getOrigin();
+                                    //     auto obstacleBottomEdge = obstacle->getBoundingBox().getBottom();
+                                    //     oldPos.setX(obstacleBottomEdge - offset.getY() + 1);
+                                    //     gamePlayState.hero->setPosition(oldPos);
+                                    //     gamePlayState.hero->setVelocityY(0);
+                                    // }
+                                    // Test horizontal second
+                                    if(gamePlayState.hero->getVelocityX() > 0) { // Moving right
+                                        auto oldPos = gamePlayState.hero->getPosition();
+                                        auto offset = gamePlayState.hero->getBoundingBox().getOrigin();
+                                        auto obstacleLeftEdge = obstacle->getBoundingBox().getLeft();
+                                        oldPos.setX(obstacleLeftEdge - offset.getX() - 1);
+                                        gamePlayState.hero->setPosition(oldPos);
+                                        gamePlayState.hero->setVelocityX(0);
+                                    } else if(gamePlayState.hero->getVelocityX() < 0) { // Moving left
+                                        auto oldPos = gamePlayState.hero->getPosition();
+                                        auto offset = gamePlayState.hero->getBoundingBox().getOrigin();
+                                        auto obstacleRightEdge = obstacle->getBoundingBox().getRight();
+                                        oldPos.setX(obstacleRightEdge + offset.getX() + 1);
+                                        gamePlayState.hero->setPosition(oldPos);
+                                        gamePlayState.hero->setVelocityX(0);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                );
+                //
+                // END code that checks hero vs obstacles
+                //     
             }
         }
 
