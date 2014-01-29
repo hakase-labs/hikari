@@ -52,6 +52,7 @@
 #include "hikari/core/game/AnimationSet.hpp"
 #include "hikari/core/game/AnimationLoader.hpp"
 #include "hikari/core/game/TileMapCollisionResolver.hpp"
+#include "hikari/core/game/WorldCollisionResolver.hpp"
 #include "hikari/core/game/map/MapLoader.hpp"
 #include "hikari/core/game/map/MapRenderer.hpp"
 #include "hikari/core/game/map/Door.hpp"
@@ -107,7 +108,7 @@ namespace hikari {
         , imageCache(services.locateService<ImageCache>(Services::IMAGECACHE))
         , userInput(new RealTimeInput())
         , scriptEnv(services.locateService<SquirrelService>(Services::SCRIPTING))
-        , collisionResolver(new TileMapCollisionResolver())
+        , collisionResolver(new WorldCollisionResolver())
         , currentMap(nullptr)
         , currentTileset(nullptr)
         , currentRoom(nullptr)
@@ -321,6 +322,7 @@ namespace hikari {
             guiWeaponMenuSelectionListener.reset(new gcn::FunctorSelectionListener([&](const gcn::SelectionEvent & event) {
                 // TODO: For now just use the index of the item in the menu.
                 auto selectedWeaponIndex = guiWeaponMenu->getSelectedIndex();
+                HIKARI_LOG(hikari::debug4) << "Selected a menu item " << selectedWeaponIndex;
             }));
 
             guiWeaponMenu->setEnabled(true);
@@ -541,6 +543,7 @@ namespace hikari {
             guiWeaponMenu->requestFocus();
         }
 
+        collisionResolver->setWorld(&world);
         Movable::setCollisionResolver(collisionResolver);
         Movable::setGravity(0.25f);
 
@@ -624,7 +627,7 @@ namespace hikari {
             mapRenderer->setCullRegion(camera.getBoundary());
 
             // Make sure we detect collisions in this room
-            collisionResolver->setRoom(currentRoom);
+            collisionResolver->setWorld(&world);
 
             // Clean up and then change the world's "room"
             world.removeAllObjects();
@@ -1767,54 +1770,54 @@ namespace hikari {
                 // We check against them after updating the hero so there is no
                 // jerky motion since we reposition the hero after he is moved.
                 //
-                auto obstacles = gamePlayState.world.getObstacles();
+                // auto obstacles = gamePlayState.world.getObstacles();
 
-                std::for_each(
-                    std::begin(obstacles),
-                    std::end(obstacles),
-                    [&](const std::shared_ptr<Enemy>& obstacle) {
-                        if(obstacle->getFaction() == Factions::World) {
-                            if(obstacle->isObstacle()) {
-                                if(obstacle->getBoundingBox().intersects(gamePlayState.hero->getBoundingBox())) {
-                                    HIKARI_LOG(debug4) << "Touching an obstacle!";
+                // std::for_each(
+                //     std::begin(obstacles),
+                //     std::end(obstacles),
+                //     [&](const std::shared_ptr<Enemy>& obstacle) {
+                //         if(obstacle->getFaction() == Factions::World) {
+                //             if(obstacle->isObstacle()) {
+                //                 if(obstacle->getBoundingBox().intersects(gamePlayState.hero->getBoundingBox())) {
+                //                     HIKARI_LOG(debug4) << "Touching an obstacle!";
 
-                                    // Test vertical first
-                                    // if(gamePlayState.hero->getVelocityY() > 0) { // Moving down
-                                    //     auto oldPos = gamePlayState.hero->getPosition();
-                                    //     auto offset = gamePlayState.hero->getBoundingBox().getOrigin();
-                                    //     auto obstacleTopEdge = obstacle->getBoundingBox().getTop();
-                                    //     oldPos.setY(obstacleTopEdge + offset.getY() - 1);
-                                    //     gamePlayState.hero->setPosition(oldPos);
-                                    //     gamePlayState.hero->setVelocityY(0);
-                                    // } else if(gamePlayState.hero->getVelocityY() < 0) { // Moving up
-                                    //     auto oldPos = gamePlayState.hero->getPosition();
-                                    //     auto offset = gamePlayState.hero->getBoundingBox().getOrigin();
-                                    //     auto obstacleBottomEdge = obstacle->getBoundingBox().getBottom();
-                                    //     oldPos.setX(obstacleBottomEdge - offset.getY() + 1);
-                                    //     gamePlayState.hero->setPosition(oldPos);
-                                    //     gamePlayState.hero->setVelocityY(0);
-                                    // }
-                                    // Test horizontal second
-                                    if(gamePlayState.hero->getVelocityX() > 0) { // Moving right
-                                        auto oldPos = gamePlayState.hero->getPosition();
-                                        auto offset = gamePlayState.hero->getBoundingBox().getOrigin();
-                                        auto obstacleLeftEdge = obstacle->getBoundingBox().getLeft();
-                                        oldPos.setX(obstacleLeftEdge - offset.getX() - 1);
-                                        gamePlayState.hero->setPosition(oldPos);
-                                        gamePlayState.hero->setVelocityX(0);
-                                    } else if(gamePlayState.hero->getVelocityX() < 0) { // Moving left
-                                        auto oldPos = gamePlayState.hero->getPosition();
-                                        auto offset = gamePlayState.hero->getBoundingBox().getOrigin();
-                                        auto obstacleRightEdge = obstacle->getBoundingBox().getRight();
-                                        oldPos.setX(obstacleRightEdge + offset.getX() + 1);
-                                        gamePlayState.hero->setPosition(oldPos);
-                                        gamePlayState.hero->setVelocityX(0);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                );
+                //                     // Test vertical first
+                //                     // if(gamePlayState.hero->getVelocityY() > 0) { // Moving down
+                //                     //     auto oldPos = gamePlayState.hero->getPosition();
+                //                     //     auto offset = gamePlayState.hero->getBoundingBox().getOrigin();
+                //                     //     auto obstacleTopEdge = obstacle->getBoundingBox().getTop();
+                //                     //     oldPos.setY(obstacleTopEdge + offset.getY() - 1);
+                //                     //     gamePlayState.hero->setPosition(oldPos);
+                //                     //     gamePlayState.hero->setVelocityY(0);
+                //                     // } else if(gamePlayState.hero->getVelocityY() < 0) { // Moving up
+                //                     //     auto oldPos = gamePlayState.hero->getPosition();
+                //                     //     auto offset = gamePlayState.hero->getBoundingBox().getOrigin();
+                //                     //     auto obstacleBottomEdge = obstacle->getBoundingBox().getBottom();
+                //                     //     oldPos.setX(obstacleBottomEdge - offset.getY() + 1);
+                //                     //     gamePlayState.hero->setPosition(oldPos);
+                //                     //     gamePlayState.hero->setVelocityY(0);
+                //                     // }
+                //                     // Test horizontal second
+                //                     if(gamePlayState.hero->getVelocityX() > 0) { // Moving right
+                //                         auto oldPos = gamePlayState.hero->getPosition();
+                //                         auto offset = gamePlayState.hero->getBoundingBox().getOrigin();
+                //                         auto obstacleLeftEdge = obstacle->getBoundingBox().getLeft();
+                //                         oldPos.setX(obstacleLeftEdge - offset.getX() - 1);
+                //                         gamePlayState.hero->setPosition(oldPos);
+                //                         gamePlayState.hero->setVelocityX(0);
+                //                     } else if(gamePlayState.hero->getVelocityX() < 0) { // Moving left
+                //                         auto oldPos = gamePlayState.hero->getPosition();
+                //                         auto offset = gamePlayState.hero->getBoundingBox().getOrigin();
+                //                         auto obstacleRightEdge = obstacle->getBoundingBox().getRight();
+                //                         oldPos.setX(obstacleRightEdge + offset.getX() + 1);
+                //                         gamePlayState.hero->setPosition(oldPos);
+                //                         gamePlayState.hero->setVelocityX(0);
+                //                     }
+                //                 }
+                //             }
+                //         }
+                //     }
+                // );
                 //
                 // END code that checks hero vs obstacles
                 //     
