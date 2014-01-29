@@ -307,6 +307,7 @@ set( HIKARI_CORE_GAME_SOURCE_FILES
     src/hikari/core/game/SpriteAnimator.cpp
     src/hikari/core/game/TileAnimator.cpp
     src/hikari/core/game/TileMapCollisionResolver.cpp
+    src/hikari/core/game/WorldCollisionResolver.cpp
 )
 
 source_group(hikari\\core\\game FILES ${HIKARI_CORE_GAME_SOURCE_FILES})
