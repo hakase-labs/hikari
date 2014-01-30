@@ -195,6 +195,7 @@
     {
         "name": "Destructable Block (1x2)",
         "hitPoints": 20.0,
+        "deathType": "Hero",
         "damageId": 0,
         "behavior": {
             "type": "scripted",

@@ -204,6 +204,7 @@ namespace FactoryHelpers {
                                         const auto boundingBoxObject = templateObject["boundingBox"];
                                         const auto statesObject      = templateObject["states"];
                                         const auto characteristicsObject = templateObject["characteristics"];
+                                        const auto deathType         = templateObject.get("deathType", "Nothing").asString();
 
                                         hikari::BoundingBoxF boundingBox(
                                             0.0f,
@@ -236,6 +237,10 @@ namespace FactoryHelpers {
                                         instance->setBoundingBox(boundingBox);
                                         instance->setDirection(Directions::Down);
                                         instance->changeAnimation("idle");
+                                        
+                                        if(deathType == "Hero") {
+                                            instance->setDeathType(EntityDeathType::Hero);
+                                        }
 
                                         if(!characteristicsObject.isNull()) {
                                             const bool gravitated = characteristicsObject["gravitated"].asBool();
@@ -442,6 +447,8 @@ namespace FactoryHelpers {
                                             // Default; do nothing
                                         } else if(deathType == "Small") {
                                             instance->setDeathType(EntityDeathType::Small);
+                                        } else if(deathType == "Hero") {
+                                            instance->setDeathType(EntityDeathType::Hero);
                                         }
 
                                         factoryPtr->registerPrototype(name, instance);

@@ -25,6 +25,7 @@ namespace hikari {
     class CollectableItem;
     class ItemFactory;
     class Doodad;
+    class Entity;
     class Enemy;
     class EnemyFactory;
     class Particle;
@@ -109,7 +110,7 @@ namespace hikari {
         const std::vector<std::shared_ptr<Particle>> & getActiveParticles() const;
         const std::vector<std::shared_ptr<Projectile>> & getActiveProjectiles() const;
 
-        std::vector<std::shared_ptr<Enemy>> getObstacles() const;
+        std::vector<std::shared_ptr<Entity>> getObstacles() const;
 
         void setPlayer(const std::shared_ptr<Hero>& player);
 

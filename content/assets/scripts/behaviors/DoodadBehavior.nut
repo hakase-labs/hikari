@@ -12,10 +12,8 @@ class DoodadBehavior extends EnemyBehavior {
             if(!didSetAnimation) {
                 host.changeAnimation("destructable-wall");
                 host.isObstacle = true;
-                //  host.isShielded = true;
+                host.isShielded = false;
                 host.faction = Factions.World;
-                ::log("host.faction = " + host.faction);
-
                 didSetAnimation = true;
             }
         }
