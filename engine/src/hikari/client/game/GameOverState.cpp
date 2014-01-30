@@ -2,6 +2,9 @@
 #include "hikari/client/game/InputService.hpp"
 #include "hikari/client/audio/AudioService.hpp"
 #include "hikari/client/gui/Panel.hpp"
+#include "hikari/client/gui/Menu.hpp"
+#include "hikari/client/gui/MenuItem.hpp"
+#include "hikari/client/gui/Icon.hpp"
 #include "hikari/client/gui/GuiService.hpp"
 #include "hikari/client/Services.hpp"
 #include "hikari/core/game/GameController.hpp"
@@ -11,7 +14,14 @@
 #include <guichan/widgets/label.hpp>
 #include <json/reader.h>
 
+#include <memory>
+
 namespace hikari {
+
+    const std::string GameOverState::ITEM_CONTINUE = "CONTINUE";
+    const std::string GameOverState::ITEM_PASS_WORD = "PASS WORD";
+    const std::string GameOverState::ITEM_STAGE_SELECT = "STAGE SELECT";
+    const std::string GameOverState::ITEM_TITLE_SCREEN = "TITLE SCREEN";
 
     GameOverState::GameOverState(const std::string &name, const Json::Value &params, GameController & controller, ServiceLocator &services)
         : name(name)
@@ -20,23 +30,62 @@ namespace hikari {
         , keyboardInput(services.locateService<InputService>(Services::INPUT))
         , mainPanel(new gui::Panel())
         , guiWrapper(new gcn::Container())
-        , testLabel(new gcn::Label())
+        , guiMenu(new gui::Menu())
+        , guiCursorIcon(new gui::Icon("assets/images/sp-gui-atlas.png"))
+        , gameOverLabel(new gcn::Label())
         , guiService(services.locateService<GuiService>(Services::GUISERVICE))
         , goToNextState(false)
     {
+        guiCursorIcon->setSubrectangle(gcn::Rectangle(0, 0, 4, 8));
+        guiCursorIcon->setWidth(4);
+        guiCursorIcon->setHeight(8);
+
         guiWrapper->setWidth(256);
         guiWrapper->setHeight(240);
         guiWrapper->setOpaque(true);
-        guiWrapper->setBaseColor(gcn::Color(12, 56, 130));
+        guiWrapper->setBaseColor(gcn::Color(0, 112, 236));
 
-        testLabel->setCaption("Game Over");
-        testLabel->adjustSize();
+        gameOverLabel->setCaption("Game Over");
+        gameOverLabel->adjustSize();
 
-        mainPanel->setWidth(100);
-        mainPanel->setHeight(100);
+        std::shared_ptr<gui::MenuItem> continueMenuItem(new gui::MenuItem(ITEM_CONTINUE));
+        continueMenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
+        continueMenuItem->setSelectionColor(gcn::Color(0, 0, 0, 0));
+        guiMenu->addItem(continueMenuItem);
 
-        guiWrapper->add(testLabel.get(), 100, 4);
-        guiWrapper->add(mainPanel.get(), 10, 20);
+        std::shared_ptr<gui::MenuItem> passWordMenuItem(new gui::MenuItem(ITEM_PASS_WORD));
+        passWordMenuItem->setY(16);
+        passWordMenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
+        passWordMenuItem->setSelectionColor(gcn::Color(0, 0, 0, 0));
+        guiMenu->addItem(passWordMenuItem);
+
+        std::shared_ptr<gui::MenuItem> stageSelectMenuItem(new gui::MenuItem(ITEM_STAGE_SELECT));
+        stageSelectMenuItem->setY(32);
+        stageSelectMenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
+        stageSelectMenuItem->setSelectionColor(gcn::Color(0, 0, 0, 0));
+        guiMenu->addItem(stageSelectMenuItem);
+
+        std::shared_ptr<gui::MenuItem> titleScreenMenuItem(new gui::MenuItem(ITEM_TITLE_SCREEN));
+        titleScreenMenuItem->setY(48);
+        titleScreenMenuItem->setForegroundColor(gcn::Color(0, 0, 0, 0));
+        titleScreenMenuItem->setSelectionColor(gcn::Color(0, 0, 0, 0));
+        guiMenu->addItem(titleScreenMenuItem);
+
+        guiMenu->setSelectedIndex(0);
+
+        mainPanel->setWidth(guiWrapper->getWidth() - 32);
+        mainPanel->setHeight(guiWrapper->getHeight() - 32);
+        mainPanel->setBaseColor(gcn::Color(0, 0, 0));
+
+        guiMenu->setWidth(mainPanel->getWidth() - 24);
+        guiMenu->setHeight(mainPanel->getHeight() - 16);
+        guiMenu->setBackgroundColor(gcn::Color(0, 0, 0, 0));
+        // guiMenu->addActionListener(guiActionListener.get());
+        guiMenu->enableWrapping();
+
+        guiWrapper->add(gameOverLabel.get(), 100, 4);
+        guiWrapper->add(mainPanel.get(), 16, 16);
+        mainPanel->add(guiMenu.get(), 24, 16);
     }
 
     GameOverState::~GameOverState() {
