@@ -582,6 +582,8 @@ namespace hikari {
             guiContainer->setEnabled(false);
             guiWeaponMenu->setEnabled(false);
         }
+
+        collisionResolver->setWorld(nullptr);
     }
 
     const std::string& GamePlayState::getName() const {

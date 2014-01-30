@@ -26,6 +26,8 @@ namespace hikari {
         bool tileIsSolid(const int& tileAttribute) const;
         bool tileIsPlatform(const int& tileAttribute) const;
 
+        void updateTileBounds(int tileX, int tileY);
+
     public:
         WorldCollisionResolver();
         virtual ~WorldCollisionResolver();

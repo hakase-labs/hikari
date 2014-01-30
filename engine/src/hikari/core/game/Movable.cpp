@@ -369,10 +369,13 @@ namespace hikari {
             checkCollision(dt);
         }
 
+        float extraX = collisionInfo.inheritedVelocityX;
+        float extraY = collisionInfo.inheritedVelocityY;
+
         // Integrate the position
         setPosition(
-            getPosition().getX() + (applyHorizontalVelocity ? velocity.getX() : 0)/* * dt */, 
-            getPosition().getY() + (applyVerticalVelocity   ? velocity.getY() : 0)/* * dt */);
+            getPosition().getX() + (applyHorizontalVelocity ? velocity.getX() + extraX : 0 + extraX)/* * dt */, 
+            getPosition().getY() + (applyVerticalVelocity   ? velocity.getY() + extraY : 0 + extraY)/* * dt */);
     }
 
     unsigned int Movable::getGravityApplicationThreshold() const {

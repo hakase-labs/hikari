@@ -14,8 +14,12 @@ class DoodadBehavior extends EnemyBehavior {
                 host.isObstacle = true;
                 host.isShielded = false;
                 host.faction = Factions.World;
+                host.velocityY = -0.04;
+                host.isPhasing = true;
                 didSetAnimation = true;
             }
+
+            host.velocityX = -0.04;
         }
 
         base.update(dt);

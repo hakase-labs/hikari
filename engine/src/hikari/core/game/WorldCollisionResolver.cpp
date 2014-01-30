@@ -21,20 +21,6 @@ namespace hikari {
 
     void WorldCollisionResolver::setWorld(GameWorld * newWorld) {
         world = newWorld;
-
-        if(world) {
-            const auto currentRoom = world->getCurrentRoom();
-
-            if(currentRoom) {
-                const int tileSize = currentRoom->getGridSize();
-        
-                tileBounds
-                    .setWidth(tileSize)
-                    .setHeight(tileSize);
-            } else {
-                HIKARI_LOG(debug4) << "WorldCollisionResolver::setWorld set world but there is no current room.";
-            }
-        }
     }
 
     GameWorld * WorldCollisionResolver::getWorld() const {
@@ -69,10 +55,13 @@ namespace hikari {
 
                     if(sweepBox.intersects(obstacleBounds)) {
                         collisionInfo.isCollisionX = true;
-                        collisionInfo.tileX = -1;
-                        collisionInfo.tileY = -1;
+                        collisionInfo.tileX = 0;
+                        collisionInfo.tileY = 0;
                         collisionInfo.tileType = 0;
                         collisionInfo.directionX = directionX;
+
+                        collisionInfo.inheritedVelocityX = obstacles[i]->getVelocityX();
+                        // collisionInfo.inheritedVelocityY = obstacles[i]->getVelocityY();
 
                         if(directionX == Directions::Left) {
                             collisionInfo.correctedX = obstacleBounds.getRight() + 1;
@@ -91,6 +80,8 @@ namespace hikari {
                         collisionInfo.tileY = tileY;
                         collisionInfo.tileType = currentTile;
                         collisionInfo.directionX = directionX;
+
+                        HIKARI_LOG(debug4) << "Collision!! tileX = " << tileX << ", tileY = " << tileY;
                 
                         determineTileCorrection(directionX, collisionInfo);
 
@@ -122,10 +113,14 @@ namespace hikari {
 
                     if(sweepBox.intersects(obstacleBounds)) {
                         collisionInfo.isCollisionY = true;
-                        collisionInfo.tileX = -1;
-                        collisionInfo.tileY = -1;
+                        collisionInfo.tileX = 0;
+                        collisionInfo.tileY = 0;
                         collisionInfo.tileType = 0;
                         collisionInfo.directionY = directionY;
+
+                        // Inherit both the X and Y velocities from the obstacle/platform
+                        collisionInfo.inheritedVelocityX = obstacles[i]->getVelocityX();
+                        collisionInfo.inheritedVelocityY = obstacles[i]->getVelocityY();
 
                         if(directionY == Directions::Up) {
                             collisionInfo.correctedY = obstacleBounds.getBottom();
@@ -161,14 +156,13 @@ namespace hikari {
         if(world) {
             const auto currentRoom = world->getCurrentRoom();
             if(currentRoom) {
-                const int tileSize = currentRoom->getGridSize();
-
-                tileBounds
-                    .setPosition(collisionInfo.tileX * tileSize, collisionInfo.tileY * tileSize);
+                updateTileBounds(collisionInfo.tileX, collisionInfo.tileY);
 
                 if(direction == Directions::Left) {
                     // Collision happened on the left edge, so return the X for the RIGHT side of the tile.
                     collisionInfo.correctedX = tileBounds.getRight();
+                    HIKARI_LOG(debug4) << "Collision!! currentRoom = " << !!currentRoom << ", gridSize = " << currentRoom->getGridSize();
+                    HIKARI_LOG(debug4) << "Collision!! correctedX = " << collisionInfo.correctedX << ", tile = " << tileBounds;
                 } else if(direction == Directions::Right) {
                     // Collision happened on the right edge, so just set the X position.
                     collisionInfo.correctedX = tileBounds.getLeft();
@@ -189,6 +183,21 @@ namespace hikari {
 
     bool WorldCollisionResolver::tileIsPlatform(const int& tileAttribute) const {
         return (tileAttribute != Room::NO_TILE) && TileAttribute::hasAttribute(tileAttribute, TileAttribute::PLATFORM);
+    }
+
+    void WorldCollisionResolver::updateTileBounds(int tileX, int tileY) {
+        if(world) {
+            const auto currentRoom = world->getCurrentRoom();
+            
+            if(currentRoom) {
+                const int tileSize = currentRoom->getGridSize();
+
+                tileBounds
+                    .setWidth(tileSize)
+                    .setHeight(tileSize)
+                    .setPosition(tileX * tileSize, tileY * tileSize);
+            }
+        }
     }
 
 } // hikari
