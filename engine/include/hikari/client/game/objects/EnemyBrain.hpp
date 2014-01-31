@@ -78,6 +78,14 @@ namespace hikari {
         virtual void handleCollision(Movable& body, CollisionInfo& info);
 
         /**
+         * Called when collisions take place with other objects. Useful for
+         * reacting to when the enemy touches the player or some other object.
+         *
+         * @param otherId [description]
+         */
+        virtual void handleObjectTouch(int otherId);
+
+        /**
          * Updates the brain's logic.
          * 
          * @param dt time, in seconds, to update for

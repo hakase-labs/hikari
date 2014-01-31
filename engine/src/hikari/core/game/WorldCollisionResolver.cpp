@@ -61,7 +61,7 @@ namespace hikari {
                         collisionInfo.directionX = directionX;
 
                         collisionInfo.inheritedVelocityX = obstacles[i]->getVelocityX();
-                        // collisionInfo.inheritedVelocityY = obstacles[i]->getVelocityY();
+                        collisionInfo.inheritedVelocityY = obstacles[i]->getVelocityY();
 
                         if(directionX == Directions::Left) {
                             collisionInfo.correctedX = obstacleBounds.getRight() + 1;
@@ -80,6 +80,7 @@ namespace hikari {
                         collisionInfo.tileY = tileY;
                         collisionInfo.tileType = currentTile;
                         collisionInfo.directionX = directionX;
+                        collisionInfo.inheritedVelocityX = 0.0f;
 
                         HIKARI_LOG(debug4) << "Collision!! tileX = " << tileX << ", tileY = " << tileY;
                 
@@ -141,6 +142,7 @@ namespace hikari {
                         collisionInfo.tileY = tileY;
                         collisionInfo.tileType = currentTile;
                         collisionInfo.directionY = directionY;
+                        collisionInfo.inheritedVelocityY = 0.0f;
 
                         determineTileCorrection(directionY, collisionInfo);
 

@@ -31,6 +31,14 @@ namespace hikari {
 
         virtual void handleCollision(Movable& body, CollisionInfo& info);
 
+        /**
+         * Handles the case when another object touches this object. Allows the
+         * object to react to a simple collision.
+         *
+         * @param otherId the ID of the other object
+         */
+        virtual void handleObjectTouch(int otherId);
+
         void setBrain(const std::shared_ptr<EnemyBrain> & brain);
         const std::shared_ptr<EnemyBrain>& getBrain() const;
 

@@ -1490,6 +1490,7 @@ namespace hikari {
         auto playerPosition = gamePlayState.world.getPlayerPosition();
 
         Sqrat::RootTable()
+            .SetValue("heroId", gamePlayState.hero->getId())
             .SetValue("heroX", playerPosition.getX())
             .SetValue("heroY", playerPosition.getY())
             .SetValue("isHeroShooting", gamePlayState.hero->isNowShooting());
@@ -1575,8 +1576,10 @@ namespace hikari {
                 //
                 const auto & hero = gamePlayState.hero;
 
-                if(enemy->getFaction() == Factions::Enemy) {
-                    if(enemy->getBoundingBox().intersects(hero->getBoundingBox())) {
+                if(enemy->getBoundingBox().intersects(hero->getBoundingBox())) {
+                    enemy->handleObjectTouch(hero->getId());
+                    
+                    if(enemy->getFaction() == Factions::Enemy) {
                         if(hero->isVulnerable()) {
                             DamageKey damageKey;
                             damageKey.damagerType = enemy->getDamageId();

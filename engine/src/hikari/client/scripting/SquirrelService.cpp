@@ -170,6 +170,7 @@ namespace hikari {
                     .Func(_SC("getId"), &Enemy::getId)
                     .Func(_SC("getActiveShotCount"), &Entity::getActiveShotCount)
                     .Func(_SC("fireWeapon"), &Enemy::fireWeapon)
+                    .Func(_SC("handleObjectTouch"), &Enemy::handleObjectTouch)
                     .GlobalFunc(_SC("getX"), &EntityHelpers::getX)
                     .GlobalFunc(_SC("getY"), &EntityHelpers::getY)
                     .GlobalFunc(_SC("setX"), &EntityHelpers::setX)

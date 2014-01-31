@@ -45,4 +45,8 @@ namespace hikari {
         // Does nothing
     }
 
+    void EnemyBrain::handleObjectTouch(int otherId) {
+        // Dones nothing
+    }
+
 } // hikari

@@ -19,6 +19,7 @@ namespace hikari {
         static const char * FUNCTION_NAME_ATTACH;
         static const char * FUNCTION_NAME_DETACH;
         static const char * FUNCTION_NAME_HANDLECOLLISION;
+        static const char * FUNCTION_NAME_HANDLEOBJECTTOUCH;
         static const char * FUNCTION_NAME_UPDATE;
         static const char * BASE_CLASS_NAME;
 
@@ -38,6 +39,7 @@ namespace hikari {
         Sqrat::Function proxyDetach;
         Sqrat::Function proxyUpdate;
         Sqrat::Function proxyHandleWorldCollision;
+        Sqrat::Function proxyHandleObjectTouch;
 
         /**
          * Creates an instance of the behavior in the VM and binds it to this
@@ -75,6 +77,7 @@ namespace hikari {
         virtual void attach(Enemy* host);
         virtual void detach();
         virtual void handleCollision(Movable& body, CollisionInfo& info);
+        virtual void handleObjectTouch(int otherId);
         virtual void update(float dt);
     };
 

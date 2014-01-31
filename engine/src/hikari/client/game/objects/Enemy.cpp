@@ -77,6 +77,13 @@ namespace hikari {
         }
     }
 
+    void Enemy::handleObjectTouch(int otherId) {
+        // HIKARI_LOG(debug4) << "I'm being touched by something! My ID = " << getId() << ", Other ID = " << otherId;
+        if(brain) {
+            brain->handleObjectTouch(otherId);
+        }
+    }
+
     void Enemy::setBrain(const std::shared_ptr<EnemyBrain> & newBrain) {
         if(newBrain) {
             brain = newBrain;
