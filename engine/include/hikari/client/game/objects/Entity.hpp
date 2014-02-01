@@ -8,8 +8,12 @@
 #include "hikari/core/game/Direction.hpp"
 #include "hikari/core/math/Vector2.hpp"
 
+#include <SFML/Graphics/RectangleShape.hpp>
+
 #include <list>
 #include <memory>
+
+#define HIKARI_DEBUG_ENTITIES
 
 namespace sf {
     class RenderTarget;

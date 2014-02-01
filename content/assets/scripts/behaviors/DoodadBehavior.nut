@@ -1,5 +1,6 @@
 class DoodadBehavior extends EnemyBehavior {
     didSetAnimation = false;
+    counter = 0.0;
 
     constructor(classConfig = {}) {
         base.constructor(classConfig);
@@ -14,12 +15,22 @@ class DoodadBehavior extends EnemyBehavior {
                 host.isObstacle = true;
                 host.isShielded = false;
                 host.faction = Factions.World;
-                host.velocityY = -0.04;
+                //host.velocityY = -0.04;
                 host.isPhasing = true;
                 didSetAnimation = true;
+                host.direction = Directions.Left;
             }
 
-            host.velocityX = -0.04;
+            counter += dt;
+
+            if(counter >= 3.0) {
+                local dir = host.direction;
+                counter = 0.0;
+                host.direction = Utils.getOppositeDirection(dir);
+            }
+
+            host.velocityY = host.direction == Directions.Left ? -0.6 : 0.6;
+            host.velocityX = host.direction == Directions.Left ? -0.6 : 0.6;
         }
 
         base.update(dt);
@@ -27,6 +38,14 @@ class DoodadBehavior extends EnemyBehavior {
 
     function handleWorldCollision(side) {
 
+    }
+
+    function handleObjectTouch(otherId) {
+        if(host) {
+            if(otherId == ::heroId) {
+                host.isGravitated = true;
+            }
+        }
     }
 }
 

@@ -12,7 +12,7 @@
 
 namespace hikari {
 
-    bool Entity::debug = false;
+    bool Entity::debug = true;
     const float Entity::DEFAULT_AGE_IN_M_SECONDS = 0.0f;
     const float Entity::DEFAULT_MAXIMUM_AGE_IN_M_SECONDS = 10.0f;
 
