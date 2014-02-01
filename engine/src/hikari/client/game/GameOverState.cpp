@@ -45,7 +45,7 @@ namespace hikari {
         guiWrapper->setOpaque(true);
         guiWrapper->setBaseColor(gcn::Color(0, 112, 236));
 
-        gameOverLabel->setCaption("Game Over");
+        gameOverLabel->setCaption("GAME OVER");
         gameOverLabel->adjustSize();
 
         std::shared_ptr<gui::MenuItem> continueMenuItem(new gui::MenuItem(ITEM_CONTINUE));

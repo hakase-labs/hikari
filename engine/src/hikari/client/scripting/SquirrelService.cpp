@@ -164,6 +164,7 @@ namespace hikari {
                     .Prop<bool>(_SC("isPhasing"), &Enemy::isPhasing, &Enemy::setPhasing)
                     .Prop<bool>(_SC("isShielded"), &Enemy::isShielded, &Enemy::setShielded)
                     .Prop<int>(_SC("weaponId"), &Enemy::getWeaponId, &Enemy::setWeaponId)
+                    .Prop<float>(_SC("hitPoints"), &Enemy::getHitPoints, &Enemy::setHitPoints)
                     .Prop<const Direction>(_SC("direction"), &Enemy::getDirection, &Enemy::setDirection)
                     .Prop<const Faction>(_SC("faction"), &Entity::getFaction, &Entity::setFaction)
                     .Func(_SC("changeAnimation"), &Enemy::changeAnimation)

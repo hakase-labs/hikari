@@ -199,9 +199,9 @@
         "damageId": 0,
         "behavior": {
             "type": "scripted",
-            "name": "DoodadBehavior",
+            "name": "FallingPlatformBehavior",
             "config": {
-
+                "fallDelay": 3.0
             }
         },
         "animationSet": "assets/animations/doodads.json",

@@ -13,7 +13,7 @@
       "id": 0,
       "x": 1,
       "y": 1,
-      "heroSpawnX": 128,
+      "heroSpawnX": 130,
       "heroSpawnY": 108,
       "width": 80,
       "height": 20,
@@ -3230,13 +3230,13 @@
       "enemies": [{
         "type": "Destructable Block (1x2)",
         "x": 320,
-        "y": 192,
+        "y": 162,
         "direction": "Left"
       },
       {
         "type": "Destructable Block (1x2)",
         "x": 304,
-        "y": 192,
+        "y": 162,
         "direction": "Left"
       }],
       "items": [],

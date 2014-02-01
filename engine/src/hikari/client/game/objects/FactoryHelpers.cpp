@@ -224,9 +224,33 @@ namespace FactoryHelpers {
 
                                         if(behaviorType == "scripted") {
                                             const auto behaviorName = behavior["name"].asString();
-                                            brain = std::make_shared<ScriptedEnemyBrain>(*squirrel, behaviorName);
+                                            const auto effectConfig = behavior["config"];
+
+                                            Sqrat::Table configTable;
+
+                                            if(!effectConfig.isNull()) {
+                                                const auto configPropertyNames = effectConfig.getMemberNames();
+
+                                                for(auto propName = std::begin(configPropertyNames); propName != std::end(configPropertyNames); std::advance(propName, 1)) {
+                                                    const auto propValue = effectConfig.get(*propName, Json::Value::null);
+
+                                                    if(propValue.isBool()) {
+                                                        configTable.SetValue((*propName).c_str(), propValue.asBool());
+                                                    } else if(propValue.isDouble()) {
+                                                        configTable.SetValue((*propName).c_str(), propValue.asDouble());
+                                                    } else if(propValue.isIntegral()) {
+                                                        configTable.SetValue((*propName).c_str(), propValue.asInt());
+                                                    } else if(propValue.isString()) {
+                                                        configTable.SetValue((*propName).c_str(), propValue.asString());
+                                                    } else if(propValue.isNull()) {
+                                                        configTable.SetValue((*propName).c_str(), nullptr);
+                                                    }
+                                                }
+                                            }
+
+                                            brain = std::make_shared<ScriptedEnemyBrain>(*squirrel, behaviorName, configTable);
                                         } else {
-                                            // Some other built-in behvior; currently not supported.
+                                            // Some other built-in behavior; currently not supported.
                                         }
 
                                         auto animationSetPtr = animationSetCache->get(animationSet);
