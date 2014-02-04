@@ -35,7 +35,7 @@ class HammerJoeBehavior extends EnemyBehavior {
                         enteringNewState = false;
                     }
 
-                    if(timer >= (1.0/60.0) * 48) {
+                    if(timer >= (1.0/60.0) * 47) {
                         timer = 0.0;
                         enteringNewState = true;
                         state = State.PRESHOOTING;
@@ -48,7 +48,7 @@ class HammerJoeBehavior extends EnemyBehavior {
                         enteringNewState = false;
                     }
 
-                    if(timer >= (1.0/60.0) * 48) {
+                    if(timer >= (1.0/60.0) * 24) {
                         timer = 0.0;
                         enteringNewState = true;
                         state = State.SHOOTING;
