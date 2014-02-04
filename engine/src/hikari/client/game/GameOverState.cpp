@@ -12,6 +12,10 @@
 
 #include <guichan/gui.hpp>
 #include <guichan/widgets/label.hpp>
+
+#include <guichan/hakase/functoractionlistener.hpp>
+#include <guichan/hakase/functorselectionlistener.hpp>
+
 #include <json/reader.h>
 
 #include <memory>
@@ -83,13 +87,66 @@ namespace hikari {
         // guiMenu->addActionListener(guiActionListener.get());
         guiMenu->enableWrapping();
 
+        guiActionListener.reset(new gcn::FunctorActionListener([&](const gcn::ActionEvent& event) {
+            auto item = guiMenu->getMenuItemAt(guiMenu->getSelectedIndex());
+
+            if(item) {
+                std::cout << "Actioned on #" << guiMenu->getSelectedIndex() << ", " << item->getName() << std::endl;
+
+                const std::string & menuItemName = item->getName();
+
+                if(menuItemName == ITEM_CONTINUE) {
+                    controller.requestStateChange("gameplay");
+                    goToNextState = true;
+                } else if(menuItemName == ITEM_PASS_WORD) {
+                    controller.requestStateChange("password");
+                    goToNextState = true;
+                } else if(menuItemName == ITEM_STAGE_SELECT) {
+                    controller.requestStateChange("stageselect");
+                    goToNextState = true;
+                } else if(menuItemName == ITEM_TITLE_SCREEN) {
+                    controller.requestStateChange("title");
+                    goToNextState = true;
+                }
+            }
+        }));
+
+        guiSelectionListener.reset(new gcn::FunctorSelectionListener([&](const gcn::SelectionEvent & event) {
+            std::cout << "Selection changed! " << guiMenu->getSelectedIndex() << std::endl;
+
+            positionCursorOnItem();
+
+            if(auto audio = audioService.lock()) {
+                audio->playSample("Menu Item Select");
+            }
+        }));
+
+        guiMenu->addActionListener(guiActionListener.get());
+        guiMenu->addSelectionListener(guiSelectionListener.get());
+
         guiWrapper->add(gameOverLabel.get(), 100, 4);
         guiWrapper->add(mainPanel.get(), 16, 16);
         mainPanel->add(guiMenu.get(), 24, 16);
+        guiWrapper->add(guiCursorIcon.get(), 16, 16);
     }
 
     GameOverState::~GameOverState() {
 
+    }
+
+    void GameOverState::positionCursorOnItem() {
+        int itemIndex = guiMenu->getSelectedIndex();
+        std::shared_ptr<gui::MenuItem> menuItem = guiMenu->getMenuItemAt(itemIndex);
+
+        int spacing = 2;
+        int absX = 0;
+        int absY = 0;
+
+        if(menuItem) {
+            menuItem->getAbsolutePosition(absX, absY);
+            guiCursorIcon->setX(absX - guiCursorIcon->getWidth() - spacing);
+            guiCursorIcon->setY(absY);
+        }
     }
 
     void GameOverState::handleEvent(sf::Event &event) {
@@ -103,6 +160,8 @@ namespace hikari {
     }
 
     bool GameOverState::update(float dt) {
+        guiMenu->logic();
+
         if(keyboardInput->wasPressed(Input::BUTTON_CANCEL)) {
             controller.requestStateChange("stageselect");
             goToNextState = true;
@@ -116,6 +175,9 @@ namespace hikari {
             auto & topContainer = gui->getRootContainer();
             topContainer.add(guiWrapper.get(), 0, 0);
             guiWrapper->setEnabled(true);
+            guiMenu->setEnabled(true);
+            guiMenu->requestFocus();
+            guiMenu->setSelectedIndex(0);
         }
 
         if(auto audio = audioService.lock()) {
@@ -130,6 +192,7 @@ namespace hikari {
             auto & topContainer = gui->getRootContainer();
             topContainer.remove(guiWrapper.get());
             guiWrapper->setEnabled(false);
+            guiMenu->setEnabled(false);
         }
         
         if(auto audio = audioService.lock()) {

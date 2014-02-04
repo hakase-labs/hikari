@@ -11,7 +11,8 @@ namespace gcn {
     class Container;
     class Label;
     class ActionListener;
-    class SelectionListener;}
+    class SelectionListener;
+}
 
 namespace Json {
     class Value;
@@ -49,8 +50,12 @@ namespace hikari {
         std::unique_ptr<gui::Icon> guiCursorIcon;
         std::unique_ptr<gcn::Label> gameOverLabel;
         std::weak_ptr<GuiService> guiService;
+        std::unique_ptr<gcn::ActionListener> guiActionListener;
+        std::unique_ptr<gcn::SelectionListener> guiSelectionListener;
 
         bool goToNextState;
+
+        void positionCursorOnItem();
 
     public:
         GameOverState(const std::string &name, const Json::Value &params, GameController & controller, ServiceLocator &services);
