@@ -98,6 +98,8 @@ namespace hikari {
         */
         void setNextState(const std::string &name);
 
+        std::string getPreviousStateName() const;
+
         void handleEvent(sf::Event &event);
         void render(sf::RenderTarget &target);
         void update(float dt);

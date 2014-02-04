@@ -67,6 +67,10 @@ namespace hikari {
         nextState = name;
     }
 
+    std::string GameController::getPreviousStateName() const {
+        return prevState;
+    }
+
     void GameController::requestStateChange(const std::string & stateName) {
         requestStateChange(
             stateName,
