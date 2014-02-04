@@ -204,6 +204,7 @@ namespace FactoryHelpers {
                                         const auto boundingBoxObject = templateObject["boundingBox"];
                                         const auto statesObject      = templateObject["states"];
                                         const auto characteristicsObject = templateObject["characteristics"];
+                                        const auto actionSpotObject  = templateObject["actionSpot"];
                                         const auto deathType         = templateObject.get("deathType", "Nothing").asString();
 
                                         hikari::BoundingBoxF boundingBox(
@@ -253,12 +254,20 @@ namespace FactoryHelpers {
                                             // Some other built-in behavior; currently not supported.
                                         }
 
+                                        Vector2<float> actionSpot;
+
+                                        if(!actionSpotObject.isNull()) {
+                                            actionSpot.setX(actionSpotObject.get("x", 0.0f).asDouble())
+                                                .setY(actionSpotObject.get("y", 0.0f).asDouble());
+                                        }
+
                                         auto animationSetPtr = animationSetCache->get(animationSet);
                                         auto spriteTexture = imageCache->get(animationSetPtr->getImageFileName());
 
                                         auto instance = std::make_shared<Enemy>(GameObject::generateObjectId(), nullptr);
                                         instance->setAnimationSet(animationSetPtr);
                                         instance->setBoundingBox(boundingBox);
+                                        instance->setActionSpot(actionSpot);
                                         instance->setDirection(Directions::Down);
                                         instance->changeAnimation("idle");
                                         

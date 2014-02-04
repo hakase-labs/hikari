@@ -67,7 +67,7 @@
         "boundingBox": {
             "width": 20,
             "height": 10,
-            "originX": 5,
+            "originX": 10,
             "originY": 5
         },
         "gravitated": false,

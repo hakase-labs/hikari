@@ -137,8 +137,8 @@
                     "y" : 32, 
                     "width" : 24, 
                     "height" : 16, 
-                    "hotspotX" : 18, 
-                    "hotspotY" : 9, 
+                    "hotspotX" : 12, 
+                    "hotspotY" : 8, 
                     "length" : 0.0667
                 },
                 { 
@@ -146,8 +146,8 @@
                     "y" : 32, 
                     "width" : 24, 
                     "height" : 16, 
-                    "hotspotX" : 18, 
-                    "hotspotY" : 9, 
+                    "hotspotX" : 12, 
+                    "hotspotY" : 8, 
                     "length" : 0.0667
                 }
             ]
