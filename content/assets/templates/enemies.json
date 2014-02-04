@@ -220,5 +220,32 @@
             "gravitated": false,
             "phasing": false
         }
+    },
+    {
+        "name": "Hammer Joe",
+        "hitPoints": 6.0,
+        "damageId": 0,
+        "behavior": {
+            "type": "scripted",
+            "name": "HammerJoeBehavior",
+            "config": {
+            }
+        },
+        "animationSet": "assets/animations/hammer-joe.json",
+        "boundingBox": {
+            "width": 20,
+            "height": 26,
+            "originX": 10,
+            "originY": 13
+        },
+        "states": {
+            "default": {
+                
+            }
+        },
+        "characteristics": {
+            "gravitated": true,
+            "phasing": false
+        }
     }
 ]

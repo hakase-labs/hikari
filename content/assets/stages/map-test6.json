@@ -57,7 +57,14 @@
         "width": 16,
         "height": 15
       },
-      "enemies": [],
+      "enemies": [
+        {
+            "type": "Hammer Joe",
+            "x": 96,
+            "y": 128,
+            "direction": "Left"
+        }
+      ],
       "items": [],
       "transitions": [
         {

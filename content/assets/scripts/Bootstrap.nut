@@ -7,6 +7,7 @@ require("assets/scripts/behaviors/EnemyBehavior.nut");
 require("assets/scripts/behaviors/DoodadBehavior.nut");
 require("assets/scripts/behaviors/FallingPlatformBehavior.nut");
 require("assets/scripts/behaviors/TellyBehavior.nut");
+require("assets/scripts/behaviors/HammerJoeBehavior.nut");
 require("assets/scripts/behaviors/DadaEnemyBehavior.nut");
 require("assets/scripts/behaviors/MetoolEnemyBehavior.nut");
 require("assets/scripts/behaviors/OctopusBatteryEnemyBehavior.nut");

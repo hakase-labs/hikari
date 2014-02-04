@@ -196,7 +196,7 @@ namespace hikari {
                     }));
 
                     // Wait half a second before continuing
-                    taskQueue.push(std::make_shared<WaitTask>(0.5f));
+                    //taskQueue.push(std::make_shared<WaitTask>(0.5f));
 
                     // Stop the regular music, start playing the boss intro music
                     taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
@@ -209,7 +209,7 @@ namespace hikari {
                     }));
 
                     // Wait 7 seconds for the music to play
-                    taskQueue.push(std::make_shared<WaitTask>(7.0f));
+                    //taskQueue.push(std::make_shared<WaitTask>(7.0f));
 
                     // Go to the next game state -- playing the game
                     taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {

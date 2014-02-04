@@ -1,6 +1,7 @@
 enum State {
   IDLE,
   MOVING,
+  PRESHOOTING,
   SHOOTING,
   PREJUMPING,
   JUMPING,

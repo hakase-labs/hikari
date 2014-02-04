@@ -214,6 +214,25 @@
         ]
     },
     {
+        "name": "Joe Hammer",
+        "projectileType": "Joe Hammer",
+        "limit": 1,
+        "usageCost": 3.0,
+        "usageSound": "None",
+        "usageActions": [
+            {
+                "type": "spawnProjectile",
+                "projectileType": "Joe Hammer",
+                "direction": "inherit",
+                "motion": {
+                    "type": "Linear",
+                    "applyYVelocity": false,
+                    "velocity": [3.0, 0.0]
+                }
+            }
+        ]
+    },
+    {
         "name": "Rain Flush",
         "projectileType": "Rain Flush",
         "global": true,
