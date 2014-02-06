@@ -199,9 +199,9 @@
         "damageId": 0,
         "behavior": {
             "type": "scripted",
-            "name": "FallingPlatformBehavior",
+            "name": "DoodadBehavior",
             "config": {
-                "fallDelay": 3.0
+                "animation": "destructable-wall-vertical-green"
             }
         },
         "animationSet": "assets/animations/doodads.json",
@@ -210,6 +210,36 @@
             "height": 32,
             "originX": 8,
             "originY": 16
+        },
+        "states": {
+            "default": {
+                
+            }
+        },
+        "characteristics": {
+            "gravitated": false,
+            "phasing": false
+        }
+    },
+    {
+        "name": "Falling Platform 1 (2x1)",
+        "hitPoints": 20.0,
+        "deathType": "Hero",
+        "damageId": 0,
+        "behavior": {
+            "type": "scripted",
+            "name": "FallingPlatformBehavior",
+            "config": {
+                "fallDelay": 0.0667,
+                "animation": "platform-1"
+            }
+        },
+        "animationSet": "assets/animations/doodads.json",
+        "boundingBox": {
+            "width": 32,
+            "height": 16,
+            "originX": 16,
+            "originY": 8
         },
         "states": {
             "default": {

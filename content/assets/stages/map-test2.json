@@ -4481,7 +4481,13 @@
         "height": 15
       },
       "doors": {},
-      "enemies": [],
+      "enemies": [
+        {
+          "type": "Destructable Block (1x2)",
+          "x": 183,
+          "y": 144
+        }
+      ],
       "items": [
         {
           "type": "Extra Life",
@@ -5005,7 +5011,18 @@
         "height": 15
       },
       "doors": {},
-      "enemies": [],
+      "enemies": [
+        {
+          "type": "Destructable Block (1x2)",
+          "x": 150,
+          "y": 48
+        },
+        {
+          "type": "Destructable Block (1x2)",
+          "x": 150,
+          "y": 112
+        }
+      ],
       "items": [
         {
           "type": "Large Health Energy",

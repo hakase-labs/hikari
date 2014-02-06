@@ -1,16 +1,16 @@
-class FallingPlatformBehavior extends EnemyBehavior {
+class FallingPlatformBehavior extends DoodadBehavior {
     counter = 0.0;
     shouldCount = false;
     fallDelay = (1.0/60.0) * 20;
 
-    constructor(classConfig = {}) {
-        base.constructor(classConfig);
+    constructor(_classConfig = {}) {
+        base.constructor(_classConfig);
         ::log("FallingPlatformBehavior constructor called.");
-        ::log("classConfig.len() = " + classConfig.len());
-        ::log("Is fallDelay in there? " + !!("fallDelay" in classConfig));
+        ::log("_classConfig.len() = " + _classConfig.len());
+        ::log("Is fallDelay in there? " + !!("fallDelay" in _classConfig));
 
-        if("fallDelay" in classConfig) {
-            fallDelay = classConfig.fallDelay;
+        if("fallDelay" in _classConfig) {
+            fallDelay = _classConfig.fallDelay;
         }
     }
 
@@ -37,7 +37,7 @@ class FallingPlatformBehavior extends EnemyBehavior {
         base.attachHost(newHost, instanceConfig);
 
         if(host) {
-            host.changeAnimation(("animation" in instanceConfig) ? instanceConfig.animation : "destructable-wall");
+            host.changeAnimation(("animation" in classConfig) ? classConfig.animation : "destructable-wall-vertical-green");
             host.isObstacle = true;
             host.isShielded = false;
             host.isPhasing = true;

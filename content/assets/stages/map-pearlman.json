@@ -3228,8 +3228,8 @@
         "height": 15
       },
       "enemies": [{
-        "type": "Destructable Block (1x2)",
-        "x": 320,
+        "type": "Falling Platform 1 (2x1)",
+        "x": 288,
         "y": 162,
         "direction": "Left"
       },
