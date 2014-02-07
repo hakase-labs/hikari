@@ -11,6 +11,8 @@ namespace hikari {
 
     class Enemy : public Entity, public Cloneable<Enemy> {
     private:
+        static const int DEFAULT_BONUS_TABLE;
+
         std::shared_ptr<EnemyBrain> brain;
         float hitPoints;
 
@@ -18,6 +20,7 @@ namespace hikari {
          * After taking damage this counts how many ticks that elapse.
          */
         int damageTickCounter;
+        int bonusTableIndex;
 
     public:
         Enemy(int id = GameObject::generateObjectId(), std::shared_ptr<Room> room = nullptr);
@@ -46,6 +49,8 @@ namespace hikari {
         float getHitPoints() const;
         void takeDamage(float amount);
 
+        void setBonusTableIndex(int index);
+        int getBonusTableIndex() const;
     };
 
 } // hikari

@@ -702,25 +702,30 @@ namespace hikari {
     std::shared_ptr<CollectableItem> GamePlayState::spawnBonusItem(int bonusTableIndex) {
         std::shared_ptr<CollectableItem> bonus;
 
-        if(const auto & gameConfigPtr = gameConfig.lock()) {
-            const auto & chanceTable = gameConfigPtr->getItemChancePairs();
-            int roll = rand() % 100;
+        if(bonusTableIndex > -1) { // -1 is a special case where nothing drops, ever.
+            // 
+            // TODO: Actually perform checks on real bonus tables?
+            // 
+            if(const auto & gameConfigPtr = gameConfig.lock()) {
+                const auto & chanceTable = gameConfigPtr->getItemChancePairs();
+                int roll = rand() % 100;
 
-            if(chanceTable.size() > 0) {
-                int lowerBound = 0;
+                if(chanceTable.size() > 0) {
+                    int lowerBound = 0;
 
-                for(auto it = std::begin(chanceTable), end = std::end(chanceTable); it != end; it++) {
-                    const auto & chance = *it;
+                    for(auto it = std::begin(chanceTable), end = std::end(chanceTable); it != end; it++) {
+                        const auto & chance = *it;
 
-                    int upperBound = lowerBound + chance.second;
+                        int upperBound = lowerBound + chance.second;
 
-                    if(roll >= lowerBound && roll < upperBound) {
-                        bonus = world.spawnCollectableItem(chance.first);
-                        break;
+                        if(roll >= lowerBound && roll < upperBound) {
+                            bonus = world.spawnCollectableItem(chance.first);
+                            break;
+                        }
+
+                        // Advance the lower bound
+                        lowerBound = upperBound;
                     }
-
-                    // Advance the lower bound
-                    lowerBound = upperBound;
                 }
             }
         }
@@ -761,6 +766,12 @@ namespace hikari {
                     clone->setActive(true);
                     world.queueObjectAddition(clone);
                 }
+            }
+        } else if(type == EntityDeathType::Large) {
+            if(std::shared_ptr<Particle> clone = world.spawnParticle("Large Explosion")) {
+                clone->setPosition(position);
+                clone->setActive(true);
+                world.queueObjectAddition(clone);
             }
         } else if(type == EntityDeathType::Small) {
             if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion")) {
@@ -1074,7 +1085,7 @@ namespace hikari {
                 spawnDeathExplosion(enemyPtr->getDeathType(), enemyPtr->getPosition());
 
                 // Calculate bonus drop
-                if(auto bonus = spawnBonusItem()) {
+                if(auto bonus = spawnBonusItem(enemyPtr->getBonusTableIndex())) {
                     bonus->setPosition(enemyPtr->getPosition());
                     bonus->setVelocityY(-3.0f); // TODO: Determine the actual upward velocity.
                     bonus->setActive(true);
@@ -1578,7 +1589,7 @@ namespace hikari {
 
                 if(enemy->getBoundingBox().intersects(hero->getBoundingBox())) {
                     enemy->handleObjectTouch(hero->getId());
-                    
+
                     if(enemy->getFaction() == Factions::Enemy) {
                         if(hero->isVulnerable()) {
                             DamageKey damageKey;

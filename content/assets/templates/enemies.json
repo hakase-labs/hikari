@@ -197,6 +197,7 @@
         "hitPoints": 20.0,
         "deathType": "Hero",
         "damageId": 0,
+        "bonusTableIndex": -1,
         "behavior": {
             "type": "scripted",
             "name": "DoodadBehavior",
@@ -226,6 +227,7 @@
         "hitPoints": 20.0,
         "deathType": "Hero",
         "damageId": 0,
+        "bonusTableIndex": -1,
         "behavior": {
             "type": "scripted",
             "name": "FallingPlatformBehavior",

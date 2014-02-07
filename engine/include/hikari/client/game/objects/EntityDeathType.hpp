@@ -11,7 +11,9 @@ namespace hikari {
     namespace EntityDeathType {
         enum Type {
             Nothing,    /// Nothing should appear
+            Hurt,       /// The "hurt" marks (like when Rock gets damaged)
             Small,      /// A small radial explosion should appear
+            Large,      /// A larger spiralling explosion should appear
             Hero        /// 16 small radial explosions (Rock or Robot Master)
         };
     }

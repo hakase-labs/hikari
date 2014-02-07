@@ -8,11 +8,14 @@
 
 namespace hikari {
 
+    const int Enemy::DEFAULT_BONUS_TABLE = 0;
+
     Enemy::Enemy(int id, std::shared_ptr<Room> room) 
         : Entity(id, room) 
         , brain(nullptr)
         , hitPoints(0.0)
         , damageTickCounter(0)
+        , bonusTableIndex(DEFAULT_BONUS_TABLE)
     {
         setAgeless(true);
         setGravitated(true);
@@ -26,6 +29,7 @@ namespace hikari {
         , brain(nullptr)
         , hitPoints(proto.hitPoints)
         , damageTickCounter(0)
+        , bonusTableIndex(proto.bonusTableIndex)
     {   
         setAgeless(true);
         setActive(false);
@@ -106,6 +110,14 @@ namespace hikari {
     void Enemy::takeDamage(float amount) {
         setHitPoints(getHitPoints() - amount);
         damageTickCounter = 1;
+    }
+
+    void Enemy::setBonusTableIndex(int index) {
+        bonusTableIndex = index;
+    }
+
+    int Enemy::getBonusTableIndex() const {
+        return bonusTableIndex;
     }
 
 } // hikari

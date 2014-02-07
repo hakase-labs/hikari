@@ -6521,7 +6521,14 @@
         "height": 15
       },
       "doors": {},
-      "enemies": [],
+      "enemies": [
+        {
+          "type": "Hammer Joe",
+          "x": 216,
+          "y": 112,
+          "direction": "left"
+        }
+      ],
       "items": [],
       "transitions": [
         {
@@ -7572,13 +7579,13 @@
       "items": [
         {
           "type": "Large Weapon Energy",
-          "x": 2243,
-          "y": 83
+          "x": 200,
+          "y": 86
         },
         {
           "type": "Large Weapon Energy",
-          "x": 2262,
-          "y": 83
+          "x": 216,
+          "y": 86
         }
       ],
       "transitions": [

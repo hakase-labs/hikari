@@ -206,6 +206,7 @@ namespace FactoryHelpers {
                                         const auto characteristicsObject = templateObject["characteristics"];
                                         const auto actionSpotObject  = templateObject["actionSpot"];
                                         const auto deathType         = templateObject.get("deathType", "Nothing").asString();
+                                        const auto bonusTableIndex   = templateObject.get("bonusTableIndex", 0).asInt();
 
                                         hikari::BoundingBoxF boundingBox(
                                             0.0f,
@@ -269,6 +270,7 @@ namespace FactoryHelpers {
                                         instance->setBoundingBox(boundingBox);
                                         instance->setActionSpot(actionSpot);
                                         instance->setDirection(Directions::Down);
+                                        instance->setBonusTableIndex(bonusTableIndex);
                                         instance->changeAnimation("idle");
                                         
                                         if(deathType == "Hero") {

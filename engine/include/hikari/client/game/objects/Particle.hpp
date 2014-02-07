@@ -19,6 +19,7 @@ namespace sf {
 namespace hikari {
     class Animation;
     class AnimationSet;
+    class Entity;
 
     /**
      * Particles are non-interactive sprites that have specific lifespans.
@@ -35,6 +36,10 @@ namespace hikari {
         std::weak_ptr<Animation> animation;
         std::weak_ptr<AnimationSet> animationSet;
         std::unique_ptr<Animator> animator;
+
+        std::weak_ptr<Entity> trackedObject;
+        bool trackX;
+        bool trackY;
 
     public:
         explicit Particle(float maximumAge);
@@ -64,6 +69,14 @@ namespace hikari {
         void setSpriteTexture(const std::shared_ptr<sf::Texture>& newTexture);
 
         void setCurrentAnimation(const std::string & animationName);
+
+        void setTrackedObject(const std::weak_ptr<Entity> & trackedObject);
+        const std::weak_ptr<Entity> & getTrackedObject() const;
+
+        void setTrackX(bool track);
+        void setTrackY(bool track);
+        bool getTrackX() const;
+        bool getTrackY() const;
     };
 
 } // hikari
