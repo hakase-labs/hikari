@@ -839,7 +839,7 @@ namespace hikari {
             for(int i = 0; i < numRooms; ++i) {
                 auto room = currentMap->getRoom(i);
 
-                HIKARI_LOG(debug) << "Resetting spawners for room " << i << ".";
+                HIKARI_LOG(debug4) << "Resetting spawners for room " << i << ".";
 
                 if(room) {
                     auto spawners = room->getSpawners();
@@ -1053,15 +1053,6 @@ namespace hikari {
 
                     // Decrement lives
                     progress->setLives(progress->getLives() - 1);
-
-                    // All the way dead
-                    // if(progress->getLives() < 0) {
-                    //     HIKARI_LOG(debug2) << "Hero has died all of his lives, go to password screen.";
-                    //     progress->resetLivesToDefault();
-                    //     progress->resetWeaponEnergyToDefault();
-                    //     controller.requestStateChange("stageselect");
-                    //     gotoNextState = true;
-                    // }
                 }
 
                 spawnDeathExplosion(hero->getDeathType(), hero->getPosition());
@@ -1159,7 +1150,6 @@ namespace hikari {
                 }
 
                 if(auto sound = audioService.lock()) {
-                    // sound->playSample(21);
                     sound->playSample(weapon->getUsageSound());
                 }
 
@@ -1184,19 +1174,16 @@ namespace hikari {
                 }
 
                 if(auto sound = audioService.lock()) {
-                    // sound->playSample(31);
                     sound->playSample("Splash");
                 }
             }
 
             if(eventData->getStateName() == "landed") {
                 if(auto sound = audioService.lock()) {
-                    // sound->playSample(19);
                     sound->playSample("Rockman (Landing)");
                 }
             } else if(eventData->getStateName() == "teleporting") {
                 if(auto sound = audioService.lock()) {
-                    // sound->playSample(52);
                     sound->playSample("Teleport");
                 }
             } else if(eventData->getStateName() == "sliding") {
@@ -1211,7 +1198,6 @@ namespace hikari {
 
     void GamePlayState::handleDoorEvent(EventDataPtr evt) {
         if(auto sound = audioService.lock()) {
-            // sound->playSample(29);
             sound->playSample("Door Open/Close");
         }
     }
@@ -1289,7 +1275,6 @@ namespace hikari {
         if(auto sound = gamePlayState.audioService.lock()) {
             HIKARI_LOG(debug) << "Playing music for the level!";
             sound->playMusic(gamePlayState.currentMap->getMusicName());
-            // sound->playMusic("Magnet Man");
         }
 
         if(gamePlayState.currentRoom) {
@@ -1314,7 +1299,8 @@ namespace hikari {
         }
 
         // Fade in
-        //gamePlayState.taskQueue.push(std::make_shared<FadeColorTask>(FadeColorTask::FADE_IN, fadeOverlay, (1.0f/60.0f) * 13.0f));
+        // gamePlayState.taskQueue.push(std::make_shared<FadeColorTask>(FadeColorTask::FADE_IN, fadeOverlay, (1.0f/60.0f) * 13.0f));
+        // renderFadeOverlay = true;
     }
 
     void GamePlayState::ReadySubState::exit() {
@@ -1479,7 +1465,7 @@ namespace hikari {
         // Check if we just entered the room where the boss battle will take place
         if(gamePlayState.currentRoom == gamePlayState.currentMap->getBossChamberRoom()) {
             // We're going to start fighting the boss
-            HIKARI_LOG(debug3) << "We just entered the boss chamber. Time to start the battle!";
+            HIKARI_LOG(debug3) << "We just entered the boss chamber. Time to start the battle with " << gamePlayState.currentMap->getBossEntity();
         }
 
         // Remove any enemies that may have been there from before

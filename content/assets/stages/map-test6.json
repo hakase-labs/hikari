@@ -8,6 +8,7 @@
     "bossCorridor": 1,
     "bossChamber": 2
   },
+  "bossEntity": "Hammer Joe",
   "rooms": [
     {
       "id": 0,
