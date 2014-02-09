@@ -1,0 +1,54 @@
+{
+    "name": "Doodads",
+    "image": "assets/images/sp-doodads.png",
+    "animations": {
+        "destructable-wall-vertical-green": {
+            "repeat": false,
+            "keyframe": 0,
+            "syncGroup": 0,
+            "frames": [ 
+                { 
+                    "x" : 16, 
+                    "y" : 32, 
+                    "width" : 16, 
+                    "height" : 32, 
+                    "hotspotX" : 8, 
+                    "hotspotY" : 16, 
+                    "length" : 1.0
+                }
+            ]
+        },
+        "destructable-wall-vertical-red": {
+            "repeat": false,
+            "keyframe": 0,
+            "syncGroup": 0,
+            "frames": [ 
+                { 
+                    "x" : 0, 
+                    "y" : 32, 
+                    "width" : 16, 
+                    "height" : 32, 
+                    "hotspotX" : 8, 
+                    "hotspotY" : 16, 
+                    "length" : 1.0
+                }
+            ]
+        },
+        "platform-1": {
+            "repeat": false,
+            "keyframe": 0,
+            "syncGroup": 0,
+            "frames": [ 
+                { 
+                    "x" : 32, 
+                    "y" : 0, 
+                    "width" : 32, 
+                    "height" : 16, 
+                    "hotspotX" : 16, 
+                    "hotspotY" : 8, 
+                    "length" : 1.0
+                }
+            ]
+        }
+    }
+}

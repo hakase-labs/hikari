@@ -1,4 +1,5 @@
 #include "hikari/client/game/objects/Particle.hpp"
+#include "hikari/client/game/objects/Entity.hpp"
 #include "hikari/core/game/AnimationSet.hpp"
 #include "hikari/core/game/SpriteAnimator.hpp"
 
@@ -18,6 +19,9 @@ namespace hikari {
         , animation()
         , animationSet()
         , animator(new SpriteAnimator(sprite))
+        , trackedObject()
+        , trackX(false)
+        , trackY(false)
     {
         animator->rewind();
     }
@@ -53,6 +57,20 @@ namespace hikari {
 
         animator->update(dt);
         
+        Vector2<float> trackingOffset;
+
+        if(trackX) {
+            if(auto ptr = trackedObject.lock()) {
+                trackingOffset.setX(ptr->getPosition().getX());
+            }
+        }
+
+        if(trackY) {
+            if(auto ptr = trackedObject.lock()) {
+                trackingOffset.setY(ptr->getPosition().getY());
+            }
+        }
+
         setPosition(getPosition() + getVelocity());
 
         age += dt;
@@ -131,6 +149,30 @@ namespace hikari {
         }
 
         animator->setAnimation(animation.lock());
+    }
+
+    void Particle::setTrackedObject(const std::weak_ptr<Entity> & trackedObject) {
+        this->trackedObject = trackedObject;
+    }
+
+    const std::weak_ptr<Entity> & Particle::getTrackedObject() const {
+        return trackedObject;
+    }
+
+    void Particle::setTrackX(bool track) {
+        trackX = track;
+    }
+
+    void Particle::setTrackY(bool track) {
+        trackY = track;
+    }
+
+    bool Particle::getTrackX() const {
+        return trackX;
+    }
+
+    bool Particle::getTrackY() const {
+        return trackX;
     }
 
 } // hikari

@@ -94,7 +94,7 @@ namespace hikari {
 
         isFullyAccelerated = false;
 
-        setFaction(Faction::Hero);
+        setFaction(Factions::Hero);
 
         changeMobilityState(std::unique_ptr<MobilityState>(new IdleMobilityState(*this)));
         changeShootingState(std::unique_ptr<ShootingState>(new NotShootingState(*this)));

@@ -59,5 +59,19 @@
         "maximumAge": 2.0,
         "reflectionType": "x",
         "deathType": "Small"
+    },
+    {
+        "name": "Joe Hammer",
+        "animationSet": "assets/animations/projectiles.json",
+        "animationName": "joe-hammer",
+        "boundingBox": {
+            "width": 20,
+            "height": 10,
+            "originX": 10,
+            "originY": 5
+        },
+        "gravitated": false,
+        "phasing": true,
+        "deathType": "Small"
     }
 ]

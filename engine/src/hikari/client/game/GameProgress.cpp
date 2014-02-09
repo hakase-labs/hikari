@@ -15,6 +15,8 @@ namespace hikari {
         , mTanks(0)
         , playerEnergy(DEFAULT_PLAYER_ENERGY)
         , playerMaxEnergy(DEFAULT_PLAYER_ENERGY)
+        , bossEnergy(DEFAULT_PLAYER_ENERGY)
+        , bossMaxEnergy(DEFAULT_PLAYER_ENERGY)
         , currentBoss(0)
         , currentWeapon(0)
     {
@@ -24,10 +26,6 @@ namespace hikari {
 
         // Mega Buster is always the 0th weapon, so enable it
         enableWeapon(0, true);
-        enableWeapon(1, true);
-        enableWeapon(2, true);
-        enableWeapon(3, true);
-        enableWeapon(4, true);
     }
 
     GameProgress::~GameProgress() { }
@@ -74,6 +72,14 @@ namespace hikari {
 
     int GameProgress::getPlayerMaxEnergy() const {
         return playerMaxEnergy;
+    }
+
+    int GameProgress::getBossEnergy() const {
+        return bossEnergy;
+    }
+
+    int GameProgress::getBossMaxEnergy() const {
+        return bossMaxEnergy;
     }
 
     unsigned char GameProgress::getWeaponCount() const {
@@ -149,6 +155,14 @@ namespace hikari {
 
     void GameProgress::setPlayerMaxEnergy(int value) {
         playerMaxEnergy = std::max(0, value);
+    }
+
+    void GameProgress::setBossEnergy(int value) {
+        bossEnergy = std::max(0, value);
+    }
+
+    void GameProgress::setBossMaxEnergy(int value) {
+        bossMaxEnergy = std::max(0, value);
     }
 
     void GameProgress::setCurrentBoss(unsigned char boss) {

@@ -1,6 +1,7 @@
 enum State {
   IDLE,
   MOVING,
+  PRESHOOTING,
   SHOOTING,
   PREJUMPING,
   JUMPING,
@@ -78,7 +79,7 @@ class EnemyBehavior {
     }
 
     /**
-     * Performs any handling of world collisions. By default ddeosn nothing, but
+     * Performs any handling of world collisions. By default does nothing, but
      * can be overridden to perform logic when colliding with different tiles in
      * the world. Any time there is a tile collision this method will be called,
      * for all tile types (so basically every frame as long as the enemy is not
@@ -87,6 +88,17 @@ class EnemyBehavior {
      * @param  {Direction} side the side of the host that has collided
      */
     function handleWorldCollision(side) {
+
+    }
+
+    /**
+     * Performs and handling of collisions with other objects. The only known
+     * information about the object is its ID.
+     *
+     * @param  {Integer} otherId - the ID of the other object
+     * @return {Void}
+     */
+    function handleObjectTouch(otherId) {
 
     }
 

@@ -37,6 +37,7 @@ namespace hikari {
         static const char* PROPERTY_NAME_SPECIAL_ROOM_MIDPOINT;
         static const char* PROPERTY_NAME_SPECIAL_ROOM_BOSS_CORRIDOR;
         static const char* PROPERTY_NAME_SPECIAL_ROOM_BOSS_CHAMBER;
+        static const char* PROPERTY_NAME_BOSS_ENTITY;
         static const char* PROPERTY_NAME_ROOM_ID;
         static const char* PROPERTY_NAME_ROOM_X;
         static const char* PROPERTY_NAME_ROOM_Y;
@@ -69,7 +70,6 @@ namespace hikari {
         static const char* PROPERTY_NAME_ROOM_DOORS_HEIGHT;
         static const char* PROPERTY_NAME_ROOM_DOORS_ENTRANCE;
         static const char* PROPERTY_NAME_ROOM_DOORS_EXIT;
-
 
         static const int DEFAULT_HERO_SPAWN_X;
         static const int DEFAULT_HERO_SPAWN_Y;

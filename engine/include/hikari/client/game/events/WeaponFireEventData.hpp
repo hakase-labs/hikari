@@ -17,16 +17,16 @@ namespace hikari {
     private:
         int weaponId;  // id of the weapon to be fired
         int shooterId; // id of the entity that shot this weapon
-        Faction::Type faction;
+        Faction faction;
         Direction direction; //weaponId, ownerId, faction, position, direction
         Vector2<float> position; // position where this weapon was fired
     public:
-        WeaponFireEventData(int weaponId, int shooterId, Faction::Type faction, Direction direction, const Vector2<float>& position);
+        WeaponFireEventData(int weaponId, int shooterId, Faction faction, Direction direction, const Vector2<float>& position);
         virtual ~WeaponFireEventData();
 
         int getWeaponId() const;
         int getShooterId() const;
-        Faction::Type getFaction() const;
+        Faction getFaction() const;
         Direction getDirection() const;
         const Vector2<float>& getPosition() const;
 

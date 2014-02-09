@@ -11,6 +11,8 @@ namespace hikari {
 
     class Enemy : public Entity, public Cloneable<Enemy> {
     private:
+        static const int DEFAULT_BONUS_TABLE;
+
         std::shared_ptr<EnemyBrain> brain;
         float hitPoints;
 
@@ -18,6 +20,7 @@ namespace hikari {
          * After taking damage this counts how many ticks that elapse.
          */
         int damageTickCounter;
+        int bonusTableIndex;
 
     public:
         Enemy(int id = GameObject::generateObjectId(), std::shared_ptr<Room> room = nullptr);
@@ -31,6 +34,14 @@ namespace hikari {
 
         virtual void handleCollision(Movable& body, CollisionInfo& info);
 
+        /**
+         * Handles the case when another object touches this object. Allows the
+         * object to react to a simple collision.
+         *
+         * @param otherId the ID of the other object
+         */
+        virtual void handleObjectTouch(int otherId);
+
         void setBrain(const std::shared_ptr<EnemyBrain> & brain);
         const std::shared_ptr<EnemyBrain>& getBrain() const;
 
@@ -38,6 +49,8 @@ namespace hikari {
         float getHitPoints() const;
         void takeDamage(float amount);
 
+        void setBonusTableIndex(int index);
+        int getBonusTableIndex() const;
     };
 
 } // hikari

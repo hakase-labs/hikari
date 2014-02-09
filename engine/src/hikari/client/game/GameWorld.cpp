@@ -3,6 +3,7 @@
 #include "hikari/client/game/events/ObjectRemovedEventData.hpp"
 #include "hikari/client/game/objects/GameObject.hpp"
 #include "hikari/client/game/objects/CollectableItem.hpp"
+#include "hikari/client/game/objects/Entity.hpp"
 #include "hikari/client/game/objects/Enemy.hpp"
 #include "hikari/client/game/objects/Particle.hpp"
 #include "hikari/client/game/objects/Projectile.hpp"
@@ -469,6 +470,23 @@ namespace hikari {
     const std::vector<std::shared_ptr<Projectile>> & GameWorld::getActiveProjectiles() const {
         return activeProjectiles;
     }
+
+    std::vector<std::shared_ptr<Entity>> GameWorld::getObstacles() const {
+        std::vector<std::shared_ptr<Entity>> result;
+
+        std::for_each(
+            std::begin(getActiveEnemies()),
+            std::end(getActiveEnemies()),
+            [&](const std::shared_ptr<Enemy> & enemy) {
+                if(enemy->isObstacle()) {
+                    result.push_back(enemy);
+                }
+            }
+        );
+
+        return result;
+    }
+
 
     void GameWorld::setPlayer(const std::shared_ptr<Hero>& player) {
         this->player = player;

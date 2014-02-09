@@ -14,7 +14,9 @@ namespace hikari {
         , tileY(0)
         , correctedX(0)
         , correctedY(0)
-        , tileType(0) 
+        , tileType(0)
+        , inheritedVelocityX(0)
+        , inheritedVelocityY(0)
     {
 
     }
@@ -32,6 +34,8 @@ namespace hikari {
         correctedX = 0;
         correctedY = 0;
         tileType = 0;
+        inheritedVelocityX = 0;
+        inheritedVelocityY = 0;
     }
 
 }

@@ -182,13 +182,13 @@ namespace hikari {
         //
         friend std::ostream &operator<<(std::ostream &stream, const BoundingBox &box) {
             stream << "[";
+            stream << box.getLeft();
+            stream << ", ";
             stream << box.getTop();
             stream << ", ";
-            stream << box.getRight();
+            stream << box.getWidth();
             stream << ", ";
-            stream << box.getBottom();
-            stream << ", ";
-            stream << box.getLeft();
+            stream << box.getHeight();
             stream << "]";
 
             return stream;

@@ -154,6 +154,7 @@ set( HIKARI_CLIENT_GAME_SOURCE_FILES
     src/hikari/client/game/Effect.cpp
     src/hikari/client/game/GameConfig.cpp
     src/hikari/client/game/GamePlayState.cpp
+    src/hikari/client/game/GameOverState.cpp
     src/hikari/client/game/GameProgress.cpp
     src/hikari/client/game/GameWorld.cpp
     src/hikari/client/game/GuiTestState.cpp
@@ -287,6 +288,7 @@ set( HIKARI_CORE_GAME_SOURCE_FILES
     src/hikari/core/game/Animator.cpp
     src/hikari/core/game/CollisionInfo.cpp
     src/hikari/core/game/Direction.cpp
+    src/hikari/core/game/Faction.cpp
     src/hikari/core/game/StateTransition.cpp
     src/hikari/core/game/FadeStateTransition.cpp
     src/hikari/core/game/SliceStateTransition.cpp
@@ -305,6 +307,7 @@ set( HIKARI_CORE_GAME_SOURCE_FILES
     src/hikari/core/game/SpriteAnimator.cpp
     src/hikari/core/game/TileAnimator.cpp
     src/hikari/core/game/TileMapCollisionResolver.cpp
+    src/hikari/core/game/WorldCollisionResolver.cpp
 )
 
 source_group(hikari\\core\\game FILES ${HIKARI_CORE_GAME_SOURCE_FILES})

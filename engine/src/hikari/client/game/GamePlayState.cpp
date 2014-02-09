@@ -52,6 +52,7 @@
 #include "hikari/core/game/AnimationSet.hpp"
 #include "hikari/core/game/AnimationLoader.hpp"
 #include "hikari/core/game/TileMapCollisionResolver.hpp"
+#include "hikari/core/game/WorldCollisionResolver.hpp"
 #include "hikari/core/game/map/MapLoader.hpp"
 #include "hikari/core/game/map/MapRenderer.hpp"
 #include "hikari/core/game/map/Door.hpp"
@@ -107,7 +108,7 @@ namespace hikari {
         , imageCache(services.locateService<ImageCache>(Services::IMAGECACHE))
         , userInput(new RealTimeInput())
         , scriptEnv(services.locateService<SquirrelService>(Services::SCRIPTING))
-        , collisionResolver(new TileMapCollisionResolver())
+        , collisionResolver(new WorldCollisionResolver())
         , currentMap(nullptr)
         , currentTileset(nullptr)
         , currentRoom(nullptr)
@@ -321,6 +322,7 @@ namespace hikari {
             guiWeaponMenuSelectionListener.reset(new gcn::FunctorSelectionListener([&](const gcn::SelectionEvent & event) {
                 // TODO: For now just use the index of the item in the menu.
                 auto selectedWeaponIndex = guiWeaponMenu->getSelectedIndex();
+                HIKARI_LOG(hikari::debug4) << "Selected a menu item " << selectedWeaponIndex;
             }));
 
             guiWeaponMenu->setEnabled(true);
@@ -343,6 +345,10 @@ namespace hikari {
 
             guiMenuLifeEnergyGauge->setValue(
                 static_cast<float>(gp->getPlayerEnergy())
+            );
+
+            guiBossEnergyGauge->setValue(
+                static_cast<float>(gp->getBossEnergy())
             );
 
             if(isViewingMenu) {
@@ -541,6 +547,7 @@ namespace hikari {
             guiWeaponMenu->requestFocus();
         }
 
+        collisionResolver->setWorld(&world);
         Movable::setCollisionResolver(collisionResolver);
         Movable::setGravity(0.25f);
 
@@ -579,6 +586,8 @@ namespace hikari {
             guiContainer->setEnabled(false);
             guiWeaponMenu->setEnabled(false);
         }
+
+        collisionResolver->setWorld(nullptr);
     }
 
     const std::string& GamePlayState::getName() const {
@@ -624,7 +633,7 @@ namespace hikari {
             mapRenderer->setCullRegion(camera.getBoundary());
 
             // Make sure we detect collisions in this room
-            collisionResolver->setRoom(currentRoom);
+            collisionResolver->setWorld(&world);
 
             // Clean up and then change the world's "room"
             world.removeAllObjects();
@@ -697,25 +706,30 @@ namespace hikari {
     std::shared_ptr<CollectableItem> GamePlayState::spawnBonusItem(int bonusTableIndex) {
         std::shared_ptr<CollectableItem> bonus;
 
-        if(const auto & gameConfigPtr = gameConfig.lock()) {
-            const auto & chanceTable = gameConfigPtr->getItemChancePairs();
-            int roll = rand() % 100;
+        if(bonusTableIndex > -1) { // -1 is a special case where nothing drops, ever.
+            // 
+            // TODO: Actually perform checks on real bonus tables?
+            // 
+            if(const auto & gameConfigPtr = gameConfig.lock()) {
+                const auto & chanceTable = gameConfigPtr->getItemChancePairs();
+                int roll = rand() % 100;
 
-            if(chanceTable.size() > 0) {
-                int lowerBound = 0;
+                if(chanceTable.size() > 0) {
+                    int lowerBound = 0;
 
-                for(auto it = std::begin(chanceTable), end = std::end(chanceTable); it != end; it++) {
-                    const auto & chance = *it;
+                    for(auto it = std::begin(chanceTable), end = std::end(chanceTable); it != end; it++) {
+                        const auto & chance = *it;
 
-                    int upperBound = lowerBound + chance.second;
+                        int upperBound = lowerBound + chance.second;
 
-                    if(roll >= lowerBound && roll < upperBound) {
-                        bonus = world.spawnCollectableItem(chance.first);
-                        break;
+                        if(roll >= lowerBound && roll < upperBound) {
+                            bonus = world.spawnCollectableItem(chance.first);
+                            break;
+                        }
+
+                        // Advance the lower bound
+                        lowerBound = upperBound;
                     }
-
-                    // Advance the lower bound
-                    lowerBound = upperBound;
                 }
             }
         }
@@ -756,6 +770,12 @@ namespace hikari {
                     clone->setActive(true);
                     world.queueObjectAddition(clone);
                 }
+            }
+        } else if(type == EntityDeathType::Large) {
+            if(std::shared_ptr<Particle> clone = world.spawnParticle("Large Explosion")) {
+                clone->setPosition(position);
+                clone->setActive(true);
+                world.queueObjectAddition(clone);
             }
         } else if(type == EntityDeathType::Small) {
             if(std::shared_ptr<Particle> clone = world.spawnParticle("Medium Explosion")) {
@@ -823,7 +843,7 @@ namespace hikari {
             for(int i = 0; i < numRooms; ++i) {
                 auto room = currentMap->getRoom(i);
 
-                HIKARI_LOG(debug) << "Resetting spawners for room " << i << ".";
+                HIKARI_LOG(debug4) << "Resetting spawners for room " << i << ".";
 
                 if(room) {
                     auto spawners = room->getSpawners();
@@ -864,6 +884,7 @@ namespace hikari {
             // Boss corridor has highest priority
             if(hasReachedBossCorridor) {
                 changeCurrentRoom(currentMap->getBossCorridorRoom());
+                guiBossEnergyGauge->setVisible(false);
             } else if(hasReachedMidpoint) {
                 changeCurrentRoom(currentMap->getMidpointRoom());
             } else {
@@ -899,10 +920,39 @@ namespace hikari {
                 HIKARI_LOG(debug2) << "Hero has died all of his lives, go to password screen.";
                 progress->resetLivesToDefault();
                 progress->resetWeaponEnergyToDefault();
-                controller.requestStateChange("stageselect");
+                controller.requestStateChange("gameover");
                 gotoNextState = true;
             }
         }
+    }
+
+    void GamePlayState::startBossBattle() {
+        if(auto sound = audioService.lock()) {
+            sound->playMusic("Boss Battle");
+        }
+
+        // 1. Music starts
+        // 2. Megaman is at idle state -- rested -- on the ground
+        // 3. Boss appears in the top right corner, his energy bar appears (empty)
+        // 4. Boss falls to the ground plane, performs intro move
+        // 6. Boss' energy bar fills up
+        // 7. Let the battle begin
+
+        guiBossEnergyGauge->setValue(0.0f);
+        guiBossEnergyGauge->setVisible(true);
+
+        if(auto gp = gameProgress.lock()) {
+            gp->setBossEnergy(0.0f);
+        }
+
+        taskQueue.push(std::make_shared<RefillHealthTask>(
+            RefillHealthTask::BOSS_ENERGY,
+            28,
+            audioService,
+            gameProgress)
+        );
+
+        taskQueue.push(std::make_shared<WaitTask>(3.0f));
     }
 
     void GamePlayState::updateDoors(float dt) {
@@ -1037,15 +1087,6 @@ namespace hikari {
 
                     // Decrement lives
                     progress->setLives(progress->getLives() - 1);
-
-                    // All the way dead
-                    // if(progress->getLives() < 0) {
-                    //     HIKARI_LOG(debug2) << "Hero has died all of his lives, go to password screen.";
-                    //     progress->resetLivesToDefault();
-                    //     progress->resetWeaponEnergyToDefault();
-                    //     controller.requestStateChange("stageselect");
-                    //     gotoNextState = true;
-                    // }
                 }
 
                 spawnDeathExplosion(hero->getDeathType(), hero->getPosition());
@@ -1069,7 +1110,7 @@ namespace hikari {
                 spawnDeathExplosion(enemyPtr->getDeathType(), enemyPtr->getPosition());
 
                 // Calculate bonus drop
-                if(auto bonus = spawnBonusItem()) {
+                if(auto bonus = spawnBonusItem(enemyPtr->getBonusTableIndex())) {
                     bonus->setPosition(enemyPtr->getPosition());
                     bonus->setVelocityY(-3.0f); // TODO: Determine the actual upward velocity.
                     bonus->setActive(true);
@@ -1143,7 +1184,6 @@ namespace hikari {
                 }
 
                 if(auto sound = audioService.lock()) {
-                    // sound->playSample(21);
                     sound->playSample(weapon->getUsageSound());
                 }
 
@@ -1168,19 +1208,16 @@ namespace hikari {
                 }
 
                 if(auto sound = audioService.lock()) {
-                    // sound->playSample(31);
                     sound->playSample("Splash");
                 }
             }
 
             if(eventData->getStateName() == "landed") {
                 if(auto sound = audioService.lock()) {
-                    // sound->playSample(19);
                     sound->playSample("Rockman (Landing)");
                 }
             } else if(eventData->getStateName() == "teleporting") {
                 if(auto sound = audioService.lock()) {
-                    // sound->playSample(52);
                     sound->playSample("Teleport");
                 }
             } else if(eventData->getStateName() == "sliding") {
@@ -1195,7 +1232,6 @@ namespace hikari {
 
     void GamePlayState::handleDoorEvent(EventDataPtr evt) {
         if(auto sound = audioService.lock()) {
-            // sound->playSample(29);
             sound->playSample("Door Open/Close");
         }
     }
@@ -1273,7 +1309,6 @@ namespace hikari {
         if(auto sound = gamePlayState.audioService.lock()) {
             HIKARI_LOG(debug) << "Playing music for the level!";
             sound->playMusic(gamePlayState.currentMap->getMusicName());
-            // sound->playMusic("Magnet Man");
         }
 
         if(gamePlayState.currentRoom) {
@@ -1298,7 +1333,8 @@ namespace hikari {
         }
 
         // Fade in
-        gamePlayState.taskQueue.push(std::make_shared<FadeColorTask>(FadeColorTask::FADE_IN, fadeOverlay, (1.0f/60.0f) * 13.0f));
+        // gamePlayState.taskQueue.push(std::make_shared<FadeColorTask>(FadeColorTask::FADE_IN, fadeOverlay, (1.0f/60.0f) * 13.0f));
+        // renderFadeOverlay = true;
     }
 
     void GamePlayState::ReadySubState::exit() {
@@ -1463,7 +1499,9 @@ namespace hikari {
         // Check if we just entered the room where the boss battle will take place
         if(gamePlayState.currentRoom == gamePlayState.currentMap->getBossChamberRoom()) {
             // We're going to start fighting the boss
-            HIKARI_LOG(debug3) << "We just entered the boss chamber. Time to start the battle!";
+            HIKARI_LOG(debug3) << "We just entered the boss chamber. Time to start the battle with " << gamePlayState.currentMap->getBossEntity();
+
+            gamePlayState.startBossBattle();
         }
 
         // Remove any enemies that may have been there from before
@@ -1485,6 +1523,7 @@ namespace hikari {
         auto playerPosition = gamePlayState.world.getPlayerPosition();
 
         Sqrat::RootTable()
+            .SetValue("heroId", gamePlayState.hero->getId())
             .SetValue("heroX", playerPosition.getX())
             .SetValue("heroY", playerPosition.getY())
             .SetValue("isHeroShooting", gamePlayState.hero->isNowShooting());
@@ -1571,32 +1610,36 @@ namespace hikari {
                 const auto & hero = gamePlayState.hero;
 
                 if(enemy->getBoundingBox().intersects(hero->getBoundingBox())) {
-                    if(hero->isVulnerable()) {
-                        DamageKey damageKey;
-                        damageKey.damagerType = enemy->getDamageId();
-                        damageKey.damageeType = hero->getDamageId();
+                    enemy->handleObjectTouch(hero->getId());
 
-                        // TODO: Perform damage lookup and apply it to hero.
-                        // START DAMAGE RESOLVER LOGIC
-                        float damageAmount = 0.0f;
+                    if(enemy->getFaction() == Factions::Enemy) {
+                        if(hero->isVulnerable()) {
+                            DamageKey damageKey;
+                            damageKey.damagerType = enemy->getDamageId();
+                            damageKey.damageeType = hero->getDamageId();
 
-                        if(auto dt = gamePlayState.damageTable.lock()) {
-                            damageAmount = dt->getDamageFor(damageKey.damagerType);
-                        }
-                        // END DAMAGE RESOLVER LOGIC
+                            // TODO: Perform damage lookup and apply it to hero.
+                            // START DAMAGE RESOLVER LOGIC
+                            float damageAmount = 0.0f;
 
-                        HIKARI_LOG(debug3) << "Hero should take " << damageAmount << " damage!";
+                            if(auto dt = gamePlayState.damageTable.lock()) {
+                                damageAmount = dt->getDamageFor(damageKey.damagerType);
+                            }
+                            // END DAMAGE RESOLVER LOGIC
 
-                        if(auto gp = gamePlayState.gameProgress.lock()) {
-                            gp->setPlayerEnergy(
-                                gp->getPlayerEnergy() - damageAmount
-                            );
+                            HIKARI_LOG(debug3) << "Hero should take " << damageAmount << " damage!";
 
-                            HIKARI_LOG(debug4) << "My energy is " << gp->getPlayerEnergy();
+                            if(auto gp = gamePlayState.gameProgress.lock()) {
+                                gp->setPlayerEnergy(
+                                    gp->getPlayerEnergy() - damageAmount
+                                );
 
-                            // Only stun if you're not dead
-                            if(gp->getPlayerEnergy() > 0) {
-                                hero->performStun();
+                                HIKARI_LOG(debug4) << "My energy is " << gp->getPlayerEnergy();
+
+                                // Only stun if you're not dead
+                                if(gp->getPlayerEnergy() > 0) {
+                                    hero->performStun();
+                                }
                             }
                         }
                     }
@@ -1647,7 +1690,7 @@ namespace hikari {
                 }
 
                 // Check Hero -> Enemy projectiles
-                if(projectile->getFaction() == Faction::Hero) {
+                if(projectile->getFaction() == Factions::Hero) {
                     auto & context = *this; // TODO: This makes intellisense errors go away but it seems kludgy.
                                             // In VS2010, this is the Intellisense error:
                                             //     "Error : a nonstatic member reference must be relative to a specific object"
@@ -1699,7 +1742,7 @@ namespace hikari {
                             }
                         }
                     );
-                } else if(projectile->getFaction() == Faction::Enemy) {
+                } else if(projectile->getFaction() == Factions::Enemy) {
 
                     const auto & hero = gamePlayState.hero;
 
@@ -1759,6 +1802,63 @@ namespace hikari {
                 }
 
                 gamePlayState.hero->update(dt);
+
+                //
+                // BEGIN code that checks hero vs obstacles
+                // We check against them after updating the hero so there is no
+                // jerky motion since we reposition the hero after he is moved.
+                //
+                // auto obstacles = gamePlayState.world.getObstacles();
+
+                // std::for_each(
+                //     std::begin(obstacles),
+                //     std::end(obstacles),
+                //     [&](const std::shared_ptr<Enemy>& obstacle) {
+                //         if(obstacle->getFaction() == Factions::World) {
+                //             if(obstacle->isObstacle()) {
+                //                 if(obstacle->getBoundingBox().intersects(gamePlayState.hero->getBoundingBox())) {
+                //                     HIKARI_LOG(debug4) << "Touching an obstacle!";
+
+                //                     // Test vertical first
+                //                     // if(gamePlayState.hero->getVelocityY() > 0) { // Moving down
+                //                     //     auto oldPos = gamePlayState.hero->getPosition();
+                //                     //     auto offset = gamePlayState.hero->getBoundingBox().getOrigin();
+                //                     //     auto obstacleTopEdge = obstacle->getBoundingBox().getTop();
+                //                     //     oldPos.setY(obstacleTopEdge + offset.getY() - 1);
+                //                     //     gamePlayState.hero->setPosition(oldPos);
+                //                     //     gamePlayState.hero->setVelocityY(0);
+                //                     // } else if(gamePlayState.hero->getVelocityY() < 0) { // Moving up
+                //                     //     auto oldPos = gamePlayState.hero->getPosition();
+                //                     //     auto offset = gamePlayState.hero->getBoundingBox().getOrigin();
+                //                     //     auto obstacleBottomEdge = obstacle->getBoundingBox().getBottom();
+                //                     //     oldPos.setX(obstacleBottomEdge - offset.getY() + 1);
+                //                     //     gamePlayState.hero->setPosition(oldPos);
+                //                     //     gamePlayState.hero->setVelocityY(0);
+                //                     // }
+                //                     // Test horizontal second
+                //                     if(gamePlayState.hero->getVelocityX() > 0) { // Moving right
+                //                         auto oldPos = gamePlayState.hero->getPosition();
+                //                         auto offset = gamePlayState.hero->getBoundingBox().getOrigin();
+                //                         auto obstacleLeftEdge = obstacle->getBoundingBox().getLeft();
+                //                         oldPos.setX(obstacleLeftEdge - offset.getX() - 1);
+                //                         gamePlayState.hero->setPosition(oldPos);
+                //                         gamePlayState.hero->setVelocityX(0);
+                //                     } else if(gamePlayState.hero->getVelocityX() < 0) { // Moving left
+                //                         auto oldPos = gamePlayState.hero->getPosition();
+                //                         auto offset = gamePlayState.hero->getBoundingBox().getOrigin();
+                //                         auto obstacleRightEdge = obstacle->getBoundingBox().getRight();
+                //                         oldPos.setX(obstacleRightEdge + offset.getX() + 1);
+                //                         gamePlayState.hero->setPosition(oldPos);
+                //                         gamePlayState.hero->setVelocityX(0);
+                //                     }
+                //                 }
+                //             }
+                //         }
+                //     }
+                // );
+                //
+                // END code that checks hero vs obstacles
+                //     
             }
         }
 

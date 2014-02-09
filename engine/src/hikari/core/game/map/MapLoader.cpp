@@ -31,6 +31,7 @@ namespace hikari {
     const char* MapLoader::PROPERTY_NAME_SPECIAL_ROOM_MIDPOINT = "midpoint";
     const char* MapLoader::PROPERTY_NAME_SPECIAL_ROOM_BOSS_CORRIDOR = "bossCorridor";
     const char* MapLoader::PROPERTY_NAME_SPECIAL_ROOM_BOSS_CHAMBER = "bossChamber";
+    const char* MapLoader::PROPERTY_NAME_BOSS_ENTITY = "bossEntity";
     const char* MapLoader::PROPERTY_NAME_ROOM_ID = "id";
     const char* MapLoader::PROPERTY_NAME_ROOM_X = "x";
     const char* MapLoader::PROPERTY_NAME_ROOM_Y = "y";
@@ -122,11 +123,14 @@ namespace hikari {
             bossChamberIndex  = specialRoomIndicies.get(PROPERTY_NAME_SPECIAL_ROOM_BOSS_CHAMBER,  0).asInt();
         }
 
+        std::string bossEntity = json.get(PROPERTY_NAME_BOSS_ENTITY, "None").asString();
+
         return MapPtr(
             new Map(
                 tileset,
                 gridSize,
                 musicName,
+                bossEntity,
                 rooms,
                 startingRoomIndex,
                 midpointRoomIndex,

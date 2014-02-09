@@ -1,0 +1,117 @@
+{
+    "name": "Hammer Joe",
+    "image": "assets/images/sp-enemies.png",
+    "animations": {
+        "idle": {
+            "repeat": true,
+            "keyframe": 0,
+            "syncGroup": 0,
+            "frames": [ 
+                { 
+                    "x" : 0, 
+                    "y" : 144, 
+                    "width" : 46, 
+                    "height" : 41, 
+                    "hotspotX" : 36, 
+                    "hotspotY" : 28, 
+                    "length" : 0.0667
+                },
+                { 
+                    "x" : 46, 
+                    "y" : 144, 
+                    "width" : 28, 
+                    "height" : 41, 
+                    "hotspotX" : 18, 
+                    "hotspotY" : 28, 
+                    "length" : 0.0667
+                },
+                { 
+                    "x" : 74, 
+                    "y" : 144, 
+                    "width" : 28,
+                    "height" : 41, 
+                    "hotspotX" : 13, 
+                    "hotspotY" : 28, 
+                    "length" : 0.0667
+                },
+                { 
+                    "x" : 102, 
+                    "y" : 144, 
+                    "width" : 39, 
+                    "height" : 41, 
+                    "hotspotX" : 29, 
+                    "hotspotY" : 28, 
+                    "length" : 0.0667
+                }
+            ]
+        },
+        "open-mask": {
+            "repeat": true,
+            "keyframe": 1,
+            "syncGroup": 5,
+            "frames": [ 
+                { 
+                    "x" : 141, 
+                    "y" : 185, 
+                    "width" : 39, 
+                    "height" : 41, 
+                    "hotspotX" : 29, 
+                    "hotspotY" : 28, 
+                    "length" : 0.0334
+                },
+                { 
+                    "x" : 0, 
+                    "y" : 185, 
+                    "width" : 46, 
+                    "height" : 41, 
+                    "hotspotX" : 36, 
+                    "hotspotY" : 28, 
+                    "length" : 0.0667
+                },
+                { 
+                    "x" : 46, 
+                    "y" : 185, 
+                    "width" : 28, 
+                    "height" : 41, 
+                    "hotspotX" : 18, 
+                    "hotspotY" : 28, 
+                    "length" : 0.0667
+                },
+                { 
+                    "x" : 74, 
+                    "y" : 185, 
+                    "width" : 28, 
+                    "height" : 41, 
+                    "hotspotX" : 13, 
+                    "hotspotY" : 28, 
+                    "length" : 0.0667
+                },
+                { 
+                    "x" : 102, 
+                    "y" : 185, 
+                    "width" : 39, 
+                    "height" : 41, 
+                    "hotspotX" : 29, 
+                    "hotspotY" : 28, 
+                    "length" : 0.0667
+                }
+            ]
+        },
+        "shooting": {
+            "repeat": false,
+            "keyframe": 0,
+            "syncGroup": 10,
+            "frames": [ 
+                { 
+                    "x" : 180, 
+                    "y" : 185, 
+                    "width" : 28, 
+                    "height" : 41, 
+                    "hotspotX" : 12, 
+                    "hotspotY" : 28, 
+                    "length" : 0.1333
+                }
+            ]
+        }
+    }
+}

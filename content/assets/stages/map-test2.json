@@ -1947,6 +1947,7 @@
         "width": 64,
         "height": 15
       },
+      "doors": {},
       "enemies": [
         {
           "type": "Telly",
@@ -1960,7 +1961,7 @@
           "y": 32,
           "direction": "Left",
           "spawnLimit": 1,
-          "spawnRate": 3.0,
+          "spawnRate": 3,
           "continuous": true
         },
         {
@@ -1969,7 +1970,7 @@
           "y": 48,
           "direction": "Right",
           "spawnLimit": 3,
-          "spawnRate": 3.0
+          "spawnRate": 3
         },
         {
           "type": "Telly",
@@ -1979,20 +1980,20 @@
         },
         {
           "type": "Peterchy",
-          "x": 96,
-          "y": 192,
+          "x": 221,
+          "y": 175,
           "direction": "Left"
         },
         {
           "type": "Komasaburo",
           "x": 336,
-          "y": 96,
+          "y": 93,
           "direction": "Left"
         },
         {
           "type": "Bikky",
-          "x": 306,
-          "y": 96,
+          "x": 480,
+          "y": 155,
           "direction": "Left"
         }
       ],
@@ -2000,12 +2001,12 @@
         {
           "type": "Extra Life",
           "x": 20,
-          "y": 176
+          "y": 168
         },
         {
           "type": "E-Tank",
           "x": 984,
-          "y": 186
+          "y": 184
         }
       ],
       "transitions": [
@@ -3963,12 +3964,13 @@
         "width": 64,
         "height": 15
       },
+      "doors": {},
       "enemies": [],
       "items": [
         {
           "type": "Large Weapon Energy",
-          "x": 1560,
-          "y": 1347
+          "x": 432,
+          "y": 122
         }
       ],
       "transitions": [
@@ -4478,12 +4480,19 @@
         "width": 16,
         "height": 15
       },
-      "enemies": [],
+      "doors": {},
+      "enemies": [
+        {
+          "type": "Destructable Block (1x2)",
+          "x": 183,
+          "y": 144
+        }
+      ],
       "items": [
         {
           "type": "Extra Life",
-          "x": 1896,
-          "y": 1107
+          "x": 123,
+          "y": 153
         }
       ],
       "transitions": [
@@ -5001,27 +5010,39 @@
         "width": 16,
         "height": 15
       },
-      "enemies": [],
+      "doors": {},
+      "enemies": [
+        {
+          "type": "Destructable Block (1x2)",
+          "x": 150,
+          "y": 48
+        },
+        {
+          "type": "Destructable Block (1x2)",
+          "x": 150,
+          "y": 112
+        }
+      ],
       "items": [
         {
           "type": "Large Health Energy",
-          "x": 2000,
-          "y": 897
+          "x": 131,
+          "y": 56
         },
         {
           "type": "Large Health Energy",
-          "x": 1888,
-          "y": 833
+          "x": 111,
+          "y": 120
         },
         {
           "type": "Large Weapon Energy",
-          "x": 1904,
-          "y": 835
+          "x": 128,
+          "y": 121
         },
         {
           "type": "E-Tank",
-          "x": 1896,
-          "y": 769
+          "x": 201,
+          "y": 185
         }
       ],
       "transitions": [
@@ -6499,7 +6520,15 @@
         "width": 48,
         "height": 15
       },
-      "enemies": [],
+      "doors": {},
+      "enemies": [
+        {
+          "type": "Hammer Joe",
+          "x": 216,
+          "y": 112,
+          "direction": "left"
+        }
+      ],
       "items": [],
       "transitions": [
         {
@@ -7016,17 +7045,18 @@
         "width": 16,
         "height": 15
       },
+      "doors": {},
       "enemies": [],
       "items": [
         {
           "type": "Large Health Energy",
-          "x": 2385,
-          "y": 305
+          "x": 87,
+          "y": 72
         },
         {
           "type": "Large Health Energy",
-          "x": 2400,
-          "y": 305
+          "x": 105,
+          "y": 72
         }
       ],
       "transitions": [
@@ -7544,17 +7574,18 @@
         "width": 16,
         "height": 15
       },
+      "doors": {},
       "enemies": [],
       "items": [
         {
           "type": "Large Weapon Energy",
-          "x": 2496,
-          "y": 83
+          "x": 200,
+          "y": 86
         },
         {
           "type": "Large Weapon Energy",
-          "x": 2512,
-          "y": 83
+          "x": 216,
+          "y": 86
         }
       ],
       "transitions": [
@@ -8074,6 +8105,7 @@
         "width": 16,
         "height": 15
       },
+      "doors": {},
       "enemies": [],
       "items": [],
       "transitions": [
@@ -8583,6 +8615,7 @@
         "width": 16,
         "height": 15
       },
+      "doors": {},
       "enemies": [],
       "items": [],
       "transitions": []
@@ -9083,6 +9116,7 @@
         "width": 16,
         "height": 15
       },
+      "doors": {},
       "enemies": [],
       "items": [],
       "transitions": [
@@ -9592,6 +9626,7 @@
         "width": 16,
         "height": 15
       },
+      "doors": {},
       "enemies": [],
       "items": [],
       "transitions": []

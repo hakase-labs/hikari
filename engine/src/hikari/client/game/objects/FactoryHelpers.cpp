@@ -204,6 +204,9 @@ namespace FactoryHelpers {
                                         const auto boundingBoxObject = templateObject["boundingBox"];
                                         const auto statesObject      = templateObject["states"];
                                         const auto characteristicsObject = templateObject["characteristics"];
+                                        const auto actionSpotObject  = templateObject["actionSpot"];
+                                        const auto deathType         = templateObject.get("deathType", "Nothing").asString();
+                                        const auto bonusTableIndex   = templateObject.get("bonusTableIndex", 0).asInt();
 
                                         hikari::BoundingBoxF boundingBox(
                                             0.0f,
@@ -223,9 +226,40 @@ namespace FactoryHelpers {
 
                                         if(behaviorType == "scripted") {
                                             const auto behaviorName = behavior["name"].asString();
-                                            brain = std::make_shared<ScriptedEnemyBrain>(*squirrel, behaviorName);
+                                            const auto effectConfig = behavior["config"];
+
+                                            Sqrat::Table configTable;
+
+                                            if(!effectConfig.isNull()) {
+                                                const auto configPropertyNames = effectConfig.getMemberNames();
+
+                                                for(auto propName = std::begin(configPropertyNames); propName != std::end(configPropertyNames); std::advance(propName, 1)) {
+                                                    const auto propValue = effectConfig.get(*propName, Json::Value::null);
+
+                                                    if(propValue.isBool()) {
+                                                        configTable.SetValue((*propName).c_str(), propValue.asBool());
+                                                    } else if(propValue.isDouble()) {
+                                                        configTable.SetValue((*propName).c_str(), propValue.asDouble());
+                                                    } else if(propValue.isIntegral()) {
+                                                        configTable.SetValue((*propName).c_str(), propValue.asInt());
+                                                    } else if(propValue.isString()) {
+                                                        configTable.SetValue((*propName).c_str(), propValue.asString());
+                                                    } else if(propValue.isNull()) {
+                                                        configTable.SetValue((*propName).c_str(), nullptr);
+                                                    }
+                                                }
+                                            }
+
+                                            brain = std::make_shared<ScriptedEnemyBrain>(*squirrel, behaviorName, configTable);
                                         } else {
-                                            // Some other built-in behvior; currently not supported.
+                                            // Some other built-in behavior; currently not supported.
+                                        }
+
+                                        Vector2<float> actionSpot;
+
+                                        if(!actionSpotObject.isNull()) {
+                                            actionSpot.setX(actionSpotObject.get("x", 0.0f).asDouble())
+                                                .setY(actionSpotObject.get("y", 0.0f).asDouble());
                                         }
 
                                         auto animationSetPtr = animationSetCache->get(animationSet);
@@ -234,8 +268,14 @@ namespace FactoryHelpers {
                                         auto instance = std::make_shared<Enemy>(GameObject::generateObjectId(), nullptr);
                                         instance->setAnimationSet(animationSetPtr);
                                         instance->setBoundingBox(boundingBox);
+                                        instance->setActionSpot(actionSpot);
                                         instance->setDirection(Directions::Down);
+                                        instance->setBonusTableIndex(bonusTableIndex);
                                         instance->changeAnimation("idle");
+                                        
+                                        if(deathType == "Hero") {
+                                            instance->setDeathType(EntityDeathType::Hero);
+                                        }
 
                                         if(!characteristicsObject.isNull()) {
                                             const bool gravitated = characteristicsObject["gravitated"].asBool();
@@ -442,6 +482,8 @@ namespace FactoryHelpers {
                                             // Default; do nothing
                                         } else if(deathType == "Small") {
                                             instance->setDeathType(EntityDeathType::Small);
+                                        } else if(deathType == "Hero") {
+                                            instance->setDeathType(EntityDeathType::Hero);
                                         }
 
                                         factoryPtr->registerPrototype(name, instance);

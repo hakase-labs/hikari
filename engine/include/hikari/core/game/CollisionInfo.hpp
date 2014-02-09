@@ -19,6 +19,8 @@ namespace hikari {
         int correctedX;
         int correctedY;
         int tileType;
+        float inheritedVelocityX;
+        float inheritedVelocityY;
 
         CollisionInfo();
 

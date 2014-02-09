@@ -13,13 +13,13 @@ namespace hikari {
     public:
         enum RefillType {
             PLAYER_ENERGY,
-            WEAPON_ENERGY
+            WEAPON_ENERGY,
+            BOSS_ENERGY
         };
 
     private:
         const static float DELAY_PER_HEALTH_TICK;
         RefillType type;
-        int refillAmount;
         int refillCounter;
         float delayTimer;
         std::weak_ptr<AudioService> audioService;

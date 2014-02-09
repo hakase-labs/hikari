@@ -6,6 +6,7 @@
 #include "hikari/client/Services.hpp"
 #include "hikari/core/game/GameController.hpp"
 #include "hikari/core/util/ServiceLocator.hpp"
+#include "hikari/core/util/Log.hpp"
 
 #include <guichan/gui.hpp>
 #include <guichan/widgets/label.hpp>
@@ -55,7 +56,7 @@ namespace hikari {
 
     bool PasswordState::update(float dt) {
         if(keyboardInput->wasPressed(Input::BUTTON_CANCEL)) {
-            controller.requestStateChange("title");
+            controller.requestStateChange(controller.getPreviousStateName());
             goToNextState = true;
         }
 

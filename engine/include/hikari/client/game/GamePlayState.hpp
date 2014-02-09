@@ -65,7 +65,7 @@ namespace hikari {
     class Map;
     class MapRenderer;
     class Hero;
-    class TileMapCollisionResolver;
+    class WorldCollisionResolver;
     class Spawner;
     class EventBus;
     class KeyboardInput;
@@ -104,7 +104,7 @@ namespace hikari {
         std::shared_ptr<ImageCache> imageCache;
         std::shared_ptr<RealTimeInput> userInput;
         std::shared_ptr<SquirrelService> scriptEnv;
-        std::shared_ptr<TileMapCollisionResolver> collisionResolver;
+        std::shared_ptr<WorldCollisionResolver> collisionResolver;
         std::shared_ptr<Map> currentMap;
         std::shared_ptr<Tileset> currentTileset;
         std::shared_ptr<Room> currentRoom;
@@ -261,6 +261,13 @@ namespace hikari {
          * @see startRound
          */
         void endRound();
+
+        /**
+         * Begins the boss battle sequence -- starts the boss intro music, spawns
+         * the boss, moves the boss to its starting point, performs the boss intro,
+         * fills up the boss' energy bar and then returns control to the game.
+         */
+        void startBossBattle();
 
         /**
          * Checks if the player is colliding with a transition region.

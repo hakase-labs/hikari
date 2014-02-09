@@ -8,16 +8,19 @@
 
 namespace hikari {
 
+    const int Enemy::DEFAULT_BONUS_TABLE = 0;
+
     Enemy::Enemy(int id, std::shared_ptr<Room> room) 
         : Entity(id, room) 
         , brain(nullptr)
         , hitPoints(0.0)
         , damageTickCounter(0)
+        , bonusTableIndex(DEFAULT_BONUS_TABLE)
     {
         setAgeless(true);
         setGravitated(true);
         setPhasing(false);
-        setFaction(Faction::Enemy);
+        setFaction(Factions::Enemy);
         setDeathType(EntityDeathType::Small);
     }
 
@@ -26,6 +29,7 @@ namespace hikari {
         , brain(nullptr)
         , hitPoints(proto.hitPoints)
         , damageTickCounter(0)
+        , bonusTableIndex(proto.bonusTableIndex)
     {   
         setAgeless(true);
         setActive(false);
@@ -77,6 +81,13 @@ namespace hikari {
         }
     }
 
+    void Enemy::handleObjectTouch(int otherId) {
+        // HIKARI_LOG(debug4) << "I'm being touched by something! My ID = " << getId() << ", Other ID = " << otherId;
+        if(brain) {
+            brain->handleObjectTouch(otherId);
+        }
+    }
+
     void Enemy::setBrain(const std::shared_ptr<EnemyBrain> & newBrain) {
         if(newBrain) {
             brain = newBrain;
@@ -99,6 +110,14 @@ namespace hikari {
     void Enemy::takeDamage(float amount) {
         setHitPoints(getHitPoints() - amount);
         damageTickCounter = 1;
+    }
+
+    void Enemy::setBonusTableIndex(int index) {
+        bonusTableIndex = index;
+    }
+
+    int Enemy::getBonusTableIndex() const {
+        return bonusTableIndex;
     }
 
 } // hikari

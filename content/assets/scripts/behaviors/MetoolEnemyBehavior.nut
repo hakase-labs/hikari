@@ -131,12 +131,12 @@
          */
         function _stateGuarding() {
             if(enteringNewState) {
-                ::log("_stateGuarding");
                 enteringNewState = false;
 
                 if(host) {
                     host.isShielded = true;
                     host.changeAnimation("guarding");
+                    host.velocityX = 0.0;
                 }
             }
 
@@ -161,7 +161,6 @@
          */
         function _stateAttacking() {
             if(enteringNewState) {
-                ::log("_stateAttacking");
                 enteringNewState = false;
 
                 if(host) {
@@ -186,13 +185,14 @@
 
         function _stateWalking() {
             if(enteringNewState) {
-                ::log("_stateWalking");
                 enteringNewState = false;
 
                 if(host) {
                     host.changeAnimation("walking");
                 }
             }
+
+            host.velocityX = host.direction == Directions.Left ? -2.5 : 2.5;
 
             if(stateTimer >= 0.5) {
                 setState("guarding");
