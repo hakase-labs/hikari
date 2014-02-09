@@ -263,6 +263,13 @@ namespace hikari {
         void endRound();
 
         /**
+         * Begins the boss battle sequence -- starts the boss intro music, spawns
+         * the boss, moves the boss to its starting point, performs the boss intro,
+         * fills up the boss' energy bar and then returns control to the game.
+         */
+        void startBossBattle();
+
+        /**
          * Checks if the player is colliding with a transition region.
          */
         void checkCollisionWithTransition();

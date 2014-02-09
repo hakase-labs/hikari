@@ -347,6 +347,10 @@ namespace hikari {
                 static_cast<float>(gp->getPlayerEnergy())
             );
 
+            guiBossEnergyGauge->setValue(
+                static_cast<float>(gp->getBossEnergy())
+            );
+
             if(isViewingMenu) {
                 std::string livesCaption = (gp->getLives() < 10 ? "0" : "") + StringUtils::toString(static_cast<int>(gp->getLives()));
                 guiLivesLabel->setVisible(true);
@@ -880,6 +884,7 @@ namespace hikari {
             // Boss corridor has highest priority
             if(hasReachedBossCorridor) {
                 changeCurrentRoom(currentMap->getBossCorridorRoom());
+                guiBossEnergyGauge->setVisible(false);
             } else if(hasReachedMidpoint) {
                 changeCurrentRoom(currentMap->getMidpointRoom());
             } else {
@@ -919,6 +924,35 @@ namespace hikari {
                 gotoNextState = true;
             }
         }
+    }
+
+    void GamePlayState::startBossBattle() {
+        if(auto sound = audioService.lock()) {
+            sound->playMusic("Boss Battle");
+        }
+
+        // 1. Music starts
+        // 2. Megaman is at idle state -- rested -- on the ground
+        // 3. Boss appears in the top right corner, his energy bar appears (empty)
+        // 4. Boss falls to the ground plane, performs intro move
+        // 6. Boss' energy bar fills up
+        // 7. Let the battle begin
+
+        guiBossEnergyGauge->setValue(0.0f);
+        guiBossEnergyGauge->setVisible(true);
+
+        if(auto gp = gameProgress.lock()) {
+            gp->setBossEnergy(0.0f);
+        }
+
+        taskQueue.push(std::make_shared<RefillHealthTask>(
+            RefillHealthTask::BOSS_ENERGY,
+            28,
+            audioService,
+            gameProgress)
+        );
+
+        taskQueue.push(std::make_shared<WaitTask>(3.0f));
     }
 
     void GamePlayState::updateDoors(float dt) {
@@ -1466,6 +1500,8 @@ namespace hikari {
         if(gamePlayState.currentRoom == gamePlayState.currentMap->getBossChamberRoom()) {
             // We're going to start fighting the boss
             HIKARI_LOG(debug3) << "We just entered the boss chamber. Time to start the battle with " << gamePlayState.currentMap->getBossEntity();
+
+            gamePlayState.startBossBattle();
         }
 
         // Remove any enemies that may have been there from before

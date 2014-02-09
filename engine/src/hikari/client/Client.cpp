@@ -204,7 +204,7 @@ namespace hikari {
         auto damageTable       = std::make_shared<DamageTable>();
         auto inputService      = std::make_shared<InputService>(globalInput);
         auto eventBusService   = std::make_shared<EventBusService>(globalEventBus);
-        audioService->disable();
+        //audioService->disable();
         gameProgress->setEventBus(globalEventBus);
 
         services.registerService(Services::AUDIO,             audioService);

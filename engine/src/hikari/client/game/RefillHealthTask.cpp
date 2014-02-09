@@ -11,9 +11,8 @@ namespace hikari {
             const std::weak_ptr<GameProgress> & gameProgress)
         : BaseTask(0, Task::TYPE_BLOCKING)
         , type(type)
-        , refillAmount(refillAmount)
         , refillCounter(refillAmount)
-        , delayTimer(delayTimer)
+        , delayTimer(0.0f)
         , audioService(audioService)
         , gameProgress(gameProgress)
     {
@@ -29,6 +28,11 @@ namespace hikari {
                 unsigned char currentWeapon = progress->getCurrentWeapon();
                 int energy = progress->getWeaponEnergy(currentWeapon);
                 int diff = progress->getWeaponMaxEnergy() - energy;
+
+                refillCounter = std::min(refillAmount, diff);
+            } else if(type == BOSS_ENERGY) {
+                int energy = progress->getBossEnergy();
+                int diff = progress->getBossMaxEnergy() - energy;
 
                 refillCounter = std::min(refillAmount, diff);
             }
@@ -57,6 +61,8 @@ namespace hikari {
                         unsigned char currentWeapon = progress->getCurrentWeapon();
                         int energy = progress->getWeaponEnergy(currentWeapon);
                         progress->setWeaponEnergy(currentWeapon, energy + 1);
+                    } else if(type == BOSS_ENERGY) {
+                        progress->setBossEnergy(progress->getBossEnergy() + 1);
                     }
                 }
             }
