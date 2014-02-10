@@ -937,6 +937,13 @@ namespace hikari {
         // 4. Boss falls to the ground plane, performs intro move
         // 6. Boss' energy bar fills up
         // 7. Let the battle begin
+        const auto currentRoom = world.getCurrentRoom();
+        const auto roomPosition = Vector2<float>(currentRoom->getX(), currentRoom->getY()) * currentRoom->getGridSize();
+        const auto offset = Vector2<float>(128.0f, 64.0f);
+        std::shared_ptr<Enemy> boss = world.spawnEnemy(currentMap->getBossEntity());
+        boss->setPosition(roomPosition + offset);
+        world.queueObjectAddition(boss);
+        world.update(0.0f);
 
         guiBossEnergyGauge->setValue(0.0f);
         guiBossEnergyGauge->setVisible(true);
@@ -952,7 +959,7 @@ namespace hikari {
             gameProgress)
         );
 
-        taskQueue.push(std::make_shared<WaitTask>(3.0f));
+        taskQueue.push(std::make_shared<WaitTask>(1.0f));
     }
 
     void GamePlayState::updateDoors(float dt) {
@@ -1496,14 +1503,6 @@ namespace hikari {
         gamePlayState.isHeroAlive = true;
         postDeathTimer = 0.0f;
 
-        // Check if we just entered the room where the boss battle will take place
-        if(gamePlayState.currentRoom == gamePlayState.currentMap->getBossChamberRoom()) {
-            // We're going to start fighting the boss
-            HIKARI_LOG(debug3) << "We just entered the boss chamber. Time to start the battle with " << gamePlayState.currentMap->getBossEntity();
-
-            gamePlayState.startBossBattle();
-        }
-
         // Remove any enemies that may have been there from before
         auto & staleEnemies = gamePlayState.world.getActiveEnemies();
 
@@ -1511,6 +1510,14 @@ namespace hikari {
             HIKARI_LOG(debug2) << "Removing stale enemy, id = " << enemy->getId();
             gamePlayState.world.queueObjectRemoval(enemy);
         });
+
+        // Check if we just entered the room where the boss battle will take place
+        if(gamePlayState.currentRoom == gamePlayState.currentMap->getBossChamberRoom()) {
+            // We're going to start fighting the boss
+            HIKARI_LOG(debug3) << "We just entered the boss chamber. Time to start the battle with " << gamePlayState.currentMap->getBossEntity();
+
+            gamePlayState.startBossBattle();
+        }
     }
 
     void GamePlayState::PlayingSubState::exit() {
