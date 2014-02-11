@@ -286,7 +286,7 @@
     },
     {
         "name": "Hammer Joe Boss",
-        "hitPoints": 28.0,
+        "hitPoints": 10.0,
         "damageId": 0,
         "deathType": "Hero",
         "bonusTableIndex": -1,

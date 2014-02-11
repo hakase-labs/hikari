@@ -272,6 +272,13 @@ namespace hikari {
         void startBossBattle();
 
         /**
+         * Ends the boss battle sequence -- starts the "completed" music, moves
+         * Rock to the center of the room, performs mega jump, and collects the
+         * boss' power. Then it returns control to the game.
+         */
+        void endBossBattle();
+
+        /**
          * Checks if the player is colliding with a transition region.
          */
         void checkCollisionWithTransition();

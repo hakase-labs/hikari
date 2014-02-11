@@ -6,6 +6,7 @@
 #include "hikari/client/game/objects/GameObject.hpp"
 #include "hikari/client/game/objects/Hero.hpp"
 #include "hikari/client/game/objects/Spawner.hpp"
+#include "hikari/client/game/objects/controllers/CutSceneHeroActionController.hpp"
 #include "hikari/client/game/objects/controllers/PlayerInputHeroActionController.hpp"
 #include "hikari/client/scripting/SquirrelService.hpp"
 #include "hikari/client/game/objects/GameObject.hpp"
@@ -945,26 +946,45 @@ namespace hikari {
         const auto currentRoom = world.getCurrentRoom();
         const auto roomPosition = Vector2<float>(currentRoom->getX(), currentRoom->getY()) * currentRoom->getGridSize();
         const auto offset = Vector2<float>(128.0f, 64.0f);
+
+        hero->setActionController(std::make_shared<CutSceneHeroActionController>(hero));
+        
         boss = world.spawnEnemy(currentMap->getBossEntity());
-        boss->setPosition(roomPosition + offset);
-        world.queueObjectAddition(boss);
-        world.update(0.0f);
 
-        guiBossEnergyGauge->setValue(0.0f);
-        guiBossEnergyGauge->setVisible(true);
+        if(boss) {
+            boss->setPosition(roomPosition + offset);
+            world.queueObjectAddition(boss);
+            world.update(0.0f);
 
-        if(auto gp = gameProgress.lock()) {
-            gp->setBossEnergy(0.0f);
+            if(auto gp = gameProgress.lock()) {
+                gp->setBossEnergy(0.0f);
+                gp->setBossMaxEnergy(boss->getHitPoints());
+
+                guiBossEnergyGauge->setValue(0.0f);
+                guiBossEnergyGauge->setMaximumValue(static_cast<float>(gp->getBossMaxEnergy()));
+                guiBossEnergyGauge->setVisible(true);
+
+                taskQueue.push(std::make_shared<FunctionTask>(0, [this](float dt) -> bool {
+                    bool done = hero->isOnGround();
+                    hero->update(dt);
+                    // TODO: Need to wait for the idle/landing animation to finish.
+                    return done;
+                }));
+
+                taskQueue.push(std::make_shared<RefillHealthTask>(
+                    RefillHealthTask::BOSS_ENERGY,
+                    gp->getBossMaxEnergy(),
+                    audioService,
+                    gameProgress)
+                );
+            }
+
+            taskQueue.push(std::make_shared<WaitTask>(1.0f));
         }
+    }
 
-        taskQueue.push(std::make_shared<RefillHealthTask>(
-            RefillHealthTask::BOSS_ENERGY,
-            28,
-            audioService,
-            gameProgress)
-        );
+    void GamePlayState::endBossBattle() {
 
-        taskQueue.push(std::make_shared<WaitTask>(1.0f));
     }
 
     void GamePlayState::updateDoors(float dt) {
@@ -1122,6 +1142,8 @@ namespace hikari {
 
                 if(boss && boss->getId() == entityId) {
                     HIKARI_LOG(debug4) << "THE BOSS HAS BEEN KILLED! " << entityId;
+                    // TODO: Make rockman immune just in case there are projectiles
+                    //       already flying around. That would be a bummer to die.
                 }
 
                 spawnDeathExplosion(enemyPtr->getDeathType(), enemyPtr->getPosition());
