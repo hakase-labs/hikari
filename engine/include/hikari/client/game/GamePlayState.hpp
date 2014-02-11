@@ -65,6 +65,7 @@ namespace hikari {
     class Map;
     class MapRenderer;
     class Hero;
+    class Enemy;
     class WorldCollisionResolver;
     class Spawner;
     class EventBus;
@@ -109,6 +110,7 @@ namespace hikari {
         std::shared_ptr<Tileset> currentTileset;
         std::shared_ptr<Room> currentRoom;
         std::shared_ptr<Hero> hero;
+        std::shared_ptr<Enemy> boss;
         std::unique_ptr<MapRenderer> mapRenderer;
         std::unique_ptr<SubState> subState;
         std::unique_ptr<SubState> nextSubState;

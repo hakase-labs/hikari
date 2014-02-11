@@ -113,6 +113,7 @@ namespace hikari {
         , currentTileset(nullptr)
         , currentRoom(nullptr)
         , hero(nullptr)
+        , boss(nullptr)
         , mapRenderer(new MapRenderer(nullptr, nullptr))
         , subState(nullptr)
         , nextSubState(nullptr)
@@ -892,6 +893,10 @@ namespace hikari {
             }
         }
 
+        // Make sure we allow the boss the be garbage collected just in case we
+        // haven't done so already.
+        boss.reset();
+
         changeSubState(std::unique_ptr<SubState>(new ReadySubState(*this)));
     }
 
@@ -940,7 +945,7 @@ namespace hikari {
         const auto currentRoom = world.getCurrentRoom();
         const auto roomPosition = Vector2<float>(currentRoom->getX(), currentRoom->getY()) * currentRoom->getGridSize();
         const auto offset = Vector2<float>(128.0f, 64.0f);
-        std::shared_ptr<Enemy> boss = world.spawnEnemy(currentMap->getBossEntity());
+        boss = world.spawnEnemy(currentMap->getBossEntity());
         boss->setPosition(roomPosition + offset);
         world.queueObjectAddition(boss);
         world.update(0.0f);
@@ -1107,12 +1112,17 @@ namespace hikari {
                 }
             }
         } else if(eventData->getEntityType() == EntityDeathEventData::Enemy) {
-            HIKARI_LOG(debug2) << "An enemy died! id = " << eventData->getEntityId();
+            int entityId = eventData->getEntityId();
+            HIKARI_LOG(debug2) << "An enemy died! id = " << entityId;
 
-            auto enemyPtr = std::dynamic_pointer_cast<Enemy>(world.getObjectById(eventData->getEntityId()).lock());
+            auto enemyPtr = std::dynamic_pointer_cast<Enemy>(world.getObjectById(entityId).lock());
 
             if(enemyPtr) {
                 world.queueObjectRemoval(enemyPtr);
+
+                if(boss && boss->getId() == entityId) {
+                    HIKARI_LOG(debug4) << "THE BOSS HAS BEEN KILLED! " << entityId;
+                }
 
                 spawnDeathExplosion(enemyPtr->getDeathType(), enemyPtr->getPosition());
 
@@ -1866,6 +1876,13 @@ namespace hikari {
                 //
                 // END code that checks hero vs obstacles
                 //     
+            }
+        }
+
+        // Update the boss' energy if there is one.
+        if(gamePlayState.boss) {
+            if(auto gp = gamePlayState.gameProgress.lock()) {
+                gp->setBossEnergy(gamePlayState.boss->getHitPoints());
             }
         }
 

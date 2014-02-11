@@ -283,5 +283,38 @@
             "gravitated": true,
             "phasing": false
         }
+    },
+    {
+        "name": "Hammer Joe Boss",
+        "hitPoints": 28.0,
+        "damageId": 0,
+        "deathType": "Hero",
+        "bonusTableIndex": -1,
+        "behavior": {
+            "type": "scripted",
+            "name": "HammerJoeBehavior",
+            "config": {
+            }
+        },
+        "animationSet": "assets/animations/hammer-joe.json",
+        "boundingBox": {
+            "width": 20,
+            "height": 26,
+            "originX": 10,
+            "originY": 13
+        },
+        "actionSpot": {
+            "x": 5.0,
+            "y": -8.0
+        },
+        "states": {
+            "default": {
+                
+            }
+        },
+        "characteristics": {
+            "gravitated": true,
+            "phasing": false
+        }
     }
 ]
