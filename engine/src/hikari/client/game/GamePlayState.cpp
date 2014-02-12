@@ -949,7 +949,7 @@ namespace hikari {
 
         hero->setActionController(std::make_shared<CutSceneHeroActionController>(hero));
         
-        boss = world.spawnEnemy(currentMap->getBossEntity());
+        boss = world.spawnEnemy(currentRoom->getBossEntity());
 
         if(boss) {
             boss->setPosition(roomPosition + offset);
@@ -1546,7 +1546,7 @@ namespace hikari {
         // Check if we just entered the room where the boss battle will take place
         if(gamePlayState.currentRoom == gamePlayState.currentMap->getBossChamberRoom()) {
             // We're going to start fighting the boss
-            HIKARI_LOG(debug3) << "We just entered the boss chamber. Time to start the battle with " << gamePlayState.currentMap->getBossEntity();
+            HIKARI_LOG(debug3) << "We just entered the boss chamber. Time to start the battle with " << gamePlayState.currentRoom->getBossEntity();
 
             gamePlayState.startBossBattle();
         }

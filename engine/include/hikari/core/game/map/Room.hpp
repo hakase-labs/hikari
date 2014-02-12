@@ -38,6 +38,7 @@ namespace hikari {
         std::list<BoundingBox<float>> ladders;
         std::shared_ptr<Door> entranceDoor;
         std::shared_ptr<Door> exitDoor;
+        std::string bossEntityName;
 
         const inline bool isInBounds(const int &x, const int &y) const;
 
@@ -49,10 +50,11 @@ namespace hikari {
 
     public:
         const static int NO_TILE = -1;
+        const static std::string DEFAULT_BOSS_ENTITY_NAME;
 
         Room(int id, int x, int y, int width, int height, int gridSize, const Point2D<int> &heroSpawnPosition, const Rectangle2D<int> &cameraBounds,
             const std::vector<int> &tile, const std::vector<int> &attr, const std::vector<RoomTransition> &transitions, const std::vector<std::shared_ptr<Spawner>> &spawners,
-            const std::shared_ptr<Door> & entranceDoor, const std::shared_ptr<Door> & exitDoor);
+            const std::shared_ptr<Door> & entranceDoor, const std::shared_ptr<Door> & exitDoor, const std::string & bossEntityName);
 
         ~Room();
 
@@ -76,6 +78,14 @@ namespace hikari {
          * @return point where the hero should spawn in this room
          */
         const Point2D<int>& getHeroSpawnPosition() const;
+
+        /**
+         * Gets the entity type of the "boss" entity of this map. This is the
+         * entity that should be spawned when the hero reaches the boss chamber.
+         *
+         * @return an entity type
+         */
+        const std::string & getBossEntity() const;
 
         /**
          * Gets the tile located at the position (tileX, tileY). If the

@@ -206,6 +206,7 @@
       "y": 0,
       "heroSpawnX": 32,
       "heroSpawnY": 224,
+      "bossEntity": "Dada",
       "width": 16,
       "height": 15,
       "tile": [
