@@ -946,6 +946,7 @@ namespace hikari {
         const auto currentRoom = world.getCurrentRoom();
         const auto roomPosition = Vector2<float>(currentRoom->getX(), currentRoom->getY()) * currentRoom->getGridSize();
         const auto offset = Vector2<float>(128.0f, 64.0f);
+        const auto playerHeroController = hero->getActionController();
 
         hero->setActionController(std::make_shared<CutSceneHeroActionController>(hero));
         
@@ -964,10 +965,20 @@ namespace hikari {
                 guiBossEnergyGauge->setMaximumValue(static_cast<float>(gp->getBossMaxEnergy()));
                 guiBossEnergyGauge->setVisible(true);
 
-                taskQueue.push(std::make_shared<FunctionTask>(0, [this](float dt) -> bool {
-                    bool done = hero->isOnGround();
+                // TODO: Get rid of this hack. Need to allocate it on the heap since it
+                // crossed into the boundary of the lambda. This is balls.
+                std::shared_ptr<float> waitTimeAfterLanding = std::make_shared<float>(0.1f);
+
+                taskQueue.push(std::make_shared<FunctionTask>(0, [this, waitTimeAfterLanding](float dt) -> bool {
+                    bool done = false;
+
+                    if(hero->isOnGround()) {
+                        *waitTimeAfterLanding -= dt;
+                        done = *waitTimeAfterLanding <= 0.0f;
+                    }
+
                     hero->update(dt);
-                    // TODO: Need to wait for the idle/landing animation to finish.
+
                     return done;
                 }));
 
@@ -977,6 +988,12 @@ namespace hikari {
                     audioService,
                     gameProgress)
                 );
+
+                // Return control to the player
+                taskQueue.push(std::make_shared<FunctionTask>(0, [this, playerHeroController](float dt) -> bool {
+                    hero->setActionController(playerHeroController);                    
+                    return true;
+                }));
             }
 
             taskQueue.push(std::make_shared<WaitTask>(1.0f));
