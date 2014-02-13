@@ -709,9 +709,9 @@ namespace hikari {
         std::shared_ptr<CollectableItem> bonus;
 
         if(bonusTableIndex > -1) { // -1 is a special case where nothing drops, ever.
-            // 
+            //
             // TODO: Actually perform checks on real bonus tables?
-            // 
+            //
             if(const auto & gameConfigPtr = gameConfig.lock()) {
                 const auto & chanceTable = gameConfigPtr->getItemChancePairs();
                 int roll = rand() % 100;
@@ -949,7 +949,7 @@ namespace hikari {
         const auto playerHeroController = hero->getActionController();
 
         hero->setActionController(std::make_shared<CutSceneHeroActionController>(hero));
-        
+
         boss = world.spawnEnemy(currentRoom->getBossEntity());
 
         if(boss) {
@@ -991,7 +991,7 @@ namespace hikari {
 
                 // Return control to the player
                 taskQueue.push(std::make_shared<FunctionTask>(0, [this, playerHeroController](float dt) -> bool {
-                    hero->setActionController(playerHeroController);                    
+                    hero->setActionController(playerHeroController);
                     return true;
                 }));
             }
@@ -1001,7 +1001,28 @@ namespace hikari {
     }
 
     void GamePlayState::endBossBattle() {
+        const auto playerHeroController = hero->getActionController();
+        hero->setActionController(std::make_shared<CutSceneHeroActionController>(hero));
+        // world.update(0.0f);
 
+        // This needs to be non-blocking.
+        taskQueue.push(std::make_shared<WaitTask>(1.0f));
+
+        // Return control to the player
+        taskQueue.push(std::make_shared<FunctionTask>(0, [this](float dt) -> bool {
+            if(auto sound = audioService.lock()) {
+                sound->playMusic("Boss Defeated (MM3)");
+            }
+            return true;
+        }));
+
+        taskQueue.push(std::make_shared<WaitTask>(2.0f));
+
+        // Return control to the player
+        taskQueue.push(std::make_shared<FunctionTask>(0, [this, playerHeroController](float dt) -> bool {
+            hero->setActionController(playerHeroController);
+            return true;
+        }));
     }
 
     void GamePlayState::updateDoors(float dt) {
@@ -1161,6 +1182,7 @@ namespace hikari {
                     HIKARI_LOG(debug4) << "THE BOSS HAS BEEN KILLED! " << entityId;
                     // TODO: Make rockman immune just in case there are projectiles
                     //       already flying around. That would be a bummer to die.
+                    endBossBattle();
                 }
 
                 spawnDeathExplosion(enemyPtr->getDeathType(), enemyPtr->getPosition());
@@ -1914,7 +1936,7 @@ namespace hikari {
                 // );
                 //
                 // END code that checks hero vs obstacles
-                //     
+                //
             }
         }
 
