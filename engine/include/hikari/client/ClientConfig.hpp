@@ -22,6 +22,7 @@ namespace hikari {
 
         bool enableVsync;
         bool enableFpsDisplay;
+        bool enableAudio;
         unsigned int stackSize;
         std::string videoMode;
         std::map<std::string, std::string> keybindings;

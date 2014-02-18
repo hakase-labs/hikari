@@ -152,6 +152,7 @@ namespace hikari {
         int enemyCount      = json[PROPERTY_NAME_ROOM_ENEMIES].size();
         int itemCount       = json[PROPERTY_NAME_ROOM_ITEMS].size();
         bool hasDoors       = json.isMember(PROPERTY_NAME_ROOM_DOORS);
+        const std::string bossEntity = json.get(PROPERTY_NAME_BOSS_ENTITY, Room::DEFAULT_BOSS_ENTITY_NAME).asString();
         
         Point2D<int> heroSpawnPosition = Point2D<int>(heroSpawnX, heroSpawnY);
         Rectangle2D<int> cameraBounds = constructCameraBounds(json[PROPERTY_NAME_ROOM_CAMERABOUNDS], x, y, gridSize);
@@ -260,7 +261,8 @@ namespace hikari {
                 transitions,
                 spawners,
                 std::move(entranceDoor),
-                std::move(exitDoor)
+                std::move(exitDoor),
+                bossEntity
             )
         );
 

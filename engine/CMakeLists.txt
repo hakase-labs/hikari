@@ -209,6 +209,7 @@ set( HIKARI_CLIENT_GAME_OBJECTS_SOURCE_FILES
     src/hikari/client/game/objects/PalettedAnimatedSprite.cpp
     src/hikari/client/game/objects/brains/ScriptedEnemyBrain.cpp
     src/hikari/client/game/objects/CollectableItem.cpp
+    src/hikari/client/game/objects/controllers/CutSceneHeroActionController.cpp
     src/hikari/client/game/objects/controllers/PlayerInputHeroActionController.cpp
     src/hikari/client/game/objects/effects/NothingEffect.cpp
     src/hikari/client/game/objects/effects/ScriptedEffect.cpp

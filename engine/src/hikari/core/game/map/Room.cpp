@@ -8,13 +8,16 @@
 
 namespace hikari {
 
+    const std::string Room::DEFAULT_BOSS_ENTITY_NAME = "None";
+
     Room::Room(int id, int x, int y, int width, int height, int gridSize, 
             const Point2D<int> &heroSpawnPosition, const Rectangle2D<int> &cameraBounds,
             const std::vector<int> &tile, const std::vector<int> &attr,
             const std::vector<RoomTransition> &transitions,
             const std::vector<std::shared_ptr<Spawner>> &spawners,
             const std::shared_ptr<Door> & entranceDoor,
-            const std::shared_ptr<Door> & exitDoor
+            const std::shared_ptr<Door> & exitDoor,
+            const std::string & bossEntityName
     )
         : id(id)
         , x(x)
@@ -31,6 +34,7 @@ namespace hikari {
         , spawners(spawners)
         , entranceDoor(entranceDoor)
         , exitDoor(exitDoor)
+        , bossEntityName(bossEntityName)
     {
         traceLadders();
     }
@@ -129,6 +133,10 @@ namespace hikari {
 
     const Point2D<int>& Room::getHeroSpawnPosition() const {
         return heroSpawnPosition;
+    }
+
+    const std::string & Room::getBossEntity() const {
+        return bossEntityName;
     }
 
     const int Room::getTileAt(int tileX, int tileY) const {

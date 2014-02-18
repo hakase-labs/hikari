@@ -65,6 +65,7 @@ namespace hikari {
     class Map;
     class MapRenderer;
     class Hero;
+    class Enemy;
     class WorldCollisionResolver;
     class Spawner;
     class EventBus;
@@ -109,6 +110,7 @@ namespace hikari {
         std::shared_ptr<Tileset> currentTileset;
         std::shared_ptr<Room> currentRoom;
         std::shared_ptr<Hero> hero;
+        std::shared_ptr<Enemy> boss;
         std::unique_ptr<MapRenderer> mapRenderer;
         std::unique_ptr<SubState> subState;
         std::unique_ptr<SubState> nextSubState;
@@ -268,6 +270,13 @@ namespace hikari {
          * fills up the boss' energy bar and then returns control to the game.
          */
         void startBossBattle();
+
+        /**
+         * Ends the boss battle sequence -- starts the "completed" music, moves
+         * Rock to the center of the room, performs mega jump, and collects the
+         * boss' power. Then it returns control to the game.
+         */
+        void endBossBattle();
 
         /**
          * Checks if the player is colliding with a transition region.

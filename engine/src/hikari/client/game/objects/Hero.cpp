@@ -238,6 +238,10 @@ namespace hikari {
         return isShooting;
     }
 
+    bool Hero::isOnGround() {
+        return body.isOnGround();
+    }
+
     void Hero::playAnimation(float dt) {
         const auto & animSprite = getAnimatedSprite();
 

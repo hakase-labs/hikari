@@ -6,6 +6,7 @@
 #include "hikari/client/game/objects/GameObject.hpp"
 #include "hikari/client/game/objects/Hero.hpp"
 #include "hikari/client/game/objects/Spawner.hpp"
+#include "hikari/client/game/objects/controllers/CutSceneHeroActionController.hpp"
 #include "hikari/client/game/objects/controllers/PlayerInputHeroActionController.hpp"
 #include "hikari/client/scripting/SquirrelService.hpp"
 #include "hikari/client/game/objects/GameObject.hpp"
@@ -113,6 +114,7 @@ namespace hikari {
         , currentTileset(nullptr)
         , currentRoom(nullptr)
         , hero(nullptr)
+        , boss(nullptr)
         , mapRenderer(new MapRenderer(nullptr, nullptr))
         , subState(nullptr)
         , nextSubState(nullptr)
@@ -707,9 +709,9 @@ namespace hikari {
         std::shared_ptr<CollectableItem> bonus;
 
         if(bonusTableIndex > -1) { // -1 is a special case where nothing drops, ever.
-            // 
+            //
             // TODO: Actually perform checks on real bonus tables?
-            // 
+            //
             if(const auto & gameConfigPtr = gameConfig.lock()) {
                 const auto & chanceTable = gameConfigPtr->getItemChancePairs();
                 int roll = rand() % 100;
@@ -892,6 +894,10 @@ namespace hikari {
             }
         }
 
+        // Make sure we allow the boss the be garbage collected just in case we
+        // haven't done so already.
+        boss.reset();
+
         changeSubState(std::unique_ptr<SubState>(new ReadySubState(*this)));
     }
 
@@ -937,22 +943,86 @@ namespace hikari {
         // 4. Boss falls to the ground plane, performs intro move
         // 6. Boss' energy bar fills up
         // 7. Let the battle begin
+        const auto currentRoom = world.getCurrentRoom();
+        const auto roomPosition = Vector2<float>(currentRoom->getX(), currentRoom->getY()) * currentRoom->getGridSize();
+        const auto offset = Vector2<float>(128.0f, 64.0f);
+        const auto playerHeroController = hero->getActionController();
 
-        guiBossEnergyGauge->setValue(0.0f);
-        guiBossEnergyGauge->setVisible(true);
+        hero->setActionController(std::make_shared<CutSceneHeroActionController>(hero));
 
-        if(auto gp = gameProgress.lock()) {
-            gp->setBossEnergy(0.0f);
+        boss = world.spawnEnemy(currentRoom->getBossEntity());
+
+        if(boss) {
+            boss->setPosition(roomPosition + offset);
+            world.queueObjectAddition(boss);
+            world.update(0.0f);
+
+            if(auto gp = gameProgress.lock()) {
+                gp->setBossEnergy(0.0f);
+                gp->setBossMaxEnergy(boss->getHitPoints());
+
+                guiBossEnergyGauge->setValue(0.0f);
+                guiBossEnergyGauge->setMaximumValue(static_cast<float>(gp->getBossMaxEnergy()));
+                guiBossEnergyGauge->setVisible(true);
+
+                // TODO: Get rid of this hack. Need to allocate it on the heap since it
+                // crossed into the boundary of the lambda. This is balls.
+                std::shared_ptr<float> waitTimeAfterLanding = std::make_shared<float>(0.1f);
+
+                taskQueue.push(std::make_shared<FunctionTask>(0, [this, waitTimeAfterLanding](float dt) -> bool {
+                    bool done = false;
+
+                    if(hero->isOnGround()) {
+                        *waitTimeAfterLanding -= dt;
+                        done = *waitTimeAfterLanding <= 0.0f;
+                    }
+
+                    hero->update(dt);
+
+                    return done;
+                }));
+
+                taskQueue.push(std::make_shared<RefillHealthTask>(
+                    RefillHealthTask::BOSS_ENERGY,
+                    gp->getBossMaxEnergy(),
+                    audioService,
+                    gameProgress)
+                );
+
+                // Return control to the player
+                taskQueue.push(std::make_shared<FunctionTask>(0, [this, playerHeroController](float dt) -> bool {
+                    hero->setActionController(playerHeroController);
+                    return true;
+                }));
+            }
+
+            taskQueue.push(std::make_shared<WaitTask>(1.0f));
         }
+    }
 
-        taskQueue.push(std::make_shared<RefillHealthTask>(
-            RefillHealthTask::BOSS_ENERGY,
-            28,
-            audioService,
-            gameProgress)
-        );
+    void GamePlayState::endBossBattle() {
+        const auto playerHeroController = hero->getActionController();
+        hero->setActionController(std::make_shared<CutSceneHeroActionController>(hero));
+        // world.update(0.0f);
 
-        taskQueue.push(std::make_shared<WaitTask>(3.0f));
+        // This needs to be non-blocking.
+        taskQueue.push(std::make_shared<WaitTask>(1.0f));
+
+        // Return control to the player
+        taskQueue.push(std::make_shared<FunctionTask>(0, [this](float dt) -> bool {
+            if(auto sound = audioService.lock()) {
+                sound->playMusic("Boss Defeated (MM3)");
+            }
+            return true;
+        }));
+
+        taskQueue.push(std::make_shared<WaitTask>(2.0f));
+
+        // Return control to the player
+        taskQueue.push(std::make_shared<FunctionTask>(0, [this, playerHeroController](float dt) -> bool {
+            hero->setActionController(playerHeroController);
+            return true;
+        }));
     }
 
     void GamePlayState::updateDoors(float dt) {
@@ -1100,12 +1170,20 @@ namespace hikari {
                 }
             }
         } else if(eventData->getEntityType() == EntityDeathEventData::Enemy) {
-            HIKARI_LOG(debug2) << "An enemy died! id = " << eventData->getEntityId();
+            int entityId = eventData->getEntityId();
+            HIKARI_LOG(debug2) << "An enemy died! id = " << entityId;
 
-            auto enemyPtr = std::dynamic_pointer_cast<Enemy>(world.getObjectById(eventData->getEntityId()).lock());
+            auto enemyPtr = std::dynamic_pointer_cast<Enemy>(world.getObjectById(entityId).lock());
 
             if(enemyPtr) {
                 world.queueObjectRemoval(enemyPtr);
+
+                if(boss && boss->getId() == entityId) {
+                    HIKARI_LOG(debug4) << "THE BOSS HAS BEEN KILLED! " << entityId;
+                    // TODO: Make rockman immune just in case there are projectiles
+                    //       already flying around. That would be a bummer to die.
+                    endBossBattle();
+                }
 
                 spawnDeathExplosion(enemyPtr->getDeathType(), enemyPtr->getPosition());
 
@@ -1496,14 +1574,6 @@ namespace hikari {
         gamePlayState.isHeroAlive = true;
         postDeathTimer = 0.0f;
 
-        // Check if we just entered the room where the boss battle will take place
-        if(gamePlayState.currentRoom == gamePlayState.currentMap->getBossChamberRoom()) {
-            // We're going to start fighting the boss
-            HIKARI_LOG(debug3) << "We just entered the boss chamber. Time to start the battle with " << gamePlayState.currentMap->getBossEntity();
-
-            gamePlayState.startBossBattle();
-        }
-
         // Remove any enemies that may have been there from before
         auto & staleEnemies = gamePlayState.world.getActiveEnemies();
 
@@ -1511,6 +1581,14 @@ namespace hikari {
             HIKARI_LOG(debug2) << "Removing stale enemy, id = " << enemy->getId();
             gamePlayState.world.queueObjectRemoval(enemy);
         });
+
+        // Check if we just entered the room where the boss battle will take place
+        if(gamePlayState.currentRoom == gamePlayState.currentMap->getBossChamberRoom()) {
+            // We're going to start fighting the boss
+            HIKARI_LOG(debug3) << "We just entered the boss chamber. Time to start the battle with " << gamePlayState.currentRoom->getBossEntity();
+
+            gamePlayState.startBossBattle();
+        }
     }
 
     void GamePlayState::PlayingSubState::exit() {
@@ -1858,7 +1936,14 @@ namespace hikari {
                 // );
                 //
                 // END code that checks hero vs obstacles
-                //     
+                //
+            }
+        }
+
+        // Update the boss' energy if there is one.
+        if(gamePlayState.boss) {
+            if(auto gp = gamePlayState.gameProgress.lock()) {
+                gp->setBossEnergy(gamePlayState.boss->getHitPoints());
             }
         }
 

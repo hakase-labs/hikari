@@ -82,6 +82,7 @@ namespace hikari {
                         collisionInfo.directionX = directionX;
                         collisionInfo.inheritedVelocityX = 0.0f;
 
+
                         HIKARI_LOG(debug4) << "Collision!! tileX = " << tileX << ", tileY = " << tileY;
                 
                         determineTileCorrection(directionX, collisionInfo);
