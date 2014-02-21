@@ -75,5 +75,5 @@ junk/
 tools/
 *.sublime-project
 *.sublime-workspace
-
+*.test.json
 *.bak
