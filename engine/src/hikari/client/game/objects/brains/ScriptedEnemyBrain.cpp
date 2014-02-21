@@ -56,7 +56,7 @@ namespace hikari {
 
                 if(!constructor.IsNull()) {
                     Sqrat::Object& configRef = instanceConfig;
-                    HIKARI_LOG(error) << "bindScriptClassInstance :: Is instanceConfig null? " << instanceConfig.IsNull();
+                    HIKARI_LOG(debug3) << "bindScriptClassInstance :: Is instanceConfig null? " << instanceConfig.IsNull();
                     instance = constructor.Evaluate<Sqrat::Object>(configRef);
 
                     if(!instance.IsNull()) {

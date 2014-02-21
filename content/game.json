@@ -49,11 +49,20 @@
         "Mega Buster"
     ],
     "itemChances": [
-        { "Extra Life" : 1 },
-        { "Large Health Energy" : 2 },
-        { "Large Weapon Energy" : 2 },
-        { "Small Health Energy" : 15 },
-        { "Small Weapon Energy" : 15 }
+        [
+            { "Extra Life" : 1 },
+            { "E-Tank" : 1 },
+            { "Large Health Energy" : 2 },
+            { "Large Weapon Energy" : 2 },
+            { "Small Health Energy" : 15 },
+            { "Small Weapon Energy" : 15 }
+        ],
+        [
+            { "Extra Life" : 25 },
+            { "E-Tank" : 25 },
+            { "Large Health Energy" : 25 },
+            { "Large Weapon Energy" : 25 }
+        ]
     ],
     "states" : {
         "introduction" : {},

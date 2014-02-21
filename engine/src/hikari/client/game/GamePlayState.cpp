@@ -713,7 +713,7 @@ namespace hikari {
             // TODO: Actually perform checks on real bonus tables?
             //
             if(const auto & gameConfigPtr = gameConfig.lock()) {
-                const auto & chanceTable = gameConfigPtr->getItemChancePairs();
+                const auto & chanceTable = gameConfigPtr->getItemChancePairs(bonusTableIndex);
                 int roll = rand() % 100;
 
                 if(chanceTable.size() > 0) {

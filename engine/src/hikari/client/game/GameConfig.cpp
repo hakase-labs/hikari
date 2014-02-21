@@ -1,4 +1,5 @@
 #include "hikari/client/game/GameConfig.hpp"
+#include "hikari/core/util/Log.hpp"
 
 #include <algorithm>
 
@@ -35,7 +36,7 @@ namespace hikari {
         , initialState(DEFAULT_INITIAL_STATE)
         , startupScripts()
         , heroWeaponNames()
-        , itemChancePairs()
+        , bonusTables()
     {
 
     }
@@ -49,7 +50,7 @@ namespace hikari {
         , initialState(DEFAULT_INITIAL_STATE)
         , startupScripts()
         , heroWeaponNames()
-        , itemChancePairs()
+        , bonusTables()
     {
         extractValuesFromJson(configJson);
     }
@@ -80,17 +81,27 @@ namespace hikari {
 
             // Item chances
             if(configJson.isMember(PROPERTY_ITEM_CHANCES)) {
-                const Json::Value & itemChanceArray = configJson.get(PROPERTY_ITEM_CHANCES, Json::Value());
-                std::size_t count = itemChanceArray.size();
+                const Json::Value & bonusTablesArray = configJson.get(PROPERTY_ITEM_CHANCES, Json::Value());
+                std::size_t bonusTableCount = bonusTablesArray.size();
 
-                for(std::size_t i = 0; i < count; ++i) {
-                    const auto & members = itemChanceArray[i].getMemberNames();
-                    itemChancePairs.push_back(std::make_pair(
-                        members[0],
-                        itemChanceArray[i].get(members[0], 0).asInt()
-                    ));
+                HIKARI_LOG(debug2) << "Found " << bonusTableCount << " bonus tables";
+
+                for(std::size_t i = 0; i < bonusTableCount; ++i) {
+                    const auto & bonusTable = bonusTablesArray[i];
+                    const std::size_t itemChanceCount = bonusTable.size();
+                    BonusTable table;
+
+                    for(std::size_t j = 0; j < itemChanceCount; ++j) {
+                        HIKARI_LOG(debug3) << "Adding " << j << " bonus table entry";
+                        const auto & members = bonusTable[j].getMemberNames();
+                        table.push_back(std::make_pair(
+                            members[0],
+                            bonusTable[j].get(members[0], 0).asInt()
+                        ));
+                    }
+
+                    bonusTables.push_back(table);
                 }
-
             }
 
             // Template paths
@@ -140,7 +151,7 @@ namespace hikari {
         return heroWeaponNames;
     }
 
-    const std::vector<std::pair<std::string, int>> & GameConfig::getItemChancePairs() const {
-        return itemChancePairs;
+    const std::vector<std::pair<std::string, int>> & GameConfig::getItemChancePairs(int bonusTableIndex) const {
+        return bonusTables.at(bonusTableIndex);
     }
 } // hikari

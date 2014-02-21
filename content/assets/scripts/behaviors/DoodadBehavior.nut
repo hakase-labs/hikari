@@ -22,7 +22,7 @@ class DoodadBehavior extends EnemyBehavior {
             host.changeAnimation(("animation" in classConfig) ? classConfig.animation : "default");
             host.isObstacle = true;
             host.isShielded = false;
-            host.isPhasing = true;
+            host.isPhasing = false;
             host.faction = Factions.World;
             host.direction = Directions.Down;
             isInitialized = true;

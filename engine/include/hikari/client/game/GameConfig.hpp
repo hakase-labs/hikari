@@ -13,6 +13,9 @@ namespace hikari {
 
     class GameConfig {
     private:
+        typedef std::pair<std::string, int> ItemChancePair;
+        typedef std::vector<ItemChancePair> BonusTable;
+
         // Property names
         static const char* PROPERTY_TEMPLATES;
         static const char* PROPERTY_TMPL_ITEM;
@@ -43,7 +46,7 @@ namespace hikari {
         std::string initialState;
         std::vector<std::string> startupScripts;
         std::vector<std::string> heroWeaponNames;
-        std::vector<std::pair<std::string, int>> itemChancePairs;
+        std::vector<BonusTable> bonusTables;
 
         void extractValuesFromJson(const Json::Value& configJson);
     public:
@@ -58,7 +61,7 @@ namespace hikari {
         const std::string & getInitialState() const;
         const std::vector<std::string> & getStartUpScripts() const;
         const std::vector<std::string> & getHeroWeaponNames() const;
-        const std::vector<std::pair<std::string, int>> & getItemChancePairs() const;
+        const std::vector<std::pair<std::string, int>> & getItemChancePairs(int bonusTableIndex = 0) const;
     };
 
 } // hikari
