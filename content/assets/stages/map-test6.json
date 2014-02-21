@@ -64,6 +64,11 @@
             "x": 96,
             "y": 128,
             "direction": "Left"
+        },
+        {
+            "type": "Mystery Tank",
+            "x": 200,
+            "y": 128
         }
       ],
       "items": [],

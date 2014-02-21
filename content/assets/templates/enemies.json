@@ -223,6 +223,35 @@
         }
     },
     {
+        "name": "Mystery Tank",
+        "hitPoints": 1.0,
+        "damageId": 0,
+        "bonusTableIndex": 1,
+        "behavior": {
+            "type": "scripted",
+            "name": "DoodadBehavior",
+            "config": {
+                "animation": "mystery-tank-red"
+            }
+        },
+        "animationSet": "assets/animations/items.json",
+        "boundingBox": {
+            "width": 16,
+            "height": 16,
+            "originX": 8,
+            "originY": 8
+        },
+        "states": {
+            "default": {
+                
+            }
+        },
+        "characteristics": {
+            "gravitated": true,
+            "phasing": false
+        }
+    },
+    {
         "name": "Falling Platform 1 (2x1)",
         "hitPoints": 20.0,
         "deathType": "Hero",

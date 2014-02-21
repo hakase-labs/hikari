@@ -61,7 +61,7 @@ namespace hikari {
         const std::string & getInitialState() const;
         const std::vector<std::string> & getStartUpScripts() const;
         const std::vector<std::string> & getHeroWeaponNames() const;
-        const std::vector<std::pair<std::string, int>> & getItemChancePairs() const;
+        const std::vector<std::pair<std::string, int>> & getItemChancePairs(int bonusTableIndex = 0) const;
     };
 
 } // hikari
