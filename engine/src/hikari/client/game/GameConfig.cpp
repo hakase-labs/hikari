@@ -35,7 +35,7 @@ namespace hikari {
         , initialState(DEFAULT_INITIAL_STATE)
         , startupScripts()
         , heroWeaponNames()
-        , itemChancePairs()
+        , bonusTables()
     {
 
     }
@@ -49,7 +49,7 @@ namespace hikari {
         , initialState(DEFAULT_INITIAL_STATE)
         , startupScripts()
         , heroWeaponNames()
-        , itemChancePairs()
+        , bonusTables()
     {
         extractValuesFromJson(configJson);
     }
@@ -83,14 +83,17 @@ namespace hikari {
                 const Json::Value & itemChanceArray = configJson.get(PROPERTY_ITEM_CHANCES, Json::Value());
                 std::size_t count = itemChanceArray.size();
 
+                BonusTable table;
+
                 for(std::size_t i = 0; i < count; ++i) {
                     const auto & members = itemChanceArray[i].getMemberNames();
-                    itemChancePairs.push_back(std::make_pair(
+                    table.push_back(std::make_pair(
                         members[0],
                         itemChanceArray[i].get(members[0], 0).asInt()
                     ));
                 }
 
+                bonusTables.push_back(table);
             }
 
             // Template paths
@@ -141,6 +144,6 @@ namespace hikari {
     }
 
     const std::vector<std::pair<std::string, int>> & GameConfig::getItemChancePairs() const {
-        return itemChancePairs;
+        return bonusTables.at(0);
     }
 } // hikari
