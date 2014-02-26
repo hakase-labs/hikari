@@ -64,7 +64,6 @@ class EnemyBehavior {
      * @param  {Table} config a configuration table for instance-level settings.
      */
     function applyConfig(config = {}) {
-        ::log("called applyConfig!" + config.len());
         // To be implemented in subclasses
     }
 

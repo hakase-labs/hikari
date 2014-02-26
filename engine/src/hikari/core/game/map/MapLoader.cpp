@@ -7,6 +7,7 @@
 #include "hikari/client/game/objects/Spawner.hpp"
 #include "hikari/client/game/objects/ItemSpawner.hpp"
 #include "hikari/client/game/objects/EnemySpawner.hpp"
+#include "hikari/client/scripting/SquirrelUtils.hpp"
 #include "hikari/core/util/AnimationSetCache.hpp"
 #include "hikari/core/util/ImageCache.hpp"
 #include "hikari/core/util/StringUtils.hpp"
@@ -352,22 +353,8 @@ namespace hikari {
 
                     Sqrat::Table configTable;
 
-                    const auto configPropertyNames = configJson.getMemberNames();
-
-                    for(auto propName = std::begin(configPropertyNames); propName != std::end(configPropertyNames); std::advance(propName, 1)) {
-                        const auto propValue = configJson.get(*propName, Json::Value::null);
-
-                        if(propValue.isBool()) {
-                            configTable.SetValue((*propName).c_str(), propValue.asBool());
-                        } else if(propValue.isDouble()) {
-                            configTable.SetValue((*propName).c_str(), propValue.asDouble());
-                        } else if(propValue.isIntegral()) {
-                            configTable.SetValue((*propName).c_str(), propValue.asInt());
-                        } else if(propValue.isString()) {
-                            configTable.SetValue((*propName).c_str(), propValue.asString());
-                        } else if(propValue.isNull()) {
-                            configTable.SetValue((*propName).c_str(), nullptr);
-                        }
+                    if(!configJson.isNull()) {
+                        configTable = SquirrelUtils::jsonToSquirrel(configJson);
                     }
 
                     enemySpawner->setInstanceConfig(configTable);

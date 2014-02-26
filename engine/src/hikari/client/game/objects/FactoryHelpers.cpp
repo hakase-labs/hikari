@@ -22,6 +22,7 @@
 #include "hikari/client/game/objects/motions/LinearMotion.hpp"
 #include "hikari/client/game/objects/EntityDeathType.hpp"
 #include "hikari/client/scripting/SquirrelService.hpp"
+#include "hikari/client/scripting/SquirrelUtils.hpp"
 
 #include "hikari/core/game/map/Room.hpp"
 #include "hikari/core/geom/BoundingBox.hpp"
@@ -97,23 +98,7 @@ namespace FactoryHelpers {
                                         Sqrat::Table configTable;
 
                                         if(!effectConfig.isNull()) {
-                                            const auto configPropertyNames = effectConfig.getMemberNames();
-
-                                            for(auto propName = std::begin(configPropertyNames); propName != std::end(configPropertyNames); std::advance(propName, 1)) {
-                                                const auto propValue = effectConfig.get(*propName, Json::Value::null);
-
-                                                if(propValue.isBool()) {
-                                                    configTable.SetValue((*propName).c_str(), propValue.asBool());
-                                                } else if(propValue.isDouble()) {
-                                                    configTable.SetValue((*propName).c_str(), propValue.asDouble());
-                                                } else if(propValue.isIntegral()) {
-                                                    configTable.SetValue((*propName).c_str(), propValue.asInt());
-                                                } else if(propValue.isString()) {
-                                                    configTable.SetValue((*propName).c_str(), propValue.asString());
-                                                } else if(propValue.isNull()) {
-                                                    configTable.SetValue((*propName).c_str(), nullptr);
-                                                }
-                                            }
+                                            configTable = SquirrelUtils::jsonToSquirrel(effectConfig);
                                         }
 
                                         effectInstance.reset(new ScriptedEffect(*squirrel, effect, configTable));
@@ -226,28 +211,12 @@ namespace FactoryHelpers {
 
                                         if(behaviorType == "scripted") {
                                             const auto behaviorName = behavior["name"].asString();
-                                            const auto effectConfig = behavior["config"];
+                                            const auto enemyConfig = behavior["config"];
 
                                             Sqrat::Table configTable;
 
-                                            if(!effectConfig.isNull()) {
-                                                const auto configPropertyNames = effectConfig.getMemberNames();
-
-                                                for(auto propName = std::begin(configPropertyNames); propName != std::end(configPropertyNames); std::advance(propName, 1)) {
-                                                    const auto propValue = effectConfig.get(*propName, Json::Value::null);
-
-                                                    if(propValue.isBool()) {
-                                                        configTable.SetValue((*propName).c_str(), propValue.asBool());
-                                                    } else if(propValue.isDouble()) {
-                                                        configTable.SetValue((*propName).c_str(), propValue.asDouble());
-                                                    } else if(propValue.isIntegral()) {
-                                                        configTable.SetValue((*propName).c_str(), propValue.asInt());
-                                                    } else if(propValue.isString()) {
-                                                        configTable.SetValue((*propName).c_str(), propValue.asString());
-                                                    } else if(propValue.isNull()) {
-                                                        configTable.SetValue((*propName).c_str(), nullptr);
-                                                    }
-                                                }
+                                            if(!enemyConfig.isNull()) {
+                                                configTable = SquirrelUtils::jsonToSquirrel(enemyConfig);
                                             }
 
                                             brain = std::make_shared<ScriptedEnemyBrain>(*squirrel, behaviorName, configTable);
