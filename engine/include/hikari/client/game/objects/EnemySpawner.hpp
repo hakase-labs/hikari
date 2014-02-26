@@ -3,6 +3,8 @@
 
 #include "hikari/client/game/objects/Spawner.hpp"
 
+#include <sqrat.h>
+
 #include <memory>
 #include <string>
 
@@ -25,6 +27,7 @@ namespace hikari {
         float spawnRateAccumulator;   // Counter between spawns
         bool continuousFlag;          // Spawns continuously (doesn't need to go off screen and come back on)
         bool wasReawoken;             // True after going to sleep and waking up
+        Sqrat::Table instanceConfig;
 
         void handleObjectRemovedEvent(EventDataPtr event);
 
@@ -60,6 +63,8 @@ namespace hikari {
         void setSpawnRate(float rate);
 
         void setContinuous(bool continuous);
+
+        void setInstanceConfig(Sqrat::Table config);
 
         /**
          * Determines if an Enemy can be spawned. This takes into account the

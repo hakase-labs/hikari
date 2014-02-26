@@ -46,7 +46,11 @@ namespace hikari {
     }
 
     void EnemyBrain::handleObjectTouch(int otherId) {
-        // Dones nothing
+        // Does nothing
+    }
+
+    void EnemyBrain::applyConfig(const Sqrat::Table & instanceConfig) {
+        // Does nothing
     }
 
 } // hikari

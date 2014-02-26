@@ -7,6 +7,7 @@
 #include "hikari/client/game/objects/Spawner.hpp"
 #include "hikari/client/game/objects/ItemSpawner.hpp"
 #include "hikari/client/game/objects/EnemySpawner.hpp"
+#include "hikari/client/scripting/SquirrelUtils.hpp"
 #include "hikari/core/util/AnimationSetCache.hpp"
 #include "hikari/core/util/ImageCache.hpp"
 #include "hikari/core/util/StringUtils.hpp"
@@ -345,6 +346,18 @@ namespace hikari {
                 if(json.isMember("continuous")) {
                     bool isContinuous = json["continuous"].asBool();
                     enemySpawner->setContinuous(isContinuous);
+                }
+
+                if(json.isMember("config")) {
+                    auto configJson = json["config"];
+
+                    Sqrat::Table configTable;
+
+                    if(!configJson.isNull()) {
+                        configTable = SquirrelUtils::jsonToSquirrel(configJson);
+                    }
+
+                    enemySpawner->setInstanceConfig(configTable);
                 }
 
                 spawner = enemySpawner;

@@ -4,6 +4,10 @@
 #include "hikari/client/game/objects/Enemy.hpp"
 #include "hikari/core/util/Cloneable.hpp"
 
+namespace Sqrat {
+    class Table;
+}
+
 namespace hikari {
 
     class Movable;
@@ -91,6 +95,8 @@ namespace hikari {
          * @param dt time, in seconds, to update for
          */
         virtual void update(float dt);
+
+        virtual void applyConfig(const Sqrat::Table & instanceConfig);
     };
 
 } // hikari

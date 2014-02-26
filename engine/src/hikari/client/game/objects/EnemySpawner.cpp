@@ -1,5 +1,6 @@
 #include "hikari/client/game/objects/EnemySpawner.hpp"
 #include "hikari/client/game/objects/Enemy.hpp"
+#include "hikari/client/game/objects/EnemyBrain.hpp"
 #include "hikari/client/game/GameWorld.hpp"
 #include "hikari/client/game/events/EventBus.hpp"
 #include "hikari/client/game/events/ObjectRemovedEventData.hpp"
@@ -20,6 +21,7 @@ namespace hikari {
         , spawnRateAccumulator(0.0f)
         , continuousFlag(spawnLimit > 1)
         , wasReawoken(false)
+        , instanceConfig()
     {
         // By default spawners are continuous if they have a spawnLimit higher
         // than 1.
@@ -50,6 +52,11 @@ namespace hikari {
         if(auto spawnedObject = world.spawnEnemy(enemyType)) {
             int objectId = spawnedObject->getId();
             spawnedObject->reset();
+
+            if(const auto brain = spawnedObject->getBrain()) {
+                brain->applyConfig(instanceConfig);
+            }
+
             spawnedObject->setPosition(getPosition());
             spawnedObject->setActive(true);
 
@@ -104,6 +111,10 @@ namespace hikari {
 
     void EnemySpawner::setContinuous(bool continuous) {
         continuousFlag = continuous;
+    }
+
+    void EnemySpawner::setInstanceConfig(Sqrat::Table config) {
+        instanceConfig = config;
     }
 
     bool EnemySpawner::canSpawn() const {

@@ -5,6 +5,10 @@
 #include "hikari/core/util/Cloneable.hpp"
 #include <memory>
 
+namespace Sqrat {
+    class Table;
+}
+
 namespace hikari {
 
     class EnemyBrain;
@@ -51,6 +55,8 @@ namespace hikari {
 
         void setBonusTableIndex(int index);
         int getBonusTableIndex() const;
+
+        void applyConfig(const Sqrat::Table & instanceConfig);
     };
 
 } // hikari
