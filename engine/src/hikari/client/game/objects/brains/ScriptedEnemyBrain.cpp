@@ -9,6 +9,7 @@ namespace hikari {
 
     const char * ScriptedEnemyBrain::FUNCTION_NAME_ATTACH = "attachHost";
     const char * ScriptedEnemyBrain::FUNCTION_NAME_DETACH = "detachHost";
+    const char * ScriptedEnemyBrain::FUNCTION_NAME_APPLYCONFIG = "applyConfig";
     const char * ScriptedEnemyBrain::FUNCTION_NAME_HANDLECOLLISION = "handleWorldCollision";
     const char * ScriptedEnemyBrain::FUNCTION_NAME_HANDLEOBJECTTOUCH = "handleObjectTouch";
     const char * ScriptedEnemyBrain::FUNCTION_NAME_UPDATE = "update";
@@ -20,7 +21,6 @@ namespace hikari {
         , instance()
         , instanceConfig(config)
     {
-        HIKARI_LOG(debug4) << "constructor :: Is instanceConfig null? " << instanceConfig.IsNull();
         if(!bindScriptClassInstance()) {
             // throw?
             HIKARI_LOG(debug4) << "ScriptedEnemyBrain failed to bind.";
@@ -33,8 +33,6 @@ namespace hikari {
         , instance()
         , instanceConfig(proto.instanceConfig)
     {
-                HIKARI_LOG(debug4) << "constructor :: Is instanceConfig null? " << instanceConfig.IsNull();
-
         if(!bindScriptClassInstance()) {
             // throw?
             HIKARI_LOG(error) << "ScriptedEnemyBrain failed to bind.";
@@ -63,6 +61,7 @@ namespace hikari {
                         proxyAttach = Sqrat::Function(instance, FUNCTION_NAME_ATTACH);
                         proxyDetach = Sqrat::Function(instance, FUNCTION_NAME_DETACH);
                         proxyUpdate = Sqrat::Function(instance, FUNCTION_NAME_UPDATE);
+                        proxyApplyConfig = Sqrat::Function(instance, FUNCTION_NAME_APPLYCONFIG);
                         proxyHandleWorldCollision = Sqrat::Function(instance, FUNCTION_NAME_HANDLECOLLISION);
                         proxyHandleObjectTouch = Sqrat::Function(instance, FUNCTION_NAME_HANDLEOBJECTTOUCH);
                     } else {
@@ -111,10 +110,16 @@ namespace hikari {
         }
     }
 
-
     void ScriptedEnemyBrain::update(float dt) {
         if(!proxyUpdate.IsNull()) {
             proxyUpdate.Execute(dt);
+        }
+    }
+
+    void ScriptedEnemyBrain::applyConfig(const Sqrat::Table & instanceConfig) {
+        if(!proxyApplyConfig.IsNull()) {
+            const Sqrat::Object & configRef = instanceConfig;
+            proxyApplyConfig.Execute(configRef);
         }
     }
 

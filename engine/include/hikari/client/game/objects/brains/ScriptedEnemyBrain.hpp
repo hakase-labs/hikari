@@ -18,6 +18,7 @@ namespace hikari {
     private:
         static const char * FUNCTION_NAME_ATTACH;
         static const char * FUNCTION_NAME_DETACH;
+        static const char * FUNCTION_NAME_APPLYCONFIG;
         static const char * FUNCTION_NAME_HANDLECOLLISION;
         static const char * FUNCTION_NAME_HANDLEOBJECTTOUCH;
         static const char * FUNCTION_NAME_UPDATE;
@@ -38,6 +39,7 @@ namespace hikari {
         Sqrat::Function proxyAttach;
         Sqrat::Function proxyDetach;
         Sqrat::Function proxyUpdate;
+        Sqrat::Function proxyApplyConfig;
         Sqrat::Function proxyHandleWorldCollision;
         Sqrat::Function proxyHandleObjectTouch;
 
@@ -79,6 +81,7 @@ namespace hikari {
         virtual void handleCollision(Movable& body, CollisionInfo& info);
         virtual void handleObjectTouch(int otherId);
         virtual void update(float dt);
+        virtual void applyConfig(const Sqrat::Table & instanceConfig);
     };
 
 } // hikari

@@ -8,6 +8,8 @@
 #include "hikari/client/game/events/EventData.hpp"
 #include "hikari/client/game/events/EventListenerDelegate.hpp"
 
+#include <sqrat.h>
+
 #include <memory>
 
 namespace hikari {

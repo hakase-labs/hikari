@@ -1953,7 +1953,10 @@
           "type": "Telly",
           "x": 16,
           "y": 16,
-          "direction": "Right"
+          "direction": "Right",
+          "config": {
+            "velocityX": 1.0
+          }
         },
         {
           "type": "Telly",

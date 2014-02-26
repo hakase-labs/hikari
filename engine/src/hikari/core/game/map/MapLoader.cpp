@@ -347,6 +347,32 @@ namespace hikari {
                     enemySpawner->setContinuous(isContinuous);
                 }
 
+                if(json.isMember("config")) {
+                    auto configJson = json["config"];
+
+                    Sqrat::Table configTable;
+
+                    const auto configPropertyNames = configJson.getMemberNames();
+
+                    for(auto propName = std::begin(configPropertyNames); propName != std::end(configPropertyNames); std::advance(propName, 1)) {
+                        const auto propValue = configJson.get(*propName, Json::Value::null);
+
+                        if(propValue.isBool()) {
+                            configTable.SetValue((*propName).c_str(), propValue.asBool());
+                        } else if(propValue.isDouble()) {
+                            configTable.SetValue((*propName).c_str(), propValue.asDouble());
+                        } else if(propValue.isIntegral()) {
+                            configTable.SetValue((*propName).c_str(), propValue.asInt());
+                        } else if(propValue.isString()) {
+                            configTable.SetValue((*propName).c_str(), propValue.asString());
+                        } else if(propValue.isNull()) {
+                            configTable.SetValue((*propName).c_str(), nullptr);
+                        }
+                    }
+
+                    enemySpawner->setInstanceConfig(configTable);
+                }
+
                 spawner = enemySpawner;
 
                 return spawner;

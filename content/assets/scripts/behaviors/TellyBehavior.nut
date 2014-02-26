@@ -24,9 +24,22 @@ class TellyEnemyBehavior extends EnemyBehavior {
     timer = 0.0;
     direction = Directions.Up;
 
+    VELOCITY_X = 0.2;
+
     constructor(classConfig = {}) {
         base.constructor(classConfig);
         ::log("TellyEnemyBehavior constructor called.");
+    }
+
+    function applyConfig(config = {}) {
+        ::log("telly's applyConfig");
+        base.applyConfig(config);
+
+        if("velocityX" in config) {
+                    ::log("has velocityX");
+
+            VELOCITY_X = config["velocityX"];
+        }
     }
 
     /**
@@ -75,10 +88,10 @@ class TellyEnemyBehavior extends EnemyBehavior {
         if(abs(distanceX) > abs(distanceY)) {
             if(distanceX > 0.0) {
                 host.direction = Directions.Right;
-                host.velocityX = 0.2;
+                host.velocityX = VELOCITY_X;
             } else {
                 host.direction = Directions.Left;
-                host.velocityX = -0.2;
+                host.velocityX = -VELOCITY_X;
             }
             host.velocityY = 0.0;
         } else {
