@@ -64,14 +64,14 @@ namespace hikari {
          * a valid GMESoundStream pointer is returned. Otherwise, a nullptr is
          * returned and no music is played.
          */
-        std::shared_ptr<GMESoundStream> playMusic(const std::string & name);
+        std::shared_ptr<GMESoundStream> playMusic(const std::string & name, float volume = 100.0f);
 
         /**
          * Tries to play a sample by looking it up by name. If the sample is found,
          * a valid GMESoundStream pointer is returned. Otherwise, a nullptr is
          * returned and no sample is played.
          */
-        std::shared_ptr<GMESoundStream> playSample(const std::string & name);
+        std::shared_ptr<GMESoundStream> playSample(const std::string & name, float volume = 100.0f);
 
         void stopMusic();
         void stopSample();
