@@ -8,7 +8,6 @@
 #include "hikari/client/game/events/EventData.hpp"
 #include "hikari/client/game/events/EntityDeathEventData.hpp"
 #include "hikari/client/game/events/EntityStateChangeEventData.hpp"
-#include "hikari/client/game/events/WeaponFireEventData.hpp"
 #include "hikari/core/game/Animation.hpp"
 #include "hikari/core/game/map/Room.hpp"
 #include "hikari/core/math/NESNumber.hpp"
