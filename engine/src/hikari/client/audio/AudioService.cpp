@@ -9,11 +9,14 @@ namespace hikari {
     const unsigned int AudioService::MUSIC_BUFFER_SIZE = 2048 * 2;  // some platforms need larger buffer
     const unsigned int AudioService::SAMPLE_BUFFER_SIZE = 2048 * 2; // so we'll double it for now.
     const unsigned int AudioService::AUDIO_SAMPLE_RATE = 44000;
+    const float AudioService::DEFAULT_VOLUME = 100.0f;
 
     AudioService::AudioService(const Json::Value &configuration)
         : musicLoaded(false)
         , samplesLoaded(false)
-        , enabledFlag(true)
+        , mutedFlag(false)
+        , sampleVolume(DEFAULT_VOLUME)
+        , musicVolume(DEFAULT_VOLUME)
         , musicStream(MUSIC_BUFFER_SIZE, 1)
         , sampleStream(SAMPLE_BUFFER_SIZE, 12)
         , library(nullptr)
@@ -40,27 +43,19 @@ namespace hikari {
     }
 
     bool AudioService::isValidConfiguration(const Json::Value &configuration) const {
-        bool valid = configuration.isMember("music") 
-                && configuration.isMember("samples") 
+        bool valid = configuration.isMember("music")
+                && configuration.isMember("samples")
                 && configuration.isMember("library")
-                && configuration["music"].isString() 
+                && configuration["music"].isString()
                 && configuration["samples"].isString()
                 && configuration["library"].isString();
 
         return valid;
     }
 
-    void AudioService::playMusic(MusicId id) {
-        // if(isEnabled() && isMusicLoaded()) {
-        //     musicStream.stop();
-        //     musicStream.setCurrentTrack(id);
-        //     musicStream.play();
-        // }
-    }
-
     void AudioService::playMusic(const std::string & name) {
-        if(isEnabled() && library->isEnabled()) {
-            const auto stream = library->playMusic(name);
+        if(library->isEnabled()) {
+            const auto stream = library->playMusic(name, getMusicVolume());
 
             if(stream) {
                 stream->play();
@@ -69,21 +64,24 @@ namespace hikari {
     }
 
     void AudioService::stopMusic() {
-        // musicStream.stopAllSamplers();
-        // musicStream.stop();
         library->stopMusic();
     }
 
-    void AudioService::playSample(SampleId id) {
-        // if(isEnabled() && isSamplesLoaded()) {
-        //     sampleStream.setCurrentTrack(id);
-        //     sampleStream.play();
-        // }
+    void AudioService::setMusicVolume(float volume) {
+        musicVolume = volume;
+
+        if(library->isEnabled()) {
+            library->setMusicVolume(musicVolume);
+        }
+    }
+
+    float AudioService::getMusicVolume() const {
+        return isMuted() ? 0.0f : musicVolume;
     }
 
     void AudioService::playSample(const std::string & name) {
-        if(isEnabled() && library->isEnabled()) {
-            const auto stream = library->playSample(name);
+        if(library->isEnabled()) {
+            const auto stream = library->playSample(name, getSampleVolume());
 
             if(stream) {
                 stream->play();
@@ -91,9 +89,19 @@ namespace hikari {
         }
     }
 
+    void AudioService::setSampleVolume(float volume) {
+        sampleVolume = volume;
+
+        if(library->isEnabled()) {
+            library->setSampleVolume(sampleVolume);
+        }
+    }
+
+    float AudioService::getSampleVolume() const {
+        return isMuted() ? 0.0f : sampleVolume;
+    }
 
     void AudioService::stopAllSamples() {
-        // sampleStream.stop();
         library->stopSample();
     }
 
@@ -105,19 +113,19 @@ namespace hikari {
         return samplesLoaded;
     }
 
-    void AudioService::disable() {
-        enabledFlag = false;
+    void AudioService::mute() {
+        mutedFlag = false;
 
-        stopAllSamples();
-        stopMusic();
+        // stopAllSamples();
+        // stopMusic();
     }
 
-    void AudioService::enable() {
-        enabledFlag = true;
+    void AudioService::unmute() {
+        mutedFlag = true;
     }
 
-    bool AudioService::isEnabled() const {
-        return enabledFlag;
+    bool AudioService::isMuted() const {
+        return mutedFlag;
     }
 
 } // hikari

@@ -44,7 +44,7 @@ namespace hikari {
 
         if(reader.parse(*fileContents, root, false)) {
             auto nsfCount = root.size();
-            
+
             for(decltype(nsfCount) samplerIndex = 0; samplerIndex < nsfCount; ++samplerIndex) {
                 const Json::Value & currentLibrary = root[samplerIndex];
                 const std::string nsfFile = currentLibrary[PROP_FILE].asString();
@@ -121,7 +121,7 @@ namespace hikari {
         return isEnabledFlag;
     }
 
-    std::shared_ptr<GMESoundStream> SoundLibrary::playMusic(const std::string & name) {
+    std::shared_ptr<GMESoundStream> SoundLibrary::playMusic(const std::string & name, float volume) {
         const auto & iterator = music.find(name);
 
         if(iterator != std::end(music)) {
@@ -133,6 +133,7 @@ namespace hikari {
 
             stopMusic();
             stream->setCurrentTrack(musicEntry->track);
+            stream->setVolume(volume);
             stream->play();
 
             return stream;
@@ -143,7 +144,7 @@ namespace hikari {
         return std::shared_ptr<GMESoundStream>(nullptr);
     }
 
-    std::shared_ptr<GMESoundStream> SoundLibrary::playSample(const std::string & name) {
+    std::shared_ptr<GMESoundStream> SoundLibrary::playSample(const std::string & name, float volume) {
         const auto & iterator = samplePlayers.find(name);
 
         if(iterator != std::end(samplePlayers)) {
@@ -160,12 +161,28 @@ namespace hikari {
             });
 
             // Play (or restart) the sound we want to play
+            player->setVolume(volume);
             player->play();
         } else {
             HIKARI_LOG(debug4) << "Didn't find the sample '" << name << "'.";
         }
 
         return std::shared_ptr<GMESoundStream>(nullptr);
+    }
+
+    void SoundLibrary::setMusicVolume(float volume) {
+        std::for_each(std::begin(samplers), std::end(samplers), [volume](const std::shared_ptr<GMESoundStream> & musicSampler) {
+            musicSampler->setVolume(volume);
+        });
+    }
+
+    void SoundLibrary::setSampleVolume(float volume) {
+        std::for_each(std::begin(samplePlayers), std::end(samplePlayers), [volume](decltype(samplePlayers)::value_type & pair) {
+            const auto & otherPlayer = pair.second;
+            const std::shared_ptr<sf::Sound> player = otherPlayer->player;
+
+            player->setVolume(volume);
+        });
     }
 
     void SoundLibrary::stopMusic() {
@@ -178,7 +195,7 @@ namespace hikari {
         std::for_each(std::begin(samplePlayers), std::end(samplePlayers), [](decltype(samplePlayers)::value_type & pair) {
             const auto & otherPlayer = pair.second;
             const std::shared_ptr<sf::Sound> player = otherPlayer->player;
-            
+
             player->stop();
         });
     }

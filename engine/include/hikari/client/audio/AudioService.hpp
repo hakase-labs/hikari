@@ -20,9 +20,12 @@ namespace hikari {
         static const unsigned int MUSIC_BUFFER_SIZE;
         static const unsigned int SAMPLE_BUFFER_SIZE;
         static const unsigned int AUDIO_SAMPLE_RATE;
+        static const float DEFAULT_VOLUME;
         bool musicLoaded;
         bool samplesLoaded;
-        bool enabledFlag;
+        bool mutedFlag;
+        float sampleVolume;
+        float musicVolume;
 
         NSFSoundStream musicStream;
         NSFSoundStream sampleStream;
@@ -37,12 +40,15 @@ namespace hikari {
 
         AudioService(const Json::Value &configuration);
         virtual ~AudioService();
-        
-        void playMusic(MusicId id);
+
         void playMusic(const std::string & name);
         void stopMusic();
-        void playSample(SampleId id);
+        void setMusicVolume(float volume);
+        float getMusicVolume() const;
+
         void playSample(const std::string & name);
+        void setSampleVolume(float volume);
+        float getSampleVolume() const;
         void stopAllSamples();
 
         bool isMusicLoaded() const;
@@ -52,26 +58,26 @@ namespace hikari {
          * Disables all audio and stops any playing music and samples. When
          * disabled, any requests to play music or samples are ignored.
          *
-         * @see AudioService::enable
-         * @see AudioService::isEnabled
+         * @see AudioService::unmute
+         * @see AudioService::isMuted
          */
-        void disable();
+        void mute();
 
         /**
          * Enables music and sample playback.
          *
-         * @see AudioService::disable
-         * @see AudioService::isEnabled
+         * @see AudioService::mute
+         * @see AudioService::isMuted
          */
-        void enable();
+        void unmute();
 
         /**
          * Checks to see if audio is enabled or not. When disabled, any requests
          * to play music or samples are ignored.
-         * 
+         *
          * @return true if currently enabled, false otherwise
          */
-        bool isEnabled() const;
+        bool isMuted() const;
     };
 
 } // hikari
