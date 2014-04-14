@@ -1245,7 +1245,7 @@ namespace hikari {
                             if(auto sound = audioService.lock()) {
                                 sound->playSample(weapon->getUsageSound());
                             }
-                
+
                             HIKARI_LOG(debug4) << "Hero's shot count: " << hero->getActiveShotCount();
                         }
                     }
@@ -1882,6 +1882,11 @@ namespace hikari {
                     index++;
                 }
 
+                if(auto gp = gamePlayState.gameProgress.lock()) {
+                    int currentWeaponEnergy = gp->getWeaponEnergy(gp->getCurrentWeapon());
+                    gamePlayState.hero->setHasAvailableWeaponEnergy(currentWeaponEnergy);
+                }
+                
                 gamePlayState.hero->update(dt);
 
                 //

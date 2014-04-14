@@ -39,6 +39,7 @@ namespace hikari {
         , isInvincible(false)
         , isUnderWater(false)
         , wasUnderWaterLastFrame(false)
+        , hasAvailableWeaponEnergy(true)
         , climbableRegion(0, 0, 0, 0)
         , actionController(nullptr)
         , mobilityState(nullptr)
@@ -239,6 +240,10 @@ namespace hikari {
 
     bool Hero::isOnGround() {
         return body.isOnGround();
+    }
+
+    void Hero::setHasAvailableWeaponEnergy(bool hasEnergy) {
+        hasAvailableWeaponEnergy = hasEnergy;
     }
 
     void Hero::playAnimation(float dt) {
@@ -527,7 +532,7 @@ namespace hikari {
             auto const * controller = hero.actionController.get();
 
             // TODO: Actually fix this to use a real cooldown
-            if(controller->shouldShootWeapon()) {
+            if(controller->shouldShootWeapon() && hero.hasAvailableWeaponEnergy) {
                 cooldownTimer = cooldown;
                 hero.fireWeapon();
             }
@@ -565,7 +570,7 @@ namespace hikari {
         if(hero.actionController) {
             auto const * controller = hero.actionController.get();
 
-            if(controller->shouldShootWeapon() && hero.canFireWeapon() && !hero.isSliding) {
+            if(controller->shouldShootWeapon() && hero.canFireWeapon() && !hero.isSliding && hero.hasAvailableWeaponEnergy) {
                 hero.requestShootingStateChange(std::unique_ptr<ShootingState>(new IsShootingState(hero)));
                 return ShootingState::NEXT;
             }
