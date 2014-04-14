@@ -114,14 +114,21 @@ namespace hikari {
     }
 
     void AudioService::mute() {
-        mutedFlag = false;
+        mutedFlag = true;
 
-        // stopAllSamples();
-        // stopMusic();
+        if(library->isEnabled()) {
+            library->setMusicVolume(getMusicVolume());
+            library->setSampleVolume(getSampleVolume());
+        }
     }
 
     void AudioService::unmute() {
-        mutedFlag = true;
+        mutedFlag = false;
+
+        if(library->isEnabled()) {
+            library->setMusicVolume(getMusicVolume());
+            library->setSampleVolume(getSampleVolume());
+        }
     }
 
     bool AudioService::isMuted() const {
