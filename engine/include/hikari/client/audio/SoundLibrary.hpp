@@ -73,6 +73,18 @@ namespace hikari {
          */
         std::shared_ptr<GMESoundStream> playSample(const std::string & name, float volume = 100.0f);
 
+        /**
+         * Sets the volume for any currently playing music.
+         * @param volume the desired volume, typically between 0.0 and 100.0
+         */
+        void setMusicVolume(float volume);
+
+        /**
+         * Sets the volume for any currently playing sample.
+         * @param volume the desired volume, typically between 0.0 and 100.0
+         */
+        void setSampleVolume(float volume);
+
         void stopMusic();
         void stopSample();
     };

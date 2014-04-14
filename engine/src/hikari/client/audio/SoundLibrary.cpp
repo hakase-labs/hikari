@@ -170,6 +170,21 @@ namespace hikari {
         return std::shared_ptr<GMESoundStream>(nullptr);
     }
 
+    void SoundLibrary::setMusicVolume(float volume) {
+        std::for_each(std::begin(samplers), std::end(samplers), [volume](const std::shared_ptr<GMESoundStream> & musicSampler) {
+            musicSampler->setVolume(volume);
+        });
+    }
+
+    void SoundLibrary::setSampleVolume(float volume) {
+        std::for_each(std::begin(samplePlayers), std::end(samplePlayers), [volume](decltype(samplePlayers)::value_type & pair) {
+            const auto & otherPlayer = pair.second;
+            const std::shared_ptr<sf::Sound> player = otherPlayer->player;
+
+            player->setVolume(volume);
+        });
+    }
+
     void SoundLibrary::stopMusic() {
         std::for_each(std::begin(samplers), std::end(samplers), [](const std::shared_ptr<GMESoundStream> & musicSampler) {
             musicSampler->stop();
