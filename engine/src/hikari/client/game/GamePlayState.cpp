@@ -1242,6 +1242,10 @@ namespace hikari {
                             // Use up the weapon energy
                             gp->setWeaponEnergy(currentWeapon, weaponEnergy - weapon->getUsageCost());
 
+                            if(auto sound = audioService.lock()) {
+                                sound->playSample(weapon->getUsageSound());
+                            }
+
                             HIKARI_LOG(debug4) << "Hero's shot count: " << hero->getActiveShotCount();
                         }
                     }
@@ -1257,14 +1261,13 @@ namespace hikari {
                     if(auto enemyGoPtr = possibleEnemyPtr.lock()) {
                         if(std::shared_ptr<Enemy> enemy = std::static_pointer_cast<Enemy>(enemyGoPtr)) {
                             enemy->observeShot(shot);
+
+                            if(auto sound = audioService.lock()) {
+                                sound->playSample(weapon->getUsageSound());
+                            }
                         }
                     }
                 }
-
-                if(auto sound = audioService.lock()) {
-                    sound->playSample(weapon->getUsageSound());
-                }
-
             } else {
                 HIKARI_LOG(debug4) << "Tried to fire weapon with bad ID (" << eventData->getWeaponId() << ")";
             }
@@ -1879,6 +1882,11 @@ namespace hikari {
                     index++;
                 }
 
+                if(auto gp = gamePlayState.gameProgress.lock()) {
+                    int currentWeaponEnergy = gp->getWeaponEnergy(gp->getCurrentWeapon());
+                    gamePlayState.hero->setHasAvailableWeaponEnergy(currentWeaponEnergy);
+                }
+                
                 gamePlayState.hero->update(dt);
 
                 //

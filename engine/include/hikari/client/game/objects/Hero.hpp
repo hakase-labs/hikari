@@ -45,6 +45,7 @@ namespace hikari {
 
         bool isUnderWater;
         bool wasUnderWaterLastFrame;
+        bool hasAvailableWeaponEnergy;
 
 #ifdef HIKARI_DEBUG_HERO_PHYSICS
         int countAscendingFrames;
@@ -219,6 +220,7 @@ namespace hikari {
         bool isVulnerable();
         bool isNowShooting();
         bool isOnGround();
+        void setHasAvailableWeaponEnergy(bool hasEnergy);
 
         virtual void update(float dt);
         virtual void render(sf::RenderTarget &target);
