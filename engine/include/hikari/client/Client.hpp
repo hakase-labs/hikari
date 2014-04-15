@@ -34,7 +34,6 @@ namespace hikari {
          * Initializes the client from the configuration file.
          */
         void initConfig();
-
         void initEventBus();
 
         /**

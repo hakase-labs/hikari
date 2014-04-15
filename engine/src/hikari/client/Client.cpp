@@ -204,8 +204,11 @@ namespace hikari {
         auto damageTable       = std::make_shared<DamageTable>();
         auto inputService      = std::make_shared<InputService>(globalInput);
         auto eventBusService   = std::make_shared<EventBusService>(globalEventBus);
-        //audioService->disable();
+
         gameProgress->setEventBus(globalEventBus);
+
+        audioService->setSampleVolume(clientConfig.getSampleVolume());
+        audioService->setMusicVolume(clientConfig.getMusicVolume());
 
         services.registerService(Services::AUDIO,             audioService);
         services.registerService(Services::GAMEPROGRESS,      gameProgress);
@@ -360,6 +363,7 @@ namespace hikari {
         float accumulator = 0.0f;
 
         auto guiService = services.locateService<GuiService>(Services::GUISERVICE).lock();
+        auto audioService = services.locateService<AudioService>(Services::AUDIO).lock();
 
         gcn::Gui & gui = guiService->getGui();
 
@@ -382,6 +386,20 @@ namespace hikari {
                     }
 
                     if(event.type == sf::Event::KeyPressed || event.type == sf::Event::KeyReleased) {
+                        // Audio tweaking code
+                        if(event.key.code == sf::Keyboard::Y) {
+                            audioService->setMusicVolume(audioService->getMusicVolume() + 10.0f);
+                        }
+                        if(event.key.code == sf::Keyboard::U) {
+                            audioService->setMusicVolume(audioService->getMusicVolume() - 10.0f);
+                        }
+                        if(event.key.code == sf::Keyboard::H) {
+                            audioService->mute();
+                        }
+                        if(event.key.code == sf::Keyboard::J) {
+                            audioService->unmute();
+                        }
+
                         globalInput->processEvent(event);
                         controller.handleEvent(event);
                     }
