@@ -84,7 +84,6 @@ namespace hikari {
         guiMenu->setWidth(mainPanel->getWidth() - 24);
         guiMenu->setHeight(mainPanel->getHeight() - 16);
         guiMenu->setBackgroundColor(gcn::Color(0, 0, 0, 0));
-        // guiMenu->addActionListener(guiActionListener.get());
         guiMenu->enableWrapping();
 
         guiActionListener.reset(new gcn::FunctorActionListener([&](const gcn::ActionEvent& event) {
@@ -194,7 +193,7 @@ namespace hikari {
             guiWrapper->setEnabled(false);
             guiMenu->setEnabled(false);
         }
-        
+
         if(auto audio = audioService.lock()) {
             audio->stopMusic();
         }

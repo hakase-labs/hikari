@@ -49,7 +49,7 @@ namespace FactoryHelpers {
         auto imageCachePtr        = services.locateService<ImageCache>(Services::IMAGECACHE);
         auto squirrelPtr          = services.locateService<SquirrelService>(Services::SCRIPTING);
         auto animationSetCachePtr = services.locateService<AnimationSetCache>(Services::ANIMATIONSETCACHE);
-        
+
         if(auto imageCache = imageCachePtr.lock()) {
             if(auto squirrel = squirrelPtr.lock()) {
                 if(auto animationSetCache = animationSetCachePtr.lock()) {
@@ -95,7 +95,7 @@ namespace FactoryHelpers {
                                     effectInstance.reset(new NothingEffect());
                                 } else {
                                     try {
-                                        Sqrat::Table configTable;
+                                        Sqrat::Table configTable(squirrel->getVmInstance());
 
                                         if(!effectConfig.isNull()) {
                                             configTable = SquirrelUtils::jsonToSquirrel(effectConfig);
@@ -161,7 +161,7 @@ namespace FactoryHelpers {
         auto imageCachePtr        = services.locateService<ImageCache>(Services::IMAGECACHE);
         auto squirrelPtr          = services.locateService<SquirrelService>(Services::SCRIPTING);
         auto animationSetCachePtr = services.locateService<AnimationSetCache>(Services::ANIMATIONSETCACHE);
-        
+
         if(auto imageCache = imageCachePtr.lock()) {
             if(auto squirrel = squirrelPtr.lock()) {
                 if(auto animationSetCache = animationSetCachePtr.lock()) {
@@ -213,7 +213,7 @@ namespace FactoryHelpers {
                                             const auto behaviorName = behavior["name"].asString();
                                             const auto enemyConfig = behavior["config"];
 
-                                            Sqrat::Table configTable;
+                                            Sqrat::Table configTable(squirrel->getVmInstance());
 
                                             if(!enemyConfig.isNull()) {
                                                 configTable = SquirrelUtils::jsonToSquirrel(enemyConfig);
@@ -241,7 +241,7 @@ namespace FactoryHelpers {
                                         instance->setDirection(Directions::Down);
                                         instance->setBonusTableIndex(bonusTableIndex);
                                         instance->changeAnimation("idle");
-                                        
+
                                         if(deathType == "Hero") {
                                             instance->setDeathType(EntityDeathType::Hero);
                                         }
@@ -378,7 +378,7 @@ namespace FactoryHelpers {
         auto imageCachePtr        = services.locateService<ImageCache>(Services::IMAGECACHE);
         auto squirrelPtr          = services.locateService<SquirrelService>(Services::SCRIPTING);
         auto animationSetCachePtr = services.locateService<AnimationSetCache>(Services::ANIMATIONSETCACHE);
-        
+
         if(auto imageCache = imageCachePtr.lock()) {
             if(auto squirrel = squirrelPtr.lock()) {
                 if(auto animationSetCache = animationSetCachePtr.lock()) {
@@ -407,8 +407,8 @@ namespace FactoryHelpers {
                                         const auto animationSet      = templateObject["animationSet"].asString();
                                         const auto animationName     = templateObject["animationName"].asString();
                                         const auto boundingBoxObject = templateObject["boundingBox"];
-                                        const auto ageless           = templateObject.get("ageless", true).asBool(); 
-                                        const auto maximumAge        = static_cast<float>(templateObject.get("maximumAge", 0.0f).asDouble());  
+                                        const auto ageless           = templateObject.get("ageless", true).asBool();
+                                        const auto maximumAge        = static_cast<float>(templateObject.get("maximumAge", 0.0f).asDouble());
                                         const auto reflectionType    = templateObject.get("reflectionType", "none").asString();
                                         const auto deathType         = templateObject.get("deathType", "Nothing").asString();
 
@@ -423,7 +423,7 @@ namespace FactoryHelpers {
                                             static_cast<float>(boundingBoxObject["originX"].asDouble()),
                                             static_cast<float>(boundingBoxObject["originY"].asDouble())
                                         );
-                                        
+
                                         auto instance = std::make_shared<hikari::Projectile>();
                                         auto animationSetPtr = animationSetCache->get(animationSet);
                                         auto spriteTexture = imageCache->get(animationSetPtr->getImageFileName());
@@ -440,7 +440,7 @@ namespace FactoryHelpers {
                                             // Default; do nothing
                                         } else if(reflectionType == "x") {
                                             instance->setReflectionType(Projectile::REFLECT_X);
-                                            
+
                                         } else if(reflectionType == "y") {
                                             instance->setReflectionType(Projectile::REFLECT_Y);
                                         } else if(reflectionType == "xy") {

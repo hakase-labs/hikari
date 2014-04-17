@@ -21,6 +21,9 @@ namespace hikari {
         , instance()
         , classConfig(classConfig)
     {
+        if(classConfig.IsNull()) {
+            this->classConfig = Sqrat::Table(vm);
+        }
         if(!bindScriptClassInstance()) {
             // throw?
             HIKARI_LOG(debug4) << "ScriptedEnemyBrain failed to bind.";
@@ -33,12 +36,15 @@ namespace hikari {
         , instance()
         , classConfig(proto.classConfig)
     {
+        if(classConfig.IsNull()) {
+            classConfig = Sqrat::Table(vm);
+        }
         if(!bindScriptClassInstance()) {
             // throw?
             HIKARI_LOG(error) << "ScriptedEnemyBrain failed to bind.";
         }
     }
-    
+
     ScriptedEnemyBrain::~ScriptedEnemyBrain() {
 
     }
@@ -50,12 +56,31 @@ namespace hikari {
             isValid = false;
         } else {
             try {
-                Sqrat::Function constructor(Sqrat::RootTable(vm), scriptClassName.c_str());
 
-                if(!constructor.IsNull()) {
+
+
+                Sqrat::Object classObject = Sqrat::RootTable(vm).GetSlot(scriptClassName.c_str());
+
+                if(!classObject.IsNull()) {
                     Sqrat::Object& configRef = classConfig;
+
+                    // Create an instance of the class, and run its constructor
+                    Sqrat::PushVar(vm, classObject);
+                    sq_createinstance(vm, -1);
+                    instance = Sqrat::Var<Sqrat::Object>(vm, -1).value;
+
+                    HIKARI_LOG(debug3) << "bindScriptClassInstance :: Is instance null? " << instance.IsNull();
                     HIKARI_LOG(debug3) << "bindScriptClassInstance :: Is classConfig null? " << classConfig.IsNull();
-                    instance = constructor.Evaluate<Sqrat::Object>(configRef);
+
+                    Sqrat::Function(instance, "constructor").Execute(configRef);
+                    sq_pop(vm, 2);
+
+                    if(Sqrat::Error::Instance().Occurred(vm)) {
+                        HIKARI_LOG(debug2) << "Error executing constructor for '" << scriptClassName << "'. " << Sqrat::Error::Instance().Message(vm);
+
+                    } else {
+                        HIKARI_LOG(debug2) << "Everything was cool";
+                    }
 
                     if(!instance.IsNull()) {
                         proxyAttach = Sqrat::Function(instance, FUNCTION_NAME_ATTACH);
@@ -70,8 +95,8 @@ namespace hikari {
                 } else {
                     HIKARI_LOG(debug2) << "Could not find a constructor for '" << scriptClassName << "'.";
                 }
-            } catch(Sqrat::Exception & squirrelException) {
-                HIKARI_LOG(debug1) << "Could not create an instance of '" << scriptClassName << "'. Reason: " << squirrelException.Message();
+            } catch(...) {
+                HIKARI_LOG(debug1) << "Could not create an instance of '" << scriptClassName << "'.";
             }
         }
 
