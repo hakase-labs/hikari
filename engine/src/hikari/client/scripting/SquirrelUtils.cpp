@@ -8,7 +8,7 @@ namespace SquirrelUtils {
 
     Sqrat::Object jsonToSquirrel(const Json::Value & json) {
         if(!json.isNull() && (json.isArray() || json.isObject())) {
-            Sqrat::Table squirrelTable;
+            Sqrat::Table squirrelTable(Sqrat::DefaultVM::Get());
 
             const auto configPropertyNames = json.getMemberNames();
 

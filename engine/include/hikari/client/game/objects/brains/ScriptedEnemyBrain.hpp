@@ -33,8 +33,8 @@ namespace hikari {
         /** A handle to the instance object we create in the VM */
         Sqrat::Object instance;
 
-        /** A table used to pass instance-level configuration to the behavior */
-        Sqrat::Table instanceConfig;
+        /** A table used to pass class-level configuration to the behavior */
+        Sqrat::Table classConfig;
 
         Sqrat::Function proxyAttach;
         Sqrat::Function proxyDetach;
@@ -46,7 +46,7 @@ namespace hikari {
         /**
          * Creates an instance of the behavior in the VM and binds it to this
          * object.
-         * 
+         *
          * @return true if binding was successful, false if anything went wrong
          */
         bool bindScriptClassInstance();
@@ -56,8 +56,8 @@ namespace hikari {
          * an instance of. Optionally accepts a table containing values for any
          * class-level configuration (not instance-level configuration).
          */
-        ScriptedEnemyBrain(SquirrelService& service, const std::string& scriptClassName, const Sqrat::Table& config = Sqrat::Table());
-        
+        ScriptedEnemyBrain(SquirrelService& service, const std::string& scriptClassName, const Sqrat::Table& classConfig = Sqrat::Table());
+
         /**
          * Copy constructor. Causes a new instance of the scripted class to be
          * instantiated, and bind to that instance.

@@ -25,6 +25,27 @@
 //  distribution.
 //
 
+/*! \mainpage Sqrat Main Page
+ *
+ * \section intro_sec Introduction
+ *
+ * Sqrat is a C++ library for Squirrel that facilitates exposing classes and other native functionality to Squirrel scripts. It models the underlying Squirrel API closely to give access to a wider range of functionality than other binding libraries. In addition to the binding library, Sqrat features a threading library and a module import library.
+ *
+ * \section install_sec Installation
+ *
+ * Sqrat only contains C++ headers so for installation you just need to copy the files in the include directory to some common header path.
+ *
+ * \section discuss_sec Discussion and User Support
+ *
+ * Discussion about Sqrat happens at the Squirrel language forum, the Bindings section
+ * http://squirrel-lang.org/forums/default.aspx?g=topics&f=4
+ *
+ * \section bug_sec Bug Reporting
+ *
+ * Bug reports or feature enhancement requests and patches can be submitted at the SourceForge Sqrat site
+ * https://sourceforge.net/p/scrat/sqrat/
+ */
+
 #if !defined(_SCRAT_MAIN_H_)
 #define _SCRAT_MAIN_H_
 

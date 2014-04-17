@@ -226,7 +226,7 @@ namespace hikari {
     void Entity::fireWeapon() {
         if(canFireWeapon()) {
             if(auto events = eventBus.lock()) {
-                
+
                 // Adjust offset for direction
                 Vector2<float> offset = getActionSpot();
 
@@ -289,7 +289,7 @@ namespace hikari {
         body.setVelocity(vx, getVelocityY());
     }
 
-    const float Entity::getVelocityX() const {
+    float Entity::getVelocityX() const {
         return body.getVelocity().getX();
     }
 
@@ -297,7 +297,7 @@ namespace hikari {
         body.setVelocity(getVelocityX(), vy);
     }
 
-    const float Entity::getVelocityY() const {
+    float Entity::getVelocityY() const {
         return body.getVelocity().getY();
     }
 
@@ -427,7 +427,7 @@ namespace hikari {
 
         renderEntity(target);
 
-        #ifdef HIKARI_DEBUG_ENTITIES        
+        #ifdef HIKARI_DEBUG_ENTITIES
         // Draw position in front of sprite
         if(debug) {
             target.draw(boxPosition);
@@ -494,7 +494,7 @@ namespace hikari {
             if(const auto & room = entity->getRoom()) {
                 int gridSize = room->getGridSize();
                 return TileAttribute::hasAttribute(
-                    room->getAttributeAt(x / gridSize, y / gridSize), 
+                    room->getAttributeAt(x / gridSize, y / gridSize),
                     static_cast<TileAttribute::TileAttribute>(attribute)
                 );
             }

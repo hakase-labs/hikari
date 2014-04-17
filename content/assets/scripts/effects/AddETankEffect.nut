@@ -13,4 +13,4 @@ class AddETankEffect extends EffectBase {
     }
 }
 
-// ::log("AddETankEffect processed!");
+::log("AddETankEffect processed!");
