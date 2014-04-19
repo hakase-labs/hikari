@@ -3,8 +3,8 @@
     "videoMode" : "2x",
     "showfps" : true,
     "audio": {
-        "samples": 100,
-        "music": 100
+        "samples": 0,
+        "music": 0
     },
     "bindings" : {
         "keyboard" : {

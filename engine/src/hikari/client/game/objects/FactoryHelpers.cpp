@@ -98,7 +98,7 @@ namespace FactoryHelpers {
                                         Sqrat::Table configTable(squirrel->getVmInstance());
 
                                         if(!effectConfig.isNull()) {
-                                            configTable = SquirrelUtils::jsonToSquirrel(effectConfig);
+                                            configTable = SquirrelUtils::jsonToSquirrel(squirrel->getVmInstance(), effectConfig);
                                         }
 
                                         effectInstance.reset(new ScriptedEffect(*squirrel, effect, configTable));
@@ -216,7 +216,7 @@ namespace FactoryHelpers {
                                             Sqrat::Table configTable(squirrel->getVmInstance());
 
                                             if(!enemyConfig.isNull()) {
-                                                configTable = SquirrelUtils::jsonToSquirrel(enemyConfig);
+                                                configTable = SquirrelUtils::jsonToSquirrel(squirrel->getVmInstance(), enemyConfig);
                                             }
 
                                             brain = std::make_shared<ScriptedEnemyBrain>(*squirrel, behaviorName, configTable);

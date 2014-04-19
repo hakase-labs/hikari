@@ -29,6 +29,8 @@
 #include "hikari/client/scripting/AudioServiceScriptProxy.hpp"
 #include "hikari/client/scripting/GameProgressScriptProxy.hpp"
 #include "hikari/client/scripting/GamePlayStateScriptProxy.hpp"
+#include "hikari/client/game/objects/Enemy.hpp"
+
 
 #include "hikari/core/game/AnimationLoader.hpp"
 #include "hikari/core/game/SliceStateTransition.hpp"
@@ -40,6 +42,9 @@
 #include "hikari/core/util/Log.hpp"
 #include "hikari/core/util/PhysFS.hpp"
 #include "hikari/core/util/TilesetCache.hpp"
+
+#include <squirrel.h>
+#include <sqrat.h>
 
 #include <SFML/Graphics/Color.hpp>
 
@@ -208,8 +213,8 @@ namespace hikari {
 
         gameProgress->setEventBus(globalEventBus);
 
-        audioService->setSampleVolume(clientConfig.getSampleVolume());
-        audioService->setMusicVolume(clientConfig.getMusicVolume());
+        // audioService->setSampleVolume(clientConfig.getSampleVolume());
+        // audioService->setMusicVolume(clientConfig.getMusicVolume());
 
         services.registerService(Services::AUDIO,             audioService);
         services.registerService(Services::GAMEPROGRESS,      gameProgress);
@@ -301,13 +306,13 @@ namespace hikari {
     }
 
     void Client::loadObjectTemplates() {
-        if(auto itemFactory = services.locateService<ItemFactory>(Services::ITEMFACTORY).lock()) {
-            FactoryHelpers::populateCollectableItemFactory(
-                gameConfig->getItemTemplatePath(),
-                std::weak_ptr<ItemFactory>(itemFactory),
-                services
-            );
-        }
+        // if(auto itemFactory = services.locateService<ItemFactory>(Services::ITEMFACTORY).lock()) {
+        //     FactoryHelpers::populateCollectableItemFactory(
+        //         gameConfig->getItemTemplatePath(),
+        //         std::weak_ptr<ItemFactory>(itemFactory),
+        //         services
+        //     );
+        // }
 
         if(auto enemyFactory = services.locateService<EnemyFactory>(Services::ENEMYFACTORY).lock()) {
             FactoryHelpers::populateEnemyFactory(
@@ -316,6 +321,76 @@ namespace hikari {
                 services
             );
         }
+
+            auto vm = services.locateService<SquirrelService>(Services::SCRIPTING).lock()->getVmInstance();
+        Sqrat::Script clientScript(vm);
+        clientScript.CompileString(
+            "class DerivedClient extends EnemyBehavior {"
+            "  updateFunc = null;"
+            "\n"
+            "  constructor() {\n"
+            "    base.constructor();\n"
+            "  }\n"
+            "\n"
+            "  function attachHost(host, config = {}) {\n"
+            "    base.attachHost(host, config);\n"
+            "    ::print(\"Called the right attachHost!\");\n"
+            "    updateFunc = _printHP;\n"
+            "  }\n"
+            "\n"
+            "  function update(dt) {\n"
+            "    if(updateFunc) {\n"
+            "      updateFunc();\n"
+            "    }\n"
+            "    base.update(dt);\n"
+            "  }\n"
+            "  function _printHP() {\n"
+            "    ::print(host.hitPoints);\n"
+            "    ::print(host.weaponId);\n"
+            "  }\n"
+            "}"
+        );
+        clientScript.Run();
+
+        Enemy * dynamicEnemy = new Enemy();
+        dynamicEnemy->setHitPoints(55);
+
+        Sqrat::PushVar(vm, Sqrat::RootTable(vm).GetSlot("DerivedClient"));
+        sq_createinstance(vm, -1);
+
+        Sqrat::Table configTable(vm);
+
+        Sqrat::Object instance = Sqrat::Var<Sqrat::Object>(vm, -1).value;
+        Sqrat::Function(instance, "constructor").Execute();
+        sq_pop(vm, 2);
+        
+        Sqrat::Function attachProxy;
+        attachProxy = Sqrat::Function(instance, "attachHost");
+        //Sqrat::Function attachFunction2 = attachFunction;
+        if(!attachProxy.IsNull()) {
+            attachProxy.Execute(dynamicEnemy, configTable);
+        }
+
+        if(Sqrat::Error::Instance().Occurred(vm)) {
+            std::cout << Sqrat::Error::Instance().Message(vm) << std::endl;
+        } else {
+            std::cout << "Everything went fine again!" << std::endl;
+        }
+
+        Sqrat::Function updateProxy;
+        updateProxy = Sqrat::Function(instance, "update");
+
+        if(!updateProxy.IsNull()) {
+            updateProxy.Execute(3.1415f);
+        }
+
+        if(Sqrat::Error::Instance().Occurred(vm)) {
+            std::cout << Sqrat::Error::Instance().Message(vm) << std::endl;
+        } else {
+            std::cout << "Everything went fine a third time!" << std::endl;
+        }
+
+        delete dynamicEnemy;
 
         if(auto particleFactory = services.locateService<ParticleFactory>(Services::PARTICLEFACTORY).lock()) {
             FactoryHelpers::populateParticleFactory(

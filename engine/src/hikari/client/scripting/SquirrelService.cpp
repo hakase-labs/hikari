@@ -120,25 +120,20 @@ namespace hikari {
             hikariTable.Bind(_SC("sound"),    audioSystemProxyTable);
             hikariTable.Bind(_SC("game"),     gameProxyTable);
 
-            HIKARI_LOG(script) << "Is it null? " << hikariTable.IsNull();
-            auto hi = Sqrat::RootTable().GetSlot("hikari");
-            HIKARI_LOG(script) << "Is it null? " << hi.IsNull();
-            Sqrat::RootTable().Bind(_SC("hikari"), hikariTable);
-            hi = Sqrat::RootTable().GetSlot("hikari");
-            HIKARI_LOG(script) << "Created global hikari table from service.";
-            HIKARI_LOG(script) << "Is it null? " << hi.IsNull();
+            Sqrat::RootTable(vm).Bind(_SC("hikari"), hikariTable);
+
             //
             // Constant/Enum bindings
             //
-            Sqrat::ConstTable()
-                .Enum(_SC("Directions"), Sqrat::Enumeration()
+            Sqrat::ConstTable(vm)
+                .Enum(_SC("Directions"), Sqrat::Enumeration(vm)
                     .Const(_SC("None"), Directions::None)
                     .Const(_SC("Up"), Directions::Up)
                     .Const(_SC("Right"), Directions::Right)
                     .Const(_SC("Down"), Directions::Down)
                     .Const(_SC("Left"), Directions::Left)
                 )
-                .Enum(_SC("Factions"), Sqrat::Enumeration()
+                .Enum(_SC("Factions"), Sqrat::Enumeration(vm)
                     .Const(_SC("World"), Factions::World)
                     .Const(_SC("Hero"), Factions::Hero)
                     .Const(_SC("Enemy"), Factions::Enemy)
@@ -147,39 +142,44 @@ namespace hikari {
             //
             // Utility bindings
             //
-            Sqrat::RootTable().Bind(
+            Sqrat::RootTable(vm).Bind(
                 _SC("Utils"),
-                Sqrat::Table()
+                Sqrat::Table(vm)
                     .Func(_SC("getOppositeDirection"), &Directions::opposite)
             );
 
             //
             // Class bindings
             //
-            Sqrat::RootTable().Bind(
+            Sqrat::RootTable(vm).Bind(
+                _SC("Entity"),
+                Sqrat::Class<Entity>(vm)
+                .Prop(_SC("velocityX"), &Entity::getVelocityX, &Entity::setVelocityX)
+                .Prop(_SC("velocityY"), &Entity::getVelocityY, &Entity::setVelocityY)
+                .Prop(_SC("isActive"), &Entity::isActive, &Entity::setActive)
+                .Prop(_SC("isGravitated"), &Entity::isGravitated, &Entity::setGravitated)
+                .Prop(_SC("isObstacle"), &Entity::isObstacle, &Entity::setObstacle)
+                .Prop(_SC("isPhasing"), &Entity::isPhasing, &Entity::setPhasing)
+                .Prop(_SC("isShielded"), &Entity::isShielded, &Entity::setShielded)
+                .Prop(_SC("weaponId"), &Entity::getWeaponId, &Entity::setWeaponId)
+                .Prop(_SC("direction"), &Entity::getDirection, &Entity::setDirection)
+                .Prop(_SC("faction"), &Entity::getFaction, &Entity::setFaction)
+                .Func(_SC("changeAnimation"), &Entity::changeAnimation)
+                .Func(_SC("getId"), &Entity::getId)
+                .Func(_SC("getActiveShotCount"), &Entity::getActiveShotCount)
+                .Func(_SC("fireWeapon"), &Entity::fireWeapon)
+                .GlobalFunc(_SC("getX"), &EntityHelpers::getX)
+                .GlobalFunc(_SC("getY"), &EntityHelpers::getY)
+                .GlobalFunc(_SC("setX"), &EntityHelpers::setX)
+                .GlobalFunc(_SC("setY"), &EntityHelpers::setY)
+                .GlobalFunc(_SC("checkIfTileAtPositionHasAttribute"), &EntityHelpers::checkIfTileAtPositionHasAttribute)
+            );
+
+            Sqrat::RootTable(vm).Bind(
                 _SC("Enemy"),
-                Sqrat::Class<Enemy>()
-                    .Prop(_SC("velocityX"), &Enemy::getVelocityX, &Enemy::setVelocityX)
-                    .Prop(_SC("velocityY"), &Enemy::getVelocityY, &Enemy::setVelocityY)
-                    .Prop(_SC("isActive"), &Enemy::isActive, &Enemy::setActive)
-                    .Prop(_SC("isGravitated"), &Enemy::isGravitated, &Enemy::setGravitated)
-                    .Prop(_SC("isObstacle"), &Enemy::isObstacle, &Enemy::setObstacle)
-                    .Prop(_SC("isPhasing"), &Enemy::isPhasing, &Enemy::setPhasing)
-                    .Prop(_SC("isShielded"), &Enemy::isShielded, &Enemy::setShielded)
-                    .Prop(_SC("weaponId"), &Enemy::getWeaponId, &Enemy::setWeaponId)
+                Sqrat::DerivedClass<Enemy, Entity>(vm)
                     .Prop(_SC("hitPoints"), &Enemy::getHitPoints, &Enemy::setHitPoints)
-                    .Prop(_SC("direction"), &Enemy::getDirection, &Enemy::setDirection)
-                    .Prop(_SC("faction"), &Entity::getFaction, &Entity::setFaction)
-                    .Func(_SC("changeAnimation"), &Enemy::changeAnimation)
-                    .Func(_SC("getId"), &Enemy::getId)
-                    .Func(_SC("getActiveShotCount"), &Entity::getActiveShotCount)
-                    .Func(_SC("fireWeapon"), &Enemy::fireWeapon)
                     .Func(_SC("handleObjectTouch"), &Enemy::handleObjectTouch)
-                    .GlobalFunc(_SC("getX"), &EntityHelpers::getX)
-                    .GlobalFunc(_SC("getY"), &EntityHelpers::getY)
-                    .GlobalFunc(_SC("setX"), &EntityHelpers::setX)
-                    .GlobalFunc(_SC("setY"), &EntityHelpers::setY)
-                    .GlobalFunc(_SC("checkIfTileAtPositionHasAttribute"), &EntityHelpers::checkIfTileAtPositionHasAttribute)
             );
         }
     }
@@ -194,9 +194,13 @@ namespace hikari {
 
             if(!fileContents.empty()) {
                 runScriptString(fileContents);
+
+                if(Sqrat::Error::Instance().Occurred(vm)) {
+                    HIKARI_LOG(debug2) << "Error running script: " << Sqrat::Error::Instance().Message(vm);
+                }
             } else {
                 // TODO: Need to handle this with an exception, etc.
-                HIKARI_LOG(error) << "Exception while executing script: " << fileName;// << sqEx.Message();
+                HIKARI_LOG(error) << "Exception while executing script: " << fileName;
             }
         }
     }
@@ -208,9 +212,18 @@ namespace hikari {
 
             try {
                 script.CompileString(scriptString);
+
+                if(Sqrat::Error::Instance().Occurred(vm)) {
+                    HIKARI_LOG(debug2) << "Error compiling script: " << Sqrat::Error::Instance().Message(vm);
+                }
+
                 script.Run();
+
+                if(Sqrat::Error::Instance().Occurred(vm)) {
+                    HIKARI_LOG(debug2) << "Error running script: " << Sqrat::Error::Instance().Message(vm);
+                }
             } catch(...) {
-                HIKARI_LOG(error) << "Exception while executing script: ";// << sqEx.Message();
+                HIKARI_LOG(error) << "Exception while executing script: ";
             }
         }
     }

@@ -42,7 +42,7 @@ class DadaEnemyBehavior extends EnemyBehavior {
     }
 
     function attachHost(newHost, instanceConfig = {}) {
-        base.attachHost(newHost);
+        base.attachHost(newHost, instanceConfig);
 
         if(host != null) {
             facePlayer();

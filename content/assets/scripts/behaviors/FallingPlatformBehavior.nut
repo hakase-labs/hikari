@@ -1,4 +1,5 @@
 class FallingPlatformBehavior extends DoodadBehavior {
+    isInitialized = false;
     counter = 0.0;
     shouldCount = false;
     fallDelay = (1.0/60.0) * 20;

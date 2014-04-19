@@ -30,7 +30,6 @@
 
 #include <squirrel.h>
 #include <map>
-
 #include "sqratUtil.h"
 
 namespace Sqrat

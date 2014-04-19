@@ -31,7 +31,6 @@
 
 #include <squirrel.h>
 #include "sqratObject.h"
-#include <iostream>
 
 namespace Sqrat {
 
@@ -263,7 +262,6 @@ public:
 
         //handle an error: pop the stack and throw the exception
         if(SQ_FAILED(result)) {
-            std::cout<<"SQ_FAILED calling the function!"<<std::endl;
             sq_pop(vm, 2);
             Error::Instance().Throw(vm, LastErrorString(vm));
             return SharedPtr<R>();
@@ -271,7 +269,6 @@ public:
 #else
         sq_call(vm, 2, true, ErrorHandling::IsEnabled());
 #endif
-                    std::cout<<"SUCCEEDED! calling the function!"<<std::endl;
 
         SharedPtr<R> ret = Var<SharedPtr<R> >(vm, -1).value;
         sq_pop(vm, 2);
@@ -1294,7 +1291,6 @@ public:
             return;
         }
 #endif
-
         PushVar(vm, a1);
         PushVar(vm, a2);
 
