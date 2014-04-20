@@ -5,7 +5,6 @@ class HammerJoeBehavior extends EnemyBehavior {
 
     constructor(classConfig = {}) {
         base.constructor(classConfig);
-        ::log("HammerJoeBehavior constructor called.");
     }
 
     /**

@@ -298,9 +298,7 @@ namespace hikari {
             const std::vector<std::string> & startupScripts = gameConfig->getStartUpScripts();
 
             std::for_each(std::begin(startupScripts), std::end(startupScripts), [&](const std::string & scriptPath) {
-                std::cout << "SCRIPT IS GOING TO BE Running " << scriptPath << std::endl;
                 squirrelService->runScriptFile(scriptPath);
-                std::cout << "SCRIPT IS DONE Running " << scriptPath << std::endl;
             });
         }
     }

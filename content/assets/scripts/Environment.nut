@@ -1,10 +1,8 @@
-print("TOP OF ENVIRONMENT");
 //
 // Global utility belt, "underscore"!
 //
 _ <- { };
 
-print("CREATED _");
 ///
 /// Fill in a given object with default properties.
 ///
@@ -21,18 +19,16 @@ _.defaults <- function(obj, defaults) {
     return obj;
 };
 
-print("_.defaults");
-print(hikari);
-
-if(::hikari.internal) {
-    print("global hikari.internal exists");
-}
 //
 // Table which keeps track of scripts loaded via require(). The keys in this
 // table are the file names, values are the compiled script.
 //
 ::hikari.internal._loaded <- { };
-print("::hikari.internal._loaded <- { };");
+
+// Globals that store properties of the hero.
+::heroX <- 0
+::heroY <- 0
+
 function require(fileName, reload = false) {
     local _loaded = ::hikari.internal._loaded;
     local _read = ::hikari.internal.readFileAsString;
@@ -48,13 +44,12 @@ function require(fileName, reload = false) {
         return compiledScript();
     }
 }
-print("require");
+
 //
 // Logs a message to the console
 //
 function log(message) {
     ::hikari.internal.log(message);
 }
-print("log");
 
 log("Scripting environment is ready.");

@@ -15,8 +15,6 @@ namespace hikari {
         , effectClassName(effectClassName)
         , config(config)
     {
-        HIKARI_LOG(debug2) << "ScriptedEffect::ScriptedEffect() ... " << config.IsNull();
-
         if(!bindScriptClassInstance()) {
             throw std::runtime_error("ScriptedEffect could not be constructed.");
         }
@@ -27,8 +25,6 @@ namespace hikari {
         , effectClassName(proto.effectClassName)
         , config(proto.config)
     {
-        HIKARI_LOG(debug2) << "ScriptedEffect::ScriptedEffect(const ScriptedEffect &proto) Copy Constructed!";
-
         if(!bindScriptClassInstance()) {
             throw std::runtime_error("ScriptedEffect could not be constructed, could not bind to a class instance of type " + effectClassName);
         }
@@ -51,32 +47,17 @@ namespace hikari {
                 Sqrat::Function(instance, "constructor").Execute(configRef);
                 sq_pop(vm, 2);
 
-                //Sqrat::Function constructor(Sqrat::RootTable(vm).GetSlot(effectClassName.c_str()), "constructor");
-                //HIKARI_LOG(debug2) << "Constructor type = " << Sqrat::Object(constructor.GetFunc()).GetType() << ", " << OT_CLOSURE;
+                if(Sqrat::Error::Instance().Occurred(vm)) {
+                    HIKARI_LOG(debug2) << "Error executing constructor for '" << effectClassName << "'. " << Sqrat::Error::Instance().Message(vm);
+                }
 
-                //if(!constructor.IsNull()) {
-                    //Sqrat::Object& configRef = config;
-
-                    //instance = constructor.Evaluate<Sqrat::Object>(configRef);
-
-                    if(Sqrat::Error::Instance().Occurred(vm)) {
-                        HIKARI_LOG(debug2) << "Error executing constructor for '" << effectClassName << "'. " << Sqrat::Error::Instance().Message(vm);
-
-                    } else {
-                        HIKARI_LOG(debug2) << "Everything was cool";
-                    }
-
-                    if(!instance.IsNull()) {
-                        proxyApply = Sqrat::Function(instance, FUNCTION_NAME_APPLY);
-                        proxyUnapply = Sqrat::Function(instance, FUNCTION_NAME_UNAPPLY);
-                    } else {
-                        isValid = false;
-                        HIKARI_LOG(debug2) << "Constructor for '" << effectClassName << "' did not return the correct object type.";
-                    }
-                /*} else {
+                if(!instance.IsNull()) {
+                    proxyApply = Sqrat::Function(instance, FUNCTION_NAME_APPLY);
+                    proxyUnapply = Sqrat::Function(instance, FUNCTION_NAME_UNAPPLY);
+                } else {
                     isValid = false;
-                    HIKARI_LOG(debug2) << "Could not find a constructor for '" << effectClassName << "'.";
-                }*/
+                    HIKARI_LOG(debug2) << "Constructor for '" << effectClassName << "' did not return the correct object type.";
+                }
             } catch(...) {
                 isValid = false;
                 HIKARI_LOG(debug1) << "Could not create an instance of '" << effectClassName << "'.";

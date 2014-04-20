@@ -31,7 +31,6 @@
 #include <squirrel.h>
 #include <sqstdio.h>
 #include <string.h>
-#include <iostream>
 
 #include "sqratObject.h"
 
@@ -170,9 +169,7 @@ public:
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     void Run() {
 #if !defined (SCRAT_NO_ERROR_CHECKING)
-        std::cout<<"::RUN()"<<std::endl;
         if(!sq_isnull(obj)) {
-            std::cout<<"!sq_isnull(obj)"<<std::endl;
             SQRESULT result;
             sq_pushobject(vm, obj);
             sq_pushroottable(vm);
@@ -183,7 +180,6 @@ public:
                 return;
             }
         }
-        std::cout<<"end of RUN()"<<std::endl;
 #else
         sq_pushobject(vm, obj);
         sq_pushroottable(vm);

@@ -6,9 +6,6 @@ class FallingPlatformBehavior extends DoodadBehavior {
 
     constructor(_classConfig = {}) {
         base.constructor(_classConfig);
-        ::log("FallingPlatformBehavior constructor called.");
-        ::log("_classConfig.len() = " + _classConfig.len());
-        ::log("Is fallDelay in there? " + !!("fallDelay" in _classConfig));
 
         if("fallDelay" in _classConfig) {
             fallDelay = _classConfig.fallDelay;

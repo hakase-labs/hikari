@@ -33,7 +33,6 @@ class DadaEnemyBehavior extends EnemyBehavior {
 
     constructor(classConfig = {}) {
         base.constructor(classConfig);
-        ::log("DadaEnemyBehavior constructor called.");
     }
 
     function update(dt) {
