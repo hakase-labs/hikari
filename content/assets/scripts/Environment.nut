@@ -20,10 +20,14 @@ _.defaults <- function(obj, defaults) {
 };
 
 //
-// Table which keeps track of scripts loaded via require(). The keys in this 
+// Table which keeps track of scripts loaded via require(). The keys in this
 // table are the file names, values are the compiled script.
 //
 ::hikari.internal._loaded <- { };
+
+// Globals that store properties of the hero.
+::heroX <- 0
+::heroY <- 0
 
 function require(fileName, reload = false) {
     local _loaded = ::hikari.internal._loaded;

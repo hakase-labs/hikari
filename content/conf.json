@@ -2,6 +2,10 @@
     "vsync" : true,
     "videoMode" : "2x",
     "showfps" : true,
+    "audio": {
+        "samples": 0,
+        "music": 0
+    },
     "bindings" : {
         "keyboard" : {
             "up" : "up",

@@ -217,12 +217,10 @@ namespace gui {
     }
 
     void Menu::logic() {
-        //std::cout << "Menu::logic" << std::endl;
         Widget::logic();
     }
 
     void Menu::keyPressed(gcn::KeyEvent& keyEvent) {
-        std::cout << "Menu::keyPressed" << std::endl;
         hikari::Input::Button button =
             InputHelper::getMappedButtonForKey(keyEvent.getKey());
 

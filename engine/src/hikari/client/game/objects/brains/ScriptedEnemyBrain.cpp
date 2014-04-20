@@ -15,15 +15,19 @@ namespace hikari {
     const char * ScriptedEnemyBrain::FUNCTION_NAME_UPDATE = "update";
     const char * ScriptedEnemyBrain::BASE_CLASS_NAME = "EnemyBehavior";
 
-    ScriptedEnemyBrain::ScriptedEnemyBrain(SquirrelService& squirrel, const std::string& scriptClassName, const Sqrat::Table& config)
+    ScriptedEnemyBrain::ScriptedEnemyBrain(SquirrelService& squirrel, const std::string& scriptClassName, const Sqrat::Table& classConfig)
         : vm(squirrel.getVmInstance())
         , scriptClassName(scriptClassName)
         , instance()
-        , instanceConfig(config)
+        , classConfig(classConfig)
     {
+        if(this->classConfig.IsNull()) {
+            this->classConfig = Sqrat::Table(vm);
+        }
+
         if(!bindScriptClassInstance()) {
             // throw?
-            HIKARI_LOG(debug4) << "ScriptedEnemyBrain failed to bind.";
+            HIKARI_LOG(error) << "ScriptedEnemyBrain failed to bind.";
         }
     }
 
@@ -31,14 +35,18 @@ namespace hikari {
         : vm(proto.vm)
         , scriptClassName(proto.scriptClassName)
         , instance()
-        , instanceConfig(proto.instanceConfig)
+        , classConfig(proto.classConfig)
     {
+        if(classConfig.IsNull()) {
+            classConfig = Sqrat::Table(vm);
+        }
+
         if(!bindScriptClassInstance()) {
             // throw?
             HIKARI_LOG(error) << "ScriptedEnemyBrain failed to bind.";
         }
     }
-    
+
     ScriptedEnemyBrain::~ScriptedEnemyBrain() {
 
     }
@@ -50,12 +58,26 @@ namespace hikari {
             isValid = false;
         } else {
             try {
-                Sqrat::Function constructor(Sqrat::RootTable(vm), scriptClassName.c_str());
+                Sqrat::Object classObject = Sqrat::RootTable(vm).GetSlot(scriptClassName.c_str());
 
-                if(!constructor.IsNull()) {
-                    Sqrat::Object& configRef = instanceConfig;
-                    HIKARI_LOG(debug3) << "bindScriptClassInstance :: Is instanceConfig null? " << instanceConfig.IsNull();
-                    instance = constructor.Evaluate<Sqrat::Object>(configRef);
+                if(!classObject.IsNull()) {
+                    Sqrat::Object& configRef = classConfig;
+
+                    // Create an instance of the class, and run its constructor
+                    Sqrat::PushVar(vm, classObject);
+                    sq_createinstance(vm, -1);
+                    instance = Sqrat::Var<Sqrat::Object>(vm, -1).value;
+
+                    if(Sqrat::Error::Instance().Occurred(vm)) {
+                        HIKARI_LOG(error) << "Error creating instance for '" << scriptClassName << "'. " << Sqrat::Error::Instance().Message(vm);
+                    }
+
+                    Sqrat::Function(instance, "constructor").Execute(configRef);
+                    sq_pop(vm, 2);
+
+                    if(Sqrat::Error::Instance().Occurred(vm)) {
+                        HIKARI_LOG(error) << "Error executing constructor for '" << scriptClassName << "'. " << Sqrat::Error::Instance().Message(vm);
+                    }
 
                     if(!instance.IsNull()) {
                         proxyAttach = Sqrat::Function(instance, FUNCTION_NAME_ATTACH);
@@ -65,13 +87,13 @@ namespace hikari {
                         proxyHandleWorldCollision = Sqrat::Function(instance, FUNCTION_NAME_HANDLECOLLISION);
                         proxyHandleObjectTouch = Sqrat::Function(instance, FUNCTION_NAME_HANDLEOBJECTTOUCH);
                     } else {
-                        HIKARI_LOG(debug2) << "Constructor for '" << scriptClassName << "' did not return the correct object type.";
+                        HIKARI_LOG(error) << "Constructor for '" << scriptClassName << "' did not return the correct object type.";
                     }
                 } else {
                     HIKARI_LOG(debug2) << "Could not find a constructor for '" << scriptClassName << "'.";
                 }
-            } catch(Sqrat::Exception & squirrelException) {
-                HIKARI_LOG(debug1) << "Could not create an instance of '" << scriptClassName << "'. Reason: " << squirrelException.Message();
+            } catch(...) {
+                HIKARI_LOG(error) << "Could not create an instance of '" << scriptClassName << "'.";
             }
         }
 
@@ -85,14 +107,24 @@ namespace hikari {
     void ScriptedEnemyBrain::attach(Enemy* host) {
         EnemyBrain::attach(host);
 
+        Sqrat::Table instanceConfig(vm);
+
         if(!proxyAttach.IsNull()) {
-            proxyAttach.Execute(host);
+            proxyAttach.Execute(host, instanceConfig);
+
+            if(Sqrat::Error::Instance().Occurred(vm)) {
+                HIKARI_LOG(debug2) << "Error attaching to host object: " << Sqrat::Error::Instance().Message(vm);
+            }
         }
     }
 
     void ScriptedEnemyBrain::detach() {
         if(!proxyDetach.IsNull()) {
             proxyDetach.Execute();
+
+            if(Sqrat::Error::Instance().Occurred(vm)) {
+                HIKARI_LOG(debug2) << "Error detaching from host object: " << Sqrat::Error::Instance().Message(vm);
+            }
         }
     }
 
@@ -116,10 +148,9 @@ namespace hikari {
         }
     }
 
-    void ScriptedEnemyBrain::applyConfig(const Sqrat::Table & instanceConfig) {
+    void ScriptedEnemyBrain::applyConfig(const Sqrat::Table & classConfig) {
         if(!proxyApplyConfig.IsNull()) {
-            const Sqrat::Object & configRef = instanceConfig;
-            proxyApplyConfig.Execute(configRef);
+            proxyApplyConfig.Execute(classConfig);
         }
     }
 

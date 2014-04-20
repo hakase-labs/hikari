@@ -29,6 +29,8 @@
 #include "hikari/client/scripting/AudioServiceScriptProxy.hpp"
 #include "hikari/client/scripting/GameProgressScriptProxy.hpp"
 #include "hikari/client/scripting/GamePlayStateScriptProxy.hpp"
+#include "hikari/client/game/objects/Enemy.hpp"
+
 
 #include "hikari/core/game/AnimationLoader.hpp"
 #include "hikari/core/game/SliceStateTransition.hpp"
@@ -40,6 +42,9 @@
 #include "hikari/core/util/Log.hpp"
 #include "hikari/core/util/PhysFS.hpp"
 #include "hikari/core/util/TilesetCache.hpp"
+
+#include <squirrel.h>
+#include <sqrat.h>
 
 #include <SFML/Graphics/Color.hpp>
 
@@ -54,6 +59,7 @@ namespace hikari {
     const std::string Client::PATH_CUSTOM_CONTENT   = "custom.zip";
     const std::string Client::PATH_CONFIG_FILE      = "conf.json";
     const std::string Client::PATH_GAME_CONFIG_FILE = "game.json";
+    const std::string Client::PATH_DAMAGE_FILE      = "damage.json";
 
     const unsigned int Client::SCREEN_WIDTH          = 256;
     const unsigned int Client::SCREEN_HEIGHT         = 240;
@@ -204,8 +210,11 @@ namespace hikari {
         auto damageTable       = std::make_shared<DamageTable>();
         auto inputService      = std::make_shared<InputService>(globalInput);
         auto eventBusService   = std::make_shared<EventBusService>(globalEventBus);
-        //audioService->disable();
+
         gameProgress->setEventBus(globalEventBus);
+
+        // audioService->setSampleVolume(clientConfig.getSampleVolume());
+        // audioService->setMusicVolume(clientConfig.getMusicVolume());
 
         services.registerService(Services::AUDIO,             audioService);
         services.registerService(Services::GAMEPROGRESS,      gameProgress);
@@ -338,11 +347,35 @@ namespace hikari {
 
     void Client::loadDamageTable() {
         if(auto damageTable = services.locateService<DamageTable>(Services::DAMAGETABLE).lock()) {
-            damageTable->addEntry(0, 0.0f);
-            damageTable->addEntry(1, 10.0f);
-            damageTable->addEntry(2, 4.0f);
-            damageTable->addEntry(4, 6.0f);
-            damageTable->addEntry(7, 1.0f);
+            auto fs = FileSystem::openFileRead(PATH_DAMAGE_FILE);
+
+            Json::Reader reader;
+            Json::Value value;
+
+            bool success = reader.parse(*fs, value, false);
+
+            if(success) {
+                const auto & damageArray = value["damage"];
+
+                for(unsigned int i = 0, length = damageArray.size(); i < length; i++) {
+                    const auto & damageEntry = damageArray[i];
+                    const float damageId = static_cast<float>(damageEntry["id"].asDouble());
+                    const float damageAmount = static_cast<float>(damageEntry["amount"].asDouble());
+
+                    damageTable->addEntry(damageId, damageAmount);
+                }
+
+                const auto & buffsArray = value["buffs"];
+
+                for(unsigned int i = 0, length = buffsArray.size(); i < length; i++) {
+                    // const auto & damageEntry = buffsArray[i];
+                    // TODO: Add buffs to damage table
+                }
+            } else {
+                HIKARI_LOG(info) << "Damage table file could not be found or was corrupt, using defaults.";
+                damageTable->addEntry(0, 0.0f);
+                damageTable->addEntry(1, 1.0f);
+            }
         }
     }
 
@@ -360,6 +393,7 @@ namespace hikari {
         float accumulator = 0.0f;
 
         auto guiService = services.locateService<GuiService>(Services::GUISERVICE).lock();
+        auto audioService = services.locateService<AudioService>(Services::AUDIO).lock();
 
         gcn::Gui & gui = guiService->getGui();
 
@@ -382,6 +416,20 @@ namespace hikari {
                     }
 
                     if(event.type == sf::Event::KeyPressed || event.type == sf::Event::KeyReleased) {
+                        // Audio tweaking code
+                        if(event.key.code == sf::Keyboard::Y) {
+                            audioService->setMusicVolume(audioService->getMusicVolume() + 10.0f);
+                        }
+                        if(event.key.code == sf::Keyboard::U) {
+                            audioService->setMusicVolume(audioService->getMusicVolume() - 10.0f);
+                        }
+                        if(event.key.code == sf::Keyboard::H) {
+                            audioService->mute();
+                        }
+                        if(event.key.code == sf::Keyboard::J) {
+                            audioService->unmute();
+                        }
+
                         globalInput->processEvent(event);
                         controller.handleEvent(event);
                     }

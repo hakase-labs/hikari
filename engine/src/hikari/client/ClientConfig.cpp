@@ -6,6 +6,9 @@
 #include <json/writer.h>
 
 namespace hikari {
+    const char* ClientConfig::PROPERTY_AUDIO = "audio";
+    const char* ClientConfig::PROPERTY_SAMPLES = "samples";
+    const char* ClientConfig::PROPERTY_MUSIC = "music";
     const char* ClientConfig::PROPERTY_VSYNC = "vsync";
     const char* ClientConfig::PROPERTY_FPS = "showfps";
     const char* ClientConfig::PROPERTY_SCRIPTING = "scripting";
@@ -29,6 +32,18 @@ namespace hikari {
             }
 
             //
+            // Extract audio settings
+            //
+            if(configJson.isMember(PROPERTY_AUDIO)) {
+                const Json::Value & audioConfigJson = configJson.get(PROPERTY_AUDIO, Json::Value());
+                const double sampleVolumeSetting = audioConfigJson.get(PROPERTY_SAMPLES, 100.f).asDouble();
+                const double musicVolumeSetting = audioConfigJson.get(PROPERTY_MUSIC, 100.f).asDouble();
+
+                musicVolume = static_cast<float>(musicVolumeSetting);
+                sampleVolume = static_cast<float>(sampleVolumeSetting);
+            }
+
+            //
             // Extract scripting config values
             //
             if(configJson.isMember(PROPERTY_SCRIPTING)) {
@@ -39,10 +54,16 @@ namespace hikari {
                 }
             }
 
+            //
+            // Extract video mode settings
+            //
             if(configJson.isMember(PROPERTY_VIDEOMODE)) {
                 videoMode = configJson.get(PROPERTY_VIDEOMODE, "1x").asString();
             }
 
+            //
+            // Extract keyboard bindings
+            //
             if(configJson.isMember(PROPERTY_BINDINGS)) {
                 const Json::Value & bindingsObject = configJson[PROPERTY_BINDINGS];
 
@@ -70,6 +91,8 @@ namespace hikari {
         : enableVsync(false)
         , enableFpsDisplay(false)
         , stackSize(1024)
+        , musicVolume(100.0f)
+        , sampleVolume(100.0f)
         , videoMode("1x")
         , keybindings()
     {
@@ -80,6 +103,8 @@ namespace hikari {
         : enableVsync(false)
         , enableFpsDisplay(false)
         , stackSize(1024)
+        , musicVolume(100.0f)
+        , sampleVolume(100.0f)
         , videoMode("1x")
         , keybindings()
     {
@@ -100,6 +125,22 @@ namespace hikari {
 
     void ClientConfig::setFpsDisplayEnabled(bool enabled) {
         enableFpsDisplay = enabled;
+    }
+
+    float ClientConfig::getMusicVolume() const {
+        return musicVolume;
+    }
+
+    void ClientConfig::setMusicVolume(float volume) {
+        musicVolume = volume;
+    }
+
+    float ClientConfig::getSampleVolume() const {
+        return sampleVolume;
+    }
+
+    void ClientConfig::setSampleVolume(float volume) {
+        sampleVolume = volume;
     }
 
     unsigned int ClientConfig::getScriptingStackSize() const {
@@ -128,6 +169,9 @@ namespace hikari {
 
         container[PROPERTY_VSYNC] = isVsyncEnabled();
         container[PROPERTY_VIDEOMODE] = getVideoMode();
+        container[PROPERTY_AUDIO] = Json::Value(Json::objectValue);
+        container[PROPERTY_AUDIO][PROPERTY_SAMPLES] = getSampleVolume();
+        container[PROPERTY_AUDIO][PROPERTY_MUSIC] = getMusicVolume();
         container[PROPERTY_FPS] = isFpsDisplayEnabled();
         container[PROPERTY_SCRIPTING] = Json::Value(Json::objectValue);
         container[PROPERTY_SCRIPTING][PROPERTY_SCRIPTING_STACKSIZE] = getScriptingStackSize();

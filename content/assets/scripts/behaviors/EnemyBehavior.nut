@@ -29,7 +29,6 @@ class EnemyBehavior {
      *                            on individual instances.
      */
     constructor(classConfig = {}) {
-        ::log("EnemyBehavior constructor called.");
         host = null;
     }
 

@@ -23,7 +23,7 @@ namespace SquirrelUtils {
      * @param  json the JSON value to convert
      * @return      the Squirrel equivalent of the JSON object
      */
-    Sqrat::Object jsonToSquirrel(const Json::Value & json);
+    Sqrat::Object jsonToSquirrel(HSQUIRRELVM vm, const Json::Value & json);
 }
 } // hikari
 

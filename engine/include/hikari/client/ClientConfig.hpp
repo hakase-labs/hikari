@@ -12,6 +12,9 @@ namespace hikari {
 
     class ClientConfig {
     private:
+        static const char* PROPERTY_AUDIO;
+        static const char* PROPERTY_SAMPLES;
+        static const char* PROPERTY_MUSIC;
         static const char* PROPERTY_VSYNC;
         static const char* PROPERTY_FPS;
         static const char* PROPERTY_SCRIPTING;
@@ -24,6 +27,8 @@ namespace hikari {
         bool enableFpsDisplay;
         bool enableAudio;
         unsigned int stackSize;
+        float musicVolume;
+        float sampleVolume;
         std::string videoMode;
         std::map<std::string, std::string> keybindings;
 
@@ -44,6 +49,12 @@ namespace hikari {
 
         bool isFpsDisplayEnabled() const;
         void setFpsDisplayEnabled(bool enabled);
+
+        float getMusicVolume() const;
+        void setMusicVolume(float volume);
+        
+        float getSampleVolume() const;
+        void setSampleVolume(float volume);
 
         unsigned int getScriptingStackSize() const;
 
