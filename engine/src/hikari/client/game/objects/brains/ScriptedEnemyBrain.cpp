@@ -15,11 +15,11 @@ namespace hikari {
     const char * ScriptedEnemyBrain::FUNCTION_NAME_UPDATE = "update";
     const char * ScriptedEnemyBrain::BASE_CLASS_NAME = "EnemyBehavior";
 
-    ScriptedEnemyBrain::ScriptedEnemyBrain(SquirrelService& squirrel, const std::string& scriptClassName, const Sqrat::Table& config)
+    ScriptedEnemyBrain::ScriptedEnemyBrain(SquirrelService& squirrel, const std::string& scriptClassName, const Sqrat::Table& classConfig)
         : vm(squirrel.getVmInstance())
         , scriptClassName(scriptClassName)
         , instance()
-        , instanceConfig(config)
+        , classConfig(classConfig)
     {
         if(!bindScriptClassInstance()) {
             // throw?
@@ -31,7 +31,7 @@ namespace hikari {
         : vm(proto.vm)
         , scriptClassName(proto.scriptClassName)
         , instance()
-        , instanceConfig(proto.instanceConfig)
+        , classConfig(proto.classConfig)
     {
         if(!bindScriptClassInstance()) {
             // throw?
@@ -53,8 +53,8 @@ namespace hikari {
                 Sqrat::Function constructor(Sqrat::RootTable(vm), scriptClassName.c_str());
 
                 if(!constructor.IsNull()) {
-                    Sqrat::Object& configRef = instanceConfig;
-                    HIKARI_LOG(debug3) << "bindScriptClassInstance :: Is instanceConfig null? " << instanceConfig.IsNull();
+                    Sqrat::Object& configRef = classConfig;
+                    HIKARI_LOG(debug3) << "bindScriptClassInstance :: Is classConfig null? " << classConfig.IsNull();
                     instance = constructor.Evaluate<Sqrat::Object>(configRef);
 
                     if(!instance.IsNull()) {
@@ -116,9 +116,9 @@ namespace hikari {
         }
     }
 
-    void ScriptedEnemyBrain::applyConfig(const Sqrat::Table & instanceConfig) {
+    void ScriptedEnemyBrain::applyConfig(const Sqrat::Table & classConfig) {
         if(!proxyApplyConfig.IsNull()) {
-            const Sqrat::Object & configRef = instanceConfig;
+            const Sqrat::Object & configRef = classConfig;
             proxyApplyConfig.Execute(configRef);
         }
     }
