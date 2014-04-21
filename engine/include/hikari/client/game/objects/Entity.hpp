@@ -66,16 +66,14 @@ namespace hikari {
 
         Vector2<float> actionSpot; // An offset from the position where actions "take place"
 
-        std::list<Shot> activeShots;
-
         void move(const Vector2<float>& delta);
         void move(const float& dx, const float& dy);
 
     protected:
         Movable body;
         std::unique_ptr<PalettedAnimatedSprite> & getAnimatedSprite();
-        //const std::shared_ptr<Room> & getRoom() const;
-
+        std::list<Shot> activeShots;
+        
         virtual void renderEntity(sf::RenderTarget &target);
 
         /**
@@ -124,7 +122,7 @@ namespace hikari {
 
         void setWeaponId(int weaponId);
         int getWeaponId() const;
-        void fireWeapon();
+        virtual void fireWeapon();
 
         void setDamageId(int damageId);
         int getDamageId() const;

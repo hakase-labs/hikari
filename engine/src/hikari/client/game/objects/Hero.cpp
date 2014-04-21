@@ -472,6 +472,14 @@ namespace hikari {
         }
     }
 
+    void Hero::fireWeapon() {
+        if(getActiveShotCount() > 0) {
+            // A weapon is already fired (not consumed yet) so notify if possible.
+            // TODO: Implement this so shields and other stateful weapons can be made.
+        }
+        Entity::fireWeapon();
+    }
+
     Hero::MobilityState::MobilityState(Hero & hero)
         : hero(hero)
     {
