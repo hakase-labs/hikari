@@ -881,6 +881,7 @@ namespace hikari {
 
         // Reset direction to face right
         hero->setDirection(Directions::Right);
+        hero->setActionController(std::make_shared<PlayerInputHeroActionController>(userInput));
 
         if(currentMap) {
             // Boss corridor has highest priority
