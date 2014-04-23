@@ -1143,6 +1143,37 @@ namespace hikari {
             if(auto sound = audioService.lock()) {
                 sound->playSample("Rockman (Damage)");
             }
+
+            const auto & boundingBox = hero->getBoundingBox();
+
+            // TODO: Create a system to spawn particles together like this, declaratively.
+
+            if(std::shared_ptr<Particle> clone = world.spawnParticle("Damage Sweat")) {
+                clone->setPosition(Vector2<float>(
+                    hero->getPosition().getX(),
+                    boundingBox.getTop() - 10.0f
+                ));
+                clone->setActive(true);
+                world.queueObjectAddition(clone);
+            }
+
+            if(std::shared_ptr<Particle> clone = world.spawnParticle("Damage Sweat")) {
+                clone->setPosition(Vector2<float>(
+                    hero->getPosition().getX() - 16.0f,
+                    boundingBox.getTop() - 7.0f
+                ));
+                clone->setActive(true);
+                world.queueObjectAddition(clone);
+            }
+
+            if(std::shared_ptr<Particle> clone = world.spawnParticle("Damage Sweat")) {
+                clone->setPosition(Vector2<float>(
+                    hero->getPosition().getX() + 16.0f,
+                    boundingBox.getTop() - 7.0f
+                ));
+                clone->setActive(true);
+                world.queueObjectAddition(clone);
+            }
         }
     }
 
