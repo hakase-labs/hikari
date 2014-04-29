@@ -254,13 +254,13 @@ namespace hikari {
         }
     }
 
-    void Hero::performJump() {
+    void Hero::performJump(bool isSuperJump) {
         if(isClimbing) {
             isClimbing = false;
             setVelocityY(0);
             HIKARI_LOG(debug4) << "Started fall from ladder at " << getPosition().getY();
         } else {
-            setVelocityY(jumpVelocity.getY());
+            setVelocityY(jumpVelocity.getY() * (isSuperJump ? 2.0f : 1.0f));
             HIKARI_LOG(debug4) << "Started jump at " << getPosition().getY();
         }
     }

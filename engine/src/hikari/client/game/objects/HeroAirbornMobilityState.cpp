@@ -21,7 +21,8 @@ namespace hikari {
         if(hero.actionController) {
             auto const * controller = hero.actionController.get();
             if(controller->shouldJump() && !hero.isFalling) {
-                hero.setVelocityY(hero.jumpVelocity.getY());
+                hero.performJump(controller->shouldSuperJump());
+                // hero.setVelocityY(hero.jumpVelocity.getY());
                 hero.isJumping = true;
             } else if(!hero.body.isOnGround()) {
                 hero.isFalling = true;

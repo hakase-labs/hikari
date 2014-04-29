@@ -84,7 +84,7 @@ namespace hikari {
          */
         bool canSlide();
 
-        void performJump();
+        void performJump(bool isSuperJump = false);
         void performSlide();
         void stopShooting();
 

@@ -20,6 +20,7 @@ namespace hikari {
         virtual bool shouldMoveDown() const;
         virtual bool shouldMoveLeft() const;
         virtual bool shouldJump() const;
+        virtual bool shouldSuperJump() const;
         virtual bool shouldStopJumping() const;
         virtual bool shouldShootWeapon() const;
         virtual bool shouldChargeWeapon() const;
