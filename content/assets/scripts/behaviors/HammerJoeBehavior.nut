@@ -1,7 +1,7 @@
 class HammerJoeBehavior extends EnemyBehavior {
     state = State.IDLE;
     timer = 0.0;
-    enteringNewState = false;
+    enteringNewState = true;
 
     constructor(classConfig = {}) {
         base.constructor(classConfig);
