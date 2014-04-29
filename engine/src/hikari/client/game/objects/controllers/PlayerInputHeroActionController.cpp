@@ -73,7 +73,7 @@ namespace hikari {
     }
 
     bool PlayerInputHeroActionController::shouldSuperJump() const {
-        return shouldJump();
+        return false;
     }
 
     bool PlayerInputHeroActionController::shouldStopJumping() const {
