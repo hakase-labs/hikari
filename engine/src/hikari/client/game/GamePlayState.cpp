@@ -881,6 +881,7 @@ namespace hikari {
 
         // Reset direction to face right
         hero->setDirection(Directions::Right);
+        hero->setActionController(std::make_shared<PlayerInputHeroActionController>(userInput));
 
         if(currentMap) {
             // Boss corridor has highest priority
@@ -1141,6 +1142,37 @@ namespace hikari {
         if(eventData->getEntityId() == hero->getId()) {
             if(auto sound = audioService.lock()) {
                 sound->playSample("Rockman (Damage)");
+            }
+
+            const auto & boundingBox = hero->getBoundingBox();
+
+            // TODO: Create a system to spawn particles together like this, declaratively.
+
+            if(std::shared_ptr<Particle> clone = world.spawnParticle("Damage Sweat")) {
+                clone->setPosition(Vector2<float>(
+                    hero->getPosition().getX(),
+                    boundingBox.getTop() - 10.0f
+                ));
+                clone->setActive(true);
+                world.queueObjectAddition(clone);
+            }
+
+            if(std::shared_ptr<Particle> clone = world.spawnParticle("Damage Sweat")) {
+                clone->setPosition(Vector2<float>(
+                    hero->getPosition().getX() - 16.0f,
+                    boundingBox.getTop() - 7.0f
+                ));
+                clone->setActive(true);
+                world.queueObjectAddition(clone);
+            }
+
+            if(std::shared_ptr<Particle> clone = world.spawnParticle("Damage Sweat")) {
+                clone->setPosition(Vector2<float>(
+                    hero->getPosition().getX() + 16.0f,
+                    boundingBox.getTop() - 7.0f
+                ));
+                clone->setActive(true);
+                world.queueObjectAddition(clone);
             }
         }
     }

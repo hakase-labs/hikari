@@ -33,6 +33,10 @@ namespace hikari {
         return false;
     }
 
+    bool CutSceneHeroActionController::shouldSuperJump() const {
+        return false;
+    }
+
     bool CutSceneHeroActionController::shouldStopJumping() const {
         return false;
     }

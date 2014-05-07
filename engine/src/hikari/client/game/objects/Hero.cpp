@@ -231,7 +231,7 @@ namespace hikari {
     }
 
     bool Hero::canSlide() {
-        return !isAirborn && !isSliding && !isStunned; /* TODO: Check if currently sliding too */
+        return !isAirborn && !isSliding && !isStunned;
     }
 
     bool Hero::isNowShooting() {
@@ -254,13 +254,13 @@ namespace hikari {
         }
     }
 
-    void Hero::performJump() {
+    void Hero::performJump(bool isSuperJump) {
         if(isClimbing) {
             isClimbing = false;
             setVelocityY(0);
             HIKARI_LOG(debug4) << "Started fall from ladder at " << getPosition().getY();
         } else {
-            setVelocityY(jumpVelocity.getY());
+            setVelocityY(jumpVelocity.getY() * (isSuperJump ? 2.0f : 1.0f));
             HIKARI_LOG(debug4) << "Started jump at " << getPosition().getY();
         }
     }
@@ -470,6 +470,14 @@ namespace hikari {
                 kill();
             }
         }
+    }
+
+    void Hero::fireWeapon() {
+        if(getActiveShotCount() > 0) {
+            // A weapon is already fired (not consumed yet) so notify if possible.
+            // TODO: Implement this so shields and other stateful weapons can be made.
+        }
+        Entity::fireWeapon();
     }
 
     Hero::MobilityState::MobilityState(Hero & hero)

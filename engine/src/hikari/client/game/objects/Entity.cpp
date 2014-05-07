@@ -39,8 +39,8 @@ namespace hikari {
         , age(DEFAULT_AGE_IN_M_SECONDS)
         , maximumAge(DEFAULT_MAXIMUM_AGE_IN_M_SECONDS)
         , actionSpot(0.0f, 0.0f)
-        , activeShots()
         , body()
+        , activeShots()
     {
         reset();
 
@@ -75,8 +75,8 @@ namespace hikari {
         , age(0)
         , maximumAge(proto.maximumAge)
         , actionSpot(proto.actionSpot)
-        , activeShots()
         , body(proto.body)
+        , activeShots()
     {
         setGravitated(proto.isGravitated());
         setPhasing(proto.isPhasing());

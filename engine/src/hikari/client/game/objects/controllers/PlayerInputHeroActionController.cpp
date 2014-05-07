@@ -72,6 +72,10 @@ namespace hikari {
         return false;
     }
 
+    bool PlayerInputHeroActionController::shouldSuperJump() const {
+        return false;
+    }
+
     bool PlayerInputHeroActionController::shouldStopJumping() const {
         if(auto in = input.lock()) {
             return in->wasReleased(Input::BUTTON_JUMP);

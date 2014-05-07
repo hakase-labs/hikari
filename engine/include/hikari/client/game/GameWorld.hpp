@@ -98,13 +98,14 @@ namespace hikari {
 
         void removeAllObjects();
 
-        std::shared_ptr<CollectableItem> spawnCollectableItem(const std::string & name /* CollectableItemInstanceConfig instanceConfig */) const;
-        std::unique_ptr<Doodad> spawnDoodad(const std::string & name /* DoodadInstanceConfig instanceConfig */) const;
-        std::unique_ptr<Enemy> spawnEnemy(const std::string & name /* EnemyInstanceConfig instanceConfig */) const;
-        std::unique_ptr<Particle> spawnParticle(const std::string & name /* ParticleInstanceConfig instanceConfig */) const;
-        std::unique_ptr<Projectile> spawnProjectile(const std::string & name /* ProjectileInstanceConfig instanceConfig */) const;
+        std::shared_ptr<CollectableItem> spawnCollectableItem(const std::string & name) const;
+        std::unique_ptr<Doodad> spawnDoodad(const std::string & name) const;
+        std::unique_ptr<Enemy> spawnEnemy(const std::string & name) const;
+        std::unique_ptr<Particle> spawnParticle(const std::string & name) const;
+        std::unique_ptr<Projectile> spawnProjectile(const std::string & name) const;
 
         const std::weak_ptr<GameObject> getObjectById(int id) const;
+
         const std::vector<std::shared_ptr<CollectableItem>> & getActiveItems() const;
         const std::vector<std::shared_ptr<Enemy>> & getActiveEnemies() const;
         const std::vector<std::shared_ptr<Particle>> & getActiveParticles() const;
@@ -131,7 +132,6 @@ namespace hikari {
         void render(sf::RenderTarget &target);
         virtual void update(float dt);
     };
-
 }
 
 #endif // HIKARI_CLIENT_GAME_GAMEWORLD

@@ -39,6 +39,19 @@
         "maximumAge": 0.8667
     },
     {
+        "name": "Damage Sweat",
+        "animationSet": "assets/animations/particles.json",
+        "animationName": "slide-dust",
+        "boundingBox": {
+            "width": 8,
+            "height": 8,
+            "originX": 4,
+            "originY": 4
+        },
+        "ageless": false,
+        "maximumAge": 0.8667
+    },
+    {
         "name": "Medium Splash",
         "animationSet": "assets/animations/particles.json",
         "animationName": "medium-splash",
