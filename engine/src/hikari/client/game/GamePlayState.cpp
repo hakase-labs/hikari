@@ -1214,6 +1214,10 @@ namespace hikari {
                     HIKARI_LOG(debug4) << "THE BOSS HAS BEEN KILLED! " << entityId;
                     // TODO: Make rockman immune just in case there are projectiles
                     //       already flying around. That would be a bummer to die.
+                    if(auto gp = gameProgress.lock()) {
+                        gp->setBossDefeated(gp->getCurrentBoss(), true);
+                    }
+
                     endBossBattle();
                 }
 
@@ -1622,7 +1626,13 @@ namespace hikari {
             // We're going to start fighting the boss
             HIKARI_LOG(debug3) << "We just entered the boss chamber. Time to start the battle with " << gamePlayState.currentRoom->getBossEntity();
 
-            gamePlayState.startBossBattle();
+            if(auto gp = gamePlayState.gameProgress.lock()) {
+                if(gp->bossIsDefeated(gp->getCurrentBoss())) {
+                    HIKARI_LOG(debug3) << "This boss is already dead! Gonna teleport out of here!";
+                } else {
+                    gamePlayState.startBossBattle();
+                }
+            }
         }
     }
 
