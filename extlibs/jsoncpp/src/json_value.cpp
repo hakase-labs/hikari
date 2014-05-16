@@ -791,6 +791,12 @@ Value::asDouble() const
    return 0; // unreachable;
 }
 
+float
+Value::asFloat() const
+{
+   return static_cast<float>(asDouble());
+}
+
 bool 
 Value::asBool() const
 {

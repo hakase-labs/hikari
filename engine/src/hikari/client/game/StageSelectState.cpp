@@ -6,11 +6,13 @@
 #include "hikari/client/game/WaitTask.hpp"
 #include "hikari/client/gui/GuiService.hpp"
 #include "hikari/client/gui/Icon.hpp"
+#include "hikari/client/gui/IconAnimator.hpp"
 #include "hikari/client/Services.hpp"
 
 #include "hikari/core/game/GameController.hpp"
 #include "hikari/core/gui/ImageFont.hpp"
 #include "hikari/core/util/ImageCache.hpp"
+#include "hikari/core/util/AnimationSetCache.hpp"
 #include "hikari/core/util/StringUtils.hpp"
 #include "hikari/core/util/ServiceLocator.hpp"
 #include "hikari/core/util/Log.hpp"
@@ -40,26 +42,30 @@ namespace hikari {
     const int StageSelectState::DEFAULT_CURSOR_ROW = 1;
     const int StageSelectState::DEFAULT_CURSOR_COLUMN = 1;
 
-    StageSelectState::StageSelectState(const std::string &name, const Json::Value &params, GameController & controller, ServiceLocator &services)
+    StageSelectState::StageSelectState(const std::string &name, const Json::Value &params, const StageSelectStateConfig & config, GameController & controller, ServiceLocator &services)
         : name(name)
         , controller(controller)
+        , config(config)
         , guiService(services.locateService<GuiService>(Services::GUISERVICE))
         , audioService(services.locateService<AudioService>(Services::AUDIO))
         , gameProgress(services.locateService<GameProgress>(Services::GAMEPROGRESS))
         , taskQueue()
         , guiContainer(new gcn::Container())
         , guiSelectedCellLabel(new gcn::Label())
-        , guiCursorIcon()
         , guiForeground()
         , guiBackground()
         , guiLeftEye()
         , guiRightEye()
+        , guiCursor()
+        , cursorAnimations()
+        , portraitAnimations()
         , cursorRow(DEFAULT_CURSOR_ROW)
         , cursorColumn(DEFAULT_CURSOR_COLUMN)
         , enableCursorMovement(false)
     {
         std::weak_ptr<ImageCache> imageCache = services.locateService<ImageCache>(Services::IMAGECACHE);
-
+        std::weak_ptr<AnimationSetCache> animationCache = services.locateService<AnimationSetCache>(Services::ANIMATIONSETCACHE);
+        
         // Load sprites from config
         // TODO: This needs to be refactored to be safer and things like that
         // TODO: Need a utility method to load sf:Sprite from JSON
@@ -70,10 +76,10 @@ namespace hikari {
             rightEye.setTexture(*imageCachePtr->get(params[PROPERTY_EYE_SPRITE].asString()).get());
         }
 
-        guiCursorIcon.reset(new gcn::Icon(params[PROPERTY_CURSOR_SPRITE].asString()));
+        guiCursor.first.reset(new gui::Icon(params[PROPERTY_CURSOR_SPRITE].asString()));
 
-        guiCursorIcon->setX(-100);
-        guiCursorIcon->setY(-100);
+        guiCursor.first->setX(-100);
+        guiCursor.first->setY(-100);
 
         // Load eye positions
         // There are 9 positions; 18 points total (one for left, one for right eye)
@@ -81,10 +87,10 @@ namespace hikari {
         if(static_cast<int>(jsonEyePositions.size()) == NUM_OF_PORTRAITS) {
             for(int i = 0; i < NUM_OF_PORTRAITS; ++i) {
                 const Json::Value &jsonEyePosition = jsonEyePositions[i];
-                float leftEyeX = static_cast<float>(jsonEyePosition[0u].get(PROPERTY_X, 0).asInt());
-                float leftEyeY = static_cast<float>(jsonEyePosition[0u].get(PROPERTY_Y, 0).asInt());
-                float rightEyeX = static_cast<float>(jsonEyePosition[1u].get(PROPERTY_X, 0).asInt());
-                float rightEyeY = static_cast<float>(jsonEyePosition[1u].get(PROPERTY_Y, 0).asInt());
+                float leftEyeX = jsonEyePosition[0u].get(PROPERTY_X, 0).asFloat();
+                float leftEyeY = jsonEyePosition[0u].get(PROPERTY_Y, 0).asFloat();
+                float rightEyeX = jsonEyePosition[1u].get(PROPERTY_X, 0).asFloat();
+                float rightEyeY = jsonEyePosition[1u].get(PROPERTY_Y, 0).asFloat();
 
                 Point2D<float> leftEyePosition(leftEyeX, leftEyeY);
                 Point2D<float> rightEyePosition(rightEyeX, rightEyeY);
@@ -98,13 +104,18 @@ namespace hikari {
         if(static_cast<int>(jsonCursorPositions.size()) == NUM_OF_PORTRAITS) {
             for(int i = 0; i < NUM_OF_PORTRAITS; ++i) {
                 const Json::Value &jsonCursorPosition = jsonCursorPositions[i];
-                float cursorX = static_cast<float>(jsonCursorPosition.get(PROPERTY_X, 0).asInt());
-                float cursorY = static_cast<float>(jsonCursorPosition.get(PROPERTY_Y, 0).asInt());
+                float cursorX = jsonCursorPosition.get(PROPERTY_X, 0).asFloat();
+                float cursorY = jsonCursorPosition.get(PROPERTY_Y, 0).asFloat();
 
                 Point2D<float> position(cursorX, cursorY);
 
                 cursorPositions.push_back(position);
             }
+        }
+
+        if(auto animations = animationCache.lock()) {
+            cursorAnimations = animations->get("assets/animations/cursor.json");
+            portraitAnimations = animations->get("assets/animations/stage-select.json");
         }
 
         buildGui();
@@ -118,7 +129,7 @@ namespace hikari {
         calculateCursorIndex();
 
         // Set eye positions
-        std::pair< Point2D<float>, Point2D<float> > eyePosition = eyePositions.at(cursorIndex);
+        const auto & eyePosition = config.getEyePositions().at(cursorIndex);
 
         const Point2D<float> &leftEyePosition = eyePosition.first;
         leftEye.setPosition(leftEyePosition.getX(), leftEyePosition.getY());
@@ -133,8 +144,8 @@ namespace hikari {
         // Set cursor position
         const Point2D<float> &cursorPosition = cursorPositions.at(cursorIndex);
 
-        guiCursorIcon->setX(cursorPosition.getX());
-        guiCursorIcon->setY(cursorPosition.getY());
+        guiCursor.first->setX(cursorPosition.getX());
+        guiCursor.first->setY(cursorPosition.getY());
     }
 
     void StageSelectState::calculateCursorIndex() {
@@ -152,18 +163,49 @@ namespace hikari {
         guiSelectedCellLabel->setCaption("(" + StringUtils::toString(cursorColumn) + ", " + StringUtils::toString(cursorRow) + ")");
         guiSelectedCellLabel->adjustSize();
 
-        guiBackground.reset(new gui::Icon("assets/images/bg-stage-select.png"));
-        guiForeground.reset(new gui::Icon("assets/images/fg-stage-select.png"));
+        guiBackground.reset(new gui::Icon(config.getBackground()));
+        guiForeground.reset(new gui::Icon(config.getForeground()));
 
+        const auto & eyeSpriteInfo = config.getEyeInfo();
         guiLeftEye.reset(new gui::Icon("assets/images/eye-stage-select.png"));
         guiRightEye.reset(new gui::Icon("assets/images/eye-stage-select.png"));
 
+        if(cursorAnimations) {
+            guiCursor.first.reset(new gui::Icon(cursorAnimations->getImageFileName()));
+            guiCursor.second.reset(new gui::IconAnimator(*guiCursor.first.get()));
+            guiCursor.second->setAnimation(cursorAnimations->get("default"));            
+        }
+
+        if(portraitAnimations) {
+            for(unsigned int i = 0; i < NUM_OF_PORTRAITS; ++i) {
+                const auto & position = cursorPositions.at(i);
+
+                AnimatedIcon portraitIcon;
+                portraitIcon.first.reset(new gui::Icon(portraitAnimations->getImageFileName()));
+                portraitIcon.first->setPosition(position.getX() + 8, position.getY() + 8);
+                portraitIcon.second.reset(new gui::IconAnimator(*portraitIcon.first.get()));
+
+                // TODO: Look up the correct portrait from the JSON.
+                portraitIcon.second->setAnimation(portraitAnimations->get("default"));
+
+                portraits.push_back(std::move(portraitIcon));
+            }
+        }
+
         guiContainer->add(guiBackground.get());
-        guiContainer->add(guiForeground.get());
+
+        for(unsigned int i = 0; i < NUM_OF_PORTRAITS; ++i) {
+            // 4 is where Megaman's portrait is
+            if(i != 4) {
+                const auto & portrait = portraits.at(i);
+                guiContainer->add(portrait.first.get());
+            }
+        }
+
         guiContainer->add(guiLeftEye.get());
         guiContainer->add(guiRightEye.get());
         guiContainer->add(guiSelectedCellLabel.get());
-        guiContainer->add(guiCursorIcon.get());
+        guiContainer->add(guiCursor.first.get());
     }
 
     void StageSelectState::handleEvent(sf::Event &event) {
@@ -273,6 +315,8 @@ namespace hikari {
         } else {
             // calculateCursorIndex();
             selectCurrentPortrait();
+
+            guiCursor.second->update(dt);
         }
 
         return startGamePlay;
@@ -284,12 +328,23 @@ namespace hikari {
 
         // Start music
         if(auto audio = audioService.lock()) {
-            audio->playMusic("Stage Select (MM2)");
+            audio->playMusic(config.getMusicName());
         }
 
         // Reset cursor to default location
         cursorColumn = DEFAULT_CURSOR_COLUMN;
         cursorRow = DEFAULT_CURSOR_ROW;
+
+        if(auto gp = gameProgress.lock()) {
+            portraits.at(0).first->setVisible(!gp->bossIsDefeated(0));
+            portraits.at(1).first->setVisible(!gp->bossIsDefeated(1));
+            portraits.at(2).first->setVisible(!gp->bossIsDefeated(2));
+            portraits.at(3).first->setVisible(!gp->bossIsDefeated(3));
+            portraits.at(5).first->setVisible(!gp->bossIsDefeated(4));
+            portraits.at(6).first->setVisible(!gp->bossIsDefeated(5));
+            portraits.at(7).first->setVisible(!gp->bossIsDefeated(6));
+            portraits.at(8).first->setVisible(!gp->bossIsDefeated(7));
+        }
 
         if(auto gui = guiService.lock()) {
             auto & topContainer = gui->getRootContainer();

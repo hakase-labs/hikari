@@ -13,7 +13,7 @@ namespace gui {
     }
 
     Icon::Icon(const std::string& filename)
-        : gcn::Icon( filename)
+        : gcn::Icon(filename)
         , imageSubrectangle()
         , opaqueFlag(false)
     {

@@ -69,14 +69,20 @@
         "title" : {},
         "options" : {},
         "select" : {
-            "music" : 3,
+            "music" : "Flash Man",
             "background" : "assets/images/bg-stage-select.png",
             "foreground" : "assets/images/fg-stage-select.png",
             "eye" : "assets/images/eye-stage-select.png",
             "cursor" : "assets/images/cursor-stage-select.png",
             "sprites" : {
-                "eye" : {},
-                "cursor" : {}
+                "eye" : {
+                    "animationSet": "assets/animations/stage-select.json",
+                    "animationName": "eye"
+                },
+                "cursor" : {
+                    "animationSet": "assets/animations/stage-select.json",
+                    "animationName": "cursor"
+                }
             },
             "eyePositions" : [
                 [{ "x" : 120, "y" : 118 }, { "x" : 129, "y" : 118 }],
@@ -100,7 +106,53 @@
                 { "x" : 104, "y" : 160 },
                 { "x" : 184, "y" : 160 }
             ],
-            "portraits" : []
+            "portraits": [
+                {
+                    "label": "TEST MAN",
+                    "animationSet": "assets/animations/stage-select.json",
+                    "animationName": "default-portrait"
+                },
+                {
+                    "label": "TEST MAN",
+                    "animationSet": "assets/animations/stage-select.json",
+                    "animationName": "default-portrait"
+                },
+                {
+                    "label": "TEST MAN",
+                    "animationSet": "assets/animations/stage-select.json",
+                    "animationName": "default-portrait"
+                },
+                {
+                    "label": "TEST MAN",
+                    "animationSet": "assets/animations/stage-select.json",
+                    "animationName": "default-portrait"
+                },
+                {
+                    "label": "TEST MAN",
+                    "animationSet": "assets/animations/stage-select.json",
+                    "animationName": "rockman-portrait"
+                },
+                {
+                    "label": "TEST MAN",
+                    "animationSet": "assets/animations/stage-select.json",
+                    "animationName": "default-portrait"
+                },
+                {
+                    "label": "TEST MAN",
+                    "animationSet": "assets/animations/stage-select.json",
+                    "animationName": "default-portrait"
+                },
+                {
+                    "label": "TEST MAN",
+                    "animationSet": "assets/animations/stage-select.json",
+                    "animationName": "default-portrait"
+                },
+                {
+                    "label": "TEST MAN",
+                    "animationSet": "assets/animations/stage-select.json",
+                    "animationName": "default-portrait"
+                }
+            ]
         },
         "password" : {},
         "gameplay" : {

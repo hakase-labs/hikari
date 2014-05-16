@@ -1,0 +1,22 @@
+{
+    "name": "Stage Select Portraits",
+    "image": "assets/images/fg-stage-select.png",
+    "animations": {
+        "default": {
+            "repeat": true,
+            "keyframe": 0,
+            "syncGroup": 0,
+            "frames": [ 
+                { 
+                    "x" : 31, 
+                    "y" : 40, 
+                    "width" : 32, 
+                    "height" : 32, 
+                    "hotspotX" : 0, 
+                    "hotspotY" : 0, 
+                    "length" : 0.1333
+                }
+            ]
+        }
+    }
+}
