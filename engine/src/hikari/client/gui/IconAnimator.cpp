@@ -2,6 +2,7 @@
 #include "hikari/client/gui/Icon.hpp"
 #include "hikari/core/game/Animation.hpp"
 #include <guichan/rectangle.hpp>
+#include <cmath>
 
 namespace hikari {
 namespace gui {
@@ -22,13 +23,18 @@ namespace gui {
         if(const auto& animation = getAnimation()) {
             const auto& currentFrame = animation->getFrameAt(getCurrentFrameIndex());
             const auto& currentFrameRectangle = currentFrame.getSourceRectangle();
-
-            icon.setSubrectangle(gcn::Rectangle(
+            const auto& currentFrameHotSpot = currentFrame.getHotspot();
+            const gcn::Rectangle frameDimension(
                 currentFrameRectangle.getX(),
                 currentFrameRectangle.getY(),
                 currentFrameRectangle.getWidth(),
                 currentFrameRectangle.getHeight()
-            ));
+            );
+
+            icon.setSubrectangle(frameDimension);
+            icon.setImageOffset(currentFrameHotSpot.getX(), currentFrameHotSpot.getY());
+            //icon.setDimension(frameDimension);
+            //icon.setFrameSize(std::max(currentFrameHotSpot.getX(), currentFrameHotSpot.getY()));
         }
     }
 

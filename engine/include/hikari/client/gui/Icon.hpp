@@ -11,6 +11,8 @@ namespace gui {
     private:
         gcn::Rectangle imageSubrectangle;
         bool opaqueFlag;
+        int offsetX;
+        int offsetY;
 
     public:
         /**
@@ -41,12 +43,16 @@ namespace gui {
 
         void setSubrectangle(const gcn::Rectangle & rect);
 
+        void setImageOffset(int x, int y);
+
         bool isOpaque() const;
 
         void setOpaque(bool opaque);
 
         // Inherited from Widget
         virtual void draw(gcn::Graphics* graphics);
+
+        virtual void _draw(gcn::Graphics* graphics);
     };
 
 } // hikari::gui

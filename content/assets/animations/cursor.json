@@ -12,8 +12,8 @@
                     "y" : 0, 
                     "width" : 48, 
                     "height" : 48, 
-                    "hotspotX" : 0, 
-                    "hotspotY" : 0, 
+                    "hotspotX" : 4, 
+                    "hotspotY" : 8, 
                     "length" : 0.1333
                 },
                 { 
