@@ -3,6 +3,7 @@
 #include "hikari/client/audio/AudioService.hpp"
 #include "hikari/client/game/GameProgress.hpp"
 #include "hikari/client/game/StageSelectState.hpp"
+#include "hikari/client/game/StageSelectStateConfig.hpp"
 #include "hikari/client/game/GamePlayState.hpp"
 #include "hikari/client/game/GameOverState.hpp"
 #include "hikari/client/game/KeyboardInput.hpp"
@@ -167,7 +168,9 @@ namespace hikari {
         GamePlayStateScriptProxy::setWrappedService(gamePlayState);
 
         // Create controller and game states
-        StatePtr stageSelectState(new StageSelectState("stageselect", gameConfigJson["states"]["select"], controller, services));
+        StageSelectStateConfig stageSelectConfig(gameConfigJson["states"]["select"]);
+
+        StatePtr stageSelectState(new StageSelectState("stageselect", gameConfigJson["states"]["select"], stageSelectConfig, controller, services));
         StatePtr gameOverState(new GameOverState("gameover", gameConfigJson, controller, services));
         StatePtr passwordState(new PasswordState("password", gameConfigJson, controller, services));
         StatePtr titleState(new TitleState("title", gameConfigJson, controller, services));

@@ -166,6 +166,7 @@ set( HIKARI_CLIENT_GAME_SOURCE_FILES
     src/hikari/client/game/SpawnProjectileWeaponAction.cpp
     src/hikari/client/game/SpriteTestState.cpp
     src/hikari/client/game/StageSelectState.cpp
+    src/hikari/client/game/StageSelectStateConfig.cpp
     src/hikari/client/game/Task.cpp
     src/hikari/client/game/BaseTask.cpp
     src/hikari/client/game/FunctionTask.cpp
@@ -270,6 +271,7 @@ set( HIKARI_CLIENT_GUI_SOURCE_FILES
     src/hikari/client/gui/WeaponMenuItem.cpp
     src/hikari/client/gui/Menu.cpp
     src/hikari/client/gui/Icon.cpp
+    src/hikari/client/gui/IconAnimator.cpp
     src/hikari/client/gui/InputHelper.cpp
 )
 

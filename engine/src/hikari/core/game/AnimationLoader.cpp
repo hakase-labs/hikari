@@ -14,6 +14,7 @@
 
 #include <exception>
 #include <fstream>
+#include <iostream>
 
 namespace hikari {
 
@@ -52,11 +53,17 @@ namespace hikari {
     }
 
     std::shared_ptr<AnimationSet> AnimationLoader::loadSet(const std::string &fileName) {
+        std::cout<< "Loading set: " << fileName << std::endl;
         if(PhysFS::exists(fileName)) {
+                    std::cout<< "File exists";
+
             Json::Value root = JsonUtils::loadJson(fileName); 
-            
+                    std::cout<< "Loaded JSON";
+
             // Extract name and image file path
             std::string name = root[PROPERTY_NAME].asString();
+                    std::cout<< "Got the NAME";
+
             std::string imageFileName = root[PROPERTY_IMAGE_FILE_NAME].asString();
             std::shared_ptr<sf::Texture> texture;
 

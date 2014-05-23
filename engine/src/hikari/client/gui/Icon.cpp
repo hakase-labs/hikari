@@ -13,9 +13,11 @@ namespace gui {
     }
 
     Icon::Icon(const std::string& filename)
-        : gcn::Icon( filename)
+        : gcn::Icon(filename)
         , imageSubrectangle()
         , opaqueFlag(false)
+        , offsetX(0)
+        , offsetY(0)
     {
         if(mImage) {
             setSubrectangle(gcn::Rectangle(0, 0, mImage->getWidth(), mImage->getHeight()));
@@ -26,6 +28,8 @@ namespace gui {
         : gcn::Icon(image)
         , imageSubrectangle()
         , opaqueFlag(false)
+        , offsetX(0)
+        , offsetY(0)
     {
         if(mImage) {
             setSubrectangle(gcn::Rectangle(0, 0, mImage->getWidth(), mImage->getHeight()));
@@ -46,6 +50,10 @@ namespace gui {
         setHeight(imageSubrectangle.height);
     }
 
+    void Icon::setImageOffset(int x, int y) {
+        offsetX = x;
+        offsetY = y;
+    }
 
     bool Icon::isOpaque() const {
         return opaqueFlag;
@@ -72,6 +80,42 @@ namespace gui {
                 imageSubrectangle.height
             );
         }
+    }
+
+    void Icon::_draw(gcn::Graphics* graphics) {
+        if (mFrameSize > 0) {
+            gcn::Rectangle rec = mDimension;
+            rec.x -= mFrameSize;
+            rec.y -= mFrameSize;
+            rec.width += 2 * mFrameSize;
+            rec.height += 2 * mFrameSize;
+            graphics->pushClipArea(rec);
+            drawFrame(graphics);
+            graphics->popClipArea();
+        }
+
+        gcn::Rectangle rec = mDimension;
+        rec.x -= offsetX;
+        rec.y -= offsetY;
+
+        graphics->pushClipArea(rec);
+        draw(graphics);
+
+        const gcn::Rectangle& childrenArea = getChildrenArea();
+        graphics->pushClipArea(childrenArea);
+
+        std::list<Widget*>::const_iterator iter;
+        for (iter = mChildren.begin(); iter != mChildren.end(); iter++)
+        {
+            gcn::Widget* widget = (*iter);
+            // Only draw a widget if it's visible and if it visible
+            // inside the children area.
+            if (widget->isVisible() && childrenArea.isIntersecting(widget->getDimension()))
+                widget->_draw(graphics);
+        }
+
+        graphics->popClipArea();
+        graphics->popClipArea();
     }
 } // gui
 } // hikari

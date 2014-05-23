@@ -2,6 +2,7 @@
 #define HIKARI_CLIENT_GAME_STAGESELECTSTATE
 
 #include "hikari/core/game/GameState.hpp"
+#include "hikari/client/game/StageSelectStateConfig.hpp"
 #include "hikari/core/geom/Point2D.hpp"
 
 #include <SFML/Graphics/RenderTarget.hpp>
@@ -26,6 +27,7 @@ namespace gcn {
 
 namespace hikari {
 
+    class AnimationSet;
     class AudioService;
     class GameProgress;
     class GuiService;
@@ -37,12 +39,16 @@ namespace hikari {
     namespace gui {
         // Forward-declare any GUI classes here
         class Icon;
+        class IconAnimator;
     }
 
     class StageSelectState : public GameState {
     private:
+        typedef std::pair<std::unique_ptr<gui::Icon>, std::unique_ptr<gui::IconAnimator>> AnimatedIcon;
+
         std::string name;
         GameController & controller;
+        StageSelectStateConfig config;
         sf::View view;
         std::weak_ptr<GuiService> guiService;
         std::weak_ptr<AudioService> audioService;
@@ -50,11 +56,14 @@ namespace hikari {
         std::queue<std::shared_ptr<Task>> taskQueue;
         std::unique_ptr<gcn::Container> guiContainer;
         std::unique_ptr<gcn::Label> guiSelectedCellLabel;
-        std::unique_ptr<gcn::Icon> guiCursorIcon;
         std::unique_ptr<gui::Icon> guiForeground;
         std::unique_ptr<gui::Icon> guiBackground;
         std::unique_ptr<gui::Icon> guiLeftEye;
         std::unique_ptr<gui::Icon> guiRightEye;
+        AnimatedIcon guiCursor;
+
+        std::shared_ptr<AnimationSet> cursorAnimations;
+        std::shared_ptr<AnimationSet> portraitAnimations;
 
         sf::Sprite background;
         sf::Sprite foreground;
@@ -69,6 +78,7 @@ namespace hikari {
 
         std::vector< std::pair< Point2D<float>, Point2D<float> > > eyePositions;
         std::vector< Point2D<float> > cursorPositions;
+        std::vector< AnimatedIcon > portraits;
 
         static const char* PROPERTY_BACKGROUND;
         static const char* PROPERTY_FOREGROUND;
@@ -92,7 +102,7 @@ namespace hikari {
         void buildGui();
 
     public:
-        StageSelectState(const std::string &name, const Json::Value &params, GameController & controller, ServiceLocator &services);
+        StageSelectState(const std::string &name, const Json::Value &params, const StageSelectStateConfig & config, GameController & controller, ServiceLocator &services);
         virtual ~StageSelectState();
 
         virtual void handleEvent(sf::Event &event);
