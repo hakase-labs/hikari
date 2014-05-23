@@ -202,6 +202,19 @@ namespace hikari {
             }
         }
 
+        const auto & portraitInfo = config.getPortraits();
+        for(unsigned int i = 0; i < NUM_OF_PORTRAITS; ++i) {
+            const auto & position = cursorPositions.at(i);
+            const auto & info = portraitInfo.at(i);
+
+            std::unique_ptr<gcn::Label> label(new gcn::Label(info.label));
+            label->setPosition(position.getX(), position.getY() + 48);
+            label->adjustSize();
+            
+            guiContainer->add(label.get());
+            portraitLabels.push_back(std::move(label));
+        }
+
         guiContainer->add(guiLeftEye.get());
         guiContainer->add(guiRightEye.get());
         guiContainer->add(guiSelectedCellLabel.get());

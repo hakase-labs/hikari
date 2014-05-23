@@ -83,6 +83,9 @@ namespace gui {
     }
 
     void Icon::_draw(gcn::Graphics* graphics) {
+        // We override this method in order to support animation frame's hotspots.
+        // It's necessary to adjust the clip rectangle based on the hotspot's position
+        // in order to not clip parts of the animation that should be visible.
         if (mFrameSize > 0) {
             gcn::Rectangle rec = mDimension;
             rec.x -= mFrameSize;
@@ -94,6 +97,7 @@ namespace gui {
             graphics->popClipArea();
         }
 
+        // Apply any offset (which would be set by an IconAnimator) from an animation.
         gcn::Rectangle rec = mDimension;
         rec.x -= offsetX;
         rec.y -= offsetY;

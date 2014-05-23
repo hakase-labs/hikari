@@ -79,6 +79,7 @@ namespace hikari {
         std::vector< std::pair< Point2D<float>, Point2D<float> > > eyePositions;
         std::vector< Point2D<float> > cursorPositions;
         std::vector< AnimatedIcon > portraits;
+        std::vector< std::unique_ptr<gcn::Label> > portraitLabels;
 
         static const char* PROPERTY_BACKGROUND;
         static const char* PROPERTY_FOREGROUND;
