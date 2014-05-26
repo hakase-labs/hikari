@@ -23,6 +23,7 @@
 #include <guichan/widgets/container.hpp>
 #include <guichan/widgets/label.hpp>
 #include <guichan/widgets/icon.hpp>
+#include <guichan/hakase/labelex.hpp>
 
 namespace hikari {
 
@@ -51,7 +52,7 @@ namespace hikari {
         , gameProgress(services.locateService<GameProgress>(Services::GAMEPROGRESS))
         , taskQueue()
         , guiContainer(new gcn::Container())
-        , guiSelectedCellLabel(new gcn::Label())
+        , guiSelectedCellLabel(new gcn::LabelEx())
         , guiForeground()
         , guiBackground()
         , guiLeftEye()
@@ -207,7 +208,7 @@ namespace hikari {
             const auto & position = cursorPositions.at(i);
             const auto & info = portraitInfo.at(i);
 
-            std::unique_ptr<gcn::Label> label(new gcn::Label(info.label));
+            std::unique_ptr<gcn::LabelEx> label(new gcn::LabelEx(info.label));
             label->setPosition(position.getX(), position.getY() + 48);
             label->adjustSize();
             

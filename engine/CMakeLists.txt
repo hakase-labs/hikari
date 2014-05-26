@@ -136,6 +136,7 @@ set( GUICHAN_HAKASE_SOURCE_FILES
     ${GUICHAN_HAKASE_DIR}/src/guichan/hakase/functordeathlistener.cpp
     ${GUICHAN_HAKASE_DIR}/src/guichan/hakase/functorfocuslistener.cpp
     ${GUICHAN_HAKASE_DIR}/src/guichan/hakase/functorwidgetlistener.cpp
+    ${GUICHAN_HAKASE_DIR}/src/guichan/hakase/labelex.cpp
 )
 
 source_group(extlibs\\guichan-hakase FILES ${GUICHAN_HAKASE_SOURCE_FILES})
