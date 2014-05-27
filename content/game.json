@@ -108,22 +108,22 @@
             ],
             "portraits": [
                 {
-                    "label": "TEST MAN",
+                    "label": "PEARL \n   MAN",
                     "animationSet": "assets/animations/stage-select.json",
                     "animationName": "default-portrait"
                 },
                 {
-                    "label": "TEST MAN",
+                    "label": "JOE",
                     "animationSet": "assets/animations/stage-select.json",
                     "animationName": "default-portrait"
                 },
                 {
-                    "label": "TEST MAN",
+                    "label": "BUBBLE MAN",
                     "animationSet": "assets/animations/stage-select.json",
                     "animationName": "default-portrait"
                 },
                 {
-                    "label": "TEST MAN",
+                    "label": "TEST\n MAN",
                     "animationSet": "assets/animations/stage-select.json",
                     "animationName": "default-portrait"
                 },

@@ -21,7 +21,7 @@ namespace sf {
 
 namespace gcn {
     class Container;
-    class Label;
+    class LabelEx;
     class Icon;
 }
 
@@ -55,7 +55,7 @@ namespace hikari {
         std::weak_ptr<GameProgress> gameProgress;
         std::queue<std::shared_ptr<Task>> taskQueue;
         std::unique_ptr<gcn::Container> guiContainer;
-        std::unique_ptr<gcn::Label> guiSelectedCellLabel;
+        std::unique_ptr<gcn::LabelEx> guiSelectedCellLabel;
         std::unique_ptr<gui::Icon> guiForeground;
         std::unique_ptr<gui::Icon> guiBackground;
         std::unique_ptr<gui::Icon> guiLeftEye;
@@ -79,6 +79,7 @@ namespace hikari {
         std::vector< std::pair< Point2D<float>, Point2D<float> > > eyePositions;
         std::vector< Point2D<float> > cursorPositions;
         std::vector< AnimatedIcon > portraits;
+        std::vector< std::unique_ptr<gcn::LabelEx> > portraitLabels;
 
         static const char* PROPERTY_BACKGROUND;
         static const char* PROPERTY_FOREGROUND;
