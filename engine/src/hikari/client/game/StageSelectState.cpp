@@ -207,9 +207,10 @@ namespace hikari {
         for(unsigned int i = 0; i < NUM_OF_PORTRAITS; ++i) {
             const auto & position = cursorPositions.at(i);
             const auto & info = portraitInfo.at(i);
+            const auto & cursor = guiCursor.first;
 
             std::unique_ptr<gcn::LabelEx> label(new gcn::LabelEx(info.label));
-            label->setPosition(position.getX(), position.getY() + 48);
+            label->setPosition(position.getX(), position.getY() + cursor->getHeight());
             label->adjustSize();
             
             guiContainer->add(label.get());
