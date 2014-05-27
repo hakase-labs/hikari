@@ -52,6 +52,7 @@ namespace hikari {
         , gameProgress(services.locateService<GameProgress>(Services::GAMEPROGRESS))
         , taskQueue()
         , guiContainer(new gcn::Container())
+        , guiBossStripe(new gcn::Container())
         , guiSelectedCellLabel(new gcn::LabelEx())
         , guiForeground()
         , guiBackground()
@@ -159,6 +160,12 @@ namespace hikari {
         guiContainer->setOpaque(false);
         guiContainer->setVisible(true);
 
+        guiBossStripe->setSize(256, 96);
+        guiBossStripe->setBaseColor(0x1f22AA);
+        guiBossStripe->setOpaque(true);
+        guiBossStripe->setVisible(false);
+        guiBossStripe->setPosition(0, 240 / 2 - 96 / 2);
+
         guiSelectedCellLabel->setX(8);
         guiSelectedCellLabel->setY(224);
         guiSelectedCellLabel->setCaption("(" + StringUtils::toString(cursorColumn) + ", " + StringUtils::toString(cursorRow) + ")");
@@ -221,6 +228,8 @@ namespace hikari {
         guiContainer->add(guiRightEye.get());
         guiContainer->add(guiSelectedCellLabel.get());
         guiContainer->add(guiCursor.first.get());
+
+        guiContainer->add(guiBossStripe.get());
     }
 
     void StageSelectState::handleEvent(sf::Event &event) {
@@ -253,7 +262,7 @@ namespace hikari {
                     }));
 
                     // Wait half a second before continuing
-                    //taskQueue.push(std::make_shared<WaitTask>(0.5f));
+                    taskQueue.push(std::make_shared<WaitTask>(0.5f));
 
                     // Stop the regular music, start playing the boss intro music
                     taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
@@ -265,8 +274,11 @@ namespace hikari {
                         return true;
                     }));
 
+                    // Show the boss stripe thing (where the boss does his dance)
+                    guiBossStripe->setVisible(true);
+
                     // Wait 7 seconds for the music to play
-                    //taskQueue.push(std::make_shared<WaitTask>(7.0f));
+                    taskQueue.push(std::make_shared<WaitTask>(7.0f));
 
                     // Go to the next game state -- playing the game
                     taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
@@ -350,6 +362,8 @@ namespace hikari {
         cursorColumn = DEFAULT_CURSOR_COLUMN;
         cursorRow = DEFAULT_CURSOR_ROW;
 
+        guiBossStripe->setVisible(false);
+
         if(auto gp = gameProgress.lock()) {
             portraits.at(0).first->setVisible(!gp->bossIsDefeated(0));
             portraits.at(1).first->setVisible(!gp->bossIsDefeated(1));
@@ -378,6 +392,8 @@ namespace hikari {
         if(auto audio = audioService.lock()) {
             audio->stopMusic();
         }
+
+        guiBossStripe->setVisible(false);
 
         // Remove our GUI
         if(auto gui = guiService.lock()) {
