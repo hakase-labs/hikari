@@ -118,37 +118,37 @@
                     "animationName": "default-portrait"
                 },
                 {
-                    "label": "BUBBLE MAN",
+                    "label": "BUBBLE\n   MAN",
                     "animationSet": "assets/animations/stage-select.json",
                     "animationName": "default-portrait"
                 },
                 {
-                    "label": "TEST\n MAN",
+                    "label": "TEST\n   MAN",
                     "animationSet": "assets/animations/stage-select.json",
                     "animationName": "default-portrait"
                 },
                 {
-                    "label": "TEST MAN",
+                    "label": "TEST2\n   MAN",
                     "animationSet": "assets/animations/stage-select.json",
                     "animationName": "rockman-portrait"
                 },
                 {
-                    "label": "TEST MAN",
+                    "label": "TEST3\n   MAN",
                     "animationSet": "assets/animations/stage-select.json",
                     "animationName": "default-portrait"
                 },
                 {
-                    "label": "TEST MAN",
+                    "label": "TEST4\n   MAN",
                     "animationSet": "assets/animations/stage-select.json",
                     "animationName": "default-portrait"
                 },
                 {
-                    "label": "TEST MAN",
+                    "label": "TEST5\n   MAN",
                     "animationSet": "assets/animations/stage-select.json",
                     "animationName": "default-portrait"
                 },
                 {
-                    "label": "TEST MAN",
+                    "label": "TEST6\n   MAN",
                     "animationSet": "assets/animations/stage-select.json",
                     "animationName": "default-portrait"
                 }
