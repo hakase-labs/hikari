@@ -55,6 +55,8 @@ namespace hikari {
         std::weak_ptr<GameProgress> gameProgress;
         std::queue<std::shared_ptr<Task>> taskQueue;
         std::unique_ptr<gcn::Container> guiContainer;
+        std::unique_ptr<gcn::Container> guiFlashLayer;
+        std::unique_ptr<gcn::Container> guiBossIntroLayer;
         std::unique_ptr<gcn::Container> guiBossStripe;
         std::unique_ptr<gcn::LabelEx> guiSelectedCellLabel;
         std::unique_ptr<gui::Icon> guiForeground;

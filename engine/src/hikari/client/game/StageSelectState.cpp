@@ -52,6 +52,8 @@ namespace hikari {
         , gameProgress(services.locateService<GameProgress>(Services::GAMEPROGRESS))
         , taskQueue()
         , guiContainer(new gcn::Container())
+        , guiFlashLayer(new gcn::Container())
+        , guiBossIntroLayer(new gcn::Container())
         , guiBossStripe(new gcn::Container())
         , guiSelectedCellLabel(new gcn::LabelEx())
         , guiForeground()
@@ -160,11 +162,23 @@ namespace hikari {
         guiContainer->setOpaque(false);
         guiContainer->setVisible(true);
 
-        guiBossStripe->setSize(256, 96);
+        guiFlashLayer->setSize(guiContainer->getWidth(), guiContainer->getHeight());
+        guiFlashLayer->setBaseColor(0xffffff);
+        guiFlashLayer->setOpaque(true);
+        guiFlashLayer->setVisible(false);
+
+        guiBossIntroLayer->setSize(guiContainer->getWidth(), guiContainer->getHeight());
+        guiBossIntroLayer->setBaseColor(0x000000);
+        guiBossIntroLayer->setOpaque(true);
+        guiBossIntroLayer->setVisible(false);
+        guiBossIntroLayer->setEnabled(true);
+
+        guiBossStripe->setSize(guiBossIntroLayer->getWidth(), 96);
         guiBossStripe->setBaseColor(0x1f22AA);
         guiBossStripe->setOpaque(true);
-        guiBossStripe->setVisible(false);
-        guiBossStripe->setPosition(0, 240 / 2 - 96 / 2);
+        guiBossStripe->setVisible(true);
+        // Center vertically
+        guiBossStripe->setPosition(0, guiBossIntroLayer->getHeight() / 2 - guiBossStripe->getHeight() / 2);
 
         guiSelectedCellLabel->setX(8);
         guiSelectedCellLabel->setY(224);
@@ -229,11 +243,15 @@ namespace hikari {
         guiContainer->add(guiSelectedCellLabel.get());
         guiContainer->add(guiCursor.first.get());
 
-        guiContainer->add(guiBossStripe.get());
+        guiBossIntroLayer->add(guiBossStripe.get());
+        guiContainer->add(guiBossIntroLayer.get());
+        guiContainer->add(guiFlashLayer.get());
+        guiFlashLayer->requestMoveToTop();
     }
 
     void StageSelectState::handleEvent(sf::Event &event) {
         bool playSample = false;
+        const float SINGLE_FRAME = 1.0f / 60.0f;
 
         if(event.type == sf::Event::KeyPressed) {
             if(enableCursorMovement) {
@@ -262,7 +280,7 @@ namespace hikari {
                     }));
 
                     // Wait half a second before continuing
-                    taskQueue.push(std::make_shared<WaitTask>(0.5f));
+                    // taskQueue.push(std::make_shared<WaitTask>(0.5f));
 
                     // Stop the regular music, start playing the boss intro music
                     taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
@@ -274,8 +292,28 @@ namespace hikari {
                         return true;
                     }));
 
+                    // Flash the screen 5 times.
+                    for(int numFlashes = 0; numFlashes < 4; ++numFlashes) {
+                        taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
+                            guiFlashLayer->setVisible(true);
+                            return true;
+                        }));
+
+                        taskQueue.push(std::make_shared<WaitTask>(SINGLE_FRAME * 2));
+
+                        taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
+                            guiFlashLayer->setVisible(false);
+                            return true;
+                        }));
+
+                        taskQueue.push(std::make_shared<WaitTask>(SINGLE_FRAME * 2));
+                    }
+
                     // Show the boss stripe thing (where the boss does his dance)
-                    guiBossStripe->setVisible(true);
+                    taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
+                        guiBossIntroLayer->setVisible(true);
+                        return true;
+                    }));
 
                     // Wait 7 seconds for the music to play
                     taskQueue.push(std::make_shared<WaitTask>(7.0f));
@@ -311,24 +349,6 @@ namespace hikari {
         if(auto gui = guiService.lock()) {
             gui->renderAsTop(guiContainer.get(), target);
         }
-        //target.draw(background);
-        //target.draw(leftEye);
-        //target.draw(rightEye);
-        //target.draw(foreground);
-
-        // guiFont->renderText(target, "PUSH   START", 80, 8);
-        // guiFont->renderText(target, "MAN", 48, 88);
-        // guiFont->renderText(target, "MAN", 128, 88);
-        // guiFont->renderText(target, "MAN", 208, 88);
-        // guiFont->renderText(target, "MAN", 48, 152);
-        // // guiFont->renderText(target, "MAN", 128, 152);
-        // guiFont->renderText(target, "MAN", 208, 152);
-        // guiFont->renderText(target, "MAN", 48, 216);
-        // guiFont->renderText(target, "MAN", 128, 216);
-        // guiFont->renderText(target, "MAN", 208, 216);
-
-        // guiFont->renderText(target, "Boss: " + StringUtils::toString<int>(static_cast<int>(gameProgress->getCurrentBoss())), 8, 224);
-        // guiFont->renderText(target, "(" + StringUtils::toString<int>(cursorColumn) + ", " + StringUtils::toString<int>(cursorRow) + ")", 8, 224);
     }
 
     bool StageSelectState::update(float dt) {
@@ -340,7 +360,6 @@ namespace hikari {
                 taskQueue.pop();
             }
         } else {
-            // calculateCursorIndex();
             selectCurrentPortrait();
 
             guiCursor.second->update(dt);
@@ -362,7 +381,7 @@ namespace hikari {
         cursorColumn = DEFAULT_CURSOR_COLUMN;
         cursorRow = DEFAULT_CURSOR_ROW;
 
-        guiBossStripe->setVisible(false);
+        guiBossIntroLayer->setVisible(false);
 
         if(auto gp = gameProgress.lock()) {
             portraits.at(0).first->setVisible(!gp->bossIsDefeated(0));
@@ -393,7 +412,7 @@ namespace hikari {
             audio->stopMusic();
         }
 
-        guiBossStripe->setVisible(false);
+        guiBossIntroLayer->setVisible(false);
 
         // Remove our GUI
         if(auto gui = guiService.lock()) {
