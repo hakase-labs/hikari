@@ -66,7 +66,7 @@ namespace gcn
     class WidgetListener;
 
     /**
-     * Abstract class for widgets of Guichan. It contains basic functions 
+     * Abstract class for widgets of Guichan. It contains basic functions
      * every widget should have.
      *
      * NOTE: Functions begining with underscore "_" should not
@@ -93,8 +93,8 @@ namespace gcn
 
         /**
          * Draws the widget. The call to draw is initiated by the widget's
-         * parent. The graphics object is set up so that all drawing is relative 
-         * to the widget, i.e coordinate (0,0) is the top left corner of the widget. 
+         * parent. The graphics object is set up so that all drawing is relative
+         * to the widget, i.e coordinate (0,0) is the top left corner of the widget.
          * It is not possible to draw outside of a widget's dimension. If a widget
          * has children, the parent's draw function will always be called before
          * the children's draw functions are called.
@@ -115,12 +115,12 @@ namespace gcn
          * The frame is not considered a part of the widget, it only allows a frame
          * to be drawn around the widget, thus a frame will never be included when
          * calculating if a widget should receive events from user input. Also
-         * a widget's frame will never be included when calculating a widget's 
+         * a widget's frame will never be included when calculating a widget's
          * position.
-         * 
-         * The size of the frame is calculated using the widget's frame size. 
-         * If a widget has a frame size of 10 pixels than the area the drawFrame 
-         * function can draw to will be the size of the widget with an additional 
+         *
+         * The size of the frame is calculated using the widget's frame size.
+         * If a widget has a frame size of 10 pixels than the area the drawFrame
+         * function can draw to will be the size of the widget with an additional
          * extension of 10 pixels in each direction.
          *
          * An example when drawFrame is a useful function is if a widget needs
@@ -133,9 +133,9 @@ namespace gcn
         virtual void drawFrame(Graphics* graphics);
 
         /**
-         * Sets the size of the widget's frame. The frame is not considered a part of 
-         * the widget, it only allows a frame to be drawn around the widget, thus a frame 
-         * will never be included when calculating if a widget should receive events 
+         * Sets the size of the widget's frame. The frame is not considered a part of
+         * the widget, it only allows a frame to be drawn around the widget, thus a frame
+         * will never be included when calculating if a widget should receive events
          * from user input. Also a widget's frame will never be included when calculating
          * a widget's position.
          *
@@ -149,9 +149,9 @@ namespace gcn
         void setFrameSize(unsigned int frameSize);
 
         /**
-         * Gets the size of the widget's frame. The frame is not considered a part of 
-         * the widget, it only allows a frame to be drawn around the widget, thus a frame 
-         * will never be included when calculating if a widget should receive events 
+         * Gets the size of the widget's frame. The frame is not considered a part of
+         * the widget, it only allows a frame to be drawn around the widget, thus a frame
+         * will never be included when calculating if a widget should receive events
          * from user input. Also a widget's frame will never be included when calculating
          * a widget's position.
          *
@@ -448,7 +448,7 @@ namespace gcn
          * @since 0.6.0
          */
         const Color& getSelectionColor() const;
-        
+
         /**
          * Requests focus for the widget. A widget will only recieve focus
          * if it is focusable.
@@ -521,8 +521,8 @@ namespace gcn
         virtual FocusHandler* _getFocusHandler();
 
         /**
-         * Adds an action listener to the widget. When an action event 
-         * is fired by the widget the action listeners of the widget 
+         * Adds an action listener to the widget. When an action event
+         * is fired by the widget the action listeners of the widget
          * will get notified.
          *
          * @param actionListener The action listener to add.
@@ -541,8 +541,8 @@ namespace gcn
         void removeActionListener(ActionListener* actionListener);
 
         /**
-         * Adds a death listener to the widget. When a death event is 
-         * fired by the widget the death listeners of the widget will 
+         * Adds a death listener to the widget. When a death event is
+         * fired by the widget the death listeners of the widget will
          * get notified.
          *
          * @param deathListener The death listener to add.
@@ -561,8 +561,8 @@ namespace gcn
         void removeDeathListener(DeathListener* deathListener);
 
         /**
-         * Adds a mouse listener to the widget. When a mouse event is 
-         * fired by the widget the mouse listeners of the widget will 
+         * Adds a mouse listener to the widget. When a mouse event is
+         * fired by the widget the mouse listeners of the widget will
          * get notified.
          *
          * @param mouseListener The mouse listener to add.
@@ -581,8 +581,8 @@ namespace gcn
         void removeMouseListener(MouseListener* mouseListener);
 
         /**
-         * Adds a key listener to the widget. When a key event is 
-         * fired by the widget the key listeners of the widget will 
+         * Adds a key listener to the widget. When a key event is
+         * fired by the widget the key listeners of the widget will
          * get notified.
          *
          * @param keyListener The key listener to add.
@@ -601,8 +601,8 @@ namespace gcn
         void removeKeyListener(KeyListener* keyListener);
 
         /**
-         * Adds a focus listener to the widget. When a focus event is 
-         * fired by the widget the key listeners of the widget will 
+         * Adds a focus listener to the widget. When a focus event is
+         * fired by the widget the key listeners of the widget will
          * get notified.
          *
          * @param focusListener The focus listener to add.
@@ -621,8 +621,8 @@ namespace gcn
         void removeFocusListener(FocusListener* focusListener);
 
         /**
-         * Adds a widget listener to the widget. When a widget event is 
-         * fired by the widget the key listeners of the widget will 
+         * Adds a widget listener to the widget. When a widget event is
+         * fired by the widget the key listeners of the widget will
          * get notified.
          *
          * @param widgetListener The widget listener to add.
@@ -686,8 +686,8 @@ namespace gcn
         virtual void _setParent(Widget* parent);
 
         /**
-         * Gets the font set for the widget. If no font has been set, 
-         * the global font will be returned. If no global font has been set, 
+         * Gets the font set for the widget. If no font has been set,
+         * the global font will be returned. If no global font has been set,
          * the default font will be returend.
          *
          * @return The font set for the widget.
@@ -706,7 +706,7 @@ namespace gcn
         static void setGlobalFont(Font* font);
 
         /**
-         * Sets the font for the widget. If NULL is passed, the global font 
+         * Sets the font for the widget. If NULL is passed, the global font
          * will be used.
          *
          * @param font The font to set for the widget.
@@ -867,7 +867,7 @@ namespace gcn
          * @return A list of widgets. An empty list if no widgets was found.
          * @since 0.9.0
          */
-        virtual std::list<Widget*> getWidgetsIn(const Rectangle& area, 
+        virtual std::list<Widget*> getWidgetsIn(const Rectangle& area,
                                                 Widget* ignore = NULL);
 
         /**
@@ -904,7 +904,7 @@ namespace gcn
          *
          * NOTE: The returned rectangle should be relative to the widget,
          *       i.e a rectangle with x and y coordinate (0,0) and with
-         *       width and height the same as the widget will let the 
+         *       width and height the same as the widget will let the
          *       children draw themselves in the whole widget.
          *
          * An example of a widget that overloads this method is ScrollArea.
@@ -965,7 +965,7 @@ namespace gcn
 
         /**
          * Focuses the next widget in the widget.
-         * 
+         *
          * @see moveToBottom
          * @since 0.1.0
          */
@@ -1103,7 +1103,7 @@ namespace gcn
          * the ability to create a Guichan GUI from an XML file.
          *
          * @param id The id to find a widget by.
-         * @return The widget with the corrosponding id, 
+         * @return The widget with the corrosponding id,
          *         NULL of no widget is found.
          *
          * @since 0.8.0
@@ -1135,14 +1135,14 @@ namespace gcn
          */
         std::list<KeyListener*> mKeyListeners;
 
-        /** 
+        /**
          * Holds the action listeners of the widget.
          */
         std::list<ActionListener*> mActionListeners;
 
         /**
          * Holds the death listeners of the widget.
-         */ 
+         */
         std::list<DeathListener*> mDeathListeners;
 
         /**
@@ -1197,7 +1197,7 @@ namespace gcn
          */
         Rectangle mDimension;
 
-        /** 
+        /**
          * Holds the frame size of the widget.
          */
         unsigned int mFrameSize;

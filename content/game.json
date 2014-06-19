@@ -93,7 +93,7 @@
                 [{ "x" : 124, "y" : 120 }, { "x" : 134, "y" : 120 }],
                 [{ "x" : 120, "y" : 122 }, { "x" : 129, "y" : 122 }],
                 [{ "x" : 123, "y" : 122 }, { "x" : 130, "y" : 122 }],
-                [{ "x" : 124, "y" : 122 }, { "x" : 133, "y" : 122 }] 
+                [{ "x" : 124, "y" : 122 }, { "x" : 133, "y" : 122 }]
             ],
             "cursorPositions" : [
                 { "x" : 24, "y" : 32 },
@@ -109,6 +109,7 @@
             "portraits": [
                 {
                     "label": "PEARL \n   MAN",
+                    "introLabel": "PEARL MAN",
                     "animationSet": "assets/animations/stage-select.json",
                     "animationName": "default-portrait"
                 },

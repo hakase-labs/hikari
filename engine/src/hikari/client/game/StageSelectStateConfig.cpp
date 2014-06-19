@@ -72,6 +72,7 @@ namespace hikari {
             PortraitInfo info;
 
             info.label = portraitJson.get("label", "").asString();
+            info.introLabel = portraitJson.get("introLabel", "").asString();
             info.animationSet = portraitJson.get("animationSet", "").asString();
             info.animationName = portraitJson.get("animationName", "").asString();
             portraits.push_back(info);

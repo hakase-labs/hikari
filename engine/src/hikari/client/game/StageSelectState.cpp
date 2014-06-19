@@ -55,6 +55,7 @@ namespace hikari {
         , guiFlashLayer(new gcn::Container())
         , guiBossIntroLayer(new gcn::Container())
         , guiBossStripe(new gcn::Container())
+        , guiBossIntroLabel(new gcn::LabelEx())
         , guiSelectedCellLabel(new gcn::LabelEx())
         , guiForeground()
         , guiBackground()
@@ -69,7 +70,7 @@ namespace hikari {
     {
         std::weak_ptr<ImageCache> imageCache = services.locateService<ImageCache>(Services::IMAGECACHE);
         std::weak_ptr<AnimationSetCache> animationCache = services.locateService<AnimationSetCache>(Services::ANIMATIONSETCACHE);
-        
+
         // Load sprites from config
         // TODO: This needs to be refactored to be safer and things like that
         // TODO: Need a utility method to load sf:Sprite from JSON
@@ -180,6 +181,11 @@ namespace hikari {
         // Center vertically
         guiBossStripe->setPosition(0, guiBossIntroLayer->getHeight() / 2 - guiBossStripe->getHeight() / 2);
 
+        guiBossIntroLabel->setY(guiBossStripe->getHeight() - 16);
+        guiBossIntroLabel->setCaption("TESTING THIS");
+        guiBossIntroLabel->adjustSize();
+        guiBossIntroLabel->setX((guiBossStripe->getWidth() / 2) - (guiBossIntroLabel->getWidth() / 2));
+
         guiSelectedCellLabel->setX(8);
         guiSelectedCellLabel->setY(224);
         guiSelectedCellLabel->setCaption("(" + StringUtils::toString(cursorColumn) + ", " + StringUtils::toString(cursorRow) + ")");
@@ -195,7 +201,7 @@ namespace hikari {
         if(cursorAnimations) {
             guiCursor.first.reset(new gui::Icon(cursorAnimations->getImageFileName()));
             guiCursor.second.reset(new gui::IconAnimator(*guiCursor.first.get()));
-            guiCursor.second->setAnimation(cursorAnimations->get("default"));            
+            guiCursor.second->setAnimation(cursorAnimations->get("default"));
         }
 
         if(portraitAnimations) {
@@ -233,7 +239,7 @@ namespace hikari {
             std::unique_ptr<gcn::LabelEx> label(new gcn::LabelEx(info.label));
             label->setPosition(position.getX(), position.getY() + cursor->getHeight());
             label->adjustSize();
-            
+
             guiContainer->add(label.get());
             portraitLabels.push_back(std::move(label));
         }
@@ -244,6 +250,7 @@ namespace hikari {
         guiContainer->add(guiCursor.first.get());
 
         guiBossIntroLayer->add(guiBossStripe.get());
+        guiBossStripe->add(guiBossIntroLabel.get());
         guiContainer->add(guiBossIntroLayer.get());
         guiContainer->add(guiFlashLayer.get());
         guiFlashLayer->requestMoveToTop();
