@@ -22,6 +22,7 @@ namespace Services {
     const static std::string DAMAGETABLE = "DamageTable";
     const static std::string INPUT = "Input";
     const static std::string EVENTBUS = "EventBus";
+    const static std::string SCREENEFFECTS = "ScreenEffects";
 
 } // hikari::Services
 } // hikari

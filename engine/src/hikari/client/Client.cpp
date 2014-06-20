@@ -8,6 +8,7 @@
 #include "hikari/client/game/GameOverState.hpp"
 #include "hikari/client/game/KeyboardInput.hpp"
 #include "hikari/client/game/InputService.hpp"
+#include "hikari/client/game/ScreenEffectsService.hpp"
 #include "hikari/client/game/EventBusService.hpp"
 #include "hikari/client/game/events/EventBusImpl.hpp"
 #include "hikari/client/game/events/EventListenerDelegate.hpp"
@@ -208,6 +209,7 @@ namespace hikari {
         auto damageTable       = std::make_shared<DamageTable>();
         auto inputService      = std::make_shared<InputService>(globalInput);
         auto eventBusService   = std::make_shared<EventBusService>(globalEventBus);
+        auto screenEffectsService = std::make_shared<ScreenEffectsService>(eventBusService, screenBuffer.getSize().x, screenBuffer.getSize().y);
 
         gameProgress->setEventBus(globalEventBus);
 
@@ -229,6 +231,7 @@ namespace hikari {
         services.registerService(Services::DAMAGETABLE,       damageTable);
         services.registerService(Services::INPUT,             inputService);
         services.registerService(Services::EVENTBUS,          eventBusService);
+        services.registerService(Services::SCREENEFFECTS,  screenEffectsService);
 
         AnimationLoader::setImageCache(std::weak_ptr<ImageCache>(imageCache));
 
@@ -392,6 +395,7 @@ namespace hikari {
 
         auto guiService = services.locateService<GuiService>(Services::GUISERVICE).lock();
         auto audioService = services.locateService<AudioService>(Services::AUDIO).lock();
+        auto screenEffectsService = services.locateService<ScreenEffectsService>(Services::SCREENEFFECTS).lock();
 
         gcn::Gui & gui = guiService->getGui();
 
@@ -442,6 +446,8 @@ namespace hikari {
                 }
 
                 controller.update(dt * speedMultiplier);
+                screenEffectsService->update(dt * speedMultiplier);
+
                 // Update input after the game controller so you don't accidentally
                 // skip an event that took place.
                 globalInput->update(dt);
@@ -457,8 +463,16 @@ namespace hikari {
             window.clear(sf::Color::Blue);
             screenBuffer.clear(sf::Color::Magenta);
             controller.render(screenBuffer);
-            window.setView(screenBufferView);
 
+            // This is weird because we call display() twice on screenBuffer.
+            // We need to do this in order to render it to a buffer, and then
+            // that buffer gets rendered back to screenBuffer, hence the need
+            // to call display() again.
+            screenBuffer.display();
+            screenEffectsService->setInputTexture(screenBuffer);
+            screenEffectsService->render(screenBuffer);
+
+            window.setView(screenBufferView);
             guiService->renderHudContainer();
 
             screenBuffer.display();

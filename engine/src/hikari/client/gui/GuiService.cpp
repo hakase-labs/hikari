@@ -43,7 +43,7 @@ namespace hikari {
         if(auto globalFont = getFontByName(DEFAULT_FONT_NAME)) {
             gcn::Widget::setGlobalFont(globalFont.get());
         }
-        
+
         // Set up the GUI's inputs/outputs
         gui->setInput(input.get());
         gui->setGraphics(graphics.get());
