@@ -11,8 +11,12 @@ namespace hikari {
         , eventBus(eventBus)
         , backBuffer()
         , inputSprite()
+        , effects()
     {
         backBuffer.create(bufferWidth, bufferHeight);
+
+        auto effect = std::make_shared<FadingScreenEffect>();
+        effects.push_back(effect);
     }
 
     ScreenEffectsService::~ScreenEffectsService() {
@@ -24,12 +28,30 @@ namespace hikari {
     }
 
     void ScreenEffectsService::update(float dt) {
-
+        std::for_each(
+            std::begin(effects),
+            std::end(effects),
+            [&](std::shared_ptr<ScreenEffect> & effect) {
+                effect->update(dt);
+            }
+        );
     }
 
     void ScreenEffectsService::render(sf::RenderTarget & target) {
         backBuffer.clear(sf::Color::Black);
-        backBuffer.draw(inputSprite /* , effectShader */);
+
+        std::for_each(
+            std::begin(effects),
+            std::end(effects),
+            [&](std::shared_ptr<ScreenEffect> & effect) {
+                // Render the effect to the buffer, and then swap the buffer
+                // pointers.
+                effect->inputTexture = const_cast<sf::Texture*>(inputSprite.getTexture());
+                effect->render(backBuffer);
+            }
+        );
+
+        //backBuffer.draw(inputSprite /* , effectShader */);
         backBuffer.display();
 
         sf::Sprite renderSprite(backBuffer.getTexture());
