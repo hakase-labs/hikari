@@ -9,7 +9,10 @@
 
 #include <SFML/Graphics/RenderTexture.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/Shader.hpp>
 #include <SFML/Graphics/Sprite.hpp>
+
+#include "hikari/core/util/FileSystem.hpp"
 
 namespace sf {
     class RenderTarget;
@@ -57,6 +60,30 @@ namespace hikari {
         virtual void render(sf::RenderTarget & target) {
             target.draw(*inputSprite);
             target.draw(mask);
+        }
+    };
+
+    struct FadingShaderScreenEffect : public ScreenEffect {
+        float timer = 0;
+        std::unique_ptr<sf::Shader> pixelShader;
+
+        FadingShaderScreenEffect() {
+            const std::string shaderCode = FileSystem::readFileAsString("assets/shaders/fade.frag");
+            pixelShader.reset(new sf::Shader());
+            pixelShader->loadFromMemory(shaderCode, sf::Shader::Fragment);
+            pixelShader->setParameter("texture", sf::Shader::CurrentTexture);
+        }
+
+        virtual void update(float dt) {
+            timer += dt;
+
+            if(timer >= 1.0) {
+                timer = 0;
+            }
+        }
+
+        virtual void render(sf::RenderTarget & target) {
+            target.draw(*inputSprite, pixelShader.get());
         }
     };
 
