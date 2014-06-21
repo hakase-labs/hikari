@@ -46,7 +46,7 @@ namespace hikari {
             [&](std::shared_ptr<ScreenEffect> & effect) {
                 // Render the effect to the buffer, and then swap the buffer
                 // pointers.
-                effect->inputTexture = const_cast<sf::Texture*>(inputSprite.getTexture());
+                effect->inputSprite = &inputSprite;
                 effect->render(backBuffer);
             }
         );

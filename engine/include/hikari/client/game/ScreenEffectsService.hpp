@@ -21,7 +21,7 @@ namespace hikari {
     class EventBusService;
 
     struct ScreenEffect {
-        sf::Texture * inputTexture;
+        sf::Sprite * inputSprite;
 
         virtual void update(float dt) {
 
@@ -55,9 +55,7 @@ namespace hikari {
         }
 
         virtual void render(sf::RenderTarget & target) {
-            sf::Sprite sprite(*inputTexture);
-
-            target.draw(sprite);
+            target.draw(*inputSprite);
             target.draw(mask);
         }
     };
