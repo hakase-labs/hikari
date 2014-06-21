@@ -77,6 +77,8 @@ namespace hikari {
         virtual void update(float dt) {
             timer += dt;
 
+            pixelShader->setParameter("fadePercent", (timer / 1.0f) * 100.0f);
+
             if(timer >= 1.0) {
                 timer = 0;
             }

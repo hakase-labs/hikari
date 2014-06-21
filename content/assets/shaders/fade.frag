@@ -1,4 +1,5 @@
 uniform sampler2D texture;
+uniform float fadePercent;
 
 void main()
 {
@@ -6,7 +7,7 @@ void main()
 
     // Do tinting/fading based on elapsed time..
     vec4 tintedPixel = sourcePixel;
-    tintedPixel.r = 1.0;
+    tintedPixel.r = fadePercent / 100.0;
 
     gl_FragColor = tintedPixel;
 }
