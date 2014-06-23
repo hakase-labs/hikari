@@ -15,7 +15,7 @@ namespace hikari {
     {
         backBuffer.create(bufferWidth, bufferHeight);
 
-        auto effect = std::make_shared<FadingShaderScreenEffect>();
+        auto effect = std::make_shared<FadingShaderScreenEffect>((1.0f/60.0f) * 13.0f);
         effects.push_back(effect);
     }
 
