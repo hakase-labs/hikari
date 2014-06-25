@@ -73,12 +73,12 @@ namespace hikari {
         }
     };
 
-    struct FadingShaderScreenEffect : public ScreenEffect {
+    struct FadeOutShaderScreenEffect : public ScreenEffect {
         float timer = 0;
         float fadeDuration = 1.0f;
         std::unique_ptr<sf::Shader> pixelShader;
 
-        FadingShaderScreenEffect(float fadeDuration = 1.0f)
+        FadeOutShaderScreenEffect(float fadeDuration = 1.0f)
             : fadeDuration(fadeDuration)
         {
             const std::string shaderCode = FileSystem::readFileAsString("assets/shaders/fade.frag");
@@ -91,10 +91,37 @@ namespace hikari {
             timer += dt;
 
             pixelShader->setParameter("fadePercent", (timer / fadeDuration) * 100.0f);
+        }
 
-            if(timer >= fadeDuration) {
+        virtual void render(sf::RenderTarget & target) {
+            target.draw(*inputSprite, pixelShader.get());
+        }
+    };
+
+    struct FadeInShaderScreenEffect : public ScreenEffect {
+        float timer = 0;
+        float fadeDuration = 1.0f;
+        std::unique_ptr<sf::Shader> pixelShader;
+
+        FadeInShaderScreenEffect(float fadeDuration = 1.0f)
+            : timer(fadeDuration)
+            , fadeDuration(fadeDuration)
+        {
+            const std::string shaderCode = FileSystem::readFileAsString("assets/shaders/fade.frag");
+            pixelShader.reset(new sf::Shader());
+            pixelShader->loadFromMemory(shaderCode, sf::Shader::Fragment);
+            pixelShader->setParameter("texture", sf::Shader::CurrentTexture);
+            pixelShader->setParameter("fadePercent", (timer / fadeDuration) * 100.0f);
+        }
+
+        virtual void update(float dt) {
+            timer -= dt;
+
+            if(timer < 0) {
                 timer = 0;
             }
+
+            pixelShader->setParameter("fadePercent", (timer / fadeDuration) * 100.0f);
         }
 
         virtual void render(sf::RenderTarget & target) {
