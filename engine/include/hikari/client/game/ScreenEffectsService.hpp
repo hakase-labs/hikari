@@ -35,44 +35,6 @@ namespace hikari {
         }
     };
 
-    struct FadingScreenEffect : public ScreenEffect {
-        float timer = 0;
-        sf::RectangleShape mask;
-
-        FadingScreenEffect() {
-            mask.setSize(sf::Vector2f(256, 240));
-            mask.setFillColor(sf::Color(0x3f, 0x3f, 0x3f, 0xff));
-        }
-
-        virtual void update(float dt) {
-            timer += dt;
-
-            // sf::Color fillColor = mask.getFillColor();
-            // fillColor.a = std::min(255, static_cast<int>((timer / 1.0) * 255.0f));
-
-            // mask.setFillColor(fillColor);
-            //
-            if((timer * 100.0f) < 25.0) {
-                mask.setFillColor(sf::Color(0x3f, 0x3f, 0x3f, 0xff));
-            } else if((timer * 100.0f) < 50.0) {
-                mask.setFillColor(sf::Color(0x2f, 0x2f, 0x2f, 0xff));
-            } else if((timer * 100.0f) < 75.0) {
-                mask.setFillColor(sf::Color(0x1f, 0x1f, 0x1f, 0xff));
-            } else if((timer * 100.0f) < 100.0) {
-                mask.setFillColor(sf::Color(0x0f, 0x0f, 0x0f, 0xff));
-            }
-
-            if(timer >= 1.0) {
-                timer = 0;
-            }
-        }
-
-        virtual void render(sf::RenderTarget & target) {
-            target.draw(*inputSprite);
-            target.draw(mask, sf::BlendAdd);
-        }
-    };
-
     struct FadeOutShaderScreenEffect : public ScreenEffect {
         float timer = 0;
         float fadeDuration = 1.0f;
@@ -120,11 +82,10 @@ namespace hikari {
             if(timer < 0) {
                 timer = 0;
             }
-
-            pixelShader->setParameter("fadePercent", (timer / fadeDuration) * 100.0f);
         }
 
         virtual void render(sf::RenderTarget & target) {
+            pixelShader->setParameter("fadePercent", (timer / fadeDuration) * 100.0f);
             target.draw(*inputSprite, pixelShader.get());
         }
     };
