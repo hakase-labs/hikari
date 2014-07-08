@@ -105,6 +105,9 @@ namespace hikari {
 
         void update(float dt);
         void render(sf::RenderTarget & target);
+
+        void fadeOut(float fadeDuration = 0.2167f);
+        void fadeIn(float fadeDuration = 0.2167f);
     };
 
 } // hikari

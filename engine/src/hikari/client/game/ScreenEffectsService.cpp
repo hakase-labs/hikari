@@ -58,4 +58,18 @@ namespace hikari {
         target.draw(renderSprite);
     }
 
+    void ScreenEffectsService::fadeOut(float fadeDuration) {
+        HIKARI_LOG(debug) << "ScreenEffectsService::fadeOut";
+
+        effects.clear();
+        effects.push_back(std::make_shared<FadeOutShaderScreenEffect>(fadeDuration));
+    }
+
+    void ScreenEffectsService::fadeIn(float fadeDuration) {
+        HIKARI_LOG(debug) << "ScreenEffectsService::fadeIn";
+
+        effects.clear();
+        effects.push_back(std::make_shared<FadeInShaderScreenEffect>(fadeDuration));
+    }
+
 } // hikari

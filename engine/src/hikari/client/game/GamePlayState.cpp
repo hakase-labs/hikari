@@ -45,6 +45,7 @@
 #include "hikari/client/game/events/EventData.hpp"
 #include "hikari/client/game/events/WeaponFireEventData.hpp"
 #include "hikari/client/game/events/ObjectRemovedEventData.hpp"
+#include "hikari/client/game/screenEffectsService.hpp"
 #include "hikari/client/gui/GuiService.hpp"
 #include "hikari/client/gui/Menu.hpp"
 #include "hikari/client/gui/WeaponMenuItem.hpp"
@@ -109,6 +110,7 @@ namespace hikari {
         , imageCache(services.locateService<ImageCache>(Services::IMAGECACHE))
         , userInput(new RealTimeInput())
         , scriptEnv(services.locateService<SquirrelService>(Services::SCRIPTING))
+        , screenEffectsService(services.locateService<ScreenEffectsService>(Services::SCREENEFFECTS))
         , collisionResolver(new WorldCollisionResolver())
         , currentMap(nullptr)
         , currentTileset(nullptr)
@@ -422,25 +424,28 @@ namespace hikari {
     void GamePlayState::handleEvent(sf::Event &event) {
         if((event.type == sf::Event::KeyPressed) && event.key.code == sf::Keyboard::Return) {
             if(canViewMenu) {
+
                 taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
-                    sf::Color color = fadeOverlay.getFillColor();
-                    color.a = 0;
-                    fadeOverlay.setFillColor(color);
-                    drawInfamousBlackBar = true;
+                    if(screenEffectsService) {
+                        screenEffectsService->fadeOut();
+                    }
                     return true;
                 }));
-                taskQueue.push(std::make_shared<FadeColorTask>(FadeColorTask::FADE_OUT, fadeOverlay, (1.0f/60.0f) * 13.0f));
+
+                taskQueue.push(std::make_shared<WaitTask>((1.0f/60.0f) * 13.0f));
+
                 taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
                     isViewingMenu = !isViewingMenu;
                     guiMenuPanel->setVisible(isViewingMenu);
                     guiWeaponMenu->requestFocus();
+
+                    if(screenEffectsService) {
+                        screenEffectsService->fadeIn();
+                    }
                     return true;
                 }));
-                taskQueue.push(std::make_shared<FadeColorTask>(FadeColorTask::FADE_IN, fadeOverlay, (1.0f/60.0f) * 13.0f));
-                taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
-                    drawInfamousBlackBar = false;
-                    return true;
-                }));
+
+                taskQueue.push(std::make_shared<WaitTask>((1.0f/60.0f) * 13.0f));
             }
 
             if(auto gp = gameProgress.lock()) {
@@ -1928,7 +1933,7 @@ namespace hikari {
                     int currentWeaponEnergy = gp->getWeaponEnergy(gp->getCurrentWeapon());
                     gamePlayState.hero->setHasAvailableWeaponEnergy(currentWeaponEnergy);
                 }
-                
+
                 gamePlayState.hero->update(dt);
 
                 //
