@@ -1,6 +1,7 @@
 #include "hikari/client/game/StageSelectState.hpp"
 #include "hikari/client/audio/AudioService.hpp"
 #include "hikari/client/game/GameProgress.hpp"
+#include "hikari/client/game/ScreenEffectsService.hpp"
 #include "hikari/client/game/Task.hpp"
 #include "hikari/client/game/FunctionTask.hpp"
 #include "hikari/client/game/WaitTask.hpp"
@@ -10,6 +11,8 @@
 #include "hikari/client/Services.hpp"
 
 #include "hikari/core/game/GameController.hpp"
+#include "hikari/core/game/StateTransition.hpp"
+#include "hikari/core/game/FadeStateTransition.hpp"
 #include "hikari/core/gui/ImageFont.hpp"
 #include "hikari/core/util/ImageCache.hpp"
 #include "hikari/core/util/AnimationSetCache.hpp"
@@ -50,6 +53,7 @@ namespace hikari {
         , guiService(services.locateService<GuiService>(Services::GUISERVICE))
         , audioService(services.locateService<AudioService>(Services::AUDIO))
         , gameProgress(services.locateService<GameProgress>(Services::GAMEPROGRESS))
+        , screenEffectsService(services.locateService<ScreenEffectsService>(Services::SCREENEFFECTS))
         , taskQueue()
         , guiContainer(new gcn::Container())
         , guiFlashLayer(new gcn::Container())
@@ -325,9 +329,23 @@ namespace hikari {
                     // Wait 7 seconds for the music to play
                     taskQueue.push(std::make_shared<WaitTask>(7.0f));
 
+                    // Fade out
+                    taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
+                        if(auto effects = screenEffectsService.lock()) {
+                            effects->fadeOut((1.0f / 60.0f) * 13.0f);
+                        }
+
+                        return true;
+                    }));
+
+                    taskQueue.push(std::make_shared<WaitTask>((1.0f / 60.0f) * 13.0f));
+
                     // Go to the next game state -- playing the game
                     taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
-                        controller.requestStateChange("gameplay");
+                        controller.requestStateChange(
+                            "gameplay",
+                            std::unique_ptr<StateTransition>(new FadeStateTransition(FadeStateTransition::FADE_OUT, sf::Color::Black, (1.0f/60.0f*13.0f))),
+                            std::unique_ptr<StateTransition>());
                         startGamePlay = true;
 
                         return true;

@@ -313,6 +313,8 @@ namespace hikari {
         //
         void buildGui();
         void updateGui();
+        void fadeOut();
+        void fadeIn();
 
         /**
          * GamePlayState::SubState encapsulates a part of gameplay that operates

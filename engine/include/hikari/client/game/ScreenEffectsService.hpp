@@ -47,15 +47,15 @@ namespace hikari {
             pixelShader.reset(new sf::Shader());
             pixelShader->loadFromMemory(shaderCode, sf::Shader::Fragment);
             pixelShader->setParameter("texture", sf::Shader::CurrentTexture);
+            pixelShader->setParameter("fadePercent", (timer / fadeDuration) * 100.0f);
         }
 
         virtual void update(float dt) {
             timer += dt;
-
-            pixelShader->setParameter("fadePercent", (timer / fadeDuration) * 100.0f);
         }
 
         virtual void render(sf::RenderTarget & target) {
+            pixelShader->setParameter("fadePercent", (timer / fadeDuration) * 100.0f);
             target.draw(*inputSprite, pixelShader.get());
         }
     };

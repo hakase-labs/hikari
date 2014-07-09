@@ -29,6 +29,7 @@ namespace hikari {
 
     class AnimationSet;
     class AudioService;
+    class ScreenEffectsService;
     class GameProgress;
     class GuiService;
     class ImageFont;
@@ -53,6 +54,7 @@ namespace hikari {
         std::weak_ptr<GuiService> guiService;
         std::weak_ptr<AudioService> audioService;
         std::weak_ptr<GameProgress> gameProgress;
+        std::weak_ptr<ScreenEffectsService> screenEffectsService;
         std::queue<std::shared_ptr<Task>> taskQueue;
         std::unique_ptr<gcn::Container> guiContainer;
         std::unique_ptr<gcn::Container> guiFlashLayer;
