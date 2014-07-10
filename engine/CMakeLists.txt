@@ -1,7 +1,7 @@
 set( CMAKE_INCLUDE_CURRENT_DIR ON )
 
 set( GME_DIR "${PROJECT_SOURCE_DIR}/extlibs/gme-nes" )
-set( GME_SOURCE_FILES 
+set( GME_SOURCE_FILES
     ${GME_DIR}/Blip_Buffer.cpp
     ${GME_DIR}/Classic_Emu.cpp
     ${GME_DIR}/Data_Reader.cpp
@@ -168,6 +168,7 @@ set( HIKARI_CLIENT_GAME_SOURCE_FILES
     src/hikari/client/game/SpriteTestState.cpp
     src/hikari/client/game/StageSelectState.cpp
     src/hikari/client/game/StageSelectStateConfig.cpp
+    src/hikari/client/game/ScreenEffectsService.cpp
     src/hikari/client/game/Task.cpp
     src/hikari/client/game/BaseTask.cpp
     src/hikari/client/game/FunctionTask.cpp

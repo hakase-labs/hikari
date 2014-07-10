@@ -93,7 +93,7 @@
                 [{ "x" : 124, "y" : 120 }, { "x" : 134, "y" : 120 }],
                 [{ "x" : 120, "y" : 122 }, { "x" : 129, "y" : 122 }],
                 [{ "x" : 123, "y" : 122 }, { "x" : 130, "y" : 122 }],
-                [{ "x" : 124, "y" : 122 }, { "x" : 133, "y" : 122 }] 
+                [{ "x" : 124, "y" : 122 }, { "x" : 133, "y" : 122 }]
             ],
             "cursorPositions" : [
                 { "x" : 24, "y" : 32 },
@@ -109,6 +109,7 @@
             "portraits": [
                 {
                     "label": "PEARL \n   MAN",
+                    "introLabel": "PEARL MAN",
                     "animationSet": "assets/animations/stage-select.json",
                     "animationName": "default-portrait"
                 },
@@ -118,37 +119,37 @@
                     "animationName": "default-portrait"
                 },
                 {
-                    "label": "BUBBLE MAN",
+                    "label": "BUBBLE\n   MAN",
                     "animationSet": "assets/animations/stage-select.json",
                     "animationName": "default-portrait"
                 },
                 {
-                    "label": "TEST\n MAN",
+                    "label": "TEST\n   MAN",
                     "animationSet": "assets/animations/stage-select.json",
                     "animationName": "default-portrait"
                 },
                 {
-                    "label": "TEST MAN",
+                    "label": "TEST2\n   MAN",
                     "animationSet": "assets/animations/stage-select.json",
                     "animationName": "rockman-portrait"
                 },
                 {
-                    "label": "TEST MAN",
+                    "label": "TEST3\n   MAN",
                     "animationSet": "assets/animations/stage-select.json",
                     "animationName": "default-portrait"
                 },
                 {
-                    "label": "TEST MAN",
+                    "label": "TEST4\n   MAN",
                     "animationSet": "assets/animations/stage-select.json",
                     "animationName": "default-portrait"
                 },
                 {
-                    "label": "TEST MAN",
+                    "label": "TEST5\n   MAN",
                     "animationSet": "assets/animations/stage-select.json",
                     "animationName": "default-portrait"
                 },
                 {
-                    "label": "TEST MAN",
+                    "label": "TEST6\n   MAN",
                     "animationSet": "assets/animations/stage-select.json",
                     "animationName": "default-portrait"
                 }

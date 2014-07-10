@@ -22,6 +22,7 @@ namespace hikari {
 
         struct PortraitInfo {
             std::string label;
+            std::string introLabel;
             std::string animationSet;
             std::string animationName;
         };

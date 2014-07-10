@@ -13,7 +13,7 @@ namespace hikari {
         , enqueuedNextState(nullptr)
         , currState(state->getName())
         , prevState(state->getName())
-        , nextState(state->getName()) 
+        , nextState(state->getName())
     {
 
     }
@@ -124,7 +124,7 @@ namespace hikari {
         } else if(inTransition) {
             inTransition->render(target);
         } else {
-            state->render(target);                
+            state->render(target);
         }
     }
 
@@ -143,6 +143,8 @@ namespace hikari {
                 } else {
                     outTransition->update(dt);
                 }
+            } else {
+                gotoNextState();
             }
         } else {
             if(inTransition) {
@@ -176,12 +178,12 @@ namespace hikari {
         return false;
     }
 
-    void GameController::DefaultGameState::onEnter() { 
-    
+    void GameController::DefaultGameState::onEnter() {
+
     }
 
-    void GameController::DefaultGameState::onExit() { 
-    
+    void GameController::DefaultGameState::onExit() {
+
     }
 
     const std::string &GameController::DefaultGameState::getName() const {

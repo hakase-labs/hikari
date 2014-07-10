@@ -45,6 +45,7 @@
 #include "hikari/client/game/events/EventData.hpp"
 #include "hikari/client/game/events/WeaponFireEventData.hpp"
 #include "hikari/client/game/events/ObjectRemovedEventData.hpp"
+#include "hikari/client/game/screenEffectsService.hpp"
 #include "hikari/client/gui/GuiService.hpp"
 #include "hikari/client/gui/Menu.hpp"
 #include "hikari/client/gui/WeaponMenuItem.hpp"
@@ -109,6 +110,7 @@ namespace hikari {
         , imageCache(services.locateService<ImageCache>(Services::IMAGECACHE))
         , userInput(new RealTimeInput())
         , scriptEnv(services.locateService<SquirrelService>(Services::SCRIPTING))
+        , screenEffectsService(services.locateService<ScreenEffectsService>(Services::SCREENEFFECTS))
         , collisionResolver(new WorldCollisionResolver())
         , currentMap(nullptr)
         , currentTileset(nullptr)
@@ -422,25 +424,28 @@ namespace hikari {
     void GamePlayState::handleEvent(sf::Event &event) {
         if((event.type == sf::Event::KeyPressed) && event.key.code == sf::Keyboard::Return) {
             if(canViewMenu) {
+
                 taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
-                    sf::Color color = fadeOverlay.getFillColor();
-                    color.a = 0;
-                    fadeOverlay.setFillColor(color);
-                    drawInfamousBlackBar = true;
+                    if(screenEffectsService) {
+                        screenEffectsService->fadeOut();
+                    }
                     return true;
                 }));
-                taskQueue.push(std::make_shared<FadeColorTask>(FadeColorTask::FADE_OUT, fadeOverlay, (1.0f/60.0f) * 13.0f));
+
+                taskQueue.push(std::make_shared<WaitTask>((1.0f/60.0f) * 13.0f));
+
                 taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
                     isViewingMenu = !isViewingMenu;
                     guiMenuPanel->setVisible(isViewingMenu);
                     guiWeaponMenu->requestFocus();
+
+                    if(screenEffectsService) {
+                        screenEffectsService->fadeIn();
+                    }
                     return true;
                 }));
-                taskQueue.push(std::make_shared<FadeColorTask>(FadeColorTask::FADE_IN, fadeOverlay, (1.0f/60.0f) * 13.0f));
-                taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
-                    drawInfamousBlackBar = false;
-                    return true;
-                }));
+
+                taskQueue.push(std::make_shared<WaitTask>((1.0f/60.0f) * 13.0f));
             }
 
             if(auto gp = gameProgress.lock()) {
@@ -489,11 +494,6 @@ namespace hikari {
 
         if(auto gui = guiService.lock()) {
             gui->renderAsTop(guiContainer.get(), target);
-        }
-
-        if(drawInfamousBlackBar) {
-            // target.draw(leftBar);
-            target.draw(fadeOverlay);
         }
     }
 
@@ -903,27 +903,26 @@ namespace hikari {
     }
 
     void GamePlayState::endRound() {
-        sf::Color color = fadeOverlay.getFillColor();
-        color.a = 0;
-        fadeOverlay.setFillColor(color);
-        taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
-            drawInfamousBlackBar = true;
-            return true;
-        }));
-        taskQueue.push(std::make_shared<FadeColorTask>(FadeColorTask::FADE_OUT, fadeOverlay, (1.0f/60.0f) * 13.0f));
-        taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
-            startRound();
-            return true;
-        }));
-        taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
-            drawInfamousBlackBar = false;
-            return true;
-        }));
-
-        // Perform the check to see if we're all the way dead, and if we are, go
-        // to a different game state.
         if(auto progress = gameProgress.lock()) {
-            if(progress->getLives() < 0) {
+            // Perform the check to see if we're all the way dead, and if we are, go
+            // to a different game state.
+            if(progress->getLives() >= 0) {
+                taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
+                    if(screenEffectsService) {
+                        screenEffectsService->fadeOut();
+                    }
+                    return true;
+                }));
+
+                taskQueue.push(std::make_shared<WaitTask>((1.0f/60.0f) * 13.0f));
+
+                taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
+                    startRound();
+                    return true;
+                }));
+
+                taskQueue.push(std::make_shared<WaitTask>((1.0f/60.0f) * 13.0f));
+            } else {
                 HIKARI_LOG(debug2) << "Hero has died all of his lives, go to password screen.";
                 progress->resetLivesToDefault();
                 progress->resetWeaponEnergyToDefault();
@@ -1371,6 +1370,22 @@ namespace hikari {
         );
     }
 
+    void GamePlayState::fadeOut() {
+        if(screenEffectsService) {
+            screenEffectsService->fadeOut();
+        }
+
+        taskQueue.push(std::make_shared<WaitTask>((1.0f/60.0f) * 13.0f));
+    }
+
+    void GamePlayState::fadeIn() {
+        if(screenEffectsService) {
+            screenEffectsService->fadeIn();
+        }
+
+        taskQueue.push(std::make_shared<WaitTask>((1.0f/60.0f) * 13.0f));
+    }
+
     // ************************************************************************
     // Definition of sub-states
     // ************************************************************************
@@ -1386,16 +1401,8 @@ namespace hikari {
     GamePlayState::ReadySubState::ReadySubState(GamePlayState & gamePlayState)
         : SubState(gamePlayState)
         , renderReadyText(false)
-        , renderFadeOverlay(true)
         , timer(0.0f)
-        , fadeOverlay()
     {
-        fadeOverlay.setSize(
-            sf::Vector2f(gamePlayState.camera.getView().getWidth(), gamePlayState.camera.getView().getHeight()));
-
-        fadeOverlay.setPosition(0.0f, 0.0f);
-        fadeOverlay.setFillColor(sf::Color::Black);
-
         gamePlayState.guiReadyLabel->setVisible(false);
     }
 
@@ -1408,7 +1415,6 @@ namespace hikari {
 
         timer = 0.0f;
 
-        renderFadeOverlay = true;
         renderReadyText = false;
         gamePlayState.guiHeroEnergyGauge->setVisible(false);
 
@@ -1417,11 +1423,6 @@ namespace hikari {
                 static_cast<float>(gp->getPlayerEnergy())
             );
         }
-
-        sf::Color overlayColor = sf::Color(fadeOverlay.getFillColor());
-        overlayColor.a = 255;
-
-        fadeOverlay.setFillColor(overlayColor);
 
         if(auto sound = gamePlayState.audioService.lock()) {
             HIKARI_LOG(debug) << "Playing music for the level!";
@@ -1450,8 +1451,7 @@ namespace hikari {
         }
 
         // Fade in
-        // gamePlayState.taskQueue.push(std::make_shared<FadeColorTask>(FadeColorTask::FADE_IN, fadeOverlay, (1.0f/60.0f) * 13.0f));
-        // renderFadeOverlay = true;
+        gamePlayState.fadeIn();
     }
 
     void GamePlayState::ReadySubState::exit() {
@@ -1462,12 +1462,6 @@ namespace hikari {
         const float frameMs = (1.0f/60.0f);
 
         timer += dt;
-
-        // Fading is done by a FadeColorTask, see GamePlayState::ReadySubState::enter()
-
-        if(timer >= (13.0f * frameMs)) {
-            renderFadeOverlay = false;
-        }
 
         if(timer >= (24.0f * frameMs)) {
             renderReadyText = true;
@@ -1504,10 +1498,6 @@ namespace hikari {
 
     void GamePlayState::ReadySubState::render(sf::RenderTarget &target) {
         gamePlayState.renderMap(target);
-
-        if(renderFadeOverlay) {
-            target.draw(fadeOverlay);
-        }
     }
 
     //
@@ -1928,7 +1918,7 @@ namespace hikari {
                     int currentWeaponEnergy = gp->getWeaponEnergy(gp->getCurrentWeapon());
                     gamePlayState.hero->setHasAvailableWeaponEnergy(currentWeaponEnergy);
                 }
-                
+
                 gamePlayState.hero->update(dt);
 
                 //
