@@ -903,26 +903,26 @@ namespace hikari {
     }
 
     void GamePlayState::endRound() {
-        taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
-            if(screenEffectsService) {
-                screenEffectsService->fadeOut();
-            }
-            return true;
-        }));
-
-        taskQueue.push(std::make_shared<WaitTask>((1.0f/60.0f) * 13.0f));
-
-        taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
-            startRound();
-            return true;
-        }));
-
-        taskQueue.push(std::make_shared<WaitTask>((1.0f/60.0f) * 13.0f));
-
-        // Perform the check to see if we're all the way dead, and if we are, go
-        // to a different game state.
         if(auto progress = gameProgress.lock()) {
-            if(progress->getLives() < 0) {
+            // Perform the check to see if we're all the way dead, and if we are, go
+            // to a different game state.
+            if(progress->getLives() >= 0) {
+                taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
+                    if(screenEffectsService) {
+                        screenEffectsService->fadeOut();
+                    }
+                    return true;
+                }));
+
+                taskQueue.push(std::make_shared<WaitTask>((1.0f/60.0f) * 13.0f));
+
+                taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
+                    startRound();
+                    return true;
+                }));
+
+                taskQueue.push(std::make_shared<WaitTask>((1.0f/60.0f) * 13.0f));
+            } else {
                 HIKARI_LOG(debug2) << "Hero has died all of his lives, go to password screen.";
                 progress->resetLivesToDefault();
                 progress->resetWeaponEnergyToDefault();

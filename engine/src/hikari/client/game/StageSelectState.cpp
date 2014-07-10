@@ -332,6 +332,7 @@ namespace hikari {
                     // Fade out
                     taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
                         if(auto effects = screenEffectsService.lock()) {
+                            std::cout << "Stage select fading out" << std::endl;
                             effects->fadeOut((1.0f / 60.0f) * 13.0f);
                         }
 
