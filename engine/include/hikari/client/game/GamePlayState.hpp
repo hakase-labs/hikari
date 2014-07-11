@@ -142,8 +142,6 @@ namespace hikari {
         sf::RectangleShape spawnerMarker;
         sf::RectangleShape transitionMarker;
         sf::RectangleShape leftBar;
-        sf::RectangleShape fadeOverlay;
-        bool drawInfamousBlackBar;
         bool canViewMenu;
         bool isViewingMenu;
         bool hasReachedMidpoint;
@@ -348,9 +346,7 @@ namespace hikari {
         class ReadySubState : public SubState {
         private:
             bool renderReadyText;
-            bool renderFadeOverlay;
             float timer;
-            sf::RectangleShape fadeOverlay;
 
         public:
             ReadySubState(GamePlayState & gamePlayState);
