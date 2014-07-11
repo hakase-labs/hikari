@@ -25,7 +25,6 @@ namespace hikari {
 
         bool enableVsync;
         bool enableFpsDisplay;
-        bool enableAudio;
         unsigned int stackSize;
         float musicVolume;
         float sampleVolume;
@@ -40,7 +39,7 @@ namespace hikari {
         static const char* VIDEO_SCALE_2X;
         static const char* VIDEO_SCALE_3X;
         static const char* VIDEO_SCALE_FULL;
-        
+
         ClientConfig();
         ClientConfig(const Json::Value& configJson);
 
@@ -52,7 +51,7 @@ namespace hikari {
 
         float getMusicVolume() const;
         void setMusicVolume(float volume);
-        
+
         float getSampleVolume() const;
         void setSampleVolume(float volume);
 

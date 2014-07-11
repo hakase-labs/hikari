@@ -146,8 +146,6 @@ namespace hikari {
         , spawnerMarker()
         , transitionMarker()
         , leftBar(sf::Vector2f(8.0f, 240.0f))
-        , fadeOverlay(sf::Vector2f(256.0f, 240.0f))
-        , drawInfamousBlackBar(false)
         , canViewMenu(false)
         , isViewingMenu(false)
         , hasReachedMidpoint(false)
@@ -337,8 +335,6 @@ namespace hikari {
             guiContainer->setEnabled(true);
             guiMenuPanel->setEnabled(true);
         }
-
-        fadeOverlay.setFillColor(sf::Color(0, 0, 0, 0));
     }
 
     void GamePlayState::updateGui() {
