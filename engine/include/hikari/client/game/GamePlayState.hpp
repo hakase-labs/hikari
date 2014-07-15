@@ -379,6 +379,7 @@ namespace hikari {
         class PlayingSubState : public SubState {
         private:
             float postDeathTimer; // A timer that counts after you die
+            float bubbleSpawnTimer;
             bool gotoNextState;
         public:
             PlayingSubState(GamePlayState & gamePlayState);

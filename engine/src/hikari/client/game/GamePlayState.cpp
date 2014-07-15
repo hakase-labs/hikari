@@ -1585,6 +1585,7 @@ namespace hikari {
     GamePlayState::PlayingSubState::PlayingSubState(GamePlayState & gamePlayState)
         : SubState(gamePlayState)
         , postDeathTimer(0.0f)
+        , bubbleSpawnTimer(0.0f)
         , gotoNextState(false)
     {
 
@@ -1916,6 +1917,19 @@ namespace hikari {
                 }
 
                 gamePlayState.hero->update(dt);
+
+                if(gamePlayState.hero->isUnderWater()) {
+                    bubbleSpawnTimer += dt;
+
+                    if(bubbleSpawnTimer >= 1.0 /* && bubbles.size() < 2 */) {
+                        HIKARI_LOG(debug4) << "Spawning a bubble!";
+
+                        bubbleSpawnTimer = 0;
+                    }
+                } else {
+                    // Set timer to 0
+                    bubbleSpawnTimer = 0;
+                }
 
                 //
                 // BEGIN code that checks hero vs obstacles
