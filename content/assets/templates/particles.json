@@ -63,5 +63,17 @@
         },
         "ageless": false,
         "maximumAge": 0.2334
+    },
+    {
+        "name": "Small Bubble",
+        "animationSet": "assets/animations/particles.json",
+        "animationName": "small-bubble",
+        "boundingBox": {
+            "width": 4,
+            "height": 4,
+            "originX": 2,
+            "originY": 2
+        },
+        "ageless": true
     }
 ]

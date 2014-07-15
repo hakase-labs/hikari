@@ -1588,11 +1588,26 @@ namespace hikari {
         , bubbleSpawnTimer(0.0f)
         , gotoNextState(false)
     {
-
+        bubbles.reserve(2);
     }
 
     GamePlayState::PlayingSubState::~PlayingSubState() {
 
+    }
+
+    std::shared_ptr<Particle> GamePlayState::PlayingSubState::spawnSmallBubble() {
+        std::shared_ptr<Particle> clone = gamePlayState.world.spawnParticle("Small Bubble");
+
+        if(clone) {
+            clone->setPosition(gamePlayState.hero->getPosition());
+            clone->setVelocity(Vector2<float>(0.0f, -2.0f));
+            clone->setActive(true);
+            gamePlayState.world.queueObjectAddition(clone);
+
+            bubbles.push_back(clone);
+        }
+
+        return clone;
     }
 
     void GamePlayState::PlayingSubState::enter() {
@@ -1777,6 +1792,21 @@ namespace hikari {
 
                 if(!particle->isActive()) {
                     gamePlayState.world.queueObjectRemoval(particle);
+
+                    // Forget about dead bubbles
+                    if(std::find(
+                        std::begin(bubbles),
+                        std::end(bubbles),
+                        particle
+                        ) != std::end(bubbles)
+                    ) {
+                        bubbles.erase(
+                            std::remove(
+                                std::begin(bubbles),
+                                std::end(bubbles),
+                                particle)
+                            );
+                    }
                 }
         });
 
@@ -1921,8 +1951,10 @@ namespace hikari {
                 if(gamePlayState.hero->isUnderWater()) {
                     bubbleSpawnTimer += dt;
 
-                    if(bubbleSpawnTimer >= 1.0 /* && bubbles.size() < 2 */) {
+                    if(bubbleSpawnTimer >= 0.25 && bubbles.size() < 2) {
                         HIKARI_LOG(debug4) << "Spawning a bubble!";
+
+                        spawnSmallBubble();
 
                         bubbleSpawnTimer = 0;
                     }

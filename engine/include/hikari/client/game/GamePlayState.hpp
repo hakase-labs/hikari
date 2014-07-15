@@ -381,6 +381,14 @@ namespace hikari {
             float postDeathTimer; // A timer that counts after you die
             float bubbleSpawnTimer;
             bool gotoNextState;
+            std::vector<std::shared_ptr<Particle>> bubbles;
+
+            /**
+             * Spawns a small bubble that float up toward the top of the screen. These
+             * are the bubbles that spawn from Rock's mouth when he's underwater.
+             */
+            std::shared_ptr<Particle> spawnSmallBubble();
+
         public:
             PlayingSubState(GamePlayState & gamePlayState);
             virtual ~PlayingSubState();
