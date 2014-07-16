@@ -179,18 +179,27 @@
         },
         "small-bubble": {
             "description": "A small bubble that floats out of Mega Man's mouth while under water.",
-            "repeat": false,
+            "repeat": true,
             "keyframe": 0,
             "syncGroup": 300,
             "frames": [
                 {
-                    "x" : 0,
-                    "y" : 24,
+                    "x" : 24,
+                    "y" : 0,
                     "width" : 4,
                     "height" : 4,
                     "hotspotX" : 2,
                     "hotspotY" : 2,
-                    "length" : 1.0
+                    "length" : 0.1
+                },
+                {
+                    "x" : 24,
+                    "y" : 0,
+                    "width" : 4,
+                    "height" : 4,
+                    "hotspotX" : 0,
+                    "hotspotY" : 2,
+                    "length" : 0.1
                 }
             ]
         }

@@ -1600,7 +1600,7 @@ namespace hikari {
 
         if(clone) {
             clone->setPosition(gamePlayState.hero->getPosition());
-            clone->setVelocity(Vector2<float>(0.0f, -2.0f));
+            clone->setVelocity(Vector2<float>(0.0f, -1.125f));
             clone->setActive(true);
             gamePlayState.world.queueObjectAddition(clone);
 
