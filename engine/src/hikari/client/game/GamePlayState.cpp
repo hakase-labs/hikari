@@ -1582,13 +1582,16 @@ namespace hikari {
     //
     // PlayingSubState
     //
+    const float GamePlayState::PlayingSubState::LONG_BUBBLE_SPAWN_DURATION = (1.0f / 60.0f) * 120.0f;
+    const float GamePlayState::PlayingSubState::SHORT_BUBBLE_SPAWN_DURATION = (1.0f / 60.0f) * 40.0f;
+
     GamePlayState::PlayingSubState::PlayingSubState(GamePlayState & gamePlayState)
         : SubState(gamePlayState)
         , postDeathTimer(0.0f)
-        , bubbleSpawnTimer(0.0f)
+        , bubbleSpawnLongTimer(LONG_BUBBLE_SPAWN_DURATION)
+        , bubbleSpawnShortTimer(SHORT_BUBBLE_SPAWN_DURATION)
         , gotoNextState(false)
     {
-        bubbles.reserve(2);
     }
 
     GamePlayState::PlayingSubState::~PlayingSubState() {
@@ -1600,11 +1603,9 @@ namespace hikari {
 
         if(clone) {
             clone->setPosition(gamePlayState.hero->getPosition());
-            clone->setVelocity(Vector2<float>(0.0f, -1.125f));
+            clone->setVelocity(Vector2<float>(0.0f, -(80.0f/60.0f))); // Moves vertically 80px/s
             clone->setActive(true);
             gamePlayState.world.queueObjectAddition(clone);
-
-            bubbles.push_back(clone);
         }
 
         return clone;
@@ -1792,21 +1793,6 @@ namespace hikari {
 
                 if(!particle->isActive()) {
                     gamePlayState.world.queueObjectRemoval(particle);
-
-                    // Forget about dead bubbles
-                    if(std::find(
-                        std::begin(bubbles),
-                        std::end(bubbles),
-                        particle
-                        ) != std::end(bubbles)
-                    ) {
-                        bubbles.erase(
-                            std::remove(
-                                std::begin(bubbles),
-                                std::end(bubbles),
-                                particle)
-                            );
-                    }
                 }
         });
 
@@ -1911,7 +1897,7 @@ namespace hikari {
         if(!gamePlayState.isHeroAlive) {
             postDeathTimer += dt;
 
-            // Wait 1 second after you died and then restart
+            // Wait 2.5 seconds after you died and then restart
             if(postDeathTimer >= 2.5f) {
                 if(!gotoNextState) {
                     gotoNextState = true;
@@ -1949,18 +1935,28 @@ namespace hikari {
                 gamePlayState.hero->update(dt);
 
                 if(gamePlayState.hero->isUnderWater()) {
-                    bubbleSpawnTimer += dt;
+                    bubbleSpawnLongTimer -= dt;
 
-                    if(bubbleSpawnTimer >= 0.25 && bubbles.size() < 2) {
-                        HIKARI_LOG(debug4) << "Spawning a bubble!";
+                    if(bubbleSpawnLongTimer <= 0.0f) {
+                        if(bubbleSpawnShortTimer == SHORT_BUBBLE_SPAWN_DURATION) {
+                            HIKARI_LOG(debug4) << "Spawning long bubble!";
+                            spawnSmallBubble();
+                        }
 
-                        spawnSmallBubble();
+                        bubbleSpawnShortTimer -= dt;
 
-                        bubbleSpawnTimer = 0;
+                        if(bubbleSpawnShortTimer <= 0.0f) {
+                            HIKARI_LOG(debug4) << "Spawning short bubble!";
+                            spawnSmallBubble();
+
+                            // Reset both timers to start the sequence over.
+                            bubbleSpawnLongTimer = LONG_BUBBLE_SPAWN_DURATION;
+                            bubbleSpawnShortTimer = SHORT_BUBBLE_SPAWN_DURATION;
+                        }
                     }
                 } else {
-                    // Set timer to 0
-                    bubbleSpawnTimer = 0;
+                    bubbleSpawnLongTimer = LONG_BUBBLE_SPAWN_DURATION;
+                    bubbleSpawnShortTimer = SHORT_BUBBLE_SPAWN_DURATION;
                 }
 
                 //

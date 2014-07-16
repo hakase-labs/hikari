@@ -378,10 +378,12 @@ namespace hikari {
          */
         class PlayingSubState : public SubState {
         private:
+            static const float LONG_BUBBLE_SPAWN_DURATION;
+            static const float SHORT_BUBBLE_SPAWN_DURATION;
             float postDeathTimer; // A timer that counts after you die
-            float bubbleSpawnTimer;
+            float bubbleSpawnLongTimer;
+            float bubbleSpawnShortTimer;
             bool gotoNextState;
-            std::vector<std::shared_ptr<Particle>> bubbles;
 
             /**
              * Spawns a small bubble that float up toward the top of the screen. These
