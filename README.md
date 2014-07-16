@@ -27,7 +27,7 @@ Project Hikari uses [CMake][3] to generate platform and compiler-specific build 
 
 Before building Hikari, make sure that the following libraries are compiled and installed:
 
-* [SFML][4]
+* [SFML 2.0+][4] (also tested with 2.1)
 * [PhysicsFS][5]
 
 Also note that this project uses `C++11` features such as `auto`, `decltype`, and lambdas, and therefore requires a C++11 compliant compiler in order to build successfully.
