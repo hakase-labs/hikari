@@ -8,7 +8,7 @@ set(HIKARI_VERSION_MINOR 2)
 set(HIKARI_VERSION_PATCH 0)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
-set(HIKARI_GOOD_COMPILER_FLAGS "-std=c++11 -Wall -O -g")
+set(HIKARI_GOOD_COMPILER_FLAGS "-std=c++11 -Wall -Wpedantic -O -g")
 set(HIKARI_DUMB_COMPILER_FLAGS "-W3")
 
 if(WIN32)
@@ -25,7 +25,7 @@ if(MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${HIKARI_DUMB_COMPILER_FLAGS}")
 
     if(NOT CMAKE_CXX_FLAGS MATCHES "/EHsc")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc") 
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc")
     endif()
 
     add_definitions( -D_CRT_SECURE_NO_DEPRECATE )
@@ -45,4 +45,4 @@ if( APPLE )
 endif( APPLE )
 
 add_subdirectory( engine )
-add_subdirectory( test )
+add_subdirectory( tests )

@@ -41,8 +41,8 @@ namespace hikari {
         std::unique_ptr<sf::Shader> pixelShader;
 
         FadeOutShaderScreenEffect(float fadeDuration = 1.0f)
-            : fadeDuration(fadeDuration)
-            , timer(0)
+            : timer(0)
+            , fadeDuration(fadeDuration)
         {
             const std::string shaderCode = FileSystem::readFileAsString("assets/shaders/fade.frag");
             pixelShader.reset(new sf::Shader());
