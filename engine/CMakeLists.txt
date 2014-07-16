@@ -419,7 +419,7 @@ endif(SFML_FOUND)
 find_package(PhysFS REQUIRED)
 
 if(PHYSFS_FOUND)
-    ADD_DEFINITIONS(-fno-common)
+    #ADD_DEFINITIONS(-fno-common)
     if(APPLE)
         set(OTHER_LDFLAGS ${OTHER_LDFLAGS} "-framework Carbon -framework IOKit")
     endif(APPLE)

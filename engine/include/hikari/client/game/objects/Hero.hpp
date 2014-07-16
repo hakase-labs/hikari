@@ -11,13 +11,13 @@ namespace hikari {
     class Hero : public Entity {
     private:
         class MobilityState;
-        class TeleportingMobilityState; // Sublass of MobilityState
-        class IdleMobilityState;        // Sublass of MobilityState
-        class WalkingMobilityState;     // Sublass of MobilityState
-        class SlidingMobilityState;     // Sublass of MobilityState
-        class AirbornMobilityState;     // Sublass of MobilityState
-        class ClimbingMobilityState;    // Sublass of MobilityState
-        class DamagedMobilityState;     // Sublass of MobilityState
+        class TeleportingMobilityState; // Subclass of MobilityState
+        class IdleMobilityState;        // Subclass of MobilityState
+        class WalkingMobilityState;     // Subclass of MobilityState
+        class SlidingMobilityState;     // Subclass of MobilityState
+        class AirbornMobilityState;     // Subclass of MobilityState
+        class ClimbingMobilityState;    // Subclass of MobilityState
+        class DamagedMobilityState;     // Subclass of MobilityState
         class ShootingState;
         class IsShootingState;          // Sublcass of ShootingState
         class NotShootingState;         // Sublcass of ShootingState
@@ -43,7 +43,7 @@ namespace hikari {
         bool isBlinking;
         bool isVisible;
 
-        bool isUnderWater;
+        bool isUnderWaterFlag;
         bool wasUnderWaterLastFrame;
         bool hasAvailableWeaponEnergy;
 
@@ -94,7 +94,7 @@ namespace hikari {
          * new state's enter() method will be called.
          *
          * The change happens immediately.
-         * 
+         *
          * @param newState a pointer to a new MobilityState
          */
         void changeMobilityState(std::unique_ptr<MobilityState> && newState);
@@ -106,7 +106,7 @@ namespace hikari {
          *
          * To change states the current MobilityState::update must return a
          * MobilityState::NEXT value.
-         * 
+         *
          * @param newState a pointer to a new MobilityState to enqueue
          */
         void requestMobilityStateChange(std::unique_ptr<MobilityState> && newState);
@@ -120,7 +120,7 @@ namespace hikari {
          * new state's enter() method will be called.
          *
          * The change happens immediately.
-         * 
+         *
          * @param newState a pointer to a new ShootingState
          */
         void changeShootingState(std::unique_ptr<ShootingState> && newState);
@@ -132,7 +132,7 @@ namespace hikari {
          *
          * To change states the current ShootingState::update must return a
          * ShootingState::NEXT value.
-         * 
+         *
          * @param newState a pointer to a new ShootingState to enqueue
          */
         void requestShootingStateChange(std::unique_ptr<ShootingState> && newState);
@@ -217,9 +217,10 @@ namespace hikari {
         void requestClimbingAttachment(const BoundingBox<float> & climbableRegion);
         void kill();
 
-        bool isVulnerable();
-        bool isNowShooting();
-        bool isOnGround();
+        bool isVulnerable() const;
+        bool isNowShooting() const;
+        bool isOnGround() const;
+        bool isUnderWater() const;
         void setHasAvailableWeaponEnergy(bool hasEnergy);
 
         virtual void update(float dt);

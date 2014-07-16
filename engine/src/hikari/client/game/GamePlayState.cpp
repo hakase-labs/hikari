@@ -1582,16 +1582,33 @@ namespace hikari {
     //
     // PlayingSubState
     //
+    const float GamePlayState::PlayingSubState::LONG_BUBBLE_SPAWN_DURATION = (1.0f / 60.0f) * 120.0f;
+    const float GamePlayState::PlayingSubState::SHORT_BUBBLE_SPAWN_DURATION = (1.0f / 60.0f) * 40.0f;
+
     GamePlayState::PlayingSubState::PlayingSubState(GamePlayState & gamePlayState)
         : SubState(gamePlayState)
         , postDeathTimer(0.0f)
+        , bubbleSpawnLongTimer(LONG_BUBBLE_SPAWN_DURATION)
+        , bubbleSpawnShortTimer(SHORT_BUBBLE_SPAWN_DURATION)
         , gotoNextState(false)
     {
-
     }
 
     GamePlayState::PlayingSubState::~PlayingSubState() {
 
+    }
+
+    std::shared_ptr<Particle> GamePlayState::PlayingSubState::spawnSmallBubble() {
+        std::shared_ptr<Particle> clone = gamePlayState.world.spawnParticle("Small Bubble");
+
+        if(clone) {
+            clone->setPosition(gamePlayState.hero->getPosition());
+            clone->setVelocity(Vector2<float>(0.0f, -(80.0f/60.0f))); // Moves vertically 80px/s
+            clone->setActive(true);
+            gamePlayState.world.queueObjectAddition(clone);
+        }
+
+        return clone;
     }
 
     void GamePlayState::PlayingSubState::enter() {
@@ -1880,7 +1897,7 @@ namespace hikari {
         if(!gamePlayState.isHeroAlive) {
             postDeathTimer += dt;
 
-            // Wait 1 second after you died and then restart
+            // Wait 2.5 seconds after you died and then restart
             if(postDeathTimer >= 2.5f) {
                 if(!gotoNextState) {
                     gotoNextState = true;
@@ -1916,6 +1933,31 @@ namespace hikari {
                 }
 
                 gamePlayState.hero->update(dt);
+
+                if(gamePlayState.hero->isUnderWater()) {
+                    bubbleSpawnLongTimer -= dt;
+
+                    if(bubbleSpawnLongTimer <= 0.0f) {
+                        if(bubbleSpawnShortTimer == SHORT_BUBBLE_SPAWN_DURATION) {
+                            HIKARI_LOG(debug4) << "Spawning long bubble!";
+                            spawnSmallBubble();
+                        }
+
+                        bubbleSpawnShortTimer -= dt;
+
+                        if(bubbleSpawnShortTimer <= 0.0f) {
+                            HIKARI_LOG(debug4) << "Spawning short bubble!";
+                            spawnSmallBubble();
+
+                            // Reset both timers to start the sequence over.
+                            bubbleSpawnLongTimer = LONG_BUBBLE_SPAWN_DURATION;
+                            bubbleSpawnShortTimer = SHORT_BUBBLE_SPAWN_DURATION;
+                        }
+                    }
+                } else {
+                    bubbleSpawnLongTimer = LONG_BUBBLE_SPAWN_DURATION;
+                    bubbleSpawnShortTimer = SHORT_BUBBLE_SPAWN_DURATION;
+                }
 
                 //
                 // BEGIN code that checks hero vs obstacles

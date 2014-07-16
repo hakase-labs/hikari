@@ -37,7 +37,7 @@ namespace hikari {
         , isMorphing(false)
         , isStunned(false)
         , isInvincible(false)
-        , isUnderWater(false)
+        , isUnderWaterFlag(false)
         , wasUnderWaterLastFrame(false)
         , hasAvailableWeaponEnergy(true)
         , climbableRegion(0, 0, 0, 0)
@@ -46,7 +46,7 @@ namespace hikari {
         , nextMobilityState(nullptr)
         , temporaryMobilityState(nullptr)
         , shootingState(nullptr)
-        , nextShootingState(nullptr) 
+        , nextShootingState(nullptr)
     {
         setDeathType(EntityDeathType::Hero);
 
@@ -116,7 +116,7 @@ namespace hikari {
     }
 
     void Hero::update(float dt) {
-        if(wasUnderWaterLastFrame != isUnderWater) {
+        if(wasUnderWaterLastFrame != isUnderWater()) {
             if(wasUnderWaterLastFrame) {
                 HIKARI_LOG(debug4) << "I'm not in water anymore!";
                 body.setGravityApplicationThreshold(1);
@@ -131,7 +131,7 @@ namespace hikari {
             }
         }
 
-        wasUnderWaterLastFrame = isUnderWater;
+        wasUnderWaterLastFrame = isUnderWater();
 
         if(const auto & room = getRoom()) {
             const int gridSize = room->getGridSize();
@@ -182,9 +182,9 @@ namespace hikari {
                     static_cast<int>(getPosition().getY()) / gridSize);
 
                 if((bodyPositionTile != Room::NO_TILE) && TileAttribute::hasAttribute(bodyPositionTile, TileAttribute::WATER)) {
-                    isUnderWater = true;
+                    isUnderWaterFlag = true;
                 } else {
-                    isUnderWater = false;
+                    isUnderWaterFlag = false;
                 }
             }
 
@@ -220,7 +220,7 @@ namespace hikari {
                         }
                     }
                 }
-            }    
+            }
         }
 
         Entity::update(dt);
@@ -234,13 +234,18 @@ namespace hikari {
         return !isAirborn && !isSliding && !isStunned;
     }
 
-    bool Hero::isNowShooting() {
+    bool Hero::isNowShooting() const {
         return isShooting;
     }
 
-    bool Hero::isOnGround() {
+    bool Hero::isOnGround() const {
         return body.isOnGround();
     }
+
+    bool Hero::isUnderWater() const {
+        return isUnderWaterFlag;
+    }
+
 
     void Hero::setHasAvailableWeaponEnergy(bool hasEnergy) {
         hasAvailableWeaponEnergy = hasEnergy;
@@ -336,7 +341,7 @@ namespace hikari {
         }
     }
 
-    bool Hero::isVulnerable() {
+    bool Hero::isVulnerable() const {
         return !isInvincible && !isStunned;
     }
 

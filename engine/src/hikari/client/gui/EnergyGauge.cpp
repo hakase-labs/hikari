@@ -4,6 +4,8 @@
 #include <guichan/color.hpp>
 #include <guichan/image.hpp>
 
+#include <algorithm>
+
 namespace hikari {
 namespace gui {
 

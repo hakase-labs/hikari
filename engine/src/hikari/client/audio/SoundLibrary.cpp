@@ -152,7 +152,7 @@ namespace hikari {
             const auto & player = samplePlayer->player;
 
             // Stop any sounds currently playing with lower priority
-            std::for_each(std::begin(samplePlayers), std::end(samplePlayers), [&](decltype(samplePlayers)::value_type & pair) {
+            std::for_each(std::begin(samplePlayers), std::end(samplePlayers), [&](std::unordered_map<std::string, std::shared_ptr<SamplePlayer>>::value_type & pair) {
                 const auto & otherPlayer = pair.second;
 
                 if(otherPlayer->priority <= samplePlayer->priority) {
@@ -177,7 +177,7 @@ namespace hikari {
     }
 
     void SoundLibrary::setSampleVolume(float volume) {
-        std::for_each(std::begin(samplePlayers), std::end(samplePlayers), [volume](decltype(samplePlayers)::value_type & pair) {
+        std::for_each(std::begin(samplePlayers), std::end(samplePlayers), [volume](std::unordered_map<std::string, std::shared_ptr<SamplePlayer>>::value_type & pair) {
             const auto & otherPlayer = pair.second;
             const std::shared_ptr<sf::Sound> player = otherPlayer->player;
 
@@ -192,7 +192,7 @@ namespace hikari {
     }
 
     void SoundLibrary::stopSample() {
-        std::for_each(std::begin(samplePlayers), std::end(samplePlayers), [](decltype(samplePlayers)::value_type & pair) {
+        std::for_each(std::begin(samplePlayers), std::end(samplePlayers), [](std::unordered_map<std::string, std::shared_ptr<SamplePlayer>>::value_type & pair) {
             const auto & otherPlayer = pair.second;
             const std::shared_ptr<sf::Sound> player = otherPlayer->player;
 

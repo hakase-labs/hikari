@@ -6,32 +6,32 @@
             "repeat": false,
             "keyframe": 0,
             "syncGroup": 0,
-            "frames": [ 
-                { 
-                    "x" : 0, 
-                    "y" : 0, 
-                    "width" : 8, 
-                    "height" : 8, 
-                    "hotspotX" : 4, 
-                    "hotspotY" : 4, 
+            "frames": [
+                {
+                    "x" : 0,
+                    "y" : 0,
+                    "width" : 8,
+                    "height" : 8,
+                    "hotspotX" : 4,
+                    "hotspotY" : 4,
                     "length" : 0.2667
                 },
-                { 
-                    "x" : 8, 
-                    "y" : 0, 
-                    "width" : 8, 
-                    "height" : 8, 
-                    "hotspotX" : 4, 
-                    "hotspotY" : 4, 
+                {
+                    "x" : 8,
+                    "y" : 0,
+                    "width" : 8,
+                    "height" : 8,
+                    "hotspotX" : 4,
+                    "hotspotY" : 4,
                     "length" : 0.3
                 },
-                { 
-                    "x" : 16, 
-                    "y" : 0, 
-                    "width" : 8, 
-                    "height" : 8, 
-                    "hotspotX" : 4, 
-                    "hotspotY" : 4, 
+                {
+                    "x" : 16,
+                    "y" : 0,
+                    "width" : 8,
+                    "height" : 8,
+                    "hotspotX" : 4,
+                    "hotspotY" : 4,
                     "length" : 0.3
                 }
             ]
@@ -41,50 +41,50 @@
             "repeat": false,
             "keyframe": 0,
             "syncGroup": 100,
-            "frames": [ 
-                { 
-                    "x" : 0, 
-                    "y" : 8, 
-                    "width" : 24, 
-                    "height" : 24, 
-                    "hotspotX" : 12, 
-                    "hotspotY" : 12, 
+            "frames": [
+                {
+                    "x" : 0,
+                    "y" : 8,
+                    "width" : 24,
+                    "height" : 24,
+                    "hotspotX" : 12,
+                    "hotspotY" : 12,
                     "length" : 0.0334
                 },
-                { 
-                    "x" : 24, 
-                    "y" : 8, 
-                    "width" : 24, 
-                    "height" : 24, 
-                    "hotspotX" : 12, 
-                    "hotspotY" : 12, 
+                {
+                    "x" : 24,
+                    "y" : 8,
+                    "width" : 24,
+                    "height" : 24,
+                    "hotspotX" : 12,
+                    "hotspotY" : 12,
                     "length" : 0.05
                 },
-                { 
-                    "x" : 48, 
-                    "y" : 8, 
-                    "width" : 24, 
-                    "height" : 24, 
-                    "hotspotX" : 12, 
-                    "hotspotY" : 12, 
+                {
+                    "x" : 48,
+                    "y" : 8,
+                    "width" : 24,
+                    "height" : 24,
+                    "hotspotX" : 12,
+                    "hotspotY" : 12,
                     "length" : 0.05
                 },
-                { 
-                    "x" : 72, 
-                    "y" : 8, 
-                    "width" : 24, 
-                    "height" : 24, 
-                    "hotspotX" : 12, 
-                    "hotspotY" : 12, 
+                {
+                    "x" : 72,
+                    "y" : 8,
+                    "width" : 24,
+                    "height" : 24,
+                    "hotspotX" : 12,
+                    "hotspotY" : 12,
                     "length" : 0.05
                 },
-                { 
-                    "x" : 96, 
-                    "y" : 8, 
-                    "width" : 24, 
-                    "height" : 24, 
-                    "hotspotX" : 12, 
-                    "hotspotY" : 12, 
+                {
+                    "x" : 96,
+                    "y" : 8,
+                    "width" : 24,
+                    "height" : 24,
+                    "hotspotX" : 12,
+                    "hotspotY" : 12,
                     "length" : 0.05
                 }
             ]
@@ -94,50 +94,50 @@
             "repeat": true,
             "keyframe": 0,
             "syncGroup": 100,
-            "frames": [ 
-                { 
-                    "x" : 0, 
-                    "y" : 8, 
-                    "width" : 24, 
-                    "height" : 24, 
-                    "hotspotX" : 12, 
-                    "hotspotY" : 12, 
+            "frames": [
+                {
+                    "x" : 0,
+                    "y" : 8,
+                    "width" : 24,
+                    "height" : 24,
+                    "hotspotX" : 12,
+                    "hotspotY" : 12,
                     "length" : 0.0334
                 },
-                { 
-                    "x" : 24, 
-                    "y" : 8, 
-                    "width" : 24, 
-                    "height" : 24, 
-                    "hotspotX" : 12, 
-                    "hotspotY" : 12, 
+                {
+                    "x" : 24,
+                    "y" : 8,
+                    "width" : 24,
+                    "height" : 24,
+                    "hotspotX" : 12,
+                    "hotspotY" : 12,
                     "length" : 0.05
                 },
-                { 
-                    "x" : 48, 
-                    "y" : 8, 
-                    "width" : 24, 
-                    "height" : 24, 
-                    "hotspotX" : 12, 
-                    "hotspotY" : 12, 
+                {
+                    "x" : 48,
+                    "y" : 8,
+                    "width" : 24,
+                    "height" : 24,
+                    "hotspotX" : 12,
+                    "hotspotY" : 12,
                     "length" : 0.05
                 },
-                { 
-                    "x" : 72, 
-                    "y" : 8, 
-                    "width" : 24, 
-                    "height" : 24, 
-                    "hotspotX" : 12, 
-                    "hotspotY" : 12, 
+                {
+                    "x" : 72,
+                    "y" : 8,
+                    "width" : 24,
+                    "height" : 24,
+                    "hotspotX" : 12,
+                    "hotspotY" : 12,
                     "length" : 0.05
                 },
-                { 
-                    "x" : 96, 
-                    "y" : 8, 
-                    "width" : 24, 
-                    "height" : 24, 
-                    "hotspotX" : 12, 
-                    "hotspotY" : 12, 
+                {
+                    "x" : 96,
+                    "y" : 8,
+                    "width" : 24,
+                    "height" : 24,
+                    "hotspotX" : 12,
+                    "hotspotY" : 12,
                     "length" : 0.05
                 }
             ]
@@ -148,32 +148,58 @@
             "keyframe": 0,
             "syncGroup": 200,
             "frames": [
-                { 
-                    "x" : 0, 
-                    "y" : 48, 
-                    "width" : 32, 
-                    "height" : 16, 
-                    "hotspotX" : 16, 
-                    "hotspotY" : 16, 
+                {
+                    "x" : 0,
+                    "y" : 48,
+                    "width" : 32,
+                    "height" : 16,
+                    "hotspotX" : 16,
+                    "hotspotY" : 16,
                     "length" : 0.0667
                 },
-                { 
-                    "x" : 32, 
-                    "y" : 32, 
-                    "width" : 16, 
-                    "height" : 32, 
-                    "hotspotX" : 8, 
-                    "hotspotY" : 32, 
+                {
+                    "x" : 32,
+                    "y" : 32,
+                    "width" : 16,
+                    "height" : 32,
+                    "hotspotX" : 8,
+                    "hotspotY" : 32,
                     "length" : 0.0833
                 },
-                { 
-                    "x" : 48, 
-                    "y" : 48, 
-                    "width" : 16, 
-                    "height" : 16, 
-                    "hotspotX" : 8, 
-                    "hotspotY" : 16, 
+                {
+                    "x" : 48,
+                    "y" : 48,
+                    "width" : 16,
+                    "height" : 16,
+                    "hotspotX" : 8,
+                    "hotspotY" : 16,
                     "length" : 0.0833
+                }
+            ]
+        },
+        "small-bubble": {
+            "description": "A small bubble that floats out of Mega Man's mouth while under water.",
+            "repeat": true,
+            "keyframe": 0,
+            "syncGroup": 300,
+            "frames": [
+                {
+                    "x" : 24,
+                    "y" : 0,
+                    "width" : 4,
+                    "height" : 4,
+                    "hotspotX" : 2,
+                    "hotspotY" : 2,
+                    "length" : 0.1
+                },
+                {
+                    "x" : 24,
+                    "y" : 0,
+                    "width" : 4,
+                    "height" : 4,
+                    "hotspotX" : 0,
+                    "hotspotY" : 2,
+                    "length" : 0.1
                 }
             ]
         }
