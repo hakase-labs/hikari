@@ -6,6 +6,8 @@
 #include <guichan/graphics.hpp>
 #include <guichan/font.hpp>
 
+#include <algorithm>
+
 namespace hikari {
 namespace gui {
 
