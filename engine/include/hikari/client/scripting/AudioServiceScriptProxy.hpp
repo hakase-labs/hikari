@@ -2,6 +2,7 @@
 #define HIKARI_CLIENT_AUDIOSERVICESCRIPTPROXY
 
 #include <memory>
+#include <string>
 
 namespace hikari {
 

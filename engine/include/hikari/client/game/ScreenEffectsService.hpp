@@ -36,12 +36,13 @@ namespace hikari {
     };
 
     struct FadeOutShaderScreenEffect : public ScreenEffect {
-        float timer = 0;
-        float fadeDuration = 1.0f;
+        float timer;
+        float fadeDuration;
         std::unique_ptr<sf::Shader> pixelShader;
 
         FadeOutShaderScreenEffect(float fadeDuration = 1.0f)
             : fadeDuration(fadeDuration)
+            , timer(0)
         {
             const std::string shaderCode = FileSystem::readFileAsString("assets/shaders/fade.frag");
             pixelShader.reset(new sf::Shader());
@@ -61,8 +62,8 @@ namespace hikari {
     };
 
     struct FadeInShaderScreenEffect : public ScreenEffect {
-        float timer = 0;
-        float fadeDuration = 1.0f;
+        float timer;
+        float fadeDuration;
         std::unique_ptr<sf::Shader> pixelShader;
 
         FadeInShaderScreenEffect(float fadeDuration = 1.0f)

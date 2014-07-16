@@ -31,12 +31,14 @@ namespace hikari {
     }
 
     std::weak_ptr<Weapon> WeaponTable::getWeaponByName(const std::string & name) const {
-        auto itr = std::find_if(std::begin(weapons), std::end(weapons), [&](const std::weak_ptr<Weapon> & weapon) {
+        auto itr = std::find_if(std::begin(weapons), std::end(weapons), [&](const std::weak_ptr<Weapon> & weapon) -> bool {
+            bool result = false;
+
             if(const auto & weaponPtr = weapon.lock()) {
-                return weaponPtr->getName() == name;
+                result = weaponPtr->getName() == name;
             }
 
-            return false;
+            return result;
         });
 
         if(itr != std::end(weapons)) {
