@@ -1,6 +1,7 @@
 #include "hikari/client/game/WeaponGetState.hpp"
 #include "hikari/client/game/InputService.hpp"
 #include "hikari/client/audio/AudioService.hpp"
+#include "hikari/client/game/GameProgress.hpp"
 #include "hikari/client/gui/Panel.hpp"
 #include "hikari/client/gui/GuiService.hpp"
 #include "hikari/client/Services.hpp"
@@ -13,8 +14,12 @@
 
 namespace hikari {
 
-    WeaponGetState::WeaponGetState(const std::string &name)
+    WeaponGetState::WeaponGetState(const std::string & name, GameController & controller, ServiceLocator &services)
         : name(name)
+        , controller(controller)
+        , guiService(services.locateService<GuiService>(Services::GUISERVICE))
+        , audioService(services.locateService<AudioService>(Services::AUDIO))
+        , gameProgress(services.locateService<GameProgress>(Services::GAMEPROGRESS))
     {
 
     }
@@ -51,9 +56,9 @@ namespace hikari {
         //     guiWrapper->setEnabled(true);
         // }
 
-        // if(auto audio = audioService.lock()) {
-        //     audio->playMusic("Password (MM3)");
-        // }
+        if(auto audio = audioService.lock()) {
+            audio->playMusic("Weapon Get (MM3)");
+        }
 
         // goToNextState = false;
     }

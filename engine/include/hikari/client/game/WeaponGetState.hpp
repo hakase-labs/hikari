@@ -8,12 +8,25 @@
 
 namespace hikari {
 
+    class AnimationSet;
+    class AudioService;
+    class GameProgress;
+    class GuiService;
+    class ImageFont;
+    class ServiceLocator;
+    class GameController;
+
     class WeaponGetState : public GameState {
     private:
         std::string name;
+        GameController & controller;
+        sf::View view;
+        std::weak_ptr<GuiService> guiService;
+        std::weak_ptr<AudioService> audioService;
+        std::weak_ptr<GameProgress> gameProgress;
 
     public:
-        WeaponGetState(const std::string & name);
+        WeaponGetState(const std::string & name, GameController & controller, ServiceLocator &services);
         virtual ~WeaponGetState();
 
         virtual void handleEvent(sf::Event &event);

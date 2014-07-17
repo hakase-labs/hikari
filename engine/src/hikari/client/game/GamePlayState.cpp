@@ -999,7 +999,7 @@ namespace hikari {
     void GamePlayState::endBossBattle() {
         const auto playerHeroController = hero->getActionController();
         hero->setActionController(std::make_shared<CutSceneHeroActionController>(hero));
-        // world.update(0.0f);
+        world.update(0.0f);
 
         // This needs to be non-blocking.
         taskQueue.push(std::make_shared<WaitTask>(1.0f));
@@ -1012,10 +1012,16 @@ namespace hikari {
             return true;
         }));
 
-        taskQueue.push(std::make_shared<WaitTask>(2.0f));
+        taskQueue.push(std::make_shared<WaitTask>(4.0f));
 
-        // Return control to the player
+        // TODO:
+        // Walk/jump sequence back to center of the room.
+        // Energy collection sequence.
+        // Teleport out of the room.
+
         taskQueue.push(std::make_shared<FunctionTask>(0, [this, playerHeroController](float dt) -> bool {
+            // Return control to the player here (this is sort of not necessary sincei t will be reset
+            // when the state transitions, but whatever).
             hero->setActionController(playerHeroController);
             controller.requestStateChange("weaponget");
             gotoNextState = true;
