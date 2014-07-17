@@ -15,6 +15,7 @@
 #include "hikari/client/game/events/GameQuitEventData.hpp"
 
 #include "hikari/client/game/PasswordState.hpp"
+#include "hikari/client/game/WeaponGetState.hpp"
 #include "hikari/client/game/TitleState.hpp"
 #include "hikari/client/game/OptionsState.hpp"
 #include "hikari/client/game/WeaponTable.hpp"
@@ -169,6 +170,7 @@ namespace hikari {
         StatePtr stageSelectState(new StageSelectState("stageselect", gameConfigJson["states"]["select"], stageSelectConfig, controller, services));
         StatePtr gameOverState(new GameOverState("gameover", gameConfigJson, controller, services));
         StatePtr passwordState(new PasswordState("password", gameConfigJson, controller, services));
+        StatePtr weaponGetState(new WeaponGetState("weaponget" /*, gameConfigJson, controller, services */));
         StatePtr titleState(new TitleState("title", gameConfigJson, controller, services));
         StatePtr optionsState(new OptionsState("options", gameConfigJson, controller, services));
 
@@ -176,6 +178,7 @@ namespace hikari {
         controller.addState(gamePlayState->getName(), gamePlayState);
         controller.addState(gameOverState->getName(), gameOverState);
         controller.addState(passwordState->getName(), passwordState);
+        controller.addState(weaponGetState->getName(), weaponGetState);
         controller.addState(titleState->getName(), titleState);
         controller.addState(optionsState->getName(), optionsState);
 

@@ -1017,6 +1017,8 @@ namespace hikari {
         // Return control to the player
         taskQueue.push(std::make_shared<FunctionTask>(0, [this, playerHeroController](float dt) -> bool {
             hero->setActionController(playerHeroController);
+            controller.requestStateChange("weaponget");
+            gotoNextState = true;
             return true;
         }));
     }

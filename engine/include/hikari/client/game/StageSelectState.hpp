@@ -70,6 +70,7 @@ namespace hikari {
 
         std::shared_ptr<AnimationSet> cursorAnimations;
         std::shared_ptr<AnimationSet> portraitAnimations;
+        std::shared_ptr<AnimationSet> eyeAnimations;
 
         sf::Sprite background;
         sf::Sprite foreground;
