@@ -6,6 +6,12 @@
 #include <SFML/Graphics/View.hpp>
 #include <string>
 
+namespace gcn {
+    class Container;
+    class LabelEx;
+    class Icon;
+}
+
 namespace hikari {
 
     class AnimationSet;
@@ -16,6 +22,12 @@ namespace hikari {
     class ServiceLocator;
     class GameController;
 
+    namespace gui {
+        // Forward-declare any GUI classes here
+        class Icon;
+        class IconAnimator;
+    }
+
     class WeaponGetState : public GameState {
     private:
         std::string name;
@@ -24,6 +36,12 @@ namespace hikari {
         std::weak_ptr<GuiService> guiService;
         std::weak_ptr<AudioService> audioService;
         std::weak_ptr<GameProgress> gameProgress;
+
+        std::unique_ptr<gcn::Container> guiContainer;
+        std::unique_ptr<gcn::LabelEx> guiWeaponGetText;
+        std::unique_ptr<gui::Icon> guiCannonIcon;
+
+        void buildGui(ServiceLocator & services);
 
     public:
         WeaponGetState(const std::string & name, GameController & controller, ServiceLocator &services);
@@ -34,7 +52,6 @@ namespace hikari {
         virtual bool update(float dt);
         virtual void onEnter();
         virtual void onExit();
-
         virtual const std::string & getName() const;
     };
 

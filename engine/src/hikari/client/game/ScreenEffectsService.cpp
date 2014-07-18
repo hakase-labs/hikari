@@ -15,8 +15,8 @@ namespace hikari {
     {
         backBuffer.create(bufferWidth, bufferHeight);
 
-        auto effect = std::make_shared<FadeInShaderScreenEffect>((1.0f/60.0f) * 100.0f);
-        effects.push_back(effect);
+        // auto effect = std::make_shared<FadeInShaderScreenEffect>((1.0f/60.0f) * 100.0f);
+        // effects.push_back(effect);
     }
 
     ScreenEffectsService::~ScreenEffectsService() {
@@ -40,18 +40,21 @@ namespace hikari {
     void ScreenEffectsService::render(sf::RenderTarget & target) {
         backBuffer.clear(sf::Color::Black);
 
-        std::for_each(
-            std::begin(effects),
-            std::end(effects),
-            [&](std::shared_ptr<ScreenEffect> & effect) {
-                // Render the effect to the buffer, and then swap the buffer
-                // pointers.
-                effect->inputSprite = &inputSprite;
-                effect->render(backBuffer);
-            }
-        );
+        if(effects.size() > 0) {
+            std::for_each(
+                std::begin(effects),
+                std::end(effects),
+                [&](std::shared_ptr<ScreenEffect> & effect) {
+                    // Render the effect to the buffer, and then swap the buffer
+                    // pointers.
+                    effect->inputSprite = &inputSprite;
+                    effect->render(backBuffer);
+                }
+            );
+        } else {
+            backBuffer.draw(inputSprite);
+        }
 
-        //backBuffer.draw(inputSprite /* , effectShader */);
         backBuffer.display();
 
         sf::Sprite renderSprite(backBuffer.getTexture());

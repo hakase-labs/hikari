@@ -4,6 +4,8 @@
 #include "hikari/client/game/GameProgress.hpp"
 #include "hikari/client/gui/Panel.hpp"
 #include "hikari/client/gui/GuiService.hpp"
+#include "hikari/client/gui/Icon.hpp"
+#include "hikari/client/gui/IconAnimator.hpp"
 #include "hikari/client/Services.hpp"
 #include "hikari/core/game/GameController.hpp"
 #include "hikari/core/util/ServiceLocator.hpp"
@@ -11,6 +13,10 @@
 
 #include <guichan/gui.hpp>
 #include <guichan/widgets/label.hpp>
+#include <guichan/widgets/container.hpp>
+#include <guichan/widgets/label.hpp>
+#include <guichan/widgets/icon.hpp>
+#include <guichan/hakase/labelex.hpp>
 
 namespace hikari {
 
@@ -21,11 +27,23 @@ namespace hikari {
         , audioService(services.locateService<AudioService>(Services::AUDIO))
         , gameProgress(services.locateService<GameProgress>(Services::GAMEPROGRESS))
     {
-
+        buildGui(services);
     }
 
     WeaponGetState::~WeaponGetState() {
 
+    }
+
+    void WeaponGetState::buildGui(ServiceLocator & services) {
+        guiContainer.reset(new gcn::Container());
+        guiContainer->setSize(256, 240);
+        guiContainer->setBaseColor(0x000000);
+        guiContainer->setOpaque(true);
+        guiContainer->setVisible(true);
+
+        guiWeaponGetText.reset(new gcn::LabelEx("WEAPON GET"));
+        guiWeaponGetText->adjustSize();
+        guiContainer->add(guiWeaponGetText.get(), 100, 100);
     }
 
     void WeaponGetState::handleEvent(sf::Event &event) {
@@ -33,9 +51,9 @@ namespace hikari {
     }
 
     void WeaponGetState::render(sf::RenderTarget &target) {
-        // if(auto gui = guiService.lock()) {
-        //     gui->renderAsTop(guiWrapper.get(), target);
-        // }
+        if(auto gui = guiService.lock()) {
+            gui->renderAsTop(guiContainer.get(), target);
+        }
     }
 
     bool WeaponGetState::update(float dt) {
@@ -50,11 +68,11 @@ namespace hikari {
     }
 
     void WeaponGetState::onEnter() {
-        // if(auto gui = guiService.lock()) {
-        //     auto & topContainer = gui->getRootContainer();
-        //     topContainer.add(guiWrapper.get(), 0, 0);
-        //     guiWrapper->setEnabled(true);
-        // }
+        if(auto gui = guiService.lock()) {
+            auto & topContainer = gui->getRootContainer();
+            topContainer.add(guiContainer.get(), 0, 0);
+            guiContainer->setEnabled(true);
+        }
 
         if(auto audio = audioService.lock()) {
             audio->playMusic("Weapon Get (MM3)");
@@ -64,11 +82,11 @@ namespace hikari {
     }
 
     void WeaponGetState::onExit() {
-        // if(auto gui = guiService.lock()) {
-        //     auto & topContainer = gui->getRootContainer();
-        //     topContainer.remove(guiWrapper.get());
-        //     guiWrapper->setEnabled(false);
-        // }
+        if(auto gui = guiService.lock()) {
+            auto & topContainer = gui->getRootContainer();
+            topContainer.remove(guiContainer.get());
+            guiContainer->setEnabled(false);
+        }
 
         // if(auto audio = audioService.lock()) {
         //     audio->stopMusic();
