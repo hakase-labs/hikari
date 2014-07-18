@@ -109,6 +109,8 @@ namespace hikari {
 
         void fadeOut(float fadeDuration = 0.2167f);
         void fadeIn(float fadeDuration = 0.2167f);
+
+        void clearEffects();
     };
 
 } // hikari

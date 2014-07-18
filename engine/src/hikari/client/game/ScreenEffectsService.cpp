@@ -14,9 +14,6 @@ namespace hikari {
         , effects()
     {
         backBuffer.create(bufferWidth, bufferHeight);
-
-        // auto effect = std::make_shared<FadeInShaderScreenEffect>((1.0f/60.0f) * 100.0f);
-        // effects.push_back(effect);
     }
 
     ScreenEffectsService::~ScreenEffectsService() {
@@ -40,6 +37,9 @@ namespace hikari {
     void ScreenEffectsService::render(sf::RenderTarget & target) {
         backBuffer.clear(sf::Color::Black);
 
+        // We have to check the size here otherwise if there are no effects the
+        // input sprite won't be drawn to the buffer at all! So if there aren't
+        // any effects to process we just pass through.
         if(effects.size() > 0) {
             std::for_each(
                 std::begin(effects),
@@ -64,15 +64,19 @@ namespace hikari {
     void ScreenEffectsService::fadeOut(float fadeDuration) {
         HIKARI_LOG(debug) << "ScreenEffectsService::fadeOut";
 
-        effects.clear();
+        clearEffects();
         effects.push_back(std::make_shared<FadeOutShaderScreenEffect>(fadeDuration));
     }
 
     void ScreenEffectsService::fadeIn(float fadeDuration) {
         HIKARI_LOG(debug) << "ScreenEffectsService::fadeIn";
 
-        effects.clear();
+        clearEffects();
         effects.push_back(std::make_shared<FadeInShaderScreenEffect>(fadeDuration));
+    }
+
+    void ScreenEffectsService::clearEffects() {
+        effects.clear();
     }
 
 } // hikari
