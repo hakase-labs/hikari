@@ -26,6 +26,7 @@ namespace hikari {
         , guiService(services.locateService<GuiService>(Services::GUISERVICE))
         , audioService(services.locateService<AudioService>(Services::AUDIO))
         , gameProgress(services.locateService<GameProgress>(Services::GAMEPROGRESS))
+        , keyboardInput(services.locateService<InputService>(Services::INPUT))
     {
         buildGui(services);
     }
@@ -59,10 +60,10 @@ namespace hikari {
     bool WeaponGetState::update(float dt) {
         bool goToNextState = false;
 
-        // if(keyboardInput->wasPressed(Input::BUTTON_CANCEL)) {
-        //     controller.requestStateChange(controller.getPreviousStateName());
-        //     goToNextState = true;
-        // }
+        if(keyboardInput->wasPressed(Input::BUTTON_CANCEL)) {
+            controller.requestStateChange("password");
+            goToNextState = true;
+        }
 
         return goToNextState;
     }

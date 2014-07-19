@@ -19,6 +19,7 @@ namespace hikari {
     class GameProgress;
     class GuiService;
     class ImageFont;
+    class Input;
     class ServiceLocator;
     class GameController;
 
@@ -36,6 +37,7 @@ namespace hikari {
         std::weak_ptr<GuiService> guiService;
         std::weak_ptr<AudioService> audioService;
         std::weak_ptr<GameProgress> gameProgress;
+        std::shared_ptr<Input> keyboardInput;
 
         std::unique_ptr<gcn::Container> guiContainer;
         std::unique_ptr<gcn::LabelEx> guiWeaponGetText;
