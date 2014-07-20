@@ -1,6 +1,6 @@
 set( CMAKE_INCLUDE_CURRENT_DIR ON )
 
-set( TEST_BASE_DIR "${PROJECT_SOURCE_DIR}/test" )
+set( TEST_BASE_DIR "${PROJECT_SOURCE_DIR}/tests" )
 set( ENGINE_BASE_DIR "${PROJECT_SOURCE_DIR}/engine" )
 
 set( INCLUDE_DIRS
@@ -30,4 +30,4 @@ set( TEST_SOURCE_FILES
 
 include_directories( ${INCLUDE_DIRS} )
 
-add_executable( test ${TEST_SOURCE_FILES} ${INCLUDE_DIRS} )
+add_executable( tests ${TEST_SOURCE_FILES} ${INCLUDE_DIRS} )

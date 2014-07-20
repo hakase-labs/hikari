@@ -4,33 +4,61 @@
 #include "hikari/core/game/GameState.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/View.hpp>
-#include <json/value.h>
 #include <string>
 
-namespace hikari {
-namespace client {
-namespace game {
+namespace gcn {
+    class Container;
+    class LabelEx;
+    class Icon;
+}
 
-    class WeaponGetState : public hikari::core::game::GameState {
+namespace hikari {
+
+    class AnimationSet;
+    class AudioService;
+    class GameProgress;
+    class GuiService;
+    class ImageFont;
+    class Input;
+    class ServiceLocator;
+    class GameController;
+
+    namespace gui {
+        // Forward-declare any GUI classes here
+        class Icon;
+        class IconAnimator;
+    }
+
+    class WeaponGetState : public GameState {
     private:
         std::string name;
-        sf::RenderTarget &target;
+        GameController & controller;
         sf::View view;
+        std::weak_ptr<GuiService> guiService;
+        std::weak_ptr<AudioService> audioService;
+        std::weak_ptr<GameProgress> gameProgress;
+        std::shared_ptr<Input> keyboardInput;
+
+        std::unique_ptr<gcn::Container> guiContainer;
+        std::unique_ptr<gcn::LabelEx> guiYouGotText;
+        std::unique_ptr<gcn::LabelEx> guiWeaponGetText;
+        std::unique_ptr<gui::Icon> guiBackground;
+        std::unique_ptr<gui::Icon> guiCannonIcon;
+
+        void buildGui(ServiceLocator & services);
 
     public:
-        WeaponGetState(const Json::Value &params);
-        virtual ~WeaponGetState() {}
+        WeaponGetState(const std::string & name, GameController & controller, ServiceLocator &services);
+        virtual ~WeaponGetState();
 
         virtual void handleEvent(sf::Event &event);
         virtual void render(sf::RenderTarget &target);
-        virtual bool update(const float &dt);
+        virtual bool update(float dt);
         virtual void onEnter();
         virtual void onExit();
-        virtual const std::string &getName() const;
+        virtual const std::string & getName() const;
     };
 
-} // hikari.client.game
-} // hikari.client
 } // hikari
 
 #endif // HIKARI_CLIENT_GAME_WEAPONGETSTATE

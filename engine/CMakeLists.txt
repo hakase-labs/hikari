@@ -162,6 +162,7 @@ set( HIKARI_CLIENT_GAME_SOURCE_FILES
     src/hikari/client/game/InputService.cpp
     src/hikari/client/game/KeyboardInput.cpp
     src/hikari/client/game/PasswordState.cpp
+    src/hikari/client/game/WeaponGetState.cpp
     src/hikari/client/game/RealTimeInput.cpp
     src/hikari/client/game/Shot.cpp
     src/hikari/client/game/SpawnProjectileWeaponAction.cpp
