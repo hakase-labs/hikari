@@ -42,9 +42,15 @@ namespace hikari {
         guiContainer->setOpaque(true);
         guiContainer->setVisible(true);
 
-        guiWeaponGetText.reset(new gcn::LabelEx("WEAPON GET"));
+        guiYouGotText.reset(new gcn::LabelEx("YOU GOT"));
+        guiYouGotText->setAlignment(gcn::Graphics::Left);
+        guiYouGotText->adjustSize();
+        guiContainer->add(guiYouGotText.get(), 80, 80);
+
+        guiWeaponGetText.reset(new gcn::LabelEx("SOME WEAPON"));
+        guiWeaponGetText->setAlignment(gcn::Graphics::Left);
         guiWeaponGetText->adjustSize();
-        guiContainer->add(guiWeaponGetText.get(), 100, 100);
+        guiContainer->add(guiWeaponGetText.get(), 80, 96);
     }
 
     void WeaponGetState::handleEvent(sf::Event &event) {

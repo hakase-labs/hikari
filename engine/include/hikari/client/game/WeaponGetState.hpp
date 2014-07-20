@@ -40,7 +40,9 @@ namespace hikari {
         std::shared_ptr<Input> keyboardInput;
 
         std::unique_ptr<gcn::Container> guiContainer;
+        std::unique_ptr<gcn::LabelEx> guiYouGotText;
         std::unique_ptr<gcn::LabelEx> guiWeaponGetText;
+        std::unique_ptr<gui::Icon> guiBackground;
         std::unique_ptr<gui::Icon> guiCannonIcon;
 
         void buildGui(ServiceLocator & services);
