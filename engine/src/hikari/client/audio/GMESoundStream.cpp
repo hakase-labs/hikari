@@ -150,7 +150,7 @@ namespace hikari {
         while(!emu->track_ended() && samples.size() < maximumSize) {
             handleError(emu->play(bufferSize, myBuffer.get()));
 
-            for(int i = 0; i < bufferSize; ++i) {
+            for(std::size_t i = 0; i < bufferSize; ++i) {
                 samples.push_back(myBuffer[i]);
             }
         }

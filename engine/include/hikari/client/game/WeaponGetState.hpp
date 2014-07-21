@@ -4,6 +4,9 @@
 #include "hikari/core/game/GameState.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/View.hpp>
+
+#include <memory>
+#include <queue>
 #include <string>
 
 namespace gcn {
@@ -22,6 +25,7 @@ namespace hikari {
     class Input;
     class ServiceLocator;
     class GameController;
+    class Task;
 
     namespace gui {
         // Forward-declare any GUI classes here
@@ -38,12 +42,13 @@ namespace hikari {
         std::weak_ptr<AudioService> audioService;
         std::weak_ptr<GameProgress> gameProgress;
         std::shared_ptr<Input> keyboardInput;
+        std::queue<std::shared_ptr<Task>> taskQueue;
 
         std::unique_ptr<gcn::Container> guiContainer;
         std::unique_ptr<gcn::LabelEx> guiYouGotText;
         std::unique_ptr<gcn::LabelEx> guiWeaponGetText;
         std::unique_ptr<gui::Icon> guiBackground;
-        std::unique_ptr<gui::Icon> guiCannonIcon;
+        std::unique_ptr<gui::Icon> guiRockman;
 
         void buildGui(ServiceLocator & services);
 

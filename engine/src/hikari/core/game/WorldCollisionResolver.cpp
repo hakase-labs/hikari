@@ -48,7 +48,12 @@ namespace hikari {
 
                 const auto obstacles = world->getObstacles();
                 const std::size_t obstacleCount = obstacles.size();
-                const BoundingBoxF sweepBox(x, yMin, 1.0f, yMax - yMin);
+                const BoundingBoxF sweepBox(
+                    static_cast<float>(x),
+                    static_cast<float>(yMin),
+                    1.0f,
+                    static_cast<float>(yMax - yMin)
+                );
 
                 for(std::size_t i = 0; i < obstacleCount; ++i) {
                     const auto & obstacleBounds = obstacles[i]->getBoundingBox();
@@ -64,9 +69,9 @@ namespace hikari {
                         collisionInfo.inheritedVelocityY = obstacles[i]->getVelocityY();
 
                         if(directionX == Directions::Left) {
-                            collisionInfo.correctedX = obstacleBounds.getRight() + 1;
+                            collisionInfo.correctedX = static_cast<int>(obstacleBounds.getRight() + 1);
                         } else if(directionX == Directions::Right) {
-                            collisionInfo.correctedX = obstacleBounds.getLeft();
+                            collisionInfo.correctedX = static_cast<int>(obstacleBounds.getLeft());
                         }
                     }
                 }
@@ -108,7 +113,12 @@ namespace hikari {
 
                 const auto obstacles = world->getObstacles();
                 const std::size_t obstacleCount = obstacles.size();
-                const BoundingBoxF sweepBox(xMin, y, xMax - xMin, 1.0f);
+                const BoundingBoxF sweepBox(
+                    static_cast<float>(xMin),
+                    static_cast<float>(y),
+                    static_cast<float>(xMax - xMin),
+                    1.0f
+                );
 
                 for(std::size_t i = 0; i < obstacleCount; ++i) {
                     const auto & obstacleBounds = obstacles[i]->getBoundingBox();
@@ -125,9 +135,9 @@ namespace hikari {
                         collisionInfo.inheritedVelocityY = obstacles[i]->getVelocityY();
 
                         if(directionY == Directions::Up) {
-                            collisionInfo.correctedY = obstacleBounds.getBottom();
+                            collisionInfo.correctedY = static_cast<int>(obstacleBounds.getBottom());
                         } else if(directionY == Directions::Down) {
-                            collisionInfo.correctedY = obstacleBounds.getTop();
+                            collisionInfo.correctedY = static_cast<int>(obstacleBounds.getTop());
                         }
                     }
                 }
