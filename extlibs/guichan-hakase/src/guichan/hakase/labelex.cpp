@@ -101,7 +101,7 @@ namespace gcn
 
     void LabelEx::draw(Graphics* graphics)
     {
-        for(int i = 0; i < mCaptionSections.size(); ++i)
+        for(std::size_t i = 0; i < mCaptionSections.size(); ++i)
         {
             int textX;
             int textY = getFont()->getHeight() * i;
@@ -130,7 +130,7 @@ namespace gcn
     void LabelEx::adjustSize()
     {
         int longestCaption = 0;
-        for(int i = 0; i < mCaptionSections.size(); ++i)
+        for(std::size_t i = 0; i < mCaptionSections.size(); ++i)
         {
             int captionWidth = getFont()->getWidth(mCaptionSections.at(i));
 

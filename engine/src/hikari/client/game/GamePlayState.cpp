@@ -196,7 +196,7 @@ namespace hikari {
         world.setParticleFactory(particleFactoryWeak);
         world.setProjectileFactory(projectileFactoryWeak);
 
-        srand(time(nullptr));
+        srand(static_cast<unsigned int>(time(nullptr)));
     }
 
     GamePlayState::~GamePlayState() {
@@ -369,7 +369,7 @@ namespace hikari {
                     if(const auto & weaponMenuItem = std::dynamic_pointer_cast<gui::WeaponMenuItem>(item)) {
                         currentWeaponId = weaponMenuItem->getWeaponId();
 
-                        weaponMenuItem->setValue(gp->getWeaponEnergy(currentWeaponId));
+                        weaponMenuItem->setValue(static_cast<float>(gp->getWeaponEnergy(currentWeaponId)));
                     }
                 }
             }
@@ -410,7 +410,7 @@ namespace hikari {
                             }
                         }
 
-                        guiWeaponEnergyGauge->setValue(gp->getWeaponEnergy(currentWeapon));
+                        guiWeaponEnergyGauge->setValue(static_cast<float>(gp->getWeaponEnergy(currentWeapon)));
                     }
                 }
             }
@@ -940,7 +940,10 @@ namespace hikari {
         // 6. Boss' energy bar fills up
         // 7. Let the battle begin
         const auto currentRoom = world.getCurrentRoom();
-        const auto roomPosition = Vector2<float>(currentRoom->getX(), currentRoom->getY()) * currentRoom->getGridSize();
+        const auto roomPosition = Vector2<float>(
+            static_cast<float>(currentRoom->getX()),
+            static_cast<float>(currentRoom->getY())
+        ) * static_cast<float>(currentRoom->getGridSize());
         const auto offset = Vector2<float>(128.0f, 64.0f);
         const auto playerHeroController = hero->getActionController();
 
@@ -954,7 +957,7 @@ namespace hikari {
             world.update(0.0f);
 
             if(auto gp = gameProgress.lock()) {
-                gp->setBossEnergy(0.0f);
+                gp->setBossEnergy(0);
                 gp->setBossMaxEnergy(boss->getHitPoints());
 
                 guiBossEnergyGauge->setValue(0.0f);
@@ -1937,7 +1940,7 @@ namespace hikari {
 
                 if(auto gp = gamePlayState.gameProgress.lock()) {
                     int currentWeaponEnergy = gp->getWeaponEnergy(gp->getCurrentWeapon());
-                    gamePlayState.hero->setHasAvailableWeaponEnergy(currentWeaponEnergy);
+                    gamePlayState.hero->setHasAvailableWeaponEnergy(currentWeaponEnergy > 0);
                 }
 
                 gamePlayState.hero->update(dt);

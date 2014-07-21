@@ -4,6 +4,8 @@
 #include "hikari/core/util/Log.hpp"
 #include <Music_Emu.h>
 #include <gme.h>
+
+#include <climits>
 #include <iostream>
 
 namespace hikari {
@@ -141,8 +143,8 @@ namespace hikari {
         });
 
         for(std::size_t i = 0; i < masterBufferSize; ++i) {
-            short mixedValue = 65535;
-
+            short mixedValue = SHRT_MAX;
+            std::cout << "mixedValue = " << mixedValue << std::endl;
             std::for_each(std::begin(activeSamplers), std::end(activeSamplers), [&](SamplerPair & pair) {
                 auto & emu = pair.first;
                 auto & buffer = *pair.second;

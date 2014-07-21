@@ -368,7 +368,7 @@ namespace hikari {
 
                 for(unsigned int i = 0, length = damageArray.size(); i < length; i++) {
                     const auto & damageEntry = damageArray[i];
-                    const float damageId = static_cast<float>(damageEntry["id"].asDouble());
+                    const int damageId = damageEntry["id"].asInt();
                     const float damageAmount = static_cast<float>(damageEntry["amount"].asDouble());
 
                     damageTable->addEntry(damageId, damageAmount);

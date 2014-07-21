@@ -153,8 +153,8 @@ namespace hikari {
         // Set cursor position
         const Point2D<float> &cursorPosition = cursorPositions.at(cursorIndex);
 
-        guiCursor.first->setX(cursorPosition.getX());
-        guiCursor.first->setY(cursorPosition.getY());
+        guiCursor.first->setX(static_cast<int>(cursorPosition.getX()));
+        guiCursor.first->setY(static_cast<int>(cursorPosition.getY()));
     }
 
     void StageSelectState::calculateCursorIndex() {
@@ -216,7 +216,10 @@ namespace hikari {
 
                 AnimatedIcon portraitIcon;
                 portraitIcon.first.reset(new gui::Icon(portraitAnimations->getImageFileName()));
-                portraitIcon.first->setPosition(position.getX() + 8, position.getY() + 8);
+                portraitIcon.first->setPosition(
+                    static_cast<int>(position.getX() + 8),
+                    static_cast<int>(position.getY() + 8)
+                );
                 portraitIcon.second.reset(new gui::IconAnimator(*portraitIcon.first.get()));
 
                 // TODO: Look up the correct portrait from the JSON.
@@ -243,7 +246,10 @@ namespace hikari {
             const auto & cursor = guiCursor.first;
 
             std::unique_ptr<gcn::LabelEx> label(new gcn::LabelEx(info.label));
-            label->setPosition(position.getX(), position.getY() + cursor->getHeight());
+            label->setPosition(
+                static_cast<int>(position.getX()),
+                static_cast<int>(position.getY() + cursor->getHeight())
+            );
             label->adjustSize();
 
             guiContainer->add(label.get());

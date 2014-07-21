@@ -227,8 +227,8 @@ namespace FactoryHelpers {
                                         Vector2<float> actionSpot;
 
                                         if(!actionSpotObject.isNull()) {
-                                            actionSpot.setX(actionSpotObject.get("x", 0.0f).asDouble())
-                                                .setY(actionSpotObject.get("y", 0.0f).asDouble());
+                                            actionSpot.setX(actionSpotObject.get("x", 0.0f).asFloat())
+                                                .setY(actionSpotObject.get("y", 0.0f).asFloat());
                                         }
 
                                         auto animationSetPtr = animationSetCache->get(animationSet);
