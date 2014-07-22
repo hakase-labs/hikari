@@ -47,6 +47,7 @@
 #include <SFML/Graphics/Color.hpp>
 
 #include <guichan/gui.hpp>
+#include <guichan/exception.hpp>
 
 #include <json/reader.h>
 
@@ -444,7 +445,14 @@ namespace hikari {
                     }
 
                     if(gui.getTop()) {
-                        gui.logic();
+                        try {
+                            gui.logic();
+                        } catch(gcn::Exception & gex) {
+                            HIKARI_LOG(error) << "Uncaught exception from GUI: " << gex.getMessage()
+                                << "\n\tFile: " << gex.getFilename()
+                                << "\n\tFunction: " << gex.getFunction()
+                                << "\n\tLine: " << gex.getLine();
+                        }
                     }
                 }
 

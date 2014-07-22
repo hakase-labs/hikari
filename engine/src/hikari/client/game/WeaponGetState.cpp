@@ -67,9 +67,6 @@ namespace hikari {
         guiRockman->setSubrectangle(gcn::Rectangle(256, 0, guiRockman->getWidth(), guiRockman->getHeight()));
         guiRockman->setVisible(false);
         guiContainer->add(guiRockman.get(), 120, 188);
-
-        // Teleport starts = 1135, (120, 188)
-        // Teleport top = 1163, (120, 76) (moves up by 112px in 28 frames, so 4px per frame or 0.0667)
     }
 
     void WeaponGetState::handleEvent(sf::Event &event) {
@@ -109,6 +106,7 @@ namespace hikari {
             auto & topContainer = gui->getRootContainer();
             topContainer.add(guiContainer.get(), 0, 0);
             guiContainer->setEnabled(true);
+            guiContainer->requestFocus();
         }
 
         if(auto audio = audioService.lock()) {
