@@ -5,6 +5,7 @@
 #include "hikari/client/game/Task.hpp"
 #include "hikari/client/game/FunctionTask.hpp"
 #include "hikari/client/game/WaitTask.hpp"
+#include "hikari/client/game/GameConfig.hpp"
 #include "hikari/client/gui/Panel.hpp"
 #include "hikari/client/gui/GuiService.hpp"
 #include "hikari/client/gui/Icon.hpp"
@@ -24,9 +25,10 @@
 
 namespace hikari {
 
-    WeaponGetState::WeaponGetState(const std::string & name, GameController & controller, ServiceLocator &services)
+    WeaponGetState::WeaponGetState(const std::string & name, GameController & controller, const std::weak_ptr<GameConfig> & gameConfig, ServiceLocator &services)
         : name(name)
         , controller(controller)
+        , gameConfig(gameConfig)
         , guiService(services.locateService<GuiService>(Services::GUISERVICE))
         , audioService(services.locateService<AudioService>(Services::AUDIO))
         , gameProgress(services.locateService<GameProgress>(Services::GAMEPROGRESS))
@@ -102,6 +104,16 @@ namespace hikari {
     }
 
     void WeaponGetState::onEnter() {
+        // Determine the weapon name to display.
+        if(auto config = gameConfig.lock()) {
+            if(auto gp = gameProgress.lock()) {
+                const unsigned int currentBossIndex = gp->getCurrentBoss();
+                const auto & weaponNames = config->getHeroWeaponNames();
+                guiWeaponGetText->setCaption(weaponNames.at(currentBossIndex));
+            }
+        }
+
+        // Push this state's GUI into the GUI container.
         if(auto gui = guiService.lock()) {
             auto & topContainer = gui->getRootContainer();
             topContainer.add(guiContainer.get(), 0, 0);

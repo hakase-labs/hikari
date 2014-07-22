@@ -171,7 +171,7 @@ namespace hikari {
         StatePtr stageSelectState(new StageSelectState("stageselect", gameConfigJson["states"]["select"], stageSelectConfig, controller, services));
         StatePtr gameOverState(new GameOverState("gameover", gameConfigJson, controller, services));
         StatePtr passwordState(new PasswordState("password", gameConfigJson, controller, services));
-        StatePtr weaponGetState(new WeaponGetState("weaponget", controller, services));
+        StatePtr weaponGetState(new WeaponGetState("weaponget", controller, gameConfig, services));
         StatePtr titleState(new TitleState("title", gameConfigJson, controller, services));
         StatePtr optionsState(new OptionsState("options", gameConfigJson, controller, services));
 
