@@ -299,7 +299,11 @@ namespace hikari {
                                     weaponMenuItem->setX(index < 5 ? 0 : 112);
                                     weaponMenuItem->setY(index < 5 ? index * 16 : (index - 5) * 16);
                                     weaponMenuItem->setFont(weaponItemFont.get());
+                                    weaponMenuItem->setVisible(true);
+                                    weaponMenuItem->setEnabled(true);
                                     guiWeaponMenu->addItem(weaponMenuItem);
+                                } else {
+                                    HIKARI_LOG(debug4) << "The weapon \"" << name << "\" was not found when building the GUI.";
                                 }
 
                                 index++;
@@ -1222,6 +1226,7 @@ namespace hikari {
                     //       already flying around. That would be a bummer to die.
                     if(auto gp = gameProgress.lock()) {
                         gp->setBossDefeated(gp->getCurrentBoss(), true);
+                        gp->enableWeapon(gp->getCurrentBoss() + 1, true);
                     }
 
                     endBossBattle();

@@ -45,6 +45,7 @@ namespace hikari {
         std::weak_ptr<GameProgress> gameProgress;
         std::shared_ptr<Input> keyboardInput;
         std::queue<std::shared_ptr<Task>> taskQueue;
+        bool goToNextState;
 
         std::unique_ptr<gcn::Container> guiContainer;
         std::unique_ptr<gcn::LabelEx> guiYouGotText;

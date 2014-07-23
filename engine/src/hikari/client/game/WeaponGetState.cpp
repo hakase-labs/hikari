@@ -23,6 +23,8 @@
 #include <guichan/widgets/icon.hpp>
 #include <guichan/hakase/labelex.hpp>
 
+#include <SFML/Window/Event.hpp>
+
 namespace hikari {
 
     WeaponGetState::WeaponGetState(const std::string & name, GameController & controller, const std::weak_ptr<GameConfig> & gameConfig, ServiceLocator &services)
@@ -33,6 +35,7 @@ namespace hikari {
         , audioService(services.locateService<AudioService>(Services::AUDIO))
         , gameProgress(services.locateService<GameProgress>(Services::GAMEPROGRESS))
         , keyboardInput(services.locateService<InputService>(Services::INPUT))
+        , goToNextState(false)
     {
         buildGui(services);
     }
@@ -72,7 +75,12 @@ namespace hikari {
     }
 
     void WeaponGetState::handleEvent(sf::Event &event) {
-
+        if(event.type == sf::Event::KeyPressed) {
+            if(event.key.code == sf::Keyboard::Return) {
+                controller.requestStateChange("stageselect");
+                goToNextState = true;
+            }
+        }
     }
 
     void WeaponGetState::render(sf::RenderTarget &target) {
@@ -82,10 +90,10 @@ namespace hikari {
     }
 
     bool WeaponGetState::update(float dt) {
-        bool goToNextState = false;
-
         if(keyboardInput->wasPressed(Input::BUTTON_CANCEL)) {
             controller.requestStateChange("password");
+            // TODO: Check if enough time has elapsed to show the sequence before
+            // skipping to stage select.
             goToNextState = true;
         }
 
@@ -104,12 +112,14 @@ namespace hikari {
     }
 
     void WeaponGetState::onEnter() {
+        goToNextState = false;
+
         // Determine the weapon name to display.
         if(auto config = gameConfig.lock()) {
             if(auto gp = gameProgress.lock()) {
                 const unsigned int currentBossIndex = gp->getCurrentBoss();
                 const auto & weaponNames = config->getHeroWeaponNames();
-                guiWeaponGetText->setCaption(weaponNames.at(currentBossIndex));
+                guiWeaponGetText->setCaption(weaponNames.at(currentBossIndex + 1)); // Weapons[0] is the Mega Buster
             }
         }
 
