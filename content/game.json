@@ -37,16 +37,16 @@
         "weapons" : "assets/weapons/weapons.json"
     },
     "weapons" : [
-        "Mega Buster",
-        "Triple Mega Buster",
-        "Komasaburo Top",
-        "Erekin Spark",
-        "Shadow Blade",
-        "Mega Buster",
-        "Mega Buster",
-        "Mega Buster",
-        "Mega Buster",
-        "Mega Buster"
+        "MEGA BUSTER",
+        "TRIPLE MEGA BUSTER",
+        "KOMASABURO TOP",
+        "EREKIN SPARK",
+        "SHADOW BLADE",
+        "MEGA BUSTER",
+        "MEGA BUSTER",
+        "MEGA BUSTER",
+        "MEGA BUSTER",
+        "MEGA BUSTER"
     ],
     "itemChances": [
         [
