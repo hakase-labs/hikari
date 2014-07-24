@@ -246,6 +246,9 @@ namespace hikari {
         return isUnderWaterFlag;
     }
 
+    void Hero::setInvincibility(bool invincible) {
+        isInvincible = invincible;
+    }
 
     void Hero::setHasAvailableWeaponEnergy(bool hasEnergy) {
         hasAvailableWeaponEnergy = hasEnergy;

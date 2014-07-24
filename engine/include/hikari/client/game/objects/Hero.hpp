@@ -221,6 +221,7 @@ namespace hikari {
         bool isNowShooting() const;
         bool isOnGround() const;
         bool isUnderWater() const;
+        void setInvincibility(bool invincible);
         void setHasAvailableWeaponEnergy(bool hasEnergy);
 
         virtual void update(float dt);

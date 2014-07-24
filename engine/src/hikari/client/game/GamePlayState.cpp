@@ -1224,6 +1224,8 @@ namespace hikari {
                     HIKARI_LOG(debug4) << "THE BOSS HAS BEEN KILLED! " << entityId;
                     // TODO: Make rockman immune just in case there are projectiles
                     //       already flying around. That would be a bummer to die.
+                    hero->setInvincibility(true);
+
                     if(auto gp = gameProgress.lock()) {
                         gp->setBossDefeated(gp->getCurrentBoss(), true);
                         gp->enableWeapon(gp->getCurrentBoss() + 1, true);
