@@ -60,7 +60,6 @@ namespace hikari {
         , guiBossIntroLayer(new gcn::Container())
         , guiBossStripe(new gcn::Container())
         , guiBossIntroLabel(new gcn::LabelEx())
-        , guiSelectedCellLabel(new gcn::LabelEx())
         , guiForeground()
         , guiBackground()
         , guiLeftEye()
@@ -189,11 +188,6 @@ namespace hikari {
         guiBossIntroLabel->setY(guiBossStripe->getHeight() - 16);
         guiBossIntroLabel->setAlignment(gcn::Graphics::Left);
 
-        guiSelectedCellLabel->setX(8);
-        guiSelectedCellLabel->setY(224);
-        guiSelectedCellLabel->setCaption("(" + StringUtils::toString(cursorColumn) + ", " + StringUtils::toString(cursorRow) + ")");
-        guiSelectedCellLabel->adjustSize();
-
         guiBackground.reset(new gui::Icon(config.getBackground()));
         guiForeground.reset(new gui::Icon(config.getForeground()));
 
@@ -257,7 +251,6 @@ namespace hikari {
 
         guiContainer->add(guiLeftEye.get());
         guiContainer->add(guiRightEye.get());
-        guiContainer->add(guiSelectedCellLabel.get());
         guiContainer->add(guiCursor.first.get());
 
         guiBossIntroLayer->add(guiBossStripe.get());
@@ -399,9 +392,6 @@ namespace hikari {
                         audio->playSample("Menu Item Select");
                     }
                 }
-
-                guiSelectedCellLabel->setCaption("(" + StringUtils::toString(cursorColumn) + ", " + StringUtils::toString(cursorRow) + ")");
-                guiSelectedCellLabel->adjustSize();
             }
         }
     }
