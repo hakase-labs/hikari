@@ -349,6 +349,8 @@ namespace hikari {
                         return true;
                     }));
 
+                    taskQueue.push(std::make_shared<WaitTask>(1.0f));
+
                     // Show each letter individually.
                     for(std::size_t i = 0, size = guiBossIntroLabel->getCaption().size(); i <= size; ++i) {
                         taskQueue.push(std::make_shared<FunctionTask>(0, [&, i](float dt) -> bool {
@@ -359,7 +361,7 @@ namespace hikari {
                     }
 
                     // Wait 7 seconds for the music to play
-                    taskQueue.push(std::make_shared<WaitTask>(7.0f));
+                    taskQueue.push(std::make_shared<WaitTask>(6.0f));
 
                     // Fade out
                     taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
@@ -388,7 +390,8 @@ namespace hikari {
                 selectCurrentPortrait();
 
                 if(auto gp = gameProgress.lock()) {
-                    gp->setCurrentBoss(cursorIndex);
+                    const unsigned int bossIndex = ((cursorIndex < 4) ? cursorIndex : (cursorIndex - 1));
+                    gp->setCurrentBoss(bossIndex);
                 }
 
                 if(playSample) {
