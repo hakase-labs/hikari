@@ -185,10 +185,11 @@ namespace hikari {
         // Center vertically
         guiBossStripe->setPosition(0, guiBossIntroLayer->getHeight() / 2 - guiBossStripe->getHeight() / 2);
 
+        guiBossIntroLabel->setX(0);
         guiBossIntroLabel->setY(guiBossStripe->getHeight() - 16);
-        guiBossIntroLabel->setCaption("TESTING THIS");
-        guiBossIntroLabel->adjustSize();
-        guiBossIntroLabel->setX((guiBossStripe->getWidth() / 2) - (guiBossIntroLabel->getWidth() / 2));
+        guiBossIntroLabel->setWidth(guiBossStripe->getWidth());
+        guiBossIntroLabel->setHeight(8);
+        guiBossIntroLabel->setAlignment(gcn::Graphics::Center);
 
         guiSelectedCellLabel->setX(8);
         guiSelectedCellLabel->setY(224);
@@ -330,6 +331,14 @@ namespace hikari {
 
                     // Show the boss stripe thing (where the boss does his dance)
                     taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
+                        // Determine the label to display on the boss name caption.
+                        const auto & portraitInfo = config.getPortraits();
+
+                        if(auto gp = gameProgress.lock()) {
+                            const auto & selectedPortraitInfo = portraitInfo.at(gp->getCurrentBoss());
+                            guiBossIntroLabel->setCaption(selectedPortraitInfo.introLabel);
+                        }
+
                         guiBossIntroLayer->setVisible(true);
                         return true;
                     }));
