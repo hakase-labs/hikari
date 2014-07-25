@@ -37,17 +37,29 @@
         "weapons" : "assets/weapons/weapons.json"
     },
     "weapons" : [
-        "Mega Buster",
-        "Triple Mega Buster",
-        "Komasaburo Top",
-        "Erekin Spark",
-        "Shadow Blade",
-        "Mega Buster",
-        "Mega Buster",
-        "Mega Buster",
-        "Mega Buster",
-        "Mega Buster"
+        "MEGA BUSTER",
+        "TRIPLE MEGA BUSTER",
+        "KOMASABURO TOP",
+        "EREKIN SPARK",
+        "SHADOW BLADE",
+        "MEGA BUSTER",
+        "MEGA BUSTER",
+        "MEGA BUSTER",
+        "MEGA BUSTER",
+        "MEGA BUSTER",
+        "MEGA BUSTER",
+        "MEGA BUSTER"
     ],
+    "weaponsPerBoss": {
+        "0": [1],
+        "1": [2, 11],
+        "2": [3],
+        "3": [4],
+        "4": [5],
+        "5": [6],
+        "6": [7, 9],
+        "7": [8, 10]
+    },
     "itemChances": [
         [
             { "Extra Life" : 1 },
@@ -115,41 +127,49 @@
                 },
                 {
                     "label": "JOE",
+                    "introLabel": "JOE MAN",
                     "animationSet": "assets/animations/stage-select.json",
                     "animationName": "default-portrait"
                 },
                 {
                     "label": "BUBBLE\n   MAN",
+                    "introLabel": "BUBBLE MAN",
                     "animationSet": "assets/animations/stage-select.json",
                     "animationName": "default-portrait"
                 },
                 {
                     "label": "TEST\n   MAN",
+                    "introLabel": "TEST MAN",
                     "animationSet": "assets/animations/stage-select.json",
                     "animationName": "default-portrait"
                 },
                 {
                     "label": "TEST2\n   MAN",
+                    "introLabel": "TEST2 MAN",
                     "animationSet": "assets/animations/stage-select.json",
                     "animationName": "rockman-portrait"
                 },
                 {
                     "label": "TEST3\n   MAN",
+                    "introLabel": "TEST3 MAN",
                     "animationSet": "assets/animations/stage-select.json",
                     "animationName": "default-portrait"
                 },
                 {
                     "label": "TEST4\n   MAN",
+                    "introLabel": "TEST4 MAN",
                     "animationSet": "assets/animations/stage-select.json",
                     "animationName": "default-portrait"
                 },
                 {
                     "label": "TEST5\n   MAN",
+                    "introLabel": "TEST5 MAN",
                     "animationSet": "assets/animations/stage-select.json",
                     "animationName": "default-portrait"
                 },
                 {
                     "label": "TEST6\n   MAN",
+                    "introLabel": "TEST6 MAN",
                     "animationSet": "assets/animations/stage-select.json",
                     "animationName": "default-portrait"
                 }
@@ -173,6 +193,6 @@
             "tileset" : "assets/tilesets/tiles-wily1.json"
         }
     },
-    "initialState" : "weaponget"
+    "initialState" : "stageselect"
 }
 

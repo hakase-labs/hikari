@@ -19,6 +19,7 @@ namespace hikari {
 
     class AnimationSet;
     class AudioService;
+    class GameConfig;
     class GameProgress;
     class GuiService;
     class ImageFont;
@@ -37,12 +38,14 @@ namespace hikari {
     private:
         std::string name;
         GameController & controller;
+        std::weak_ptr<GameConfig> gameConfig;
         sf::View view;
         std::weak_ptr<GuiService> guiService;
         std::weak_ptr<AudioService> audioService;
         std::weak_ptr<GameProgress> gameProgress;
         std::shared_ptr<Input> keyboardInput;
         std::queue<std::shared_ptr<Task>> taskQueue;
+        bool goToNextState;
 
         std::unique_ptr<gcn::Container> guiContainer;
         std::unique_ptr<gcn::LabelEx> guiYouGotText;
@@ -53,7 +56,7 @@ namespace hikari {
         void buildGui(ServiceLocator & services);
 
     public:
-        WeaponGetState(const std::string & name, GameController & controller, ServiceLocator &services);
+        WeaponGetState(const std::string & name, GameController & controller, const std::weak_ptr<GameConfig> & gameConfig, ServiceLocator &services);
         virtual ~WeaponGetState();
 
         virtual void handleEvent(sf::Event &event);

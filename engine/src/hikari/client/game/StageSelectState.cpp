@@ -185,10 +185,9 @@ namespace hikari {
         // Center vertically
         guiBossStripe->setPosition(0, guiBossIntroLayer->getHeight() / 2 - guiBossStripe->getHeight() / 2);
 
+        guiBossIntroLabel->setX(0);
         guiBossIntroLabel->setY(guiBossStripe->getHeight() - 16);
-        guiBossIntroLabel->setCaption("TESTING THIS");
-        guiBossIntroLabel->adjustSize();
-        guiBossIntroLabel->setX((guiBossStripe->getWidth() / 2) - (guiBossIntroLabel->getWidth() / 2));
+        guiBossIntroLabel->setAlignment(gcn::Graphics::Left);
 
         guiSelectedCellLabel->setX(8);
         guiSelectedCellLabel->setY(224);
@@ -328,11 +327,36 @@ namespace hikari {
                         taskQueue.push(std::make_shared<WaitTask>(SINGLE_FRAME * 2));
                     }
 
+                    // Determine the label to display on the boss name caption.
+                    const auto & portraitInfo = config.getPortraits();
+
+                    if(auto gp = gameProgress.lock()) {
+                        const auto & selectedPortraitInfo = portraitInfo.at(gp->getCurrentBoss());
+                        guiBossIntroLabel->setCaption(selectedPortraitInfo.introLabel);
+                        guiBossIntroLabel->adjustSize();
+
+                        // Set the correct X position to center the text before
+                        // showing each letter of it.
+                        guiBossIntroLabel->setX(guiBossStripe->getWidth() / 2 - guiBossIntroLabel->getWidth() / 2);
+
+                        // Now we decrease the width so it shows no letters.
+                        guiBossIntroLabel->setWidth(0);
+                    }
+
                     // Show the boss stripe thing (where the boss does his dance)
                     taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
                         guiBossIntroLayer->setVisible(true);
                         return true;
                     }));
+
+                    // Show each letter individually.
+                    for(std::size_t i = 0, size = guiBossIntroLabel->getCaption().size(); i <= size; ++i) {
+                        taskQueue.push(std::make_shared<FunctionTask>(0, [&, i](float dt) -> bool {
+                            guiBossIntroLabel->setWidth(i * 8);
+                            return true;
+                        }));
+                        taskQueue.push(std::make_shared<WaitTask>((1.0f / 60.0f) * 5.0f));
+                    }
 
                     // Wait 7 seconds for the music to play
                     taskQueue.push(std::make_shared<WaitTask>(7.0f));

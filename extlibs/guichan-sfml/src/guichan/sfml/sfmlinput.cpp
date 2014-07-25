@@ -3,6 +3,7 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 
 #include "guichan/exception.hpp"
+#include <iostream>
 
 namespace gcn
 {
@@ -66,8 +67,8 @@ namespace gcn
                 if (value == -1)
                 {
                     value = (int)event.key.code; // This is actually wrong; but what can you do?
-                } 
-               
+                }
+
                 keyInput.setKey(Key(value));
                 keyInput.setType(KeyInput::Pressed);
                 keyInput.setShiftPressed(event.key.shift);
@@ -88,8 +89,8 @@ namespace gcn
                 if (value == -1)
                 {
                     value = (int)event.key.code; // This is actually wrong; but what can you do?
-                } 
-               
+                }
+
                 keyInput.setKey(Key(value));
                 keyInput.setType(KeyInput::Released);
                 keyInput.setShiftPressed(event.key.shift);
@@ -156,19 +157,22 @@ namespace gcn
                 mouseInput.setX(static_cast<int>(normalizedCoords.x));
                 mouseInput.setY(static_cast<int>(normalizedCoords.y));
                 mouseInput.setButton(MouseInput::Empty);
+                mouseInput.setTimeStamp(mClock.getElapsedTime().asMilliseconds());
 
                 if (event.mouseWheel.delta > 0)
                 {
                     mouseInput.setType(MouseInput::WheelMovedUp);
+                    mMouseInputQueue.push(mouseInput);
                 }
                 else if (event.mouseWheel.delta < 0)
                 {
                     mouseInput.setType(MouseInput::WheelMovedDown);
+                    mMouseInputQueue.push(mouseInput);
                 }
 
-                mouseInput.setTimeStamp(mClock.getElapsedTime().asMilliseconds());
+                // We don't enqueue it unless it's up or down, or else it's an
+                // unknown movement type.
 
-                mMouseInputQueue.push(mouseInput);
                 break;
             }
             case sf::Event::LostFocus:

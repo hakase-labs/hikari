@@ -299,7 +299,11 @@ namespace hikari {
                                     weaponMenuItem->setX(index < 5 ? 0 : 112);
                                     weaponMenuItem->setY(index < 5 ? index * 16 : (index - 5) * 16);
                                     weaponMenuItem->setFont(weaponItemFont.get());
+                                    weaponMenuItem->setVisible(true);
+                                    weaponMenuItem->setEnabled(true);
                                     guiWeaponMenu->addItem(weaponMenuItem);
+                                } else {
+                                    HIKARI_LOG(debug4) << "The weapon \"" << name << "\" was not found when building the GUI.";
                                 }
 
                                 index++;
@@ -878,6 +882,7 @@ namespace hikari {
         // Reset direction to face right
         hero->setDirection(Directions::Right);
         hero->setActionController(std::make_shared<PlayerInputHeroActionController>(userInput));
+        hero->setInvincibility(false);
 
         if(currentMap) {
             // Boss corridor has highest priority
@@ -1220,8 +1225,11 @@ namespace hikari {
                     HIKARI_LOG(debug4) << "THE BOSS HAS BEEN KILLED! " << entityId;
                     // TODO: Make rockman immune just in case there are projectiles
                     //       already flying around. That would be a bummer to die.
+                    hero->setInvincibility(true);
+
                     if(auto gp = gameProgress.lock()) {
                         gp->setBossDefeated(gp->getCurrentBoss(), true);
+                        gp->enableWeapon(gp->getCurrentBoss() + 1, true);
                     }
 
                     endBossBattle();

@@ -52,6 +52,7 @@
 #include <SFML/Graphics/Color.hpp>
 
 #include <guichan/gui.hpp>
+#include <guichan/exception.hpp>
 
 #include <json/reader.h>
 
@@ -175,7 +176,7 @@ namespace hikari {
         StatePtr stageSelectState(new StageSelectState("stageselect", gameConfigJson["states"]["select"], stageSelectConfig, controller, services));
         StatePtr gameOverState(new GameOverState("gameover", gameConfigJson, controller, services));
         StatePtr passwordState(new PasswordState("password", gameConfigJson, controller, services));
-        StatePtr weaponGetState(new WeaponGetState("weaponget", controller, services));
+        StatePtr weaponGetState(new WeaponGetState("weaponget", controller, gameConfig, services));
         StatePtr titleState(new TitleState("title", gameConfigJson, controller, services));
         StatePtr optionsState(new OptionsState("options", gameConfigJson, controller, services));
 
@@ -449,7 +450,14 @@ namespace hikari {
                     }
 
                     if(gui.getTop()) {
-                        gui.logic();
+                        try {
+                            gui.logic();
+                        } catch(gcn::Exception & gex) {
+                            HIKARI_LOG(error) << "Uncaught exception from GUI: " << gex.getMessage()
+                                << "\n\tFile: " << gex.getFilename()
+                                << "\n\tFunction: " << gex.getFunction()
+                                << "\n\tLine: " << gex.getLine();
+                        }
                     }
                 }
 

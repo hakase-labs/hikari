@@ -1,6 +1,6 @@
 [
     {
-        "name": "Mega Buster",
+        "name": "MEGA BUSTER",
         "label": "M.BUSTER",
         "damageId": 7,
         "projectileType": "Plasma Bullet",
@@ -8,7 +8,7 @@
         "usageCost": 0,
         "usageSound": "Rockman (Shooting)",
         "usageActions": [
-            { 
+            {
                 "type": "spawnProjectile",
                 "projectileType": "Plasma Bullet",
                 "direction": "inherit",
@@ -20,7 +20,7 @@
         ]
     },
     {
-        "name": "Triple Mega Buster",
+        "name": "TRIPLE MEGA BUSTER",
         "label": "TRISHOT",
         "projectileType": "Plasma Bullet",
         "damageId": 7,
@@ -29,7 +29,7 @@
         "usageCost": 2.0,
         "usageSound": "Rockman (Shooting)",
         "usageActions": [
-            { 
+            {
                 "type": "spawnProjectile",
                 "projectileType": "Plasma Bullet",
                 "direction": "inherit",
@@ -38,7 +38,7 @@
                     "velocity": [3.825, 0.5]
                 }
             },
-            { 
+            {
                 "type": "spawnProjectile",
                 "projectileType": "Plasma Bullet",
                 "direction": "inherit",
@@ -47,7 +47,7 @@
                     "velocity": [4.0, 0.0]
                 }
             },
-            { 
+            {
                 "type": "spawnProjectile",
                 "projectileType": "Plasma Bullet",
                 "direction": "inherit",
@@ -59,7 +59,7 @@
         ]
     },
     {
-        "name": "Shadow Blade",
+        "name": "SHADOW BLADE",
         "label": "S.BLADE",
         "projectileType": "Shadow Blade",
         "paletteId": 5,
@@ -75,7 +75,7 @@
         ]
     },
     {
-        "name": "Komasaburo Top",
+        "name": "KOMASABURO TOP",
         "projectileType": "Komasaburo Top",
         "limit": 1,
         "usageCost": 3.0,
@@ -94,14 +94,14 @@
         ]
     },
     {
-        "name": "Erekin Spark",
+        "name": "EREKIN SPARK",
         "label": "E.SPARK",
         "projectileType": "Erekin Spark",
         "limit": 3,
         "usageCost": 3.0,
         "usageSound": "Erekin Spark",
         "usageActions": [
-            { 
+            {
                 "type": "spawnProjectile",
                 "projectileType": "Erekin Spark",
                 "direction": "inherit",
@@ -110,7 +110,7 @@
                     "velocity": [0, -2]
                 }
             },
-            { 
+            {
                 "type": "spawnProjectile",
                 "projectileType": "Erekin Spark",
                 "direction": "inherit",
@@ -119,7 +119,7 @@
                     "velocity": [1.4140625, -1.4140625]
                 }
             },
-            { 
+            {
                 "type": "spawnProjectile",
                 "projectileType": "Erekin Spark",
                 "direction": "inherit",
@@ -128,7 +128,7 @@
                     "velocity": [2, 0]
                 }
             },
-            { 
+            {
                 "type": "spawnProjectile",
                 "projectileType": "Erekin Spark",
                 "direction": "inherit",
@@ -137,7 +137,7 @@
                     "velocity": [1.4140625, 1.4140625]
                 }
             },
-            { 
+            {
                 "type": "spawnProjectile",
                 "projectileType": "Erekin Spark",
                 "direction": "inherit",
@@ -146,7 +146,7 @@
                     "velocity": [0, 2]
                 }
             },
-            { 
+            {
                 "type": "spawnProjectile",
                 "projectileType": "Erekin Spark",
                 "direction": "inherit",
@@ -155,7 +155,7 @@
                     "velocity": [-1.4140625, 1.4140625]
                 }
             },
-            { 
+            {
                 "type": "spawnProjectile",
                 "projectileType": "Erekin Spark",
                 "direction": "inherit",
@@ -164,7 +164,7 @@
                     "velocity": [-2, 0]
                 }
             },
-            { 
+            {
                 "type": "spawnProjectile",
                 "projectileType": "Erekin Spark",
                 "direction": "inherit",
@@ -176,7 +176,7 @@
         ]
     },
     {
-        "name": "Metool Triple Shot",
+        "name": "METOOL TRIPLE SHOT",
         "label": "METOOL",
         "projectileType": "Metool Plasma Bullet",
         "damageId": 1,
@@ -184,7 +184,7 @@
         "usageCost": 1.0,
         "usageSound": "None",
         "usageActions": [
-            { 
+            {
                 "type": "spawnProjectile",
                 "projectileType": "Metool Plasma Bullet",
                 "direction": "inherit",
@@ -193,7 +193,7 @@
                     "velocity": [0.98046875, -1.3125]
                 }
             },
-            { 
+            {
                 "type": "spawnProjectile",
                 "projectileType": "Metool Plasma Bullet",
                 "direction": "inherit",
@@ -202,7 +202,7 @@
                     "velocity": [1.19921875, 0.0]
                 }
             },
-            { 
+            {
                 "type": "spawnProjectile",
                 "projectileType": "Metool Plasma Bullet",
                 "direction": "inherit",
@@ -214,7 +214,7 @@
         ]
     },
     {
-        "name": "Joe Hammer",
+        "name": "JOE HAMMER",
         "projectileType": "Joe Hammer",
         "limit": 1,
         "usageCost": 3.0,
@@ -233,28 +233,28 @@
         ]
     },
     {
-        "name": "Rain Flush",
+        "name": "RAIN FLUSH",
         "projectileType": "Rain Flush",
         "global": true,
         "usageCost": 2,
         "usageSound": "Rain Flush",
         "usageActions": [
-            { 
+            {
                 "type": "screenEffect"
             },
-            { 
+            {
                 "type": "screenEffect"
             }
         ]
     },
     {
-        "name": "Leaf Shield",
+        "name": "LEAF SHIELD",
         "projectileType": "Leaf Shield",
         "limit": 1,
         "usageCost": 2,
         "usageSound": "Rain Flush",
         "usageActions": [
-            { 
+            {
                 "type": "shield",
                 "projectileType": "Leaf Shield"
             }

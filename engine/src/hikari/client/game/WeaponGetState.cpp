@@ -5,6 +5,7 @@
 #include "hikari/client/game/Task.hpp"
 #include "hikari/client/game/FunctionTask.hpp"
 #include "hikari/client/game/WaitTask.hpp"
+#include "hikari/client/game/GameConfig.hpp"
 #include "hikari/client/gui/Panel.hpp"
 #include "hikari/client/gui/GuiService.hpp"
 #include "hikari/client/gui/Icon.hpp"
@@ -22,15 +23,19 @@
 #include <guichan/widgets/icon.hpp>
 #include <guichan/hakase/labelex.hpp>
 
+#include <SFML/Window/Event.hpp>
+
 namespace hikari {
 
-    WeaponGetState::WeaponGetState(const std::string & name, GameController & controller, ServiceLocator &services)
+    WeaponGetState::WeaponGetState(const std::string & name, GameController & controller, const std::weak_ptr<GameConfig> & gameConfig, ServiceLocator &services)
         : name(name)
         , controller(controller)
+        , gameConfig(gameConfig)
         , guiService(services.locateService<GuiService>(Services::GUISERVICE))
         , audioService(services.locateService<AudioService>(Services::AUDIO))
         , gameProgress(services.locateService<GameProgress>(Services::GAMEPROGRESS))
         , keyboardInput(services.locateService<InputService>(Services::INPUT))
+        , goToNextState(false)
     {
         buildGui(services);
     }
@@ -67,13 +72,15 @@ namespace hikari {
         guiRockman->setSubrectangle(gcn::Rectangle(256, 0, guiRockman->getWidth(), guiRockman->getHeight()));
         guiRockman->setVisible(false);
         guiContainer->add(guiRockman.get(), 120, 188);
-
-        // Teleport starts = 1135, (120, 188)
-        // Teleport top = 1163, (120, 76) (moves up by 112px in 28 frames, so 4px per frame or 0.0667)
     }
 
     void WeaponGetState::handleEvent(sf::Event &event) {
-
+        if(event.type == sf::Event::KeyPressed) {
+            if(event.key.code == sf::Keyboard::Return) {
+                controller.requestStateChange("stageselect");
+                goToNextState = true;
+            }
+        }
     }
 
     void WeaponGetState::render(sf::RenderTarget &target) {
@@ -83,10 +90,10 @@ namespace hikari {
     }
 
     bool WeaponGetState::update(float dt) {
-        bool goToNextState = false;
-
         if(keyboardInput->wasPressed(Input::BUTTON_CANCEL)) {
             controller.requestStateChange("password");
+            // TODO: Check if enough time has elapsed to show the sequence before
+            // skipping to stage select.
             goToNextState = true;
         }
 
@@ -105,10 +112,23 @@ namespace hikari {
     }
 
     void WeaponGetState::onEnter() {
+        goToNextState = false;
+
+        // Determine the weapon name to display.
+        if(auto config = gameConfig.lock()) {
+            if(auto gp = gameProgress.lock()) {
+                const unsigned int currentBossIndex = gp->getCurrentBoss();
+                const auto & weaponNames = config->getHeroWeaponNames();
+                guiWeaponGetText->setCaption(weaponNames.at(currentBossIndex + 1)); // Weapons[0] is the Mega Buster
+            }
+        }
+
+        // Push this state's GUI into the GUI container.
         if(auto gui = guiService.lock()) {
             auto & topContainer = gui->getRootContainer();
             topContainer.add(guiContainer.get(), 0, 0);
             guiContainer->setEnabled(true);
+            guiContainer->requestFocus();
         }
 
         if(auto audio = audioService.lock()) {
