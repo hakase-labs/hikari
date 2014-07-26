@@ -2104,11 +2104,8 @@ namespace hikari {
 
             if(playerEnergy <= 0) {
                 hero->kill();
+                gamePlayState.canViewMenu = false;
             }
-
-            // gamePlayState.guiHeroEnergyGauge->setValue(
-            //     static_cast<float>(gp->getPlayerEnergy())
-            // );
         }
 
         return SubState::CONTINUE;

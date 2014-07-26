@@ -61,7 +61,6 @@ namespace hikari {
         std::unique_ptr<gcn::Container> guiBossIntroLayer;
         std::unique_ptr<gcn::Container> guiBossStripe;
         std::unique_ptr<gcn::LabelEx> guiBossIntroLabel;
-        std::unique_ptr<gcn::LabelEx> guiSelectedCellLabel;
         std::unique_ptr<gui::Icon> guiForeground;
         std::unique_ptr<gui::Icon> guiBackground;
         std::unique_ptr<gui::Icon> guiLeftEye;

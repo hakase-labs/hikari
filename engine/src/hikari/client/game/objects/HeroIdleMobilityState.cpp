@@ -51,7 +51,7 @@ namespace hikari {
                     return MobilityState::NEXT;
                 }
 
-                if(hero.canJump() && controller->shouldJump()) {
+                if(hero.canJump() && controller->shouldJump() && !controller->shouldSlide()) {
                     hero.requestMobilityStateChange(std::unique_ptr<MobilityState>(new AirbornMobilityState(hero)));
                     return MobilityState::NEXT;
                 }

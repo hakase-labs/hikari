@@ -60,7 +60,6 @@ namespace hikari {
         , guiBossIntroLayer(new gcn::Container())
         , guiBossStripe(new gcn::Container())
         , guiBossIntroLabel(new gcn::LabelEx())
-        , guiSelectedCellLabel(new gcn::LabelEx())
         , guiForeground()
         , guiBackground()
         , guiLeftEye()
@@ -189,11 +188,6 @@ namespace hikari {
         guiBossIntroLabel->setY(guiBossStripe->getHeight() - 16);
         guiBossIntroLabel->setAlignment(gcn::Graphics::Left);
 
-        guiSelectedCellLabel->setX(8);
-        guiSelectedCellLabel->setY(224);
-        guiSelectedCellLabel->setCaption("(" + StringUtils::toString(cursorColumn) + ", " + StringUtils::toString(cursorRow) + ")");
-        guiSelectedCellLabel->adjustSize();
-
         guiBackground.reset(new gui::Icon(config.getBackground()));
         guiForeground.reset(new gui::Icon(config.getForeground()));
 
@@ -257,7 +251,6 @@ namespace hikari {
 
         guiContainer->add(guiLeftEye.get());
         guiContainer->add(guiRightEye.get());
-        guiContainer->add(guiSelectedCellLabel.get());
         guiContainer->add(guiCursor.first.get());
 
         guiBossIntroLayer->add(guiBossStripe.get());
@@ -349,6 +342,8 @@ namespace hikari {
                         return true;
                     }));
 
+                    taskQueue.push(std::make_shared<WaitTask>(1.0f));
+
                     // Show each letter individually.
                     for(std::size_t i = 0, size = guiBossIntroLabel->getCaption().size(); i <= size; ++i) {
                         taskQueue.push(std::make_shared<FunctionTask>(0, [&, i](float dt) -> bool {
@@ -359,7 +354,7 @@ namespace hikari {
                     }
 
                     // Wait 7 seconds for the music to play
-                    taskQueue.push(std::make_shared<WaitTask>(7.0f));
+                    taskQueue.push(std::make_shared<WaitTask>(6.0f));
 
                     // Fade out
                     taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
@@ -388,7 +383,8 @@ namespace hikari {
                 selectCurrentPortrait();
 
                 if(auto gp = gameProgress.lock()) {
-                    gp->setCurrentBoss(cursorIndex);
+                    const unsigned int bossIndex = ((cursorIndex < 4) ? cursorIndex : (cursorIndex - 1));
+                    gp->setCurrentBoss(bossIndex);
                 }
 
                 if(playSample) {
@@ -396,9 +392,6 @@ namespace hikari {
                         audio->playSample("Menu Item Select");
                     }
                 }
-
-                guiSelectedCellLabel->setCaption("(" + StringUtils::toString(cursorColumn) + ", " + StringUtils::toString(cursorRow) + ")");
-                guiSelectedCellLabel->adjustSize();
             }
         }
     }

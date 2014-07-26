@@ -66,7 +66,10 @@ namespace hikari {
         slideDuration += dt;
 
         if(auto const * controller = hero.actionController.get()) {
-            if(hero.isInTunnel || (slideDuration < slideDurationThreshold && (controller->shouldSlide() || !controller->shouldStopSliding()))) {
+            if((hero.isInTunnel || (slideDuration < slideDurationThreshold))
+                && !hero.isOnEdge
+                && !hero.isBlockedByWall
+            ) {
                 if(controller->shouldMoveLeft()) {
                     hero.setDirection(Directions::Left);
                 }
