@@ -4,6 +4,7 @@
 #include "hikari/client/game/objects/HeroTeleportingMobilityState.hpp"
 #include "hikari/client/game/objects/HeroDamagedMobilityState.hpp"
 #include "hikari/client/game/objects/PalettedAnimatedSprite.hpp"
+#include "hikari/client/game/objects/Entity.hpp"
 #include "hikari/client/game/events/EventBus.hpp"
 #include "hikari/client/game/events/EventData.hpp"
 #include "hikari/client/game/events/EntityDeathEventData.hpp"
@@ -231,7 +232,41 @@ namespace hikari {
     }
 
     bool Hero::canSlide() {
-        return !isAirborn && !isSliding && !isStunned;
+        // TODO: Perform check to see if there is a wall in front of me. If there is,
+        // I can't slide. Otherwise, I can. I also can't slide if I'm on a cliff/edge.
+        // swtch(direction) {
+        //   case Left:
+        //      check left edge - 16px if it's solid
+        //   case Right:
+        //      check right edge + 16 if its solid
+        // }
+        bool isBlockedByWall = false;
+        bool isOnEdge = false;
+
+        // Check wall blockage.
+        if(const auto & room = getRoom()) {
+            // We check the position to either side of the hero's feet plane.
+
+            float checkX = 0;
+            float checkY = 0;
+
+            if(getDirection() == Directions::Left) {
+                checkY = getBoundingBox().getBottom() - 1.0f;
+                checkX = getBoundingBox().getLeft() - 16.0f;
+            } else if(getDirection() == Directions::Right) {
+                checkY = getBoundingBox().getBottom() - 1.0f;
+                checkX = getBoundingBox().getRight() + 16.0f;
+            }
+
+            isBlockedByWall = EntityHelpers::checkIfTileAtPositionHasAttribute(
+                this,
+                static_cast<int>(checkX),
+                static_cast<int>(checkY),
+                TileAttribute::SOLID
+            );
+        }
+
+        return !isAirborn && !isSliding && !isStunned && !isOnEdge && !isBlockedByWall;
     }
 
     bool Hero::isNowShooting() const {

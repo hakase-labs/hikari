@@ -65,8 +65,10 @@ namespace hikari {
     Hero::MobilityState::StateChangeAction Hero::SlidingMobilityState::update(const float & dt) {
         slideDuration += dt;
 
+        bool isOnEdge = false;
+
         if(auto const * controller = hero.actionController.get()) {
-            if(hero.isInTunnel || (slideDuration < slideDurationThreshold)) {
+            if((hero.isInTunnel || (slideDuration < slideDurationThreshold)) && !isOnEdge) {
                 if(controller->shouldMoveLeft()) {
                     hero.setDirection(Directions::Left);
                 }
@@ -83,6 +85,11 @@ namespace hikari {
                     hero.setVelocityX(hero.slideVelocity.getX());
                 }
             } else {
+                // We stopped sliding because we approached the edge of a plane.
+                if(isOnEdge) {
+                    // TODO: Not sure what to do.
+                }
+
                 if(!controller->shouldMoveLeft() && !controller->shouldMoveRight()){
                     hero.isDecelerating = true;
                     hero.requestMobilityStateChange(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
