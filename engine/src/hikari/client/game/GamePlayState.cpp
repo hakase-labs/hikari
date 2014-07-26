@@ -888,7 +888,6 @@ namespace hikari {
             // Boss corridor has highest priority
             if(hasReachedBossCorridor) {
                 changeCurrentRoom(currentMap->getBossCorridorRoom());
-                guiBossEnergyGauge->setVisible(false);
             } else if(hasReachedMidpoint) {
                 changeCurrentRoom(currentMap->getMidpointRoom());
             } else {
@@ -899,6 +898,9 @@ namespace hikari {
         // Make sure we allow the boss the be garbage collected just in case we
         // haven't done so already.
         boss.reset();
+
+        // Stop showing the boss energy bar until it's needed.
+        guiBossEnergyGauge->setVisible(false);
 
         changeSubState(std::unique_ptr<SubState>(new ReadySubState(*this)));
     }
