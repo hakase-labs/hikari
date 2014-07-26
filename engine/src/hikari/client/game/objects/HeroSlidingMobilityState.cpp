@@ -53,8 +53,8 @@ namespace hikari {
         const auto currentBoundingBox = hero.getBoundingBox();
 
         BoundingBoxF restoredBoundingBox(oldBoundingBox);
-        restoredBoundingBox.setBottom(currentBoundingBox.getBottom());
         restoredBoundingBox.setPosition(currentBoundingBox.getPosition());
+        restoredBoundingBox.setBottom(currentBoundingBox.getBottom());
 
         hero.setBoundingBox(restoredBoundingBox);
 
