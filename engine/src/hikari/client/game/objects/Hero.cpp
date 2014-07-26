@@ -176,6 +176,46 @@ namespace hikari {
                 }
             }
 
+            // Check for wall blockage and edge detection. These two flags are used
+            // to determine if the hero can slide or shoud stop sliding.
+            isBlockedByWall = false;
+            isOnEdge = false;
+
+            // We check the position to either side of the hero's feet plane.
+
+            float checkX = 0;
+            float checkY = 0;
+
+            if(getDirection() == Directions::Left) {
+                checkY = getBoundingBox().getBottom() - 1.0f;
+                checkX = getBoundingBox().getLeft() - 16.0f;
+            } else if(getDirection() == Directions::Right) {
+                checkY = getBoundingBox().getBottom() - 1.0f;
+                checkX = getBoundingBox().getRight() + 16.0f;
+            }
+
+            isBlockedByWall = EntityHelpers::checkIfTileAtPositionHasAttribute(
+                this,
+                static_cast<int>(checkX),
+                static_cast<int>(checkY),
+                TileAttribute::SOLID
+            );
+
+            // We check the to next to you and the one below that. If they're both
+            // not solid then it's an "edge".
+            isOnEdge = !(EntityHelpers::checkIfTileAtPositionHasAttribute(
+                this,
+                static_cast<int>(checkX),
+                static_cast<int>(checkY),
+                TileAttribute::SOLID
+            )) && !(EntityHelpers::checkIfTileAtPositionHasAttribute(
+                this,
+                static_cast<int>(checkX),
+                static_cast<int>(checkY + 1),
+                TileAttribute::SOLID
+            ));
+
+
             // Check if we're under water or starting to enter water
             {
                 int bodyPositionTile = room->getAttributeAt(
@@ -232,54 +272,6 @@ namespace hikari {
     }
 
     bool Hero::canSlide() {
-        // TODO: Perform check to see if there is a wall in front of me. If there is,
-        // I can't slide. Otherwise, I can. I also can't slide if I'm on a cliff/edge.
-        // swtch(direction) {
-        //   case Left:
-        //      check left edge - 16px if it's solid
-        //   case Right:
-        //      check right edge + 16 if its solid
-        // }
-        bool isBlockedByWall = false;
-        bool isOnEdge = false;
-
-        // Check wall blockage.
-        if(const auto & room = getRoom()) {
-            // We check the position to either side of the hero's feet plane.
-
-            float checkX = 0;
-            float checkY = 0;
-
-            if(getDirection() == Directions::Left) {
-                checkY = getBoundingBox().getBottom() - 1.0f;
-                checkX = getBoundingBox().getLeft() - 16.0f;
-            } else if(getDirection() == Directions::Right) {
-                checkY = getBoundingBox().getBottom() - 1.0f;
-                checkX = getBoundingBox().getRight() + 16.0f;
-            }
-
-            isBlockedByWall = EntityHelpers::checkIfTileAtPositionHasAttribute(
-                this,
-                static_cast<int>(checkX),
-                static_cast<int>(checkY),
-                TileAttribute::SOLID
-            );
-
-            // We check the to next to you and the one below that. If they're both
-            // not solid then it's an "edge".
-            isOnEdge = !(EntityHelpers::checkIfTileAtPositionHasAttribute(
-                this,
-                static_cast<int>(checkX),
-                static_cast<int>(checkY),
-                TileAttribute::SOLID
-            )) && !(EntityHelpers::checkIfTileAtPositionHasAttribute(
-                this,
-                static_cast<int>(checkX),
-                static_cast<int>(checkY + 1),
-                TileAttribute::SOLID
-            ));
-        }
-
         return !isAirborn && !isSliding && !isStunned && !isOnEdge && !isBlockedByWall;
     }
 

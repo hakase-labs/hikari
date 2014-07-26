@@ -27,6 +27,8 @@ namespace hikari {
         bool isWalking;                 // Moving left or right on purpose
         bool isSliding;                 // Currently engaged in a slide
         bool isInTunnel;                // Surrounded by solid surface (sliding in a narrow space)
+        bool isOnEdge;                  // On the edge of a ground plane
+        bool isBlockedByWall;           // There is a wall in front of hero in whatever his direction is
         bool isJumping;                 // Moving upward with no solid ground underneath
         bool isFalling;                 // Falling with no solid ground underneath
         bool isAirborn;                 // In air; falling or jumping
