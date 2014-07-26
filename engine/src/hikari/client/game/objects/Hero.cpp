@@ -188,10 +188,10 @@ namespace hikari {
 
             if(getDirection() == Directions::Left) {
                 checkY = getBoundingBox().getBottom() - 1.0f;
-                checkX = getBoundingBox().getLeft() - 16.0f;
+                checkX = getBoundingBox().getLeft() - 8.0f;
             } else if(getDirection() == Directions::Right) {
                 checkY = getBoundingBox().getBottom() - 1.0f;
-                checkX = getBoundingBox().getRight() + 16.0f;
+                checkX = getBoundingBox().getRight() + 8.0f;
             }
 
             isBlockedByWall = EntityHelpers::checkIfTileAtPositionHasAttribute(
