@@ -44,6 +44,9 @@ namespace hikari {
 
         hero.chooseAnimation();
 
+        // Can't shoot while sliding, so stop it now.
+        hero.stopShooting();
+
         if(auto events = hero.getEventBus().lock()) {
             events->triggerEvent(EventDataPtr(new EntityStateChangeEventData(hero.getId(), "sliding")));
         }
