@@ -208,11 +208,21 @@ namespace hikari {
                 static_cast<int>(checkX),
                 static_cast<int>(checkY),
                 TileAttribute::SOLID
+            ) || EntityHelpers::checkIfTileAtPositionHasAttribute(
+                this,
+                static_cast<int>(checkX),
+                static_cast<int>(checkY),
+                TileAttribute::PLATFORM
             )) && !(EntityHelpers::checkIfTileAtPositionHasAttribute(
                 this,
                 static_cast<int>(checkX),
                 static_cast<int>(checkY + 1),
                 TileAttribute::SOLID
+            ) || EntityHelpers::checkIfTileAtPositionHasAttribute(
+                this,
+                static_cast<int>(checkX),
+                static_cast<int>(checkY + 1),
+                TileAttribute::PLATFORM
             ));
 
 
