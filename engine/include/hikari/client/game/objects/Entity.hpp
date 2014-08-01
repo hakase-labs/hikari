@@ -30,8 +30,8 @@ namespace hikari {
     class Shot;
 
     /**
-     * Base class for all in-game entities. 
-     *  
+     * Base class for all in-game entities.
+     *
      * An Entity has a logical and a rendered component. Most objects are
      * subclasses of Entity.
      */
@@ -73,7 +73,7 @@ namespace hikari {
         Movable body;
         std::unique_ptr<PalettedAnimatedSprite> & getAnimatedSprite();
         std::list<Shot> activeShots;
-        
+
         virtual void renderEntity(sf::RenderTarget &target);
 
         /**
@@ -83,9 +83,9 @@ namespace hikari {
         void removeNonActiveShots();
 
         /**
-         * Returns whether the Entity can fire its currently assigned weapon or 
+         * Returns whether the Entity can fire its currently assigned weapon or
          * not.
-         * 
+         *
          * @return true if weapon can be fired, false otherwise
          */
         bool canFireWeapon() const;
@@ -110,7 +110,7 @@ namespace hikari {
 
         int getPaletteIndex() const;
         void setPaletteIndex(int index);
-        
+
         void setDirection(const Direction& dir);
         const Direction getDirection() const;
 
@@ -152,14 +152,14 @@ namespace hikari {
         /**
          * Causes the Entity to observe a Shot. Entities can observe many shots
          * at one time.
-         * 
+         *
          * @param shot the Shot to observe
          */
         void observeShot(const Shot & shot);
 
         /**
          * Returns how many active shots the Entity is observing.
-         * 
+         *
          * @return count onf active shots
          */
         unsigned int getActiveShotCount() const;
@@ -168,7 +168,7 @@ namespace hikari {
          * Sets whether this Entity should be affected by gravity or not. When
          * an Entity is affected by gravity, its Y position is adjusted over
          * time by a gravitational constant.
-         * 
+         *
          * @param affected whether this Entity should be affected by gravity or not
          * @see Entity::isGravitated
          */
@@ -182,9 +182,9 @@ namespace hikari {
 
         /**
          * Sets whether this Entity acts like an obstacle. When an Entity is
-         * an obstacle, it obstructs the movement of other Entities. It can 
+         * an obstacle, it obstructs the movement of other Entities. It can
          * also be stood on (like solid ground).
-         * 
+         *
          * @param obstacle flag for whether this Entity should be an obstacle or not
          * @see Entity::isObstacle
          */
@@ -192,7 +192,7 @@ namespace hikari {
 
         /**
          * Gets the "obstacle status" of this Entity.
-         * 
+         *
          * @return whether this Entity is an obstacle or not
          * @see Entity::setObstacle
          */
@@ -218,7 +218,7 @@ namespace hikari {
          * Sets whether this Entity should phase through solid objects. If an
          * object is phasing it can freely pass through solid objects like
          * walls. It will not perform collision checks with the world.
-         * 
+         *
          * @param phasing flag indicating whether this Entity should phase
          * @see Entity::isPhasing
          */
@@ -227,7 +227,7 @@ namespace hikari {
         /**
          * Gets whether this Entity is currently phasing or not. Entities that
          * are phasing do not perform Object vs. World collision checks.
-         * 
+         *
          * @return phasing status
          * @see Entity::setPhasing
          */
@@ -243,7 +243,7 @@ namespace hikari {
 
         /**
          * Sets the Entity's position to newPosition.
-         * 
+         *
          * @param newPosition a new position to give the Entity
          * @see getPosition
          */
@@ -251,7 +251,7 @@ namespace hikari {
 
         /**
          * Sets the Entity's position to (x, y).
-         * 
+         *
          * @param x a new X coordinate to give the Entity
          * @param y a new Y coordinate to give the Entity
          * @see getPosition
@@ -260,7 +260,7 @@ namespace hikari {
 
         /**
          * Gets the Entity's "action spot", which is a point relative to its
-         * position where "actions" should take place. For example, when 
+         * position where "actions" should take place. For example, when
          * shooting a weapon the action spot would be used to calculate
          * where the projectiles should spawn from.
          *
@@ -271,7 +271,7 @@ namespace hikari {
 
         /**
          * Sets the Entity's "action spot".
-         * 
+         *
          * @param spot a point relative to the Entity's position to be used as
          *             the "action spot"
          */
@@ -286,7 +286,7 @@ namespace hikari {
 
         /**
          * Sets the Entity's bounding box.
-         * 
+         *
          * @param box the bounding box to use
          */
         void setBoundingBox(const BoundingBoxF& box);
@@ -312,7 +312,7 @@ namespace hikari {
         virtual void onSleep();
 
         /**
-         * A function that is called when this object's body collides with 
+         * A function that is called when this object's body collides with
          * different kinds of tiles.
          *
          * This method it used to handle Object vs. World collisions -- tile
@@ -345,7 +345,7 @@ namespace hikari {
          * state.
          *
          * This should no longer be used and will be removed eventually.
-         * 
+         *
          * @deprecated
          */
         virtual void reset();
@@ -394,7 +394,7 @@ namespace hikari {
          *
          * In other words, it can be used to see if an entity is touching
          * spikes, water, solid walls, etc.
-         * 
+         *
          * @param  entity    the Entity to use as a Room reference
          * @param  x         the x position (in pixels) of a tile
          * @param  y         the y position (in pixels) of a tile
@@ -403,6 +403,10 @@ namespace hikari {
          *                   specified position, false otherwise
          */
         bool checkIfTileAtPositionHasAttribute(Entity * entity, int x, int y, int attribute);
+
+        bool isBlockedByWall(Entity * entity, int distance);
+
+        bool isOnEdge(Entity * entity, int distance);
 
     } // hikari.EntityHelpers
 
