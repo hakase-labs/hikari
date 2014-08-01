@@ -145,7 +145,7 @@ namespace gcn
 
         if (x >= width)
         {
-            return text.size();
+            return std::max(static_cast<int>(text.size()) - 1, 0);
         }
 
         return x / mGlyphWidth;
