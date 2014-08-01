@@ -20,7 +20,7 @@ namespace hikari {
     const SQInteger SquirrelService::DEFAULT_STACK_SIZE = 1024;
 
     void SquirrelService::squirrelPrintFunction(HSQUIRRELVM vm, const SQChar *s, ...) {
-        va_list vl; 
+        va_list vl;
         va_start(vl, s);
         vprintf(s, vl);
         va_end(vl);
@@ -59,11 +59,11 @@ namespace hikari {
             sq_setprintfunc(vm, squirrelPrintFunction, squirrelPrintFunction);
         }
     }
-    
+
     void SquirrelService::initStandardLibraries() {
         if(vm) {
             sq_pushroottable(vm);
-            sqstd_register_mathlib(vm); 
+            sqstd_register_mathlib(vm);
             sq_pop(vm, 1);
         }
     }
@@ -145,18 +145,18 @@ namespace hikari {
             // Utility bindings
             //
             Sqrat::RootTable().Bind(
-                _SC("Utils"), 
+                _SC("Utils"),
                 Sqrat::Table()
                     .Func(_SC("getOppositeDirection"), &Directions::opposite)
             );
-            
+
             //
             // Class bindings
             //
             Sqrat::RootTable().Bind(
-                _SC("Enemy"),  
+                _SC("Enemy"),
                 Sqrat::Class<Enemy>()
-                    .Prop<const float>(_SC("velocityX"), &Enemy::getVelocityX, &Enemy::setVelocityX) 
+                    .Prop<const float>(_SC("velocityX"), &Enemy::getVelocityX, &Enemy::setVelocityX)
                     .Prop<const float>(_SC("velocityY"), &Enemy::getVelocityY, &Enemy::setVelocityY)
                     .Prop<bool>(_SC("isActive"), &Enemy::isActive, &Enemy::setActive)
                     .Prop<bool>(_SC("isGravitated"), &Enemy::isGravitated, &Enemy::setGravitated)
@@ -177,6 +177,8 @@ namespace hikari {
                     .GlobalFunc(_SC("setX"), &EntityHelpers::setX)
                     .GlobalFunc(_SC("setY"), &EntityHelpers::setY)
                     .GlobalFunc(_SC("checkIfTileAtPositionHasAttribute"), &EntityHelpers::checkIfTileAtPositionHasAttribute)
+                    .GlobalFunc(_SC("isBlockedByWall"), &EntityHelpers::isBlockedByWall)
+                    .GlobalFunc(_SC("isOnEdge"), &EntityHelpers::isOnEdge)
             );
         }
     }
