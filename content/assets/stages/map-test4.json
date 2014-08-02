@@ -947,6 +947,12 @@
             "x": 128,
             "y": 80,
             "direction": "Down"
+        },
+        {
+            "type": "Creeping Metool",
+            "x": 36,
+            "y": 36,
+            "direction": "Left"
         }
       ],
       "items": [],
