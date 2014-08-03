@@ -1,0 +1,65 @@
+{
+  "name": "Springer",
+  "image": "assets/images/sp-enemies.png",
+  "animations": {
+    "idle": {
+      "repeat": false,
+      "keyframe": 0,
+      "syncGroup": 0,
+      "frames": [
+        {
+          "x" : 120,
+          "y" : 128,
+          "width" : 16,
+          "height" : 16,
+          "hotspotX" : 8,
+          "hotspotY" : 16,
+          "length" : 1.0
+        }
+      ]
+    },
+    "attacking": {
+      "repeat": true,
+      "keyframe": 0,
+      "syncGroup": 1,
+      "frames": [
+        {
+          "x" : 136,
+          "y" : 120,
+          "width" : 16,
+          "height" : 24,
+          "hotspotX" : 8,
+          "hotspotY" : 24,
+          "length" : 0.15
+        },
+        {
+          "x" : 152,
+          "y" : 120,
+          "width" : 24,
+          "height" : 32,
+          "hotspotX" : 8,
+          "hotspotY" : 32,
+          "length" : 0.15
+        },
+        {
+          "x" : 136,
+          "y" : 120,
+          "width" : 16,
+          "height" : 24,
+          "hotspotX" : 8,
+          "hotspotY" : 24,
+          "length" : 0.15
+        },
+        {
+          "x" : 120,
+          "y" : 128,
+          "width" : 16,
+          "height" : 16,
+          "hotspotX" : 8,
+          "hotspotY" : 16,
+          "length" : 0.15
+        }
+      ]
+    }
+  }
+}

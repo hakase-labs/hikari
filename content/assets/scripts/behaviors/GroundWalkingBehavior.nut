@@ -43,6 +43,14 @@ class GroundWalkingBehavior extends EnemyBehavior {
         base.update(dt);
     }
 
+    function attachHost(newHost, instanceConfig = {}) {
+        base.attachHost(newHost);
+
+        if(host != null) {
+            host.changeAnimation("attacking");
+        }
+    }
+
     function handleWorldCollision(side) {
         if(side == Directions.Left) {
             direction = Directions.Right;
