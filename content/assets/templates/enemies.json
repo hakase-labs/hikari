@@ -352,9 +352,11 @@
         "hitPoints": 1.0,
         "behavior": {
             "type": "scripted",
-            "name": "GroundWalkingBehavior",
+            "name": "SpringerBehavior",
             "config": {
-                "speed": 0.5
+                "speed": 0.5,
+                "fastSpeed": 2.0,
+                "attackDuration": 0.5
             }
         },
         "animationSet": "assets/animations/springer.json",

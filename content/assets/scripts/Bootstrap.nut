@@ -14,6 +14,7 @@ require("assets/scripts/behaviors/KomasaburoEnemyBehavior.nut");
 require("assets/scripts/behaviors/BikkyEnemyBehavior.nut");
 require("assets/scripts/behaviors/PeterchyEnemyBehavior.nut");
 require("assets/scripts/behaviors/GroundWalkingBehavior.nut");
+require("assets/scripts/behaviors/SpringerBehavior.nut");
 // Doodads
 require("assets/scripts/behaviors/DoodadBehavior.nut");
 require("assets/scripts/behaviors/FallingPlatformBehavior.nut");

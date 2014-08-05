@@ -1,6 +1,7 @@
 class GroundWalkingBehavior extends EnemyBehavior {
     direction = Directions.Left;
     speed = 0.5;
+    checkDistance = 1;
 
     constructor(classConfig = {}) {
         base.constructor(classConfig);
@@ -31,7 +32,7 @@ class GroundWalkingBehavior extends EnemyBehavior {
             host.direction = direction;
 
             // Reverse direction of we're going to walk off the edge.
-            if(host.isOnEdge(1)) {
+            if(host.isOnEdge(checkDistance)) {
                 if(direction == Directions.Left) {
                     direction = Directions.Right;
                 } else if(direction == Directions.Right) {
@@ -41,14 +42,6 @@ class GroundWalkingBehavior extends EnemyBehavior {
         }
 
         base.update(dt);
-    }
-
-    function attachHost(newHost, instanceConfig = {}) {
-        base.attachHost(newHost);
-
-        if(host != null) {
-            host.changeAnimation("attacking");
-        }
     }
 
     function handleWorldCollision(side) {
