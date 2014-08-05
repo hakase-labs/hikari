@@ -502,6 +502,70 @@ namespace hikari {
             return false;
         }
 
+        bool isBlockedByWall(Entity * entity, int distance) {
+            bool isBlockedByWall = false;
+
+            float checkX = 0;
+            float checkY = 0;
+
+            if(entity->getDirection() == Directions::Left) {
+                checkY = entity->getBoundingBox().getBottom() - 1.0f;
+                checkX = entity->getBoundingBox().getLeft() - static_cast<float>(distance);
+            } else if(entity->getDirection() == Directions::Right) {
+                checkY = entity->getBoundingBox().getBottom() - 1.0f;
+                checkX = entity->getBoundingBox().getRight() + static_cast<float>(distance);
+            }
+
+            isBlockedByWall = checkIfTileAtPositionHasAttribute(
+                entity,
+                static_cast<int>(checkX),
+                static_cast<int>(checkY),
+                TileAttribute::SOLID
+            );
+
+            return isBlockedByWall;
+        }
+
+        bool isOnEdge(Entity * entity, int distance) {
+            bool isOnEdge = false;
+
+            float checkX = 0;
+            float checkY = 0;
+
+            if(entity->getDirection() == Directions::Left) {
+                checkY = entity->getBoundingBox().getBottom() - 1.0f;
+                checkX = entity->getBoundingBox().getLeft() - static_cast<float>(distance);
+            } else if(entity->getDirection() == Directions::Right) {
+                checkY = entity->getBoundingBox().getBottom() - 1.0f;
+                checkX = entity->getBoundingBox().getRight() + static_cast<float>(distance);
+            }
+
+            // We check the to next to you and the one below that. If they're both
+            // not solid then it's an "edge".
+            isOnEdge = !(checkIfTileAtPositionHasAttribute(
+                entity,
+                static_cast<int>(checkX),
+                static_cast<int>(checkY),
+                TileAttribute::SOLID
+            ) || checkIfTileAtPositionHasAttribute(
+                entity,
+                static_cast<int>(checkX),
+                static_cast<int>(checkY),
+                TileAttribute::PLATFORM
+            )) && !(checkIfTileAtPositionHasAttribute(
+                entity,
+                static_cast<int>(checkX),
+                static_cast<int>(checkY + 1),
+                TileAttribute::SOLID
+            ) || checkIfTileAtPositionHasAttribute(
+                entity,
+                static_cast<int>(checkX),
+                static_cast<int>(checkY + 1),
+                TileAttribute::PLATFORM
+            ));
+
+            return isOnEdge;
+        }
     }
 
 } // hikari

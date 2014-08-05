@@ -173,6 +173,8 @@ namespace hikari {
                 .GlobalFunc(_SC("setX"), &EntityHelpers::setX)
                 .GlobalFunc(_SC("setY"), &EntityHelpers::setY)
                 .GlobalFunc(_SC("checkIfTileAtPositionHasAttribute"), &EntityHelpers::checkIfTileAtPositionHasAttribute)
+                .GlobalFunc(_SC("isBlockedByWall"), &EntityHelpers::isBlockedByWall)
+                .GlobalFunc(_SC("isOnEdge"), &EntityHelpers::isOnEdge)
             );
 
             Sqrat::RootTable(vm).Bind(

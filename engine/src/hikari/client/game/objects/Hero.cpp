@@ -194,37 +194,8 @@ namespace hikari {
                 checkX = getBoundingBox().getRight() + 8.0f;
             }
 
-            isBlockedByWall = EntityHelpers::checkIfTileAtPositionHasAttribute(
-                this,
-                static_cast<int>(checkX),
-                static_cast<int>(checkY),
-                TileAttribute::SOLID
-            );
-
-            // We check the to next to you and the one below that. If they're both
-            // not solid then it's an "edge".
-            isOnEdge = !(EntityHelpers::checkIfTileAtPositionHasAttribute(
-                this,
-                static_cast<int>(checkX),
-                static_cast<int>(checkY),
-                TileAttribute::SOLID
-            ) || EntityHelpers::checkIfTileAtPositionHasAttribute(
-                this,
-                static_cast<int>(checkX),
-                static_cast<int>(checkY),
-                TileAttribute::PLATFORM
-            )) && !(EntityHelpers::checkIfTileAtPositionHasAttribute(
-                this,
-                static_cast<int>(checkX),
-                static_cast<int>(checkY + 1),
-                TileAttribute::SOLID
-            ) || EntityHelpers::checkIfTileAtPositionHasAttribute(
-                this,
-                static_cast<int>(checkX),
-                static_cast<int>(checkY + 1),
-                TileAttribute::PLATFORM
-            ));
-
+            isBlockedByWall = EntityHelpers::isBlockedByWall(this, 8);
+            isOnEdge = EntityHelpers::isOnEdge(this, 8);
 
             // Check if we're under water or starting to enter water
             {
