@@ -73,7 +73,7 @@ namespace hikari {
         Movable body;
         std::unique_ptr<PalettedAnimatedSprite> & getAnimatedSprite();
         std::list<Shot> activeShots;
-        
+
         virtual void renderEntity(sf::RenderTarget &target);
 
         /**
@@ -403,6 +403,27 @@ namespace hikari {
          *                   specified position, false otherwise
          */
         bool checkIfTileAtPositionHasAttribute(Entity * entity, int x, int y, int attribute);
+
+        /**
+         * Performs a check to see if there is a wall "in front" of the entity
+         * within a specific distance.
+         *
+         * @param  entity   the Entity to check for
+         * @param  distance how far, in pixels, in front of the entity to check
+         * @return          true if there is a wall in front of the entity
+         */
+        bool isBlockedByWall(Entity * entity, int distance = 0);
+
+        /**
+         * Performs a check to see if the entity is on or approaching an edge.
+         * An edge indicates that the platform ends and there is nothing to stand
+         * on.
+         *
+         * @param  entity   the Entity to check for
+         * @param  distance how far, in pixels, in front of the entity to check
+         * @return          true if there is an edge in front of the entity
+         */
+        bool isOnEdge(Entity * entity, int distance = 0);
 
     } // hikari.EntityHelpers
 

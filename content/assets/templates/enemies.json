@@ -19,7 +19,7 @@
         },
         "states": {
             "default": {
-                
+
             }
         },
         "characteristics": {
@@ -47,7 +47,7 @@
         },
         "states": {
             "default": {
-                
+
             }
         },
         "characteristics": {
@@ -75,7 +75,7 @@
         },
         "states": {
             "default": {
-                
+
             }
         },
         "characteristics": {
@@ -102,7 +102,7 @@
         },
         "states": {
             "default": {
-                
+
             }
         },
         "characteristics": {
@@ -129,7 +129,7 @@
         },
         "states": {
             "default": {
-                
+
             }
         },
         "characteristics": {
@@ -156,7 +156,7 @@
         },
         "states": {
             "default": {
-                
+
             }
         },
         "characteristics": {
@@ -184,7 +184,7 @@
         },
         "states": {
             "default": {
-                
+
             }
         },
         "characteristics": {
@@ -214,7 +214,7 @@
         },
         "states": {
             "default": {
-                
+
             }
         },
         "characteristics": {
@@ -243,7 +243,7 @@
         },
         "states": {
             "default": {
-                
+
             }
         },
         "characteristics": {
@@ -274,7 +274,7 @@
         },
         "states": {
             "default": {
-                
+
             }
         },
         "characteristics": {
@@ -305,7 +305,7 @@
         },
         "states": {
             "default": {
-                
+
             }
         },
         "characteristics": {
@@ -338,7 +338,37 @@
         },
         "states": {
             "default": {
-                
+
+            }
+        },
+        "characteristics": {
+            "gravitated": true,
+            "phasing": false
+        }
+    },
+    {
+        "name": "Springer",
+        "damageId": 7,
+        "hitPoints": 1.0,
+        "behavior": {
+            "type": "scripted",
+            "name": "SpringerBehavior",
+            "config": {
+                "speed": 0.5,
+                "fastSpeed": 2.0,
+                "attackDuration": 0.5
+            }
+        },
+        "animationSet": "assets/animations/springer.json",
+        "boundingBox": {
+            "width": 16,
+            "height": 11,
+            "originX": 8,
+            "originY": 11
+        },
+        "states": {
+            "default": {
+
             }
         },
         "characteristics": {
