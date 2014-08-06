@@ -33,7 +33,6 @@ class DadaEnemyBehavior extends EnemyBehavior {
 
     constructor(classConfig = {}) {
         base.constructor(classConfig);
-        ::log("DadaEnemyBehavior constructor called.");
     }
 
     function update(dt) {
@@ -42,7 +41,7 @@ class DadaEnemyBehavior extends EnemyBehavior {
     }
 
     function attachHost(newHost, instanceConfig = {}) {
-        base.attachHost(newHost);
+        base.attachHost(newHost, instanceConfig);
 
         if(host != null) {
             facePlayer();

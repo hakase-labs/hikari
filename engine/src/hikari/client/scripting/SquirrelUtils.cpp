@@ -6,9 +6,9 @@
 namespace hikari {
 namespace SquirrelUtils {
 
-    Sqrat::Object jsonToSquirrel(const Json::Value & json) {
+    Sqrat::Object jsonToSquirrel(HSQUIRRELVM vm, const Json::Value & json) {
         if(!json.isNull() && (json.isArray() || json.isObject())) {
-            Sqrat::Table squirrelTable;
+            Sqrat::Table squirrelTable(vm);
 
             const auto configPropertyNames = json.getMemberNames();
 

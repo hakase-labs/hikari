@@ -351,10 +351,10 @@ namespace hikari {
                 if(json.isMember("config")) {
                     auto configJson = json["config"];
 
-                    Sqrat::Table configTable;
+                    Sqrat::Table configTable(Sqrat::DefaultVM::Get());
 
                     if(!configJson.isNull()) {
-                        configTable = SquirrelUtils::jsonToSquirrel(configJson);
+                        configTable = SquirrelUtils::jsonToSquirrel(Sqrat::DefaultVM::Get(), configJson);
                     }
 
                     enemySpawner->setInstanceConfig(configTable);

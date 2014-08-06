@@ -29,11 +29,9 @@
 
         constructor(classConfig = {}) {
             base.constructor(classConfig);
-            ::log("MetoolEnemyBehavior constructor called.");
         }
 
         function update(dt) {
-            // moveInFacedDirection();
             faceTimer += dt;
             stateTimer += dt;
             shootingTimer += dt;
@@ -42,57 +40,16 @@
                 stateFunction();
             }
 
-            /*
-            switch(state) {
-                case STATE_GUARDING:
-
-                break;
-
-                default:
-                break;
-            }
-
-            // Face the player every 1 second
-            if(faceTimer >= 1.0) {
-                facePlayer();
-                faceTimer = 0;
-            }
-
-            if(shootingTimer >= 3.0 && !isShooting) {
-                shootingTimer = 0.0;
-                isShooting = true;
-                host.changeAnimation("shooting");
-            }
-
-            if(isShooting) {
-                if(shootingTimer >= 0.5) {
-                    isShooting = false;
-                    shootingTimer = 0.0;
-                    host.changeAnimation("idle");
-                }
-            }
-            */
-
             base.update(dt);
         }
 
         function attachHost(newHost, instanceConfig = {}) {
-            base.attachHost(newHost);
+            base.attachHost(newHost, instanceConfig);
 
             if(host != null) {
                 setState("guarding");
             }
         }
-
-        // function moveInFacedDirection() {
-        //     local dir = host.direction;
-            
-        //     if(Directions.Left == dir) {
-        //         host.velocityX = -MOVEMENT_VELOCITY_X;
-        //     } else {
-        //         host.velocityX = MOVEMENT_VELOCITY_X;
-        //     }
-        // }
 
         /**
          * @override

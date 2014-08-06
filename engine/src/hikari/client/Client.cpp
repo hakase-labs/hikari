@@ -32,6 +32,8 @@
 #include "hikari/client/scripting/AudioServiceScriptProxy.hpp"
 #include "hikari/client/scripting/GameProgressScriptProxy.hpp"
 #include "hikari/client/scripting/GamePlayStateScriptProxy.hpp"
+#include "hikari/client/game/objects/Enemy.hpp"
+
 
 #include "hikari/core/game/AnimationLoader.hpp"
 #include "hikari/core/game/SliceStateTransition.hpp"
@@ -43,6 +45,9 @@
 #include "hikari/core/util/Log.hpp"
 #include "hikari/core/util/PhysFS.hpp"
 #include "hikari/core/util/TilesetCache.hpp"
+
+#include <squirrel.h>
+#include <sqrat.h>
 
 #include <SFML/Graphics/Color.hpp>
 
@@ -217,8 +222,8 @@ namespace hikari {
 
         gameProgress->setEventBus(globalEventBus);
 
-        audioService->setSampleVolume(clientConfig.getSampleVolume());
-        audioService->setMusicVolume(clientConfig.getMusicVolume());
+        // audioService->setSampleVolume(clientConfig.getSampleVolume());
+        // audioService->setMusicVolume(clientConfig.getMusicVolume());
 
         services.registerService(Services::AUDIO,             audioService);
         services.registerService(Services::GAMEPROGRESS,      gameProgress);

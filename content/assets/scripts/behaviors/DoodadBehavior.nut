@@ -1,5 +1,6 @@
 class DoodadBehavior extends EnemyBehavior {
     classConfig = {};
+    isInitialized = false;
 
     constructor(_classConfig = {}) {
         base.constructor(_classConfig);

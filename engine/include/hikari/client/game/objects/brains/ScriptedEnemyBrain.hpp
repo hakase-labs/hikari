@@ -46,7 +46,7 @@ namespace hikari {
         /**
          * Creates an instance of the behavior in the VM and binds it to this
          * object.
-         * 
+         *
          * @return true if binding was successful, false if anything went wrong
          */
         bool bindScriptClassInstance();
@@ -57,7 +57,7 @@ namespace hikari {
          * class-level configuration (not instance-level configuration).
          */
         ScriptedEnemyBrain(SquirrelService& service, const std::string& scriptClassName, const Sqrat::Table& classConfig = Sqrat::Table());
-        
+
         /**
          * Copy constructor. Causes a new instance of the scripted class to be
          * instantiated, and bind to that instance.

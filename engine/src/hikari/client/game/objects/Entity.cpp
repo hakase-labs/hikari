@@ -289,7 +289,7 @@ namespace hikari {
         body.setVelocity(vx, getVelocityY());
     }
 
-    const float Entity::getVelocityX() const {
+    float Entity::getVelocityX() const {
         return body.getVelocity().getX();
     }
 
@@ -297,7 +297,7 @@ namespace hikari {
         body.setVelocity(getVelocityX(), vy);
     }
 
-    const float Entity::getVelocityY() const {
+    float Entity::getVelocityY() const {
         return body.getVelocity().getY();
     }
 

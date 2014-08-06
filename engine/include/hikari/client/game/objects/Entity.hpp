@@ -137,10 +137,10 @@ namespace hikari {
         const std::weak_ptr<GameWorld>& getWorld() const;
 
         void setVelocityX(const float &vx);
-        const float getVelocityX() const;
+        float getVelocityX() const;
 
         void setVelocityY(const float &vy);
-        const float getVelocityY() const;
+        float getVelocityY() const;
 
         float getAge() const;
         float getMaximumAge() const;
