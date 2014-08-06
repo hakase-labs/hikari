@@ -30,7 +30,7 @@
           "height" : 24,
           "hotspotX" : 8,
           "hotspotY" : 24,
-          "length" : 0.15
+          "length" : 0.075
         },
         {
           "x" : 152,
@@ -39,7 +39,7 @@
           "height" : 32,
           "hotspotX" : 8,
           "hotspotY" : 32,
-          "length" : 0.15
+          "length" : 0.075
         },
         {
           "x" : 136,
@@ -48,7 +48,7 @@
           "height" : 24,
           "hotspotX" : 8,
           "hotspotY" : 24,
-          "length" : 0.15
+          "length" : 0.075
         },
         {
           "x" : 120,
@@ -57,7 +57,7 @@
           "height" : 16,
           "hotspotX" : 8,
           "hotspotY" : 16,
-          "length" : 0.15
+          "length" : 0.075
         }
       ]
     }
