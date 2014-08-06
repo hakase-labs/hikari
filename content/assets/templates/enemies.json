@@ -355,8 +355,7 @@
             "name": "SpringerBehavior",
             "config": {
                 "speed": 0.5,
-                "fastSpeed": 2.0,
-                "attackDuration": 0.5
+                "fastSpeed": 2.0
             }
         },
         "animationSet": "assets/animations/springer.json",

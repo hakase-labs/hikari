@@ -2,10 +2,12 @@ class SpringerBehavior extends GroundWalkingBehavior {
 
     state = State.IDLE;
     timer = 0.0;
+    directionTimer = 0.0;
     enteringNewState = false;
     normalSpeed = 0.5;
     fastSpeed = 1.0;
-    attackDuration = 1.0;
+    animationDuration = 0.3;
+    attackDuration = 0.3 * 4.0;
 
     constructor(classConfig = {}) {
         base.constructor(classConfig);
@@ -36,6 +38,7 @@ class SpringerBehavior extends GroundWalkingBehavior {
                         host.isShielded = true;
                         enteringNewState = false;
                         timer = 0.0;
+                        directionTimer = 0.0;
                     }
 
                     if(timer >= attackDuration) {
@@ -44,8 +47,17 @@ class SpringerBehavior extends GroundWalkingBehavior {
                         enteringNewState = true;
                     }
 
+                    // This secondary timer it used to flip direction back and
+                    // forth while attacking. This causes the Springer to pop up
+                    // back and forth in both directions.
+                    if(directionTimer >= animationDuration) {
+                        directionTimer -= animationDuration;
+                        direction = Utils.getOppositeDirection(direction);
+                    }
+
                     speed = 0.0;
                     timer = timer + dt;
+                    directionTimer = directionTimer + dt;
                     break;
 
                 case State.MOVING:
