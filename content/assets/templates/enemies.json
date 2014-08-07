@@ -374,5 +374,32 @@
             "gravitated": true,
             "phasing": false
         }
+    },
+    {
+        "name": "Mole",
+        "damageId": 7,
+        "hitPoints": 3.0,
+        "behavior": {
+            "type": "scripted",
+            "name": "MoleBehavior",
+            "config": {
+            }
+        },
+        "animationSet": "assets/animations/mole.json",
+        "boundingBox": {
+            "width": 8,
+            "height": 16,
+            "originX": 4,
+            "originY": 8
+        },
+        "states": {
+            "default": {
+
+            }
+        },
+        "characteristics": {
+            "gravitated": false,
+            "phasing": true
+        }
     }
 ]

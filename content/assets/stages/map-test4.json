@@ -937,6 +937,14 @@
           "spawnRate": 3.0
         },
         {
+          "type": "Mole",
+          "x": 174,
+          "y": 36,
+          "direction": "Down",
+          "spawnLimit": 3,
+          "spawnRate": 3.0
+        },
+        {
           "type": "Telly",
           "x": 144,
           "y": 80,
