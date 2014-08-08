@@ -24,6 +24,8 @@ endif()
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${HIKARI_DUMB_COMPILER_FLAGS}")
 
+    MESSAGE(STATUS "==== MSVC detected - Adding MSVC-specific compiler flags")
+
     if(NOT CMAKE_CXX_FLAGS MATCHES "/EHsc")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc")
     endif()
@@ -37,9 +39,10 @@ else()
     # Clang-specific settings
     #
     if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++")
+      MESSAGE(STATUS "==== Clang detected - Adding Clang-specific compiler flags")
+      set(CMAKE_CXX_FLAGS "-v ${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++")
     endif()
-endif(MSVC)
+endif()
 
 #
 # Apple-specific stuff
