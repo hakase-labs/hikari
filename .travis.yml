@@ -1,6 +1,5 @@
 language: cpp
-compiler:
-  - gcc
+compiler: clang
 before_install:
   - echo $LANG
   - echo $LC_ALL
@@ -18,7 +17,7 @@ before_script:
   - cd ..
   - mkdir build-hikari
   - cd build-hikari
-script: pwd; ls; cmake -G "Unix Makefiles" ../hikari; sudo make
+script: cmake -G "Unix Makefiles" ../hikari; sudo make
 branches:
   only:
     - master
