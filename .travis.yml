@@ -4,7 +4,13 @@ compiler:
 before_install:
   - echo $LANG
   - echo $LC_ALL
-  - sudo apt-get install cmake libsfml-dev libphysfs-dev
+  - sudo apt-get install cmake libphysfs-dev
+  - git clone https://github.com/LaurentGomila/SFML.git sfml
+  - mkdir build-sfml
+  - cd build-sfml
+  - cmake -G "Unix Makefiles" ../sfml
+  - make
+  - make install
 before_script:
   - cd ..
   - mkdir build-hikari
