@@ -5,6 +5,7 @@ before_install:
   - echo $LANG
   - echo $LC_ALL
   - sudo apt-get install cmake libudev-dev libpthread-stubs0-dev libgl1-mesa-dev libx11-dev libxrandr-dev libfreetype6-dev libglew1.5-dev libjpeg8-dev libsndfile1-dev libopenal-dev libphysfs-dev
+  - cd ..
   - git clone https://github.com/LaurentGomila/SFML.git sfml
   - mkdir build-sfml
   - cd build-sfml
@@ -15,7 +16,7 @@ before_script:
   - cd ..
   - mkdir build-hikari
   - cd build-hikari
-script: cmake -G "Unix Makefiles" ../hikari; sudo make
+script: cd ..; cmake -G "Unix Makefiles" ../hikari; sudo make
 branches:
   only:
     - master
