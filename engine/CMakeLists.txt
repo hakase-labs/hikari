@@ -403,9 +403,9 @@ add_custom_target(
 #
 # We want to link statically on Windows
 #
-if(WIN32)
+if(MSVC)
     set(SFML_STATIC_LIBRARIES TRUE)
-endif(WIN32)
+endif(MSVC)
 
 find_package(SFML 2 COMPONENTS graphics window audio system REQUIRED)
 
@@ -415,6 +415,18 @@ if(SFML_FOUND)
     endif(APPLE)
     include_directories( ${SFML_INCLUDE_DIR} )
     target_link_libraries( hikari ${SFML_LIBRARIES} ${OTHER_SFML_LDFLAGS} )
+
+    #
+    # Copy the correct .dll files from SFML's directory to the ouput directory.
+    #
+    if(MSVC)
+        #add_custom_target(
+        #  windows-dependency-dlls
+        #  ALL
+        #  COMMAND ${CMAKE_COMMAND} -E echo "Copying .dll files used by SFML to output directory."
+        #  COMMAND ${CMAKE_COMMAND} -E copy "${SFML_INCLUDE_DIR}/../bin/libsndfile-1.dll" $<TARGET_FILE_DIR:hikari>/libsndfile-1.dll
+        #)
+    endif(MSVC)
 endif(SFML_FOUND)
 
 find_package(PhysFS REQUIRED)
