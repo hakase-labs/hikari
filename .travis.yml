@@ -43,6 +43,7 @@ install:
   - git clone https://github.com/LaurentGomila/SFML.git sfml
   - mkdir build-sfml
   - cd build-sfml
+  - if [ "$CXX" == "clang++" ]; then export CXXFLAGS="-std=c++0x -stdlib=libc++"; fi
   - cmake -G "Unix Makefiles" -D CMAKE_BUILD_TYPE=Release -D BUILD_SHARED_LIBS=TRUE ../sfml
   - sudo make
   - sudo make install
@@ -52,6 +53,7 @@ before_script:
   - cd ..
   - mkdir build-hikari
   - cd build-hikari
+  - if [ "$CXX" == "clang++" ]; then export CXXFLAGS="-std=c++11 -stdlib=libc++"; fi
 script: cmake -G "Unix Makefiles" ../hikari; sudo make
 branches:
   only:
