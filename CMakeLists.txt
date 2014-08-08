@@ -40,7 +40,10 @@ else()
     #
     if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
       MESSAGE(STATUS "==== Clang detected - Adding Clang-specific compiler flags")
-      set(CMAKE_CXX_FLAGS "-v ${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++")
+      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++")
+      set( CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -stdlib=libc++" )
+      set( CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -stdlib=libc++" )
+      set( CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -stdlib=libc++" )
     endif()
 endif()
 
