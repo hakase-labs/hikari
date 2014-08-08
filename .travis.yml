@@ -39,7 +39,7 @@ install:
   - sudo apt-get install cmake libudev-dev libpthread-stubs0-dev libgl1-mesa-dev libx11-dev libxrandr-dev libfreetype6-dev libglew1.5-dev libjpeg8-dev libsndfile1-dev libopenal-dev libphysfs-dev
   - sudo add-apt-repository ppa:sonkun/sfml-stable -y
   - sudo apt-get update -q
-  - sudo apt-get install sfml
+  - sudo apt-get install libsfml2-dev
 
   # Build SFML from source
   # - cd ..
