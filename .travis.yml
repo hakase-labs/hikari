@@ -9,13 +9,13 @@ before_install:
   - mkdir build-sfml
   - cd build-sfml
   - cmake -G "Unix Makefiles" -D CMAKE_BUILD_TYPE=Release -D BUILD_SHARED_LIBS=TRUE ../sfml
-  - make
-  - make install
+  - sudo make
+  - sudo make install
 before_script:
   - cd ..
   - mkdir build-hikari
   - cd build-hikari
-script: cmake -G "Unix Makefiles" ../hikari
+script: cmake -G "Unix Makefiles" ../hikari; sudo make
 branches:
   only:
     - master
