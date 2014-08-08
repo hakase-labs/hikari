@@ -37,15 +37,15 @@ install:
 
   # Install packages needed for SFML 2.1 and Hikari (PhysFS)
   - sudo apt-get install cmake libudev-dev libpthread-stubs0-dev libgl1-mesa-dev libx11-dev libxrandr-dev libfreetype6-dev libglew1.5-dev libjpeg8-dev libsndfile1-dev libopenal-dev libphysfs-dev
+before_script:
   - sudo add-apt-repository ppa:sonkun/sfml-stable -y
   - sudo apt-get update -q
   - sudo apt-get install sfml
-
-before_script:
   - cd ..
   - mkdir build-hikari
   - cd build-hikari
-script: cmake -G "Unix Makefiles" ../hikari; sudo make
+  - cmake -G "Unix Makefiles" ../hikari
+script: sudo make
 branches:
   only:
     - master
