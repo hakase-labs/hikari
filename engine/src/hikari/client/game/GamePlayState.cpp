@@ -965,7 +965,7 @@ namespace hikari {
 
             if(auto gp = gameProgress.lock()) {
                 gp->setBossEnergy(0);
-                gp->setBossMaxEnergy(boss->getHitPoints());
+                gp->setBossMaxEnergy(static_cast<int>(boss->getHitPoints()));
 
                 guiBossEnergyGauge->setValue(0.0f);
                 guiBossEnergyGauge->setMaximumValue(static_cast<float>(gp->getBossMaxEnergy()));
