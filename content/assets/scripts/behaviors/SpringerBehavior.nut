@@ -93,8 +93,6 @@ class SpringerBehavior extends GroundWalkingBehavior {
      */
     function handleObjectTouch(otherId) {
         if(otherId == ::heroId) {
-            ::log("I'm touching the hero!");
-
             if(state != State.IDLE) {
                 enteringNewState = true;
                 state = State.IDLE;

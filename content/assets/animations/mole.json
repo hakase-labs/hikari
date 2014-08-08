@@ -1,0 +1,57 @@
+{
+  "name": "Mole",
+  "image": "assets/images/sp-enemies.png",
+  "animations": {
+    "default": {
+      "aliases": ["idle", "drilling-up"],
+      "repeat": true,
+      "keyframe": 0,
+      "syncGroup": 0,
+      "frames": [
+        {
+          "x" : 176,
+          "y" : 120,
+          "width" : 8,
+          "height" : 24,
+          "hotspotX" : 4,
+          "hotspotY" : 12,
+          "length" : 0.0875
+        },
+        {
+          "x" : 184,
+          "y" : 120,
+          "width" : 8,
+          "height" : 24,
+          "hotspotX" : 4,
+          "hotspotY" : 12,
+          "length" : 0.0875
+        }
+      ]
+    },
+    "drilling-down": {
+      "repeat": true,
+      "keyframe": 0,
+      "syncGroup": 0,
+      "frames": [
+        {
+          "x" : 176,
+          "y" : 144,
+          "width" : 8,
+          "height" : 24,
+          "hotspotX" : 4,
+          "hotspotY" : 12,
+          "length" : 0.0875
+        },
+        {
+          "x" : 184,
+          "y" : 144,
+          "width" : 8,
+          "height" : 24,
+          "hotspotX" : 4,
+          "hotspotY" : 12,
+          "length" : 0.0875
+        }
+      ]
+    }
+  }
+}

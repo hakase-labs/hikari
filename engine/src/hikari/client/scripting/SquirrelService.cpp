@@ -198,7 +198,11 @@ namespace hikari {
                 runScriptString(fileContents);
 
                 if(Sqrat::Error::Instance().Occurred(vm)) {
-                    HIKARI_LOG(debug2) << "Error running script: " << Sqrat::Error::Instance().Message(vm);
+                    HIKARI_LOG(debug2)
+                        << "Error running script \""
+                        << fileName
+                        << "\": "
+                        << Sqrat::Error::Instance().Message(vm);
                 }
             } else {
                 // TODO: Need to handle this with an exception, etc.
