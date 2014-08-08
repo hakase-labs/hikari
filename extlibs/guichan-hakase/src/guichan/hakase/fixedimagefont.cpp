@@ -45,6 +45,8 @@
 #include "guichan/graphics.hpp"
 #include "guichan/rectangle.hpp"
 
+#include <algorithm>
+
 namespace gcn
 {
     FixedImageFont::FixedImageFont(const Image* image, const unsigned int& glyphWidth, const unsigned int& glyphHeight, const std::string& glyphs)
