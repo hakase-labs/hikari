@@ -153,7 +153,7 @@ namespace hikari {
             //
             Sqrat::RootTable(vm).Bind(
                 _SC("Entity"),
-                Sqrat::Class<Entity>(vm)
+                Sqrat::Class<Entity, Sqrat::NoConstructor<Entity>>(vm)
                 .Prop(_SC("velocityX"), &Entity::getVelocityX, &Entity::setVelocityX)
                 .Prop(_SC("velocityY"), &Entity::getVelocityY, &Entity::setVelocityY)
                 .Prop(_SC("isActive"), &Entity::isActive, &Entity::setActive)

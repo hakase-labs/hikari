@@ -2285,181 +2285,181 @@ public:
 
 // Arg Count 0
 template <class R>
-SQFUNCTION SqGlobalFunc(R (*/*method*/)()) {
+SQFUNCTION SqGlobalFunc(R (* /*method*/)()) {
     return &SqGlobal<R>::template Func0<false>;
 }
 
 // Arg Count 0
 template <class R>
-SQFUNCTION SqGlobalFunc(R & (*/*method*/)()) {
+SQFUNCTION SqGlobalFunc(R & (* /*method*/)()) {
     return &SqGlobal<R& >::template Func0<false>;
 }
 
 // Arg Count 1
 template <class R, class A1>
-SQFUNCTION SqGlobalFunc(R (*/*method*/)(A1)) {
+SQFUNCTION SqGlobalFunc(R (* /*method*/)(A1)) {
     return &SqGlobal<R>::template Func1<A1, 2, false>;
 }
 
 // Arg Count 1
 template <class R, class A1>
-SQFUNCTION SqGlobalFunc(R & (*/*method*/)(A1)) {
+SQFUNCTION SqGlobalFunc(R & (* /*method*/)(A1)) {
     return &SqGlobal<R&>::template Func1<A1, 2, false>;
 }
 
 // Arg Count 2
 template <class R, class A1, class A2>
-SQFUNCTION SqGlobalFunc(R (*/*method*/)(A1, A2)) {
+SQFUNCTION SqGlobalFunc(R (* /*method*/)(A1, A2)) {
     return &SqGlobal<R>::template Func2<A1, A2, 2, false>;
 }
 
 // Arg Count 2
 template <class R, class A1, class A2>
-SQFUNCTION SqGlobalFunc(R & (*/*method*/)(A1, A2)) {
+SQFUNCTION SqGlobalFunc(R & (* /*method*/)(A1, A2)) {
     return &SqGlobal<R& >::template Func2<A1, A2, 2, false>;
 }
 
 // Arg Count 3
 template <class R, class A1, class A2, class A3>
-SQFUNCTION SqGlobalFunc(R (*/*method*/)(A1, A2, A3)) {
+SQFUNCTION SqGlobalFunc(R (* /*method*/)(A1, A2, A3)) {
     return &SqGlobal<R>::template Func3<A1, A2, A3, 2, false>;
 }
 
 // Arg Count 3
 template <class R, class A1, class A2, class A3>
-SQFUNCTION SqGlobalFunc(R & (*/*method*/)(A1, A2, A3)) {
+SQFUNCTION SqGlobalFunc(R & (* /*method*/)(A1, A2, A3)) {
     return &SqGlobal<R& >::template Func3<A1, A2, A3, 2, false>;
 }
 
 // Arg Count 4
 template <class R, class A1, class A2, class A3, class A4>
-SQFUNCTION SqGlobalFunc(R (*/*method*/)(A1, A2, A3, A4)) {
+SQFUNCTION SqGlobalFunc(R (* /*method*/)(A1, A2, A3, A4)) {
     return &SqGlobal<R>::template Func4<A1, A2, A3, A4, 2, false>;
 }
 
 // Arg Count 4
 template <class R, class A1, class A2, class A3, class A4>
-SQFUNCTION SqGlobalFunc(R & (*/*method*/)(A1, A2, A3, A4)) {
+SQFUNCTION SqGlobalFunc(R & (* /*method*/)(A1, A2, A3, A4)) {
     return &SqGlobal<R& >::template Func4<A1, A2, A3, A4, 2, false>;
 }
 
 // Arg Count 5
 template <class R, class A1, class A2, class A3, class A4, class A5>
-SQFUNCTION SqGlobalFunc(R (*/*method*/)(A1, A2, A3, A4, A5)) {
+SQFUNCTION SqGlobalFunc(R (* /*method*/)(A1, A2, A3, A4, A5)) {
     return &SqGlobal<R>::template Func5<A1, A2, A3, A4, A5, 2, false>;
 }
 
 // Arg Count 5
 template <class R, class A1, class A2, class A3, class A4, class A5>
-SQFUNCTION SqGlobalFunc(R & (*/*method*/)(A1, A2, A3, A4, A5)) {
+SQFUNCTION SqGlobalFunc(R & (* /*method*/)(A1, A2, A3, A4, A5)) {
     return &SqGlobal<R&>::template Func5<A1, A2, A3, A4, A5, 2, false>;
 }
 
 // Arg Count 6
 template <class R, class A1, class A2, class A3, class A4, class A5, class A6>
-SQFUNCTION SqGlobalFunc(R (*/*method*/)(A1, A2, A3, A4, A5, A6)) {
+SQFUNCTION SqGlobalFunc(R (* /*method*/)(A1, A2, A3, A4, A5, A6)) {
     return &SqGlobal<R>::template Func6<A1, A2, A3, A4, A5, A6, 2, false>;
 }
 
 // Arg Count 6
 template <class R, class A1, class A2, class A3, class A4, class A5, class A6>
-SQFUNCTION SqGlobalFunc(R & (*/*method*/)(A1, A2, A3, A4, A5, A6)) {
+SQFUNCTION SqGlobalFunc(R & (* /*method*/)(A1, A2, A3, A4, A5, A6)) {
     return &SqGlobal<R& >::template Func6<A1, A2, A3, A4, A5, A6, 2, false>;
 }
 
 // Arg Count 7
 template <class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7>
-SQFUNCTION SqGlobalFunc(R (*/*method*/)(A1, A2, A3, A4, A5, A6, A7)) {
+SQFUNCTION SqGlobalFunc(R (* /*method*/)(A1, A2, A3, A4, A5, A6, A7)) {
     return &SqGlobal<R>::template Func7<A1, A2, A3, A4, A5, A6, A7, 2, false>;
 }
 
 // Arg Count 7
 template <class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7>
-SQFUNCTION SqGlobalFunc(R & (*/*method*/)(A1, A2, A3, A4, A5, A6, A7)) {
+SQFUNCTION SqGlobalFunc(R & (* /*method*/)(A1, A2, A3, A4, A5, A6, A7)) {
     return &SqGlobal<R &>::template Func7<A1, A2, A3, A4, A5, A6, A7, 2, false>;
 }
 
 // Arg Count 8
 template <class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8>
-SQFUNCTION SqGlobalFunc(R (*/*method*/)(A1, A2, A3, A4, A5, A6, A7, A8)) {
+SQFUNCTION SqGlobalFunc(R (* /*method*/)(A1, A2, A3, A4, A5, A6, A7, A8)) {
     return &SqGlobal<R>::template Func8<A1, A2, A3, A4, A5, A6, A7, A8, 2, false>;
 }
 
 // Arg Count 8
 template <class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8>
-SQFUNCTION SqGlobalFunc(R & (*/*method*/)(A1, A2, A3, A4, A5, A6, A7, A8)) {
+SQFUNCTION SqGlobalFunc(R & (* /*method*/)(A1, A2, A3, A4, A5, A6, A7, A8)) {
     return &SqGlobal<R& >::template Func8<A1, A2, A3, A4, A5, A6, A7, A8, 2, false>;
 }
 
 // Arg Count 9
 template <class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9>
-SQFUNCTION SqGlobalFunc(R (*/*method*/)(A1, A2, A3, A4, A5, A6, A7, A8, A9)) {
+SQFUNCTION SqGlobalFunc(R (* /*method*/)(A1, A2, A3, A4, A5, A6, A7, A8, A9)) {
     return &SqGlobal<R>::template Func9<A1, A2, A3, A4, A5, A6, A7, A8, A9, 2, false>;
 }
 
 // Arg Count 9
 template <class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9>
-SQFUNCTION SqGlobalFunc(R & (*/*method*/)(A1, A2, A3, A4, A5, A6, A7, A8, A9)) {
+SQFUNCTION SqGlobalFunc(R & (* /*method*/)(A1, A2, A3, A4, A5, A6, A7, A8, A9)) {
     return &SqGlobal<R& >::template Func9<A1, A2, A3, A4, A5, A6, A7, A8, A9, 2, false>;
 }
 
 // Arg Count 10
 template <class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10>
-SQFUNCTION SqGlobalFunc(R (*/*method*/)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10)) {
+SQFUNCTION SqGlobalFunc(R (* /*method*/)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10)) {
     return &SqGlobal<R>::template Func10<A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, 2, false>;
 }
 
 // Arg Count 10
 template <class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10>
-SQFUNCTION SqGlobalFunc(R & (*/*method*/)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10)) {
+SQFUNCTION SqGlobalFunc(R & (* /*method*/)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10)) {
     return &SqGlobal<R& >::template Func10<A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, 2, false>;
 }
 
 // Arg Count 11
 template <class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11>
-SQFUNCTION SqGlobalFunc(R (*/*method*/)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11)) {
+SQFUNCTION SqGlobalFunc(R (* /*method*/)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11)) {
     return &SqGlobal<R>::template Func11<A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, 2, false>;
 }
 
 // Arg Count 11
 template <class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11>
-SQFUNCTION SqGlobalFunc(R & (*/*method*/)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11)) {
+SQFUNCTION SqGlobalFunc(R & (* /*method*/)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11)) {
     return &SqGlobal<R& >::template Func11<A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, 2, false>;
 }
 
 // Arg Count 12
 template <class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11, class A12>
-SQFUNCTION SqGlobalFunc(R (*/*method*/)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)) {
+SQFUNCTION SqGlobalFunc(R (* /*method*/)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)) {
     return &SqGlobal<R>::template Func12<A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, 2, false>;
 }
 
 // Arg Count 12
 template <class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11, class A12>
-SQFUNCTION SqGlobalFunc(R & (*/*method*/)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)) {
+SQFUNCTION SqGlobalFunc(R & (* /*method*/)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)) {
     return &SqGlobal<R& >::template Func12<A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, 2, false>;
 }
 
 // Arg Count 13
 template <class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11, class A12, class A13>
-SQFUNCTION SqGlobalFunc(R (*/*method*/)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13)) {
+SQFUNCTION SqGlobalFunc(R (* /*method*/)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13)) {
     return &SqGlobal<R>::template Func13<A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, 2, false>;
 }
 
 // Arg Count 13
 template <class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11, class A12, class A13>
-SQFUNCTION SqGlobalFunc(R & (*/*method*/)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13)) {
+SQFUNCTION SqGlobalFunc(R & (* /*method*/)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13)) {
     return &SqGlobal<R& >::template Func13<A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, 2, false>;
 }
 
 // Arg Count 14
 template <class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11, class A12, class A13, class A14>
-SQFUNCTION SqGlobalFunc(R (*/*method*/)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14)) {
+SQFUNCTION SqGlobalFunc(R (* /*method*/)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14)) {
     return &SqGlobal<R>::template Func14<A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, 2, false>;
 }
 
 // Arg Count 14
 template <class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11, class A12, class A13, class A14>
-SQFUNCTION SqGlobalFunc(R & (*/*method*/)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14)) {
+SQFUNCTION SqGlobalFunc(R & (* /*method*/)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14)) {
     return &SqGlobal<R& >::template Func14<A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, 2, false>;
 }
 
@@ -2470,169 +2470,169 @@ SQFUNCTION SqGlobalFunc(R & (*/*method*/)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A1
 
 // Arg Count 1
 template <class R, class A1>
-SQFUNCTION SqMemberGlobalFunc(R (*/*method*/)(A1)) {
+SQFUNCTION SqMemberGlobalFunc(R (* /*method*/)(A1)) {
     return &SqGlobal<R>::template Func1<A1, 1, false>;
 }
 
 // Arg Count 1
 template <class R, class A1>
-SQFUNCTION SqMemberGlobalFunc(R & (*/*method*/)(A1)) {
+SQFUNCTION SqMemberGlobalFunc(R & (* /*method*/)(A1)) {
     return &SqGlobal<R& >::template Func1<A1, 1, false>;
 }
 
 // Arg Count 2
 template <class R, class A1, class A2>
-SQFUNCTION SqMemberGlobalFunc(R (*/*method*/)(A1, A2)) {
+SQFUNCTION SqMemberGlobalFunc(R (* /*method*/)(A1, A2)) {
     return &SqGlobal<R>::template Func2<A1, A2, 1, false>;
 }
 
 // Arg Count 2
 template <class R, class A1, class A2>
-SQFUNCTION SqMemberGlobalFunc(R & (*/*method*/)(A1, A2)) {
+SQFUNCTION SqMemberGlobalFunc(R & (* /*method*/)(A1, A2)) {
     return &SqGlobal<R& >::template Func2<A1, A2, 1, false>;
 }
 
 // Arg Count 3
 template <class R, class A1, class A2, class A3>
-SQFUNCTION SqMemberGlobalFunc(R (*/*method*/)(A1, A2, A3)) {
+SQFUNCTION SqMemberGlobalFunc(R (* /*method*/)(A1, A2, A3)) {
     return &SqGlobal<R>::template Func3<A1, A2, A3, 1, false>;
 }
 
 // Arg Count 3
 template <class R, class A1, class A2, class A3>
-SQFUNCTION SqMemberGlobalFunc(R & (*/*method*/)(A1, A2, A3)) {
+SQFUNCTION SqMemberGlobalFunc(R & (* /*method*/)(A1, A2, A3)) {
     return &SqGlobal<R& >::template Func3<A1, A2, A3, 1, false>;
 }
 
 // Arg Count 4
 template <class R, class A1, class A2, class A3, class A4>
-SQFUNCTION SqMemberGlobalFunc(R (*/*method*/)(A1, A2, A3, A4)) {
+SQFUNCTION SqMemberGlobalFunc(R (* /*method*/)(A1, A2, A3, A4)) {
     return &SqGlobal<R>::template Func4<A1, A2, A3, A4, 1, false>;
 }
 
 // Arg Count 4
 template <class R, class A1, class A2, class A3, class A4>
-SQFUNCTION SqMemberGlobalFunc(R & (*/*method*/)(A1, A2, A3, A4)) {
+SQFUNCTION SqMemberGlobalFunc(R & (* /*method*/)(A1, A2, A3, A4)) {
     return &SqGlobal<R& >::template Func4<A1, A2, A3, A4, 1, false>;
 }
 
 // Arg Count 5
 template <class R, class A1, class A2, class A3, class A4, class A5>
-SQFUNCTION SqMemberGlobalFunc(R (*/*method*/)(A1, A2, A3, A4, A5)) {
+SQFUNCTION SqMemberGlobalFunc(R (* /*method*/)(A1, A2, A3, A4, A5)) {
     return &SqGlobal<R>::template Func5<A1, A2, A3, A4, A5, 1, false>;
 }
 
 // Arg Count 5
 template <class R, class A1, class A2, class A3, class A4, class A5>
-SQFUNCTION SqMemberGlobalFunc(R & (*/*method*/)(A1, A2, A3, A4, A5)) {
+SQFUNCTION SqMemberGlobalFunc(R & (* /*method*/)(A1, A2, A3, A4, A5)) {
     return &SqGlobal<R& >::template Func5<A1, A2, A3, A4, A5, 1, false>;
 }
 
 // Arg Count 6
 template <class R, class A1, class A2, class A3, class A4, class A5, class A6>
-SQFUNCTION SqMemberGlobalFunc(R (*/*method*/)(A1, A2, A3, A4, A5, A6)) {
+SQFUNCTION SqMemberGlobalFunc(R (* /*method*/)(A1, A2, A3, A4, A5, A6)) {
     return &SqGlobal<R>::template Func6<A1, A2, A3, A4, A5, A6, 1, false>;
 }
 
 // Arg Count 6
 template <class R, class A1, class A2, class A3, class A4, class A5, class A6>
-SQFUNCTION SqMemberGlobalFunc(R & (*/*method*/)(A1, A2, A3, A4, A5, A6)) {
+SQFUNCTION SqMemberGlobalFunc(R & (* /*method*/)(A1, A2, A3, A4, A5, A6)) {
     return &SqGlobal<R& >::template Func6<A1, A2, A3, A4, A5, A6, 1, false>;
 }
 
 // Arg Count 7
 template <class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7>
-SQFUNCTION SqMemberGlobalFunc(R (*/*method*/)(A1, A2, A3, A4, A5, A6, A7)) {
+SQFUNCTION SqMemberGlobalFunc(R (* /*method*/)(A1, A2, A3, A4, A5, A6, A7)) {
     return &SqGlobal<R>::template Func7<A1, A2, A3, A4, A5, A6, A7, 1, false>;
 }
 
 // Arg Count 7
 template <class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7>
-SQFUNCTION SqMemberGlobalFunc(R & (*/*method*/)(A1, A2, A3, A4, A5, A6, A7)) {
+SQFUNCTION SqMemberGlobalFunc(R & (* /*method*/)(A1, A2, A3, A4, A5, A6, A7)) {
     return &SqGlobal<R& >::template Func7<A1, A2, A3, A4, A5, A6, A7, 1, false>;
 }
 
 // Arg Count 8
 template <class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8>
-SQFUNCTION SqMemberGlobalFunc(R (*/*method*/)(A1, A2, A3, A4, A5, A6, A7, A8)) {
+SQFUNCTION SqMemberGlobalFunc(R (* /*method*/)(A1, A2, A3, A4, A5, A6, A7, A8)) {
     return &SqGlobal<R>::template Func8<A1, A2, A3, A4, A5, A6, A7, A8, 1, false>;
 }
 
 // Arg Count 8
 template <class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8>
-SQFUNCTION SqMemberGlobalFunc(R & (*/*method*/)(A1, A2, A3, A4, A5, A6, A7, A8)) {
+SQFUNCTION SqMemberGlobalFunc(R & (* /*method*/)(A1, A2, A3, A4, A5, A6, A7, A8)) {
     return &SqGlobal<R& >::template Func8<A1, A2, A3, A4, A5, A6, A7, A8, 1, false>;
 }
 
 // Arg Count 9
 template <class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9>
-SQFUNCTION SqMemberGlobalFunc(R (*/*method*/)(A1, A2, A3, A4, A5, A6, A7, A8, A9)) {
+SQFUNCTION SqMemberGlobalFunc(R (* /*method*/)(A1, A2, A3, A4, A5, A6, A7, A8, A9)) {
     return &SqGlobal<R>::template Func9<A1, A2, A3, A4, A5, A6, A7, A8, A9, 1, false>;
 }
 
 // Arg Count 9
 template <class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9>
-SQFUNCTION SqMemberGlobalFunc(R & (*/*method*/)(A1, A2, A3, A4, A5, A6, A7, A8, A9)) {
+SQFUNCTION SqMemberGlobalFunc(R & (* /*method*/)(A1, A2, A3, A4, A5, A6, A7, A8, A9)) {
     return &SqGlobal<R& >::template Func9<A1, A2, A3, A4, A5, A6, A7, A8, A9, 1, false>;
 }
 
 // Arg Count 10
 template <class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10>
-SQFUNCTION SqMemberGlobalFunc(R (*/*method*/)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10)) {
+SQFUNCTION SqMemberGlobalFunc(R (* /*method*/)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10)) {
     return &SqGlobal<R>::template Func10<A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, 1, false>;
 }
 
 // Arg Count 10
 template <class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10>
-SQFUNCTION SqMemberGlobalFunc(R & (*/*method*/)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10)) {
+SQFUNCTION SqMemberGlobalFunc(R & (* /*method*/)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10)) {
     return &SqGlobal<R& >::template Func10<A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, 1, false>;
 }
 
 // Arg Count 11
 template <class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11>
-SQFUNCTION SqMemberGlobalFunc(R (*/*method*/)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11)) {
+SQFUNCTION SqMemberGlobalFunc(R (* /*method*/)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11)) {
     return &SqGlobal<R>::template Func11<A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, 1, false>;
 }
 
 // Arg Count 11
 template <class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11>
-SQFUNCTION SqMemberGlobalFunc(R & (*/*method*/)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11)) {
+SQFUNCTION SqMemberGlobalFunc(R & (* /*method*/)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11)) {
     return &SqGlobal<R& >::template Func11<A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, 1, false>;
 }
 
 // Arg Count 12
 template <class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11, class A12>
-SQFUNCTION SqMemberGlobalFunc(R (*/*method*/)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)) {
+SQFUNCTION SqMemberGlobalFunc(R (* /*method*/)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)) {
     return &SqGlobal<R>::template Func12<A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, 1, false>;
 }
 
 // Arg Count 12
 template <class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11, class A12>
-SQFUNCTION SqMemberGlobalFunc(R & (*/*method*/)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)) {
+SQFUNCTION SqMemberGlobalFunc(R & (* /*method*/)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)) {
     return &SqGlobal<R& >::template Func12<A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, 1, false>;
 }
 
 // Arg Count 13
 template <class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11, class A12, class A13>
-SQFUNCTION SqMemberGlobalFunc(R (*/*method*/)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13)) {
+SQFUNCTION SqMemberGlobalFunc(R (* /*method*/)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13)) {
     return &SqGlobal<R>::template Func13<A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, 1, false>;
 }
 
 // Arg Count 13
 template <class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11, class A12, class A13>
-SQFUNCTION SqMemberGlobalFunc(R & (*/*method*/)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13)) {
+SQFUNCTION SqMemberGlobalFunc(R & (* /*method*/)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13)) {
     return &SqGlobal<R& >::template Func13<A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, 1, false>;
 }
 
 // Arg Count 14
 template <class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11, class A12, class A13, class A14>
-SQFUNCTION SqMemberGlobalFunc(R (*/*method*/)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14)) {
+SQFUNCTION SqMemberGlobalFunc(R (* /*method*/)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14)) {
     return &SqGlobal<R>::template Func14<A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, 1, false>;
 }
 
 // Arg Count 14
 template <class R, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10, class A11, class A12, class A13, class A14>
-SQFUNCTION SqMemberGlobalFunc(R & (*/*method*/)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14)) {
+SQFUNCTION SqMemberGlobalFunc(R & (* /*method*/)(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14)) {
     return &SqGlobal<R& >::template Func14<A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, 1, false>;
 }
 
