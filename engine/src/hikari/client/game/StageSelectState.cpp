@@ -191,9 +191,6 @@ namespace hikari {
         guiBackground.reset(new gui::Icon(config.getBackground()));
         guiForeground.reset(new gui::Icon(config.getForeground()));
 
-        const auto & eyeSpriteInfo = config.getEyeInfo();
-
-
         guiLeftEye.reset(new gui::Icon("assets/images/eye-stage-select.png"));
         guiRightEye.reset(new gui::Icon("assets/images/eye-stage-select.png"));
 
