@@ -1,5 +1,7 @@
 #include "hikari/core/util/HashedString.hpp"
 #include <functional>
+#include <string>
+#include <ostream>
 
 namespace hikari {
 
