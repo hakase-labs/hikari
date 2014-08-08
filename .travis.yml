@@ -4,11 +4,11 @@ compiler:
 before_install:
   - echo $LANG
   - echo $LC_ALL
-  - sudo apt-get install cmake libphysfs-dev
+  - sudo apt-get install cmake libpthread-stubs0-dev libgl1-mesa-dev libx11-dev libxrandr-dev libfreetype6-dev libglew1.5-dev libjpeg8-dev libsndfile1-dev libopenal-dev libphysfs-dev
   - git clone https://github.com/LaurentGomila/SFML.git sfml
   - mkdir build-sfml
   - cd build-sfml
-  - cmake -G "Unix Makefiles" ../sfml
+  - cmake -G "Unix Makefiles" -D CMAKE_BUILD_TYPE=Release -D BUILD_SHARED_LIBS=TRUE ../sfml
   - make
   - make install
 before_script:
