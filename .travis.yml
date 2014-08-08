@@ -1,9 +1,17 @@
 language: cpp
-compiler: clang
+compiler: clang++
 before_install:
   - echo $LANG
   - echo $LC_ALL
+
+  # clang 3.4
+  - if [ "$CXX" == "clang++" ]; then sudo add-apt-repository -y ppa:h-rayflood/llvm; fi
+  - sudo apt-get update -qq
+
+  # Install packages needed for SFML 2.1 and Hikari (PhysFS)
   - sudo apt-get install cmake libudev-dev libpthread-stubs0-dev libgl1-mesa-dev libx11-dev libxrandr-dev libfreetype6-dev libglew1.5-dev libjpeg8-dev libsndfile1-dev libopenal-dev libphysfs-dev
+
+  # Build SFML from source
   - cd ..
   - git clone https://github.com/LaurentGomila/SFML.git sfml
   - mkdir build-sfml
@@ -11,6 +19,10 @@ before_install:
   - cmake -G "Unix Makefiles" -D CMAKE_BUILD_TYPE=Release -D BUILD_SHARED_LIBS=TRUE ../sfml
   - sudo make
   - sudo make install
+install:
+  # clang 3.4
+  - if [ "$CXX" == "clang++" ]; then sudo apt-get install --allow-unauthenticated -qq clang-3.4; fi
+  - if [ "$CXX" == "clang++" ]; then export CXX="clang++-3.4"; fi
 before_script:
   - pwd
   - ls
