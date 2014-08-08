@@ -15,12 +15,12 @@ install:
   # g++4.8.1
   - if [ "$CXX" == "g++" ]; then sudo apt-get update -qq; fi
   - if [ "$CXX" == "g++" ]; then sudo apt-get install -qq g++-4.8; fi
-  - if [ "$CXX" == "g++" ]; then sudo export CXX="g++-4.8"; fi
+  - if [ "$CXX" == "g++" ]; then export CXX="g++-4.8"; fi
 
   # clang 3.4
-  - if [ "$CXX" == "clang++" ]; then sudo apt-get install --allow-unauthenticated -qq clang-3.4; fi
-  - if [ "$CXX" == "clang++" ]; then sudo export CXX="clang++-3.4"; fi
   - if [ "$CXX" == "clang++" ]; then sudo apt-get update -qq; fi
+  - if [ "$CXX" == "clang++" ]; then sudo apt-get install --allow-unauthenticated -qq clang-3.4; fi
+  - if [ "$CXX" == "clang++" ]; then export CXX="clang++-3.4"; fi
   - if [ "$CXX" == "clang++" ]; then export CXXFLAGS="-std=c++0x -stdlib=libc++"; fi
   - if [ "$CXX" == "clang++" ]; then svn co --quiet http://llvm.org/svn/llvm-project/libcxx/trunk libcxx; fi
 
