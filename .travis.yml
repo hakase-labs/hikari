@@ -1,0 +1,27 @@
+language: cpp
+compiler:
+  - gcc
+before_install:
+  - echo $LANG
+  - echo $LC_ALL
+  - sudo apt-get install cmake libsfml-dev libphysfs-dev
+before_script:
+  - mkdir build-hikari
+  - cd build-hikari
+script: cmake -G "Unix Makefiles" ../hikari
+branches:
+  only:
+    - master
+notifications:
+  recipients:
+    - hikari@zackthehuman.com
+  email:
+    on_success: change
+    on_failure: always
+  irc:
+    channels:
+      - "irc.boxbox.org#hikari"
+    template:
+      - "%{repository}/%{branch} (%{commit} - %{author}): %{message}"
+os:
+  - linux
