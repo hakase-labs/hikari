@@ -6,6 +6,7 @@ before_install:
   - echo $LC_ALL
   - sudo apt-get install cmake libsfml-dev libphysfs-dev
 before_script:
+  - cd ..
   - mkdir build-hikari
   - cd build-hikari
 script: cmake -G "Unix Makefiles" ../hikari
