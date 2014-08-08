@@ -21,7 +21,7 @@ endif()
 #
 # Remove security warnings with Visual C++
 #
-if(MSVC)
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${HIKARI_DUMB_COMPILER_FLAGS}")
 
     if(NOT CMAKE_CXX_FLAGS MATCHES "/EHsc")
@@ -32,9 +32,13 @@ if(MSVC)
     add_definitions( -D_CRT_SECURE_NO_WARNINGS )
 else()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${HIKARI_GOOD_COMPILER_FLAGS}")
-    if(CLANG)
-      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
-    endif(CLANG)
+
+    #
+    # Clang-specific settings
+    #
+    if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++")
+    endif()
 endif(MSVC)
 
 #
