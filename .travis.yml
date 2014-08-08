@@ -37,23 +37,23 @@ install:
 
   # Install packages needed for SFML 2.1 and Hikari (PhysFS)
   - sudo apt-get install cmake libudev-dev libpthread-stubs0-dev libgl1-mesa-dev libx11-dev libxrandr-dev libfreetype6-dev libglew1.5-dev libjpeg8-dev libsndfile1-dev libopenal-dev libphysfs-dev
+  - sudo add-apt-repository -y 'deb https://packages.debian.org/ jessie'
+  - sudo apt-get install libsfml-dev
 
   # Build SFML from source
-  - cd ..
-  - git clone https://github.com/LaurentGomila/SFML.git sfml
-  - mkdir build-sfml
-  - cd build-sfml
-  - if [ "$CXX" == "clang++-3.4" ]; then export CXXFLAGS="-std=c++0x -stdlib=libc++"; fi
-  - cmake -G "Unix Makefiles" -D CMAKE_BUILD_TYPE=Release -D BUILD_SHARED_LIBS=TRUE ../sfml
-  - sudo make
-  - sudo make install
+  # - cd ..
+  # - git clone https://github.com/LaurentGomila/SFML.git sfml
+  # - mkdir build-sfml
+  # - cd build-sfml
+  # - cmake -G "Unix Makefiles" -D CMAKE_BUILD_TYPE=Release -D BUILD_SHARED_LIBS=TRUE ../sfml
+  # - sudo make
+  # - sudo make install
 before_script:
   - pwd
   - ls
   - cd ..
   - mkdir build-hikari
   - cd build-hikari
-  - if [ "$CXX" == "clang++-3.4" ]; then export CXXFLAGS="-std=c++11 -stdlib=libc++"; fi
 script: cmake -G "Unix Makefiles" ../hikari; sudo make
 branches:
   only:
