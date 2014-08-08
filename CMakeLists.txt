@@ -32,6 +32,9 @@ if(MSVC)
     add_definitions( -D_CRT_SECURE_NO_WARNINGS )
 else()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${HIKARI_GOOD_COMPILER_FLAGS}")
+    if(CLANG)
+      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
+    endif(CLANG)
 endif(MSVC)
 
 #
