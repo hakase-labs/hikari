@@ -3,7 +3,7 @@
 
 namespace hikari {
 
-    const EventType WeaponFireEventData::Type = HashedString("WeaponFireEventData").getHash();;
+    const EventType WeaponFireEventData::Type = HashedString("WeaponFireEventData").getHash();
 
     WeaponFireEventData::WeaponFireEventData(int weaponId, int shooterId, Faction faction, Direction direction, const Vector2<float> & position)
         : BaseEventData(0.0f)

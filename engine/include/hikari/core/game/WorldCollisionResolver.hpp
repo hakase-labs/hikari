@@ -1,5 +1,5 @@
 #ifndef HIKARI_CLIENT_GAME_MAP_WORLDCOLLISIONRESOLVER
-#define HIKARI_CLIENT_GAME_MAP_WorldCOLLISIONRESOLVER
+#define HIKARI_CLIENT_GAME_MAP_WORLDCOLLISIONRESOLVER
 
 #include "hikari/core/game/CollisionResolver.hpp"
 #include "hikari/core/geom/BoundingBox.hpp"

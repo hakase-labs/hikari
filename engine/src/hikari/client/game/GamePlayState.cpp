@@ -45,7 +45,7 @@
 #include "hikari/client/game/events/EventData.hpp"
 #include "hikari/client/game/events/WeaponFireEventData.hpp"
 #include "hikari/client/game/events/ObjectRemovedEventData.hpp"
-#include "hikari/client/game/screenEffectsService.hpp"
+#include "hikari/client/game/ScreenEffectsService.hpp"
 #include "hikari/client/gui/GuiService.hpp"
 #include "hikari/client/gui/Menu.hpp"
 #include "hikari/client/gui/WeaponMenuItem.hpp"

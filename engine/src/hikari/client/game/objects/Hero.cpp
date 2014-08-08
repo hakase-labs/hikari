@@ -176,24 +176,6 @@ namespace hikari {
                 }
             }
 
-            // Check for wall blockage and edge detection. These two flags are used
-            // to determine if the hero can slide or shoud stop sliding.
-            isBlockedByWall = false;
-            isOnEdge = false;
-
-            // We check the position to either side of the hero's feet plane.
-
-            float checkX = 0;
-            float checkY = 0;
-
-            if(getDirection() == Directions::Left) {
-                checkY = getBoundingBox().getBottom() - 1.0f;
-                checkX = getBoundingBox().getLeft() - 8.0f;
-            } else if(getDirection() == Directions::Right) {
-                checkY = getBoundingBox().getBottom() - 1.0f;
-                checkX = getBoundingBox().getRight() + 8.0f;
-            }
-
             isBlockedByWall = EntityHelpers::isBlockedByWall(this, 8);
             isOnEdge = EntityHelpers::isOnEdge(this, 8);
 
