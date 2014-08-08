@@ -13,10 +13,12 @@ before_install:
   - sudo make
   - sudo make install
 before_script:
+  - pwd
+  - ls
   - cd ..
   - mkdir build-hikari
   - cd build-hikari
-script: cd ..; cmake -G "Unix Makefiles" ../hikari; sudo make
+script: pwd; ls; cmake -G "Unix Makefiles" ../hikari; sudo make
 branches:
   only:
     - master
