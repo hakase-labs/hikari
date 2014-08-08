@@ -28,8 +28,11 @@ install:
 
   - if [ "$CXX" == "clang++" ]; then cd libcxx/lib && bash buildit; fi
   - if [ "$CXX" == "clang++" ]; then sudo cp ./libc++.so.1.0 /usr/lib/; fi
+  - if [ "$CXX" == "clang++" ]; then sudo mkdir /usr/include; fi
+  - if [ "$CXX" == "clang++" ]; then sudo mkdir /usr/include/c++; fi
   - if [ "$CXX" == "clang++" ]; then sudo mkdir /usr/include/c++/v1; fi
   - if [ "$CXX" == "clang++" ]; then cd .. && sudo cp -r include/* /usr/include/c++/v1/; fi
+  - if [ "$CXX" == "clang++" ]; then sudo ls -al /usr/include/c++/v1/; fi
   - if [ "$CXX" == "clang++" ]; then cd /usr/lib && sudo ln -sf libc++.so.1.0 libc++.so; fi
   - if [ "$CXX" == "clang++" ]; then sudo ln -sf libc++.so.1.0 libc++.so.1 && cd $cwd; fi
 
