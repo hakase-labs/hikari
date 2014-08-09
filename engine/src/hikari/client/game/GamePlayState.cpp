@@ -1030,6 +1030,124 @@ namespace hikari {
         }
     }
 
+    void GamePlayState::updateParticles(float dt) {
+        const auto & activeParticles = world.getActiveParticles();
+        const auto & cameraView = camera.getView();
+
+        std::for_each(
+            std::begin(activeParticles),
+            std::end(activeParticles),
+            [this, &cameraView, &dt](const std::shared_ptr<Particle> & particle) {
+                particle->update(dt);
+
+                if(!geom::intersects(particle->getBoundingBox(), cameraView)) {
+                    HIKARI_LOG(debug3) << "Cleaning up off-screen particle #" << particle->getId();
+                    particle->setActive(false);
+                }
+
+                if(!particle->isActive()) {
+                    world.queueObjectRemoval(particle);
+                }
+        });
+    }
+
+    void GamePlayState::updateProjectiles(float dt) {
+//
+        // Update projectiles
+        //
+        const auto & activeEnemies = world.getActiveEnemies();
+        const auto & activeProjectiles = world.getActiveProjectiles();
+        const auto & cameraView = camera.getView();
+
+        std::for_each(
+            std::begin(activeProjectiles),
+            std::end(activeProjectiles),
+            [&](const std::shared_ptr<Projectile> & projectile) {
+                projectile->update(dt);
+
+                if(!geom::intersects(projectile->getBoundingBox(), cameraView)) {
+                    HIKARI_LOG(debug3) << "Cleaning up off-screen projectile #" << projectile->getId();
+                    projectile->setActive(false);
+                    world.queueObjectRemoval(projectile);
+                }
+
+                // Check Hero -> Enemy projectiles
+                if(projectile->getFaction() == Factions::Hero) {
+                    // Check for collision with enemies
+                    std::for_each(
+                        std::begin(activeEnemies),
+                        std::end(activeEnemies),
+                        [&](const std::shared_ptr<Enemy> & enemy) {
+                            if(!projectile->isInert()) {
+                                if(projectile->getBoundingBox().intersects(enemy->getBoundingBox())) {
+                                    if(enemy->isShielded()) {
+                                         // Deflect projectile
+                                        projectile->deflect();
+
+                                        if(auto sound = audioService.lock()) {
+                                            HIKARI_LOG(debug4) << "PLAYING SAMPLE weapon DEFLECTED";
+                                            sound->playSample("Deflected");
+                                        }
+                                    } else {
+                                        HIKARI_LOG(debug3) << "Hero bullet " << projectile->getId() << " hit an enemy " << enemy->getId();
+                                        projectile->setActive(false);
+                                        world.queueObjectRemoval(projectile);
+
+                                        DamageKey damageKey;
+                                        damageKey.damagerType = projectile->getDamageId();
+                                        damageKey.damageeType = enemy->getDamageId();
+
+                                        HIKARI_LOG(debug3) << "Hero bullet damage id = " << projectile->getDamageId();
+
+                                        // TODO: Perform damage lookup and apply it to hero.
+                                        // Trigger enemy damage
+                                        float damageAmount = 0.0f;
+
+                                        if(auto dt = damageTable.lock()) {
+                                            damageAmount = dt->getDamageFor(damageKey.damagerType);
+                                        }
+
+                                        HIKARI_LOG(debug3) << "Enemy took " << damageAmount;
+
+                                        enemy->takeDamage(damageAmount);
+
+                                        if(auto sound = audioService.lock()) {
+                                            sound->playSample("Enemy (Damage)");
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    );
+                } else if(projectile->getFaction() == Factions::Enemy) {
+                    // Check for collision with hero
+                    if(projectile->getBoundingBox().intersects(hero->getBoundingBox())) {
+                        HIKARI_LOG(debug3) << "Enemy bullet " << projectile->getId() << " hit the hero!";
+
+                        // DamageKey damageKey;
+                        // damageKey.damagerType = projectile->getDamageId();
+                        // damageKey.damageeType = hero->getDamageId();
+
+                        // TODO: Perform damage lookup and apply it to hero.
+
+                        if(hero->isVulnerable()) {
+                            hero->performStun();
+                            projectile->setActive(false);
+                            world.queueObjectRemoval(projectile);
+                        }
+                    }
+                }
+        });
+    }
+
+    void GamePlayState::updateEnemies(float dt) {
+
+    }
+
+    void GamePlayState::updateItems(float dt) {
+
+    }
+
     void GamePlayState::checkCollisionWithTransition() { }
 
     void GamePlayState::renderMap(sf::RenderTarget &target) const {
@@ -1770,124 +1888,8 @@ namespace hikari {
 
         });
 
-        //
-        // Update particles
-        //
-        const auto & activeParticles = gamePlayState.world.getActiveParticles();
-
-        std::for_each(
-            std::begin(activeParticles),
-            std::end(activeParticles),
-            [this, &camera, &dt](const std::shared_ptr<Particle> & particle) {
-                particle->update(dt);
-
-                const auto & cameraView = camera.getView();
-
-                if(!geom::intersects(particle->getBoundingBox(), cameraView)) {
-                    HIKARI_LOG(debug3) << "Cleaning up off-screen particle #" << particle->getId();
-                    particle->setActive(false);
-                }
-
-                if(!particle->isActive()) {
-                    gamePlayState.world.queueObjectRemoval(particle);
-                }
-        });
-
-        //
-        // Update projectiles
-        //
-        const auto & activeProjectiles = gamePlayState.world.getActiveProjectiles();
-
-        std::for_each(
-            std::begin(activeProjectiles),
-            std::end(activeProjectiles),
-            [this, &activeEnemies, &camera, &dt](const std::shared_ptr<Projectile> & projectile) {
-                projectile->update(dt);
-
-                const auto & cameraView = camera.getView();
-
-                if(!geom::intersects(projectile->getBoundingBox(), cameraView)) {
-                    HIKARI_LOG(debug3) << "Cleaning up off-screen projectile #" << projectile->getId();
-                    projectile->setActive(false);
-                    gamePlayState.world.queueObjectRemoval(projectile);
-                }
-
-                // Check Hero -> Enemy projectiles
-                if(projectile->getFaction() == Factions::Hero) {
-                    auto & context = *this; // TODO: This makes intellisense errors go away but it seems kludgy.
-                                            // In VS2010, this is the Intellisense error:
-                                            //     "Error : a nonstatic member reference must be relative to a specific object"
-                                            // However, despite the error the code compiles fine.
-
-                    // Check for collision with enemies
-                    std::for_each(
-                        std::begin(activeEnemies),
-                        std::end(activeEnemies),
-                        [&](const std::shared_ptr<Enemy> & enemy) {
-                            if(!projectile->isInert()) {
-                                if(projectile->getBoundingBox().intersects(enemy->getBoundingBox())) {
-                                    if(enemy->isShielded()) {
-                                         // Deflect projectile
-                                        projectile->deflect();
-
-                                        if(auto sound = context.gamePlayState.audioService.lock()) {
-                                            HIKARI_LOG(debug4) << "PLAYING SAMPLE weapon DEFLECTED";
-                                            sound->playSample("Deflected");
-                                        }
-                                    } else {
-                                        HIKARI_LOG(debug3) << "Hero bullet " << projectile->getId() << " hit an enemy " << enemy->getId();
-                                        projectile->setActive(false);
-                                        context.gamePlayState.world.queueObjectRemoval(projectile);
-
-                                        DamageKey damageKey;
-                                        damageKey.damagerType = projectile->getDamageId();
-                                        damageKey.damageeType = enemy->getDamageId();
-
-                                        HIKARI_LOG(debug3) << "Hero bullet damage id = " << projectile->getDamageId();
-
-                                        // TODO: Perform damage lookup and apply it to hero.
-                                        // Trigger enemy damage
-                                        float damageAmount = 0.0f;
-
-                                        if(auto dt = context.gamePlayState.damageTable.lock()) {
-                                            damageAmount = dt->getDamageFor(damageKey.damagerType);
-                                        }
-
-                                        HIKARI_LOG(debug3) << "Enemy took " << damageAmount;
-
-                                        enemy->takeDamage(damageAmount);
-
-                                        if(auto sound = context.gamePlayState.audioService.lock()) {
-                                            sound->playSample("Enemy (Damage)");
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    );
-                } else if(projectile->getFaction() == Factions::Enemy) {
-
-                    const auto & hero = gamePlayState.hero;
-
-                    // Check for collision with hero
-                    if(projectile->getBoundingBox().intersects(hero->getBoundingBox())) {
-                        HIKARI_LOG(debug3) << "Enemy bullet " << projectile->getId() << " hit the hero!";
-
-                        // DamageKey damageKey;
-                        // damageKey.damagerType = projectile->getDamageId();
-                        // damageKey.damageeType = hero->getDamageId();
-
-                        // TODO: Perform damage lookup and apply it to hero.
-
-                        if(hero->isVulnerable()) {
-                            hero->performStun();
-                            projectile->setActive(false);
-                            gamePlayState.world.queueObjectRemoval(projectile);
-                        }
-                    }
-                }
-        });
-
+        gamePlayState.updateParticles(dt);
+        gamePlayState.updateProjectiles(dt);
         gamePlayState.updateDoors(dt);
 
         // Hero died so we need to restart
@@ -2370,7 +2372,9 @@ namespace hikari {
     }
 
     GamePlayState::BossDefeatedSubState::BossDefeatedSubState(GamePlayState & gamePlayState)
-        : SubState(gamePlayState) {
+        : SubState(gamePlayState)
+        , timer(0.0f)
+    {
 
     }
 
@@ -2381,52 +2385,59 @@ namespace hikari {
     void GamePlayState::BossDefeatedSubState::enter() {
         HIKARI_LOG(debug) << "BossDefeatedSubState::enter()";
 
-        const auto playerHeroController = gamePlayState.hero->getActionController();
+        if(auto sound = gamePlayState.audioService.lock()) {
+            sound->stopMusic();
+        }
+
         gamePlayState.cutSceneController->stopMoving();
         gamePlayState.hero->setActionController(gamePlayState.cutSceneController);
-        gamePlayState.world.update(0.0f);
 
-        const int targetX = gamePlayState.hero->getPosition().getX() + 100;
+        // const auto playerHeroController = gamePlayState.hero->getActionController();
+        // gamePlayState.cutSceneController->stopMoving();
+        // gamePlayState.hero->setActionController(gamePlayState.cutSceneController);
+        // gamePlayState.world.update(0.0f);
 
-        // This needs to be non-blocking.
-        gamePlayState.taskQueue.push(std::make_shared<WaitTask>(1.0f));
+        // const int targetX = gamePlayState.hero->getPosition().getX() + 100;
 
-        // Return control to the player
-        gamePlayState.taskQueue.push(std::make_shared<FunctionTask>(0, [this](float dt) -> bool {
-            if(auto sound = gamePlayState.audioService.lock()) {
-                sound->playMusic("Boss Defeated (MM3)");
-            }
-            return true;
-        }));
+        // // This needs to be non-blocking.
+        // gamePlayState.taskQueue.push(std::make_shared<WaitTask>(1.0f));
 
-        gamePlayState.taskQueue.push(std::make_shared<WaitTask>(4.0f));
+        // // Return control to the player
+        // gamePlayState.taskQueue.push(std::make_shared<FunctionTask>(0, [this](float dt) -> bool {
+        //     if(auto sound = gamePlayState.audioService.lock()) {
+        //         sound->playMusic("Boss Defeated (MM3)");
+        //     }
+        //     return true;
+        // }));
 
-        // TODO:
-        // Walk/jump sequence back to center of the room.
-        // Energy collection sequence.
-        // Teleport out of the room.
-        gamePlayState.taskQueue.push(std::make_shared<FunctionTask>(0, [this, targetX](float dt) -> bool {
-            bool complete = false;
+        // gamePlayState.taskQueue.push(std::make_shared<WaitTask>(4.0f));
 
-            gamePlayState.cutSceneController->moveRight();
-            gamePlayState.hero->update(dt);
+        // // TODO:
+        // // Walk/jump sequence back to center of the room.
+        // // Energy collection sequence.
+        // // Teleport out of the room.
+        // gamePlayState.taskQueue.push(std::make_shared<FunctionTask>(0, [this, targetX](float dt) -> bool {
+        //     bool complete = false;
 
-            if(gamePlayState.hero->getPosition().getX() >= targetX) {
-                complete = true;
-                gamePlayState.cutSceneController->stopMoving();
+        //     gamePlayState.cutSceneController->moveRight();
+        //     gamePlayState.hero->update(dt);
 
-            }
+        //     if(gamePlayState.hero->getPosition().getX() >= targetX) {
+        //         complete = true;
+        //         gamePlayState.cutSceneController->stopMoving();
 
-            return complete;
-        }));
+        //     }
 
-        gamePlayState.taskQueue.push(std::make_shared<FunctionTask>(0, [this, playerHeroController](float dt) -> bool {
-            // Return control to the player here (this is sort of not necessary since it will be reset
-            // when the state transitions, but whatever).
-            gamePlayState.hero->setActionController(playerHeroController);
-            gamePlayState.controller.requestStateChange("weaponget");
-            return true;
-        }));
+        //     return complete;
+        // }));
+
+        // gamePlayState.taskQueue.push(std::make_shared<FunctionTask>(0, [this, playerHeroController](float dt) -> bool {
+        //     // Return control to the player here (this is sort of not necessary since it will be reset
+        //     // when the state transitions, but whatever).
+        //     gamePlayState.hero->setActionController(playerHeroController);
+        //     gamePlayState.controller.requestStateChange("weaponget");
+        //     return true;
+        // }));
     }
 
     void GamePlayState::BossDefeatedSubState::exit() {
@@ -2434,7 +2445,19 @@ namespace hikari {
     }
 
     GamePlayState::SubState::StateChangeAction GamePlayState::BossDefeatedSubState::update(float dt) {
-        return SubState::NEXT;
+        auto& camera = gamePlayState.camera;
+
+        timer += dt;
+
+        gamePlayState.world.update(dt);
+        gamePlayState.updateProjectiles(dt);
+        gamePlayState.updateParticles(dt);
+        gamePlayState.hero->update(dt);
+
+        gamePlayState.cutSceneController->moveRight();
+        gamePlayState.cutSceneController->jump();
+
+        return timer > 6.0f ? SubState::NEXT : SubState::CONTINUE;
     }
 
     void GamePlayState::BossDefeatedSubState::render(sf::RenderTarget &target) {

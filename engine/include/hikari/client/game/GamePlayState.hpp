@@ -290,6 +290,11 @@ namespace hikari {
          */
         void updateDoors(float dt);
 
+        void updateParticles(float dt);
+        void updateProjectiles(float dt);
+        void updateEnemies(float dt);
+        void updateItems(float dt);
+
         //
         // Rendering
         //
@@ -441,7 +446,7 @@ namespace hikari {
          */
         class BossDefeatedSubState : public SubState {
         private:
-
+            float timer;
         public:
             BossDefeatedSubState(GamePlayState & gamePlayState);
             virtual ~BossDefeatedSubState();
