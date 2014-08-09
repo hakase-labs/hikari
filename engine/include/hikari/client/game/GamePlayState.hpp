@@ -10,6 +10,7 @@
 
 #include "hikari/client/game/GameWorld.hpp"
 #include "hikari/core/game/map/RoomTransition.hpp"
+#include "hikari/core/game/Direction.hpp"
 
 
 #include <SFML/Graphics/RenderTarget.hpp>
@@ -446,7 +447,15 @@ namespace hikari {
          */
         class BossDefeatedSubState : public SubState {
         private:
+            bool complete;
+            unsigned int segment;
             float timer;
+            float targetXPosition; // This is the X position of the center of the room
+                                   // where we want the hero to walk to.
+            float roomTopY;
+            Direction targetDirection; // The direction for the hero to walk in.
+
+            void nextSegment();
         public:
             BossDefeatedSubState(GamePlayState & gamePlayState);
             virtual ~BossDefeatedSubState();

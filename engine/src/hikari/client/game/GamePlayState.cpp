@@ -50,6 +50,7 @@
 #include "hikari/client/gui/Menu.hpp"
 #include "hikari/client/gui/WeaponMenuItem.hpp"
 #include "hikari/client/gui/Icon.hpp"
+#include "hikari/core/game/Movable.hpp"
 #include "hikari/core/game/GameController.hpp"
 #include "hikari/core/game/AnimationSet.hpp"
 #include "hikari/core/game/AnimationLoader.hpp"
@@ -776,6 +777,10 @@ namespace hikari {
                     world.queueObjectAddition(clone);
                 }
             }
+
+            if(auto sound = audioService.lock()) {
+                sound->playSample("Rockman (Death)");
+            }
         } else if(type == EntityDeathType::Large) {
             if(std::shared_ptr<Particle> clone = world.spawnParticle("Large Explosion")) {
                 clone->setPosition(position);
@@ -1130,7 +1135,7 @@ namespace hikari {
 
                         // TODO: Perform damage lookup and apply it to hero.
 
-                        if(hero->isVulnerable()) {
+                        if(isHeroAlive && hero->isVulnerable()) {
                             hero->performStun();
                             projectile->setActive(false);
                             world.queueObjectRemoval(projectile);
@@ -1298,15 +1303,14 @@ namespace hikari {
                     progress->setLives(progress->getLives() - 1);
                 }
 
-                spawnDeathExplosion(hero->getDeathType(), hero->getPosition());
-
                 HIKARI_LOG(debug) << "Hero died. Starting over.";
 
                 if(auto sound = audioService.lock()) {
                     sound->stopMusic();
                     sound->stopAllSamples();
-                    sound->playSample("Rockman (Death)");
                 }
+
+                spawnDeathExplosion(hero->getDeathType(), hero->getPosition());
             }
         } else if(eventData->getEntityType() == EntityDeathEventData::Enemy) {
             int entityId = eventData->getEntityId();
@@ -2373,7 +2377,11 @@ namespace hikari {
 
     GamePlayState::BossDefeatedSubState::BossDefeatedSubState(GamePlayState & gamePlayState)
         : SubState(gamePlayState)
+        , complete(false)
+        , segment(0)
         , timer(0.0f)
+        , targetXPosition(0)
+        , roomTopY(0)
     {
 
     }
@@ -2382,15 +2390,41 @@ namespace hikari {
 
     }
 
+    void GamePlayState::BossDefeatedSubState::nextSegment() {
+        segment++;
+        timer = 0.0f;
+    }
+
     void GamePlayState::BossDefeatedSubState::enter() {
         HIKARI_LOG(debug) << "BossDefeatedSubState::enter()";
+
+        complete = false;
+        segment = 0;
+        timer = 0.0f;
 
         if(auto sound = gamePlayState.audioService.lock()) {
             sound->stopMusic();
         }
 
         gamePlayState.cutSceneController->stopMoving();
+        gamePlayState.cutSceneController->stopJumping();
         gamePlayState.hero->setActionController(gamePlayState.cutSceneController);
+
+        const auto & currentRoom = gamePlayState.world.getCurrentRoom();
+        const auto gridSize = currentRoom->getGridSize();
+        const int roomWidthPixels = currentRoom->getWidth() * gridSize;
+        const int roomXPixels = currentRoom->getX() * gridSize;
+
+        // Determine the X position of the center of the room and the direction
+        // the hero needs to face in order to get there.
+        targetXPosition = roomXPixels + (roomWidthPixels / 2);
+        targetDirection = gamePlayState.hero->getPosition().getX() < targetXPosition ? Directions::Right : Directions::Left;
+
+        gamePlayState.hero->setDirection(targetDirection);
+
+        // Determine the Y position of the top of the room so we'll know when
+        // the hero has teleported outside of it.
+        roomTopY = currentRoom->getY() * gridSize;
 
         // const auto playerHeroController = gamePlayState.hero->getActionController();
         // gamePlayState.cutSceneController->stopMoving();
@@ -2445,19 +2479,134 @@ namespace hikari {
     }
 
     GamePlayState::SubState::StateChangeAction GamePlayState::BossDefeatedSubState::update(float dt) {
-        auto& camera = gamePlayState.camera;
-
-        timer += dt;
-
         gamePlayState.world.update(dt);
         gamePlayState.updateProjectiles(dt);
         gamePlayState.updateParticles(dt);
         gamePlayState.hero->update(dt);
 
-        gamePlayState.cutSceneController->moveRight();
-        gamePlayState.cutSceneController->jump();
+        switch(segment) {
+            case 0:
+                // Wait 160 frames, and then play the jams.
+                if(timer >= 2.6667f) {
+                    if(auto sound = gamePlayState.audioService.lock()) {
+                        sound->playMusic("Boss Defeated (MM3)");
+                    }
 
-        return timer > 6.0f ? SubState::NEXT : SubState::CONTINUE;
+                    nextSegment();
+                }
+                break;
+
+            case 1:
+                // Just wait for 2 seconds.
+                if(timer >= 4.2334f) {
+                    nextSegment();
+                }
+                break;
+
+            case 2:
+                // Walk to center of the room.
+                if(targetDirection == Directions::Right) {
+                    gamePlayState.cutSceneController->moveRight();
+                } else {
+                    gamePlayState.cutSceneController->moveLeft();
+                }
+
+                // When we reach the center, jump.
+                if(std::abs(gamePlayState.hero->getPosition().getX() - targetXPosition) <= 2) {
+                    gamePlayState.cutSceneController->stopMoving();
+                    gamePlayState.cutSceneController->jump();
+                }
+
+                // Once we've passed the crest of the jump and start descending,
+                // go to the next segment!
+                if(!gamePlayState.hero->isOnGround() && gamePlayState.hero->getVelocityY() >= 0) {
+                    nextSegment();
+                }
+                break;
+
+            case 3:
+                // Pause in mid-air so we can collect the boss' energy.
+                gamePlayState.hero->setGravitated(false);
+                gamePlayState.hero->setVelocityY(0.0f);
+
+                // Play the first "energy collected" sample.
+                if(auto sound = gamePlayState.audioService.lock()) {
+                    sound->stopAllSamples();
+                    sound->playSample("Power Obtained");
+                }
+
+                nextSegment();
+                break;
+
+             case 4:
+                // Wait for ~40 frames.
+                if(timer >= ((1.0f / 60.f) * 40.0f)) {
+                    // Play the second "energy collected" sample.
+                    if(auto sound = gamePlayState.audioService.lock()) {
+                        sound->stopAllSamples();
+                        sound->playSample("Power Obtained");
+                    }
+
+                    nextSegment();
+                }
+                break;
+
+            case 5:
+                // Wait for ~40 frames.
+                if(timer >= ((1.0f / 60.f) * 40.0f)) {
+                    // Play the second "energy collected" sample.
+                    if(auto sound = gamePlayState.audioService.lock()) {
+                        sound->stopAllSamples();
+                        sound->playSample("Power Obtained");
+                    }
+
+                    nextSegment();
+                }
+                break;
+
+            case 6:
+                // Fall back to the ground.
+                gamePlayState.hero->setGravitated(true);
+                nextSegment();
+                break;
+
+            case 7:
+                // Once the hero has reached the ground, teleport him outta' here!
+                if(gamePlayState.hero->isOnGround()) {
+                    gamePlayState.hero->setPhasing(true);
+                    gamePlayState.hero->performTeleport();
+
+                    // Invert the gravity to teleport the hero out through the ceiling.
+                    Movable::setGravity(-0.25);
+
+                    if(auto sound = gamePlayState.audioService.lock()) {
+                        sound->playSample("Teleport");
+                    }
+
+                    nextSegment();
+                }
+                break;
+
+            case 8:
+                if(gamePlayState.hero->getBoundingBox().getBottom() < roomTopY) {
+                    Movable::setGravity(0.25);
+                    nextSegment();
+                }
+                break;
+
+            case 9:
+                gamePlayState.controller.requestStateChange("weaponget");
+                nextSegment();
+                break;
+
+            default:
+                complete = true;
+                break;
+        }
+
+        timer += dt;
+
+        return complete ? SubState::NEXT : SubState::CONTINUE;
     }
 
     void GamePlayState::BossDefeatedSubState::render(sf::RenderTarget &target) {
