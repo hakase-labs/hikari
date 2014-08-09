@@ -67,6 +67,7 @@ namespace hikari {
     class MapRenderer;
     class Hero;
     class Enemy;
+    class CutSceneHeroActionController;
     class WorldCollisionResolver;
     class Spawner;
     class EventBus;
@@ -113,6 +114,7 @@ namespace hikari {
         std::shared_ptr<Room> currentRoom;
         std::shared_ptr<Hero> hero;
         std::shared_ptr<Enemy> boss;
+        std::shared_ptr<CutSceneHeroActionController> cutSceneController;
         std::unique_ptr<MapRenderer> mapRenderer;
         std::unique_ptr<SubState> subState;
         std::unique_ptr<SubState> nextSubState;
@@ -428,6 +430,21 @@ namespace hikari {
         public:
             TransitionSubState(GamePlayState & gamePlayState, RoomTransition transition);
             virtual ~TransitionSubState();
+            virtual void enter();
+            virtual void exit();
+            virtual StateChangeAction update(float dt);
+            virtual void render(sf::RenderTarget &target);
+        };
+
+        /**
+         * Handles the sequence after the boss was defeated.
+         */
+        class BossDefeatedSubState : public SubState {
+        private:
+
+        public:
+            BossDefeatedSubState(GamePlayState & gamePlayState);
+            virtual ~BossDefeatedSubState();
             virtual void enter();
             virtual void exit();
             virtual StateChangeAction update(float dt);

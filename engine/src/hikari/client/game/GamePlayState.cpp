@@ -117,6 +117,7 @@ namespace hikari {
         , currentRoom(nullptr)
         , hero(nullptr)
         , boss(nullptr)
+        , cutSceneController(nullptr)
         , mapRenderer(new MapRenderer(nullptr, nullptr))
         , subState(nullptr)
         , nextSubState(nullptr)
@@ -182,6 +183,8 @@ namespace hikari {
             hero->setActionSpot(Vector2<float>(6.0, -8.0));
             hero->setActionController(std::make_shared<PlayerInputHeroActionController>(userInput));
             hero->setEventBus(std::weak_ptr<EventBus>(eventBus));
+
+            cutSceneController = std::make_shared<CutSceneHeroActionController>(hero);
         }
 
         world.setPlayer(hero);
@@ -954,7 +957,9 @@ namespace hikari {
         const auto offset = Vector2<float>(128.0f, 64.0f);
         const auto playerHeroController = hero->getActionController();
 
-        hero->setActionController(std::make_shared<CutSceneHeroActionController>(hero));
+        cutSceneController->stopMoving();
+        cutSceneController->stopJumping();
+        hero->setActionController(cutSceneController);
 
         boss = world.spawnEnemy(currentRoom->getBossEntity());
 
@@ -1007,36 +1012,7 @@ namespace hikari {
     }
 
     void GamePlayState::endBossBattle() {
-        const auto playerHeroController = hero->getActionController();
-        hero->setActionController(std::make_shared<CutSceneHeroActionController>(hero));
-        world.update(0.0f);
-
-        // This needs to be non-blocking.
-        taskQueue.push(std::make_shared<WaitTask>(1.0f));
-
-        // Return control to the player
-        taskQueue.push(std::make_shared<FunctionTask>(0, [this](float dt) -> bool {
-            if(auto sound = audioService.lock()) {
-                sound->playMusic("Boss Defeated (MM3)");
-            }
-            return true;
-        }));
-
-        taskQueue.push(std::make_shared<WaitTask>(4.0f));
-
-        // TODO:
-        // Walk/jump sequence back to center of the room.
-        // Energy collection sequence.
-        // Teleport out of the room.
-
-        taskQueue.push(std::make_shared<FunctionTask>(0, [this, playerHeroController](float dt) -> bool {
-            // Return control to the player here (this is sort of not necessary sincei t will be reset
-            // when the state transitions, but whatever).
-            hero->setActionController(playerHeroController);
-            controller.requestStateChange("weaponget");
-            gotoNextState = true;
-            return true;
-        }));
+        changeSubState(std::unique_ptr<SubState>(new BossDefeatedSubState(*this)));
     }
 
     void GamePlayState::updateDoors(float dt) {
@@ -2390,6 +2366,85 @@ namespace hikari {
         }
 
         gamePlayState.renderHero(target);
+        gamePlayState.renderHud(target);
+    }
+
+    GamePlayState::BossDefeatedSubState::BossDefeatedSubState(GamePlayState & gamePlayState)
+        : SubState(gamePlayState) {
+
+    }
+
+    GamePlayState::BossDefeatedSubState::~BossDefeatedSubState() {
+
+    }
+
+    void GamePlayState::BossDefeatedSubState::enter() {
+        HIKARI_LOG(debug) << "BossDefeatedSubState::enter()";
+
+        const auto playerHeroController = gamePlayState.hero->getActionController();
+        gamePlayState.cutSceneController->stopMoving();
+        gamePlayState.hero->setActionController(gamePlayState.cutSceneController);
+        gamePlayState.world.update(0.0f);
+
+        const int targetX = gamePlayState.hero->getPosition().getX() + 100;
+
+        // This needs to be non-blocking.
+        gamePlayState.taskQueue.push(std::make_shared<WaitTask>(1.0f));
+
+        // Return control to the player
+        gamePlayState.taskQueue.push(std::make_shared<FunctionTask>(0, [this](float dt) -> bool {
+            if(auto sound = gamePlayState.audioService.lock()) {
+                sound->playMusic("Boss Defeated (MM3)");
+            }
+            return true;
+        }));
+
+        gamePlayState.taskQueue.push(std::make_shared<WaitTask>(4.0f));
+
+        // TODO:
+        // Walk/jump sequence back to center of the room.
+        // Energy collection sequence.
+        // Teleport out of the room.
+        gamePlayState.taskQueue.push(std::make_shared<FunctionTask>(0, [this, targetX](float dt) -> bool {
+            bool complete = false;
+
+            gamePlayState.cutSceneController->moveRight();
+            gamePlayState.hero->update(dt);
+
+            if(gamePlayState.hero->getPosition().getX() >= targetX) {
+                complete = true;
+                gamePlayState.cutSceneController->stopMoving();
+
+            }
+
+            return complete;
+        }));
+
+        gamePlayState.taskQueue.push(std::make_shared<FunctionTask>(0, [this, playerHeroController](float dt) -> bool {
+            // Return control to the player here (this is sort of not necessary since it will be reset
+            // when the state transitions, but whatever).
+            gamePlayState.hero->setActionController(playerHeroController);
+            gamePlayState.controller.requestStateChange("weaponget");
+            return true;
+        }));
+    }
+
+    void GamePlayState::BossDefeatedSubState::exit() {
+        HIKARI_LOG(debug) << "BossDefeatedSubState::exit()";
+    }
+
+    GamePlayState::SubState::StateChangeAction GamePlayState::BossDefeatedSubState::update(float dt) {
+        return SubState::NEXT;
+    }
+
+    void GamePlayState::BossDefeatedSubState::render(sf::RenderTarget &target) {
+        gamePlayState.renderMap(target);
+        gamePlayState.renderEntities(target);
+
+        if(gamePlayState.isHeroAlive) {
+            gamePlayState.renderHero(target);
+        }
+
         gamePlayState.renderHud(target);
     }
 
