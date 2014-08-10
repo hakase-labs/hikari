@@ -745,8 +745,8 @@ namespace hikari {
 
     void GamePlayState::spawnDeathExplosion(EntityDeathType::Type type, const Vector2<float> & position) {
         if(type == EntityDeathType::Hero) {
-            // This type of explosion shoots in 8 directions. Thwo explosions per
-            // direction; one fast and one slow. It's the death thath appens to Rock
+            // This type of explosion shoots in 8 directions. Two explosions per
+            // direction; one fast and one slow. It's the death that happens to Rock
             // as well as Robot Masters.
             std::list<Vector2<float>> velocities;
             velocities.emplace_back(Vector2<float>(-2.125f,  -2.125f )); // Fast up left
@@ -2426,52 +2426,52 @@ namespace hikari {
         // the hero has teleported outside of it.
         roomTopY = currentRoom->getY() * gridSize;
 
-        // const auto playerHeroController = gamePlayState.hero->getActionController();
-        // gamePlayState.cutSceneController->stopMoving();
-        // gamePlayState.hero->setActionController(gamePlayState.cutSceneController);
-        // gamePlayState.world.update(0.0f);
+        energyRingParticleVelocities.emplace_back(Vector2<float>(0.0f, 3.0f)); // 12:00 slow
+        energyRingParticleVelocities.emplace_back(Vector2<float>(-2.125f, 2.125f)); // 1:30 slow
+        energyRingParticleVelocities.emplace_back(Vector2<float>(-3.0f, 0.0f)); // 3:00 slow
+        energyRingParticleVelocities.emplace_back(Vector2<float>(-2.125f, -2.125f)); // 4:30 slow
+        energyRingParticleVelocities.emplace_back(Vector2<float>(0.0f, -3.0f)); // 6:00 slow
+        energyRingParticleVelocities.emplace_back(Vector2<float>(2.125f, -2.125f)); // 7:30 slow
+        energyRingParticleVelocities.emplace_back(Vector2<float>(3.0f, 0.0f)); // 9:00 slow
+        energyRingParticleVelocities.emplace_back(Vector2<float>(2.125f, 2.125f)); // 10:30 slow
 
-        // const int targetX = gamePlayState.hero->getPosition().getX() + 100;
+        energyRingParticlePositions.emplace_back(Vector2<float>(0.0f, -117.0f)); // 12:00
+        energyRingParticlePositions.emplace_back(Vector2<float>(81.0f, -83.0f)); // 1:30
+        energyRingParticlePositions.emplace_back(Vector2<float>(117.0f, 0.0f)); // 3:00
+        energyRingParticlePositions.emplace_back(Vector2<float>(81.0f, 83.0f)); // 4:30
+        energyRingParticlePositions.emplace_back(Vector2<float>(0.0f, 117.0f)); // 6:00
+        energyRingParticlePositions.emplace_back(Vector2<float>(-81.0f, 83.0f)); // 7:30
+        energyRingParticlePositions.emplace_back(Vector2<float>(-117.0f, 0.0f)); // 9:00
+        energyRingParticlePositions.emplace_back(Vector2<float>(-81.0f, -83.0f)); // 10:30
+    }
 
-        // // This needs to be non-blocking.
-        // gamePlayState.taskQueue.push(std::make_shared<WaitTask>(1.0f));
+    void GamePlayState::BossDefeatedSubState::spawnEnergyRing(float speed, float maximumAge) {
+        auto & world = gamePlayState.world;
+        const auto & cameraView = gamePlayState.camera.getView();
+        const auto & cameraCenter = Vector2<float>(
+            cameraView.getX() + (cameraView.getWidth() / 2.0f),
+            cameraView.getY() + (cameraView.getHeight() / 2.0f));
 
-        // // Return control to the player
-        // gamePlayState.taskQueue.push(std::make_shared<FunctionTask>(0, [this](float dt) -> bool {
-        //     if(auto sound = gamePlayState.audioService.lock()) {
-        //         sound->playMusic("Boss Defeated (MM3)");
-        //     }
-        //     return true;
-        // }));
+        for(std::size_t i = 0, length = energyRingParticleVelocities.size(); i < length; ++i) {
+            const auto & velocity = energyRingParticleVelocities[i];
+            const auto & position = energyRingParticlePositions[i];
 
-        // gamePlayState.taskQueue.push(std::make_shared<WaitTask>(4.0f));
+            if(std::shared_ptr<Particle> slowParticle = world.spawnParticle("Medium Explosion (Loop)")) {
+                slowParticle->setPosition(cameraCenter + position);
+                slowParticle->setVelocity(velocity * speed);
+                slowParticle->setActive(true);
+                slowParticle->setMaximumAge(maximumAge);
+                world.queueObjectAddition(slowParticle);
+            }
 
-        // // TODO:
-        // // Walk/jump sequence back to center of the room.
-        // // Energy collection sequence.
-        // // Teleport out of the room.
-        // gamePlayState.taskQueue.push(std::make_shared<FunctionTask>(0, [this, targetX](float dt) -> bool {
-        //     bool complete = false;
-
-        //     gamePlayState.cutSceneController->moveRight();
-        //     gamePlayState.hero->update(dt);
-
-        //     if(gamePlayState.hero->getPosition().getX() >= targetX) {
-        //         complete = true;
-        //         gamePlayState.cutSceneController->stopMoving();
-
-        //     }
-
-        //     return complete;
-        // }));
-
-        // gamePlayState.taskQueue.push(std::make_shared<FunctionTask>(0, [this, playerHeroController](float dt) -> bool {
-        //     // Return control to the player here (this is sort of not necessary since it will be reset
-        //     // when the state transitions, but whatever).
-        //     gamePlayState.hero->setActionController(playerHeroController);
-        //     gamePlayState.controller.requestStateChange("weaponget");
-        //     return true;
-        // }));
+            if(std::shared_ptr<Particle> fastParticle = world.spawnParticle("Medium Explosion (Loop)")) {
+                fastParticle->setPosition(cameraCenter + position);
+                fastParticle->setVelocity(velocity * speed * 2.0f);
+                fastParticle->setActive(true);
+                fastParticle->setMaximumAge(maximumAge / 2.0f);
+                world.queueObjectAddition(fastParticle);
+            }
+        }
     }
 
     void GamePlayState::BossDefeatedSubState::exit() {
@@ -2529,6 +2529,9 @@ namespace hikari {
                 gamePlayState.hero->setGravitated(false);
                 gamePlayState.hero->setVelocityY(0.0f);
 
+                // Spawn first energy ring
+                spawnEnergyRing(1.0f, (1.0f / 60.0f) * 40.0f);
+
                 // Play the first "energy collected" sample.
                 if(auto sound = gamePlayState.audioService.lock()) {
                     sound->stopAllSamples();
@@ -2541,6 +2544,9 @@ namespace hikari {
              case 4:
                 // Wait for ~40 frames.
                 if(timer >= ((1.0f / 60.f) * 40.0f)) {
+                    // Spawn second energy ring
+                    spawnEnergyRing(1.0f, (1.0f / 60.0f) * 40.0f);
+
                     // Play the second "energy collected" sample.
                     if(auto sound = gamePlayState.audioService.lock()) {
                         sound->stopAllSamples();
@@ -2554,7 +2560,10 @@ namespace hikari {
             case 5:
                 // Wait for ~40 frames.
                 if(timer >= ((1.0f / 60.f) * 40.0f)) {
-                    // Play the second "energy collected" sample.
+                    // Spawn third energy ring (it's slower)
+                    spawnEnergyRing(0.5f, (1.0f / 60.0f) * 80.0f);
+
+                    // Play the third "energy collected" sample.
                     if(auto sound = gamePlayState.audioService.lock()) {
                         sound->stopAllSamples();
                         sound->playSample("Power Obtained");
@@ -2565,9 +2574,12 @@ namespace hikari {
                 break;
 
             case 6:
-                // Fall back to the ground.
-                gamePlayState.hero->setGravitated(true);
-                nextSegment();
+                // Wait for ~80 frames
+                if(timer >= ((1.0f / 60.f) * 80.0f)) {
+                    // Fall back to the ground.
+                    gamePlayState.hero->setGravitated(true);
+                    nextSegment();
+                }
                 break;
 
             case 7:

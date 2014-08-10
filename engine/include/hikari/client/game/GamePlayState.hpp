@@ -455,7 +455,11 @@ namespace hikari {
             float roomTopY;
             Direction targetDirection; // The direction for the hero to walk in.
 
+            std::vector<Vector2<float>> energyRingParticleVelocities; // Ordered pairs, clockwise
+            std::vector<Vector2<float>> energyRingParticlePositions; // Relative to hero
+
             void nextSegment();
+            void spawnEnergyRing(float speed, float maximumAge);
         public:
             BossDefeatedSubState(GamePlayState & gamePlayState);
             virtual ~BossDefeatedSubState();
