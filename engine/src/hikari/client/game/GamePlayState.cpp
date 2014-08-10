@@ -2587,6 +2587,7 @@ namespace hikari {
                 if(timer >= ((1.0f / 60.f) * 80.0f)) {
                     // Fall back to the ground.
                     gamePlayState.hero->setGravitated(true);
+                    gamePlayState.cutSceneController->stopJumping();
                     nextSegment();
                 }
                 break;
@@ -2594,23 +2595,31 @@ namespace hikari {
             case 7:
                 // Once the hero has reached the ground, teleport him outta' here!
                 if(gamePlayState.hero->isOnGround()) {
-                    gamePlayState.hero->setPhasing(true);
-                    gamePlayState.hero->performTeleport();
+                    if(timer >= 1.0f) {
+                        gamePlayState.hero->setPhasing(true);
+                        gamePlayState.hero->performTeleport();
 
-                    // Invert the gravity to teleport the hero out through the ceiling.
-                    Movable::setGravity(-0.25);
+                        // Invert the gravity to teleport the hero out through the ceiling.
+                        Movable::setGravity(-0.25);
 
-                    if(auto sound = gamePlayState.audioService.lock()) {
-                        sound->playSample("Teleport");
+                        if(auto sound = gamePlayState.audioService.lock()) {
+                            sound->playSample("Teleport");
+                        }
+
+                        nextSegment();
                     }
-
-                    nextSegment();
+                } else {
+                    timer = 0.0f;
                 }
                 break;
 
             case 8:
                 if(gamePlayState.hero->getBoundingBox().getBottom() < roomTopY) {
+                    // Make sure the hero doesn't fall through the floor next time he's in
+                    // a room.
+                    gamePlayState.hero->setPhasing(false);
                     Movable::setGravity(0.25);
+
                     nextSegment();
                 }
                 break;
