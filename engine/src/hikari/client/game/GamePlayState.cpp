@@ -50,6 +50,7 @@
 #include "hikari/client/gui/Menu.hpp"
 #include "hikari/client/gui/WeaponMenuItem.hpp"
 #include "hikari/client/gui/Icon.hpp"
+#include "hikari/core/game/Movable.hpp"
 #include "hikari/core/game/GameController.hpp"
 #include "hikari/core/game/AnimationSet.hpp"
 #include "hikari/core/game/AnimationLoader.hpp"
@@ -117,6 +118,7 @@ namespace hikari {
         , currentRoom(nullptr)
         , hero(nullptr)
         , boss(nullptr)
+        , cutSceneController(nullptr)
         , mapRenderer(new MapRenderer(nullptr, nullptr))
         , subState(nullptr)
         , nextSubState(nullptr)
@@ -182,6 +184,8 @@ namespace hikari {
             hero->setActionSpot(Vector2<float>(6.0, -8.0));
             hero->setActionController(std::make_shared<PlayerInputHeroActionController>(userInput));
             hero->setEventBus(std::weak_ptr<EventBus>(eventBus));
+
+            cutSceneController = std::make_shared<CutSceneHeroActionController>(hero);
         }
 
         world.setPlayer(hero);
@@ -741,8 +745,8 @@ namespace hikari {
 
     void GamePlayState::spawnDeathExplosion(EntityDeathType::Type type, const Vector2<float> & position) {
         if(type == EntityDeathType::Hero) {
-            // This type of explosion shoots in 8 directions. Thwo explosions per
-            // direction; one fast and one slow. It's the death thath appens to Rock
+            // This type of explosion shoots in 8 directions. Two explosions per
+            // direction; one fast and one slow. It's the death that happens to Rock
             // as well as Robot Masters.
             std::list<Vector2<float>> velocities;
             velocities.emplace_back(Vector2<float>(-2.125f,  -2.125f )); // Fast up left
@@ -772,6 +776,10 @@ namespace hikari {
                     clone->setActive(true);
                     world.queueObjectAddition(clone);
                 }
+            }
+
+            if(auto sound = audioService.lock()) {
+                sound->playSample("Rockman (Death)");
             }
         } else if(type == EntityDeathType::Large) {
             if(std::shared_ptr<Particle> clone = world.spawnParticle("Large Explosion")) {
@@ -954,7 +962,9 @@ namespace hikari {
         const auto offset = Vector2<float>(128.0f, 64.0f);
         const auto playerHeroController = hero->getActionController();
 
-        hero->setActionController(std::make_shared<CutSceneHeroActionController>(hero));
+        cutSceneController->stopMoving();
+        cutSceneController->stopJumping();
+        hero->setActionController(cutSceneController);
 
         boss = world.spawnEnemy(currentRoom->getBossEntity());
 
@@ -1007,36 +1017,7 @@ namespace hikari {
     }
 
     void GamePlayState::endBossBattle() {
-        const auto playerHeroController = hero->getActionController();
-        hero->setActionController(std::make_shared<CutSceneHeroActionController>(hero));
-        world.update(0.0f);
-
-        // This needs to be non-blocking.
-        taskQueue.push(std::make_shared<WaitTask>(1.0f));
-
-        // Return control to the player
-        taskQueue.push(std::make_shared<FunctionTask>(0, [this](float dt) -> bool {
-            if(auto sound = audioService.lock()) {
-                sound->playMusic("Boss Defeated (MM3)");
-            }
-            return true;
-        }));
-
-        taskQueue.push(std::make_shared<WaitTask>(4.0f));
-
-        // TODO:
-        // Walk/jump sequence back to center of the room.
-        // Energy collection sequence.
-        // Teleport out of the room.
-
-        taskQueue.push(std::make_shared<FunctionTask>(0, [this, playerHeroController](float dt) -> bool {
-            // Return control to the player here (this is sort of not necessary sincei t will be reset
-            // when the state transitions, but whatever).
-            hero->setActionController(playerHeroController);
-            controller.requestStateChange("weaponget");
-            gotoNextState = true;
-            return true;
-        }));
+        changeSubState(std::unique_ptr<SubState>(new BossDefeatedSubState(*this)));
     }
 
     void GamePlayState::updateDoors(float dt) {
@@ -1052,6 +1033,124 @@ namespace hikari {
                 entranceDoor->update(dt);
             }
         }
+    }
+
+    void GamePlayState::updateParticles(float dt) {
+        const auto & activeParticles = world.getActiveParticles();
+        const auto & cameraView = camera.getView();
+
+        std::for_each(
+            std::begin(activeParticles),
+            std::end(activeParticles),
+            [this, &cameraView, &dt](const std::shared_ptr<Particle> & particle) {
+                particle->update(dt);
+
+                if(!geom::intersects(particle->getBoundingBox(), cameraView)) {
+                    HIKARI_LOG(debug3) << "Cleaning up off-screen particle #" << particle->getId();
+                    particle->setActive(false);
+                }
+
+                if(!particle->isActive()) {
+                    world.queueObjectRemoval(particle);
+                }
+        });
+    }
+
+    void GamePlayState::updateProjectiles(float dt) {
+//
+        // Update projectiles
+        //
+        const auto & activeEnemies = world.getActiveEnemies();
+        const auto & activeProjectiles = world.getActiveProjectiles();
+        const auto & cameraView = camera.getView();
+
+        std::for_each(
+            std::begin(activeProjectiles),
+            std::end(activeProjectiles),
+            [&](const std::shared_ptr<Projectile> & projectile) {
+                projectile->update(dt);
+
+                if(!geom::intersects(projectile->getBoundingBox(), cameraView)) {
+                    HIKARI_LOG(debug3) << "Cleaning up off-screen projectile #" << projectile->getId();
+                    projectile->setActive(false);
+                    world.queueObjectRemoval(projectile);
+                }
+
+                // Check Hero -> Enemy projectiles
+                if(projectile->getFaction() == Factions::Hero) {
+                    // Check for collision with enemies
+                    std::for_each(
+                        std::begin(activeEnemies),
+                        std::end(activeEnemies),
+                        [&](const std::shared_ptr<Enemy> & enemy) {
+                            if(!projectile->isInert()) {
+                                if(projectile->getBoundingBox().intersects(enemy->getBoundingBox())) {
+                                    if(enemy->isShielded()) {
+                                         // Deflect projectile
+                                        projectile->deflect();
+
+                                        if(auto sound = audioService.lock()) {
+                                            HIKARI_LOG(debug4) << "PLAYING SAMPLE weapon DEFLECTED";
+                                            sound->playSample("Deflected");
+                                        }
+                                    } else {
+                                        HIKARI_LOG(debug3) << "Hero bullet " << projectile->getId() << " hit an enemy " << enemy->getId();
+                                        projectile->setActive(false);
+                                        world.queueObjectRemoval(projectile);
+
+                                        DamageKey damageKey;
+                                        damageKey.damagerType = projectile->getDamageId();
+                                        damageKey.damageeType = enemy->getDamageId();
+
+                                        HIKARI_LOG(debug3) << "Hero bullet damage id = " << projectile->getDamageId();
+
+                                        // TODO: Perform damage lookup and apply it to hero.
+                                        // Trigger enemy damage
+                                        float damageAmount = 0.0f;
+
+                                        if(auto dt = damageTable.lock()) {
+                                            damageAmount = dt->getDamageFor(damageKey.damagerType);
+                                        }
+
+                                        HIKARI_LOG(debug3) << "Enemy took " << damageAmount;
+
+                                        enemy->takeDamage(damageAmount);
+
+                                        if(auto sound = audioService.lock()) {
+                                            sound->playSample("Enemy (Damage)");
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    );
+                } else if(projectile->getFaction() == Factions::Enemy) {
+                    // Check for collision with hero
+                    if(projectile->getBoundingBox().intersects(hero->getBoundingBox())) {
+                        HIKARI_LOG(debug3) << "Enemy bullet " << projectile->getId() << " hit the hero!";
+
+                        // DamageKey damageKey;
+                        // damageKey.damagerType = projectile->getDamageId();
+                        // damageKey.damageeType = hero->getDamageId();
+
+                        // TODO: Perform damage lookup and apply it to hero.
+
+                        if(isHeroAlive && hero->isVulnerable()) {
+                            hero->performStun();
+                            projectile->setActive(false);
+                            world.queueObjectRemoval(projectile);
+                        }
+                    }
+                }
+        });
+    }
+
+    void GamePlayState::updateEnemies(float dt) {
+
+    }
+
+    void GamePlayState::updateItems(float dt) {
+
     }
 
     void GamePlayState::checkCollisionWithTransition() { }
@@ -1204,15 +1303,14 @@ namespace hikari {
                     progress->setLives(progress->getLives() - 1);
                 }
 
-                spawnDeathExplosion(hero->getDeathType(), hero->getPosition());
-
                 HIKARI_LOG(debug) << "Hero died. Starting over.";
 
                 if(auto sound = audioService.lock()) {
                     sound->stopMusic();
                     sound->stopAllSamples();
-                    sound->playSample("Rockman (Death)");
                 }
+
+                spawnDeathExplosion(hero->getDeathType(), hero->getPosition());
             }
         } else if(eventData->getEntityType() == EntityDeathEventData::Enemy) {
             int entityId = eventData->getEntityId();
@@ -1794,124 +1892,8 @@ namespace hikari {
 
         });
 
-        //
-        // Update particles
-        //
-        const auto & activeParticles = gamePlayState.world.getActiveParticles();
-
-        std::for_each(
-            std::begin(activeParticles),
-            std::end(activeParticles),
-            [this, &camera, &dt](const std::shared_ptr<Particle> & particle) {
-                particle->update(dt);
-
-                const auto & cameraView = camera.getView();
-
-                if(!geom::intersects(particle->getBoundingBox(), cameraView)) {
-                    HIKARI_LOG(debug3) << "Cleaning up off-screen particle #" << particle->getId();
-                    particle->setActive(false);
-                }
-
-                if(!particle->isActive()) {
-                    gamePlayState.world.queueObjectRemoval(particle);
-                }
-        });
-
-        //
-        // Update projectiles
-        //
-        const auto & activeProjectiles = gamePlayState.world.getActiveProjectiles();
-
-        std::for_each(
-            std::begin(activeProjectiles),
-            std::end(activeProjectiles),
-            [this, &activeEnemies, &camera, &dt](const std::shared_ptr<Projectile> & projectile) {
-                projectile->update(dt);
-
-                const auto & cameraView = camera.getView();
-
-                if(!geom::intersects(projectile->getBoundingBox(), cameraView)) {
-                    HIKARI_LOG(debug3) << "Cleaning up off-screen projectile #" << projectile->getId();
-                    projectile->setActive(false);
-                    gamePlayState.world.queueObjectRemoval(projectile);
-                }
-
-                // Check Hero -> Enemy projectiles
-                if(projectile->getFaction() == Factions::Hero) {
-                    auto & context = *this; // TODO: This makes intellisense errors go away but it seems kludgy.
-                                            // In VS2010, this is the Intellisense error:
-                                            //     "Error : a nonstatic member reference must be relative to a specific object"
-                                            // However, despite the error the code compiles fine.
-
-                    // Check for collision with enemies
-                    std::for_each(
-                        std::begin(activeEnemies),
-                        std::end(activeEnemies),
-                        [&](const std::shared_ptr<Enemy> & enemy) {
-                            if(!projectile->isInert()) {
-                                if(projectile->getBoundingBox().intersects(enemy->getBoundingBox())) {
-                                    if(enemy->isShielded()) {
-                                         // Deflect projectile
-                                        projectile->deflect();
-
-                                        if(auto sound = context.gamePlayState.audioService.lock()) {
-                                            HIKARI_LOG(debug4) << "PLAYING SAMPLE weapon DEFLECTED";
-                                            sound->playSample("Deflected");
-                                        }
-                                    } else {
-                                        HIKARI_LOG(debug3) << "Hero bullet " << projectile->getId() << " hit an enemy " << enemy->getId();
-                                        projectile->setActive(false);
-                                        context.gamePlayState.world.queueObjectRemoval(projectile);
-
-                                        DamageKey damageKey;
-                                        damageKey.damagerType = projectile->getDamageId();
-                                        damageKey.damageeType = enemy->getDamageId();
-
-                                        HIKARI_LOG(debug3) << "Hero bullet damage id = " << projectile->getDamageId();
-
-                                        // TODO: Perform damage lookup and apply it to hero.
-                                        // Trigger enemy damage
-                                        float damageAmount = 0.0f;
-
-                                        if(auto dt = context.gamePlayState.damageTable.lock()) {
-                                            damageAmount = dt->getDamageFor(damageKey.damagerType);
-                                        }
-
-                                        HIKARI_LOG(debug3) << "Enemy took " << damageAmount;
-
-                                        enemy->takeDamage(damageAmount);
-
-                                        if(auto sound = context.gamePlayState.audioService.lock()) {
-                                            sound->playSample("Enemy (Damage)");
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    );
-                } else if(projectile->getFaction() == Factions::Enemy) {
-
-                    const auto & hero = gamePlayState.hero;
-
-                    // Check for collision with hero
-                    if(projectile->getBoundingBox().intersects(hero->getBoundingBox())) {
-                        HIKARI_LOG(debug3) << "Enemy bullet " << projectile->getId() << " hit the hero!";
-
-                        // DamageKey damageKey;
-                        // damageKey.damagerType = projectile->getDamageId();
-                        // damageKey.damageeType = hero->getDamageId();
-
-                        // TODO: Perform damage lookup and apply it to hero.
-
-                        if(hero->isVulnerable()) {
-                            hero->performStun();
-                            projectile->setActive(false);
-                            gamePlayState.world.queueObjectRemoval(projectile);
-                        }
-                    }
-                }
-        });
-
+        gamePlayState.updateParticles(dt);
+        gamePlayState.updateProjectiles(dt);
         gamePlayState.updateDoors(dt);
 
         // Hero died so we need to restart
@@ -2390,6 +2372,281 @@ namespace hikari {
         }
 
         gamePlayState.renderHero(target);
+        gamePlayState.renderHud(target);
+    }
+
+    GamePlayState::BossDefeatedSubState::BossDefeatedSubState(GamePlayState & gamePlayState)
+        : SubState(gamePlayState)
+        , complete(false)
+        , segment(0)
+        , timer(0.0f)
+        , targetXPosition(0)
+        , roomTopY(0)
+    {
+
+    }
+
+    GamePlayState::BossDefeatedSubState::~BossDefeatedSubState() {
+
+    }
+
+    void GamePlayState::BossDefeatedSubState::nextSegment() {
+        segment++;
+        timer = 0.0f;
+    }
+
+    void GamePlayState::BossDefeatedSubState::enter() {
+        HIKARI_LOG(debug) << "BossDefeatedSubState::enter()";
+
+        complete = false;
+        segment = 0;
+        timer = 0.0f;
+
+        if(auto sound = gamePlayState.audioService.lock()) {
+            sound->stopMusic();
+        }
+
+        gamePlayState.cutSceneController->stopMoving();
+        gamePlayState.cutSceneController->stopJumping();
+        gamePlayState.hero->setActionController(gamePlayState.cutSceneController);
+
+        const auto & currentRoom = gamePlayState.world.getCurrentRoom();
+        const auto gridSize = currentRoom->getGridSize();
+        const int roomWidthPixels = currentRoom->getWidth() * gridSize;
+        const int roomXPixels = currentRoom->getX() * gridSize;
+
+        // Determine the X position of the center of the room and the direction
+        // the hero needs to face in order to get there.
+        targetXPosition = roomXPixels + (roomWidthPixels / 2);
+        targetDirection = gamePlayState.hero->getPosition().getX() < targetXPosition ? Directions::Right : Directions::Left;
+
+        gamePlayState.hero->setDirection(targetDirection);
+
+        // Determine the Y position of the top of the room so we'll know when
+        // the hero has teleported outside of it.
+        roomTopY = currentRoom->getY() * gridSize;
+
+        // Determine the Y position of the center of the rom so we'll know when
+        // to stop the hero from falling and collect energy!
+        roomCenterY = roomTopY + ((currentRoom->getHeight() * gridSize) / 2);
+
+        energyRingParticleVelocities.emplace_back(Vector2<float>(0.0f, 3.0f)); // 12:00 slow
+        energyRingParticleVelocities.emplace_back(Vector2<float>(-2.125f, 2.125f)); // 1:30 slow
+        energyRingParticleVelocities.emplace_back(Vector2<float>(-3.0f, 0.0f)); // 3:00 slow
+        energyRingParticleVelocities.emplace_back(Vector2<float>(-2.125f, -2.125f)); // 4:30 slow
+        energyRingParticleVelocities.emplace_back(Vector2<float>(0.0f, -3.0f)); // 6:00 slow
+        energyRingParticleVelocities.emplace_back(Vector2<float>(2.125f, -2.125f)); // 7:30 slow
+        energyRingParticleVelocities.emplace_back(Vector2<float>(3.0f, 0.0f)); // 9:00 slow
+        energyRingParticleVelocities.emplace_back(Vector2<float>(2.125f, 2.125f)); // 10:30 slow
+
+        energyRingParticlePositions.emplace_back(Vector2<float>(0.0f, -117.0f)); // 12:00
+        energyRingParticlePositions.emplace_back(Vector2<float>(81.0f, -83.0f)); // 1:30
+        energyRingParticlePositions.emplace_back(Vector2<float>(117.0f, 0.0f)); // 3:00
+        energyRingParticlePositions.emplace_back(Vector2<float>(81.0f, 83.0f)); // 4:30
+        energyRingParticlePositions.emplace_back(Vector2<float>(0.0f, 117.0f)); // 6:00
+        energyRingParticlePositions.emplace_back(Vector2<float>(-81.0f, 83.0f)); // 7:30
+        energyRingParticlePositions.emplace_back(Vector2<float>(-117.0f, 0.0f)); // 9:00
+        energyRingParticlePositions.emplace_back(Vector2<float>(-81.0f, -83.0f)); // 10:30
+    }
+
+    void GamePlayState::BossDefeatedSubState::spawnEnergyRing(float speed, float maximumAge) {
+        auto & world = gamePlayState.world;
+        const auto & cameraView = gamePlayState.camera.getView();
+        const auto & cameraCenter = Vector2<float>(
+            cameraView.getX() + (cameraView.getWidth() / 2.0f),
+            cameraView.getY() + (cameraView.getHeight() / 2.0f));
+
+        for(std::size_t i = 0, length = energyRingParticleVelocities.size(); i < length; ++i) {
+            const auto & velocity = energyRingParticleVelocities[i];
+            const auto & position = energyRingParticlePositions[i];
+
+            if(std::shared_ptr<Particle> slowParticle = world.spawnParticle("Medium Explosion (Loop)")) {
+                slowParticle->setPosition(cameraCenter + position);
+                slowParticle->setVelocity(velocity * speed);
+                slowParticle->setActive(true);
+                slowParticle->setMaximumAge(maximumAge);
+                world.queueObjectAddition(slowParticle);
+            }
+
+            if(std::shared_ptr<Particle> fastParticle = world.spawnParticle("Medium Explosion (Loop)")) {
+                fastParticle->setPosition(cameraCenter + position);
+                fastParticle->setVelocity(velocity * speed * 2.0f);
+                fastParticle->setActive(true);
+                fastParticle->setMaximumAge(maximumAge / 2.0f);
+                world.queueObjectAddition(fastParticle);
+            }
+        }
+    }
+
+    void GamePlayState::BossDefeatedSubState::exit() {
+        HIKARI_LOG(debug) << "BossDefeatedSubState::exit()";
+    }
+
+    GamePlayState::SubState::StateChangeAction GamePlayState::BossDefeatedSubState::update(float dt) {
+        gamePlayState.world.update(dt);
+        gamePlayState.updateProjectiles(dt);
+        gamePlayState.updateParticles(dt);
+        gamePlayState.hero->update(dt);
+
+        switch(segment) {
+            case 0:
+                // Wait 160 frames, and then play the jams.
+                if(timer >= 2.6667f) {
+                    if(auto sound = gamePlayState.audioService.lock()) {
+                        sound->playMusic("Boss Defeated (MM3)");
+                    }
+
+                    nextSegment();
+                }
+                break;
+
+            case 1:
+                // Just wait for 2 seconds.
+                if(timer >= 4.2334f) {
+                    nextSegment();
+                }
+                break;
+
+            case 2:
+                // Walk to center of the room.
+                if(targetDirection == Directions::Right) {
+                    gamePlayState.cutSceneController->moveRight();
+                } else {
+                    gamePlayState.cutSceneController->moveLeft();
+                }
+
+                // When we reach the center, jump.
+                if(std::abs(gamePlayState.hero->getPosition().getX() - targetXPosition) <= 2) {
+                    gamePlayState.cutSceneController->stopMoving();
+                    gamePlayState.cutSceneController->jump();
+                    gamePlayState.cutSceneController->superJump();
+                }
+
+                // Once we've passed the crest of the jump and start descending,
+                // go to the next segment!
+                if(!gamePlayState.hero->isOnGround() && gamePlayState.hero->getVelocityY() >= 0) {
+                    if(gamePlayState.hero->getPosition().getY() >= roomCenterY) {
+                        // Make sure he is dead center.
+                        gamePlayState.hero->setPosition(gamePlayState.hero->getPosition().getX(), roomCenterY);
+                        nextSegment();
+                    }
+                }
+                break;
+
+            case 3:
+                // Pause in mid-air so we can collect the boss' energy.
+                gamePlayState.hero->setGravitated(false);
+                gamePlayState.hero->setVelocityY(0.0f);
+
+                // Spawn first energy ring
+                spawnEnergyRing(1.0f, (1.0f / 60.0f) * 40.0f);
+
+                // Play the first "energy collected" sample.
+                if(auto sound = gamePlayState.audioService.lock()) {
+                    sound->stopAllSamples();
+                    sound->playSample("Power Obtained");
+                }
+
+                nextSegment();
+                break;
+
+             case 4:
+                // Wait for ~40 frames.
+                if(timer >= ((1.0f / 60.f) * 40.0f)) {
+                    // Spawn second energy ring
+                    spawnEnergyRing(1.0f, (1.0f / 60.0f) * 40.0f);
+
+                    // Play the second "energy collected" sample.
+                    if(auto sound = gamePlayState.audioService.lock()) {
+                        sound->stopAllSamples();
+                        sound->playSample("Power Obtained");
+                    }
+
+                    nextSegment();
+                }
+                break;
+
+            case 5:
+                // Wait for ~40 frames.
+                if(timer >= ((1.0f / 60.f) * 40.0f)) {
+                    // Spawn third energy ring (it's slower)
+                    spawnEnergyRing(0.5f, (1.0f / 60.0f) * 80.0f);
+
+                    // Play the third "energy collected" sample.
+                    if(auto sound = gamePlayState.audioService.lock()) {
+                        sound->stopAllSamples();
+                        sound->playSample("Power Obtained");
+                    }
+
+                    nextSegment();
+                }
+                break;
+
+            case 6:
+                // Wait for ~80 frames
+                if(timer >= ((1.0f / 60.f) * 80.0f)) {
+                    // Fall back to the ground.
+                    gamePlayState.hero->setGravitated(true);
+                    gamePlayState.cutSceneController->stopJumping();
+                    nextSegment();
+                }
+                break;
+
+            case 7:
+                // Once the hero has reached the ground, teleport him outta' here!
+                if(gamePlayState.hero->isOnGround()) {
+                    if(timer >= 1.0f) {
+                        gamePlayState.hero->setPhasing(true);
+                        gamePlayState.hero->performTeleport();
+
+                        // Invert the gravity to teleport the hero out through the ceiling.
+                        Movable::setGravity(-0.25);
+
+                        if(auto sound = gamePlayState.audioService.lock()) {
+                            sound->playSample("Teleport");
+                        }
+
+                        nextSegment();
+                    }
+                } else {
+                    timer = 0.0f;
+                }
+                break;
+
+            case 8:
+                if(gamePlayState.hero->getBoundingBox().getBottom() < roomTopY) {
+                    // Make sure the hero doesn't fall through the floor next time he's in
+                    // a room.
+                    gamePlayState.hero->setPhasing(false);
+                    Movable::setGravity(0.25);
+
+                    nextSegment();
+                }
+                break;
+
+            case 9:
+                gamePlayState.controller.requestStateChange("weaponget");
+                nextSegment();
+                break;
+
+            default:
+                complete = true;
+                break;
+        }
+
+        timer += dt;
+
+        return complete ? SubState::NEXT : SubState::CONTINUE;
+    }
+
+    void GamePlayState::BossDefeatedSubState::render(sf::RenderTarget &target) {
+        gamePlayState.renderMap(target);
+        gamePlayState.renderEntities(target);
+
+        if(gamePlayState.isHeroAlive) {
+            gamePlayState.renderHero(target);
+        }
+
         gamePlayState.renderHud(target);
     }
 

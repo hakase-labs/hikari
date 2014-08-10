@@ -2,6 +2,7 @@
     {
         "name": "Dada",
         "damageId": 4,
+        "deathType": "Hero",
         "hitPoints": 1.0,
         "behavior": {
             "type": "scripted",
