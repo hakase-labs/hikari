@@ -2588,6 +2588,12 @@ namespace hikari {
                     // Fall back to the ground.
                     gamePlayState.hero->setGravitated(true);
                     gamePlayState.cutSceneController->stopJumping();
+
+                    // Play cool "ka-ching!" sound.
+                    if(auto sound = gamePlayState.audioService.lock()) {
+                        sound->playSample("Weapon Acquired");
+                    }
+
                     nextSegment();
                 }
                 break;
