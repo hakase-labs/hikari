@@ -2426,6 +2426,10 @@ namespace hikari {
         // the hero has teleported outside of it.
         roomTopY = currentRoom->getY() * gridSize;
 
+        // Determine the Y position of the center of the rom so we'll know when
+        // to stop the hero from falling and collect energy!
+        roomCenterY = roomTopY + ((currentRoom->getHeight() * gridSize) / 2);
+
         energyRingParticleVelocities.emplace_back(Vector2<float>(0.0f, 3.0f)); // 12:00 slow
         energyRingParticleVelocities.emplace_back(Vector2<float>(-2.125f, 2.125f)); // 1:30 slow
         energyRingParticleVelocities.emplace_back(Vector2<float>(-3.0f, 0.0f)); // 3:00 slow
@@ -2515,12 +2519,17 @@ namespace hikari {
                 if(std::abs(gamePlayState.hero->getPosition().getX() - targetXPosition) <= 2) {
                     gamePlayState.cutSceneController->stopMoving();
                     gamePlayState.cutSceneController->jump();
+                    gamePlayState.cutSceneController->superJump();
                 }
 
                 // Once we've passed the crest of the jump and start descending,
                 // go to the next segment!
                 if(!gamePlayState.hero->isOnGround() && gamePlayState.hero->getVelocityY() >= 0) {
-                    nextSegment();
+                    if(gamePlayState.hero->getPosition().getY() >= roomCenterY) {
+                        // Make sure he is dead center.
+                        gamePlayState.hero->setPosition(gamePlayState.hero->getPosition().getX(), roomCenterY);
+                        nextSegment();
+                    }
                 }
                 break;
 

@@ -453,6 +453,7 @@ namespace hikari {
             float targetXPosition; // This is the X position of the center of the room
                                    // where we want the hero to walk to.
             float roomTopY;
+            float roomCenterY;
             Direction targetDirection; // The direction for the hero to walk in.
 
             std::vector<Vector2<float>> energyRingParticleVelocities; // Ordered pairs, clockwise
