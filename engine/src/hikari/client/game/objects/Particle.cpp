@@ -10,7 +10,7 @@ namespace hikari {
 
     Particle::Particle(float maximumAge)
         : GameObject()
-        , zIndex(0)
+        , zIndex(100)
         , age(0.0f)
         , maximumAge(maximumAge)
         , velocity(0.0f, 0.0f)
@@ -29,7 +29,7 @@ namespace hikari {
 
     Particle::Particle(const Particle& proto)
         : GameObject()
-        , zIndex(0)
+        , zIndex(proto.zIndex)
         , age(0.0f)
         , maximumAge(proto.maximumAge)
         , velocity(proto.velocity)

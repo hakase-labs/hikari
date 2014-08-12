@@ -70,6 +70,7 @@ namespace hikari {
         , deathType(proto.deathType)
         , weaponId(proto.weaponId)
         , damageId(proto.damageId)
+        , zIndex(proto.zIndex)
         , obstacleFlag(proto.obstacleFlag)
         , shieldFlag(proto.shieldFlag)
         , agelessFlag(proto.agelessFlag)

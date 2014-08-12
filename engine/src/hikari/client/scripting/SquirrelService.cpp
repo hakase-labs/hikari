@@ -164,6 +164,7 @@ namespace hikari {
                 .Prop(_SC("weaponId"), &Entity::getWeaponId, &Entity::setWeaponId)
                 .Prop(_SC("direction"), &Entity::getDirection, &Entity::setDirection)
                 .Prop(_SC("faction"), &Entity::getFaction, &Entity::setFaction)
+                .Prop(_SC("zIndex"), &Entity::getZIndex, &Entity::setZIndex)
                 .Func(_SC("changeAnimation"), &Entity::changeAnimation)
                 .Func(_SC("getId"), &Entity::getId)
                 .Func(_SC("getActiveShotCount"), &Entity::getActiveShotCount)

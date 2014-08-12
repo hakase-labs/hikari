@@ -490,6 +490,14 @@ namespace hikari {
                 gp->setPlayerEnergy(0);
             }
         }
+
+        if((event.type == sf::Event::KeyPressed) && event.key.code == sf::Keyboard::B) {
+            if(hero->getZIndex() == 0) {
+                hero->setZIndex(-1);
+            } else {
+                hero->setZIndex(0);
+            }
+        }
     }
 
     void GamePlayState::render(sf::RenderTarget &target) {
@@ -1245,6 +1253,10 @@ namespace hikari {
             orderedEntities.push_back((*it).get());
         }
 
+        if(isHeroAlive) {
+            orderedEntities.push_back(hero.get());
+        }
+
         const auto & activeParticles = world.getActiveParticles();
 
         for(auto it = std::begin(activeParticles), end = std::end(activeParticles); it != end; it++) {
@@ -1257,8 +1269,22 @@ namespace hikari {
             orderedEntities.push_back((*it).get());
         }
 
+        auto backgroundSprites = std::stable_partition(
+            std::begin(orderedEntities),
+            std::end(orderedEntities),
+            [&](const Renderable* renderable) -> bool {
+                return renderable->getZIndex() < 0;
+            });
+
         std::for_each(
             std::begin(orderedEntities),
+            backgroundSprites,
+            std::bind(&Renderable::render, std::placeholders::_1, ReferenceWrapper<sf::RenderTarget>(target)));
+
+        mapRenderer->renderForeground(target);
+
+        std::for_each(
+            backgroundSprites,
             std::end(orderedEntities),
             std::bind(&Renderable::render, std::placeholders::_1, ReferenceWrapper<sf::RenderTarget>(target)));
 
@@ -2150,9 +2176,9 @@ namespace hikari {
         //gamePlayState.renderEntities(target);
         gamePlayState.renderWorld(target);
 
-        if(gamePlayState.isHeroAlive) {
-            gamePlayState.renderHero(target);
-        }
+        // if(gamePlayState.isHeroAlive) {
+        //     gamePlayState.renderHero(target);
+        // }
 
         gamePlayState.renderHud(target);
     }
