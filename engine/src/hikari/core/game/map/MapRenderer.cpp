@@ -11,7 +11,7 @@
 #endif
 
 namespace hikari {
-    
+
     bool MapRenderer::isDebugLadderRenderingEnabled = false;
     bool MapRenderer::isDebugDoorRenderingEnabled = false;
     const int MapRenderer::TILE_OVERDRAW = 1;
@@ -20,16 +20,18 @@ namespace hikari {
         : room(room)
         , tileData(tileData)
         , tileSprite()
+        , backgroundShape()
         , visibleScreenArea()
         , visibleTileArea() {
         if(tileData) {
-            tileSprite.setTexture(*(tileData->getTexture()));    
+            tileSprite.setTexture(*(tileData->getTexture()));
         }
     }
 
     void MapRenderer::setRoom(const RoomPtr &room) {
         if(this->room != room) {
             this->room = room;
+            buildBackgroundRectangle();
             cullTiles();
         }
     }
@@ -51,6 +53,8 @@ namespace hikari {
     void MapRenderer::render(sf::RenderTarget &target) {
         int tileIndex = Room::NO_TILE;
         int tileAttributes = TileAttribute::NO_ATTRIBUTES;
+
+        target.draw(backgroundShape);
 
         for(int y = visibleTileArea.getY(); y < visibleTileArea.getHeight(); ++y) {
             for(int x = visibleTileArea.getX(); x < visibleTileArea.getWidth(); ++x) {
@@ -113,9 +117,9 @@ namespace hikari {
                         sf::Vector2f(entranceDoor->getWidth() * 16.0f, entranceDoor->getHeight() * 16.0f)
                     );
 
-                    target.draw(doorRect);    
+                    target.draw(doorRect);
                 }
-                
+
                 if(exitDoor) {
                     doorRect.setFillColor(sf::Color(192, 0, 32, 96));
                     doorRect.setPosition(
@@ -125,9 +129,38 @@ namespace hikari {
                         sf::Vector2f(exitDoor->getWidth() * 16.0f, exitDoor->getHeight() * 16.0f)
                     );
 
-                    target.draw(doorRect);    
-                }     
+                    target.draw(doorRect);
+                }
             }
+        }
+    }
+
+    inline void MapRenderer::buildBackgroundRectangle() {
+        if(room) {
+            const auto & widthInTiles = room->getWidth();
+            const auto & heightInTiles = room->getHeight();
+            const auto & gridSize = room->getGridSize();
+            const auto & bgColor = room->getBackgroundColor();
+
+            backgroundShape.setSize(
+                sf::Vector2f(
+                    widthInTiles * gridSize,
+                    heightInTiles * gridSize
+                )
+            );
+
+            backgroundShape.setPosition(
+                sf::Vector2f(room->getX() * gridSize, room->getY() * gridSize)
+            );
+
+            backgroundShape.setFillColor(
+                sf::Color(
+                    ((bgColor >> 16) & 0xFF), // Extract Red
+                    ((bgColor >>  8) & 0xFF), // Extract Green
+                    ( bgColor        & 0xFF), // Extract Blue
+                    255
+                )
+            );
         }
     }
 
@@ -163,7 +196,7 @@ namespace hikari {
 
         tileSprite.setTextureRect(rect);
         tileSprite.setPosition(
-            static_cast<float>(x * tileData->getTileSize()), 
+            static_cast<float>(x * tileData->getTileSize()),
             static_cast<float>(y * tileData->getTileSize())
         );
     }

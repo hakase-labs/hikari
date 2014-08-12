@@ -4,6 +4,7 @@
 #include "hikari/core/Platform.hpp"
 #include "hikari/core/geom/Rectangle2D.hpp"
 #include <memory>
+#include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 
 #if (_WIN32 && _MSC_VER)
@@ -32,9 +33,11 @@ namespace hikari {
         RoomPtr room;
         TileDataPtr tileData;
         sf::Sprite tileSprite;
+        sf::RectangleShape backgroundShape;
         Rectangle2D<int> visibleScreenArea;
         Rectangle2D<int> visibleTileArea;
 
+        inline void buildBackgroundRectangle();
         inline void cullTiles();
         inline void applyTileToSprite(const int &tileIndex, const int &x, const int &y);
         inline void applyTileAttributes(const int &attributes);

@@ -18,6 +18,7 @@
       "heroSpawnY": 196,
       "width": 16,
       "height": 15,
+      "backgroundColor": 2563756,
       "tile": [
         9,
         24,

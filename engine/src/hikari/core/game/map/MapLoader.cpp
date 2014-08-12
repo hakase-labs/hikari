@@ -40,6 +40,7 @@ namespace hikari {
     const char* MapLoader::PROPERTY_NAME_ROOM_HERO_SPAWN_Y = "heroSpawnY";
     const char* MapLoader::PROPERTY_NAME_ROOM_WIDTH = "width";
     const char* MapLoader::PROPERTY_NAME_ROOM_HEIGHT = "height";
+    const char* MapLoader::PROPERTY_NAME_ROOM_BG_COLOR = "backgroundColor";
     const char* MapLoader::PROPERTY_NAME_ROOM_CAMERABOUNDS = "cameraBounds";
     const char* MapLoader::PROPERTY_NAME_ROOM_CAMERABOUNDS_X = "x";
     const char* MapLoader::PROPERTY_NAME_ROOM_CAMERABOUNDS_Y = "y";
@@ -147,6 +148,7 @@ namespace hikari {
         int y               = json[PROPERTY_NAME_ROOM_Y].asInt();
         int width           = json[PROPERTY_NAME_ROOM_WIDTH].asInt();
         int height          = json[PROPERTY_NAME_ROOM_HEIGHT].asInt();
+        int backgroundColor = json.get(PROPERTY_NAME_ROOM_BG_COLOR, Room::DEFAULT_BG_COLOR).asInt();
         int heroSpawnX      = json.get(PROPERTY_NAME_ROOM_HERO_SPAWN_X, DEFAULT_HERO_SPAWN_X).asInt();
         int heroSpawnY      = json.get(PROPERTY_NAME_ROOM_HERO_SPAWN_Y, DEFAULT_HERO_SPAWN_Y).asInt();
         int transitionCount = json[PROPERTY_NAME_ROOM_TRANSITIONS].size();
@@ -154,7 +156,7 @@ namespace hikari {
         int itemCount       = json[PROPERTY_NAME_ROOM_ITEMS].size();
         bool hasDoors       = json.isMember(PROPERTY_NAME_ROOM_DOORS);
         const std::string bossEntity = json.get(PROPERTY_NAME_BOSS_ENTITY, Room::DEFAULT_BOSS_ENTITY_NAME).asString();
-        
+
         Point2D<int> heroSpawnPosition = Point2D<int>(heroSpawnX, heroSpawnY);
         Rectangle2D<int> cameraBounds = constructCameraBounds(json[PROPERTY_NAME_ROOM_CAMERABOUNDS], x, y, gridSize);
 
@@ -203,7 +205,7 @@ namespace hikari {
         }
 
         const auto & itemSpawnerArray = json[PROPERTY_NAME_ROOM_ITEMS];
-        
+
         if(itemCount > 0) {
             HIKARI_LOG(debug) << "Found " << itemCount << " item declarations.";
             for(int itemIndex = 0; itemIndex < itemCount; ++itemIndex) {
@@ -255,6 +257,7 @@ namespace hikari {
                 width,
                 height,
                 gridSize,
+                backgroundColor,
                 heroSpawnPosition,
                 cameraBounds,
                 tile,
@@ -277,10 +280,10 @@ namespace hikari {
         int height = json.get(PROPERTY_NAME_ROOM_DOORS_HEIGHT, 3).asInt();
 
         std::unique_ptr<Door> doorInstance(new Door(x + offsetX, y + offsetY, width, height));
-        
+
         auto animationSetPtr = animationSetCache->get("assets/animations/door.json");
         // auto spriteTexture = imageCache->get(animationSetPtr->getImageFileName());
-                                        
+
         doorInstance->setAnimationSet(animationSetPtr);
 
         return doorInstance;
@@ -292,16 +295,16 @@ namespace hikari {
         HIKARI_LOG(debug4) << "constructSpawner offset: (" << offsetX << ", " << offsetY << ")";
 
         switch(type) {
-            case SPAWN_ITEM: 
+            case SPAWN_ITEM:
             {
                 auto type         = json[PROPERTY_NAME_ROOM_ENEMIES_TYPE].asString();
                 auto x            = json[PROPERTY_NAME_ROOM_ENEMIES_POSITION_X].asInt();
                 auto y            = json[PROPERTY_NAME_ROOM_ENEMIES_POSITION_Y].asInt();
                 auto dirString    = json.get(PROPERTY_NAME_ROOM_ENEMIES_DIRECTION, "None").asString();
-                auto direction    = (dirString == "Up" ? Directions::Up : 
-                                        (dirString == "Right" ? Directions::Right : 
-                                            (dirString == "Down" ? Directions::Down : 
-                                                (dirString == "Left" ? Directions::Left : 
+                auto direction    = (dirString == "Up" ? Directions::Up :
+                                        (dirString == "Right" ? Directions::Right :
+                                            (dirString == "Down" ? Directions::Down :
+                                                (dirString == "Left" ? Directions::Left :
                                                     Directions::None)
                                                 )
                                             )
@@ -323,10 +326,10 @@ namespace hikari {
                 auto x            = json[PROPERTY_NAME_ROOM_ENEMIES_POSITION_X].asInt();
                 auto y            = json[PROPERTY_NAME_ROOM_ENEMIES_POSITION_Y].asInt();
                 auto dirString    = json.get(PROPERTY_NAME_ROOM_ENEMIES_DIRECTION, "None").asString();
-                auto direction    = (dirString == "Up" ? Directions::Up : 
-                                        (dirString == "Right" ? Directions::Right : 
-                                            (dirString == "Down" ? Directions::Down : 
-                                                (dirString == "Left" ? Directions::Left : 
+                auto direction    = (dirString == "Up" ? Directions::Up :
+                                        (dirString == "Right" ? Directions::Right :
+                                            (dirString == "Down" ? Directions::Down :
+                                                (dirString == "Left" ? Directions::Left :
                                                     Directions::None)
                                                 )
                                             )
@@ -373,7 +376,7 @@ namespace hikari {
 
     RoomTransition MapLoader::constructTransition(const Json::Value &json) const {
         bool isDoor = json.get("door", false).asBool();
-        
+
         // TODO: Do we need this?
         int from = -1;
 
@@ -402,7 +405,7 @@ namespace hikari {
         return RoomTransition(from, to, width, height, x, y, dir, isDoor);
     }
 
-    Rectangle2D<int> MapLoader::constructCameraBounds(const Json::Value &json, 
+    Rectangle2D<int> MapLoader::constructCameraBounds(const Json::Value &json,
             int roomX, int roomY, int gridSize) const {
         int x = (roomX + json[PROPERTY_NAME_ROOM_CAMERABOUNDS_X].asInt()) * gridSize;
         int y = (roomY + json[PROPERTY_NAME_ROOM_CAMERABOUNDS_Y].asInt()) * gridSize;

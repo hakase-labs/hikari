@@ -10,7 +10,7 @@ namespace hikari {
 
     const std::string Room::DEFAULT_BOSS_ENTITY_NAME = "None";
 
-    Room::Room(int id, int x, int y, int width, int height, int gridSize, 
+    Room::Room(int id, int x, int y, int width, int height, int gridSize, int backgroundColor,
             const Point2D<int> &heroSpawnPosition, const Rectangle2D<int> &cameraBounds,
             const std::vector<int> &tile, const std::vector<int> &attr,
             const std::vector<RoomTransition> &transitions,
@@ -25,6 +25,7 @@ namespace hikari {
         , width(width)
         , height(height)
         , gridSize(gridSize)
+        , backgroundColor(backgroundColor)
         , heroSpawnPosition(heroSpawnPosition)
         , bounds(x * gridSize, y * gridSize, width * gridSize, height * gridSize)
         , cameraBounds(cameraBounds)
@@ -98,7 +99,7 @@ namespace hikari {
             }
         }
     }
-    
+
     const int Room::getId() const {
         return id;
     }
@@ -110,17 +111,21 @@ namespace hikari {
     const int Room::getY() const {
         return y;
     }
-    
+
     const int Room::getWidth() const {
         return width;
     }
 
     const int Room::getHeight() const {
         return height;
-    } 
+    }
 
     const int Room::getGridSize() const {
         return gridSize;
+    }
+
+    const int Room::getBackgroundColor() const {
+        return backgroundColor;
     }
 
     const Rectangle2D<int>& Room::getBounds() const {
@@ -145,7 +150,7 @@ namespace hikari {
         tileY = tileY - getY();
 
         if(isInBounds(tileX, tileY)) {
-            return tile[tileX + (tileY * getWidth())]; 
+            return tile[tileX + (tileY * getWidth())];
         }
 
         return NO_TILE;
@@ -157,7 +162,7 @@ namespace hikari {
         tileY = tileY - getY();
 
         if(isInBounds(tileX, tileY)) {
-            return attr[tileX + (tileY * getWidth())]; 
+            return attr[tileX + (tileY * getWidth())];
         }
 
         return NO_TILE;
@@ -166,7 +171,7 @@ namespace hikari {
     const inline bool Room::isInBounds(const int &x, const int &y) const {
         return ((x >= 0 && x < getWidth()) && (y >= 0 && y < getHeight()));
     }
-    
+
     const std::vector<RoomTransition>& Room::getTransitions() const {
         return transitions;
     }
