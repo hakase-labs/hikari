@@ -51,6 +51,7 @@
 #include "hikari/client/gui/WeaponMenuItem.hpp"
 #include "hikari/client/gui/Icon.hpp"
 #include "hikari/core/game/Movable.hpp"
+#include "hikari/core/game/Renderable.hpp"
 #include "hikari/core/game/GameController.hpp"
 #include "hikari/core/game/AnimationSet.hpp"
 #include "hikari/core/game/AnimationLoader.hpp"
@@ -1220,6 +1221,55 @@ namespace hikari {
 
     }
 
+    void GamePlayState::renderWorld(sf::RenderTarget &target) const {
+        const auto& oldView = target.getDefaultView();
+        auto newView = camera.getPixelAlignedView();
+        std::vector<Renderable*> orderedEntities;
+
+        target.setView(newView);
+        mapRenderer->setRoom(currentRoom);
+
+        // Render the map background first
+        mapRenderer->renderBackground(target);
+
+        // 1) Partition the list of renderables by "z-index"
+        const auto & activeItems = world.getActiveItems();
+
+        for(auto it = std::begin(activeItems), end = std::end(activeItems); it != end; it++) {
+            orderedEntities.push_back((*it).get());
+        }
+
+        const auto & activeEnemies = world.getActiveEnemies();
+
+        for(auto it = std::begin(activeEnemies), end = std::end(activeEnemies); it != end; it++) {
+            orderedEntities.push_back((*it).get());
+        }
+
+        const auto & activeParticles = world.getActiveParticles();
+
+        for(auto it = std::begin(activeParticles), end = std::end(activeParticles); it != end; it++) {
+            orderedEntities.push_back((*it).get());
+        }
+
+        const auto & activeProjectiles = world.getActiveProjectiles();
+
+        for(auto it = std::begin(activeProjectiles), end = std::end(activeProjectiles); it != end; it++) {
+            orderedEntities.push_back((*it).get());
+        }
+
+        std::for_each(
+            std::begin(orderedEntities),
+            std::end(orderedEntities),
+            std::bind(&Renderable::render, std::placeholders::_1, ReferenceWrapper<sf::RenderTarget>(target)));
+
+        // 2) Render the lowest ones first
+        // 3) Render the foreground layer
+        // 4) Render the higher z-index renderables
+
+        // Restore UI view
+        target.setView(oldView);
+    }
+
     void GamePlayState::bindEventHandlers() {
         if(eventBus) {
             auto weaponFireDelegate = EventListenerDelegate(std::bind(&GamePlayState::handleWeaponFireEvent, this, std::placeholders::_1));
@@ -2096,8 +2146,9 @@ namespace hikari {
     }
 
     void GamePlayState::PlayingSubState::render(sf::RenderTarget &target) {
-        gamePlayState.renderMap(target);
-        gamePlayState.renderEntities(target);
+        //gamePlayState.renderMap(target);
+        //gamePlayState.renderEntities(target);
+        gamePlayState.renderWorld(target);
 
         if(gamePlayState.isHeroAlive) {
             gamePlayState.renderHero(target);

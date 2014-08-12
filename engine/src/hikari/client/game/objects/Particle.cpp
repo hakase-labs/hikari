@@ -10,6 +10,7 @@ namespace hikari {
 
     Particle::Particle(float maximumAge)
         : GameObject()
+        , zIndex(0)
         , age(0.0f)
         , maximumAge(maximumAge)
         , velocity(0.0f, 0.0f)
@@ -28,6 +29,7 @@ namespace hikari {
 
     Particle::Particle(const Particle& proto)
         : GameObject()
+        , zIndex(0)
         , age(0.0f)
         , maximumAge(proto.maximumAge)
         , velocity(proto.velocity)
@@ -56,7 +58,7 @@ namespace hikari {
         GameObject::update(dt);
 
         animator->update(dt);
-        
+
         Vector2<float> trackingOffset;
 
         if(trackX) {
@@ -85,11 +87,19 @@ namespace hikari {
         auto position = getPosition();
 
         sprite.setPosition(
-            std::floor(position.getX()), 
+            std::floor(position.getX()),
             std::floor(position.getY())
         );
 
         target.draw(sprite);
+    }
+
+    int Particle::getZIndex() const {
+        return zIndex;
+    }
+
+    void Particle::setZIndex(int index) {
+        zIndex = index;
     }
 
     void Particle::setMaximumAge(float maximumAge) {

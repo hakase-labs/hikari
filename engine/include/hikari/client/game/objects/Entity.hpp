@@ -5,6 +5,7 @@
 #include "hikari/client/game/objects/Faction.hpp"
 #include "hikari/client/game/objects/EntityDeathType.hpp"
 #include "hikari/core/game/Movable.hpp"
+#include "hikari/core/game/Renderable.hpp"
 #include "hikari/core/game/Direction.hpp"
 #include "hikari/core/math/Vector2.hpp"
 
@@ -35,7 +36,7 @@ namespace hikari {
      * An Entity has a logical and a rendered component. Most objects are
      * subclasses of Entity.
      */
-    class Entity : public GameObject {
+    class Entity : public GameObject, public Renderable {
     private:
         static bool debug;
         static const float DEFAULT_AGE_IN_M_SECONDS;
@@ -56,6 +57,7 @@ namespace hikari {
         EntityDeathType::Type deathType;
         int weaponId;
         int damageId;
+        int zIndex;
 
         bool obstacleFlag; // Does this object act like an obstacle?
         bool shieldFlag;   // Does this object deflect projectiles right now?
@@ -339,6 +341,10 @@ namespace hikari {
          * @param target a sf::RenderTarget to draw to
          */
         virtual void render(sf::RenderTarget &target);
+
+        virtual int getZIndex() const;
+
+        virtual void setZIndex(int index);
 
         /**
          * A function that can be used to "reset" an Entity to its original

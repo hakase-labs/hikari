@@ -302,6 +302,7 @@ namespace hikari {
         void renderMap(sf::RenderTarget &target) const;
         void renderHero(sf::RenderTarget &target) const;
         void renderEntities(sf::RenderTarget &target) const;
+        void renderWorld(sf::RenderTarget &target) const;
         void renderHud(sf::RenderTarget &target) const;
 
         //

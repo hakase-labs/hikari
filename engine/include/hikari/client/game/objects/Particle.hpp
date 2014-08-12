@@ -4,6 +4,7 @@
 #include "hikari/client/game/objects/GameObject.hpp"
 #include "hikari/core/geom/BoundingBox.hpp"
 #include "hikari/core/math/Vector2.hpp"
+#include "hikari/core/game/Renderable.hpp"
 #include "hikari/core/game/Animator.hpp"
 #include "hikari/core/util/Cloneable.hpp"
 
@@ -24,8 +25,9 @@ namespace hikari {
     /**
      * Particles are non-interactive sprites that have specific lifespans.
      */
-    class Particle : public GameObject, public Cloneable<Particle> {
+    class Particle : public GameObject, public Renderable, public Cloneable<Particle> {
     private:
+        int zIndex;
         float age;
         float maximumAge;
         Vector2<float> velocity;
@@ -43,13 +45,15 @@ namespace hikari {
 
     public:
         explicit Particle(float maximumAge);
-        Particle(const Particle& proto); 
+        Particle(const Particle& proto);
         virtual ~Particle();
 
         virtual std::unique_ptr<Particle> clone() const;
 
         virtual void update(float dt);
         virtual void render(sf::RenderTarget &target);
+        virtual int getZIndex() const;
+        virtual void setZIndex(int index);
 
         void setMaximumAge(float maximumAge);
         float getMaximumAge() const;
