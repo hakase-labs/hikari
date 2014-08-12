@@ -50,11 +50,13 @@ namespace hikari {
         return tileData;
     }
 
-    void MapRenderer::render(sf::RenderTarget &target) {
+    void MapRenderer::renderBackground(sf::RenderTarget &target) {
+        target.draw(backgroundShape);
+    }
+
+    void MapRenderer::renderForeground(sf::RenderTarget &target) {
         int tileIndex = Room::NO_TILE;
         int tileAttributes = TileAttribute::NO_ATTRIBUTES;
-
-        target.draw(backgroundShape);
 
         for(int y = visibleTileArea.getY(); y < visibleTileArea.getHeight(); ++y) {
             for(int x = visibleTileArea.getX(); x < visibleTileArea.getWidth(); ++x) {
@@ -133,6 +135,11 @@ namespace hikari {
                 }
             }
         }
+    }
+
+    void MapRenderer::render(sf::RenderTarget &target) {
+        renderBackground(target);
+        renderForeground(target);
     }
 
     inline void MapRenderer::buildBackgroundRectangle() {

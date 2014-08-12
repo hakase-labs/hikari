@@ -54,6 +54,8 @@ namespace hikari {
         void setCullRegion(const Rectangle2D<int> &cullRegion);
 
         void render(sf::RenderTarget &target);
+        void renderBackground(sf::RenderTarget &target);
+        void renderForeground(sf::RenderTarget &target);
     };
 
 } // hikari
