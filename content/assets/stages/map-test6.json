@@ -1069,6 +1069,28 @@
           "direction": "Left"
         },
         {
+          "type": "Mole",
+          "x": 160,
+          "y": 108,
+          "direction": "Down",
+          "spawnLimit": 3,
+          "spawnRate": 3.0,
+          "config": {
+            "direction": "Down"
+          }
+        },
+        {
+          "type": "Mole",
+          "x": 180,
+          "y": 208,
+          "direction": "Down",
+          "spawnLimit": 3,
+          "spawnRate": 3.0,
+          "config": {
+            "direction": "Up"
+          }
+        },
+        {
           "type": "Metool",
           "x": 160,
           "y": 188,
