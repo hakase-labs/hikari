@@ -1269,6 +1269,17 @@ namespace hikari {
             orderedEntities.push_back((*it).get());
         }
 
+        // Sort by z-index, then partition the list so we have two groups:
+        // Group 1) Background sprites
+        // Group 2) Foreground sprites
+
+        std::stable_sort(
+            std::begin(orderedEntities),
+            std::end(orderedEntities),
+            [&](const Renderable* a, const Renderable* b) {
+                return a->getZIndex() < b->getZIndex();
+            });
+
         auto backgroundSprites = std::stable_partition(
             std::begin(orderedEntities),
             std::end(orderedEntities),
@@ -1276,6 +1287,8 @@ namespace hikari {
                 return renderable->getZIndex() < 0;
             });
 
+        // These are the background sprites and are rendered on top of the map's
+        // background, but beneath the map's foreground.
         std::for_each(
             std::begin(orderedEntities),
             backgroundSprites,
@@ -1283,14 +1296,12 @@ namespace hikari {
 
         mapRenderer->renderForeground(target);
 
+        // These are the foreground sprites and are rendered on top of the map's
+        // foreground.
         std::for_each(
             backgroundSprites,
             std::end(orderedEntities),
             std::bind(&Renderable::render, std::placeholders::_1, ReferenceWrapper<sf::RenderTarget>(target)));
-
-        // 2) Render the lowest ones first
-        // 3) Render the foreground layer
-        // 4) Render the higher z-index renderables
 
         // Restore UI view
         target.setView(oldView);
@@ -2172,15 +2183,7 @@ namespace hikari {
     }
 
     void GamePlayState::PlayingSubState::render(sf::RenderTarget &target) {
-        //gamePlayState.renderMap(target);
-        //gamePlayState.renderEntities(target);
         gamePlayState.renderWorld(target);
-
-        // if(gamePlayState.isHeroAlive) {
-        //     gamePlayState.renderHero(target);
-        // }
-
-        gamePlayState.renderHud(target);
     }
 
     //
@@ -2723,12 +2726,12 @@ namespace hikari {
     }
 
     void GamePlayState::BossDefeatedSubState::render(sf::RenderTarget &target) {
-        gamePlayState.renderMap(target);
-        gamePlayState.renderEntities(target);
+        gamePlayState.renderWorld(target);
+        // gamePlayState.renderEntities(target);
 
-        if(gamePlayState.isHeroAlive) {
-            gamePlayState.renderHero(target);
-        }
+        // if(gamePlayState.isHeroAlive) {
+        //     gamePlayState.renderHero(target);
+        // }
 
         gamePlayState.renderHud(target);
     }

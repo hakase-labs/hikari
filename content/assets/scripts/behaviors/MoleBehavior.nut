@@ -43,6 +43,7 @@ class MoleBehavior extends EnemyBehavior {
 
         if(host != null) {
             host.changeAnimation("idle");
+            host.zIndex = -1;
 
             if("direction" in instanceConfig) {
                 local dir = instanceConfig.direction;

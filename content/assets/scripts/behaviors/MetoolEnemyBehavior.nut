@@ -10,7 +10,7 @@
         /**
          * The range horizontally that the Metool must be from the player in order
          * to attack.
-         * 
+         *
          * @type {Number}
          */
         static ATTACK_RANGE_X = 60;
@@ -56,7 +56,7 @@
          */
         function handleWorldCollision(side) {
             if(side == Directions.Down) {
-                
+
             }
 
             // Flip horizontal direction if we run into a wall
@@ -83,7 +83,7 @@
         /**
          * Function used when the Metool is in the "guarding" state. This is like
          * the update function for "guarding".
-         * 
+         *
          * @return {[type]} [description]
          */
         function _stateGuarding() {
@@ -113,7 +113,7 @@
 
         /**
          * Function used when the Metool is in the "attacking" state.
-         * 
+         *
          * @return {[type]} [description]
          */
         function _stateAttacking() {
