@@ -1858,6 +1858,7 @@ namespace hikari {
             .SetValue("heroId", gamePlayState.hero->getId())
             .SetValue("heroX", playerPosition.getX())
             .SetValue("heroY", playerPosition.getY())
+            .SetValue("heroBottomY", gamePlayState.hero->getBoundingBox().getBottom())
             .SetValue("isHeroShooting", gamePlayState.hero->isNowShooting());
 
         gamePlayState.world.update(dt);
