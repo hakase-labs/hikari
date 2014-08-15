@@ -2727,12 +2727,6 @@ namespace hikari {
 
     void GamePlayState::BossDefeatedSubState::render(sf::RenderTarget &target) {
         gamePlayState.renderWorld(target);
-        // gamePlayState.renderEntities(target);
-
-        // if(gamePlayState.isHeroAlive) {
-        //     gamePlayState.renderHero(target);
-        // }
-
         gamePlayState.renderHud(target);
     }
 
