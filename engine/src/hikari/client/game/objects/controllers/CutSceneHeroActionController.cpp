@@ -1,10 +1,14 @@
 #include "hikari/client/game/objects/controllers/CutSceneHeroActionController.hpp"
-#include "hikari/client/game/objects/Hero.hpp" 
+#include "hikari/client/game/objects/Hero.hpp"
 
 namespace hikari {
 
     CutSceneHeroActionController::CutSceneHeroActionController(const std::shared_ptr<Hero> & heroPtr)
-        : hero(heroPtr) 
+        : hero(heroPtr)
+        , moveLeftFlag(false)
+        , moveRightFlag(false)
+        , jumpFlag(false)
+        , superJumpFlag(false)
     {
 
     }
@@ -18,7 +22,7 @@ namespace hikari {
     }
 
     bool CutSceneHeroActionController::shouldMoveRight() const {
-        return false;
+        return moveRightFlag;
     }
 
     bool CutSceneHeroActionController::shouldMoveDown() const {
@@ -26,15 +30,15 @@ namespace hikari {
     }
 
     bool CutSceneHeroActionController::shouldMoveLeft() const {
-        return false;
+        return moveLeftFlag;
     }
 
     bool CutSceneHeroActionController::shouldJump() const {
-        return false;
+        return jumpFlag;
     }
 
     bool CutSceneHeroActionController::shouldSuperJump() const {
-        return false;
+        return superJumpFlag;
     }
 
     bool CutSceneHeroActionController::shouldStopJumping() const {
@@ -57,4 +61,29 @@ namespace hikari {
         return false;
     }
 
+    void CutSceneHeroActionController::moveLeft() {
+        moveLeftFlag = true;
+    }
+
+    void CutSceneHeroActionController::moveRight() {
+        moveRightFlag = true;
+    }
+
+    void CutSceneHeroActionController::stopMoving() {
+        moveLeftFlag = false;
+        moveRightFlag = false;
+    }
+
+    void CutSceneHeroActionController::jump() {
+        jumpFlag = true;
+    }
+
+    void CutSceneHeroActionController::superJump() {
+        superJumpFlag = true;
+    }
+
+    void CutSceneHeroActionController::stopJumping() {
+        jumpFlag = false;
+        superJumpFlag = false;
+    }
 } // hikari

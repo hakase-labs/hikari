@@ -69,7 +69,7 @@ class SpringerBehavior extends GroundWalkingBehavior {
 
                     speed = normalSpeed;
 
-                    if(abs(host.getY() - ::heroY) < 5) {
+                    if(abs(host.getY() - ::heroBottomY) < 5) {
                         speed = fastSpeed;
                     }
 

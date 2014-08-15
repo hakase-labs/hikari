@@ -31,7 +31,7 @@ class MoleBehavior extends EnemyBehavior {
             }
 
             if(host.direction == Directions.Up) {
-                host.velocityY = -abs(host.velocityY);
+                host.velocityY = -fabs(host.velocityY);
             }
         }
 
@@ -43,11 +43,22 @@ class MoleBehavior extends EnemyBehavior {
 
         if(host != null) {
             host.changeAnimation("idle");
+            host.zIndex = -1;
 
-            if("direction" in instanceConfig) {
-                local dir = instanceConfig.direction;
+            chooseDirection(instanceConfig);
+        }
+    }
 
-                if(dir == "UP") {
+    function applyConfig(config = {}) {
+        chooseDirection(config);
+    }
+
+    function chooseDirection(config = {}) {
+        if(host != null) {
+            if("direction" in config) {
+                local dir = config.direction;
+
+                if(dir == "Up") {
                     host.direction = Directions.Up;
                     host.changeAnimation("drilling-up");
                 } else {

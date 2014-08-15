@@ -45,6 +45,7 @@ namespace hikari {
         static const char* PROPERTY_NAME_ROOM_HERO_SPAWN_Y;
         static const char* PROPERTY_NAME_ROOM_WIDTH;
         static const char* PROPERTY_NAME_ROOM_HEIGHT;
+        static const char* PROPERTY_NAME_ROOM_BG_COLOR;
         static const char* PROPERTY_NAME_ROOM_CAMERABOUNDS;
         static const char* PROPERTY_NAME_ROOM_CAMERABOUNDS_X;
         static const char* PROPERTY_NAME_ROOM_CAMERABOUNDS_Y;
@@ -88,13 +89,13 @@ namespace hikari {
         SpawnerPtr constructSpawner(const Json::Value &json, SpawnType type, int offsetX = 0, int offsetY = 0) const;
         std::unique_ptr<Door> constructDoor(const Json::Value & json, int offsetX = 0, int offsetY = 0) const;
         RoomTransition constructTransition(const Json::Value &json) const;
-        Rectangle2D<int> constructCameraBounds(const Json::Value &json, 
+        Rectangle2D<int> constructCameraBounds(const Json::Value &json,
                 int roomX, int roomY, int gridSize) const;
         bool validateMapStructure(const Json::Value &json) const;
         bool validateRoomStructure(const Json::Value &json) const;
 
     public:
-        MapLoader(const std::shared_ptr<AnimationSetCache> & animationSetCache, 
+        MapLoader(const std::shared_ptr<AnimationSetCache> & animationSetCache,
             const std::shared_ptr<ImageCache> & imageCache,
             const std::shared_ptr<TilesetCache> &tilesetCache
         );

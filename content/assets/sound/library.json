@@ -80,6 +80,7 @@
       { "track": 39, "name": "Explosion (Medium)", "priority": 2 },
       { "track": 45, "name": "Erekin Spark", "priority": 0},
       { "track": 46, "name": "Shadow Blade", "priority": 1 },
+      { "track": 49, "name": "Weapon Acquired", "priority": 3 },
       { "track": 50, "name": "Power Obtained", "priority": 3 },
       { "track": 52, "name": "Teleport", "priority": 3 }
     ]

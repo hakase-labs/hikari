@@ -9,13 +9,11 @@ namespace hikari {
     // Static
     float Movable::maxYVelocity = 7.0f;
     float Movable::maxXVelocity = 16.0f;
-    float Movable::minYVelocity = -maxYVelocity;
+    float Movable::minYVelocity = -16.0f;
     float Movable::minXVelocity = -maxXVelocity;
 
     std::shared_ptr<CollisionResolver> Movable::collisionResolver = nullptr;
     float Movable::gravity = 0.0f;
-    // int Movable::gravityApplicationCounter = 0;
-    // int Movable::gravityApplicationThreshold = 1;
 
     void Movable::setGravity(const float& gravity) {
         Movable::gravity = gravity;
@@ -71,7 +69,7 @@ namespace hikari {
 
     }
 
-    Movable::Movable(const Movable& proto) 
+    Movable::Movable(const Movable& proto)
         : gravityApplicationCounter(proto.gravityApplicationCounter)
         , gravityApplicationThreshold(proto.gravityApplicationThreshold)
         , onGroundNow(proto.onGroundNow)
@@ -374,7 +372,7 @@ namespace hikari {
 
         // Integrate the position
         setPosition(
-            getPosition().getX() + (applyHorizontalVelocity ? velocity.getX() + extraX : 0 + extraX)/* * dt */, 
+            getPosition().getX() + (applyHorizontalVelocity ? velocity.getX() + extraX : 0 + extraX)/* * dt */,
             getPosition().getY() + (applyVerticalVelocity   ? velocity.getY() + extraY : 0 + extraY)/* * dt */);
     }
 

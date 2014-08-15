@@ -33,6 +33,7 @@ namespace hikari {
         , deathType(EntityDeathType::Nothing)
         , weaponId(0)
         , damageId(0)
+        , zIndex(0)
         , obstacleFlag(false)
         , shieldFlag(false)
         , agelessFlag(false)
@@ -69,6 +70,7 @@ namespace hikari {
         , deathType(proto.deathType)
         , weaponId(proto.weaponId)
         , damageId(proto.damageId)
+        , zIndex(proto.zIndex)
         , obstacleFlag(proto.obstacleFlag)
         , shieldFlag(proto.shieldFlag)
         , agelessFlag(proto.agelessFlag)
@@ -433,6 +435,14 @@ namespace hikari {
             target.draw(boxPosition);
         }
         #endif // HIKARI_DEBUG_ENTITIES
+    }
+
+    int Entity::getZIndex() const {
+        return zIndex;
+    }
+
+    void Entity::setZIndex(int index) {
+        zIndex = index;
     }
 
     void Entity::renderEntity(sf::RenderTarget &target) {

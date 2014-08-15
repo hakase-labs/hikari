@@ -10,6 +10,7 @@
 
 #include "hikari/client/game/GameWorld.hpp"
 #include "hikari/core/game/map/RoomTransition.hpp"
+#include "hikari/core/game/Direction.hpp"
 
 
 #include <SFML/Graphics/RenderTarget.hpp>
@@ -67,6 +68,7 @@ namespace hikari {
     class MapRenderer;
     class Hero;
     class Enemy;
+    class CutSceneHeroActionController;
     class WorldCollisionResolver;
     class Spawner;
     class EventBus;
@@ -113,6 +115,7 @@ namespace hikari {
         std::shared_ptr<Room> currentRoom;
         std::shared_ptr<Hero> hero;
         std::shared_ptr<Enemy> boss;
+        std::shared_ptr<CutSceneHeroActionController> cutSceneController;
         std::unique_ptr<MapRenderer> mapRenderer;
         std::unique_ptr<SubState> subState;
         std::unique_ptr<SubState> nextSubState;
@@ -288,12 +291,18 @@ namespace hikari {
          */
         void updateDoors(float dt);
 
+        void updateParticles(float dt);
+        void updateProjectiles(float dt);
+        void updateEnemies(float dt);
+        void updateItems(float dt);
+
         //
         // Rendering
         //
         void renderMap(sf::RenderTarget &target) const;
         void renderHero(sf::RenderTarget &target) const;
         void renderEntities(sf::RenderTarget &target) const;
+        void renderWorld(sf::RenderTarget &target) const;
         void renderHud(sf::RenderTarget &target) const;
 
         //
@@ -428,6 +437,34 @@ namespace hikari {
         public:
             TransitionSubState(GamePlayState & gamePlayState, RoomTransition transition);
             virtual ~TransitionSubState();
+            virtual void enter();
+            virtual void exit();
+            virtual StateChangeAction update(float dt);
+            virtual void render(sf::RenderTarget &target);
+        };
+
+        /**
+         * Handles the sequence after the boss was defeated.
+         */
+        class BossDefeatedSubState : public SubState {
+        private:
+            bool complete;
+            unsigned int segment;
+            float timer;
+            float targetXPosition; // This is the X position of the center of the room
+                                   // where we want the hero to walk to.
+            float roomTopY;
+            float roomCenterY;
+            Direction targetDirection; // The direction for the hero to walk in.
+
+            std::vector<Vector2<float>> energyRingParticleVelocities; // Ordered pairs, clockwise
+            std::vector<Vector2<float>> energyRingParticlePositions; // Relative to hero
+
+            void nextSegment();
+            void spawnEnergyRing(float speed, float maximumAge);
+        public:
+            BossDefeatedSubState(GamePlayState & gamePlayState);
+            virtual ~BossDefeatedSubState();
             virtual void enter();
             virtual void exit();
             virtual StateChangeAction update(float dt);
