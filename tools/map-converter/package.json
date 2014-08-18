@@ -1,0 +1,27 @@
+{
+  "name": "tmx-to-json",
+  "main": "tmx2json.js",
+  "description": "Tiled map .TMX to Hikari format map .JSON converter",
+  "version": "0.0.1a",
+  "keywords": [
+    "hikari",
+    "tiled"
+  ],
+  "homepage": "https://github.com/hakase-labs/hikari",
+  "bugs": {
+    "url": "https://github.com/hakase-labs/hikari/issues"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "dependencies": {
+    "deepmerge": "~0.2.7",
+    "lodash": "^2.4.1",
+    "rsvp": "~3.0.13",
+    "xml2js": "~0.4.4"
+  },
+  "devDependencies": {
+    "mocha": "~1.18.2",
+    "sinon": "1.3.4"
+  }
+}
