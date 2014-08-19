@@ -13,7 +13,7 @@ parser.addListener('end', function(result) {
   console.log(JSON.stringify(extractMapMetaData(result), undefined, 1));
 });
 
-fs.readFile(__dirname + '/dev-map.xml', function(err, data) {
+fs.readFile(__dirname + '/dev-map.tmx', function(err, data) {
   parser.parseString(data);
 });
 
@@ -26,7 +26,9 @@ function extractMapMetaData(tmxJson) {
   var result = {},
     tmxMap,
     tmxMeta,
-    tmxProperties;
+    tmxProperties,
+    maybeMusicId,
+    maybeBossEntity;
 
   if(_.has(tmxJson, 'map')) {
     tmxMap = tmxJson.map;
@@ -40,18 +42,31 @@ function extractMapMetaData(tmxJson) {
 
     if(_.has(tmxMap, 'properties')) {
       tmxProperties = tmxMap.properties;
-      tmxProperties = _.pluck(tmxProperties, 'property');
+      tmxProperties = _.flatten(_.pluck(tmxProperties, 'property'));
 
-      result.musicId = _.find(tmxProperties, function(prop) {
-        return prop[0].$.name === 'musicId';
-      });
+      maybeMusicId = unwrapProperty(tmxProperties, 'musicId');
+      result.musicId = maybeMusicId ? parseInt(maybeMusicId, 10) : null;
 
-      result.bossEntity = _.findWhere(tmxProperties, function(prop) {
-        return prop[0].$.name === 'bossEntity';
-      });
+      maybeBossEntity = unwrapProperty(tmxProperties, 'bossEntity');
+      result.bossEntity = maybeBossEntity;
     }
   }
-      console.log('returning');
 
   return result;
+}
+
+function unwrapProperty(obj, propName) {
+  var maybeProp;
+
+  if(obj && propName) {
+    maybeProp = _.find(obj, function(property) {
+      return property.$.name === propName;
+    });
+
+    if(maybeProp) {
+      return maybeProp.$.value;
+    }
+  }
+
+  return undefined;
 }
