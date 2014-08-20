@@ -124,6 +124,14 @@ function extractRoom(tmxJson) {
     if(_.has(properties, 'heroSpawnY')) {
       result.heroSpawnY = parseInt(properties.heroSpawnY, 10);
     }
+
+    result.tile = _.map(tileLayer.data[0]._.replace(new RegExp('\\n', 'g'), '').split(','), function(num) {
+      return parseInt(num, 10);
+    });
+
+    result.attr = _.map(attrLayer.data[0]._.replace(new RegExp('\\n', 'g'), '').split(','), function(num) {
+      return parseInt(num, 10);
+    });
   }
 
   console.log(JSON.stringify(layers, undefined, 1));
