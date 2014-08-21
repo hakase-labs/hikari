@@ -173,7 +173,22 @@ function extractRoom(tmxJson) {
 }
 
 function extractEnemies(tmxJsonEnemiesLayer) {
-  return [];
+  var result;
+
+  result = _.map(tmxJsonEnemiesLayer.object, function(enemy) {
+    var properties = enemy.properties ? mapProperties(enemy.properties[0].property) : {},
+      mappedEnemy = _.extend({
+        type: enemy.$.name,
+        x: parseInt(enemy.$.x, 10),
+        y: parseInt(enemy.$.y, 10)
+      }, properties);
+
+    return mappedEnemy;
+  });
+
+  // console.log('extractEnemies');
+  // console.log(JSON.stringify(result, undefined, 1));
+  return result;
 }
 
 function extractItems(tmxJsonItemsLayer) {
