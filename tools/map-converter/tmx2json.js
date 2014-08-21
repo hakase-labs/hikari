@@ -11,7 +11,6 @@ var parser = new xml2js.Parser({
 
 parser.addListener('end', function(result) {
   console.log(JSON.stringify(extractMapMetaData(result), undefined, 1));
-
   console.log(JSON.stringify(extractRoom(result), undefined, 1));
 });
 
@@ -96,20 +95,46 @@ function mapProperties(tmxJson) {
   }));
 }
 
+function extractTiles(tmxJsonTileLayer) {
+  var csvTileData = tmxJsonTileLayer.data[0]._,
+    cleanedTileData = csvTileData.replace(new RegExp('\\n', 'g'), '');
+
+  return _.map(cleanedTileData.split(','), function(num) {
+    return parseInt(num, 10);
+  });
+}
+
 function extractRoom(tmxJson) {
   var result,
     layers = tmxJson.map.layer,
+    objectGroups = tmxJson.map.objectgroup,
     properties,
     tileLayer,
     attrLayer,
+    cameraLayer,
+    enemyLayer,
+    itemLayer,
+    transitionLayer,
+    doorLayer,
+    cameraBounds,
     TILE_LAYER = 0,
-    ATTR_LAYER = 1;
+    ATTR_LAYER = 1,
+    CAMERA_LAYER = 0,
+    ENEMY_LAYER = 1,
+    ITEM_LAYER = 2,
+    TRANSITION_LAYER = 3,
+    DOOR_LAYER = 4;
 
   result = {};
 
   if(layers) {
     tileLayer = layers[TILE_LAYER];
     attrLayer = layers[ATTR_LAYER];
+    cameraLayer = objectGroups[CAMERA_LAYER];
+    enemyLayer = objectGroups[ENEMY_LAYER];
+    itemLayer = objectGroups[ITEM_LAYER];
+    transitionLayer = objectGroups[TRANSITION_LAYER];
+    doorLayer = objectGroups[DOOR_LAYER];
     properties = mapProperties(tileLayer.properties[0].property);
 
     result.width = parseInt(tileLayer.$.width, 10);
@@ -125,16 +150,40 @@ function extractRoom(tmxJson) {
       result.heroSpawnY = parseInt(properties.heroSpawnY, 10);
     }
 
-    result.tile = _.map(tileLayer.data[0]._.replace(new RegExp('\\n', 'g'), '').split(','), function(num) {
-      return parseInt(num, 10);
-    });
+    result.tile = extractTiles(tileLayer);
+    result.attr = extractTiles(attrLayer);
 
-    result.attr = _.map(attrLayer.data[0]._.replace(new RegExp('\\n', 'g'), '').split(','), function(num) {
-      return parseInt(num, 10);
-    });
+    // Grab the camera bounds.
+    cameraBounds = _.omit(cameraLayer.object[0].$, 'name');
+
+    result.cameraBounds = {
+      x: parseInt(cameraBounds.x, 10) / 16,
+      y: parseInt(cameraBounds.y, 10) / 16,
+      width: parseInt(cameraBounds.width, 10) / 16,
+      height: parseInt(cameraBounds.height, 10) / 16
+    };
+
+    result.enemies = extractEnemies(enemyLayer);
+    result.items = extractItems(itemLayer);
+    result.transitions = extractTransitions(transitionLayer);
+    result.doors = extractDoors(doorLayer);
   }
 
-  console.log(JSON.stringify(layers, undefined, 1));
-
   return result;
+}
+
+function extractEnemies(tmxJsonEnemiesLayer) {
+  return [];
+}
+
+function extractItems(tmxJsonItemsLayer) {
+  return [];
+}
+
+function extractTransitions(tmxJsonTransitionLayer) {
+  return [];
+}
+
+function extractDoors(tmxJsonDoorLayer) {
+  return [];
 }
