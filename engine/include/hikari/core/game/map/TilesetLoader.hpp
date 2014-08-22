@@ -26,6 +26,7 @@ namespace hikari {
         static const char* PROPERTY_NAME_X;
         static const char* PROPERTY_NAME_Y;
         static const char* PROPERTY_NAME_ANIMATION;
+        static const char* PROPERTY_NAME_VERSION;
 
         std::shared_ptr<AnimationLoader> animationLoader;
         std::shared_ptr<ImageCache> imageCache;

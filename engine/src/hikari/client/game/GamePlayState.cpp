@@ -567,6 +567,7 @@ namespace hikari {
         Movable::setGravity(0.25f);
 
         std::vector<std::string> mapList;
+        mapList.push_back("map-dev2.json");
         mapList.push_back("map-pearlman.json");
         mapList.push_back("map-test6.json");
         mapList.push_back("map-pearl.json");

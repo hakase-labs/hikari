@@ -9,13 +9,10 @@ var parser = new xml2js.Parser({
   trim: true
 });
 
-parser.addListener('end', function(result) {
-  // console.log(JSON.stringify(extractMapMetaData(result), undefined, 1));
-  // console.log(JSON.stringify(extractRoom(result), undefined, 1));
-});
-
 fs.readdir(__dirname + '/dev-map', function(err, data) {
   console.log(JSON.stringify(data, undefined, 1));
+
+  var outputFilename = __dirname + '/dev-map.json';
 
   // Map the file names to full paths.
   var files = _.map(data, function(file) {
@@ -37,32 +34,48 @@ fs.readdir(__dirname + '/dev-map', function(err, data) {
 
   // Wait for all the files to be read and then kick-start the transformation.
   rsvp.all(fileReadPromises)
-  .then(function (fileContents) {
-    var jsonTmxObjects = _.map(fileContents, function(xmlString) {
-      return new rsvp.Promise(function(resolve, reject) {
-        parser.parseString(xmlString, function(err, data) {
-          if(err) {
-            reject(err);
-          } else {
-            resolve(data);
-          }
-        });
-      });
+  .then(convertFilesToJson)
+  .then(function(jsonMaps) {
+    console.log('I converted all the files!');
+
+    var mapMetaData = extractMapMetaData(jsonMaps[0]);
+    var roomData = _.map(jsonMaps, _.partialRight(extractRoom, mapMetaData));
+    var assembledMap = _.extend({}, mapMetaData, {
+      rooms: roomData
     });
 
-    return rsvp.all(jsonTmxObjects);
-  })
-  .then(function(fileContents) {
-    console.log('I converted all the files!', JSON.stringify(fileContents));
+    fs.writeFile(outputFilename, JSON.stringify(assembledMap, null, 2), function(err) {
+      if(err) {
+        console.log(err);
+      } else {
+        console.log("JSON saved to " + outputFilename);
+      }
+    });
   })
   .catch(function(reason) {
     console.log('Error reading all files!', reason);
   });
 });
 
-fs.readFile(__dirname + '/dev-map.tmx', function(err, data) {
-  parser.parseString(data);
-});
+/**
+ * Converts an array of XML files strings (TMX file data) to JSON and returns
+ * a promise that resolves when all have been converted.
+ */
+function convertFilesToJson(fileContents) {
+  var jsonTmxObjects = _.map(fileContents, function parseXmlStringToJson(xmlString) {
+    return new rsvp.Promise(function(resolve, reject) {
+      parser.parseString(xmlString, function(err, data) {
+        if(err) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
+    });
+  });
+
+  return rsvp.all(jsonTmxObjects);
+}
 
 /**
  * Extracts metadata for an entire map.
@@ -150,7 +163,7 @@ function extractTiles(tmxJsonTileLayer) {
   });
 }
 
-function extractRoom(tmxJson) {
+function extractRoom(tmxJson, roomIndex, allRooms, mapMetaData) {
   var result,
     layers = tmxJson.map.layer,
     objectGroups = tmxJson.map.objectgroup,
@@ -183,6 +196,7 @@ function extractRoom(tmxJson) {
     doorLayer = objectGroups[DOOR_LAYER];
     properties = mapProperties(tileLayer.properties[0].property);
 
+    result.id = roomIndex;
     result.width = parseInt(tileLayer.$.width, 10);
     result.height = parseInt(tileLayer.$.height, 10);
     result.x = parseInt(properties.x, 10);
@@ -203,10 +217,10 @@ function extractRoom(tmxJson) {
     cameraBounds = _.omit(cameraLayer.object[0].$, 'name');
 
     result.cameraBounds = {
-      x: parseInt(cameraBounds.x, 10) / 16,
-      y: parseInt(cameraBounds.y, 10) / 16,
-      width: parseInt(cameraBounds.width, 10) / 16,
-      height: parseInt(cameraBounds.height, 10) / 16
+      x: parseInt(cameraBounds.x, 10) / mapMetaData.gridsize,
+      y: parseInt(cameraBounds.y, 10) / mapMetaData.gridsize,
+      width: parseInt(cameraBounds.width, 10) / mapMetaData.gridsize,
+      height: parseInt(cameraBounds.height, 10) / mapMetaData.gridsize
     };
 
     result.enemies = extractEnemies(enemyLayer);
