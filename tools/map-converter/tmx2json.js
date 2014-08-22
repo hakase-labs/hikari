@@ -10,8 +10,54 @@ var parser = new xml2js.Parser({
 });
 
 parser.addListener('end', function(result) {
-  console.log(JSON.stringify(extractMapMetaData(result), undefined, 1));
-  console.log(JSON.stringify(extractRoom(result), undefined, 1));
+  // console.log(JSON.stringify(extractMapMetaData(result), undefined, 1));
+  // console.log(JSON.stringify(extractRoom(result), undefined, 1));
+});
+
+fs.readdir(__dirname + '/dev-map', function(err, data) {
+  console.log(JSON.stringify(data, undefined, 1));
+
+  // Map the file names to full paths.
+  var files = _.map(data, function(file) {
+    return __dirname + '/dev-map/' + file;
+  });
+
+  // Map each file path to a async read -> promise.
+  var fileReadPromises = _.map(files, function(filePath) {
+    return new rsvp.Promise(function(resolve, reject) {
+      fs.readFile(filePath, 'utf8', function(err, data) {
+        if(err) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
+    });
+  });
+
+  // Wait for all the files to be read and then kick-start the transformation.
+  rsvp.all(fileReadPromises)
+  .then(function (fileContents) {
+    var jsonTmxObjects = _.map(fileContents, function(xmlString) {
+      return new rsvp.Promise(function(resolve, reject) {
+        parser.parseString(xmlString, function(err, data) {
+          if(err) {
+            reject(err);
+          } else {
+            resolve(data);
+          }
+        });
+      });
+    });
+
+    return rsvp.all(jsonTmxObjects);
+  })
+  .then(function(fileContents) {
+    console.log('I converted all the files!', JSON.stringify(fileContents));
+  })
+  .catch(function(reason) {
+    console.log('Error reading all files!', reason);
+  });
 });
 
 fs.readFile(__dirname + '/dev-map.tmx', function(err, data) {
@@ -173,9 +219,7 @@ function extractRoom(tmxJson) {
 }
 
 function extractEnemies(tmxJsonEnemiesLayer) {
-  var result;
-
-  result = _.map(tmxJsonEnemiesLayer.object, function(enemy) {
+  return _.map(tmxJsonEnemiesLayer.object, function(enemy) {
     var properties = enemy.properties ? mapProperties(enemy.properties[0].property) : {},
       mappedEnemy = _.extend({
         type: enemy.$.name,
@@ -185,10 +229,6 @@ function extractEnemies(tmxJsonEnemiesLayer) {
 
     return mappedEnemy;
   });
-
-  // console.log('extractEnemies');
-  // console.log(JSON.stringify(result, undefined, 1));
-  return result;
 }
 
 function extractItems(tmxJsonItemsLayer) {
