@@ -235,17 +235,21 @@ namespace hikari {
         std::unique_ptr<Door> exitDoor;
 
         if(hasDoors) {
-            HIKARI_LOG(debug4) << "The room has doors.";
+            HIKARI_LOG(debug4) << "The room has doors array.";
             const auto & doorsJson = json[PROPERTY_NAME_ROOM_DOORS];
 
-            if(doorsJson.isMember(PROPERTY_NAME_ROOM_DOORS_ENTRANCE)) {
-                HIKARI_LOG(debug4) << "The room has an entrance.";
-                entranceDoor = constructDoor(doorsJson[PROPERTY_NAME_ROOM_DOORS_ENTRANCE], x, y);
-            }
+            if(doorsJson.size() > 0) {
+                if(doorsJson.isMember(PROPERTY_NAME_ROOM_DOORS_ENTRANCE)) {
+                    HIKARI_LOG(debug4) << "The room has an entrance.";
+                    entranceDoor = constructDoor(doorsJson[PROPERTY_NAME_ROOM_DOORS_ENTRANCE], x, y);
+                }
 
-            if(doorsJson.isMember(PROPERTY_NAME_ROOM_DOORS_EXIT)) {
-                HIKARI_LOG(debug4) << "The room has an exit.";
-                exitDoor = constructDoor(doorsJson[PROPERTY_NAME_ROOM_DOORS_EXIT], x, y);
+                if(doorsJson.isMember(PROPERTY_NAME_ROOM_DOORS_EXIT)) {
+                    HIKARI_LOG(debug4) << "The room has an exit.";
+                    exitDoor = constructDoor(doorsJson[PROPERTY_NAME_ROOM_DOORS_EXIT], x, y);
+                }
+            } else {
+                HIKARI_LOG(debug4) << "The room has no door definitions.";
             }
         }
 

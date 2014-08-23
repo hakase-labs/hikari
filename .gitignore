@@ -72,7 +72,6 @@ _ReSharper*/
 #Hikari Specific Ignores
 doc/
 junk/
-tools/
 *.sublime-project
 *.sublime-workspace
 *.test.json

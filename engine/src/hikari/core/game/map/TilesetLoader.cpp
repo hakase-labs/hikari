@@ -19,6 +19,7 @@ namespace hikari {
     const char* TilesetLoader::PROPERTY_NAME_X = "x";
     const char* TilesetLoader::PROPERTY_NAME_Y = "y";
     const char* TilesetLoader::PROPERTY_NAME_ANIMATION = "animation";
+    const char* TilesetLoader::PROPERTY_NAME_VERSION = "version";
 
     TilesetLoader::TilesetLoader(const std::shared_ptr<ImageCache> &imageCache,
             const std::shared_ptr<AnimationLoader> &animationLoader)
@@ -85,7 +86,7 @@ namespace hikari {
     }
 
     bool TilesetLoader::isTileAnimated(const Json::Value &json) const {
-        return json.isMember(PROPERTY_NAME_ANIMATION) 
+        return json.isMember(PROPERTY_NAME_ANIMATION)
                 && json[PROPERTY_NAME_ANIMATION].isObject();
     }
 
@@ -93,6 +94,7 @@ namespace hikari {
         std::string surfaceName(json[PROPERTY_NAME_SURFACE].asString());
         int tileSize = json[PROPERTY_NAME_SIZE].asInt();
         int numberOfTiles = json[PROPERTY_NAME_TILES].size();
+        int version = json.get(PROPERTY_NAME_VERSION, 0).asInt();
 
         std::vector<sf::IntRect> tiles(numberOfTiles);
         std::vector<TileAnimator> tileAnimators;
@@ -102,9 +104,9 @@ namespace hikari {
 
             if(isValidTileJson(tileJson)) {
                 tiles.at(i) = sf::IntRect(
-                    tileJson[PROPERTY_NAME_X].asInt(), 
-                    tileJson[PROPERTY_NAME_Y].asInt(), 
-                    tileSize, 
+                    tileJson[PROPERTY_NAME_X].asInt(),
+                    tileJson[PROPERTY_NAME_Y].asInt(),
+                    tileSize,
                     tileSize
                 );
 
@@ -122,7 +124,7 @@ namespace hikari {
                         }
                     } catch(std::exception &loadException) {
                         HIKARI_LOG(debug) << "<TilesetLoader> failed to parse animation from tile index " << i << ". Exception: " << loadException.what();
-                    } 
+                    }
                 }
             } else {
                 HIKARI_LOG(debug) << "<TilesetLoader> ignoring invalid tile index " << i << ".";
@@ -131,8 +133,8 @@ namespace hikari {
 
         return TileDataPtr(
             new Tileset(
-                imageCache->get(surfaceName), 
-                tileSize, 
+                imageCache->get(surfaceName),
+                tileSize,
                 tiles,
                 tileAnimators
             )

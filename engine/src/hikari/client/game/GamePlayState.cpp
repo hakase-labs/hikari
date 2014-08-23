@@ -182,7 +182,7 @@ namespace hikari {
             hero->setBoundingBox(BoundingBoxF(0, 0, 16, 24).setOrigin(8, 20));
             hero->changeAnimation("idle");
             hero->setPosition(100.0f, 100.0f);
-            hero->setActionSpot(Vector2<float>(6.0, -8.0));
+            hero->setActionSpot(Vector2<float>(16.0, -8.0));
             hero->setActionController(std::make_shared<PlayerInputHeroActionController>(userInput));
             hero->setEventBus(std::weak_ptr<EventBus>(eventBus));
 
@@ -567,6 +567,7 @@ namespace hikari {
         Movable::setGravity(0.25f);
 
         std::vector<std::string> mapList;
+        mapList.push_back("map-dev2.json");
         mapList.push_back("map-pearlman.json");
         mapList.push_back("map-test6.json");
         mapList.push_back("map-pearl.json");
@@ -1808,7 +1809,7 @@ namespace hikari {
         std::shared_ptr<Particle> clone = gamePlayState.world.spawnParticle("Small Bubble");
 
         if(clone) {
-            clone->setPosition(gamePlayState.hero->getPosition());
+            clone->setPosition(gamePlayState.hero->getPosition() + Vector2<float>(0.0f, -8.0f));
             clone->setVelocity(Vector2<float>(0.0f, -(80.0f/60.0f))); // Moves vertically 80px/s
             clone->setActive(true);
             gamePlayState.world.queueObjectAddition(clone);
