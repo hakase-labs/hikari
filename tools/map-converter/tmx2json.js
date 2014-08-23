@@ -44,6 +44,9 @@ fs.readdir(__dirname + '/dev-map', function(err, data) {
       rooms: roomData
     });
 
+    // Clean up any data params we don't need anymore.
+    delete assembledMap._tilesetGid;
+
     fs.writeFile(outputFilename, JSON.stringify(assembledMap, null, 2), function(err) {
       if(err) {
         console.log(err);
@@ -88,6 +91,7 @@ function extractMapMetaData(tmxJson) {
     tmxMeta,
     tmxProperties,
     tmxTileset,
+    tmxTilesetFirstGid,
     maybeMusicId,
     maybeBossEntity;
 
@@ -114,9 +118,13 @@ function extractMapMetaData(tmxJson) {
 
     if(_.has(tmxMap, 'tileset')) {
       tmxTileset = _.flatten(tmxMap.tileset);
-      tmxTileset = tmxTileset[0].$;
+      tmxTileset = _.find(tmxTileset, function (tileset) {
+        return tileset.$.name !== 'attribute';
+      });
+      tmxTilesetFirstGid = parseInt(tmxTileset.$.firstgid, 10);
 
-      result.tileset = tmxTileset.name;
+      result.tileset = tmxTileset.$.name;
+      result._tilesetGid = tmxTilesetFirstGid;
     }
   }
 
@@ -161,6 +169,14 @@ function extractTiles(tmxJsonTileLayer) {
   return _.map(cleanedTileData.split(','), function(num) {
     return parseInt(num, 10);
   });
+}
+
+function extractTileSets(tmxJsonMap) {
+  return _.map(tmxJsonMap, extractTileSet);
+}
+
+function extractTileSet(tmxJsonTileset) {
+  return {};
 }
 
 function extractRoom(tmxJson, roomIndex, allRooms, mapMetaData) {
@@ -210,7 +226,9 @@ function extractRoom(tmxJson, roomIndex, allRooms, mapMetaData) {
       result.heroSpawnY = parseInt(properties.heroSpawnY, 10);
     }
 
-    result.tile = extractTiles(tileLayer);
+    result.tile = _.map(extractTiles(tileLayer), function(num) {
+      return num - mapMetaData._tilesetGid;
+    });
     result.attr = extractTiles(attrLayer);
 
     // Grab the camera bounds.
