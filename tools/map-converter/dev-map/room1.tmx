@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="18" height="17" tilewidth="16" tileheight="16" backgroundcolor="#cdff00">
+ <tileset firstgid="1" name="attribute" tilewidth="16" tileheight="16">
+  <image source="../../../../projects/totsuzen/assets/tiles.png" width="128" height="128"/>
+  <terraintypes>
+   <terrain name="air" tile="0"/>
+   <terrain name="solid" tile="8"/>
+   <terrain name="slope" tile="1"/>
+   <terrain name="slope" tile="2"/>
+   <terrain name="slope" tile="3"/>
+   <terrain name="slope" tile="9"/>
+   <terrain name="slope" tile="10"/>
+   <terrain name="slope" tile="11"/>
+  </terraintypes>
+ </tileset>
+ <tileset firstgid="65" name="assets/tilesets/tile-wily1.json" tilewidth="16" tileheight="16">
+  <image source="../../../content/assets/images/tile-wily1.png" width="256" height="256"/>
+ </tileset>
+ <layer name="Tiles" width="18" height="17">
+  <properties>
+   <property name="heroSpawnX" value="230"/>
+   <property name="heroSpawnY" value="216"/>
+   <property name="x" value="1"/>
+   <property name="y" value="1"/>
+  </properties>
+  <data encoding="csv">
+134,134,134,134,134,134,134,134,134,134,134,134,134,134,134,134,134,134,
+70,83,84,86,69,70,86,69,70,86,69,70,86,69,70,86,69,70,
+69,70,117,117,117,117,117,117,117,117,117,117,117,117,117,117,117,117,
+85,86,134,134,134,134,134,134,134,134,134,134,134,134,134,134,134,134,
+69,85,134,134,134,134,134,134,134,134,134,134,134,134,134,134,134,134,
+69,70,118,69,70,134,134,134,134,134,134,134,134,134,134,134,134,134,
+85,86,118,85,86,134,134,134,134,134,134,134,134,134,134,134,134,134,
+69,70,118,69,85,69,70,134,134,134,134,134,134,134,134,134,134,134,
+85,86,118,133,69,85,86,134,134,134,134,134,134,134,134,134,134,134,
+69,70,118,133,133,69,85,69,70,134,134,134,134,134,134,134,134,134,
+85,86,118,133,133,133,69,85,86,134,134,134,134,134,134,134,134,134,
+69,70,118,133,133,133,133,69,85,69,70,134,134,134,134,134,134,134,
+85,86,118,133,133,133,133,86,69,85,86,134,134,134,134,134,134,134,
+69,70,118,133,85,69,70,85,69,70,85,69,70,134,134,134,134,134,
+85,86,118,133,69,85,86,69,85,86,69,85,86,134,134,134,134,134,
+69,70,118,133,86,69,85,86,69,85,86,69,85,69,70,69,70,69,
+85,86,118,133,133,133,133,133,133,133,133,133,133,85,86,85,86,85
+</data>
+ </layer>
+ <layer name="Attributes" width="18" height="17" visible="0" opacity="0.74">
+  <data encoding="csv">
+2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
+2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
+2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,
+2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,
+2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,
+2,2,1,2,2,1,1,1,1,1,1,1,1,1,1,1,2,2,
+2,2,1,2,2,1,1,1,1,1,1,1,1,1,1,1,2,2,
+2,2,1,2,2,2,2,1,1,1,1,1,1,1,1,1,2,2,
+2,2,1,2,2,2,2,1,1,1,1,1,1,1,1,1,2,2,
+2,2,1,2,2,2,2,2,2,1,1,1,1,1,1,1,2,2,
+2,2,1,2,2,2,2,2,2,1,1,1,1,1,1,1,2,2,
+2,2,1,2,2,2,2,2,2,2,2,1,1,1,1,1,2,2,
+2,2,1,2,2,2,2,2,2,2,2,1,1,1,1,1,2,2,
+2,2,1,2,2,2,2,2,2,2,2,2,2,1,1,1,2,2,
+2,2,1,2,2,2,2,2,2,2,2,2,2,1,1,1,2,2,
+2,2,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
+2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2
+</data>
+ </layer>
+ <objectgroup name="Camera Bounds" width="18" height="17">
+  <object name="cameraBounds" x="16" y="16" width="256" height="240"/>
+ </objectgroup>
+ <objectgroup name="Enemies" width="18" height="17">
+  <object name="Telly" x="64" y="240" width="16" height="16">
+   <properties>
+    <property name="direction" value="Left"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup name="Items" width="18" height="17"/>
+ <objectgroup name="Transitions" width="18" height="17"/>
+ <objectgroup name="Doors" width="18" height="17"/>
+</map>

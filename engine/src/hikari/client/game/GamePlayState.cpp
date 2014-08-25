@@ -1350,8 +1350,17 @@ namespace hikari {
 
             if(std::shared_ptr<Particle> clone = world.spawnParticle("Damage Sweat")) {
                 clone->setPosition(Vector2<float>(
+                    hero->getPosition().getX() - 11.0f,
+                    hero->getPosition().getY() - 19.0f
+                ));
+                clone->setActive(true);
+                world.queueObjectAddition(clone);
+            }
+
+            if(std::shared_ptr<Particle> clone = world.spawnParticle("Damage Sweat")) {
+                clone->setPosition(Vector2<float>(
                     hero->getPosition().getX(),
-                    boundingBox.getTop() - 10.0f
+                    hero->getPosition().getY() - 23.0f
                 ));
                 clone->setActive(true);
                 world.queueObjectAddition(clone);
@@ -1359,17 +1368,8 @@ namespace hikari {
 
             if(std::shared_ptr<Particle> clone = world.spawnParticle("Damage Sweat")) {
                 clone->setPosition(Vector2<float>(
-                    hero->getPosition().getX() - 16.0f,
-                    boundingBox.getTop() - 7.0f
-                ));
-                clone->setActive(true);
-                world.queueObjectAddition(clone);
-            }
-
-            if(std::shared_ptr<Particle> clone = world.spawnParticle("Damage Sweat")) {
-                clone->setPosition(Vector2<float>(
-                    hero->getPosition().getX() + 16.0f,
-                    boundingBox.getTop() - 7.0f
+                    hero->getPosition().getX() + 13.0f,
+                    hero->getPosition().getY() - 19.0f
                 ));
                 clone->setActive(true);
                 world.queueObjectAddition(clone);

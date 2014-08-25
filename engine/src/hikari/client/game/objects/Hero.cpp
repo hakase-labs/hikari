@@ -235,7 +235,7 @@ namespace hikari {
     }
 
     bool Hero::canSlide() {
-        return !isAirborn && !isSliding && !isStunned && !isOnEdge && !isBlockedByWall;
+        return !isAirborn && !isSliding && !isStunned && !isBlockedByWall;
     }
 
     bool Hero::isNowShooting() const {

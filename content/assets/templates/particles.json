@@ -41,15 +41,15 @@
     {
         "name": "Damage Sweat",
         "animationSet": "assets/animations/particles.json",
-        "animationName": "slide-dust",
+        "animationName": "damage-sweat",
         "boundingBox": {
             "width": 8,
             "height": 8,
             "originX": 4,
-            "originY": 4
+            "originY": 8
         },
         "ageless": false,
-        "maximumAge": 0.8667
+        "maximumAge": 0.4167
     },
     {
         "name": "Medium Splash",

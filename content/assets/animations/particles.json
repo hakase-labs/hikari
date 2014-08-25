@@ -202,6 +202,40 @@
                     "length" : 0.1
                 }
             ]
+        },
+        "damage-sweat": {
+            "repeat": false,
+            "keyframe": 0,
+            "syncGroup": 0,
+            "frames": [
+                {
+                    "x" : 32,
+                    "y" : 0,
+                    "width" : 8,
+                    "height" : 8,
+                    "hotspotX" : 4,
+                    "hotspotY" : 8,
+                    "length" : 0.1334
+                },
+                {
+                    "x" : 40,
+                    "y" : 0,
+                    "width" : 8,
+                    "height" : 8,
+                    "hotspotX" : 4,
+                    "hotspotY" : 8,
+                    "length" : 0.15
+                },
+                {
+                    "x" : 48,
+                    "y" : 0,
+                    "width" : 8,
+                    "height" : 8,
+                    "hotspotX" : 4,
+                    "hotspotY" : 8,
+                    "length" : 0.15
+                }
+            ]
         }
     }
 }

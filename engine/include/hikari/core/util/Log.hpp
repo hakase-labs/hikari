@@ -5,13 +5,18 @@
 #include <iostream>
 #include <sstream>
 
+#ifndef HIKARI_LOG_MAX_LEVEL
+#define HIKARI_LOG_MAX_LEVEL 4
+#endif
+
 namespace hikari {
 
 /*
     Logging convenience macro
 */
 #define HIKARI_LOG(level) \
-if(level > ::hikari::Log::getReportingLevel()) {} \
+if(level > HIKARI_LOG_MAX_LEVEL) {} \
+else if(level > ::hikari::Log::getReportingLevel()) {} \
 else ::hikari::Log().get(level)
 
     enum LogLevel {
