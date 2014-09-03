@@ -102,11 +102,6 @@ namespace hikari {
                         return MobilityState::NEXT;
                 }
 
-                if(hero.canJump() && controller->shouldJump()) {
-                    hero.requestMobilityStateChange(std::unique_ptr<MobilityState>(new AirbornMobilityState(hero)));
-                    return MobilityState::NEXT;
-                }
-
                 if(!hero.body.isOnGround()) {
                     hero.requestMobilityStateChange(std::unique_ptr<MobilityState>(new AirbornMobilityState(hero)));
                     return MobilityState::NEXT;
@@ -114,6 +109,11 @@ namespace hikari {
 
                 hero.isDecelerating = true;
                 hero.requestMobilityStateChange(std::unique_ptr<MobilityState>(new IdleMobilityState(hero)));
+                return MobilityState::NEXT;
+            }
+
+            if(hero.canJump() && controller->shouldJump()) {
+                hero.requestMobilityStateChange(std::unique_ptr<MobilityState>(new AirbornMobilityState(hero)));
                 return MobilityState::NEXT;
             }
         }

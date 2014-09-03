@@ -979,6 +979,7 @@ namespace hikari {
         boss = world.spawnEnemy(currentRoom->getBossEntity());
 
         if(boss) {
+            boss->setBonusTableIndex(-1); // Ensure that the boss never drops an item.
             boss->setPosition(roomPosition + offset);
             world.queueObjectAddition(boss);
             world.update(0.0f);
@@ -1410,17 +1411,22 @@ namespace hikari {
                 world.queueObjectRemoval(enemyPtr);
 
                 if(boss && boss->getId() == entityId) {
-                    HIKARI_LOG(debug4) << "THE BOSS HAS BEEN KILLED! " << entityId;
-                    // TODO: Make rockman immune just in case there are projectiles
-                    //       already flying around. That would be a bummer to die.
-                    hero->setInvincibility(true);
+                    // Protect against the case where Rock dies RIGHT BEFORE the boss.
+                    // In that case, you still lose the battle.
+                    if(isHeroAlive) {
+                        HIKARI_LOG(debug4) << "The boss has been killed! " << entityId;
 
-                    if(auto gp = gameProgress.lock()) {
-                        gp->setBossDefeated(gp->getCurrentBoss(), true);
-                        gp->enableWeapon(gp->getCurrentBoss() + 1, true);
+                        hero->setInvincibility(true);
+
+                        if(auto gp = gameProgress.lock()) {
+                            gp->setBossDefeated(gp->getCurrentBoss(), true);
+                            gp->enableWeapon(gp->getCurrentBoss() + 1, true);
+                        }
+
+                        endBossBattle();
+                    } else {
+                        HIKARI_LOG(debug4) << "The boss has been killed, but Rock died before so you lose. ";
                     }
-
-                    endBossBattle();
                 }
 
                 spawnDeathExplosion(enemyPtr->getDeathType(), enemyPtr->getPosition());
