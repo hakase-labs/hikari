@@ -567,19 +567,20 @@ namespace hikari {
         Movable::setGravity(0.25f);
 
         std::vector<std::string> mapList;
-        mapList.push_back("map-dev2.json");
         mapList.push_back("map-pearlman.json");
         mapList.push_back("map-test6.json");
+        mapList.push_back("map-pearlman.json");
         mapList.push_back("map-pearl.json");
         mapList.push_back("map-test4.json");
         mapList.push_back("map-test3.json");
         mapList.push_back("map-test2.json");
 
         if(auto gp = gameProgress.lock()) {
-            // Determine which stage we're on and set that to the current level...
-            if((currentMap = maps.at(mapList.at(gp->getCurrentBoss() % mapList.size())))) {
-                currentTileset = currentMap->getTileset();
-            }
+			// Determine which stage we're on and set that to the current level...
+			if ((currentMap = maps.at(mapList.at(gp->getCurrentBoss() % mapList.size())))) {
+				currentTileset = currentMap->getTileset();
+			}
+
 
             // Enable / disable weapon menu items based on GameProgress
             int menuItemCount = guiWeaponMenu->getItemCount();

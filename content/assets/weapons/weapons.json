@@ -76,6 +76,7 @@
     },
     {
         "name": "KOMASABURO TOP",
+        "label": "K.TOP",
         "projectileType": "Komasaburo Top",
         "limit": 1,
         "usageCost": 3.0,
