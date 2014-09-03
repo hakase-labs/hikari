@@ -2509,8 +2509,6 @@ namespace hikari {
         targetXPosition = roomXPixels + (roomWidthPixels / 2);
         targetDirection = gamePlayState.hero->getPosition().getX() < targetXPosition ? Directions::Right : Directions::Left;
 
-        gamePlayState.hero->setDirection(targetDirection);
-
         // Determine the Y position of the top of the room so we'll know when
         // the hero has teleported outside of it.
         roomTopY = currentRoom->getY() * gridSize;
@@ -2590,8 +2588,9 @@ namespace hikari {
                 break;
 
             case 1:
-                // Just wait for 2 seconds.
+                // Just wait for 2 seconds and then face the right direction.
                 if(timer >= 4.2334f) {
+                    gamePlayState.hero->setDirection(targetDirection);
                     nextSegment();
                 }
                 break;
