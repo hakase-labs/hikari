@@ -77,8 +77,10 @@ namespace hikari {
     void WeaponGetState::handleEvent(sf::Event &event) {
         if(event.type == sf::Event::KeyPressed) {
             if(event.key.code == sf::Keyboard::Return) {
-                controller.requestStateChange("stageselect");
-                goToNextState = true;
+                if(!goToNextState) {
+                    controller.requestStateChange("stageselect");
+                    goToNextState = true;
+                }
             }
         }
     }
