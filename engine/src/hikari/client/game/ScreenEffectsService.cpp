@@ -1,10 +1,14 @@
 #include "hikari/client/game/ScreenEffectsService.hpp"
 #include "hikari/client/game/EventBusService.hpp"
+#include "hikari/core/util/FileSystem.hpp"
 #include "hikari/core/util/Log.hpp"
 
 #include <SFML/Graphics.hpp>
 
 namespace hikari {
+
+    const std::unique_ptr<sf::Shader> ScreenEffectsService::FADE_OUT_SHADER = std::unique_ptr<sf::Shader>(new sf::Shader());
+    const std::unique_ptr<sf::Shader> ScreenEffectsService::FADE_IN_SHADER = std::unique_ptr<sf::Shader>(new sf::Shader());
 
     ScreenEffectsService::ScreenEffectsService(const std::weak_ptr<EventBusService> & eventBus, int bufferWidth, int bufferHeight)
         : Service()
@@ -14,10 +18,17 @@ namespace hikari {
         , effects()
     {
         backBuffer.create(bufferWidth, bufferHeight);
+        preloadShaders();
     }
 
     ScreenEffectsService::~ScreenEffectsService() {
 
+    }
+
+    void ScreenEffectsService::preloadShaders() {
+        const std::string shaderCode = FileSystem::readFileAsString("assets/shaders/fade.frag");
+        FADE_OUT_SHADER->loadFromMemory(shaderCode, sf::Shader::Fragment);
+        FADE_IN_SHADER->loadFromMemory(shaderCode, sf::Shader::Fragment);
     }
 
     void ScreenEffectsService::setInputTexture(const sf::RenderTexture & texture) {
