@@ -17,8 +17,9 @@
 
 namespace hikari {
 
-    class Spawner;
     class Door;
+    class Force;
+    class Spawner;
 
     class HIKARI_API Room {
     private:
@@ -36,6 +37,7 @@ namespace hikari {
         std::vector<int> attr;
         std::vector<RoomTransition> transitions;
         std::vector<std::shared_ptr<Spawner>> spawners;
+        std::vector<std::shared_ptr<Force>> forces;
         std::list<BoundingBox<float>> ladders;
         std::shared_ptr<Door> entranceDoor;
         std::shared_ptr<Door> exitDoor;
@@ -54,9 +56,24 @@ namespace hikari {
         const static int DEFAULT_BG_COLOR = 0;
         const static std::string DEFAULT_BOSS_ENTITY_NAME;
 
-        Room(int id, int x, int y, int width, int height, int gridSize, int backgroundColor, const Point2D<int> &heroSpawnPosition, const Rectangle2D<int> &cameraBounds,
-            const std::vector<int> &tile, const std::vector<int> &attr, const std::vector<RoomTransition> &transitions, const std::vector<std::shared_ptr<Spawner>> &spawners,
-            const std::shared_ptr<Door> & entranceDoor, const std::shared_ptr<Door> & exitDoor, const std::string & bossEntityName);
+        Room(
+            int id,
+            int x,
+            int y,
+            int width,
+            int height,
+            int gridSize,
+            int backgroundColor,
+            const Point2D<int> &heroSpawnPosition,
+            const Rectangle2D<int> &cameraBounds,
+            const std::vector<int> &tile,
+            const std::vector<int> &attr,
+            const std::vector<RoomTransition> &transitions,
+            const std::vector<std::shared_ptr<Spawner>> &spawners,
+            const std::vector<std::shared_ptr<Force>> &forces,
+            const std::shared_ptr<Door> & entranceDoor,
+            const std::shared_ptr<Door> & exitDoor,
+            const std::string & bossEntityName);
 
         ~Room();
 
@@ -140,6 +157,13 @@ namespace hikari {
          * @return list of ladder rectangles
          */
         const std::list<BoundingBox<float>> & getLadders() const;
+
+        /**
+         * Gets a reference to the list of Forces in the room.
+         *
+         * @return list of Forces
+         */
+        const std::vector<std::shared_ptr<Force>>& getForces() const;
 
         /**
          * Gets a list of weak pointers to the Spawner objects in this Room.

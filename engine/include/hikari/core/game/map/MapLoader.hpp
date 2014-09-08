@@ -20,10 +20,12 @@ namespace hikari {
     class Room;
     class RoomTransition;
     class Spawner;
+    class Force;
 
     typedef std::shared_ptr<Map> MapPtr;
     typedef std::shared_ptr<Room> RoomPtr;
     typedef std::shared_ptr<Spawner> SpawnerPtr;
+    typedef std::shared_ptr<Force> ForcePtr;
 
     class HIKARI_API MapLoader : public Service {
     private:
@@ -87,6 +89,7 @@ namespace hikari {
         MapPtr constructMap(const Json::Value &json) const;
         RoomPtr constructRoom(const Json::Value &json, int gridSize) const;
         SpawnerPtr constructSpawner(const Json::Value &json, SpawnType type, int offsetX = 0, int offsetY = 0) const;
+        ForcePtr constructForce(const Json::Value &json, int offsetX = 0, int offsetY = 0) const;
         std::unique_ptr<Door> constructDoor(const Json::Value & json, int offsetX = 0, int offsetY = 0) const;
         RoomTransition constructTransition(const Json::Value &json) const;
         Rectangle2D<int> constructCameraBounds(const Json::Value &json,
