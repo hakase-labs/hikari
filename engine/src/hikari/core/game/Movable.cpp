@@ -185,7 +185,7 @@ namespace hikari {
     }
 
     Vector2<float> Movable::checkCollision(const float& dt) {
-        Vector2<float> translation = velocity;
+        Vector2<float> translation = getVelocity() + getAmbientVelocity();
 
         collisionInfo.clear();
         collisionInfo.treatPlatformAsGround = this->treatPlatformAsGround;
@@ -320,6 +320,10 @@ namespace hikari {
         boundingBox.setBottom(newBottom);
     }
 
+    void Movable::setAmbientVelocity(const Vector2<float>& velocity) {
+        ambientVelocity = velocity;
+    }
+
     void Movable::setVelocity(const Vector2<float>& velocity) {
         this->velocity = velocity;
     }
@@ -362,6 +366,8 @@ namespace hikari {
     }
 
     void Movable::update(float dt) {
+        Vector2<float> translation;
+
         if(isGravitated()) {
             if(isOnGround()) {
                 velocity.setY(velocity.getY() + getGravity());
@@ -379,7 +385,9 @@ namespace hikari {
         velocity.setY(math::clamp(velocity.getY(), minYVelocity, maxYVelocity));
 
         if(doesCollideWithWorld()) {
-            checkCollision(dt);
+            translation = checkCollision(dt);
+        } else {
+            translation = velocity + getAmbientVelocity();
         }
 
         float extraX = collisionInfo.inheritedVelocityX;
@@ -387,8 +395,8 @@ namespace hikari {
 
         // Integrate the position
         setPosition(
-            getPosition().getX() + (applyHorizontalVelocity ? velocity.getX() + extraX : 0 + extraX)/* * dt */,
-            getPosition().getY() + (applyVerticalVelocity   ? velocity.getY() + extraY : 0 + extraY)/* * dt */);
+            getPosition().getX() + (applyHorizontalVelocity ? translation.getX() + extraX : 0 + extraX)/* * dt */,
+            getPosition().getY() + (applyVerticalVelocity   ? translation.getY() + extraY : 0 + extraY)/* * dt */);
     }
 
     unsigned int Movable::getGravityApplicationThreshold() const {
