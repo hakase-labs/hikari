@@ -1,5 +1,6 @@
 #include "hikari/core/game/map/MapRenderer.hpp"
 #include "hikari/core/game/map/Door.hpp"
+#include "hikari/core/game/map/Force.hpp"
 #include "hikari/core/game/map/Room.hpp"
 #include "hikari/core/game/map/Tileset.hpp"
 #include <SFML/Graphics.hpp>
@@ -14,6 +15,7 @@ namespace hikari {
 
     bool MapRenderer::isDebugLadderRenderingEnabled = false;
     bool MapRenderer::isDebugDoorRenderingEnabled = false;
+    bool MapRenderer::isDebugForceRenderingEnabled = false;
     const int MapRenderer::TILE_OVERDRAW = 1;
 
     MapRenderer::MapRenderer(const RoomPtr &room, const TileDataPtr &tileData)
@@ -21,11 +23,22 @@ namespace hikari {
         , tileData(tileData)
         , tileSprite()
         , backgroundShape()
+        , debugLadderShape()
+        , debugForceShape()
         , visibleScreenArea()
-        , visibleTileArea() {
+        , visibleTileArea()
+    {
         if(tileData) {
             tileSprite.setTexture(*(tileData->getTexture()));
         }
+
+        debugLadderShape.setFillColor(sf::Color(128, 128, 0, 96));
+        debugLadderShape.setOutlineColor(sf::Color(255, 255, 255, 128));
+        debugLadderShape.setOutlineThickness(1.0f);
+
+        debugForceShape.setFillColor(sf::Color(128, 0, 0, 96));
+        debugForceShape.setOutlineColor(sf::Color(255, 255, 255, 128));
+        debugForceShape.setOutlineThickness(1.0f);
     }
 
     void MapRenderer::setRoom(const RoomPtr &room) {
@@ -80,16 +93,22 @@ namespace hikari {
 
         // Render ladder outlines if debug rendering is enabled
         if(isDebugLadderRenderingEnabled) {
-            sf::RectangleShape ladderRect;
-            ladderRect.setFillColor(sf::Color(128, 128, 0, 96));
-            ladderRect.setOutlineColor(sf::Color(255, 255, 255, 128));
-            ladderRect.setOutlineThickness(1.0f);
+            std::for_each(std::begin(room->getLadders()), std::end(room->getLadders()), [this, &target](const BoundingBox<float> & ladder) {
+                debugLadderShape.setPosition(sf::Vector2f(ladder.getLeft(), ladder.getTop()));
+                debugLadderShape.setSize(sf::Vector2f(ladder.getWidth(), ladder.getHeight()));
 
-            std::for_each(std::begin(room->getLadders()), std::end(room->getLadders()), [this, &ladderRect, &target](const BoundingBox<float> & ladder) {
-                ladderRect.setPosition(sf::Vector2f(ladder.getLeft(), ladder.getTop()));
-                ladderRect.setSize(sf::Vector2f(ladder.getWidth(), ladder.getHeight()));
+                target.draw(debugLadderShape);
+            });
+        }
 
-                target.draw(ladderRect);
+        // Render force outlines if debug rendering is enabled
+        if(isDebugForceRenderingEnabled) {
+            std::for_each(std::begin(room->getForces()), std::end(room->getForces()), [this, &target](const std::shared_ptr<Force> & force) {
+                const auto & bounds = force->getBounds();
+                debugForceShape.setPosition(sf::Vector2f(bounds.getLeft(), bounds.getTop()));
+                debugForceShape.setSize(sf::Vector2f(bounds.getWidth(), bounds.getHeight()));
+
+                target.draw(debugForceShape);
             });
         }
 

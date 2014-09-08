@@ -28,12 +28,15 @@ namespace hikari {
     class HIKARI_API MapRenderer {
     private:
         static bool isDebugLadderRenderingEnabled;
+        static bool isDebugForceRenderingEnabled;
         static bool isDebugDoorRenderingEnabled;
         static const int TILE_OVERDRAW;
         RoomPtr room;
         TileDataPtr tileData;
         sf::Sprite tileSprite;
         sf::RectangleShape backgroundShape;
+        sf::RectangleShape debugLadderShape;
+        sf::RectangleShape debugForceShape;
         Rectangle2D<int> visibleScreenArea;
         Rectangle2D<int> visibleTileArea;
 
