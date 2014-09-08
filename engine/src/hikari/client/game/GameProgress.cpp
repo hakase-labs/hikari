@@ -39,7 +39,7 @@ namespace hikari {
     }
 
     const unsigned char GameProgress::getBossCount() const {
-        return GameProgress::NumBosses;
+        return GameProgress::NUM_BOSSES;
     }
 
     const unsigned char GameProgress::getDefeatedBossCount() const {
@@ -66,24 +66,24 @@ namespace hikari {
         return mTanks;
     }
 
-    int GameProgress::getPlayerEnergy() const {
+    float GameProgress::getPlayerEnergy() const {
         return playerEnergy;
     }
 
-    int GameProgress::getPlayerMaxEnergy() const {
+    float GameProgress::getPlayerMaxEnergy() const {
         return playerMaxEnergy;
     }
 
-    int GameProgress::getBossEnergy() const {
+    float GameProgress::getBossEnergy() const {
         return bossEnergy;
     }
 
-    int GameProgress::getBossMaxEnergy() const {
+    float GameProgress::getBossMaxEnergy() const {
         return bossMaxEnergy;
     }
 
     unsigned char GameProgress::getWeaponCount() const {
-        return GameProgress::NumWeapons;
+        return GameProgress::NUM_BOSSES;
     }
 
     unsigned char GameProgress::getCurrentBoss() const {
@@ -94,14 +94,14 @@ namespace hikari {
         return currentWeapon;
     }
 
-    int GameProgress::getWeaponEnergy(unsigned char weapon) const {
+    float GameProgress::getWeaponEnergy(unsigned char weapon) const {
         if(weapon < getWeaponCount()) {
             return weaponEnergies[weapon];
         }
         return 0;
     }
 
-    int GameProgress::getWeaponMaxEnergy() const {
+    float GameProgress::getWeaponMaxEnergy() const {
         return DEFAULT_WEAPON_ENERGY;
     }
 
@@ -149,20 +149,20 @@ namespace hikari {
         mTanks = value;
     }
 
-    void GameProgress::setPlayerEnergy(int value) {
-        playerEnergy = std::max(0, value);
+    void GameProgress::setPlayerEnergy(float value) {
+        playerEnergy = std::max(0.0f, value);
     }
 
-    void GameProgress::setPlayerMaxEnergy(int value) {
-        playerMaxEnergy = std::max(0, value);
+    void GameProgress::setPlayerMaxEnergy(float value) {
+        playerMaxEnergy = std::max(0.0f, value);
     }
 
-    void GameProgress::setBossEnergy(int value) {
-        bossEnergy = std::max(0, value);
+    void GameProgress::setBossEnergy(float value) {
+        bossEnergy = std::max(0.0f, value);
     }
 
-    void GameProgress::setBossMaxEnergy(int value) {
-        bossMaxEnergy = std::max(0, value);
+    void GameProgress::setBossMaxEnergy(float value) {
+        bossMaxEnergy = std::max(0.0f, value);
     }
 
     void GameProgress::setCurrentBoss(unsigned char boss) {
@@ -186,9 +186,9 @@ namespace hikari {
 
     }
 
-    void GameProgress::setWeaponEnergy(unsigned char weapon, int value) {
+    void GameProgress::setWeaponEnergy(unsigned char weapon, float value) {
         if(weapon < getWeaponCount()) {
-            value = std::max(0, value);
+            value = std::max(0.0f, value);
             weaponEnergies[weapon] = value;
         }
     }

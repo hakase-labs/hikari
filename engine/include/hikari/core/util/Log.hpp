@@ -6,7 +6,7 @@
 #include <sstream>
 
 #ifndef HIKARI_LOG_MAX_LEVEL
-#define HIKARI_LOG_MAX_LEVEL 4
+#define HIKARI_LOG_MAX_LEVEL 9
 #endif
 
 namespace hikari {
@@ -34,10 +34,10 @@ else ::hikari::Log().get(level)
 
     /*
         Originally adapted from:
-        
-            "Logging In C++" 
+
+            "Logging In C++"
             by Petru Marginean
-            September 05, 2007 
+            September 05, 2007
             (http://www.drdobbs.com/cpp/logging-in-c/201804215?pgno=1)
 
     */
@@ -61,7 +61,7 @@ else ::hikari::Log().get(level)
         static LogLevel& getReportingLevel();
         static void setReportingLevel(const LogLevel& level);
     };
-    
+
 }
 
 #endif // HIKARI_CORE_UTIL_LOG

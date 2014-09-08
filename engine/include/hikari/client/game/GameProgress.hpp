@@ -11,8 +11,8 @@ namespace hikari {
 
     class HIKARI_API GameProgress : public Service {
     private:
-        static const unsigned char NumBosses = 8;
-        static const unsigned char NumWeapons = NumBosses + 3; // Need to determine this.
+        static const unsigned char NUM_BOSSES = 8;
+        static const unsigned char NUM_WEAPONS = NUM_BOSSES + 3; // Need to determine this.
         static const unsigned char DEFAULT_PLAYER_ENERGY;
         static const int DEFAULT_WEAPON_ENERGY;
         static const int DEFAULT_NUM_LIVES;
@@ -20,16 +20,16 @@ namespace hikari {
         int lives;
         int eTanks;
         int mTanks;
-        int playerEnergy;    // Your (the player's) energy
-        int playerMaxEnergy;
-        int bossEnergy;      // The energy of the boss currently being fought
-        int bossMaxEnergy;
-        int weaponEnergies[NumWeapons];
+        float playerEnergy;    // Your (the player's) energy
+        float playerMaxEnergy;
+        float bossEnergy;      // The energy of the boss currently being fought
+        float bossMaxEnergy;
+        float weaponEnergies[NUM_WEAPONS];
         unsigned char currentBoss;
         unsigned char currentWeapon;
 
-        bool bossesDefeated[NumBosses];
-        bool weaponsEnabled[NumWeapons];
+        bool bossesDefeated[NUM_BOSSES];
+        bool weaponsEnabled[NUM_WEAPONS];
 
         std::weak_ptr<EventBus> eventBus;
     public:
@@ -47,15 +47,15 @@ namespace hikari {
         int getLives() const;
         int getETanks() const;
         int getMTanks() const;
-        int getPlayerEnergy() const;
-        int getPlayerMaxEnergy() const;
-        int getBossEnergy() const;
-        int getBossMaxEnergy() const;
+        float getPlayerEnergy() const;
+        float getPlayerMaxEnergy() const;
+        float getBossEnergy() const;
+        float getBossMaxEnergy() const;
         unsigned char getCurrentBoss() const;
         unsigned char getCurrentWeapon() const;
         unsigned char getWeaponCount() const;
-        int getWeaponEnergy(unsigned char weapon) const;
-        int getWeaponMaxEnergy() const;
+        float getWeaponEnergy(unsigned char weapon) const;
+        float getWeaponMaxEnergy() const;
         unsigned char getWeakestWeapon() const;
         bool bossIsDefeated(unsigned char boss) const;
         bool weaponIsEnabled(unsigned char weapon) const;
@@ -67,13 +67,13 @@ namespace hikari {
         void setLives(int value);
         void setETanks(int value);
         void setMTanks(int value);
-        void setPlayerEnergy(int value);
-        void setPlayerMaxEnergy(int value);
-        void setBossEnergy(int value);
-        void setBossMaxEnergy(int value);
+        void setPlayerEnergy(float value);
+        void setPlayerMaxEnergy(float value);
+        void setBossEnergy(float value);
+        void setBossMaxEnergy(float value);
         void setCurrentBoss(unsigned char boss);
         void setCurrentWeapon(unsigned char weapon);
-        void setWeaponEnergy(unsigned char weapon, int value);
+        void setWeaponEnergy(unsigned char weapon, float value);
         void enableWeapon(unsigned char weapon, bool enable);
 
         //

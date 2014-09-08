@@ -2690,11 +2690,7 @@ namespace hikari {
                 // Once the hero has reached the ground, teleport him outta' here!
                 if(gamePlayState.hero->isOnGround()) {
                     if(timer >= 1.0f) {
-                        gamePlayState.hero->setPhasing(true);
-                        gamePlayState.hero->performTeleport();
-
-                        // Invert the gravity to teleport the hero out through the ceiling.
-                        Movable::setGravity(-0.25);
+                        gamePlayState.hero->changeAnimation("teleporting-out");
 
                         if(auto sound = gamePlayState.audioService.lock()) {
                             sound->playSample("Teleport");
@@ -2708,6 +2704,17 @@ namespace hikari {
                 break;
 
             case 8:
+                if(timer >= 0.2167f) {
+                    gamePlayState.hero->setPhasing(true);
+                    gamePlayState.hero->performTeleport();
+
+                    // Invert the gravity to teleport the hero out through the ceiling.
+                    Movable::setGravity(-0.25);
+                    nextSegment();
+                }
+                break;
+
+            case 9:
                 if(gamePlayState.hero->getBoundingBox().getBottom() < roomTopY) {
                     // Make sure the hero doesn't fall through the floor next time he's in
                     // a room.
@@ -2718,7 +2725,7 @@ namespace hikari {
                 }
                 break;
 
-            case 9:
+            case 10:
                 gamePlayState.controller.requestStateChange("weaponget");
                 nextSegment();
                 break;
