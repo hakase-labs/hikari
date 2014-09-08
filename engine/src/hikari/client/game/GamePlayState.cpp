@@ -60,6 +60,7 @@
 #include "hikari/core/game/map/MapLoader.hpp"
 #include "hikari/core/game/map/MapRenderer.hpp"
 #include "hikari/core/game/map/Door.hpp"
+#include "hikari/core/game/map/Force.hpp"
 #include "hikari/core/game/map/Room.hpp"
 #include "hikari/core/game/map/RoomTransition.hpp"
 #include "hikari/core/geom/GeometryUtils.hpp"
@@ -2013,18 +2014,36 @@ namespace hikari {
             //
             if(gamePlayState.hero) {
                 // Check to see if there are any ladders to grab on to.
-                auto index = std::begin(gamePlayState.currentRoom->getLadders());
-                const auto & end = std::end(gamePlayState.currentRoom->getLadders());
+                auto ladderIndex = std::begin(gamePlayState.currentRoom->getLadders());
+                const auto & ladderEnd = std::end(gamePlayState.currentRoom->getLadders());
 
-                while(index != end) {
-                    const BoundingBox<float> & ladder = *index;
+                while(ladderIndex != ladderEnd) {
+                    const BoundingBox<float> & ladder = *ladderIndex;
 
                     if(gamePlayState.hero->getBoundingBox().intersects(ladder)) {
                        gamePlayState.hero->requestClimbingAttachment(ladder);
                     }
 
-                    index++;
+                    ladderIndex++;
                 }
+
+                // Check to see if there are any Forces that need to act on the hero.
+                gamePlayState.hero->setAmbientVelocity(Vector2<float>(0.0f, 0.0f));
+
+                std::for_each(
+                    std::begin(gamePlayState.currentRoom->getForces()),
+                    std::end(gamePlayState.currentRoom->getForces()),
+                    [&](const std::shared_ptr<Force> & force) {
+                        const BoundingBox<float> & bounds = force->getBounds();
+
+                        if(gamePlayState.hero->getBoundingBox().intersects(bounds)) {
+                            // HIKARI_LOG(hikari::debug4) << "Touching a force!";
+                            gamePlayState.hero->setAmbientVelocity(
+                                gamePlayState.hero->getAmbientVelocity() + force->getVelocity()
+                            );
+                        }
+                    }
+                );
 
                 if(auto gp = gamePlayState.gameProgress.lock()) {
                     int currentWeaponEnergy = gp->getWeaponEnergy(gp->getCurrentWeapon());

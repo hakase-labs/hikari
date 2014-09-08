@@ -226,6 +226,9 @@ namespace hikari {
         void setInvincibility(bool invincible);
         void setHasAvailableWeaponEnergy(bool hasEnergy);
 
+        const Vector2<float>& getAmbientVelocity() const;
+        void setAmbientVelocity(const Vector2<float> & velocity);
+
         virtual void update(float dt);
         virtual void render(sf::RenderTarget &target);
         virtual void handleCollision(Movable& body, CollisionInfo& info);
