@@ -542,6 +542,15 @@
           "y": 8,
           "direction": "forward"
         }
+      ],
+      "forces": [
+        {
+            "x": 0,
+            "y": 120,
+            "width": 256,
+            "height": 200,
+            "velocityX": -2.0
+        }
       ]
     },
     {
