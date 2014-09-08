@@ -37,6 +37,7 @@ namespace hikari {
         , treatPlatformAsGround(true)
         , applyHorizontalVelocity(true)
         , applyVerticalVelocity(true)
+        , ambientVelocity(0.0f, 0.0f)
         , velocity(0.0f, 0.0f)
         , boundingBox(0.0f, 0.0f, 0.0f, 0.0f)
         , collisionInfo()
@@ -60,6 +61,7 @@ namespace hikari {
         , treatPlatformAsGround(true)
         , applyHorizontalVelocity(true)
         , applyVerticalVelocity(true)
+        , ambientVelocity(0.0f, 0.0f)
         , velocity(0.0f, 0.0f)
         , boundingBox(0.0f, 0.0f, width, height)
         , collisionInfo()
@@ -83,6 +85,7 @@ namespace hikari {
         , treatPlatformAsGround(proto.treatPlatformAsGround)
         , applyHorizontalVelocity(proto.applyHorizontalVelocity)
         , applyVerticalVelocity(proto.applyVerticalVelocity)
+        , ambientVelocity(proto.ambientVelocity)
         , velocity(proto.velocity)
         , boundingBox(proto.boundingBox)
         , collisionInfo(proto.collisionInfo)
@@ -126,6 +129,10 @@ namespace hikari {
 
     const Vector2<float>& Movable::getPosition() const {
         return boundingBox.getPosition();
+    }
+
+    const Vector2<float>& Movable::getAmbientVelocity() const {
+        return ambientVelocity;
     }
 
     const Vector2<float>& Movable::getVelocity() const {
@@ -177,19 +184,21 @@ namespace hikari {
         leftBlockedFlag = false;
     }
 
-    void Movable::checkCollision(const float& dt) {
+    Vector2<float> Movable::checkCollision(const float& dt) {
+        Vector2<float> translation = velocity;
+
         collisionInfo.clear();
         collisionInfo.treatPlatformAsGround = this->treatPlatformAsGround;
 
         preCheckCollision();
 
         // Check horizontal directions first
-        if(velocity.getX() < 0) {
+        if(translation.getX() < 0) {
             // Moving left
 
             // We subtract 1 here because getBottom() represents the first pixel outside of the bounding box.
             getCollisionResolver()->checkHorizontalEdge(
-                static_cast<int>(boundingBox.getLeft() + velocity.getX()/* * dt */),
+                static_cast<int>(boundingBox.getLeft() + translation.getX()/* * dt */),
                 static_cast<int>(boundingBox.getTop()),
                 static_cast<int>(boundingBox.getBottom() - 1),
                 Directions::Left,
@@ -199,6 +208,7 @@ namespace hikari {
             if(collisionInfo.isCollisionX) {
                 boundingBox.setLeft(static_cast<float>(collisionInfo.correctedX));
                 velocity.setX(0.0f);
+                translation.setX(0.0f);
                 leftBlockedFlag = true;
 
                 if(collisionCallback) {
@@ -206,12 +216,12 @@ namespace hikari {
                 }
             }
 
-        } else if(velocity.getX() > 0) {
+        } else if(translation.getX() > 0) {
             // Moving right
 
             // We subtract 1 here because getBottom() represents the first pixel outside of the bounding box.
             getCollisionResolver()->checkHorizontalEdge(
-                static_cast<int>(boundingBox.getRight() + velocity.getX()/* * dt */),
+                static_cast<int>(boundingBox.getRight() + translation.getX()/* * dt */),
                 static_cast<int>(boundingBox.getTop()),
                 static_cast<int>(boundingBox.getBottom() - 1),
                 Directions::Right,
@@ -221,6 +231,7 @@ namespace hikari {
             if(collisionInfo.isCollisionX) {
                 boundingBox.setRight(static_cast<float>(collisionInfo.correctedX));
                 velocity.setX(0.0f);
+                translation.setX(0.0f);
                 rightBlockedFlag = true;
 
                 if(collisionCallback) {
@@ -230,12 +241,12 @@ namespace hikari {
         }
 
         // Check vertical directions second
-        if(velocity.getY() < 0) {
+        if(translation.getY() < 0) {
             // Moving up
 
             // We subtract 1 here because getRight() represents the first pixel outside of the bounding box.
             getCollisionResolver()->checkVerticalEdge(
-                static_cast<int>(boundingBox.getTop() + velocity.getY()/* * dt */),
+                static_cast<int>(boundingBox.getTop() + translation.getY()/* * dt */),
                 static_cast<int>(boundingBox.getLeft()),
                 static_cast<int>(boundingBox.getRight() - 1),
                 Directions::Up,
@@ -245,6 +256,7 @@ namespace hikari {
             if(collisionInfo.isCollisionY) {
                 boundingBox.setTop(static_cast<float>(collisionInfo.correctedY));
                 velocity.setY(0.0f);
+                translation.setY(0.0f);
                 topBlockedFlag = true;
 
                 if(collisionCallback) {
@@ -252,12 +264,12 @@ namespace hikari {
                 }
             }
 
-        } else if(velocity.getY() > 0) {
+        } else if(translation.getY() > 0) {
             // Moving down
 
             // We subtract 1 here because getRight() represents the first pixel outside of the bounding box.
             getCollisionResolver()->checkVerticalEdge(
-                static_cast<int>(std::ceil(boundingBox.getBottom() + velocity.getY()/* * dt */)),
+                static_cast<int>(std::ceil(boundingBox.getBottom() + translation.getY()/* * dt */)),
                 static_cast<int>(boundingBox.getLeft()),
                 static_cast<int>(boundingBox.getRight() - 1),
                 Directions::Down,
@@ -267,6 +279,7 @@ namespace hikari {
             if(collisionInfo.isCollisionY) {
                 boundingBox.setBottom(static_cast<float>(collisionInfo.correctedY));
                 velocity.setY(velocity.getY() - std::floor(velocity.getY()));
+                translation.setY(velocity.getY());
                 onGroundNow = true;
                 bottomBlockedFlag = true;
 
@@ -281,6 +294,8 @@ namespace hikari {
         }
 
         postCheckCollision();
+
+        return translation;
     }
 
     void Movable::postCheckCollision() {
@@ -359,9 +374,9 @@ namespace hikari {
                     gravityApplicationCounter = 0;
                 }
             }
-
-            velocity.setY(math::clamp(velocity.getY(), minYVelocity, maxYVelocity));
         }
+
+        velocity.setY(math::clamp(velocity.getY(), minYVelocity, maxYVelocity));
 
         if(doesCollideWithWorld()) {
             checkCollision(dt);
