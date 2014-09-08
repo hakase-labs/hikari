@@ -545,11 +545,11 @@
       ],
       "forces": [
         {
-            "x": 0,
+            "x": 96,
             "y": 120,
-            "width": 256,
+            "width": 64,
             "height": 200,
-            "velocityX": -2.0
+            "velocityX": -0.5
         }
       ]
     },
