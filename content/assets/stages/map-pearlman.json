@@ -3228,7 +3228,7 @@
         "height": 15
       },
       "enemies": [{
-        "type": "Falling Platform 1 (2x1)",
+        "type": "Moving Platform 1 (2x1)",
         "x": 288,
         "y": 162,
         "direction": "Left"

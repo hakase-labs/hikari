@@ -546,10 +546,10 @@
       "forces": [
         {
             "x": 96,
-            "y": 120,
+            "y": 190,
             "width": 64,
             "height": 200,
-            "velocityX": -0.5
+            "velocityX": -0.875
         }
       ]
     },
