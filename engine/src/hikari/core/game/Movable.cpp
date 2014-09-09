@@ -187,13 +187,23 @@ namespace hikari {
     Vector2<float> Movable::checkCollision(const float& dt) {
         Vector2<float> translation = getVelocity() + getAmbientVelocity();
 
+        // Set "forceCheck" flags here based on whether we were previously
+        // inheriting velocity from something. If that's true, it means that
+        // we were on top of a moving platform or something else. If we're
+        // standing still then our velocity would be 0 so no checks on that axis
+        // would be performed, but since we're still technically moving we need
+        // a way to force checking for collisions so we don't ride a platform
+        // through a wall.
+        bool forceCheckXAxis = collisionInfo.inheritedVelocityX != 0.0;
+        bool forceCheckYAxis = collisionInfo.inheritedVelocityY != 0.0;
+
         collisionInfo.clear();
         collisionInfo.treatPlatformAsGround = this->treatPlatformAsGround;
 
         preCheckCollision();
 
         // Check horizontal directions first
-        if(translation.getX() < 0) {
+        if(translation.getX() < 0 || forceCheckXAxis) {
             // Moving left
 
             // We subtract 1 here because getBottom() represents the first pixel outside of the bounding box.
@@ -216,7 +226,7 @@ namespace hikari {
                 }
             }
 
-        } else if(translation.getX() > 0) {
+        } else if(translation.getX() > 0 || forceCheckXAxis) {
             // Moving right
 
             // We subtract 1 here because getBottom() represents the first pixel outside of the bounding box.
@@ -241,7 +251,7 @@ namespace hikari {
         }
 
         // Check vertical directions second
-        if(translation.getY() < 0) {
+        if(translation.getY() < 0 || forceCheckYAxis) {
             // Moving up
 
             // We subtract 1 here because getRight() represents the first pixel outside of the bounding box.
@@ -264,7 +274,7 @@ namespace hikari {
                 }
             }
 
-        } else if(translation.getY() > 0) {
+        } else if(translation.getY() > 0 || forceCheckYAxis) {
             // Moving down
 
             // We subtract 1 here because getRight() represents the first pixel outside of the bounding box.
