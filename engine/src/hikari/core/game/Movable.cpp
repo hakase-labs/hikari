@@ -194,6 +194,10 @@ namespace hikari {
         // would be performed, but since we're still technically moving we need
         // a way to force checking for collisions so we don't ride a platform
         // through a wall.
+        //
+        // Also the reason that there are four differene flags is because we
+        // don't want to incorrectly check for "up" collisions when we're moving
+        // down, or for "left" collisions when we're moving right.
         bool forceCheckXLeft = collisionInfo.inheritedVelocityX < 0.0;
         bool forceCheckXRight = collisionInfo.inheritedVelocityX > 0.0;
         bool forceCheckYUp = collisionInfo.inheritedVelocityY < 0.0;
