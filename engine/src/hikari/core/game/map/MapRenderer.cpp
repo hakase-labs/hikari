@@ -15,7 +15,7 @@ namespace hikari {
 
     bool MapRenderer::isDebugLadderRenderingEnabled = false;
     bool MapRenderer::isDebugDoorRenderingEnabled = false;
-    bool MapRenderer::isDebugForceRenderingEnabled = false;
+    bool MapRenderer::isDebugForceRenderingEnabled = true;
     const int MapRenderer::TILE_OVERDRAW = 1;
 
     MapRenderer::MapRenderer(const RoomPtr &room, const TileDataPtr &tileData)

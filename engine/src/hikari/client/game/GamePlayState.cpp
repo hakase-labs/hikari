@@ -2037,7 +2037,6 @@ namespace hikari {
                         const BoundingBox<float> & bounds = force->getBounds();
 
                         if(gamePlayState.hero->getBoundingBox().intersects(bounds)) {
-                            // HIKARI_LOG(hikari::debug4) << "Touching a force!";
                             gamePlayState.hero->setAmbientVelocity(
                                 gamePlayState.hero->getAmbientVelocity() + force->getVelocity()
                             );
