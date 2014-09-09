@@ -194,8 +194,10 @@ namespace hikari {
         // would be performed, but since we're still technically moving we need
         // a way to force checking for collisions so we don't ride a platform
         // through a wall.
-        bool forceCheckXAxis = collisionInfo.inheritedVelocityX != 0.0;
-        bool forceCheckYAxis = collisionInfo.inheritedVelocityY != 0.0;
+        bool forceCheckXLeft = collisionInfo.inheritedVelocityX < 0.0;
+        bool forceCheckXRight = collisionInfo.inheritedVelocityX > 0.0;
+        bool forceCheckYUp = collisionInfo.inheritedVelocityY < 0.0;
+        bool forceCheckYDown = collisionInfo.inheritedVelocityY > 0.0;
 
         collisionInfo.clear();
         collisionInfo.treatPlatformAsGround = this->treatPlatformAsGround;
@@ -203,7 +205,7 @@ namespace hikari {
         preCheckCollision();
 
         // Check horizontal directions first
-        if(translation.getX() < 0 || forceCheckXAxis) {
+        if(translation.getX() < 0 || forceCheckXLeft) {
             // Moving left
 
             // We subtract 1 here because getBottom() represents the first pixel outside of the bounding box.
@@ -226,7 +228,7 @@ namespace hikari {
                 }
             }
 
-        } else if(translation.getX() > 0 || forceCheckXAxis) {
+        } else if(translation.getX() > 0 || forceCheckXRight) {
             // Moving right
 
             // We subtract 1 here because getBottom() represents the first pixel outside of the bounding box.
@@ -251,7 +253,7 @@ namespace hikari {
         }
 
         // Check vertical directions second
-        if(translation.getY() < 0 || forceCheckYAxis) {
+        if(translation.getY() < 0 || forceCheckYUp) {
             // Moving up
 
             // We subtract 1 here because getRight() represents the first pixel outside of the bounding box.
@@ -274,7 +276,7 @@ namespace hikari {
                 }
             }
 
-        } else if(translation.getY() > 0 || forceCheckYAxis) {
+        } else if(translation.getY() > 0 || forceCheckYDown) {
             // Moving down
 
             // We subtract 1 here because getRight() represents the first pixel outside of the bounding box.
