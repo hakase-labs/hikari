@@ -529,6 +529,11 @@
           "type": "Mystery Tank",
           "x": 230,
           "y": 184
+        },
+        {
+            "type": "Super Magnet",
+            "x": 16,
+            "y": 184
         }
       ],
       "items": [],
@@ -545,10 +550,10 @@
       ],
       "forces": [
         {
-            "x": 96,
-            "y": 190,
+            "x": 32,
+            "y": 168,
             "width": 64,
-            "height": 200,
+            "height": 32,
             "velocityX": -0.875
         }
       ]

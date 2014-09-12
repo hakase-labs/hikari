@@ -462,5 +462,34 @@
             "gravitated": false,
             "phasing": true
         }
+    },
+    {
+        "name": "Super Magnet",
+        "hitPoints": 20.0,
+        "damageId": 0,
+        "bonusTableIndex": -1,
+        "behavior": {
+            "type": "scripted",
+            "name": "DoodadBehavior",
+            "config": {
+                "animation": "super-magnet"
+            }
+        },
+        "animationSet": "assets/animations/doodads.json",
+        "boundingBox": {
+            "width": 32,
+            "height": 32,
+            "originX": 16,
+            "originY": 16
+        },
+        "states": {
+            "default": {
+
+            }
+        },
+        "characteristics": {
+            "gravitated": false,
+            "phasing": false
+        }
     }
 ]

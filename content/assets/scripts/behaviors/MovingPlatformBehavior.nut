@@ -2,7 +2,7 @@ class MovingPlatformBehavior extends DoodadBehavior {
     isInitialized = false;
     counter = 0.0;
     shouldCount = false;
-    switchDirectionDelay = (1.0/60.0) * 3000;
+    switchDirectionDelay = 3.0;
 
     constructor(_classConfig = {}) {
         base.constructor(_classConfig);
@@ -10,14 +10,14 @@ class MovingPlatformBehavior extends DoodadBehavior {
 
     function update(dt) {
         if(host != null) {
-            if(shouldCount) {
+            // if(shouldCount) {
                 counter += dt;
 
                 if(counter >= switchDirectionDelay) {
                     counter = 0.0;
                     host.direction = Utils.getOppositeDirection(host.direction);
                 }
-            }
+            // }
 
             if(host.direction == Directions.Left) {
                 host.velocityX = 1.0;
