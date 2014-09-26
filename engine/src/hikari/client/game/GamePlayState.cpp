@@ -307,6 +307,7 @@ namespace hikari {
                                     weaponMenuItem->setFont(weaponItemFont.get());
                                     weaponMenuItem->setVisible(true);
                                     weaponMenuItem->setEnabled(true);
+                                    weaponMenuItem->setActionEventId("changeWeapon");
                                     guiWeaponMenu->addItem(weaponMenuItem);
                                 } else {
                                     HIKARI_LOG(debug4) << "The weapon \"" << name << "\" was not found when building the GUI.";
@@ -318,6 +319,18 @@ namespace hikari {
                 }
             }
 
+            // Add menu item for E-tanks
+            std::shared_ptr<gui::WeaponMenuItem> etankMenuItem(new gui::WeaponMenuItem("E", -1));
+            etankMenuItem->setForegroundColor(gcn::Color(128, 0, 0, 0));
+            etankMenuItem->setSelectionColor(gcn::Color(250, 128, 128));
+            etankMenuItem->setX(0);
+            etankMenuItem->setY(64);
+            // etankMenuItem->setFont(weaponItemFont.get());
+            etankMenuItem->setVisible(true);
+            etankMenuItem->setEnabled(true);
+            etankMenuItem->setActionEventId("useETank");
+            guiWeaponMenu->addItem(etankMenuItem);
+
             guiWeaponMenu->setWidth(guiContainer->getWidth() - 32);
             guiWeaponMenu->setHeight((guiContainer->getHeight() / 2) - 32);
             guiWeaponMenu->setBackgroundColor(gcn::Color(0, 0, 0, 0));
@@ -328,7 +341,7 @@ namespace hikari {
 
             guiWeaponMenuActionListener.reset(new gcn::FunctorActionListener([&](const gcn::ActionEvent& event) {
                 auto item = guiWeaponMenu->getMenuItemAt(guiWeaponMenu->getSelectedIndex());
-                // std::cout << "Actioned on #" << guiWeaponMenu->getSelectedIndex() << std::endl;
+                std::cout << "Actioned on #" << guiWeaponMenu->getSelectedIndex() << std::endl;
             }));
 
             guiWeaponMenuSelectionListener.reset(new gcn::FunctorSelectionListener([&](const gcn::SelectionEvent & event) {
@@ -588,8 +601,11 @@ namespace hikari {
 
             for(int i = 0; i < menuItemCount; ++i) {
                 const auto & menuItem = guiWeaponMenu->getMenuItemAt(i);
-                menuItem->setVisible(gp->weaponIsEnabled(i));
-                menuItem->setEnabled(gp->weaponIsEnabled(i));
+
+                if(menuItem->getActionEventId() == "changeWeapon") {
+                    menuItem->setVisible(gp->weaponIsEnabled(i));
+                    menuItem->setEnabled(gp->weaponIsEnabled(i));
+                }
             }
         }
 
