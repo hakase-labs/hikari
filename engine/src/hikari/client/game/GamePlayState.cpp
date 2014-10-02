@@ -325,7 +325,6 @@ namespace hikari {
             etankMenuItem->setSelectionColor(gcn::Color(250, 128, 128));
             etankMenuItem->setX(0);
             etankMenuItem->setY(64);
-            // etankMenuItem->setFont(weaponItemFont.get());
             etankMenuItem->setVisible(true);
             etankMenuItem->setEnabled(true);
             etankMenuItem->setActionEventId("useETank");
@@ -442,30 +441,7 @@ namespace hikari {
 
     void GamePlayState::handleEvent(sf::Event &event) {
         if((event.type == sf::Event::KeyPressed) && event.key.code == sf::Keyboard::Return) {
-            if(canViewMenu) {
-
-                taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
-                    if(screenEffectsService) {
-                        screenEffectsService->fadeOut();
-                    }
-                    return true;
-                }));
-
-                taskQueue.push(std::make_shared<WaitTask>((1.0f/60.0f) * 13.0f));
-
-                taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
-                    isViewingMenu = !isViewingMenu;
-                    guiMenuPanel->setVisible(isViewingMenu);
-                    guiWeaponMenu->requestFocus();
-
-                    if(screenEffectsService) {
-                        screenEffectsService->fadeIn();
-                    }
-                    return true;
-                }));
-
-                taskQueue.push(std::make_shared<WaitTask>((1.0f/60.0f) * 13.0f));
-            }
+            // Menu handlng code use to be here. <--
 
             if(auto gp = gameProgress.lock()) {
                 const auto & item = guiWeaponMenu->getMenuItemAt(guiWeaponMenu->getSelectedIndex());
@@ -533,6 +509,32 @@ namespace hikari {
 
         if(eventBus) {
             eventBus->processEvents();
+        }
+
+        if(userInput->wasPressed(Input::BUTTON_START)) {
+            if(canViewMenu) {
+                taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
+                    if(screenEffectsService) {
+                        screenEffectsService->fadeOut();
+                    }
+                    return true;
+                }));
+
+                taskQueue.push(std::make_shared<WaitTask>((1.0f/60.0f) * 13.0f));
+
+                taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
+                    isViewingMenu = !isViewingMenu;
+                    guiMenuPanel->setVisible(isViewingMenu);
+                    guiWeaponMenu->requestFocus();
+
+                    if(screenEffectsService) {
+                        screenEffectsService->fadeIn();
+                    }
+                    return true;
+                }));
+
+                taskQueue.push(std::make_shared<WaitTask>((1.0f/60.0f) * 13.0f));
+            }
         }
 
         if(!taskQueue.empty()) {
