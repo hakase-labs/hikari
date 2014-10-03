@@ -146,6 +146,7 @@ namespace hikari {
         sf::RectangleShape transitionMarker;
         sf::RectangleShape leftBar;
         bool canViewMenu;
+        bool isTransitioningMenu;
         bool isViewingMenu;
         bool hasReachedMidpoint;
         bool hasReachedBossCorridor;

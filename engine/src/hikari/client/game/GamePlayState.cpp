@@ -151,6 +151,7 @@ namespace hikari {
         , transitionMarker()
         , leftBar(sf::Vector2f(8.0f, 240.0f))
         , canViewMenu(false)
+        , isTransitioningMenu(false)
         , isViewingMenu(false)
         , hasReachedMidpoint(false)
         , hasReachedBossCorridor(false)
@@ -512,11 +513,13 @@ namespace hikari {
         }
 
         if(userInput->wasPressed(Input::BUTTON_START)) {
-            if(canViewMenu) {
+            if(canViewMenu && !isTransitioningMenu) {
                 taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
                     if(screenEffectsService) {
                         screenEffectsService->fadeOut();
                     }
+
+                    isTransitioningMenu = true;
                     return true;
                 }));
 
@@ -530,10 +533,16 @@ namespace hikari {
                     if(screenEffectsService) {
                         screenEffectsService->fadeIn();
                     }
+
                     return true;
                 }));
 
                 taskQueue.push(std::make_shared<WaitTask>((1.0f/60.0f) * 13.0f));
+
+                taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
+                    isTransitioningMenu = false;
+                    return true;
+                }));
             }
         }
 
