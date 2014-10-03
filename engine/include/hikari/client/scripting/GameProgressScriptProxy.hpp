@@ -34,6 +34,9 @@ namespace hikari {
         static void setLives(int value);
         static void setETanks(int value);
         static void setMTanks(int value);
+
+        static void enableWeaponSlot(int slotIndex);
+        static void disableWeaponSlot(int slotIndex);
     };
 
 } // hikari

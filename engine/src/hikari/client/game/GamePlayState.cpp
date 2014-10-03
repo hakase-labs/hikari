@@ -543,6 +543,27 @@ namespace hikari {
                     isTransitioningMenu = false;
                     return true;
                 }));
+
+                // TODO: Apply weapon change here.
+
+                if(auto gp = gameProgress.lock()) {
+                    const auto & item = guiWeaponMenu->getMenuItemAt(guiWeaponMenu->getSelectedIndex());
+                    int currentWeaponId = 0;
+
+                    // So, here's a very convoluted thing that's going on:
+                    // Weapons have a ID, which is assigned automatically when all of the weapons are
+                    // parsed and loaded when the game starts. The weapons in the menu are stored by
+                    // name in game.json, which are then looked up to get their ID. Both the name and
+                    // ID are stored in the MenuItem. When a menu item is selected, we get the weapon
+                    // ID from it, and then store that as the "current weapon".
+
+                    if(const auto & weaponMenuItem = std::dynamic_pointer_cast<gui::WeaponMenuItem>(item)) {
+                        currentWeaponId = weaponMenuItem->getWeaponId();
+                    }
+
+                    gp->setCurrentWeapon(currentWeaponId);
+                    hero->setWeaponId(gp->getCurrentWeapon());
+                }
             }
         }
 
