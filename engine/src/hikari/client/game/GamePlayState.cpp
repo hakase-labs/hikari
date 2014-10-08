@@ -152,6 +152,7 @@ namespace hikari {
         , leftBar(sf::Vector2f(8.0f, 240.0f))
         , canViewMenu(false)
         , isTransitioningMenu(false)
+        , isRefillingEnergy(false)
         , isViewingMenu(false)
         , hasReachedMidpoint(false)
         , hasReachedBossCorridor(false)
@@ -347,8 +348,17 @@ namespace hikari {
 
                 if("useETank" == actionEventId) {
                     std::cout << "Trying to use an etank!" << std::endl;
+                    if(isRefillingEnergy) {
+                        std::cout << "A refill is in progress, so ignore." << std::endl;
+                    } else if(auto gp = gameProgress.lock()) {
+                        if(gp->getETanks() > 0 && gp->getPlayerEnergy() < gp->getPlayerMaxEnergy()) {
+                            gp->setETanks(gp->getETanks() - 1);
+                            refillPlayerEnergy(gp->getPlayerMaxEnergy());
+                        }
+                    }
                 } else {
                     std::cout << "Swapping weapon, exiting menu." << std::endl;
+                    toggleWeaponMenu();
                 }
             }));
 
@@ -490,6 +500,12 @@ namespace hikari {
             }
         }
 
+        if((event.type == sf::Event::KeyPressed) && event.key.code == sf::Keyboard::Y) {
+            if(auto gp = gameProgress.lock()) {
+                gp->setPlayerEnergy(1.0f);
+            }
+        }
+
         if((event.type == sf::Event::KeyPressed) && event.key.code == sf::Keyboard::B) {
             if(hero->getZIndex() == 0) {
                 hero->setZIndex(-1);
@@ -521,36 +537,8 @@ namespace hikari {
         }
 
         if(userInput->wasPressed(Input::BUTTON_START)) {
-            if(canViewMenu && !isTransitioningMenu) {
-                taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
-                    if(screenEffectsService) {
-                        screenEffectsService->fadeOut();
-                    }
-
-                    isTransitioningMenu = true;
-                    return true;
-                }));
-
-                taskQueue.push(std::make_shared<WaitTask>((1.0f/60.0f) * 13.0f));
-
-                taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
-                    isViewingMenu = !isViewingMenu;
-                    guiMenuPanel->setVisible(isViewingMenu);
-                    guiWeaponMenu->requestFocus();
-
-                    if(screenEffectsService) {
-                        screenEffectsService->fadeIn();
-                    }
-
-                    return true;
-                }));
-
-                taskQueue.push(std::make_shared<WaitTask>((1.0f/60.0f) * 13.0f));
-
-                taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
-                    isTransitioningMenu = false;
-                    return true;
-                }));
+            if(canViewMenu && !isTransitioningMenu && !isRefillingEnergy && !isViewingMenu) {
+                toggleWeaponMenu();
 
                 // TODO: Apply weapon change here.
 
@@ -1620,12 +1608,20 @@ namespace hikari {
     }
 
     void GamePlayState::refillPlayerEnergy(int amount) {
+        taskQueue.push(std::make_shared<FunctionTask>(1, [&](float dt) {
+            isRefillingEnergy = true;
+            return true;
+        }));
         taskQueue.push(std::make_shared<RefillHealthTask>(
             RefillHealthTask::PLAYER_ENERGY,
             amount,
             audioService,
             gameProgress)
         );
+        taskQueue.push(std::make_shared<FunctionTask>(1, [&](float dt) {
+            isRefillingEnergy = false;
+            return true;
+        }));
     }
 
     void GamePlayState::refillWeaponEnergy(int amount) {
@@ -1651,6 +1647,38 @@ namespace hikari {
         }
 
         taskQueue.push(std::make_shared<WaitTask>((1.0f/60.0f) * 13.0f));
+    }
+
+    void GamePlayState::toggleWeaponMenu() {
+        taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
+            if(screenEffectsService) {
+                screenEffectsService->fadeOut();
+            }
+
+            isTransitioningMenu = true;
+            return true;
+        }));
+
+        taskQueue.push(std::make_shared<WaitTask>((1.0f/60.0f) * 13.0f));
+
+        taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
+            isViewingMenu = !isViewingMenu;
+            guiMenuPanel->setVisible(isViewingMenu);
+            guiWeaponMenu->requestFocus();
+
+            if(screenEffectsService) {
+                screenEffectsService->fadeIn();
+            }
+
+            return true;
+        }));
+
+        taskQueue.push(std::make_shared<WaitTask>((1.0f/60.0f) * 13.0f));
+
+        taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
+            isTransitioningMenu = false;
+            return true;
+        }));
     }
 
     // ************************************************************************

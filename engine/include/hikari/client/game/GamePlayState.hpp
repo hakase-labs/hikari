@@ -147,6 +147,7 @@ namespace hikari {
         sf::RectangleShape leftBar;
         bool canViewMenu;
         bool isTransitioningMenu;
+        bool isRefillingEnergy;
         bool isViewingMenu;
         bool hasReachedMidpoint;
         bool hasReachedBossCorridor;
@@ -323,6 +324,7 @@ namespace hikari {
         void updateGui();
         void fadeOut();
         void fadeIn();
+        void toggleWeaponMenu();
 
         /**
          * GamePlayState::SubState encapsulates a part of gameplay that operates
