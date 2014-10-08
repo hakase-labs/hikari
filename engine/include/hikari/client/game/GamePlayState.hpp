@@ -288,6 +288,8 @@ namespace hikari {
          */
         void checkCollisionWithTransition();
 
+        void chooseCurrentWeapon();
+
         /**
          * Updates doors of the current room if it has any.
          */

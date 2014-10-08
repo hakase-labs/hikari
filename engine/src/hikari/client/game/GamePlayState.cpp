@@ -348,7 +348,7 @@ namespace hikari {
 
                 if("useETank" == actionEventId) {
                     std::cout << "Trying to use an etank!" << std::endl;
-                    if(isRefillingEnergy) {
+                    if(isRefillingEnergy || isTransitioningMenu) {
                         std::cout << "A refill is in progress, so ignore." << std::endl;
                     } else if(auto gp = gameProgress.lock()) {
                         if(gp->getETanks() > 0 && gp->getPlayerEnergy() < gp->getPlayerMaxEnergy()) {
@@ -357,8 +357,12 @@ namespace hikari {
                         }
                     }
                 } else {
-                    std::cout << "Swapping weapon, exiting menu." << std::endl;
-                    toggleWeaponMenu();
+                    if(!isTransitioningMenu) {
+                        std::cout << "Swapping weapon, exiting menu." << std::endl;
+                        isTransitioningMenu = true;
+                        chooseCurrentWeapon();
+                        toggleWeaponMenu();
+                    }
                 }
             }));
 
@@ -539,27 +543,6 @@ namespace hikari {
         if(userInput->wasPressed(Input::BUTTON_START)) {
             if(canViewMenu && !isTransitioningMenu && !isRefillingEnergy && !isViewingMenu) {
                 toggleWeaponMenu();
-
-                // TODO: Apply weapon change here.
-
-                if(auto gp = gameProgress.lock()) {
-                    const auto & item = guiWeaponMenu->getMenuItemAt(guiWeaponMenu->getSelectedIndex());
-                    int currentWeaponId = 0;
-
-                    // So, here's a very convoluted thing that's going on:
-                    // Weapons have a ID, which is assigned automatically when all of the weapons are
-                    // parsed and loaded when the game starts. The weapons in the menu are stored by
-                    // name in game.json, which are then looked up to get their ID. Both the name and
-                    // ID are stored in the MenuItem. When a menu item is selected, we get the weapon
-                    // ID from it, and then store that as the "current weapon".
-
-                    if(const auto & weaponMenuItem = std::dynamic_pointer_cast<gui::WeaponMenuItem>(item)) {
-                        currentWeaponId = weaponMenuItem->getWeaponId();
-                    }
-
-                    gp->setCurrentWeapon(currentWeaponId);
-                    hero->setWeaponId(gp->getCurrentWeapon());
-                }
             }
         }
 
@@ -1211,6 +1194,31 @@ namespace hikari {
     }
 
     void GamePlayState::checkCollisionWithTransition() { }
+
+    void GamePlayState::chooseCurrentWeapon() {
+        if(auto gp = gameProgress.lock()) {
+            const auto & item = guiWeaponMenu->getMenuItemAt(guiWeaponMenu->getSelectedIndex());
+            int selectedWeaponId = 0;
+
+            // So, here's a very convoluted thing that's going on:
+            // Weapons have a ID, which is assigned automatically when all of the weapons are
+            // parsed and loaded when the game starts. The weapons in the menu are stored by
+            // name in game.json, which are then looked up to get their ID. Both the name and
+            // ID are stored in the MenuItem. When a menu item is selected, we get the weapon
+            // ID from it, and then store that as the "current weapon".
+
+            if(const auto & weaponMenuItem = std::dynamic_pointer_cast<gui::WeaponMenuItem>(item)) {
+                selectedWeaponId = weaponMenuItem->getWeaponId();
+            }
+
+            if(gp->getCurrentWeapon() != selectedWeaponId) {
+                // TODO: Remove any active projectiles since we've changed weapons.
+            }
+
+            gp->setCurrentWeapon(selectedWeaponId);
+            hero->setWeaponId(gp->getCurrentWeapon());
+        }
+    }
 
     void GamePlayState::renderMap(sf::RenderTarget &target) const {
         const auto& oldView = target.getDefaultView();

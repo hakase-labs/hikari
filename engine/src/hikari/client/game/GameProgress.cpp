@@ -26,6 +26,8 @@ namespace hikari {
 
         // Mega Buster is always the 0th weapon, so enable it
         enableWeapon(0, true);
+        enableWeapon(1, true);
+        enableWeapon(2, true);
         setETanks(4);
     }
 
