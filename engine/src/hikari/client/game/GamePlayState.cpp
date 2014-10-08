@@ -341,7 +341,15 @@ namespace hikari {
 
             guiWeaponMenuActionListener.reset(new gcn::FunctorActionListener([&](const gcn::ActionEvent& event) {
                 auto item = guiWeaponMenu->getMenuItemAt(guiWeaponMenu->getSelectedIndex());
+                auto actionEventId = item->getActionEventId();
+
                 std::cout << "Actioned on #" << guiWeaponMenu->getSelectedIndex() << std::endl;
+
+                if("useETank" == actionEventId) {
+                    std::cout << "Trying to use an etank!" << std::endl;
+                } else {
+                    std::cout << "Swapping weapon, exiting menu." << std::endl;
+                }
             }));
 
             guiWeaponMenuSelectionListener.reset(new gcn::FunctorSelectionListener([&](const gcn::SelectionEvent & event) {
