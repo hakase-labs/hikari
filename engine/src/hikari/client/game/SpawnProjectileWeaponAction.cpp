@@ -33,6 +33,7 @@ namespace hikari {
             projectile->setDirection(eventData.getDirection());
             projectile->setFaction(eventData.getFaction());
             projectile->setPosition(eventData.getPosition());
+            projectile->setParentId(eventData.getShooterId());
             projectile->setDamageId(weapon.getDamageId());
             projectile->setActive(true);
 

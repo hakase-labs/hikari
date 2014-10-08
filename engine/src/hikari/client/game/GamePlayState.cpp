@@ -466,24 +466,24 @@ namespace hikari {
         if((event.type == sf::Event::KeyPressed) && event.key.code == sf::Keyboard::Return) {
             // Menu handlng code use to be here. <--
 
-            if(auto gp = gameProgress.lock()) {
-                const auto & item = guiWeaponMenu->getMenuItemAt(guiWeaponMenu->getSelectedIndex());
-                int currentWeaponId = 0;
+            // if(auto gp = gameProgress.lock()) {
+            //     const auto & item = guiWeaponMenu->getMenuItemAt(guiWeaponMenu->getSelectedIndex());
+            //     int currentWeaponId = 0;
 
-                // So, here's a very convoluted thing that's going on:
-                // Weapons have a ID, which is assigned automatically when all of the weapons are
-                // parsed and loaded when the game starts. The weapons in the menu are stored by
-                // name in game.json, which are then looked up to get their ID. Both the name and
-                // ID are stored in the MenuItem. When a menu item is selected, we get the weapon
-                // ID from it, and then store that as the "current weapon".
+            //     // So, here's a very convoluted thing that's going on:
+            //     // Weapons have a ID, which is assigned automatically when all of the weapons are
+            //     // parsed and loaded when the game starts. The weapons in the menu are stored by
+            //     // name in game.json, which are then looked up to get their ID. Both the name and
+            //     // ID are stored in the MenuItem. When a menu item is selected, we get the weapon
+            //     // ID from it, and then store that as the "current weapon".
 
-                if(const auto & weaponMenuItem = std::dynamic_pointer_cast<gui::WeaponMenuItem>(item)) {
-                    currentWeaponId = weaponMenuItem->getWeaponId();
-                }
+            //     if(const auto & weaponMenuItem = std::dynamic_pointer_cast<gui::WeaponMenuItem>(item)) {
+            //         currentWeaponId = weaponMenuItem->getWeaponId();
+            //     }
 
-                gp->setCurrentWeapon(currentWeaponId);
-                hero->setWeaponId(gp->getCurrentWeapon());
-            }
+            //     gp->setCurrentWeapon(currentWeaponId);
+            //     hero->setWeaponId(gp->getCurrentWeapon());
+            // }
         }
 
         if((event.type == sf::Event::KeyPressed) && event.key.code == sf::Keyboard::BackSpace) {
@@ -1212,7 +1212,22 @@ namespace hikari {
             }
 
             if(gp->getCurrentWeapon() != selectedWeaponId) {
-                // TODO: Remove any active projectiles since we've changed weapons.
+                // Remove any active projectiles since we've changed weapons.
+                const auto & activeProjectiles = world.getActiveProjectiles();
+
+                std::for_each(
+                    std::begin(activeProjectiles),
+                    std::end(activeProjectiles),
+                    [&](const std::shared_ptr<Projectile> & projectile) {
+                        if(projectile && projectile->getParentId() == hero->getId()) {
+                            world.queueObjectRemoval(projectile);
+                        }
+                    }
+                );
+
+                // Flush any queued object removals, otherwise they won't get
+                // processed until after the menu fades out, and it looks bad/wrong.
+                world.processRemovals();
             }
 
             gp->setCurrentWeapon(selectedWeaponId);
