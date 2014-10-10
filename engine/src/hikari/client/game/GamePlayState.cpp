@@ -2619,6 +2619,7 @@ namespace hikari {
             sound->stopMusic();
         }
 
+        gamePlayState.canViewMenu = false;
         gamePlayState.cutSceneController->stopMoving();
         gamePlayState.cutSceneController->stopJumping();
         gamePlayState.hero->setActionController(gamePlayState.cutSceneController);
