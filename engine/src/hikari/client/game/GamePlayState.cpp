@@ -1023,6 +1023,12 @@ namespace hikari {
                 // crossed into the boundary of the lambda. This is balls.
                 std::shared_ptr<float> waitTimeAfterLanding = std::make_shared<float>(0.1f);
 
+                // Diable the weapon menu temporarily until the battle is ready to begin.
+                taskQueue.push(std::make_shared<FunctionTask>(1, [&](float dt) {
+                    isRefillingEnergy = true;
+                    return true;
+                }));
+
                 taskQueue.push(std::make_shared<FunctionTask>(0, [this, waitTimeAfterLanding](float dt) -> bool {
                     bool done = false;
 
@@ -1043,9 +1049,10 @@ namespace hikari {
                     gameProgress)
                 );
 
-                // Return control to the player
+                // Return control to the player and re-enable the weapon menu.
                 taskQueue.push(std::make_shared<FunctionTask>(0, [this, playerHeroController](float dt) -> bool {
                     hero->setActionController(playerHeroController);
+                    isRefillingEnergy = false;
                     return true;
                 }));
             }
