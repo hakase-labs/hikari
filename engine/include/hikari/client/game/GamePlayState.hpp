@@ -96,6 +96,7 @@ namespace hikari {
     class SubState;
 
     private:
+        static const std::string MENU_ACTION_ETANK;
         std::string name;
         GameController & controller;
         std::weak_ptr<AudioService> audioService;

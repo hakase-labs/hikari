@@ -95,10 +95,7 @@
 
 namespace hikari {
 
-    void letMeKnowItsGone(EventDataPtr data) {
-        auto eventData = std::static_pointer_cast<ObjectRemovedEventData>(data);
-        HIKARI_LOG(debug1) << "Removed! id =" << eventData->getObjectId();
-    }
+    const std::string GamePlayState::MENU_ACTION_ETANK = "useETank";
 
     GamePlayState::GamePlayState(const std::string &name, GameController & controller, const Json::Value &params, const std::weak_ptr<GameConfig> & gameConfig, ServiceLocator &services)
         : name(name)
@@ -329,7 +326,7 @@ namespace hikari {
             etankMenuItem->setY(64);
             etankMenuItem->setVisible(true);
             etankMenuItem->setEnabled(true);
-            etankMenuItem->setActionEventId("useETank");
+            etankMenuItem->setActionEventId(MENU_ACTION_ETANK);
             guiWeaponMenu->addItem(etankMenuItem);
 
             guiWeaponMenu->setWidth(guiContainer->getWidth() - 32);
@@ -344,21 +341,22 @@ namespace hikari {
                 auto item = guiWeaponMenu->getMenuItemAt(guiWeaponMenu->getSelectedIndex());
                 auto actionEventId = item->getActionEventId();
 
-                std::cout << "Actioned on #" << guiWeaponMenu->getSelectedIndex() << std::endl;
+                HIKARI_LOG(debug3) << "Actioned on #" << guiWeaponMenu->getSelectedIndex();
 
-                if("useETank" == actionEventId) {
-                    std::cout << "Trying to use an etank!" << std::endl;
-                    if(isRefillingEnergy || isTransitioningMenu) {
-                        std::cout << "A refill is in progress, so ignore." << std::endl;
-                    } else if(auto gp = gameProgress.lock()) {
-                        if(gp->getETanks() > 0 && gp->getPlayerEnergy() < gp->getPlayerMaxEnergy()) {
-                            gp->setETanks(gp->getETanks() - 1);
-                            refillPlayerEnergy(gp->getPlayerMaxEnergy());
+                if(MENU_ACTION_ETANK == actionEventId) {
+                    HIKARI_LOG(debug4) << "Trying to use an e-tank.";
+
+                    if(!(isRefillingEnergy || isTransitioningMenu)) {
+                        if(auto gp = gameProgress.lock()) {
+                            if(gp->getETanks() > 0 && gp->getPlayerEnergy() < gp->getPlayerMaxEnergy()) {
+                                gp->setETanks(gp->getETanks() - 1);
+                                refillPlayerEnergy(gp->getPlayerMaxEnergy());
+                            }
                         }
                     }
                 } else {
                     if(!isTransitioningMenu) {
-                        std::cout << "Swapping weapon, exiting menu." << std::endl;
+                        HIKARI_LOG(debug4) << "Swapping weapon, exiting menu.";
                         isTransitioningMenu = true;
                         chooseCurrentWeapon();
                         toggleWeaponMenu();
@@ -1396,10 +1394,6 @@ namespace hikari {
             eventBus->addListener(entityStateChangeDelegate, EntityStateChangeEventData::Type);
             eventHandlerDelegates.push_back(std::make_pair(entityStateChangeDelegate, EntityStateChangeEventData::Type));
 
-            auto objectRemovedDelegate = EventListenerDelegate(&letMeKnowItsGone);
-            eventBus->addListener(objectRemovedDelegate, ObjectRemovedEventData::Type);
-            eventHandlerDelegates.push_back(std::make_pair(objectRemovedDelegate, ObjectRemovedEventData::Type));
-
             auto doorEventDelegate = EventListenerDelegate(std::bind(&GamePlayState::handleDoorEvent, this, std::placeholders::_1));
             eventBus->addListener(doorEventDelegate, DoorEventData::Type);
             eventHandlerDelegates.push_back(std::make_pair(doorEventDelegate, DoorEventData::Type));
@@ -1413,8 +1407,6 @@ namespace hikari {
             if(auto sound = audioService.lock()) {
                 sound->playSample("Rockman (Damage)");
             }
-
-            const auto & boundingBox = hero->getBoundingBox();
 
             // TODO: Create a system to spawn particles together like this, declaratively.
 
