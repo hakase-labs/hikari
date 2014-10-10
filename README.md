@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/zackthehuman/hikari.svg?branch=master)](https://travis-ci.org/zackthehuman/hikari)
+
 ![Hikari](http://zackthehuman.com/images/hikari/hikari-logo.png)
-![Build Status](https://api.travis-ci.org/zackthehuman/hikari.svg)
 
 Project Hikari
 ==============
