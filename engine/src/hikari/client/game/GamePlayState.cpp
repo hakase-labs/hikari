@@ -1672,6 +1672,10 @@ namespace hikari {
     }
 
     void GamePlayState::toggleWeaponMenu() {
+        if(auto sound = audioService.lock()) {
+            sound->playSample("Menu Open");
+        }
+
         taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
             if(screenEffectsService) {
                 screenEffectsService->fadeOut();
