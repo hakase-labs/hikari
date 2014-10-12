@@ -1,6 +1,7 @@
 #include "hikari/core/game/map/MapLoader.hpp"
 #include "hikari/core/game/map/Map.hpp"
 #include "hikari/core/game/map/Door.hpp"
+#include "hikari/core/game/map/Force.hpp"
 #include "hikari/core/game/map/Room.hpp"
 #include "hikari/core/game/map/RoomTransition.hpp"
 #include "hikari/core/game/map/Tileset.hpp"
@@ -8,6 +9,7 @@
 #include "hikari/client/game/objects/ItemSpawner.hpp"
 #include "hikari/client/game/objects/EnemySpawner.hpp"
 #include "hikari/client/scripting/SquirrelUtils.hpp"
+#include "hikari/core/geom/BoundingBox.hpp"
 #include "hikari/core/util/AnimationSetCache.hpp"
 #include "hikari/core/util/ImageCache.hpp"
 #include "hikari/core/util/StringUtils.hpp"
@@ -221,6 +223,26 @@ namespace hikari {
         }
 
         //
+        // Construct forces
+        //
+        std::vector<std::shared_ptr<Force>> forces;
+
+        const auto & forceArray = json["forces"];
+
+        if(forceArray.size() > 0) {
+            HIKARI_LOG(debug) << "Found " << forceArray.size() << " force declarations.";
+            for(int forceIndex = 0; forceIndex < forceArray.size(); ++forceIndex) {
+                forces.emplace_back(
+                    constructForce(
+                        forceArray[forceIndex],
+                        roomOriginX,
+                        roomOriginY
+                    )
+                );
+            }
+        }
+
+        //
         // Construct transitions
         //
         std::vector<RoomTransition> transitions;
@@ -268,6 +290,7 @@ namespace hikari {
                 attr,
                 transitions,
                 spawners,
+                forces,
                 std::move(entranceDoor),
                 std::move(exitDoor),
                 bossEntity
@@ -376,6 +399,29 @@ namespace hikari {
         }
 
         return spawner;
+    }
+
+    ForcePtr MapLoader::constructForce(const Json::Value &json, int offsetX, int offsetY) const {
+        HIKARI_LOG(debug4) << "constructForce offset: (" << offsetX << ", " << offsetY << ")";
+
+        auto x = json["x"].asInt();
+        auto y = json["y"].asInt();
+        auto width = json["width"].asInt();
+        auto height = json["height"].asInt();
+        auto vX = json.get("velocityX", 0.0f).asFloat();
+        auto vY = json.get("velocityY", 0.0f).asFloat();
+
+        auto force = std::make_shared<Force>(
+            BoundingBox<float>(
+                static_cast<float>(x),
+                static_cast<float>(y),
+                static_cast<float>(width),
+                static_cast<float>(height)
+            ),
+            Vector2<float>(vX, vY)
+        );
+
+        return force;
     }
 
     RoomTransition MapLoader::constructTransition(const Json::Value &json) const {

@@ -258,6 +258,14 @@ namespace hikari {
         hasAvailableWeaponEnergy = hasEnergy;
     }
 
+    const Vector2<float>& Hero::getAmbientVelocity() const {
+        return body.getAmbientVelocity();
+    }
+
+    void Hero::setAmbientVelocity(const Vector2<float> & velocity) {
+        body.setAmbientVelocity(velocity);
+    }
+
     void Hero::playAnimation(float dt) {
         const auto & animSprite = getAnimatedSprite();
 

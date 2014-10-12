@@ -111,6 +111,8 @@ namespace hikari {
             gameProxyTable.Func(_SC("setLives"),  &GameProgressScriptProxy::setLives);
             gameProxyTable.Func(_SC("setETanks"), &GameProgressScriptProxy::setETanks);
             gameProxyTable.Func(_SC("setMTanks"), &GameProgressScriptProxy::setMTanks);
+            gameProxyTable.Func(_SC("enableWeapon"), &GameProgressScriptProxy::enableWeaponSlot);
+            gameProxyTable.Func(_SC("disableWeapon"), &GameProgressScriptProxy::disableWeaponSlot);
             // Same table, different proxy
             gameProxyTable.Func(_SC("refillHealth"), &GamePlayStateScriptProxy::refillPlayerEnergy);
             gameProxyTable.Func(_SC("refillWeapon"), &GamePlayStateScriptProxy::refillWeaponEnergy);

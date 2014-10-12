@@ -37,6 +37,7 @@ namespace hikari {
         , treatPlatformAsGround(true)
         , applyHorizontalVelocity(true)
         , applyVerticalVelocity(true)
+        , ambientVelocity(0.0f, 0.0f)
         , velocity(0.0f, 0.0f)
         , boundingBox(0.0f, 0.0f, 0.0f, 0.0f)
         , collisionInfo()
@@ -60,6 +61,7 @@ namespace hikari {
         , treatPlatformAsGround(true)
         , applyHorizontalVelocity(true)
         , applyVerticalVelocity(true)
+        , ambientVelocity(0.0f, 0.0f)
         , velocity(0.0f, 0.0f)
         , boundingBox(0.0f, 0.0f, width, height)
         , collisionInfo()
@@ -83,6 +85,7 @@ namespace hikari {
         , treatPlatformAsGround(proto.treatPlatformAsGround)
         , applyHorizontalVelocity(proto.applyHorizontalVelocity)
         , applyVerticalVelocity(proto.applyVerticalVelocity)
+        , ambientVelocity(proto.ambientVelocity)
         , velocity(proto.velocity)
         , boundingBox(proto.boundingBox)
         , collisionInfo(proto.collisionInfo)
@@ -126,6 +129,10 @@ namespace hikari {
 
     const Vector2<float>& Movable::getPosition() const {
         return boundingBox.getPosition();
+    }
+
+    const Vector2<float>& Movable::getAmbientVelocity() const {
+        return ambientVelocity;
     }
 
     const Vector2<float>& Movable::getVelocity() const {
@@ -177,19 +184,37 @@ namespace hikari {
         leftBlockedFlag = false;
     }
 
-    void Movable::checkCollision(const float& dt) {
+    Vector2<float> Movable::checkCollision(const float& dt) {
+        Vector2<float> translation = getVelocity() + getAmbientVelocity();
+
+        // Set "forceCheck" flags here based on whether we were previously
+        // inheriting velocity from something. If that's true, it means that
+        // we were on top of a moving platform or something else. If we're
+        // standing still then our velocity would be 0 so no checks on that axis
+        // would be performed, but since we're still technically moving we need
+        // a way to force checking for collisions so we don't ride a platform
+        // through a wall.
+        //
+        // Also the reason that there are four differene flags is because we
+        // don't want to incorrectly check for "up" collisions when we're moving
+        // down, or for "left" collisions when we're moving right.
+        bool forceCheckXLeft = collisionInfo.inheritedVelocityX < 0.0;
+        bool forceCheckXRight = collisionInfo.inheritedVelocityX > 0.0;
+        bool forceCheckYUp = collisionInfo.inheritedVelocityY < 0.0;
+        bool forceCheckYDown = collisionInfo.inheritedVelocityY > 0.0;
+
         collisionInfo.clear();
         collisionInfo.treatPlatformAsGround = this->treatPlatformAsGround;
 
         preCheckCollision();
 
         // Check horizontal directions first
-        if(velocity.getX() < 0) {
+        if(translation.getX() < 0 || forceCheckXLeft) {
             // Moving left
 
             // We subtract 1 here because getBottom() represents the first pixel outside of the bounding box.
             getCollisionResolver()->checkHorizontalEdge(
-                static_cast<int>(boundingBox.getLeft() + velocity.getX()/* * dt */),
+                static_cast<int>(boundingBox.getLeft() + translation.getX()/* * dt */),
                 static_cast<int>(boundingBox.getTop()),
                 static_cast<int>(boundingBox.getBottom() - 1),
                 Directions::Left,
@@ -199,6 +224,7 @@ namespace hikari {
             if(collisionInfo.isCollisionX) {
                 boundingBox.setLeft(static_cast<float>(collisionInfo.correctedX));
                 velocity.setX(0.0f);
+                translation.setX(0.0f);
                 leftBlockedFlag = true;
 
                 if(collisionCallback) {
@@ -206,12 +232,12 @@ namespace hikari {
                 }
             }
 
-        } else if(velocity.getX() > 0) {
+        } else if(translation.getX() > 0 || forceCheckXRight) {
             // Moving right
 
             // We subtract 1 here because getBottom() represents the first pixel outside of the bounding box.
             getCollisionResolver()->checkHorizontalEdge(
-                static_cast<int>(boundingBox.getRight() + velocity.getX()/* * dt */),
+                static_cast<int>(boundingBox.getRight() + translation.getX()/* * dt */),
                 static_cast<int>(boundingBox.getTop()),
                 static_cast<int>(boundingBox.getBottom() - 1),
                 Directions::Right,
@@ -221,6 +247,7 @@ namespace hikari {
             if(collisionInfo.isCollisionX) {
                 boundingBox.setRight(static_cast<float>(collisionInfo.correctedX));
                 velocity.setX(0.0f);
+                translation.setX(0.0f);
                 rightBlockedFlag = true;
 
                 if(collisionCallback) {
@@ -230,12 +257,12 @@ namespace hikari {
         }
 
         // Check vertical directions second
-        if(velocity.getY() < 0) {
+        if(translation.getY() < 0 || forceCheckYUp) {
             // Moving up
 
             // We subtract 1 here because getRight() represents the first pixel outside of the bounding box.
             getCollisionResolver()->checkVerticalEdge(
-                static_cast<int>(boundingBox.getTop() + velocity.getY()/* * dt */),
+                static_cast<int>(boundingBox.getTop() + translation.getY()/* * dt */),
                 static_cast<int>(boundingBox.getLeft()),
                 static_cast<int>(boundingBox.getRight() - 1),
                 Directions::Up,
@@ -245,6 +272,7 @@ namespace hikari {
             if(collisionInfo.isCollisionY) {
                 boundingBox.setTop(static_cast<float>(collisionInfo.correctedY));
                 velocity.setY(0.0f);
+                translation.setY(0.0f);
                 topBlockedFlag = true;
 
                 if(collisionCallback) {
@@ -252,12 +280,12 @@ namespace hikari {
                 }
             }
 
-        } else if(velocity.getY() > 0) {
+        } else if(translation.getY() > 0 || forceCheckYDown) {
             // Moving down
 
             // We subtract 1 here because getRight() represents the first pixel outside of the bounding box.
             getCollisionResolver()->checkVerticalEdge(
-                static_cast<int>(std::ceil(boundingBox.getBottom() + velocity.getY()/* * dt */)),
+                static_cast<int>(std::ceil(boundingBox.getBottom() + translation.getY()/* * dt */)),
                 static_cast<int>(boundingBox.getLeft()),
                 static_cast<int>(boundingBox.getRight() - 1),
                 Directions::Down,
@@ -267,6 +295,7 @@ namespace hikari {
             if(collisionInfo.isCollisionY) {
                 boundingBox.setBottom(static_cast<float>(collisionInfo.correctedY));
                 velocity.setY(velocity.getY() - std::floor(velocity.getY()));
+                translation.setY(velocity.getY());
                 onGroundNow = true;
                 bottomBlockedFlag = true;
 
@@ -281,6 +310,8 @@ namespace hikari {
         }
 
         postCheckCollision();
+
+        return translation;
     }
 
     void Movable::postCheckCollision() {
@@ -303,6 +334,10 @@ namespace hikari {
 
     void Movable::setBottom(float newBottom) {
         boundingBox.setBottom(newBottom);
+    }
+
+    void Movable::setAmbientVelocity(const Vector2<float>& velocity) {
+        ambientVelocity = velocity;
     }
 
     void Movable::setVelocity(const Vector2<float>& velocity) {
@@ -347,6 +382,8 @@ namespace hikari {
     }
 
     void Movable::update(float dt) {
+        Vector2<float> translation;
+
         if(isGravitated()) {
             if(isOnGround()) {
                 velocity.setY(velocity.getY() + getGravity());
@@ -359,12 +396,14 @@ namespace hikari {
                     gravityApplicationCounter = 0;
                 }
             }
-
-            velocity.setY(math::clamp(velocity.getY(), minYVelocity, maxYVelocity));
         }
 
+        velocity.setY(math::clamp(velocity.getY(), minYVelocity, maxYVelocity));
+
         if(doesCollideWithWorld()) {
-            checkCollision(dt);
+            translation = checkCollision(dt);
+        } else {
+            translation = velocity + getAmbientVelocity();
         }
 
         float extraX = collisionInfo.inheritedVelocityX;
@@ -372,8 +411,8 @@ namespace hikari {
 
         // Integrate the position
         setPosition(
-            getPosition().getX() + (applyHorizontalVelocity ? velocity.getX() + extraX : 0 + extraX)/* * dt */,
-            getPosition().getY() + (applyVerticalVelocity   ? velocity.getY() + extraY : 0 + extraY)/* * dt */);
+            getPosition().getX() + (applyHorizontalVelocity ? translation.getX() + extraX : 0 + extraX)/* * dt */,
+            getPosition().getY() + (applyVerticalVelocity   ? translation.getY() + extraY : 0 + extraY)/* * dt */);
     }
 
     unsigned int Movable::getGravityApplicationThreshold() const {

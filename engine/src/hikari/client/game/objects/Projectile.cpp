@@ -12,9 +12,10 @@ namespace hikari {
 
     const std::shared_ptr<Motion> Projectile::DeflectedMotion = std::make_shared<LinearMotion>(Vector2<float>(-4.0f, -4.0f));
 
-    Projectile::Projectile(int id, std::shared_ptr<Room> room) 
-        : Entity(id, room) 
+    Projectile::Projectile(int id, std::shared_ptr<Room> room)
+        : Entity(id, room)
         , inert(false)
+        , parentId(-1)
         , reflectionType(NO_REFLECTION)
     {
         body.setGravitated(false);
@@ -24,13 +25,14 @@ namespace hikari {
     Projectile::Projectile(const Projectile& proto)
         : Entity(proto)
         , inert(false)
+        , parentId(proto.parentId)
         , reflectionType(proto.reflectionType)
     {
         setActive(false);
     }
 
     Projectile::~Projectile() {
-        
+
     }
 
     std::unique_ptr<Projectile> Projectile::clone() const {
@@ -73,7 +75,7 @@ namespace hikari {
                     setDirection(Directions::Left);
                 }
             }
-        } 
+        }
 
         if(getReflectionType() == REFLECT_Y || getReflectionType() == REFLECT_XY) {
             if(info.isCollisionY) {
@@ -84,6 +86,14 @@ namespace hikari {
                 }
             }
         }
+    }
+
+    void Projectile::setParentId(int id) {
+        parentId = id;
+    }
+
+    int Projectile::getParentId() const {
+        return parentId;
     }
 
     void Projectile::setMotion(const std::shared_ptr<Motion> motion) {

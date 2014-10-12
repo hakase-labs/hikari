@@ -18,7 +18,7 @@ namespace sf {
 }
 
 namespace hikari {
-    
+
     class Room;
     class GameObject;
     class Hero;
@@ -67,7 +67,6 @@ namespace hikari {
         bool gravityEnabled;
 
         void processAdditions();
-        void processRemovals();
 
     public:
         GameWorld();
@@ -97,6 +96,7 @@ namespace hikari {
         void queueObjectRemoval(const std::shared_ptr<Projectile> &obj);
 
         void removeAllObjects();
+        void processRemovals();
 
         std::shared_ptr<CollectableItem> spawnCollectableItem(const std::string & name) const;
         std::unique_ptr<Doodad> spawnDoodad(const std::string & name) const;

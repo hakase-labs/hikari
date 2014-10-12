@@ -96,6 +96,7 @@ namespace hikari {
     class SubState;
 
     private:
+        static const std::string MENU_ACTION_ETANK;
         std::string name;
         GameController & controller;
         std::weak_ptr<AudioService> audioService;
@@ -146,6 +147,8 @@ namespace hikari {
         sf::RectangleShape transitionMarker;
         sf::RectangleShape leftBar;
         bool canViewMenu;
+        bool isTransitioningMenu;
+        bool isRefillingEnergy;
         bool isViewingMenu;
         bool hasReachedMidpoint;
         bool hasReachedBossCorridor;
@@ -286,6 +289,8 @@ namespace hikari {
          */
         void checkCollisionWithTransition();
 
+        void chooseCurrentWeapon();
+
         /**
          * Updates doors of the current room if it has any.
          */
@@ -322,6 +327,7 @@ namespace hikari {
         void updateGui();
         void fadeOut();
         void fadeIn();
+        void toggleWeaponMenu();
 
         /**
          * GamePlayState::SubState encapsulates a part of gameplay that operates

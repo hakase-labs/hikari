@@ -63,4 +63,16 @@ namespace hikari {
         }
     }
 
+    void GameProgressScriptProxy::enableWeaponSlot(int slotIndex) {
+        if(auto progress = gameProgress.lock()) {
+            progress->enableWeapon(slotIndex, true);
+        }
+    }
+
+    void GameProgressScriptProxy::disableWeaponSlot(int slotIndex) {
+        if(auto progress = gameProgress.lock()) {
+            progress->enableWeapon(slotIndex, false);
+        }
+    }
+
 } // hikari

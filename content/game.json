@@ -81,7 +81,7 @@
         "title" : {},
         "options" : {},
         "select" : {
-            "music" : "Flash Man",
+            "music" : "Stage Select (MM3)",
             "background" : "assets/images/bg-stage-select.png",
             "foreground" : "assets/images/fg-stage-select.png",
             "eye" : "assets/images/eye-stage-select.png",
@@ -120,56 +120,56 @@
             ],
             "portraits": [
                 {
-                    "label": "PEARL \n   MAN",
-                    "introLabel": "PEARL MAN",
+                    "label": "???",
+                    "introLabel": "???",
                     "animationSet": "assets/animations/stage-select.json",
                     "animationName": "default-portrait"
                 },
                 {
-                    "label": "JOE",
-                    "introLabel": "JOE MAN",
-                    "animationSet": "assets/animations/stage-select.json",
-                    "animationName": "default-portrait"
-                },
-                {
-                    "label": "BUBBLE\n   MAN",
-                    "introLabel": "BUBBLE MAN",
-                    "animationSet": "assets/animations/stage-select.json",
-                    "animationName": "default-portrait"
-                },
-                {
-                    "label": "TEST\n   MAN",
+                    "label": "TEST",
                     "introLabel": "TEST MAN",
                     "animationSet": "assets/animations/stage-select.json",
                     "animationName": "default-portrait"
                 },
                 {
-                    "label": "TEST2\n   MAN",
-                    "introLabel": "TEST2 MAN",
+                    "label": "???",
+                    "introLabel": "???",
+                    "animationSet": "assets/animations/stage-select.json",
+                    "animationName": "default-portrait"
+                },
+                {
+                    "label": "???",
+                    "introLabel": "???",
+                    "animationSet": "assets/animations/stage-select.json",
+                    "animationName": "default-portrait"
+                },
+                {
+                    "label": "???",
+                    "introLabel": "???",
                     "animationSet": "assets/animations/stage-select.json",
                     "animationName": "rockman-portrait"
                 },
                 {
-                    "label": "TEST3\n   MAN",
-                    "introLabel": "TEST3 MAN",
+                    "label": "???",
+                    "introLabel": "???",
                     "animationSet": "assets/animations/stage-select.json",
                     "animationName": "default-portrait"
                 },
                 {
-                    "label": "TEST4\n   MAN",
-                    "introLabel": "TEST4 MAN",
+                    "label": "???",
+                    "introLabel": "???",
                     "animationSet": "assets/animations/stage-select.json",
                     "animationName": "default-portrait"
                 },
                 {
-                    "label": "TEST5\n   MAN",
-                    "introLabel": "TEST5 MAN",
+                    "label": "???",
+                    "introLabel": "???",
                     "animationSet": "assets/animations/stage-select.json",
                     "animationName": "default-portrait"
                 },
                 {
-                    "label": "TEST6\n   MAN",
-                    "introLabel": "TEST6 MAN",
+                    "label": "???",
+                    "introLabel": "???",
                     "animationSet": "assets/animations/stage-select.json",
                     "animationName": "default-portrait"
                 }
@@ -193,6 +193,6 @@
             "tileset" : "assets/tilesets/tiles-wily1.json"
         }
     },
-    "initialState" : "stageselect"
+    "initialState" : "title"
 }
 

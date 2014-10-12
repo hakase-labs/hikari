@@ -1,26 +1,28 @@
-class FallingPlatformBehavior extends DoodadBehavior {
+class MovingPlatformBehavior extends DoodadBehavior {
     isInitialized = false;
     counter = 0.0;
     shouldCount = false;
-    fallDelay = (1.0/60.0) * 20;
+    switchDirectionDelay = 3.0;
 
     constructor(_classConfig = {}) {
         base.constructor(_classConfig);
-
-        if("fallDelay" in _classConfig) {
-            fallDelay = _classConfig.fallDelay;
-        }
     }
 
     function update(dt) {
         if(host != null) {
-            if(shouldCount) {
+            // if(shouldCount) {
                 counter += dt;
 
-                if(counter >= fallDelay) {
-                    host.isGravitated = true;
-                    shouldCount = false;
+                if(counter >= switchDirectionDelay) {
+                    counter = 0.0;
+                    host.direction = Utils.getOppositeDirection(host.direction);
                 }
+            // }
+
+            if(host.direction == Directions.Left) {
+                host.velocityX = 1.0;
+            } else {
+                host.velocityX = -1.0;
             }
         }
 
@@ -40,17 +42,9 @@ class FallingPlatformBehavior extends DoodadBehavior {
             host.isShielded = false;
             host.isPhasing = true;
             host.faction = Factions.World;
-            host.direction = Directions.Down;
+            host.direction = Directions.Right;
+            host.isGravitated = false;
             isInitialized = true;
-        }
-    }
-
-    function handleObjectTouch(otherId) {
-        if(host) {
-            if(otherId == ::heroId) {
-                shouldCount = true;
-                // host.isGravitated = true;
-            }
         }
     }
 }

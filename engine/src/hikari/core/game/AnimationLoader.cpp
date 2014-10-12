@@ -42,7 +42,7 @@ namespace hikari {
     void AnimationLoader::setImageCache(const std::weak_ptr<ImageCache> & imageCache) {
         AnimationLoader::imageCache = imageCache;
     }
-    
+
     std::shared_ptr<Animation> AnimationLoader::load(const std::string &fileName) {
         if(PhysFS::exists(fileName)) {
             Json::Value root = JsonUtils::loadJson(fileName);
@@ -53,17 +53,11 @@ namespace hikari {
     }
 
     std::shared_ptr<AnimationSet> AnimationLoader::loadSet(const std::string &fileName) {
-        std::cout<< "Loading set: " << fileName << std::endl;
         if(PhysFS::exists(fileName)) {
-                    std::cout<< "File exists";
-
-            Json::Value root = JsonUtils::loadJson(fileName); 
-                    std::cout<< "Loaded JSON";
+            Json::Value root = JsonUtils::loadJson(fileName);
 
             // Extract name and image file path
             std::string name = root[PROPERTY_NAME].asString();
-                    std::cout<< "Got the NAME";
-
             std::string imageFileName = root[PROPERTY_IMAGE_FILE_NAME].asString();
             std::shared_ptr<sf::Texture> texture;
 
@@ -71,13 +65,13 @@ namespace hikari {
                 texture = cache->get(imageFileName);
             }
 
-            std::shared_ptr<AnimationSet> resultSet = 
+            std::shared_ptr<AnimationSet> resultSet =
                 std::shared_ptr<AnimationSet>(new AnimationSet(name, imageFileName, texture));
 
             // Extract animations
             const Json::Value animations = root[PROPERTY_ANIMATIONS];
             const Json::Value::Members animationNames = animations.getMemberNames();
-            
+
             for(int i = 0, length = animationNames.size(); i < length; i++) {
                 const std::string animationName = animationNames.at(i);
                 const Json::Value animationJson = animations[animationName];
@@ -122,12 +116,12 @@ namespace hikari {
             bool repeat = json.get(PROPERTY_REPEAT, false).asBool();
 
             unsigned int keyframe = json.get(
-                PROPERTY_KEYFRAME, 
+                PROPERTY_KEYFRAME,
                 Animation::ANIMATION_BEGINNING_FRAME_INDEX
             ).asInt();
 
             unsigned int syncGroup = json.get(
-                PROPERTY_SYNCGROUP, 
+                PROPERTY_SYNCGROUP,
                 Animation::ANIMATION_DEFAULT_SYNC_GROUP
             ).asInt();
 
@@ -150,12 +144,12 @@ namespace hikari {
                         (jsonFrame.get(PROPERTY_FRAME_LENGTH, 0.0f).asDouble());
 
                     Point2D<int> hotspot(
-                        jsonFrame.get(PROPERTY_FRAME_HOTSPOT_X, 0).asInt(), 
+                        jsonFrame.get(PROPERTY_FRAME_HOTSPOT_X, 0).asInt(),
                         jsonFrame.get(PROPERTY_FRAME_HOTSPOT_Y, 0).asInt()
                     );
 
                     frames.push_back(Frame(rectangle, length, hotspot));
-                }                
+                }
 
                 return std::shared_ptr<Animation>(new Animation(frames, repeat, keyframe, syncGroup));
             } else {

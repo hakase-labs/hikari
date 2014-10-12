@@ -19,3 +19,4 @@ require("assets/scripts/behaviors/MoleBehavior.nut");
 // Doodads
 require("assets/scripts/behaviors/DoodadBehavior.nut");
 require("assets/scripts/behaviors/FallingPlatformBehavior.nut");
+require("assets/scripts/behaviors/MovingPlatformBehavior.nut");

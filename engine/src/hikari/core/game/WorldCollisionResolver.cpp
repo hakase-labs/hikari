@@ -87,9 +87,6 @@ namespace hikari {
                         collisionInfo.directionX = directionX;
                         collisionInfo.inheritedVelocityX = 0.0f;
 
-
-                        HIKARI_LOG(debug4) << "Collision!! tileX = " << tileX << ", tileY = " << tileY;
-                
                         determineTileCorrection(directionX, collisionInfo);
 
                         return;
@@ -135,7 +132,7 @@ namespace hikari {
                         collisionInfo.inheritedVelocityY = obstacles[i]->getVelocityY();
 
                         if(directionY == Directions::Up) {
-                            collisionInfo.correctedY = static_cast<int>(obstacleBounds.getBottom());
+                            collisionInfo.correctedY = static_cast<int>(obstacleBounds.getBottom() + 1);
                         } else if(directionY == Directions::Down) {
                             collisionInfo.correctedY = static_cast<int>(obstacleBounds.getTop());
                         }
@@ -174,8 +171,6 @@ namespace hikari {
                 if(direction == Directions::Left) {
                     // Collision happened on the left edge, so return the X for the RIGHT side of the tile.
                     collisionInfo.correctedX = tileBounds.getRight();
-                    HIKARI_LOG(debug4) << "Collision!! currentRoom = " << !!currentRoom << ", gridSize = " << currentRoom->getGridSize();
-                    HIKARI_LOG(debug4) << "Collision!! correctedX = " << collisionInfo.correctedX << ", tile = " << tileBounds;
                 } else if(direction == Directions::Right) {
                     // Collision happened on the right edge, so just set the X position.
                     collisionInfo.correctedX = tileBounds.getLeft();
@@ -201,7 +196,7 @@ namespace hikari {
     void WorldCollisionResolver::updateTileBounds(int tileX, int tileY) {
         if(world) {
             const auto currentRoom = world->getCurrentRoom();
-            
+
             if(currentRoom) {
                 const int tileSize = currentRoom->getGridSize();
 

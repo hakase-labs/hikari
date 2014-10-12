@@ -1,5 +1,6 @@
 #include "hikari/core/game/map/Room.hpp"
 #include "hikari/core/game/map/Door.hpp"
+#include "hikari/core/game/map/Force.hpp"
 #include "hikari/core/game/map/Tileset.hpp"
 #include "hikari/core/util/Log.hpp"
 #include <memory>
@@ -15,6 +16,7 @@ namespace hikari {
             const std::vector<int> &tile, const std::vector<int> &attr,
             const std::vector<RoomTransition> &transitions,
             const std::vector<std::shared_ptr<Spawner>> &spawners,
+            const std::vector<std::shared_ptr<Force>> &forces,
             const std::shared_ptr<Door> & entranceDoor,
             const std::shared_ptr<Door> & exitDoor,
             const std::string & bossEntityName
@@ -33,6 +35,7 @@ namespace hikari {
         , attr(attr)
         , transitions(transitions)
         , spawners(spawners)
+        , forces(forces)
         , entranceDoor(entranceDoor)
         , exitDoor(exitDoor)
         , bossEntityName(bossEntityName)
@@ -178,6 +181,10 @@ namespace hikari {
 
     const std::vector<std::shared_ptr<Spawner>>& Room::getSpawners() const {
         return spawners;
+    }
+
+    const std::vector<std::shared_ptr<Force>>& Room::getForces() const {
+        return forces;
     }
 
     const std::list<BoundingBox<float>> & Room::getLadders() const {

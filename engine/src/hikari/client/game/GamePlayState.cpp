@@ -60,6 +60,7 @@
 #include "hikari/core/game/map/MapLoader.hpp"
 #include "hikari/core/game/map/MapRenderer.hpp"
 #include "hikari/core/game/map/Door.hpp"
+#include "hikari/core/game/map/Force.hpp"
 #include "hikari/core/game/map/Room.hpp"
 #include "hikari/core/game/map/RoomTransition.hpp"
 #include "hikari/core/geom/GeometryUtils.hpp"
@@ -94,10 +95,7 @@
 
 namespace hikari {
 
-    void letMeKnowItsGone(EventDataPtr data) {
-        auto eventData = std::static_pointer_cast<ObjectRemovedEventData>(data);
-        HIKARI_LOG(debug1) << "Removed! id =" << eventData->getObjectId();
-    }
+    const std::string GamePlayState::MENU_ACTION_ETANK = "useETank";
 
     GamePlayState::GamePlayState(const std::string &name, GameController & controller, const Json::Value &params, const std::weak_ptr<GameConfig> & gameConfig, ServiceLocator &services)
         : name(name)
@@ -150,6 +148,8 @@ namespace hikari {
         , transitionMarker()
         , leftBar(sf::Vector2f(8.0f, 240.0f))
         , canViewMenu(false)
+        , isTransitioningMenu(false)
+        , isRefillingEnergy(false)
         , isViewingMenu(false)
         , hasReachedMidpoint(false)
         , hasReachedBossCorridor(false)
@@ -306,6 +306,7 @@ namespace hikari {
                                     weaponMenuItem->setFont(weaponItemFont.get());
                                     weaponMenuItem->setVisible(true);
                                     weaponMenuItem->setEnabled(true);
+                                    weaponMenuItem->setActionEventId("changeWeapon");
                                     guiWeaponMenu->addItem(weaponMenuItem);
                                 } else {
                                     HIKARI_LOG(debug4) << "The weapon \"" << name << "\" was not found when building the GUI.";
@@ -317,6 +318,17 @@ namespace hikari {
                 }
             }
 
+            // Add menu item for E-tanks
+            std::shared_ptr<gui::WeaponMenuItem> etankMenuItem(new gui::WeaponMenuItem("E", -1));
+            etankMenuItem->setForegroundColor(gcn::Color(128, 0, 0, 0));
+            etankMenuItem->setSelectionColor(gcn::Color(250, 128, 128));
+            etankMenuItem->setX(0);
+            etankMenuItem->setY(64);
+            etankMenuItem->setVisible(true);
+            etankMenuItem->setEnabled(true);
+            etankMenuItem->setActionEventId(MENU_ACTION_ETANK);
+            guiWeaponMenu->addItem(etankMenuItem);
+
             guiWeaponMenu->setWidth(guiContainer->getWidth() - 32);
             guiWeaponMenu->setHeight((guiContainer->getHeight() / 2) - 32);
             guiWeaponMenu->setBackgroundColor(gcn::Color(0, 0, 0, 0));
@@ -327,7 +339,29 @@ namespace hikari {
 
             guiWeaponMenuActionListener.reset(new gcn::FunctorActionListener([&](const gcn::ActionEvent& event) {
                 auto item = guiWeaponMenu->getMenuItemAt(guiWeaponMenu->getSelectedIndex());
-                // std::cout << "Actioned on #" << guiWeaponMenu->getSelectedIndex() << std::endl;
+                auto actionEventId = item->getActionEventId();
+
+                HIKARI_LOG(debug3) << "Actioned on #" << guiWeaponMenu->getSelectedIndex();
+
+                if(MENU_ACTION_ETANK == actionEventId) {
+                    HIKARI_LOG(debug4) << "Trying to use an e-tank.";
+
+                    if(!(isRefillingEnergy || isTransitioningMenu)) {
+                        if(auto gp = gameProgress.lock()) {
+                            if(gp->getETanks() > 0 && gp->getPlayerEnergy() < gp->getPlayerMaxEnergy()) {
+                                gp->setETanks(gp->getETanks() - 1);
+                                refillPlayerEnergy(gp->getPlayerMaxEnergy());
+                            }
+                        }
+                    }
+                } else {
+                    if(!isTransitioningMenu) {
+                        HIKARI_LOG(debug4) << "Swapping weapon, exiting menu.";
+                        isTransitioningMenu = true;
+                        chooseCurrentWeapon();
+                        toggleWeaponMenu();
+                    }
+                }
             }));
 
             guiWeaponMenuSelectionListener.reset(new gcn::FunctorSelectionListener([&](const gcn::SelectionEvent & event) {
@@ -428,49 +462,26 @@ namespace hikari {
 
     void GamePlayState::handleEvent(sf::Event &event) {
         if((event.type == sf::Event::KeyPressed) && event.key.code == sf::Keyboard::Return) {
-            if(canViewMenu) {
+            // Menu handlng code use to be here. <--
 
-                taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
-                    if(screenEffectsService) {
-                        screenEffectsService->fadeOut();
-                    }
-                    return true;
-                }));
+            // if(auto gp = gameProgress.lock()) {
+            //     const auto & item = guiWeaponMenu->getMenuItemAt(guiWeaponMenu->getSelectedIndex());
+            //     int currentWeaponId = 0;
 
-                taskQueue.push(std::make_shared<WaitTask>((1.0f/60.0f) * 13.0f));
+            //     // So, here's a very convoluted thing that's going on:
+            //     // Weapons have a ID, which is assigned automatically when all of the weapons are
+            //     // parsed and loaded when the game starts. The weapons in the menu are stored by
+            //     // name in game.json, which are then looked up to get their ID. Both the name and
+            //     // ID are stored in the MenuItem. When a menu item is selected, we get the weapon
+            //     // ID from it, and then store that as the "current weapon".
 
-                taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
-                    isViewingMenu = !isViewingMenu;
-                    guiMenuPanel->setVisible(isViewingMenu);
-                    guiWeaponMenu->requestFocus();
+            //     if(const auto & weaponMenuItem = std::dynamic_pointer_cast<gui::WeaponMenuItem>(item)) {
+            //         currentWeaponId = weaponMenuItem->getWeaponId();
+            //     }
 
-                    if(screenEffectsService) {
-                        screenEffectsService->fadeIn();
-                    }
-                    return true;
-                }));
-
-                taskQueue.push(std::make_shared<WaitTask>((1.0f/60.0f) * 13.0f));
-            }
-
-            if(auto gp = gameProgress.lock()) {
-                const auto & item = guiWeaponMenu->getMenuItemAt(guiWeaponMenu->getSelectedIndex());
-                int currentWeaponId = 0;
-
-                // So, here's a very convoluted thing that's going on:
-                // Weapons have a ID, which is assigned automatically when all of the weapons are
-                // parsed and loaded when the game starts. The weapons in the menu are stored by
-                // name in game.json, which are then looked up to get their ID. Both the name and
-                // ID are stored in the MenuItem. When a menu item is selected, we get the weapon
-                // ID from it, and then store that as the "current weapon".
-
-                if(const auto & weaponMenuItem = std::dynamic_pointer_cast<gui::WeaponMenuItem>(item)) {
-                    currentWeaponId = weaponMenuItem->getWeaponId();
-                }
-
-                gp->setCurrentWeapon(currentWeaponId);
-                hero->setWeaponId(gp->getCurrentWeapon());
-            }
+            //     gp->setCurrentWeapon(currentWeaponId);
+            //     hero->setWeaponId(gp->getCurrentWeapon());
+            // }
         }
 
         if((event.type == sf::Event::KeyPressed) && event.key.code == sf::Keyboard::BackSpace) {
@@ -488,6 +499,12 @@ namespace hikari {
         if((event.type == sf::Event::KeyPressed) && event.key.code == sf::Keyboard::T) {
             if(auto gp = gameProgress.lock()) {
                 gp->setPlayerEnergy(0);
+            }
+        }
+
+        if((event.type == sf::Event::KeyPressed) && event.key.code == sf::Keyboard::Y) {
+            if(auto gp = gameProgress.lock()) {
+                gp->setPlayerEnergy(1.0f);
             }
         }
 
@@ -519,6 +536,12 @@ namespace hikari {
 
         if(eventBus) {
             eventBus->processEvents();
+        }
+
+        if(userInput->wasPressed(Input::BUTTON_START)) {
+            if(canViewMenu && !isTransitioningMenu && !isRefillingEnergy && !isViewingMenu) {
+                toggleWeaponMenu();
+            }
         }
 
         if(!taskQueue.empty()) {
@@ -567,27 +590,31 @@ namespace hikari {
         Movable::setGravity(0.25f);
 
         std::vector<std::string> mapList;
-        mapList.push_back("map-dev2.json");
         mapList.push_back("map-pearlman.json");
         mapList.push_back("map-test6.json");
+        mapList.push_back("map-pearlman.json");
         mapList.push_back("map-pearl.json");
         mapList.push_back("map-test4.json");
         mapList.push_back("map-test3.json");
         mapList.push_back("map-test2.json");
 
         if(auto gp = gameProgress.lock()) {
-            // Determine which stage we're on and set that to the current level...
-            if((currentMap = maps.at(mapList.at(gp->getCurrentBoss() % mapList.size())))) {
-                currentTileset = currentMap->getTileset();
-            }
+			// Determine which stage we're on and set that to the current level...
+			if ((currentMap = maps.at(mapList.at(gp->getCurrentBoss() % mapList.size())))) {
+				currentTileset = currentMap->getTileset();
+			}
+
 
             // Enable / disable weapon menu items based on GameProgress
             int menuItemCount = guiWeaponMenu->getItemCount();
 
             for(int i = 0; i < menuItemCount; ++i) {
                 const auto & menuItem = guiWeaponMenu->getMenuItemAt(i);
-                menuItem->setVisible(gp->weaponIsEnabled(i));
-                menuItem->setEnabled(gp->weaponIsEnabled(i));
+
+                if(menuItem->getActionEventId() == "changeWeapon") {
+                    menuItem->setVisible(gp->weaponIsEnabled(i));
+                    menuItem->setEnabled(gp->weaponIsEnabled(i));
+                }
             }
         }
 
@@ -996,6 +1023,12 @@ namespace hikari {
                 // crossed into the boundary of the lambda. This is balls.
                 std::shared_ptr<float> waitTimeAfterLanding = std::make_shared<float>(0.1f);
 
+                // Diable the weapon menu temporarily until the battle is ready to begin.
+                taskQueue.push(std::make_shared<FunctionTask>(1, [&](float dt) {
+                    isRefillingEnergy = true;
+                    return true;
+                }));
+
                 taskQueue.push(std::make_shared<FunctionTask>(0, [this, waitTimeAfterLanding](float dt) -> bool {
                     bool done = false;
 
@@ -1016,9 +1049,10 @@ namespace hikari {
                     gameProgress)
                 );
 
-                // Return control to the player
+                // Return control to the player and re-enable the weapon menu.
                 taskQueue.push(std::make_shared<FunctionTask>(0, [this, playerHeroController](float dt) -> bool {
                     hero->setActionController(playerHeroController);
+                    isRefillingEnergy = false;
                     return true;
                 }));
             }
@@ -1165,6 +1199,46 @@ namespace hikari {
     }
 
     void GamePlayState::checkCollisionWithTransition() { }
+
+    void GamePlayState::chooseCurrentWeapon() {
+        if(auto gp = gameProgress.lock()) {
+            const auto & item = guiWeaponMenu->getMenuItemAt(guiWeaponMenu->getSelectedIndex());
+            int selectedWeaponId = 0;
+
+            // So, here's a very convoluted thing that's going on:
+            // Weapons have a ID, which is assigned automatically when all of the weapons are
+            // parsed and loaded when the game starts. The weapons in the menu are stored by
+            // name in game.json, which are then looked up to get their ID. Both the name and
+            // ID are stored in the MenuItem. When a menu item is selected, we get the weapon
+            // ID from it, and then store that as the "current weapon".
+
+            if(const auto & weaponMenuItem = std::dynamic_pointer_cast<gui::WeaponMenuItem>(item)) {
+                selectedWeaponId = weaponMenuItem->getWeaponId();
+            }
+
+            if(gp->getCurrentWeapon() != selectedWeaponId) {
+                // Remove any active projectiles since we've changed weapons.
+                const auto & activeProjectiles = world.getActiveProjectiles();
+
+                std::for_each(
+                    std::begin(activeProjectiles),
+                    std::end(activeProjectiles),
+                    [&](const std::shared_ptr<Projectile> & projectile) {
+                        if(projectile && projectile->getParentId() == hero->getId()) {
+                            world.queueObjectRemoval(projectile);
+                        }
+                    }
+                );
+
+                // Flush any queued object removals, otherwise they won't get
+                // processed until after the menu fades out, and it looks bad/wrong.
+                world.processRemovals();
+            }
+
+            gp->setCurrentWeapon(selectedWeaponId);
+            hero->setWeaponId(gp->getCurrentWeapon());
+        }
+    }
 
     void GamePlayState::renderMap(sf::RenderTarget &target) const {
         const auto& oldView = target.getDefaultView();
@@ -1327,10 +1401,6 @@ namespace hikari {
             eventBus->addListener(entityStateChangeDelegate, EntityStateChangeEventData::Type);
             eventHandlerDelegates.push_back(std::make_pair(entityStateChangeDelegate, EntityStateChangeEventData::Type));
 
-            auto objectRemovedDelegate = EventListenerDelegate(&letMeKnowItsGone);
-            eventBus->addListener(objectRemovedDelegate, ObjectRemovedEventData::Type);
-            eventHandlerDelegates.push_back(std::make_pair(objectRemovedDelegate, ObjectRemovedEventData::Type));
-
             auto doorEventDelegate = EventListenerDelegate(std::bind(&GamePlayState::handleDoorEvent, this, std::placeholders::_1));
             eventBus->addListener(doorEventDelegate, DoorEventData::Type);
             eventHandlerDelegates.push_back(std::make_pair(doorEventDelegate, DoorEventData::Type));
@@ -1344,8 +1414,6 @@ namespace hikari {
             if(auto sound = audioService.lock()) {
                 sound->playSample("Rockman (Damage)");
             }
-
-            const auto & boundingBox = hero->getBoundingBox();
 
             // TODO: Create a system to spawn particles together like this, declaratively.
 
@@ -1562,12 +1630,20 @@ namespace hikari {
     }
 
     void GamePlayState::refillPlayerEnergy(int amount) {
+        taskQueue.push(std::make_shared<FunctionTask>(1, [&](float dt) {
+            isRefillingEnergy = true;
+            return true;
+        }));
         taskQueue.push(std::make_shared<RefillHealthTask>(
             RefillHealthTask::PLAYER_ENERGY,
             amount,
             audioService,
             gameProgress)
         );
+        taskQueue.push(std::make_shared<FunctionTask>(1, [&](float dt) {
+            isRefillingEnergy = false;
+            return true;
+        }));
     }
 
     void GamePlayState::refillWeaponEnergy(int amount) {
@@ -1593,6 +1669,42 @@ namespace hikari {
         }
 
         taskQueue.push(std::make_shared<WaitTask>((1.0f/60.0f) * 13.0f));
+    }
+
+    void GamePlayState::toggleWeaponMenu() {
+        if(auto sound = audioService.lock()) {
+            sound->playSample("Menu Open");
+        }
+
+        taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
+            if(screenEffectsService) {
+                screenEffectsService->fadeOut();
+            }
+
+            isTransitioningMenu = true;
+            return true;
+        }));
+
+        taskQueue.push(std::make_shared<WaitTask>((1.0f/60.0f) * 13.0f));
+
+        taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
+            isViewingMenu = !isViewingMenu;
+            guiMenuPanel->setVisible(isViewingMenu);
+            guiWeaponMenu->requestFocus();
+
+            if(screenEffectsService) {
+                screenEffectsService->fadeIn();
+            }
+
+            return true;
+        }));
+
+        taskQueue.push(std::make_shared<WaitTask>((1.0f/60.0f) * 13.0f));
+
+        taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
+            isTransitioningMenu = false;
+            return true;
+        }));
     }
 
     // ************************************************************************
@@ -2012,18 +2124,35 @@ namespace hikari {
             //
             if(gamePlayState.hero) {
                 // Check to see if there are any ladders to grab on to.
-                auto index = std::begin(gamePlayState.currentRoom->getLadders());
-                const auto & end = std::end(gamePlayState.currentRoom->getLadders());
+                auto ladderIndex = std::begin(gamePlayState.currentRoom->getLadders());
+                const auto & ladderEnd = std::end(gamePlayState.currentRoom->getLadders());
 
-                while(index != end) {
-                    const BoundingBox<float> & ladder = *index;
+                while(ladderIndex != ladderEnd) {
+                    const BoundingBox<float> & ladder = *ladderIndex;
 
                     if(gamePlayState.hero->getBoundingBox().intersects(ladder)) {
                        gamePlayState.hero->requestClimbingAttachment(ladder);
                     }
 
-                    index++;
+                    ladderIndex++;
                 }
+
+                // Check to see if there are any Forces that need to act on the hero.
+                gamePlayState.hero->setAmbientVelocity(Vector2<float>(0.0f, 0.0f));
+
+                std::for_each(
+                    std::begin(gamePlayState.currentRoom->getForces()),
+                    std::end(gamePlayState.currentRoom->getForces()),
+                    [&](const std::shared_ptr<Force> & force) {
+                        const BoundingBox<float> & bounds = force->getBounds();
+
+                        if(gamePlayState.hero->getBoundingBox().intersects(bounds)) {
+                            gamePlayState.hero->setAmbientVelocity(
+                                gamePlayState.hero->getAmbientVelocity() + force->getVelocity()
+                            );
+                        }
+                    }
+                );
 
                 if(auto gp = gamePlayState.gameProgress.lock()) {
                     int currentWeaponEnergy = gp->getWeaponEnergy(gp->getCurrentWeapon());
@@ -2494,6 +2623,7 @@ namespace hikari {
             sound->stopMusic();
         }
 
+        gamePlayState.canViewMenu = false;
         gamePlayState.cutSceneController->stopMoving();
         gamePlayState.cutSceneController->stopJumping();
         gamePlayState.hero->setActionController(gamePlayState.cutSceneController);
@@ -2507,8 +2637,6 @@ namespace hikari {
         // the hero needs to face in order to get there.
         targetXPosition = roomXPixels + (roomWidthPixels / 2);
         targetDirection = gamePlayState.hero->getPosition().getX() < targetXPosition ? Directions::Right : Directions::Left;
-
-        gamePlayState.hero->setDirection(targetDirection);
 
         // Determine the Y position of the top of the room so we'll know when
         // the hero has teleported outside of it.
@@ -2589,8 +2717,9 @@ namespace hikari {
                 break;
 
             case 1:
-                // Just wait for 2 seconds.
+                // Just wait for 2 seconds and then face the right direction.
                 if(timer >= 4.2334f) {
+                    gamePlayState.hero->setDirection(targetDirection);
                     nextSegment();
                 }
                 break;
@@ -2690,11 +2819,7 @@ namespace hikari {
                 // Once the hero has reached the ground, teleport him outta' here!
                 if(gamePlayState.hero->isOnGround()) {
                     if(timer >= 1.0f) {
-                        gamePlayState.hero->setPhasing(true);
-                        gamePlayState.hero->performTeleport();
-
-                        // Invert the gravity to teleport the hero out through the ceiling.
-                        Movable::setGravity(-0.25);
+                        gamePlayState.hero->changeAnimation("teleporting-out");
 
                         if(auto sound = gamePlayState.audioService.lock()) {
                             sound->playSample("Teleport");
@@ -2708,6 +2833,17 @@ namespace hikari {
                 break;
 
             case 8:
+                if(timer >= 0.2167f) {
+                    gamePlayState.hero->setPhasing(true);
+                    gamePlayState.hero->performTeleport();
+
+                    // Invert the gravity to teleport the hero out through the ceiling.
+                    Movable::setGravity(-0.25);
+                    nextSegment();
+                }
+                break;
+
+            case 9:
                 if(gamePlayState.hero->getBoundingBox().getBottom() < roomTopY) {
                     // Make sure the hero doesn't fall through the floor next time he's in
                     // a room.
@@ -2718,7 +2854,7 @@ namespace hikari {
                 }
                 break;
 
-            case 9:
+            case 10:
                 gamePlayState.controller.requestStateChange("weaponget");
                 nextSegment();
                 break;

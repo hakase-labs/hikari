@@ -21,7 +21,7 @@ namespace hikari {
     class Movable {
     public:
         typedef std::function<void (Movable&, CollisionInfo&)> CollisionCallback;
-    
+
     private:
         static float maxYVelocity;
         static float maxXVelocity;
@@ -47,6 +47,7 @@ namespace hikari {
         bool applyVerticalVelocity;
 
     protected:
+        Vector2<float> ambientVelocity;
         Vector2<float> velocity;
         BoundingBoxF boundingBox;
         CollisionInfo collisionInfo;
@@ -55,7 +56,7 @@ namespace hikari {
         CollisionCallback collisionCallback;
 
         virtual void preCheckCollision();
-        virtual void checkCollision(const float& dt);
+        virtual Vector2<float> checkCollision(const float& dt);
         virtual void postCheckCollision();
         virtual void onLanding();
 
@@ -94,6 +95,7 @@ namespace hikari {
          * @see Movable::getBoundingBox
          */
         const Vector2<float>& getPosition() const;
+        const Vector2<float>& getAmbientVelocity() const;
         const Vector2<float>& getVelocity() const;
         const BoundingBoxF& getBoundingBox() const;
 
@@ -101,11 +103,12 @@ namespace hikari {
         void setPosition(const Vector2<float>& position);
         void setPosition(const float& x, const float& y);
         void setBottom(float newBottom);
+        void setAmbientVelocity(const Vector2<float>& velocity);
         void setVelocity(const Vector2<float>& velocity);
         void setVelocity(const float& x, const float& y);
         void setBoundingBox(const BoundingBoxF& boundingBox);
 
-        void setTreatPlatformAsGround(const bool& treatAsGround); 
+        void setTreatPlatformAsGround(const bool& treatAsGround);
         void setApplyHorizontalVelocity(const bool& applyVelocity);
         void setApplyVerticalVelocity(const bool& applyVelocity);
 
