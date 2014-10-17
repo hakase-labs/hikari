@@ -323,14 +323,14 @@ namespace hikari {
             etankMenuItem->setForegroundColor(gcn::Color(128, 0, 0, 0));
             etankMenuItem->setSelectionColor(gcn::Color(250, 128, 128));
             etankMenuItem->setX(0);
-            etankMenuItem->setY(64);
+            etankMenuItem->setY(16 * 9);
             etankMenuItem->setVisible(true);
             etankMenuItem->setEnabled(true);
             etankMenuItem->setActionEventId(MENU_ACTION_ETANK);
             guiWeaponMenu->addItem(etankMenuItem);
 
             guiWeaponMenu->setWidth(guiContainer->getWidth() - 32);
-            guiWeaponMenu->setHeight((guiContainer->getHeight() / 2) - 32);
+            guiWeaponMenu->setHeight(guiContainer->getHeight());
             guiWeaponMenu->setBackgroundColor(gcn::Color(0, 0, 0, 0));
             guiWeaponMenu->enableWrapping();
             guiWeaponMenu->setVisible(true);
