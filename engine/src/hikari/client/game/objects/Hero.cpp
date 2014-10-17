@@ -296,6 +296,7 @@ namespace hikari {
 
     void Hero::performMorph() {
         isMorphing = true;
+        chooseAnimation();
     }
 
     void Hero::performSlide() {

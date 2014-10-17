@@ -282,7 +282,7 @@ namespace hikari {
          * Rock to the center of the room, performs mega jump, and collects the
          * boss' power. Then it returns control to the game.
          */
-        void endBossBattle();
+        void endBossBattle(bool alreadyDefeated);
 
         /**
          * Checks if the player is colliding with a transition region.
@@ -469,7 +469,7 @@ namespace hikari {
             void nextSegment();
             void spawnEnergyRing(float speed, float maximumAge);
         public:
-            BossDefeatedSubState(GamePlayState & gamePlayState);
+            BossDefeatedSubState(GamePlayState & gamePlayState, int segment = 0);
             virtual ~BossDefeatedSubState();
             virtual void enter();
             virtual void exit();

@@ -1058,11 +1058,14 @@ namespace hikari {
             }
 
             taskQueue.push(std::make_shared<WaitTask>(1.0f));
+        } else {
+            endBossBattle(true);
         }
     }
 
-    void GamePlayState::endBossBattle() {
-        changeSubState(std::unique_ptr<SubState>(new BossDefeatedSubState(*this)));
+    void GamePlayState::endBossBattle(bool alreadyDefeated) {
+        int segment = alreadyDefeated ? 7 : 0;
+        changeSubState(std::unique_ptr<SubState>(new BossDefeatedSubState(*this, segment)));
     }
 
     void GamePlayState::updateDoors(float dt) {
@@ -1233,6 +1236,7 @@ namespace hikari {
                 // Flush any queued object removals, otherwise they won't get
                 // processed until after the menu fades out, and it looks bad/wrong.
                 world.processRemovals();
+                hero->performMorph();
             }
 
             gp->setCurrentWeapon(selectedWeaponId);
@@ -1491,7 +1495,7 @@ namespace hikari {
                             gp->enableWeapon(gp->getCurrentBoss() + 1, true);
                         }
 
-                        endBossBattle();
+                        endBossBattle(false);
                     } else {
                         HIKARI_LOG(debug4) << "The boss has been killed, but Rock died before so you lose. ";
                     }
@@ -1545,7 +1549,7 @@ namespace hikari {
                 if(eventData->getShooterId() == hero->getId()) {
                     if(auto gp = gameProgress.lock()) {
                         int currentWeapon = gp->getCurrentWeapon();
-                        unsigned int weaponEnergy = gp->getWeaponEnergy(currentWeapon);
+                        float weaponEnergy = gp->getWeaponEnergy(currentWeapon);
 
                         if(weaponEnergy > 0) {
                             Shot shot = weapon->fire(world, *eventData.get());
@@ -1553,6 +1557,7 @@ namespace hikari {
 
                             // Use up the weapon energy
                             gp->setWeaponEnergy(currentWeapon, weaponEnergy - weapon->getUsageCost());
+                            HIKARI_LOG(debug4) << "Weapon energy: " << weaponEnergy << ", cost: " << weapon->getUsageCost();
 
                             if(auto sound = audioService.lock()) {
                                 sound->playSample(weapon->getUsageSound());
@@ -1673,7 +1678,11 @@ namespace hikari {
 
     void GamePlayState::toggleWeaponMenu() {
         if(auto sound = audioService.lock()) {
-            sound->playSample("Menu Open");
+            if(isViewingMenu) {
+                sound->playSample("Stage Selected");
+            } else {
+                sound->playSample("Menu Open");
+            }
         }
 
         taskQueue.push(std::make_shared<FunctionTask>(0, [&](float dt) -> bool {
@@ -2592,10 +2601,10 @@ namespace hikari {
         gamePlayState.renderHud(target);
     }
 
-    GamePlayState::BossDefeatedSubState::BossDefeatedSubState(GamePlayState & gamePlayState)
+    GamePlayState::BossDefeatedSubState::BossDefeatedSubState(GamePlayState & gamePlayState, int segment)
         : SubState(gamePlayState)
         , complete(false)
-        , segment(0)
+        , segment(segment)
         , timer(0.0f)
         , targetXPosition(0)
         , roomTopY(0)
@@ -2616,7 +2625,7 @@ namespace hikari {
         HIKARI_LOG(debug) << "BossDefeatedSubState::enter()";
 
         complete = false;
-        segment = 0;
+        // segment = 0;
         timer = 0.0f;
 
         if(auto sound = gamePlayState.audioService.lock()) {

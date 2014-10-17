@@ -26,7 +26,7 @@
         "damageId": 7,
         "paletteId": 4,
         "limit": 3,
-        "usageCost": 2.0,
+        "usageCost": 0.25,
         "usageSound": "Rockman (Shooting)",
         "usageActions": [
             {
