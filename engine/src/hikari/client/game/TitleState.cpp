@@ -62,29 +62,31 @@ namespace hikari {
         guiCursorIcon->setHeight(8);
 
         guiActionListener.reset(new gcn::FunctorActionListener([&](const gcn::ActionEvent& event) {
-            auto item = guiMenu->getMenuItemAt(guiMenu->getSelectedIndex());
+            if(!goToNextState) {
+                auto item = guiMenu->getMenuItemAt(guiMenu->getSelectedIndex());
 
-            if(item) {
-                std::cout << "Actioned on #" << guiMenu->getSelectedIndex() << ", " << item->getName() << std::endl;
+                if(item) {
+                    std::cout << "Actioned on #" << guiMenu->getSelectedIndex() << ", " << item->getName() << std::endl;
 
-                const std::string & menuItemName = item->getName();
+                    const std::string & menuItemName = item->getName();
 
-                if(menuItemName == ITEM_GAME_START) {
-                    controller.requestStateChange("stageselect");
-                    goToNextState = true;
-                } else if(menuItemName == ITEM_PASS_WORD) {
-                    controller.requestStateChange("password");
-                    goToNextState = true;
-                } else if(menuItemName == ITEM_OPTIONS) {
-                    controller.requestStateChange("options");
-                    goToNextState = true;
-                } else if(menuItemName == ITEM_QUIT) {
-                    if(auto events = globalEventBus.lock()) {
-                        events->triggerEvent(EventDataPtr(new GameQuitEventData(GameQuitEventData::QUIT_NOW)));
+                    if(menuItemName == ITEM_GAME_START) {
+                        controller.requestStateChange("stageselect");
+                        goToNextState = true;
+                    } else if(menuItemName == ITEM_PASS_WORD) {
+                        controller.requestStateChange("password");
+                        goToNextState = true;
+                    } else if(menuItemName == ITEM_OPTIONS) {
+                        controller.requestStateChange("options");
+                        goToNextState = true;
+                    } else if(menuItemName == ITEM_QUIT) {
+                        if(auto events = globalEventBus.lock()) {
+                            events->triggerEvent(EventDataPtr(new GameQuitEventData(GameQuitEventData::QUIT_NOW)));
+                        }
                     }
+                } else {
+                    std::cout << "Actioned on #" << guiMenu->getSelectedIndex() << std::endl;
                 }
-            } else {
-                std::cout << "Actioned on #" << guiMenu->getSelectedIndex() << std::endl;
             }
         }));
 
@@ -152,7 +154,7 @@ namespace hikari {
         guiContainer->add(guiMenu.get(), 48, guiIcon->getHeight() + guiIcon->getY() + 16);
         guiContainer->add(guiLabel.get());
         guiContainer->add(guiCursorIcon.get());
-        
+
         // Set the initial position of the cursor
         positionCursorOnItem();
     }
