@@ -291,6 +291,7 @@ namespace hikari {
             static_cast<float>(SCREEN_HEIGHT / 2));
 
         SliceStateTransition::createSharedTextures();
+        ScreenEffectsService::preloadShaders();
     }
 
     void Client::deinitFileSystem() {
@@ -501,6 +502,7 @@ namespace hikari {
 
         PalettedAnimatedSprite::destroySharedResources();
         SliceStateTransition::destroySharedTextures();
+        ScreenEffectsService::destroyShaders();
 
         HIKARI_LOG(debug) << "Quitting; total run time = " << totalRuntime << " seconds.";
     }

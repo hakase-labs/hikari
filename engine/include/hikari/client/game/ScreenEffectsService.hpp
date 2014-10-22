@@ -42,11 +42,11 @@ namespace hikari {
         sf::Sprite inputSprite;
         std::vector<std::shared_ptr<ScreenEffect>> effects;
 
-        void preloadShaders();
-
     public:
-        static const std::unique_ptr<sf::Shader> FADE_OUT_SHADER;
-        static const std::unique_ptr<sf::Shader> FADE_IN_SHADER;
+        static std::unique_ptr<sf::Shader> FADE_OUT_SHADER;
+        static std::unique_ptr<sf::Shader> FADE_IN_SHADER;
+        static void preloadShaders();
+        static void destroyShaders();
 
         explicit ScreenEffectsService(const std::weak_ptr<EventBusService> & eventBus, int bufferWidth, int bufferHeight);
         virtual ~ScreenEffectsService();

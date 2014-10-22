@@ -7,8 +7,8 @@
 
 namespace hikari {
 
-    const std::unique_ptr<sf::Shader> ScreenEffectsService::FADE_OUT_SHADER = std::unique_ptr<sf::Shader>(new sf::Shader());
-    const std::unique_ptr<sf::Shader> ScreenEffectsService::FADE_IN_SHADER = std::unique_ptr<sf::Shader>(new sf::Shader());
+    std::unique_ptr<sf::Shader> ScreenEffectsService::FADE_OUT_SHADER = std::unique_ptr<sf::Shader>(new sf::Shader());
+    std::unique_ptr<sf::Shader> ScreenEffectsService::FADE_IN_SHADER = std::unique_ptr<sf::Shader>(new sf::Shader());
 
     ScreenEffectsService::ScreenEffectsService(const std::weak_ptr<EventBusService> & eventBus, int bufferWidth, int bufferHeight)
         : Service()
@@ -18,17 +18,22 @@ namespace hikari {
         , effects()
     {
         backBuffer.create(bufferWidth, bufferHeight);
-        preloadShaders();
+        //preloadShaders();
     }
 
     ScreenEffectsService::~ScreenEffectsService() {
-
+        //destroyShaders();
     }
 
     void ScreenEffectsService::preloadShaders() {
         const std::string shaderCode = FileSystem::readFileAsString("assets/shaders/fade.frag");
         FADE_OUT_SHADER->loadFromMemory(shaderCode, sf::Shader::Fragment);
         FADE_IN_SHADER->loadFromMemory(shaderCode, sf::Shader::Fragment);
+    }
+
+    void ScreenEffectsService::destroyShaders() {
+        FADE_IN_SHADER.release();
+        FADE_OUT_SHADER.release();
     }
 
     void ScreenEffectsService::setInputTexture(const sf::RenderTexture & texture) {
