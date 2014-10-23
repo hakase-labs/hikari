@@ -328,6 +328,7 @@ namespace hikari {
             etankMenuItem->setEnabled(true);
             etankMenuItem->setActionEventId(MENU_ACTION_ETANK);
             guiWeaponMenu->addItem(etankMenuItem);
+            guiWeaponMenu->disableKeyPressIgnore();
 
             guiWeaponMenu->setWidth(guiContainer->getWidth() - 32);
             guiWeaponMenu->setHeight(guiContainer->getHeight());
@@ -536,6 +537,12 @@ namespace hikari {
 
         if(eventBus) {
             eventBus->processEvents();
+        }
+
+        if(isRefillingEnergy) {
+            guiWeaponMenu->enableKeyPressIgnore();
+        } else {
+            guiWeaponMenu->disableKeyPressIgnore();
         }
 
         if(userInput->wasPressed(Input::BUTTON_START)) {

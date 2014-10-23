@@ -25,8 +25,9 @@ namespace gui {
     private:
         std::vector<std::shared_ptr<MenuItem>> items;
         std::list<gcn::SelectionListener*> selectionListeners;
-        
+
         bool enableSelectionWrap;
+        bool keyPressIgnoreFlag;
         int selectedIndex;
 
     protected:
@@ -61,6 +62,9 @@ namespace gui {
         bool isWrappingEnabled() const;
         void enableWrapping();
         void disableWrapping();
+
+        void enableKeyPressIgnore();
+        void disableKeyPressIgnore();
 
         /**
          * Adds a selection listener to the menu. When the selection
