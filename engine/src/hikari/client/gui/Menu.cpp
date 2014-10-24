@@ -19,6 +19,7 @@ namespace gui {
         , items()
         , selectionListeners()
         , enableSelectionWrap(true)
+        , keyPressIgnoreFlag(false)
         , selectedIndex(0)
     {
         setFocusable(true);
@@ -32,6 +33,7 @@ namespace gui {
         , items(items)
         , selectionListeners()
         , enableSelectionWrap(true)
+        , keyPressIgnoreFlag(false)
         , selectedIndex(0)
     {
         setFocusable(true);
@@ -220,18 +222,28 @@ namespace gui {
         Widget::logic();
     }
 
-    void Menu::keyPressed(gcn::KeyEvent& keyEvent) {
-        hikari::Input::Button button =
-            InputHelper::getMappedButtonForKey(keyEvent.getKey());
+    void Menu::enableKeyPressIgnore() {
+        keyPressIgnoreFlag = true;
+    }
 
-        if(button == Input::BUTTON_UP) {
-            selectPreviousItem();
-            keyEvent.consume();
-        } else if(button == Input::BUTTON_DOWN) {
-            selectNextItem();
-            keyEvent.consume();
-        } else if(button == Input::BUTTON_START || button == Input::BUTTON_SHOOT) {
-            distributeActionEvent();
+    void Menu::disableKeyPressIgnore() {
+        keyPressIgnoreFlag = false;
+    }
+
+    void Menu::keyPressed(gcn::KeyEvent& keyEvent) {
+        if(!keyPressIgnoreFlag) {
+            hikari::Input::Button button =
+                InputHelper::getMappedButtonForKey(keyEvent.getKey());
+
+            if(button == Input::BUTTON_UP) {
+                selectPreviousItem();
+                keyEvent.consume();
+            } else if(button == Input::BUTTON_DOWN) {
+                selectNextItem();
+                keyEvent.consume();
+            } else if(button == Input::BUTTON_START || button == Input::BUTTON_SHOOT) {
+                distributeActionEvent();
+            }
         }
     }
 
