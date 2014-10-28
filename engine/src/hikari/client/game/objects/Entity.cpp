@@ -189,6 +189,7 @@ namespace hikari {
     void Entity::setBoundingBox(const BoundingBoxF& box) {
         body.setBoundingBox(box);
         hitBoxes[0].bounds = box;
+        hitBoxes[0].shieldFlag = isShielded();
     }
 
     const std::vector<HitBox> & Entity::getHitBoxes() const {
@@ -401,6 +402,7 @@ namespace hikari {
         body.update(dt);
 
         hitBoxes[0].bounds = body.getBoundingBox();
+        hitBoxes[0].shieldFlag = isShielded();
 
         if(isActive()) {
             if(!isAgeless()) {

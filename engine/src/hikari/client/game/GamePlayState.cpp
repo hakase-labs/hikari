@@ -1139,41 +1139,58 @@ namespace hikari {
                         std::end(activeEnemies),
                         [&](const std::shared_ptr<Enemy> & enemy) {
                             if(!projectile->isInert()) {
-                                if(projectile->getBoundingBox().intersects(enemy->getHitBoxes()[0].bounds)) {
-                                    if(enemy->isShielded()) {
-                                         // Deflect projectile
-                                        projectile->deflect();
+                                int collisionType = 0;
+                                // Types:
+                                // 0 = none (we didn't hit at all)
+                                // 1 = hit (we hit a vunlerable part)
+                                // 2 = bounce (we hit a shield)
+                                for(auto hitBox = enemy->getHitBoxes().begin();
+                                    hitBox != enemy->getHitBoxes().end();
+                                    ++hitBox
+                                ) {
+                                    if(projectile->getBoundingBox().intersects((*hitBox).bounds)) {
+                                        collisionType = 1;
 
-                                        if(auto sound = audioService.lock()) {
-                                            HIKARI_LOG(debug4) << "PLAYING SAMPLE weapon DEFLECTED";
-                                            sound->playSample("Deflected");
+                                        if((*hitBox).shieldFlag) {
+                                            collisionType = 2;
+                                            break; // Stop checking; we're going to deflect.
                                         }
-                                    } else {
-                                        HIKARI_LOG(debug3) << "Hero bullet " << projectile->getId() << " hit an enemy " << enemy->getId();
-                                        projectile->setActive(false);
-                                        world.queueObjectRemoval(projectile);
+                                    }
+                                }
 
-                                        DamageKey damageKey;
-                                        damageKey.damagerType = projectile->getDamageId();
-                                        damageKey.damageeType = enemy->getDamageId();
+                                if(collisionType == 2) {
+                                     // Deflect projectile
+                                    projectile->deflect();
 
-                                        HIKARI_LOG(debug3) << "Hero bullet damage id = " << projectile->getDamageId();
+                                    if(auto sound = audioService.lock()) {
+                                        HIKARI_LOG(debug4) << "PLAYING SAMPLE weapon DEFLECTED";
+                                        sound->playSample("Deflected");
+                                    }
+                                } else if(collisionType == 1) {
+                                    HIKARI_LOG(debug3) << "Hero bullet " << projectile->getId() << " hit an enemy " << enemy->getId();
+                                    projectile->setActive(false);
+                                    world.queueObjectRemoval(projectile);
 
-                                        // TODO: Perform damage lookup and apply it to hero.
-                                        // Trigger enemy damage
-                                        float damageAmount = 0.0f;
+                                    DamageKey damageKey;
+                                    damageKey.damagerType = projectile->getDamageId();
+                                    damageKey.damageeType = enemy->getDamageId();
 
-                                        if(auto dt = damageTable.lock()) {
-                                            damageAmount = dt->getDamageFor(damageKey.damagerType);
-                                        }
+                                    HIKARI_LOG(debug3) << "Hero bullet damage id = " << projectile->getDamageId();
 
-                                        HIKARI_LOG(debug3) << "Enemy took " << damageAmount;
+                                    // TODO: Perform damage lookup and apply it to hero.
+                                    // Trigger enemy damage
+                                    float damageAmount = 0.0f;
 
-                                        enemy->takeDamage(damageAmount);
+                                    if(auto dt = damageTable.lock()) {
+                                        damageAmount = dt->getDamageFor(damageKey.damagerType);
+                                    }
 
-                                        if(auto sound = audioService.lock()) {
-                                            sound->playSample("Enemy (Damage)");
-                                        }
+                                    HIKARI_LOG(debug3) << "Enemy took " << damageAmount;
+
+                                    enemy->takeDamage(damageAmount);
+
+                                    if(auto sound = audioService.lock()) {
+                                        sound->playSample("Enemy (Damage)");
                                     }
                                 }
                             }
