@@ -59,6 +59,7 @@ namespace hikari {
         boxPosition.setOutlineThickness(1.0f);
         #endif // HIKARI_DEBUG_ENTITIES
 
+        // Seed the hitboxes
         hitBoxes.push_back(BoundingBoxF(0, 0, 0, 0));
     }
 

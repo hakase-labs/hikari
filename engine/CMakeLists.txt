@@ -208,6 +208,7 @@ source_group(hikari\\client\\game\\events FILES ${HIKARI_CLIENT_GAME_EVENTS_SOUR
 
 set( HIKARI_CLIENT_GAME_OBJECTS_SOURCE_FILES
     src/hikari/client/game/objects/GameObject.cpp
+    src/hikari/client/game/objects/HitBox.cpp
     src/hikari/client/game/objects/Hero.cpp
     src/hikari/client/game/objects/AnimatedSprite.cpp
     src/hikari/client/game/objects/PalettedAnimatedSprite.cpp
