@@ -9,6 +9,8 @@ Project Hikari is the code name for a yet-to-be-named open-source Mega Man/Rockm
 
 Gameplay and feature videos can be seen on [hakaselabshikari's YouTube page][7].
 
+You can also contact us via our [Facebook fan page][8], if that's your kind of thing.
+
 ## Customization & Extension ##
 
 The game is designed to be as data-driven as possible and as such it allows for customization and extension.
@@ -98,3 +100,4 @@ No. While the mechanics of the game are very similar to Mega Man 3, this project
 [5]: http://icculus.org/physfs/downloads/
 [6]: http://squirrel-lang.org
 [7]: https://www.youtube.com/user/hakaselabshikari/videos
+[8]: https://www.facebook.com/pages/Project-Hikari/341175436063199
