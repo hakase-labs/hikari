@@ -2,6 +2,7 @@
 #define HIKARI_CLIENT_GAME_OBJECTS_ENTITY
 
 #include "hikari/client/game/objects/GameObject.hpp"
+#include "hikari/client/game/objects/HitBox.hpp"
 #include "hikari/client/game/objects/Faction.hpp"
 #include "hikari/client/game/objects/EntityDeathType.hpp"
 #include "hikari/core/game/Movable.hpp"
@@ -68,7 +69,7 @@ namespace hikari {
 
         Vector2<float> actionSpot; // An offset from the position where actions "take place"
 
-        std::vector<BoundingBoxF> hitBoxes;
+        std::vector<HitBox> hitBoxes;
 
         void move(const Vector2<float>& delta);
         void move(const float& dx, const float& dy);
@@ -300,7 +301,7 @@ namespace hikari {
          *
          * @return vector of BoundingBoxF
          */
-        const std::vector<BoundingBoxF> & getHitBoxes() const;
+        const std::vector<HitBox> & getHitBoxes() const;
 
         /**
          * Called when Entity is added to the game.

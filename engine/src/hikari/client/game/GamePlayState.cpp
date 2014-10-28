@@ -1139,7 +1139,7 @@ namespace hikari {
                         std::end(activeEnemies),
                         [&](const std::shared_ptr<Enemy> & enemy) {
                             if(!projectile->isInert()) {
-                                if(projectile->getBoundingBox().intersects(enemy->getHitBoxes()[0])) {
+                                if(projectile->getBoundingBox().intersects(enemy->getHitBoxes()[0].bounds)) {
                                     if(enemy->isShielded()) {
                                          // Deflect projectile
                                         projectile->deflect();

@@ -188,10 +188,10 @@ namespace hikari {
 
     void Entity::setBoundingBox(const BoundingBoxF& box) {
         body.setBoundingBox(box);
-        hitBoxes[0] = box;
+        hitBoxes[0].bounds = box;
     }
 
-    const std::vector<BoundingBoxF> & Entity::getHitBoxes() const {
+    const std::vector<HitBox> & Entity::getHitBoxes() const {
         return hitBoxes;
     }
 
@@ -400,7 +400,7 @@ namespace hikari {
     void Entity::update(float dt) {
         body.update(dt);
 
-        hitBoxes[0] = body.getBoundingBox();
+        hitBoxes[0].bounds = body.getBoundingBox();
 
         if(isActive()) {
             if(!isAgeless()) {
