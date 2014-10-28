@@ -40,6 +40,7 @@ namespace hikari {
         , age(DEFAULT_AGE_IN_M_SECONDS)
         , maximumAge(DEFAULT_MAXIMUM_AGE_IN_M_SECONDS)
         , actionSpot(0.0f, 0.0f)
+        , hitBoxes()
         , body()
         , activeShots()
     {
@@ -57,6 +58,8 @@ namespace hikari {
         boxPosition.setOutlineColor(sf::Color(255, 255, 255, 196));
         boxPosition.setOutlineThickness(1.0f);
         #endif // HIKARI_DEBUG_ENTITIES
+
+        hitBoxes.push_back(BoundingBoxF(0, 0, 0, 0));
     }
 
     Entity::Entity(const Entity& proto)
@@ -77,6 +80,7 @@ namespace hikari {
         , age(0)
         , maximumAge(proto.maximumAge)
         , actionSpot(proto.actionSpot)
+        , hitBoxes(proto.hitBoxes)
         , body(proto.body)
         , activeShots()
     {
@@ -183,6 +187,11 @@ namespace hikari {
 
     void Entity::setBoundingBox(const BoundingBoxF& box) {
         body.setBoundingBox(box);
+        hitBoxes[0] = box;
+    }
+
+    const std::vector<BoundingBoxF> & Entity::getHitBoxes() const {
+        return hitBoxes;
     }
 
     void Entity::setDirection(const Direction& dir) {
@@ -389,6 +398,8 @@ namespace hikari {
 
     void Entity::update(float dt) {
         body.update(dt);
+
+        hitBoxes[0] = body.getBoundingBox();
 
         if(isActive()) {
             if(!isAgeless()) {

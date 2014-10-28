@@ -68,6 +68,8 @@ namespace hikari {
 
         Vector2<float> actionSpot; // An offset from the position where actions "take place"
 
+        std::vector<BoundingBoxF> hitBoxes;
+
         void move(const Vector2<float>& delta);
         void move(const float& dx, const float& dy);
 
@@ -292,6 +294,13 @@ namespace hikari {
          * @param box the bounding box to use
          */
         void setBoundingBox(const BoundingBoxF& box);
+
+        /**
+         * Gets the Entity's set of hitboxes.
+         *
+         * @return vector of BoundingBoxF
+         */
+        const std::vector<BoundingBoxF> & getHitBoxes() const;
 
         /**
          * Called when Entity is added to the game.
