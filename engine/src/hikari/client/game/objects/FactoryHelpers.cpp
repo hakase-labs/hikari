@@ -270,7 +270,7 @@ namespace FactoryHelpers {
 
                                         for(std::size_t i = 0; i < hitBoxes.size(); ++i) {
                                             // Loop through each box and add hitbox to enemy.
-                                            // instance->addHitBox(hitBoxes[i]);
+                                            instance->addHitBox(hitBoxes[i]);
                                         }
 
                                         if(deathType == "Hero") {

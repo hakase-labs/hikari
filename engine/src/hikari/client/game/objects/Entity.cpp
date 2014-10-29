@@ -197,6 +197,10 @@ namespace hikari {
         return hitBoxes;
     }
 
+    void Entity::addHitBox(const HitBox & hitBox) {
+        hitBoxes.push_back(hitBox);
+    }
+
     void Entity::setDirection(const Direction& dir) {
         this->direction = dir;
 
