@@ -4,6 +4,7 @@
 #include "hikari/client/game/objects/ItemFactory.hpp"
 #include "hikari/client/game/objects/ProjectileFactory.hpp"
 #include "hikari/client/game/objects/ParticleFactory.hpp"
+#include "hikari/client/game/objects/HitBox.hpp"
 #include "hikari/client/game/objects/GameObject.hpp"
 #include "hikari/client/game/objects/CollectableItem.hpp"
 #include "hikari/client/game/objects/Enemy.hpp"
@@ -187,6 +188,7 @@ namespace FactoryHelpers {
                                         const auto behavior          = templateObject["behavior"];
                                         const auto animationSet      = templateObject["animationSet"].asString();
                                         const auto boundingBoxObject = templateObject["boundingBox"];
+                                        const auto hitBoxesObject    = templateObject["hitBoxes"];
                                         const auto statesObject      = templateObject["states"];
                                         const auto characteristicsObject = templateObject["characteristics"];
                                         const auto actionSpotObject  = templateObject["actionSpot"];
@@ -204,6 +206,30 @@ namespace FactoryHelpers {
                                             static_cast<float>(boundingBoxObject["originX"].asDouble()),
                                             static_cast<float>(boundingBoxObject["originY"].asDouble())
                                         );
+
+                                        std::vector<HitBox> hitBoxes;
+
+                                        if(!hitBoxesObject.isNull()) {
+                                            auto length = hitBoxesObject.size();
+
+                                            for(std::size_t i = 0; i < length; ++i) {
+                                                const auto boxJson = hitBoxesObject[i];
+
+                                                // Create hitbox and push to vector
+                                                const float width = boxJson["width"].asFloat();
+                                                const float height = boxJson["height"].asFloat();
+                                                const float x = boxJson["x"].asFloat();
+                                                const float y = boxJson["y"].asFloat();
+                                                const float originX = boxJson.get("originX", 0.0f).asFloat();
+                                                const float originY = boxJson.get("originY", 0.0f).asFloat();
+                                                const bool isShield = boxJson.get("isShield", false).asBool();
+
+                                                HitBox hitBox(BoundingBox<float>(x, y, width, height), isShield);
+                                                hitBox.bounds.setOrigin(originX, originY);
+
+                                                hitBoxes.push_back(hitBox);
+                                            }
+                                        }
 
                                         std::shared_ptr<EnemyBrain> brain(nullptr);
 
@@ -238,9 +264,14 @@ namespace FactoryHelpers {
                                         instance->setAnimationSet(animationSetPtr);
                                         instance->setBoundingBox(boundingBox);
                                         instance->setActionSpot(actionSpot);
-                                        instance->setDirection(Directions::Down);
+                                        instance->setDirection(Directions::Right);
                                         instance->setBonusTableIndex(bonusTableIndex);
                                         instance->changeAnimation("idle");
+
+                                        for(std::size_t i = 0; i < hitBoxes.size(); ++i) {
+                                            // Loop through each box and add hitbox to enemy.
+                                            // instance->addHitBox(hitBoxes[i]);
+                                        }
 
                                         if(deathType == "Hero") {
                                             instance->setDeathType(EntityDeathType::Hero);

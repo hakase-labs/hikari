@@ -450,7 +450,27 @@ namespace hikari {
         #ifdef HIKARI_DEBUG_ENTITIES
         // Draw bounding box behind sprite
         if(debug) {
+            // Bounding box is yellow
+            boxOutline.setOutlineColor(sf::Color(255, 255, 0));
             target.draw(boxOutline);
+
+            // HitBoxes are red
+            boxOutline.setOutlineColor(sf::Color(255, 0, 0));
+
+            for(auto hitBox = hitBoxes.begin();
+                hitBox != hitBoxes.end();
+                ++hitBox
+            ) {
+                auto & box = (*hitBox).bounds;
+
+                boxOutline.setPosition(std::floor(box.getLeft() ), std::floor(box.getTop()));
+                boxOutline.setSize(sf::Vector2f(std::floor(box.getWidth() ), std::floor(box.getHeight())));
+
+                boxPosition.setPosition(std::floor(box.getPosition().getX()), std::floor(box.getPosition().getY()));
+                boxPosition.setSize(sf::Vector2f(1.0f, 1.0f));
+
+                target.draw(boxOutline);
+            }
         }
         #endif // HIKARI_DEBUG_ENTITIES
 

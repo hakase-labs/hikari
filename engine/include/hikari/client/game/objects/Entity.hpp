@@ -15,7 +15,7 @@
 #include <list>
 #include <memory>
 
-// #define HIKARI_DEBUG_ENTITIES
+ #define HIKARI_DEBUG_ENTITIES
 
 namespace sf {
     class RenderTarget;

@@ -360,6 +360,14 @@
             "originX": 10,
             "originY": 13
         },
+        "hitBoxes": [
+            {
+                "width": 10,
+                "height": 10,
+                "originX": 20,
+                "originY": 20
+            }
+        ],
         "actionSpot": {
             "x": 5.0,
             "y": -8.0
