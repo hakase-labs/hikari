@@ -168,6 +168,7 @@ namespace hikari {
 
     void Entity::setPosition(const Vector2<float>& newPosition) {
         body.setPosition(newPosition);
+        syncHitBoxes();
     }
 
     void Entity::setPosition(const float x, const float y) {
@@ -322,6 +323,15 @@ namespace hikari {
         age = newAge;
     }
 
+    void Entity::syncHitBoxes() {
+        for(auto hitBox = hitBoxes.begin();
+            hitBox != hitBoxes.end();
+            ++hitBox
+        ) {
+            (*hitBox).bounds.setPosition(getPosition());
+        }
+    }
+
     float Entity::getMaximumAge() const {
         return maximumAge;
     }
@@ -364,6 +374,7 @@ namespace hikari {
 
     void Entity::setShielded(bool shielded) {
         this->shieldFlag = shielded;
+        hitBoxes[0].shieldFlag = shielded;
     }
 
     bool Entity::isShielded() const {
@@ -403,6 +414,8 @@ namespace hikari {
 
         hitBoxes[0].bounds = body.getBoundingBox();
         hitBoxes[0].shieldFlag = isShielded();
+
+        syncHitBoxes();
 
         if(isActive()) {
             if(!isAgeless()) {

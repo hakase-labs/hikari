@@ -97,6 +97,8 @@ namespace hikari {
 
         void setAge(float newAge);
 
+        void syncHitBoxes();
+
     public:
         static void enableDebug(const bool &debug);
 
