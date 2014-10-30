@@ -485,9 +485,6 @@ namespace hikari {
             boxOutline.setOutlineColor(sf::Color(255, 255, 0));
             target.draw(boxOutline);
 
-            // HitBoxes are red
-            boxOutline.setOutlineColor(sf::Color(255, 0, 0));
-
             for(auto hitBox = hitBoxes.begin();
                 hitBox != hitBoxes.end();
                 ++hitBox
@@ -499,6 +496,12 @@ namespace hikari {
 
                 boxPosition.setPosition(std::floor(box.getPosition().getX()), std::floor(box.getPosition().getY()));
                 boxPosition.setSize(sf::Vector2f(1.0f, 1.0f));
+
+                if((*hitBox).shieldFlag) {
+                    boxOutline.setOutlineColor(sf::Color(255, 0, 0));
+                } else {
+                    boxOutline.setOutlineColor(sf::Color(0, 255, 0));
+                }
 
                 target.draw(boxOutline);
             }
