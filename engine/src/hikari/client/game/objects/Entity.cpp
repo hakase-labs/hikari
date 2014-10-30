@@ -224,6 +224,8 @@ namespace hikari {
          using their top-left corner, the offset needs to be adjusted accordingly
          when flipping (by taking its width into consideration).
 
+        */
+
         /*
 
         if(changed) {
