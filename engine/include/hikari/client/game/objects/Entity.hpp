@@ -306,6 +306,7 @@ namespace hikari {
         const std::vector<HitBox> & getHitBoxes() const;
 
         void addHitBox(const HitBox & hitBox);
+        void setHitBoxShield(unsigned int index, bool shield);
 
         /**
          * Called when Entity is added to the game.

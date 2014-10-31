@@ -201,6 +201,12 @@ namespace hikari {
         hitBoxes.push_back(hitBox);
     }
 
+    void Entity::setHitBoxShield(unsigned int index, bool shield) {
+        if(index < hitBoxes.size()) {
+            hitBoxes[index].shieldFlag = shield;
+        }
+    }
+
     void Entity::setDirection(const Direction& dir) {
         bool changed = dir != this->direction;
 
