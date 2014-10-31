@@ -218,16 +218,6 @@ namespace hikari {
             }
         }
 
-        /*
-
-         This doesn't quite work as intended. Since the hitboxes are positioned
-         using their top-left corner, the offset needs to be adjusted accordingly
-         when flipping (by taking its width into consideration).
-
-        */
-
-        /*
-
         if(changed) {
             // Flip offsets of all hitboxes
             for(auto hitBox = hitBoxes.begin();
@@ -235,13 +225,11 @@ namespace hikari {
                 ++hitBox
             ) {
                 auto & box = (*hitBox).bounds;
-                auto & origin = box.getOrigin();
-
-                box.setOrigin(origin.getX() * -1, origin.getY());
+                box.setInverted(!box.isInverted());
             }
         }
 
-        */
+
     }
 
     void Entity::setFaction(const Faction& newFaction) {
