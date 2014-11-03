@@ -40,6 +40,7 @@ namespace hikari {
         , age(DEFAULT_AGE_IN_M_SECONDS)
         , maximumAge(DEFAULT_MAXIMUM_AGE_IN_M_SECONDS)
         , actionSpot(0.0f, 0.0f)
+        , hitBoxes()
         , body()
         , activeShots()
     {
@@ -57,6 +58,9 @@ namespace hikari {
         boxPosition.setOutlineColor(sf::Color(255, 255, 255, 196));
         boxPosition.setOutlineThickness(1.0f);
         #endif // HIKARI_DEBUG_ENTITIES
+
+        // Seed the hitboxes
+        hitBoxes.push_back(BoundingBoxF(0, 0, 0, 0));
     }
 
     Entity::Entity(const Entity& proto)
@@ -77,6 +81,7 @@ namespace hikari {
         , age(0)
         , maximumAge(proto.maximumAge)
         , actionSpot(proto.actionSpot)
+        , hitBoxes(proto.hitBoxes)
         , body(proto.body)
         , activeShots()
     {
@@ -163,6 +168,7 @@ namespace hikari {
 
     void Entity::setPosition(const Vector2<float>& newPosition) {
         body.setPosition(newPosition);
+        syncHitBoxes();
     }
 
     void Entity::setPosition(const float x, const float y) {
@@ -183,9 +189,27 @@ namespace hikari {
 
     void Entity::setBoundingBox(const BoundingBoxF& box) {
         body.setBoundingBox(box);
+        hitBoxes[0].bounds = box;
+        hitBoxes[0].shieldFlag = isShielded();
+    }
+
+    const std::vector<HitBox> & Entity::getHitBoxes() const {
+        return hitBoxes;
+    }
+
+    void Entity::addHitBox(const HitBox & hitBox) {
+        hitBoxes.push_back(hitBox);
+    }
+
+    void Entity::setHitBoxShield(unsigned int index, bool shield) {
+        if(index < hitBoxes.size()) {
+            hitBoxes[index].shieldFlag = shield;
+        }
     }
 
     void Entity::setDirection(const Direction& dir) {
+        bool changed = dir != this->direction;
+
         this->direction = dir;
 
         // Flip sprite and sprite offset if facing left
@@ -199,6 +223,19 @@ namespace hikari {
                 animatedSprite->setXFlipped(false);
             }
         }
+
+        if(changed) {
+            // Flip offsets of all hitboxes
+            for(auto hitBox = hitBoxes.begin();
+                hitBox != hitBoxes.end();
+                ++hitBox
+            ) {
+                auto & box = (*hitBox).bounds;
+                box.setInverted(!box.isInverted());
+            }
+        }
+
+
     }
 
     void Entity::setFaction(const Faction& newFaction) {
@@ -311,6 +348,15 @@ namespace hikari {
         age = newAge;
     }
 
+    void Entity::syncHitBoxes() {
+        for(auto hitBox = hitBoxes.begin();
+            hitBox != hitBoxes.end();
+            ++hitBox
+        ) {
+            (*hitBox).bounds.setPosition(getPosition());
+        }
+    }
+
     float Entity::getMaximumAge() const {
         return maximumAge;
     }
@@ -353,6 +399,7 @@ namespace hikari {
 
     void Entity::setShielded(bool shielded) {
         this->shieldFlag = shielded;
+        hitBoxes[0].shieldFlag = shielded;
     }
 
     bool Entity::isShielded() const {
@@ -390,6 +437,11 @@ namespace hikari {
     void Entity::update(float dt) {
         body.update(dt);
 
+        hitBoxes[0].bounds = body.getBoundingBox();
+        hitBoxes[0].shieldFlag = isShielded();
+
+        syncHitBoxes();
+
         if(isActive()) {
             if(!isAgeless()) {
                 setAge(getAge() + dt);
@@ -423,7 +475,30 @@ namespace hikari {
         #ifdef HIKARI_DEBUG_ENTITIES
         // Draw bounding box behind sprite
         if(debug) {
+            // Bounding box is yellow
+            boxOutline.setOutlineColor(sf::Color(255, 255, 0));
             target.draw(boxOutline);
+
+            for(auto hitBox = hitBoxes.begin();
+                hitBox != hitBoxes.end();
+                ++hitBox
+            ) {
+                auto & box = (*hitBox).bounds;
+
+                boxOutline.setPosition(std::floor(box.getLeft() ), std::floor(box.getTop()));
+                boxOutline.setSize(sf::Vector2f(std::floor(box.getWidth() ), std::floor(box.getHeight())));
+
+                boxPosition.setPosition(std::floor(box.getPosition().getX()), std::floor(box.getPosition().getY()));
+                boxPosition.setSize(sf::Vector2f(1.0f, 1.0f));
+
+                if((*hitBox).shieldFlag) {
+                    boxOutline.setOutlineColor(sf::Color(255, 0, 0));
+                } else {
+                    boxOutline.setOutlineColor(sf::Color(0, 255, 0));
+                }
+
+                target.draw(boxOutline);
+            }
         }
         #endif // HIKARI_DEBUG_ENTITIES
 

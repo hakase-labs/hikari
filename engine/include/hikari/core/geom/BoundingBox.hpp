@@ -24,6 +24,7 @@ namespace hikari {
         Vector2<T> origin;
         T width;
         T height;
+        bool invertFlag;
 
     public:
         BoundingBox(const Vector2<T> &position, const T &width, const T &height);
@@ -86,6 +87,8 @@ namespace hikari {
         const Vector2<T> getBottomLeft() const;
         const Vector2<T> getBottomRight() const;
 
+        bool isInverted() const;
+
         //
         // Mutators
         //
@@ -130,6 +133,13 @@ namespace hikari {
         */
         BoundingBox& setBottom(const T& newBottom);
 
+        /**
+         * Sets whether the BoundingBox is inverted or not. Inverted boxes calculate
+         * their bounds from the right-hand side rahter than the left and use the
+         * horizontal mirror of their origin.
+         * @param invert true to invert, false otherwise
+         */
+        void setInverted(bool invert);
 
         /**
             Tests if two BoundingBox objects' areas intersect.
@@ -189,6 +199,8 @@ namespace hikari {
             stream << box.getWidth();
             stream << ", ";
             stream << box.getHeight();
+            stream << ", ";
+            stream << (box.isInverted() ? "true" : "false");
             stream << "]";
 
             return stream;
@@ -201,7 +213,8 @@ namespace hikari {
         : position(position)
         , origin(0, 0)
         , width(width)
-        , height(height) {
+        , height(height)
+        , invertFlag(false) {
 
     }
 
@@ -210,7 +223,8 @@ namespace hikari {
         : position(x, y)
         , origin(0, 0)
         , width(width)
-        , height(height) {
+        , height(height)
+        , invertFlag(false) {
 
     }
 
@@ -219,7 +233,8 @@ namespace hikari {
         : position(proto.position)
         , origin(proto.origin)
         , width(proto.width)
-        , height(proto.height) {
+        , height(proto.height)
+        , invertFlag(proto.invertFlag) {
 
     }
 
@@ -248,6 +263,7 @@ namespace hikari {
         std::swap(origin, other.origin);
         std::swap(width, other.width);
         std::swap(height, other.height);
+        std::swap(invertFlag, other.invertFlag);
     }
 
     template <typename T>
@@ -273,7 +289,7 @@ namespace hikari {
     }
     template <typename T>
     const T BoundingBox<T>::getLeft() const {
-        return position.getX() - origin.getX();
+        return isInverted() ? (position.getX() + origin.getX() - getWidth()) : (position.getX() - origin.getX());
     }
     template <typename T>
     const T BoundingBox<T>::getRight() const {
@@ -301,6 +317,11 @@ namespace hikari {
     template <typename T>
     const Vector2<T> BoundingBox<T>::getBottomRight() const {
         return Vector2<T>(getRight(), getBottom());
+    }
+
+    template <typename T>
+    bool BoundingBox<T>::isInverted() const {
+        return invertFlag;
     }
 
     template <typename T>
@@ -352,7 +373,7 @@ namespace hikari {
 
     template <typename T>
     BoundingBox<T>& BoundingBox<T>::setLeft(const T& newLeft) {
-        position.setX(newLeft + origin.getX());
+        position.setX(isInverted() ? (newLeft - origin.getX()) : (newLeft + origin.getX()));
         return *this;
     }
 
@@ -366,6 +387,11 @@ namespace hikari {
     BoundingBox<T>& BoundingBox<T>::setBottom(const T& newBottom) {
         setTop(newBottom - getHeight());
         return *this;
+    }
+
+    template <typename T>
+    void BoundingBox<T>::setInverted(bool invert) {
+        invertFlag = invert;
     }
 
     template <typename T>
