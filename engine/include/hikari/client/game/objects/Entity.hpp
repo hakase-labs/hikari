@@ -2,6 +2,7 @@
 #define HIKARI_CLIENT_GAME_OBJECTS_ENTITY
 
 #include "hikari/client/game/objects/GameObject.hpp"
+#include "hikari/client/game/objects/HitBox.hpp"
 #include "hikari/client/game/objects/Faction.hpp"
 #include "hikari/client/game/objects/EntityDeathType.hpp"
 #include "hikari/core/game/Movable.hpp"
@@ -14,7 +15,7 @@
 #include <list>
 #include <memory>
 
-// #define HIKARI_DEBUG_ENTITIES
+ #define HIKARI_DEBUG_ENTITIES
 
 namespace sf {
     class RenderTarget;
@@ -68,6 +69,8 @@ namespace hikari {
 
         Vector2<float> actionSpot; // An offset from the position where actions "take place"
 
+        std::vector<HitBox> hitBoxes;
+
         void move(const Vector2<float>& delta);
         void move(const float& dx, const float& dy);
 
@@ -93,6 +96,8 @@ namespace hikari {
         bool canFireWeapon() const;
 
         void setAge(float newAge);
+
+        void syncHitBoxes();
 
     public:
         static void enableDebug(const bool &debug);
@@ -292,6 +297,16 @@ namespace hikari {
          * @param box the bounding box to use
          */
         void setBoundingBox(const BoundingBoxF& box);
+
+        /**
+         * Gets the Entity's set of hitboxes.
+         *
+         * @return vector of BoundingBoxF
+         */
+        const std::vector<HitBox> & getHitBoxes() const;
+
+        void addHitBox(const HitBox & hitBox);
+        void setHitBoxShield(unsigned int index, bool shield);
 
         /**
          * Called when Entity is added to the game.
