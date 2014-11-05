@@ -2219,6 +2219,16 @@ namespace hikari {
                     bubbleSpawnShortTimer = SHORT_BUBBLE_SPAWN_DURATION;
                 }
 
+                // Check if the player has left the screen (fell through the bottom)
+                const auto & heroBounds = gamePlayState.hero->getBoundingBox();
+                const auto & cameraBounds = gamePlayState.currentRoom->getCameraBounds();
+                const int PLAY_AREA_KILL_THRESHOLD = 100;
+
+                if(heroBounds.getTop() - cameraBounds.getBottom() > PLAY_AREA_KILL_THRESHOLD) {
+                    HIKARI_LOG(debug) << "Killing play since he dropped out of the play area. ";
+                    gamePlayState.hero->kill();
+                }
+
                 //
                 // BEGIN code that checks hero vs obstacles
                 // We check against them after updating the hero so there is no
