@@ -135,6 +135,7 @@ namespace hikari {
         , guiWeaponMenuActionListener(nullptr)
         , guiWeaponMenuSelectionListener(nullptr)
         , keyboardInput(new KeyboardInput())
+        , oldHeroPosition(new Vector2<float>())
         , maps()
         , itemSpawners()
         , deactivatedItemSpawners()
@@ -2192,6 +2193,9 @@ namespace hikari {
                     gamePlayState.hero->setHasAvailableWeaponEnergy(currentWeaponEnergy > 0);
                 }
 
+                const auto & oldPos = gamePlayState.hero->getPosition().toFloor();
+                gamePlayState.oldHeroPosition->setX(oldPos.getX()).setY(oldPos.getY());
+
                 gamePlayState.hero->update(dt);
 
                 if(gamePlayState.hero->isUnderWater()) {
@@ -2299,10 +2303,24 @@ namespace hikari {
         // Move camera to correct place
         //
         auto& hero = gamePlayState.hero;
-        const auto& heroPosition = hero->getPosition();
+        const auto& heroPosition = hero->getPosition().toFloor();
         auto& renderer = gamePlayState.mapRenderer;
 
-        camera.lookAt(heroPosition.getX(), heroPosition.getY());
+        const auto heroPositionDelta = heroPosition - (*gamePlayState.oldHeroPosition);
+        const auto heroScreenPosition = heroPosition - Vector2<float>(gamePlayState.camera.getX(), gamePlayState.camera.getY());
+        const bool heroMovedRight = heroPositionDelta.getX() > 0;
+
+        if(heroMovedRight) {
+            if(heroScreenPosition.getX() >= 128.0f) {
+                camera.move(heroPositionDelta);
+            }
+        } else {
+            if(heroScreenPosition.getX() < 128.0f) {
+                camera.move(heroPositionDelta);
+            }
+        }
+
+        // camera.lookAt(heroPosition.getX(), heroPosition.getY());
 
         const auto& cameraView = camera.getView();
         const auto cameraX  = static_cast<int>(cameraView.getX());

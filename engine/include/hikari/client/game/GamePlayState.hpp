@@ -1,6 +1,7 @@
 #ifndef HIKARI_CLIENT_GAME_GAMEPLAYSTATE
 #define HIKARI_CLIENT_GAME_GAMEPLAYSTATE
 
+#include "hikari/core/math/Vector2.hpp"
 #include "hikari/core/game/GameState.hpp"
 #include "hikari/core/game/map/Camera.hpp"
 #include "hikari/core/game/map/Map.hpp"
@@ -134,6 +135,7 @@ namespace hikari {
         std::unique_ptr<gcn::ActionListener> guiWeaponMenuActionListener;
         std::unique_ptr<gcn::SelectionListener> guiWeaponMenuSelectionListener;
         std::unique_ptr<KeyboardInput> keyboardInput;
+        std::unique_ptr<Vector2<float>> oldHeroPosition;
         std::map< std::string, std::shared_ptr<Map> > maps;
         std::vector<std::weak_ptr<Spawner>> itemSpawners;
         std::vector<std::weak_ptr<Spawner>> deactivatedItemSpawners;
