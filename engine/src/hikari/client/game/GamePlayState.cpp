@@ -135,6 +135,7 @@ namespace hikari {
         , guiWeaponMenuActionListener(nullptr)
         , guiWeaponMenuSelectionListener(nullptr)
         , keyboardInput(new KeyboardInput())
+        , oldHeroPosition(new Vector2<float>())
         , maps()
         , itemSpawners()
         , deactivatedItemSpawners()
@@ -597,7 +598,7 @@ namespace hikari {
         Movable::setGravity(0.25f);
 
         std::vector<std::string> mapList;
-        mapList.push_back("map-pearlman.json");
+        mapList.push_back("map-snake.json");
         mapList.push_back("map-test6.json");
         mapList.push_back("map-pearlman.json");
         mapList.push_back("map-pearl.json");
@@ -2192,6 +2193,9 @@ namespace hikari {
                     gamePlayState.hero->setHasAvailableWeaponEnergy(currentWeaponEnergy > 0);
                 }
 
+                const auto & oldPos = gamePlayState.hero->getPosition().toFloor();
+                gamePlayState.oldHeroPosition->setX(oldPos.getX()).setY(oldPos.getY());
+
                 gamePlayState.hero->update(dt);
 
                 if(gamePlayState.hero->isUnderWater()) {
@@ -2217,6 +2221,16 @@ namespace hikari {
                 } else {
                     bubbleSpawnLongTimer = LONG_BUBBLE_SPAWN_DURATION;
                     bubbleSpawnShortTimer = SHORT_BUBBLE_SPAWN_DURATION;
+                }
+
+                // Check if the player has left the screen (fell through the bottom)
+                const auto & heroBounds = gamePlayState.hero->getBoundingBox();
+                const auto & cameraBounds = gamePlayState.currentRoom->getCameraBounds();
+                const int PLAY_AREA_KILL_THRESHOLD = 100;
+
+                if(heroBounds.getTop() - cameraBounds.getBottom() > PLAY_AREA_KILL_THRESHOLD) {
+                    HIKARI_LOG(debug) << "Killing play since he dropped out of the play area. ";
+                    gamePlayState.hero->kill();
                 }
 
                 //
@@ -2289,10 +2303,24 @@ namespace hikari {
         // Move camera to correct place
         //
         auto& hero = gamePlayState.hero;
-        const auto& heroPosition = hero->getPosition();
+        const auto& heroPosition = hero->getPosition().toFloor();
         auto& renderer = gamePlayState.mapRenderer;
 
-        camera.lookAt(heroPosition.getX(), heroPosition.getY());
+        const auto heroPositionDelta = heroPosition - (*gamePlayState.oldHeroPosition);
+        const auto heroScreenPosition = heroPosition - Vector2<float>(gamePlayState.camera.getX(), gamePlayState.camera.getY());
+        const bool heroMovedRight = heroPositionDelta.getX() > 0;
+
+        if(heroMovedRight) {
+            if(heroScreenPosition.getX() >= 128.0f) {
+                camera.move(heroPositionDelta);
+            }
+        } else {
+            if(heroScreenPosition.getX() < 128.0f) {
+                camera.move(heroPositionDelta);
+            }
+        }
+
+        // camera.lookAt(heroPosition.getX(), heroPosition.getY());
 
         const auto& cameraView = camera.getView();
         const auto cameraX  = static_cast<int>(cameraView.getX());

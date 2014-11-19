@@ -5,7 +5,7 @@ namespace hikari {
 
     Camera::Camera(const Rectangle2D<float>& view, const Rectangle2D<int>& boundary)
         : view(view)
-        , boundary(boundary) 
+        , boundary(boundary)
         , lockHorizontalMovement(false)
         , lockVerticalMovement(false)
     {

@@ -18,7 +18,7 @@ namespace hikari {
         Vector2(T x, T y);
         Vector2(const Vector2<T>& copy);
         Vector2(Point2D<T> copy);
-        
+
         const T getX() const;
         const T getY() const;
         const T getLengthSquared() const;
@@ -53,7 +53,7 @@ namespace hikari {
         const T dot(const Vector2& rhs) const;
 
         Vector2 abs() const;
-        
+
         friend std::ostream &operator<<(std::ostream &stream, const Vector2 &vector) {
             stream << "(";
             stream << vector.getX();
@@ -67,14 +67,14 @@ namespace hikari {
          * Floors the X and Y values in the Vector2.
          */
         Vector2& floor();
-        
+
         /**
-         * Creates a new Vector2 with its values adjuted by std::floor.
-         * 
+         * Creates a new Vector2 with its values adjusted by std::floor.
+         *
          * @return a new Vector2 of floored values
          */
         Vector2 toFloor() const;
-        
+
         /**
          * Ceils the X and Y values in the Vector2.
          */
@@ -82,7 +82,7 @@ namespace hikari {
 
         /**
          * Creates a new Vector2 with its values adjuted by std::ceil.
-         * 
+         *
          * @return a new Vector2 of ceiled values
          */
         Vector2 toCeil() const;
@@ -90,7 +90,7 @@ namespace hikari {
 
     template <typename T>
     Vector2<T>::Vector2()
-        : point(0, 0) 
+        : point(0, 0)
     {
 
     }
@@ -103,19 +103,19 @@ namespace hikari {
     }
 
     template <typename T>
-    Vector2<T>::Vector2(const Vector2<T>& copy) 
+    Vector2<T>::Vector2(const Vector2<T>& copy)
         : point(copy.point)
     {
 
     }
 
     template <typename T>
-    Vector2<T>::Vector2(Point2D<T> copy) 
+    Vector2<T>::Vector2(Point2D<T> copy)
         : point(copy)
     {
 
     }
-        
+
     template <typename T>
     const T Vector2<T>::getX() const {
         return point.getX();
@@ -280,12 +280,12 @@ namespace hikari {
 
         return *this;
     }
-    
+
     template<typename T>
     Vector2<T> Vector2<T>::toFloor() const {
         return Vector2<T>(*this).floor();
     }
-    
+
     template<typename T>
     Vector2<T> & Vector2<T>::ceil() {
         setX(std::ceil(getX()));
