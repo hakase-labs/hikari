@@ -22,6 +22,8 @@ namespace gui {
         , selectBoxSpacing(DEFAULT_SELECT_BOX_SPACING)
         , weaponId(-1)
         , gauge(new EnergyGauge())
+        , selectedIcon()
+        , unselectedIcon()
     {
         initGauge();
         adjustSize();
@@ -34,6 +36,22 @@ namespace gui {
         , selectBoxSpacing(DEFAULT_SELECT_BOX_SPACING)
         , weaponId(weaponId)
         , gauge(new EnergyGauge())
+        , selectedIcon()
+        , unselectedIcon()
+    {
+        initGauge();
+        adjustSize();
+    }
+
+    WeaponMenuItem::WeaponMenuItem(const std::string & name, int weaponId, std::unique_ptr<Icon> selected, std::unique_ptr<Icon> unselected)
+        : MenuItem(name)
+        , selectBoxWidth(DEFAULT_SELECT_BOX_WIDTH)
+        , selectBoxHeight(DEFAULT_SELECT_BOX_HEIGHT)
+        , selectBoxSpacing(DEFAULT_SELECT_BOX_SPACING)
+        , weaponId(weaponId)
+        , gauge(new EnergyGauge())
+        , selectedIcon(std::move(selected))
+        , unselectedIcon(std::move(unselected))
     {
         initGauge();
         adjustSize();
@@ -105,9 +123,17 @@ namespace gui {
             boxBackgroundColor = gcn::Color(116, 116, 116);
             gauge->setForegroundColor(gcn::Color(0xfcfcfc));
             gauge->setBackgroundColor(gcn::Color(0xfcd8a8));
+
+            if(unselectedIcon) {
+                unselectedIcon->draw(graphics);
+            }
         } else {
             gauge->setForegroundColor(gcn::Color(0x00e8d8));
             gauge->setBackgroundColor(gcn::Color(0, 112, 236));
+
+            if(selectedIcon) {
+                selectedIcon->draw(graphics);
+            }
         }
 
         // Draw icon box
