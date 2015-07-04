@@ -15,10 +15,11 @@ namespace hikari {
             DirectionBackward = 3,
             DirectionTeleport = 4
         };
-        
-        RoomTransition(int from, int to, int width, int height, int x, int y, Direction dir, bool doorFlag);
+
+        RoomTransition(int from, int to, int width, int height, int x, int y, Direction dir, bool doorFlag, bool ladderOnly);
         
         bool isDoor() const;
+        bool isLadderOnly() const;
         int getFromRegion() const;
         int getToRegion() const;
         int getWidth() const;
@@ -29,6 +30,7 @@ namespace hikari {
     
     private:
         bool doorFlag;
+        bool ladderOnly;
         int fromRegion;
         int toRegion;
         Rectangle2D<int> bounds;

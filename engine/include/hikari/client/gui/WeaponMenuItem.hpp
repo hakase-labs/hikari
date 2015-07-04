@@ -30,7 +30,8 @@ namespace gui {
 
     public:
         WeaponMenuItem();
-        explicit WeaponMenuItem(const std::string & name, int weaponId);
+        WeaponMenuItem(const std::string & name, int weaponId);
+        WeaponMenuItem(const std::string & name, int weaponId, std::unique_ptr<Icon> selected, std::unique_ptr<Icon> unselected);
         virtual ~WeaponMenuItem();
 
         int getWeaponId() const;

@@ -2196,6 +2196,17 @@ namespace hikari {
                 const auto & oldPos = gamePlayState.hero->getPosition().toFloor();
                 gamePlayState.oldHeroPosition->setX(oldPos.getX()).setY(oldPos.getY());
 
+                const auto & heroBounds = gamePlayState.hero->getBoundingBox();
+                const auto & cameraBounds = gamePlayState.currentRoom->getCameraBounds();
+
+                // TODO: Make this work.
+                // Check if the player has left the screen on the top, and if so,
+                // prevent horizontal movement.
+                // if(heroBounds.getBottom() < cameraBounds.getTop()) {
+                //     HIKARI_LOG(debug4) << "Preventing horizontal movement since hero is above the play area.";
+                //     gamePlayState.hero->setVelocityX(0.0f);
+                // }
+
                 gamePlayState.hero->update(dt);
 
                 if(gamePlayState.hero->isUnderWater()) {
@@ -2224,12 +2235,10 @@ namespace hikari {
                 }
 
                 // Check if the player has left the screen (fell through the bottom)
-                const auto & heroBounds = gamePlayState.hero->getBoundingBox();
-                const auto & cameraBounds = gamePlayState.currentRoom->getCameraBounds();
                 const int PLAY_AREA_KILL_THRESHOLD = 100;
 
                 if(heroBounds.getTop() - cameraBounds.getBottom() > PLAY_AREA_KILL_THRESHOLD) {
-                    HIKARI_LOG(debug) << "Killing play since he dropped out of the play area. ";
+                    HIKARI_LOG(debug) << "Killing player since he dropped out of the play area. ";
                     gamePlayState.hero->kill();
                 }
 
@@ -2357,14 +2366,18 @@ namespace hikari {
             // transitions require Rock to be fully contained before triggering.
             if(transition.isDoor()) {
                 if(transitionBounds.intersects(hero->getBoundingBox())) {
-                    HIKARI_LOG(debug) << "Transitioning from room " << currentRoom->getId() << " through a door " << transition.getToRegion();
+                    if(!transition.isLadderOnly() || (transition.isLadderOnly() && hero->isMountedOnLadder())) {
+                        HIKARI_LOG(debug) << "Transitioning from room " << currentRoom->getId() << " through a door " << transition.getToRegion();
+                        gamePlayState.requestSubStateChange(std::unique_ptr<SubState>(new TransitionSubState(gamePlayState, transition)));
+                        return SubState::NEXT;
+                    }
+                }
+            } else if(transitionBounds.contains(hero->getBoundingBox())) {
+                if(!transition.isLadderOnly() || (transition.isLadderOnly() && hero->isMountedOnLadder())) {
+                    HIKARI_LOG(debug) << "Transitioning from room " << currentRoom->getId() << " to room " << transition.getToRegion();
                     gamePlayState.requestSubStateChange(std::unique_ptr<SubState>(new TransitionSubState(gamePlayState, transition)));
                     return SubState::NEXT;
                 }
-            } else if(transitionBounds.contains(hero->getBoundingBox())) {
-                HIKARI_LOG(debug) << "Transitioning from room " << currentRoom->getId() << " to room " << transition.getToRegion();
-                gamePlayState.requestSubStateChange(std::unique_ptr<SubState>(new TransitionSubState(gamePlayState, transition)));
-                return SubState::NEXT;
             }
         }
 

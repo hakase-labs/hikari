@@ -20,9 +20,9 @@ class MovingPlatformBehavior extends DoodadBehavior {
             // }
 
             if(host.direction == Directions.Left) {
-                host.velocityX = 1.0;
+                host.velocityY = 0.60;
             } else {
-                host.velocityX = -1.0;
+                host.velocityY = -0.60;
             }
         }
 

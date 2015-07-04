@@ -357,6 +357,10 @@ namespace hikari {
         }
     }
 
+    bool Hero::isMountedOnLadder() const {
+        return isClimbing;
+    }
+
     bool Hero::isVulnerable() const {
         return !isInvincible && !isStunned;
     }

@@ -219,6 +219,7 @@ namespace hikari {
         void requestClimbingAttachment(const BoundingBox<float> & climbableRegion);
         void kill();
 
+        bool isMountedOnLadder() const;
         bool isVulnerable() const;
         bool isNowShooting() const;
         bool isOnGround() const;

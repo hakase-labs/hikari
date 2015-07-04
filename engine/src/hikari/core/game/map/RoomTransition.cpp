@@ -2,8 +2,9 @@
 
 namespace hikari {
 
-    RoomTransition::RoomTransition(int from, int to, int width, int height, int x, int y, Direction dir, bool doorFlag)
+    RoomTransition::RoomTransition(int from, int to, int width, int height, int x, int y, Direction dir, bool doorFlag, bool ladderOnly)
         : doorFlag(doorFlag)
+        , ladderOnly(ladderOnly)
         , fromRegion(from)
         , toRegion(to)
         , bounds(x, y, width, height)
@@ -13,6 +14,10 @@ namespace hikari {
 
     bool RoomTransition::isDoor() const {
         return doorFlag;
+    }
+
+    bool RoomTransition::isLadderOnly() const {
+        return ladderOnly;
     }
     
     int RoomTransition::getFromRegion() const {
