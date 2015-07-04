@@ -231,7 +231,7 @@ namespace hikari {
 
         if(forceArray.size() > 0) {
             HIKARI_LOG(debug) << "Found " << forceArray.size() << " force declarations.";
-            for(int forceIndex = 0; forceIndex < forceArray.size(); ++forceIndex) {
+            for(std::size_t forceIndex = 0; forceIndex < forceArray.size(); ++forceIndex) {
                 forces.emplace_back(
                     constructForce(
                         forceArray[forceIndex],
@@ -426,6 +426,7 @@ namespace hikari {
 
     RoomTransition MapLoader::constructTransition(const Json::Value &json) const {
         bool isDoor = json.get("door", false).asBool();
+        bool ladderOnly = json.get("ladderOnly", false).asBool();
 
         // TODO: Do we need this?
         int from = -1;
@@ -452,7 +453,7 @@ namespace hikari {
             dir = RoomTransition::DirectionTeleport;
         }
 
-        return RoomTransition(from, to, width, height, x, y, dir, isDoor);
+        return RoomTransition(from, to, width, height, x, y, dir, isDoor, ladderOnly);
     }
 
     Rectangle2D<int> MapLoader::constructCameraBounds(const Json::Value &json,
