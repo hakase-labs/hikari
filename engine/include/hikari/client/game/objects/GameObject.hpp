@@ -3,8 +3,6 @@
 
 #include "hikari/core/game/Updatable.hpp"
 
-#include <functional>
-
 namespace hikari {
     
     class GameObject : public Updatable {
@@ -39,7 +37,7 @@ namespace hikari {
 
         virtual void update(float dt);
 
-        virtual void reset() {};
+        virtual void reset();
     };
 
 } // hikari
