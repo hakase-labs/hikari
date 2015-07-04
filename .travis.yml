@@ -37,7 +37,7 @@ install:
   - if [ "$CXX" == "clang++" ]; then export CXX="clang++-3.4"; fi
 
   # Install packages needed for SFML 2.1 and Hikari (PhysFS)
-  - sudo apt-get install cmake libudev-dev libpthread-stubs0-dev libgl1-mesa-dev libx11-dev libxrandr-dev libfreetype6-dev libglew1.5-dev libjpeg8-dev libsndfile1-dev libopenal-dev libphysfs-dev
+  - sudo apt-get install cmake libudev-dev libpthread-stubs0-dev libgl1-mesa-dev libx11-dev libxrandr-dev libfreetype6-dev libglew1.5-dev libjpeg8-dev libsndfile1-dev libopenal-dev libphysfs-dev libxcb-dev libx11-xcb-dev libxcb-randr0-dev libxcb-image0-dev
 
   # Build SFML from source
   - cd ..
