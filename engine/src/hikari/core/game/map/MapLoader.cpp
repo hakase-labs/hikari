@@ -8,6 +8,8 @@
 #include "hikari/client/game/objects/Spawner.hpp"
 #include "hikari/client/game/objects/ItemSpawner.hpp"
 #include "hikari/client/game/objects/EnemySpawner.hpp"
+#include "hikari/client/game/objects/BlockSequenceDescriptor.hpp"
+#include "hikari/client/game/objects/BlockTiming.hpp"
 #include "hikari/client/scripting/SquirrelUtils.hpp"
 #include "hikari/core/geom/BoundingBox.hpp"
 #include "hikari/core/util/AnimationSetCache.hpp"
@@ -25,49 +27,58 @@
 
 namespace hikari {
 
-    const char* MapLoader::PROPERTY_NAME_TILESET = "tileset";
-    const char* MapLoader::PROPERTY_NAME_GRIDSIZE = "gridsize";
-    const char* MapLoader::PROPERTY_NAME_MUSICNAME = "musicName";
-    const char* MapLoader::PROPERTY_NAME_ROOMS = "rooms";
-    const char* MapLoader::PROPERTY_NAME_SPECIAL_ROOMS = "specialRooms";
-    const char* MapLoader::PROPERTY_NAME_SPECIAL_ROOM_STARTING = "starting";
-    const char* MapLoader::PROPERTY_NAME_SPECIAL_ROOM_MIDPOINT = "midpoint";
-    const char* MapLoader::PROPERTY_NAME_SPECIAL_ROOM_BOSS_CORRIDOR = "bossCorridor";
-    const char* MapLoader::PROPERTY_NAME_SPECIAL_ROOM_BOSS_CHAMBER = "bossChamber";
-    const char* MapLoader::PROPERTY_NAME_BOSS_ENTITY = "bossEntity";
-    const char* MapLoader::PROPERTY_NAME_ROOM_ID = "id";
-    const char* MapLoader::PROPERTY_NAME_ROOM_X = "x";
-    const char* MapLoader::PROPERTY_NAME_ROOM_Y = "y";
-    const char* MapLoader::PROPERTY_NAME_ROOM_HERO_SPAWN_X = "heroSpawnX";
-    const char* MapLoader::PROPERTY_NAME_ROOM_HERO_SPAWN_Y = "heroSpawnY";
-    const char* MapLoader::PROPERTY_NAME_ROOM_WIDTH = "width";
-    const char* MapLoader::PROPERTY_NAME_ROOM_HEIGHT = "height";
-    const char* MapLoader::PROPERTY_NAME_ROOM_BG_COLOR = "backgroundColor";
-    const char* MapLoader::PROPERTY_NAME_ROOM_CAMERABOUNDS = "cameraBounds";
-    const char* MapLoader::PROPERTY_NAME_ROOM_CAMERABOUNDS_X = "x";
-    const char* MapLoader::PROPERTY_NAME_ROOM_CAMERABOUNDS_Y = "y";
-    const char* MapLoader::PROPERTY_NAME_ROOM_CAMERABOUNDS_WIDTH = "width";
-    const char* MapLoader::PROPERTY_NAME_ROOM_CAMERABOUNDS_HEIGHT = "height";
-    const char* MapLoader::PROPERTY_NAME_ROOM_TILE = "tile";
-    const char* MapLoader::PROPERTY_NAME_ROOM_TILEATTRIBUTES = "attr";
-    const char* MapLoader::PROPERTY_NAME_ROOM_ENEMIES = "enemies";
-    const char* MapLoader::PROPERTY_NAME_ROOM_ENEMIES_TYPE = "type";
-    const char* MapLoader::PROPERTY_NAME_ROOM_ENEMIES_POSITION = "position";
-    const char* MapLoader::PROPERTY_NAME_ROOM_ENEMIES_POSITION_X = "x";
-    const char* MapLoader::PROPERTY_NAME_ROOM_ENEMIES_POSITION_Y = "y";
-    const char* MapLoader::PROPERTY_NAME_ROOM_ENEMIES_DIRECTION = "direction";
-    const char* MapLoader::PROPERTY_NAME_ROOM_ITEMS = "items";
-    const char* MapLoader::PROPERTY_NAME_ROOM_ITEMS_TYPE = "type";
-    const char* MapLoader::PROPERTY_NAME_ROOM_ITEMS_X = "x";
-    const char* MapLoader::PROPERTY_NAME_ROOM_ITEMS_Y = "y";
-    const char* MapLoader::PROPERTY_NAME_ROOM_TRANSITIONS = "transitions";
-    const char* MapLoader::PROPERTY_NAME_ROOM_DOORS = "doors";
-    const char* MapLoader::PROPERTY_NAME_ROOM_DOORS_X = "x";
-    const char* MapLoader::PROPERTY_NAME_ROOM_DOORS_Y = "y";
-    const char* MapLoader::PROPERTY_NAME_ROOM_DOORS_WIDTH = "width";
-    const char* MapLoader::PROPERTY_NAME_ROOM_DOORS_HEIGHT = "height";
-    const char* MapLoader::PROPERTY_NAME_ROOM_DOORS_ENTRANCE = "entrance";
-    const char* MapLoader::PROPERTY_NAME_ROOM_DOORS_EXIT = "exit";
+    const char* MapLoader::PROP_TILESET = "tileset";
+    const char* MapLoader::PROP_GRIDSIZE = "gridsize";
+    const char* MapLoader::PROP_MUSICNAME = "musicName";
+    const char* MapLoader::PROP_ROOMS = "rooms";
+    const char* MapLoader::PROP_SPECIAL_ROOMS = "specialRooms";
+    const char* MapLoader::PROP_SPECIAL_ROOM_STARTING = "starting";
+    const char* MapLoader::PROP_SPECIAL_ROOM_MIDPOINT = "midpoint";
+    const char* MapLoader::PROP_SPECIAL_ROOM_BOSS_CORRIDOR = "bossCorridor";
+    const char* MapLoader::PROP_SPECIAL_ROOM_BOSS_CHAMBER = "bossChamber";
+    const char* MapLoader::PROP_BOSS_ENTITY = "bossEntity";
+    const char* MapLoader::PROP_ROOM_ID = "id";
+    const char* MapLoader::PROP_ROOM_X = "x";
+    const char* MapLoader::PROP_ROOM_Y = "y";
+    const char* MapLoader::PROP_ROOM_HERO_SPAWN_X = "heroSpawnX";
+    const char* MapLoader::PROP_ROOM_HERO_SPAWN_Y = "heroSpawnY";
+    const char* MapLoader::PROP_ROOM_WIDTH = "width";
+    const char* MapLoader::PROP_ROOM_HEIGHT = "height";
+    const char* MapLoader::PROP_ROOM_BG_COLOR = "backgroundColor";
+    const char* MapLoader::PROP_ROOM_CAMERABOUNDS = "cameraBounds";
+    const char* MapLoader::PROP_ROOM_CAMERABOUNDS_X = "x";
+    const char* MapLoader::PROP_ROOM_CAMERABOUNDS_Y = "y";
+    const char* MapLoader::PROP_ROOM_CAMERABOUNDS_WIDTH = "width";
+    const char* MapLoader::PROP_ROOM_CAMERABOUNDS_HEIGHT = "height";
+    const char* MapLoader::PROP_ROOM_TILE = "tile";
+    const char* MapLoader::PROP_ROOM_TILEATTRIBUTES = "attr";
+    const char* MapLoader::PROP_ROOM_ENEMIES = "enemies";
+    const char* MapLoader::PROP_ROOM_ENEMIES_TYPE = "type";
+    const char* MapLoader::PROP_ROOM_ENEMIES_POSITION = "position";
+    const char* MapLoader::PROP_ROOM_ENEMIES_POSITION_X = "x";
+    const char* MapLoader::PROP_ROOM_ENEMIES_POSITION_Y = "y";
+    const char* MapLoader::PROP_ROOM_ENEMIES_DIRECTION = "direction";
+    const char* MapLoader::PROP_ROOM_ITEMS = "items";
+    const char* MapLoader::PROP_ROOM_ITEMS_TYPE = "type";
+    const char* MapLoader::PROP_ROOM_ITEMS_X = "x";
+    const char* MapLoader::PROP_ROOM_ITEMS_Y = "y";
+    const char* MapLoader::PROP_ROOM_TRANSITIONS = "transitions";
+    const char* MapLoader::PROP_ROOM_DOORS = "doors";
+    const char* MapLoader::PROP_ROOM_DOORS_X = "x";
+    const char* MapLoader::PROP_ROOM_DOORS_Y = "y";
+    const char* MapLoader::PROP_ROOM_DOORS_WIDTH = "width";
+    const char* MapLoader::PROP_ROOM_DOORS_HEIGHT = "height";
+    const char* MapLoader::PROP_ROOM_DOORS_ENTRANCE = "entrance";
+    const char* MapLoader::PROP_ROOM_DOORS_EXIT = "exit";
+    const char* MapLoader::PROP_ROOM_BLOCKSEQUENCES = "blockSequences";
+    const char* MapLoader::PROP_ROOM_BLOCKSEQUENCES_X = "x";
+    const char* MapLoader::PROP_ROOM_BLOCKSEQUENCES_Y = "y";
+    const char* MapLoader::PROP_ROOM_BLOCKSEQUENCES_WIDTH = "width";
+    const char* MapLoader::PROP_ROOM_BLOCKSEQUENCES_HEIGHT = "height";
+    const char* MapLoader::PROP_ROOM_BLOCKSEQUENCES_BLOCKS = "blocks";
+    const char* MapLoader::PROP_ROOM_BLOCKSEQUENCES_TIMING = "timing";
+    const char* MapLoader::PROP_ROOM_BLOCKSEQUENCES_AT = "at";
+    const char* MapLoader::PROP_ROOM_BLOCKSEQUENCES_ON = "on";
 
     const int MapLoader::DEFAULT_HERO_SPAWN_X = 0;
     const int MapLoader::DEFAULT_HERO_SPAWN_Y = 0;
@@ -91,10 +102,10 @@ namespace hikari {
 
     MapPtr MapLoader::constructMap(const Json::Value &json) const {
         // Parse map attributes
-        std::string tilesetName = json[PROPERTY_NAME_TILESET].asString();
-        int gridSize = json[PROPERTY_NAME_GRIDSIZE].asInt();
-        std::string musicName = json.get(PROPERTY_NAME_MUSICNAME, "None").asString();
-        int roomCount = json[PROPERTY_NAME_ROOMS].size();
+        std::string tilesetName = json[PROP_TILESET].asString();
+        int gridSize = json[PROP_GRIDSIZE].asInt();
+        std::string musicName = json.get(PROP_MUSICNAME, "None").asString();
+        int roomCount = json[PROP_ROOMS].size();
 
         TileDataPtr tileset = nullptr;
 
@@ -107,7 +118,7 @@ namespace hikari {
         // Parse rooms
         std::vector<RoomPtr> rooms;
         for(int i = 0; i < roomCount; ++i) {
-            rooms.push_back(constructRoom(json[PROPERTY_NAME_ROOMS][i], gridSize));
+            rooms.push_back(constructRoom(json[PROP_ROOMS][i], gridSize));
         }
 
         //
@@ -118,16 +129,16 @@ namespace hikari {
         int bossCorridorIndex = 0;
         int bossChamberIndex  = 0;
 
-        auto specialRoomIndicies = json[PROPERTY_NAME_SPECIAL_ROOMS];
+        auto specialRoomIndicies = json[PROP_SPECIAL_ROOMS];
 
         if(!specialRoomIndicies.isNull()) {
-            startingRoomIndex = specialRoomIndicies.get(PROPERTY_NAME_SPECIAL_ROOM_STARTING,      0).asInt();
-            midpointRoomIndex = specialRoomIndicies.get(PROPERTY_NAME_SPECIAL_ROOM_MIDPOINT,      0).asInt();
-            bossCorridorIndex = specialRoomIndicies.get(PROPERTY_NAME_SPECIAL_ROOM_BOSS_CORRIDOR, 0).asInt();
-            bossChamberIndex  = specialRoomIndicies.get(PROPERTY_NAME_SPECIAL_ROOM_BOSS_CHAMBER,  0).asInt();
+            startingRoomIndex = specialRoomIndicies.get(PROP_SPECIAL_ROOM_STARTING,      0).asInt();
+            midpointRoomIndex = specialRoomIndicies.get(PROP_SPECIAL_ROOM_MIDPOINT,      0).asInt();
+            bossCorridorIndex = specialRoomIndicies.get(PROP_SPECIAL_ROOM_BOSS_CORRIDOR, 0).asInt();
+            bossChamberIndex  = specialRoomIndicies.get(PROP_SPECIAL_ROOM_BOSS_CHAMBER,  0).asInt();
         }
 
-        std::string bossEntity = json.get(PROPERTY_NAME_BOSS_ENTITY, "None").asString();
+        std::string bossEntity = json.get(PROP_BOSS_ENTITY, "None").asString();
 
         return MapPtr(
             new Map(
@@ -145,22 +156,23 @@ namespace hikari {
     }
 
     RoomPtr MapLoader::constructRoom(const Json::Value &json, int gridSize) const {
-        int id              = json[PROPERTY_NAME_ROOM_ID].asInt();
-        int x               = json[PROPERTY_NAME_ROOM_X].asInt();
-        int y               = json[PROPERTY_NAME_ROOM_Y].asInt();
-        int width           = json[PROPERTY_NAME_ROOM_WIDTH].asInt();
-        int height          = json[PROPERTY_NAME_ROOM_HEIGHT].asInt();
-        int backgroundColor = json.get(PROPERTY_NAME_ROOM_BG_COLOR, Room::DEFAULT_BG_COLOR).asInt();
-        int heroSpawnX      = json.get(PROPERTY_NAME_ROOM_HERO_SPAWN_X, DEFAULT_HERO_SPAWN_X).asInt();
-        int heroSpawnY      = json.get(PROPERTY_NAME_ROOM_HERO_SPAWN_Y, DEFAULT_HERO_SPAWN_Y).asInt();
-        int transitionCount = json[PROPERTY_NAME_ROOM_TRANSITIONS].size();
-        int enemyCount      = json[PROPERTY_NAME_ROOM_ENEMIES].size();
-        int itemCount       = json[PROPERTY_NAME_ROOM_ITEMS].size();
-        bool hasDoors       = json.isMember(PROPERTY_NAME_ROOM_DOORS);
-        const std::string bossEntity = json.get(PROPERTY_NAME_BOSS_ENTITY, Room::DEFAULT_BOSS_ENTITY_NAME).asString();
+        int id              = json[PROP_ROOM_ID].asInt();
+        int x               = json[PROP_ROOM_X].asInt();
+        int y               = json[PROP_ROOM_Y].asInt();
+        int width           = json[PROP_ROOM_WIDTH].asInt();
+        int height          = json[PROP_ROOM_HEIGHT].asInt();
+        int backgroundColor = json.get(PROP_ROOM_BG_COLOR, Room::DEFAULT_BG_COLOR).asInt();
+        int heroSpawnX      = json.get(PROP_ROOM_HERO_SPAWN_X, DEFAULT_HERO_SPAWN_X).asInt();
+        int heroSpawnY      = json.get(PROP_ROOM_HERO_SPAWN_Y, DEFAULT_HERO_SPAWN_Y).asInt();
+        int transitionCount = json[PROP_ROOM_TRANSITIONS].size();
+        int enemyCount      = json[PROP_ROOM_ENEMIES].size();
+        int itemCount       = json[PROP_ROOM_ITEMS].size();
+        int blockSequenceCount = 0;
+        bool hasDoors       = json.isMember(PROP_ROOM_DOORS);
+        const std::string bossEntity = json.get(PROP_BOSS_ENTITY, Room::DEFAULT_BOSS_ENTITY_NAME).asString();
 
         Point2D<int> heroSpawnPosition = Point2D<int>(heroSpawnX, heroSpawnY);
-        Rectangle2D<int> cameraBounds = constructCameraBounds(json[PROPERTY_NAME_ROOM_CAMERABOUNDS], x, y, gridSize);
+        Rectangle2D<int> cameraBounds = constructCameraBounds(json[PROP_ROOM_CAMERABOUNDS], x, y, gridSize);
 
         //
         // Store tiles and attributes
@@ -168,8 +180,8 @@ namespace hikari {
         std::vector<int> tile(width * height, 0);
         std::vector<int> attr(width * height, 0);
 
-        const auto & tileArray = json[PROPERTY_NAME_ROOM_TILE];
-        const auto & attrArray = json[PROPERTY_NAME_ROOM_TILEATTRIBUTES];
+        const auto & tileArray = json[PROP_ROOM_TILE];
+        const auto & attrArray = json[PROP_ROOM_TILEATTRIBUTES];
 
         for(int ty = 0; ty < height; ++ty) {
             for(int tx = 0; tx < width; ++tx) {
@@ -190,7 +202,7 @@ namespace hikari {
         //
         std::vector<std::shared_ptr<Spawner>> spawners;
 
-        const auto & enemySpawnerArray = json[PROPERTY_NAME_ROOM_ENEMIES];
+        const auto & enemySpawnerArray = json[PROP_ROOM_ENEMIES];
 
         if(enemyCount > 0) {
             HIKARI_LOG(debug) << "Found " << enemyCount << " enemy declarations.";
@@ -206,7 +218,7 @@ namespace hikari {
             }
         }
 
-        const auto & itemSpawnerArray = json[PROPERTY_NAME_ROOM_ITEMS];
+        const auto & itemSpawnerArray = json[PROP_ROOM_ITEMS];
 
         if(itemCount > 0) {
             HIKARI_LOG(debug) << "Found " << itemCount << " item declarations.";
@@ -247,7 +259,20 @@ namespace hikari {
         //
         std::vector<RoomTransition> transitions;
         for(int i = 0; i < transitionCount; ++i) {
-            transitions.emplace_back(constructTransition(json[PROPERTY_NAME_ROOM_TRANSITIONS][i]));
+            transitions.emplace_back(constructTransition(json[PROP_ROOM_TRANSITIONS][i]));
+        }
+
+        //
+        // Construct block sequences
+        //
+        std::vector<BlockSequenceDescriptor> blockSequences;
+
+        if(json[PROP_ROOM_BLOCKSEQUENCES].isArray()) {
+            blockSequenceCount = json[PROP_ROOM_BLOCKSEQUENCES].size();
+        }
+
+        for(int i = 0; i < blockSequenceCount; ++i) {
+            blockSequences.emplace_back(constructBlockSequence(json[PROP_ROOM_BLOCKSEQUENCES][i]));
         }
 
         //
@@ -258,17 +283,17 @@ namespace hikari {
 
         if(hasDoors) {
             HIKARI_LOG(debug4) << "The room has doors array.";
-            const auto & doorsJson = json[PROPERTY_NAME_ROOM_DOORS];
+            const auto & doorsJson = json[PROP_ROOM_DOORS];
 
             if(doorsJson.size() > 0) {
-                if(doorsJson.isMember(PROPERTY_NAME_ROOM_DOORS_ENTRANCE)) {
+                if(doorsJson.isMember(PROP_ROOM_DOORS_ENTRANCE)) {
                     HIKARI_LOG(debug4) << "The room has an entrance.";
-                    entranceDoor = constructDoor(doorsJson[PROPERTY_NAME_ROOM_DOORS_ENTRANCE], x, y);
+                    entranceDoor = constructDoor(doorsJson[PROP_ROOM_DOORS_ENTRANCE], x, y);
                 }
 
-                if(doorsJson.isMember(PROPERTY_NAME_ROOM_DOORS_EXIT)) {
+                if(doorsJson.isMember(PROP_ROOM_DOORS_EXIT)) {
                     HIKARI_LOG(debug4) << "The room has an exit.";
-                    exitDoor = constructDoor(doorsJson[PROPERTY_NAME_ROOM_DOORS_EXIT], x, y);
+                    exitDoor = constructDoor(doorsJson[PROP_ROOM_DOORS_EXIT], x, y);
                 }
             } else {
                 HIKARI_LOG(debug4) << "The room has no door definitions.";
@@ -286,11 +311,12 @@ namespace hikari {
                 backgroundColor,
                 heroSpawnPosition,
                 cameraBounds,
-                tile,
-                attr,
-                transitions,
-                spawners,
-                forces,
+                std::move(tile),
+                std::move(attr),
+                std::move(transitions),
+                std::move(spawners),
+                std::move(forces),
+                std::move(blockSequences),
                 std::move(entranceDoor),
                 std::move(exitDoor),
                 bossEntity
@@ -301,10 +327,10 @@ namespace hikari {
     }
 
     std::unique_ptr<Door> MapLoader::constructDoor(const Json::Value & json, int offsetX, int offsetY) const {
-        int x = json.get(PROPERTY_NAME_ROOM_DOORS_X, 0).asInt();
-        int y = json.get(PROPERTY_NAME_ROOM_DOORS_Y, 0).asInt();
-        int width = json.get(PROPERTY_NAME_ROOM_DOORS_WIDTH, 1).asInt();
-        int height = json.get(PROPERTY_NAME_ROOM_DOORS_HEIGHT, 3).asInt();
+        int x = json.get(PROP_ROOM_DOORS_X, 0).asInt();
+        int y = json.get(PROP_ROOM_DOORS_Y, 0).asInt();
+        int width = json.get(PROP_ROOM_DOORS_WIDTH, 1).asInt();
+        int height = json.get(PROP_ROOM_DOORS_HEIGHT, 3).asInt();
 
         std::unique_ptr<Door> doorInstance(new Door(x + offsetX, y + offsetY, width, height));
 
@@ -324,10 +350,10 @@ namespace hikari {
         switch(type) {
             case SPAWN_ITEM:
             {
-                auto type         = json[PROPERTY_NAME_ROOM_ENEMIES_TYPE].asString();
-                auto x            = json[PROPERTY_NAME_ROOM_ENEMIES_POSITION_X].asInt();
-                auto y            = json[PROPERTY_NAME_ROOM_ENEMIES_POSITION_Y].asInt();
-                auto dirString    = json.get(PROPERTY_NAME_ROOM_ENEMIES_DIRECTION, "None").asString();
+                auto type         = json[PROP_ROOM_ENEMIES_TYPE].asString();
+                auto x            = json[PROP_ROOM_ENEMIES_POSITION_X].asInt();
+                auto y            = json[PROP_ROOM_ENEMIES_POSITION_Y].asInt();
+                auto dirString    = json.get(PROP_ROOM_ENEMIES_DIRECTION, "None").asString();
                 auto direction    = (dirString == "Up" ? Directions::Up :
                                         (dirString == "Right" ? Directions::Right :
                                             (dirString == "Down" ? Directions::Down :
@@ -349,10 +375,10 @@ namespace hikari {
 
             case SPAWN_ENEMY:
             {
-                auto type         = json[PROPERTY_NAME_ROOM_ENEMIES_TYPE].asString();
-                auto x            = json[PROPERTY_NAME_ROOM_ENEMIES_POSITION_X].asInt();
-                auto y            = json[PROPERTY_NAME_ROOM_ENEMIES_POSITION_Y].asInt();
-                auto dirString    = json.get(PROPERTY_NAME_ROOM_ENEMIES_DIRECTION, "None").asString();
+                auto type         = json[PROP_ROOM_ENEMIES_TYPE].asString();
+                auto x            = json[PROP_ROOM_ENEMIES_POSITION_X].asInt();
+                auto y            = json[PROP_ROOM_ENEMIES_POSITION_Y].asInt();
+                auto dirString    = json.get(PROP_ROOM_ENEMIES_DIRECTION, "None").asString();
                 auto direction    = (dirString == "Up" ? Directions::Up :
                                         (dirString == "Right" ? Directions::Right :
                                             (dirString == "Down" ? Directions::Down :
@@ -456,12 +482,59 @@ namespace hikari {
         return RoomTransition(from, to, width, height, x, y, dir, isDoor, ladderOnly);
     }
 
+    BlockSequenceDescriptor MapLoader::constructBlockSequence(const Json::Value &json) const {
+        HIKARI_LOG(debug4) << "constructBlockSequence ...";
+        int x = json[PROP_ROOM_BLOCKSEQUENCES_X].asInt();
+        int y = json[PROP_ROOM_BLOCKSEQUENCES_Y].asInt();
+        int width = json[PROP_ROOM_BLOCKSEQUENCES_WIDTH].asInt();
+        int height = json[PROP_ROOM_BLOCKSEQUENCES_HEIGHT].asInt();
+
+        std::vector<Point2D<int>> blockPositions;
+        std::vector<BlockTiming> timing;
+
+        const auto & blockJson = json[PROP_ROOM_BLOCKSEQUENCES_BLOCKS];
+
+        if(blockJson.isArray()) {
+            HIKARI_LOG(debug4) << "blocks is an array ...";
+            const std::size_t length = blockJson.size();
+
+            for(std::size_t i = 0; i < length; ++i) {
+                const auto & block = blockJson[i];
+                int blockX = block[PROP_ROOM_BLOCKSEQUENCES_X].asInt();
+                int blockY = block[PROP_ROOM_BLOCKSEQUENCES_Y].asInt();
+
+                HIKARI_LOG(debug4) << "block at " << blockX << ", " << blockY;
+
+                blockPositions.push_back(Point2D<int>(blockX, blockY));
+            }
+        }
+
+        const auto & timingJson = json[PROP_ROOM_BLOCKSEQUENCES_TIMING];
+
+        if(timingJson.isArray()) {
+            HIKARI_LOG(debug4) << "timing is an array ...";
+
+            const std::size_t length = timingJson.size();
+
+            for(std::size_t i = 0; i < length; ++i) {
+                const auto & timing = timingJson[i];
+                float at = timing[PROP_ROOM_BLOCKSEQUENCES_AT].asFloat();
+
+                HIKARI_LOG(debug4) << "timing at " << at;
+
+                //timing.push_back(Point2D(blockX, blockY));
+            }
+        }
+
+        return BlockSequenceDescriptor(Rectangle2D<int>(x, y, width, height), blockPositions, timing);
+    }
+
     Rectangle2D<int> MapLoader::constructCameraBounds(const Json::Value &json,
             int roomX, int roomY, int gridSize) const {
-        int x = (roomX + json[PROPERTY_NAME_ROOM_CAMERABOUNDS_X].asInt()) * gridSize;
-        int y = (roomY + json[PROPERTY_NAME_ROOM_CAMERABOUNDS_Y].asInt()) * gridSize;
-        int width = json[PROPERTY_NAME_ROOM_CAMERABOUNDS_WIDTH].asInt() * gridSize;
-        int height = json[PROPERTY_NAME_ROOM_CAMERABOUNDS_HEIGHT].asInt() * gridSize;
+        int x = (roomX + json[PROP_ROOM_CAMERABOUNDS_X].asInt()) * gridSize;
+        int y = (roomY + json[PROP_ROOM_CAMERABOUNDS_Y].asInt()) * gridSize;
+        int width = json[PROP_ROOM_CAMERABOUNDS_WIDTH].asInt() * gridSize;
+        int height = json[PROP_ROOM_CAMERABOUNDS_HEIGHT].asInt() * gridSize;
 
         return Rectangle2D<int>(x, y, width, height);
     }
@@ -475,16 +548,16 @@ namespace hikari {
         }
 
         // Root must contain a string property called "tileset"
-        if(!json[PROPERTY_NAME_TILESET].isString()) {
+        if(!json[PROP_TILESET].isString()) {
             isValid = false;
         }
 
-        if(!json[PROPERTY_NAME_GRIDSIZE].isNumeric()) {
+        if(!json[PROP_GRIDSIZE].isNumeric()) {
             isValid = false;
         }
 
         // Root must contain an array property called "rooms"
-        if(!json[PROPERTY_NAME_ROOMS].isArray()) {
+        if(!json[PROP_ROOMS].isArray()) {
             isValid = false;
         }
 

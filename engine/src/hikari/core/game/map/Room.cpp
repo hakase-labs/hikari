@@ -12,11 +12,14 @@ namespace hikari {
     const std::string Room::DEFAULT_BOSS_ENTITY_NAME = "None";
 
     Room::Room(int id, int x, int y, int width, int height, int gridSize, int backgroundColor,
-            const Point2D<int> &heroSpawnPosition, const Rectangle2D<int> &cameraBounds,
-            const std::vector<int> &tile, const std::vector<int> &attr,
-            const std::vector<RoomTransition> &transitions,
-            const std::vector<std::shared_ptr<Spawner>> &spawners,
-            const std::vector<std::shared_ptr<Force>> &forces,
+            const Point2D<int> & heroSpawnPosition,
+            const Rectangle2D<int> & cameraBounds,
+            const std::vector<int> & tile,
+            const std::vector<int> & attr,
+            const std::vector<RoomTransition> & transitions,
+            const std::vector<std::shared_ptr<Spawner>> & spawners,
+            const std::vector<std::shared_ptr<Force>> & forces,
+            const std::vector<BlockSequenceDescriptor> & blockSequences,
             const std::shared_ptr<Door> & entranceDoor,
             const std::shared_ptr<Door> & exitDoor,
             const std::string & bossEntityName
@@ -36,6 +39,7 @@ namespace hikari {
         , transitions(transitions)
         , spawners(spawners)
         , forces(forces)
+        , blockSequences(blockSequences)
         , entranceDoor(entranceDoor)
         , exitDoor(exitDoor)
         , bossEntityName(bossEntityName)
@@ -185,6 +189,10 @@ namespace hikari {
 
     const std::vector<std::shared_ptr<Force>>& Room::getForces() const {
         return forces;
+    }
+
+    const std::vector<BlockSequenceDescriptor> & Room::getBlockSequences() const {
+        return blockSequences;
     }
 
     const std::list<BoundingBox<float>> & Room::getLadders() const {

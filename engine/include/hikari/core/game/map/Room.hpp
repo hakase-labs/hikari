@@ -6,6 +6,7 @@
 #include "hikari/core/geom/BoundingBox.hpp"
 #include "hikari/core/geom/Point2D.hpp"
 #include "hikari/core/geom/Rectangle2D.hpp"
+#include "hikari/client/game/objects/BlockSequenceDescriptor.hpp"
 #include <list>
 #include <memory>
 #include <vector>
@@ -38,6 +39,7 @@ namespace hikari {
         std::vector<RoomTransition> transitions;
         std::vector<std::shared_ptr<Spawner>> spawners;
         std::vector<std::shared_ptr<Force>> forces;
+        std::vector<BlockSequenceDescriptor> blockSequences;
         std::list<BoundingBox<float>> ladders;
         std::shared_ptr<Door> entranceDoor;
         std::shared_ptr<Door> exitDoor;
@@ -64,13 +66,14 @@ namespace hikari {
             int height,
             int gridSize,
             int backgroundColor,
-            const Point2D<int> &heroSpawnPosition,
-            const Rectangle2D<int> &cameraBounds,
-            const std::vector<int> &tile,
-            const std::vector<int> &attr,
-            const std::vector<RoomTransition> &transitions,
-            const std::vector<std::shared_ptr<Spawner>> &spawners,
-            const std::vector<std::shared_ptr<Force>> &forces,
+            const Point2D<int> & heroSpawnPosition,
+            const Rectangle2D<int> & cameraBounds,
+            const std::vector<int> & tile,
+            const std::vector<int> & attr,
+            const std::vector<RoomTransition> & transitions,
+            const std::vector<std::shared_ptr<Spawner>> & spawners,
+            const std::vector<std::shared_ptr<Force>> & forces,
+            const std::vector<BlockSequenceDescriptor> & blockSequences,
             const std::shared_ptr<Door> & entranceDoor,
             const std::shared_ptr<Door> & exitDoor,
             const std::string & bossEntityName);
@@ -163,7 +166,14 @@ namespace hikari {
          *
          * @return list of Forces
          */
-        const std::vector<std::shared_ptr<Force>>& getForces() const;
+        const std::vector<std::shared_ptr<Force>> & getForces() const;
+
+        /**
+         * Gets a reference to the list of BlockSequenceDescriptors in the room.
+         *
+         * @return list of BlockSequenceDescriptors
+         */
+        const std::vector<BlockSequenceDescriptor> & getBlockSequences() const;
 
         /**
          * Gets a list of weak pointers to the Spawner objects in this Room.
