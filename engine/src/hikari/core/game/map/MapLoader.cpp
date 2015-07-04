@@ -79,6 +79,7 @@ namespace hikari {
     const char* MapLoader::PROP_ROOM_BLOCKSEQUENCES_TIMING = "timing";
     const char* MapLoader::PROP_ROOM_BLOCKSEQUENCES_AT = "at";
     const char* MapLoader::PROP_ROOM_BLOCKSEQUENCES_ON = "on";
+    const char* MapLoader::PROP_ROOM_BLOCKSEQUENCES_OFF = "off";
 
     const int MapLoader::DEFAULT_HERO_SPAWN_X = 0;
     const int MapLoader::DEFAULT_HERO_SPAWN_Y = 0;
@@ -525,12 +526,29 @@ namespace hikari {
             const std::size_t length = timingJson.size();
 
             for(std::size_t i = 0; i < length; ++i) {
-                const auto & timing = timingJson[i];
-                float at = timing[PROP_ROOM_BLOCKSEQUENCES_AT].asFloat();
+                const auto & timingObject = timingJson[i];
+                float at = timingObject[PROP_ROOM_BLOCKSEQUENCES_AT].asFloat();
+
+                std::vector<int> activiations;
+                std::vector<int> deactivations;
+
+                const auto & activiationsJson = timingObject[PROP_ROOM_BLOCKSEQUENCES_ON];
+
+                for(std::size_t index = 0; index < activiationsJson.size(); ++index) {
+                    const auto & id = activiationsJson[index].asInt();
+                    activiations.push_back(id);
+                }
+
+                const auto & deactiviationsJson = timingObject[PROP_ROOM_BLOCKSEQUENCES_OFF];
+
+                for(std::size_t index = 0; index < deactiviationsJson.size(); ++index) {
+                    const auto & id = deactiviationsJson[index].asInt();
+                    deactivations.push_back(id);
+                }
 
                 HIKARI_LOG(debug4) << "timing at " << at;
 
-                //timing.push_back(Point2D(blockX, blockY));
+                timing.push_back(BlockTiming(at, activiations, deactivations));
             }
         }
 

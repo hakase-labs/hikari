@@ -83,6 +83,7 @@ namespace hikari {
         static const char* PROP_ROOM_BLOCKSEQUENCES_TIMING;
         static const char* PROP_ROOM_BLOCKSEQUENCES_AT;
         static const char* PROP_ROOM_BLOCKSEQUENCES_ON;
+        static const char* PROP_ROOM_BLOCKSEQUENCES_OFF;
 
         static const int DEFAULT_HERO_SPAWN_X;
         static const int DEFAULT_HERO_SPAWN_Y;
