@@ -240,6 +240,8 @@ set( HIKARI_CLIENT_GAME_OBJECTS_SOURCE_FILES
     src/hikari/client/game/objects/EnemySpawner.cpp
     src/hikari/client/game/objects/EnemyFactory.cpp
     src/hikari/client/game/objects/Spawner.cpp
+    src/hikari/client/game/objects/BlockSequenceDescriptor.cpp
+    src/hikari/client/game/objects/BlockTiming.cpp
 )
 
 source_group(hikari\\client\\game\\objects FILES ${HIKARI_CLIENT_GAME_OBJECTS_SOURCE_FILES})
