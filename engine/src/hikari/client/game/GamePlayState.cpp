@@ -638,6 +638,8 @@ namespace hikari {
             guiWeaponMenu->setEnabled(false);
         }
 
+        blockSequences.clear();
+
         collisionResolver->setWorld(nullptr);
     }
 
@@ -693,6 +695,9 @@ namespace hikari {
             // Get links to all spawners from new room
             linkSpawners(currentRoom);
 
+            // Set up and block sequences needed for this room
+            linkBlockSequences(currentRoom);
+
             // This was causing a bug. Any spawners that are visible before the level start were "waking" twice.
             //checkSpawners();
 
@@ -717,6 +722,24 @@ namespace hikari {
                 }
             }
         );
+    }
+
+    void GamePlayState::linkBlockSequences(const std::shared_ptr<Room> & room) {
+        if(room) {
+            const auto & descriptors = room->getBlockSequences();
+
+            HIKARI_LOG(debug4) << "Linking " << descriptors.size() << " block sequences.";
+
+            blockSequences.clear();
+
+            std::for_each(
+                std::begin(descriptors),
+                std::end(descriptors),
+                [&](const BlockSequenceDescriptor & descriptor) {
+                    blockSequences.push_back(std::make_shared<BlockSequence>(descriptor));
+                }
+            );
+        }
     }
 
     void GamePlayState::checkSpawners(float dt) {
@@ -758,9 +781,6 @@ namespace hikari {
         std::shared_ptr<CollectableItem> bonus;
 
         if(bonusTableIndex > -1) { // -1 is a special case where nothing drops, ever.
-            //
-            // TODO: Actually perform checks on real bonus tables?
-            //
             if(const auto & gameConfigPtr = gameConfig.lock()) {
                 const auto & chanceTable = gameConfigPtr->getItemChancePairs(bonusTableIndex);
                 int roll = rand() % 100;
@@ -1091,6 +1111,26 @@ namespace hikari {
         }
     }
 
+    void GamePlayState::updateBlockSequences(float dt) {
+        const auto & cameraView = camera.getView();
+
+        std::for_each(
+            std::begin(blockSequences),
+            std::end(blockSequences),
+            [this, &cameraView, &dt](std::shared_ptr<BlockSequence> & blockSequence) {
+                if(blockSequence) {
+                    if(cameraView.intersects(blockSequence->getBounds())) {
+                        blockSequence->setActive(true);
+                    } else {
+                        blockSequence->setActive(false);
+                    }
+
+                    blockSequence->update(dt);
+                }
+            }
+        );
+    }
+
     void GamePlayState::updateParticles(float dt) {
         const auto & activeParticles = world.getActiveParticles();
         const auto & cameraView = camera.getView();
@@ -1113,7 +1153,7 @@ namespace hikari {
     }
 
     void GamePlayState::updateProjectiles(float dt) {
-//
+        //
         // Update projectiles
         //
         const auto & activeEnemies = world.getActiveEnemies();
@@ -1355,6 +1395,10 @@ namespace hikari {
         const auto & activeEnemies = world.getActiveEnemies();
 
         for(auto it = std::begin(activeEnemies), end = std::end(activeEnemies); it != end; it++) {
+            orderedEntities.push_back((*it).get());
+        }
+
+        for(auto it = std::begin(blockSequences), end = std::end(blockSequences); it != end; it++) {
             orderedEntities.push_back((*it).get());
         }
 
@@ -2136,6 +2180,7 @@ namespace hikari {
         gamePlayState.updateParticles(dt);
         gamePlayState.updateProjectiles(dt);
         gamePlayState.updateDoors(dt);
+        gamePlayState.updateBlockSequences(dt);
 
         // Hero died so we need to restart
         if(!gamePlayState.isHeroAlive) {

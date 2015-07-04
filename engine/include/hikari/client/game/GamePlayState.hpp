@@ -8,6 +8,7 @@
 #include "hikari/client/game/events/EventData.hpp"
 #include "hikari/client/game/events/EventListenerDelegate.hpp"
 #include "hikari/client/game/objects/EntityDeathType.hpp"
+#include "hikari/client/game/objects/BlockSequence.hpp"
 
 #include "hikari/client/game/GameWorld.hpp"
 #include "hikari/core/game/map/RoomTransition.hpp"
@@ -139,6 +140,7 @@ namespace hikari {
         std::map< std::string, std::shared_ptr<Map> > maps;
         std::vector<std::weak_ptr<Spawner>> itemSpawners;
         std::vector<std::weak_ptr<Spawner>> deactivatedItemSpawners;
+        std::vector<std::shared_ptr<BlockSequence>> blockSequences;
         std::vector<std::pair<EventListenerDelegate, EventType>> eventHandlerDelegates;
         std::list<std::pair<int, std::string>> bonusChancesTable;
         std::queue<std::shared_ptr<Task>> taskQueue;
@@ -215,6 +217,11 @@ namespace hikari {
          * @see checkSpawners
          */
         void linkSpawners(const std::shared_ptr<Room> & room);
+
+        /**
+         * Creates wrapper objects for all BlockSequenceDescriptors in a Room.
+         */
+        void linkBlockSequences(const std::shared_ptr<Room> & room);
 
         /**
          * Checks all linked spawners if they should be active or inactive. This
@@ -297,7 +304,7 @@ namespace hikari {
          * Updates doors of the current room if it has any.
          */
         void updateDoors(float dt);
-
+        void updateBlockSequences(float dt);
         void updateParticles(float dt);
         void updateProjectiles(float dt);
         void updateEnemies(float dt);
