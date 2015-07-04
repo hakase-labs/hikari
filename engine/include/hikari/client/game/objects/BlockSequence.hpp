@@ -4,8 +4,17 @@
 #include "hikari/client/game/objects/BlockSequenceDescriptor.hpp"
 #include "hikari/client/game/objects/GameObject.hpp"
 #include "hikari/core/game/Renderable.hpp"
+#include "hikari/core/geom/Rectangle2D.hpp"
 
-namespace hikari {   
+#include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
+
+#include <memory>
+
+namespace hikari {
+
+    class Entity;
+
     /**
      * A composite object that controls a sequence of appearing and
      * disappearing blocks. An instance of this class encapsulates the
@@ -13,14 +22,20 @@ namespace hikari {
      */
     class BlockSequence : public GameObject, public Renderable {
     private:
+        int zIndex;
+        unsigned int step;
+        float timer;
         BlockSequenceDescriptor descriptor;
+        std::vector<std::shared_ptr<Entity>> blockEntities;
+        sf::RectangleShape outlineShape;
+        std::vector<sf::RectangleShape> blockRects;
 
     protected:
         virtual void onActivated();
         virtual void onDeactivated();
 
     public:
-        explicit BlockSequence(const BlockSequenceDescriptor & descriptor, int id = GameObject::generateObjectId());
+        BlockSequence(const BlockSequenceDescriptor & descriptor, int id = GameObject::generateObjectId());
         virtual ~BlockSequence();
 
         virtual void update(float dt);
@@ -28,6 +43,10 @@ namespace hikari {
         virtual void reset();
 
         virtual void render(sf::RenderTarget &target);
+        virtual void setZIndex(int index);
+        virtual int getZIndex() const;
+
+        const Rectangle2D<int> & getBounds() const;
     };
 
 } // hikari
