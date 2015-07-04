@@ -272,7 +272,14 @@ namespace hikari {
         }
 
         for(int i = 0; i < blockSequenceCount; ++i) {
-            blockSequences.emplace_back(constructBlockSequence(json[PROP_ROOM_BLOCKSEQUENCES][i]));
+            blockSequences.emplace_back(
+                constructBlockSequence(
+                    json[PROP_ROOM_BLOCKSEQUENCES][i],
+                    roomOriginX,
+                    roomOriginY,
+                    gridSize
+                )
+            );
         }
 
         //
@@ -482,12 +489,13 @@ namespace hikari {
         return RoomTransition(from, to, width, height, x, y, dir, isDoor, ladderOnly);
     }
 
-    BlockSequenceDescriptor MapLoader::constructBlockSequence(const Json::Value &json) const {
+    BlockSequenceDescriptor MapLoader::constructBlockSequence(const Json::Value &json,
+        int roomX, int roomY, int gridSize) const {
         HIKARI_LOG(debug4) << "constructBlockSequence ...";
-        int x = json[PROP_ROOM_BLOCKSEQUENCES_X].asInt();
-        int y = json[PROP_ROOM_BLOCKSEQUENCES_Y].asInt();
-        int width = json[PROP_ROOM_BLOCKSEQUENCES_WIDTH].asInt();
-        int height = json[PROP_ROOM_BLOCKSEQUENCES_HEIGHT].asInt();
+        int x = roomX + json[PROP_ROOM_BLOCKSEQUENCES_X].asInt() * gridSize;
+        int y = roomY + json[PROP_ROOM_BLOCKSEQUENCES_Y].asInt() * gridSize;
+        int width = json[PROP_ROOM_BLOCKSEQUENCES_WIDTH].asInt() * gridSize;
+        int height = json[PROP_ROOM_BLOCKSEQUENCES_HEIGHT].asInt() * gridSize;
 
         std::vector<Point2D<int>> blockPositions;
         std::vector<BlockTiming> timing;
@@ -500,8 +508,8 @@ namespace hikari {
 
             for(std::size_t i = 0; i < length; ++i) {
                 const auto & block = blockJson[i];
-                int blockX = block[PROP_ROOM_BLOCKSEQUENCES_X].asInt();
-                int blockY = block[PROP_ROOM_BLOCKSEQUENCES_Y].asInt();
+                int blockX = x + block[PROP_ROOM_BLOCKSEQUENCES_X].asInt() * gridSize;
+                int blockY = y + block[PROP_ROOM_BLOCKSEQUENCES_Y].asInt() * gridSize;
 
                 HIKARI_LOG(debug4) << "block at " << blockX << ", " << blockY;
 
