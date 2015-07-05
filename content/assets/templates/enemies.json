@@ -344,6 +344,34 @@
         }
     },
     {
+        "name": "Appearing Block (Red)",
+        "hitPoints": 128.0,
+        "damageId": 0,
+        "bonusTableIndex": -1,
+        "behavior": {
+            "type": "scripted",
+            "name": "AppearingBlockBehavior",
+            "config": {
+            }
+        },
+        "animationSet": "assets/animations/doodads.json",
+        "boundingBox": {
+            "width": 16,
+            "height": 16,
+            "originX": 0,
+            "originY": 0
+        },
+        "states": {
+            "default": {
+
+            }
+        },
+        "characteristics": {
+            "gravitated": false,
+            "phasing": true
+        }
+    },
+    {
         "name": "Hammer Joe",
         "hitPoints": 8.0,
         "damageId": 0,
