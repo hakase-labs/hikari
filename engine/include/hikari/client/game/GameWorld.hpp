@@ -99,7 +99,6 @@ namespace hikari {
         void processRemovals();
 
         std::shared_ptr<CollectableItem> spawnCollectableItem(const std::string & name) const;
-        std::unique_ptr<Doodad> spawnDoodad(const std::string & name) const;
         std::unique_ptr<Enemy> spawnEnemy(const std::string & name) const;
         std::unique_ptr<Particle> spawnParticle(const std::string & name) const;
         std::unique_ptr<Projectile> spawnProjectile(const std::string & name) const;

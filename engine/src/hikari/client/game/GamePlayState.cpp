@@ -736,7 +736,7 @@ namespace hikari {
                 std::begin(descriptors),
                 std::end(descriptors),
                 [&](const BlockSequenceDescriptor & descriptor) {
-                    blockSequences.push_back(std::make_shared<BlockSequence>(descriptor));
+                    blockSequences.push_back(std::make_shared<BlockSequence>(descriptor, world));
                 }
             );
         }
@@ -1179,7 +1179,7 @@ namespace hikari {
                         std::begin(activeEnemies),
                         std::end(activeEnemies),
                         [&](const std::shared_ptr<Enemy> & enemy) {
-                            if(!projectile->isInert()) {
+                            if(!projectile->isInert() && !enemy->isPhasing()) {
                                 int collisionType = 0;
                                 // Types:
                                 // 0 = none (we didn't hit at all)
@@ -2129,9 +2129,11 @@ namespace hikari {
                 const auto & cameraView = camera.getView();
 
                 if(!geom::intersects(enemy->getBoundingBox(), cameraView)) {
-                    HIKARI_LOG(debug3) << "Cleaning up off-screen enemy #" << enemy->getId();
-                    enemy->setActive(false);
-                    gamePlayState.world.queueObjectRemoval(enemy);
+                    if(!enemy->getLiveOffscreen()) {
+                        HIKARI_LOG(debug3) << "Cleaning up off-screen enemy #" << enemy->getId();
+                        enemy->setActive(false);
+                        gamePlayState.world.queueObjectRemoval(enemy);
+                    }
                 }
 
                 //

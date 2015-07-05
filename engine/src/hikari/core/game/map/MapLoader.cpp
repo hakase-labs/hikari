@@ -492,7 +492,6 @@ namespace hikari {
 
     BlockSequenceDescriptor MapLoader::constructBlockSequence(const Json::Value &json,
         int roomX, int roomY, int gridSize) const {
-        HIKARI_LOG(debug4) << "constructBlockSequence ...";
         int x = roomX + json[PROP_ROOM_BLOCKSEQUENCES_X].asInt() * gridSize;
         int y = roomY + json[PROP_ROOM_BLOCKSEQUENCES_Y].asInt() * gridSize;
         int width = json[PROP_ROOM_BLOCKSEQUENCES_WIDTH].asInt() * gridSize;
@@ -504,15 +503,12 @@ namespace hikari {
         const auto & blockJson = json[PROP_ROOM_BLOCKSEQUENCES_BLOCKS];
 
         if(blockJson.isArray()) {
-            HIKARI_LOG(debug4) << "blocks is an array ...";
             const std::size_t length = blockJson.size();
 
             for(std::size_t i = 0; i < length; ++i) {
                 const auto & block = blockJson[i];
                 int blockX = x + block[PROP_ROOM_BLOCKSEQUENCES_X].asInt() * gridSize;
                 int blockY = y + block[PROP_ROOM_BLOCKSEQUENCES_Y].asInt() * gridSize;
-
-                HIKARI_LOG(debug4) << "block at " << blockX << ", " << blockY;
 
                 blockPositions.push_back(Point2D<int>(blockX, blockY));
             }
@@ -521,8 +517,6 @@ namespace hikari {
         const auto & timingJson = json[PROP_ROOM_BLOCKSEQUENCES_TIMING];
 
         if(timingJson.isArray()) {
-            HIKARI_LOG(debug4) << "timing is an array ...";
-
             const std::size_t length = timingJson.size();
 
             for(std::size_t i = 0; i < length; ++i) {
@@ -545,8 +539,6 @@ namespace hikari {
                     const auto & id = deactiviationsJson[index].asInt();
                     deactivations.push_back(id);
                 }
-
-                HIKARI_LOG(debug4) << "timing at " << at;
 
                 timing.push_back(BlockTiming(at, activiations, deactivations));
             }

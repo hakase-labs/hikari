@@ -1,3 +1,6 @@
+#include "hikari/client/game/GameWorld.hpp"
+#include "hikari/client/game/objects/Entity.hpp"
+#include "hikari/client/game/objects/Enemy.hpp"
 #include "hikari/client/game/objects/BlockSequence.hpp"
 #include "hikari/client/game/objects/BlockTiming.hpp"
 #include "hikari/core/util/Log.hpp"
@@ -6,12 +9,13 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 
 namespace hikari {   
-    BlockSequence::BlockSequence(const BlockSequenceDescriptor & descriptor, int id)
+    BlockSequence::BlockSequence(const BlockSequenceDescriptor & descriptor, GameWorld & world, int id)
         : GameObject(id)
         , zIndex(0)
         , step(0)
         , timer(0.0f)
         , descriptor(descriptor)
+        , world(world)
         , blockEntities()
         , outlineShape()
         , blockRects()
@@ -21,13 +25,13 @@ namespace hikari {
         const auto & bounds = getBounds();
 
         outlineShape.setSize({
-            bounds.getWidth(),
-            bounds.getHeight()
+            static_cast<float>(bounds.getWidth()),
+            static_cast<float>(bounds.getHeight())
         });
 
         outlineShape.setPosition({
-            bounds.getX(),
-            bounds.getY()
+            static_cast<float>(bounds.getX()),
+            static_cast<float>(bounds.getY())
         });
 
         outlineShape.setFillColor({ 255, 192, 10, 128 });
@@ -41,8 +45,8 @@ namespace hikari {
                 sf::RectangleShape shape;
 
                 shape.setPosition({
-                    topLeft.getX(),
-                    topLeft.getY()
+                    static_cast<float>(topLeft.getX()),
+                    static_cast<float>(topLeft.getY())
                 });
 
                 shape.setSize({
@@ -53,11 +57,20 @@ namespace hikari {
                 shape.setFillColor({ 255, 32, 32, 128 });
 
                 blockRects.push_back(shape);
+
+                std::unique_ptr<Enemy> entityUnique = world.spawnEnemy("Appearing Block (Red)");
+                std::shared_ptr<Enemy> entityShared(std::move(entityUnique));
+                entityShared->setPosition(topLeft.getX(), topLeft.getY());
+
+                blockEntities.push_back(entityShared);
             });
+
+
     }
 
     BlockSequence::~BlockSequence() {
         HIKARI_LOG(debug) << "~BlockSequence()";
+        blockEntities.clear();
     }
 
     void BlockSequence::onActivated() {
@@ -80,23 +93,36 @@ namespace hikari {
             // Check if we want to advance along in the sequence...
             if(timer >= timingStep.getAtTime()) {
                 // Process activiations
-                std::for_each(
-                    std::begin(timingStep.getActivations()),
-                    std::end(timingStep.getActivations()),
-                    [this](const int & id) {
-                        blockRects[id].setFillColor({ 32, 255, 32, 196 });
+                HIKARI_LOG(debug4) << "Processing activations...";
+                for(auto it = std::begin(timingStep.getActivations()), end = std::end(timingStep.getActivations()); it != end; it++) {
+                    int id = *it;
+
+                    blockRects[id].setFillColor({ 32, 255, 32, 196 });
+
+                    if(blockEntities[id]) {
+                        blockEntities[id]->setObstacle(true);
+                        world.queueObjectAddition(blockEntities[id]);
                     }
-                );
-                // Process deactiviations
-                std::for_each(
-                    std::begin(timingStep.getDeactivations()),
-                    std::end(timingStep.getDeactivations()),
-                    [this](const int & id) {
-                        blockRects[id].setFillColor({ 255, 32, 32, 128 });
+                }
+
+                HIKARI_LOG(debug4) << "Processing deactivations...";
+                for(auto it = std::begin(timingStep.getDeactivations()), end = std::end(timingStep.getDeactivations()); it != end; it++) {
+                    int id = *it;
+
+                    blockRects[id].setFillColor({ 255, 32, 32, 128 });
+
+                    if(blockEntities[id]) {
+                        blockEntities[id]->setObstacle(false);
+                        world.queueObjectRemoval(blockEntities[id]);
                     }
-                );
+                }
+
                 // Advance the step counter
                 step++;
+            }
+
+            for(auto it = std::begin(blockEntities), end = std::end(blockEntities); it != end; it++) {
+                (*it)->update(dt);
             }
 
             // We got to the end so reset.

@@ -13,7 +13,8 @@
 
 namespace hikari {
 
-    class Entity;
+    class GameWorld;
+    class Enemy;
 
     /**
      * A composite object that controls a sequence of appearing and
@@ -26,7 +27,8 @@ namespace hikari {
         unsigned int step;
         float timer;
         BlockSequenceDescriptor descriptor;
-        std::vector<std::shared_ptr<Entity>> blockEntities;
+        GameWorld & world;
+        std::vector<std::shared_ptr<Enemy>> blockEntities;
         sf::RectangleShape outlineShape;
         std::vector<sf::RectangleShape> blockRects;
 
@@ -35,7 +37,7 @@ namespace hikari {
         virtual void onDeactivated();
 
     public:
-        BlockSequence(const BlockSequenceDescriptor & descriptor, int id = GameObject::generateObjectId());
+        BlockSequence(const BlockSequenceDescriptor & descriptor, GameWorld & world, int id = GameObject::generateObjectId());
         virtual ~BlockSequence();
 
         virtual void update(float dt);
