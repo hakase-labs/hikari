@@ -185,6 +185,7 @@ namespace hikari {
                 _SC("Enemy"),
                 Sqrat::DerivedClass<Enemy, Entity>(vm)
                     .Prop(_SC("hitPoints"), &Enemy::getHitPoints, &Enemy::setHitPoints)
+                    .Prop(_SC("liveOffscreen"), &Enemy::getLiveOffscreen, &Enemy::setLiveOffscreen)
                     .Func(_SC("handleObjectTouch"), &Enemy::handleObjectTouch)
             );
         }

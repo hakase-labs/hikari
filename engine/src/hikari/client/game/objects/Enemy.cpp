@@ -16,6 +16,7 @@ namespace hikari {
         , hitPoints(0.0)
         , damageTickCounter(0)
         , bonusTableIndex(DEFAULT_BONUS_TABLE)
+        , canLiveOffscreen(false)
     {
         setAgeless(true);
         setGravitated(true);
@@ -30,6 +31,7 @@ namespace hikari {
         , hitPoints(proto.hitPoints)
         , damageTickCounter(0)
         , bonusTableIndex(proto.bonusTableIndex)
+        , canLiveOffscreen(proto.canLiveOffscreen)
     {   
         setAgeless(true);
         setActive(false);
@@ -118,6 +120,14 @@ namespace hikari {
 
     int Enemy::getBonusTableIndex() const {
         return bonusTableIndex;
+    }
+
+    void Enemy::setLiveOffscreen(bool flag) {
+        canLiveOffscreen = flag;
+    }
+    
+    bool Enemy::getLiveOffscreen() const {
+        return canLiveOffscreen;
     }
 
 } // hikari

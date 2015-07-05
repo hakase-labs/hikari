@@ -26,6 +26,8 @@ namespace hikari {
         int damageTickCounter;
         int bonusTableIndex;
 
+        bool canLiveOffscreen;
+
     public:
         Enemy(int id = GameObject::generateObjectId(), std::shared_ptr<Room> room = nullptr);
         Enemy(const Enemy& proto); 
@@ -55,6 +57,9 @@ namespace hikari {
 
         void setBonusTableIndex(int index);
         int getBonusTableIndex() const;
+
+        void setLiveOffscreen(bool flag);
+        bool getLiveOffscreen() const;
 
         void applyConfig(const Sqrat::Table & instanceConfig);
     };
