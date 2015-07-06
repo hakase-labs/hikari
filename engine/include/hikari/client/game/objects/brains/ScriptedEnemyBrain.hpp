@@ -22,6 +22,8 @@ namespace hikari {
         static const char * FUNCTION_NAME_HANDLECOLLISION;
         static const char * FUNCTION_NAME_HANDLEOBJECTTOUCH;
         static const char * FUNCTION_NAME_UPDATE;
+        static const char * FUNCTION_NAME_ONACTIVATED;
+        static const char * FUNCTION_NAME_ONDEACTIVATED;
         static const char * BASE_CLASS_NAME;
 
         /** A handle to the Squirrel VM */
@@ -38,6 +40,8 @@ namespace hikari {
 
         Sqrat::Function proxyAttach;
         Sqrat::Function proxyDetach;
+        Sqrat::Function proxyOnActivated;
+        Sqrat::Function proxyOnDeactivated;
         Sqrat::Function proxyUpdate;
         Sqrat::Function proxyApplyConfig;
         Sqrat::Function proxyHandleWorldCollision;
@@ -78,6 +82,8 @@ namespace hikari {
 
         virtual void attach(Enemy* host);
         virtual void detach();
+        virtual void onActivated();
+        virtual void onDeactivated();
         virtual void handleCollision(Movable& body, CollisionInfo& info);
         virtual void handleObjectTouch(int otherId);
         virtual void update(float dt);

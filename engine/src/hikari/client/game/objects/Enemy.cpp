@@ -55,6 +55,18 @@ namespace hikari {
         }
     }
 
+    void Enemy::onActivated() {
+        if(brain) {
+            brain->onActivated();
+        }
+    }
+
+    void Enemy::onDeactivated() {
+        if(brain) {
+            brain->onDeactivated();
+        }
+    }
+
     void Enemy::update(float dt) {
         Entity::update(dt);
 
@@ -125,7 +137,7 @@ namespace hikari {
     void Enemy::setLiveOffscreen(bool flag) {
         canLiveOffscreen = flag;
     }
-    
+
     bool Enemy::getLiveOffscreen() const {
         return canLiveOffscreen;
     }

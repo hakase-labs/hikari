@@ -96,11 +96,12 @@ namespace hikari {
                 HIKARI_LOG(debug4) << "Processing activations...";
                 for(auto it = std::begin(timingStep.getActivations()), end = std::end(timingStep.getActivations()); it != end; it++) {
                     int id = *it;
+                    auto & entity = blockEntities[id];
 
                     blockRects[id].setFillColor({ 32, 255, 32, 196 });
 
-                    if(blockEntities[id]) {
-                        blockEntities[id]->setObstacle(true);
+                    if(entity) {
+                        entity->setActive(true);
                         world.queueObjectAddition(blockEntities[id]);
                     }
                 }
@@ -108,12 +109,13 @@ namespace hikari {
                 HIKARI_LOG(debug4) << "Processing deactivations...";
                 for(auto it = std::begin(timingStep.getDeactivations()), end = std::end(timingStep.getDeactivations()); it != end; it++) {
                     int id = *it;
+                    auto & entity = blockEntities[id];
 
                     blockRects[id].setFillColor({ 255, 32, 32, 128 });
 
-                    if(blockEntities[id]) {
-                        blockEntities[id]->setObstacle(false);
-                        world.queueObjectRemoval(blockEntities[id]);
+                    if(entity) {
+                        entity->setActive(false);
+                        world.queueObjectRemoval(entity);
                     }
                 }
 

@@ -73,6 +73,20 @@ namespace hikari {
         virtual void detach();
 
         /**
+         * Called when the host is activated.
+         *
+         * @see EnemyBrain::onDeactivated
+         */
+        virtual void onActivated();
+
+        /**
+         * Called when the host is deactivated.
+         *
+         * @see EnemyBrain::onActivated
+         */
+        virtual void onDeactivated();
+
+        /**
          * Called when collisions take place with tiles in the world. Allows for
          * handling of collision response from within a brain.
          * 

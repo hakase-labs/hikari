@@ -37,6 +37,14 @@ namespace hikari {
         host = nullptr;
     }
 
+    void EnemyBrain::onActivated() {
+        // Does nothing
+    }
+
+    void EnemyBrain::onDeactivated() {
+        // Does nothing
+    }
+
     void EnemyBrain::update(float dt) {
         // Does nothing
     }

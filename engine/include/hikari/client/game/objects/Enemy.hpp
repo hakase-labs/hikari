@@ -35,6 +35,9 @@ namespace hikari {
 
         virtual std::unique_ptr<Enemy> clone() const;
 
+        virtual void onActivated();
+        virtual void onDeactivated();
+
         virtual void update(float dt);
         virtual void render(sf::RenderTarget &target);
 
