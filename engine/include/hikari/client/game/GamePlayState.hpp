@@ -328,6 +328,7 @@ namespace hikari {
         void handleWeaponFireEvent(EventDataPtr evt);
         void handleEntityStateChangeEvent(EventDataPtr evt);
         void handleDoorEvent(EventDataPtr evt);
+        void handleAudioEvent(EventDataPtr evt);
 
         //
         // GUI

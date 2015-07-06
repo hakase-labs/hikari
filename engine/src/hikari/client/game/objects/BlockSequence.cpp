@@ -1,4 +1,7 @@
 #include "hikari/client/game/GameWorld.hpp"
+#include "hikari/client/game/events/EventBus.hpp"
+#include "hikari/client/game/events/EventData.hpp"
+#include "hikari/client/game/events/AudioEventData.hpp"
 #include "hikari/client/game/objects/Entity.hpp"
 #include "hikari/client/game/objects/Enemy.hpp"
 #include "hikari/client/game/objects/BlockSequence.hpp"
@@ -119,6 +122,18 @@ namespace hikari {
                     }
                 }
 
+                if(auto events = eventBus.lock()) {
+                    HIKARI_LOG(debug4) << "Triggering block sound...";
+                    events->triggerEvent(
+                        EventDataPtr(
+                            new AudioEventData(
+                                AudioEventData::ACTION_PLAY_SAMPLE,
+                                "Disappearing Block"
+                            )
+                        )
+                    );
+                }                        
+
                 // Advance the step counter
                 step++;
             }
@@ -161,6 +176,10 @@ namespace hikari {
 
     const Rectangle2D<int> & BlockSequence::getBounds() const {
         return descriptor.getBounds();
+    }
+
+    void BlockSequence::setEventBus(const std::weak_ptr<EventBus> & eventBus) {
+        this->eventBus = eventBus;
     }
 
 } // hikari

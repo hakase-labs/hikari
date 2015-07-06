@@ -13,8 +13,9 @@
 
 namespace hikari {
 
-    class GameWorld;
+    class EventBus;
     class Enemy;
+    class GameWorld;
 
     /**
      * A composite object that controls a sequence of appearing and
@@ -28,6 +29,7 @@ namespace hikari {
         float timer;
         BlockSequenceDescriptor descriptor;
         GameWorld & world;
+        std::weak_ptr<EventBus> eventBus;
         std::vector<std::shared_ptr<Enemy>> blockEntities;
         sf::RectangleShape outlineShape;
         std::vector<sf::RectangleShape> blockRects;
@@ -49,6 +51,7 @@ namespace hikari {
         virtual int getZIndex() const;
 
         const Rectangle2D<int> & getBounds() const;
+        void setEventBus(const std::weak_ptr<EventBus> & eventBus);
     };
 
 } // hikari

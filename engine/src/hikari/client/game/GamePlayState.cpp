@@ -36,6 +36,7 @@
 #include "hikari/client/game/RefillHealthTask.hpp"
 #include "hikari/client/game/FadeColorTask.hpp"
 #include "hikari/client/game/WaitTask.hpp"
+#include "hikari/client/game/events/AudioEventData.hpp"
 #include "hikari/client/game/events/EventBusImpl.hpp"
 #include "hikari/client/game/events/EventListenerDelegate.hpp"
 #include "hikari/client/game/events/EntityDamageEventData.hpp"
@@ -736,7 +737,9 @@ namespace hikari {
                 std::begin(descriptors),
                 std::end(descriptors),
                 [&](const BlockSequenceDescriptor & descriptor) {
-                    blockSequences.push_back(std::make_shared<BlockSequence>(descriptor, world));
+                    auto wrapper = std::make_shared<BlockSequence>(descriptor, world);
+                    wrapper->setEventBus(eventBus);
+                    blockSequences.push_back(wrapper);
                 }
             );
         }
@@ -1477,6 +1480,10 @@ namespace hikari {
             auto doorEventDelegate = EventListenerDelegate(std::bind(&GamePlayState::handleDoorEvent, this, std::placeholders::_1));
             eventBus->addListener(doorEventDelegate, DoorEventData::Type);
             eventHandlerDelegates.push_back(std::make_pair(doorEventDelegate, DoorEventData::Type));
+
+            auto audioEventDelegate = EventListenerDelegate(std::bind(&GamePlayState::handleAudioEvent, this, std::placeholders::_1));
+            eventBus->addListener(audioEventDelegate, AudioEventData::Type);
+            eventHandlerDelegates.push_back(std::make_pair(audioEventDelegate, AudioEventData::Type));
         }
     }
 
@@ -1700,6 +1707,16 @@ namespace hikari {
     void GamePlayState::handleDoorEvent(EventDataPtr evt) {
         if(auto sound = audioService.lock()) {
             sound->playSample("Door Open/Close");
+        }
+    }
+
+    void GamePlayState::handleAudioEvent(EventDataPtr evt) {
+        auto eventData = std::static_pointer_cast<AudioEventData>(evt);
+
+        if(auto sound = audioService.lock()) {
+            if(eventData->getAudioAction() == AudioEventData::ACTION_PLAY_SAMPLE) {
+                sound->playSample(eventData->getMusicOrSampleName());
+            }
         }
     }
 
