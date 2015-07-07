@@ -7,17 +7,6 @@ class AppearingBlockBehavior extends DoodadBehavior {
 
     function update(dt) {
         base.update(dt);
-
-        // if(host) {
-        //     if(host.isObstacle != previousObstacleStatus) {
-        //         ::log("State changed!");
-        //         previousObstacleStatus = host.isObstacle;
-
-        //         if(host.isObstacle) {
-        //             ::hikari.sound.playSample("Disappearing Block");
-        //         }
-        //     }
-        // }
     }
 
     /**
@@ -38,8 +27,8 @@ class AppearingBlockBehavior extends DoodadBehavior {
         }
     }
 
-    function handleObjectTouch(otherId) {
-
+    function onActivated() {
+        // TODO: Restart animation so it looks like it's appearing.
     }
 }
 

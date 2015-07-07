@@ -3,6 +3,8 @@
 
 #include "hikari/client/game/events/BaseEventData.hpp"
 
+#include <string>
+
 namespace hikari {
 
     typedef int SoundType;

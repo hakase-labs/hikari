@@ -11,7 +11,7 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 
-namespace hikari {   
+namespace hikari {
     BlockSequence::BlockSequence(const BlockSequenceDescriptor & descriptor, GameWorld & world, int id)
         : GameObject(id)
         , zIndex(0)
@@ -96,7 +96,6 @@ namespace hikari {
             // Check if we want to advance along in the sequence...
             if(timer >= timingStep.getAtTime()) {
                 // Process activiations
-                HIKARI_LOG(debug4) << "Processing activations...";
                 for(auto it = std::begin(timingStep.getActivations()), end = std::end(timingStep.getActivations()); it != end; it++) {
                     int id = *it;
                     auto & entity = blockEntities[id];
@@ -109,7 +108,6 @@ namespace hikari {
                     }
                 }
 
-                HIKARI_LOG(debug4) << "Processing deactivations...";
                 for(auto it = std::begin(timingStep.getDeactivations()), end = std::end(timingStep.getDeactivations()); it != end; it++) {
                     int id = *it;
                     auto & entity = blockEntities[id];
@@ -122,17 +120,18 @@ namespace hikari {
                     }
                 }
 
-                if(auto events = eventBus.lock()) {
-                    HIKARI_LOG(debug4) << "Triggering block sound...";
-                    events->triggerEvent(
-                        EventDataPtr(
-                            new AudioEventData(
-                                AudioEventData::ACTION_PLAY_SAMPLE,
-                                "Disappearing Block"
+                if(timingStep.getActivations().size() > 0 || timingStep.getDeactivations().size() > 0) {
+                    if(auto events = eventBus.lock()) {
+                        events->triggerEvent(
+                            EventDataPtr(
+                                new AudioEventData(
+                                    AudioEventData::ACTION_PLAY_SAMPLE,
+                                    "Disappearing Block"
+                                )
                             )
-                        )
-                    );
-                }                        
+                        );
+                    }
+                }
 
                 // Advance the step counter
                 step++;

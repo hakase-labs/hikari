@@ -2,6 +2,7 @@
 #include "hikari/client/scripting/AudioServiceScriptProxy.hpp"
 #include "hikari/client/scripting/GameProgressScriptProxy.hpp"
 #include "hikari/client/scripting/GamePlayStateScriptProxy.hpp"
+#include "hikari/client/game/objects/GameObject.hpp"
 #include "hikari/client/game/objects/Entity.hpp"
 #include "hikari/client/game/objects/Faction.hpp"
 #include "hikari/client/game/objects/Enemy.hpp"
@@ -154,11 +155,17 @@ namespace hikari {
             // Class bindings
             //
             Sqrat::RootTable(vm).Bind(
+                _SC("GameObject"),
+                Sqrat::Class<GameObject, Sqrat::NoConstructor<GameObject>>(vm)
+                .Func(_SC("getId"), &GameObject::getId)
+                .Prop(_SC("isActive"), &GameObject::isActive, &GameObject::setActive)
+            );
+
+            Sqrat::RootTable(vm).Bind(
                 _SC("Entity"),
-                Sqrat::Class<Entity, Sqrat::NoConstructor<Entity>>(vm)
+                Sqrat::DerivedClass<Entity, GameObject, Sqrat::NoConstructor<Entity>>(vm)
                 .Prop(_SC("velocityX"), &Entity::getVelocityX, &Entity::setVelocityX)
                 .Prop(_SC("velocityY"), &Entity::getVelocityY, &Entity::setVelocityY)
-                .Prop(_SC("isActive"), &Entity::isActive, &Entity::setActive)
                 .Prop(_SC("isGravitated"), &Entity::isGravitated, &Entity::setGravitated)
                 .Prop(_SC("isObstacle"), &Entity::isObstacle, &Entity::setObstacle)
                 .Prop(_SC("isPhasing"), &Entity::isPhasing, &Entity::setPhasing)
@@ -168,7 +175,6 @@ namespace hikari {
                 .Prop(_SC("faction"), &Entity::getFaction, &Entity::setFaction)
                 .Prop(_SC("zIndex"), &Entity::getZIndex, &Entity::setZIndex)
                 .Func(_SC("changeAnimation"), &Entity::changeAnimation)
-                .Func(_SC("getId"), &Entity::getId)
                 .Func(_SC("getActiveShotCount"), &Entity::getActiveShotCount)
                 .Func(_SC("fireWeapon"), &Entity::fireWeapon)
                 .Func(_SC("setHitBoxShield"), &Entity::setHitBoxShield)
