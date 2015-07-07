@@ -13,6 +13,8 @@ namespace hikari {
     const char * ScriptedEnemyBrain::FUNCTION_NAME_HANDLECOLLISION = "handleWorldCollision";
     const char * ScriptedEnemyBrain::FUNCTION_NAME_HANDLEOBJECTTOUCH = "handleObjectTouch";
     const char * ScriptedEnemyBrain::FUNCTION_NAME_UPDATE = "update";
+    const char * ScriptedEnemyBrain::FUNCTION_NAME_ONACTIVATED = "onActivated";
+    const char * ScriptedEnemyBrain::FUNCTION_NAME_ONDEACTIVATED = "onDeactivated";
     const char * ScriptedEnemyBrain::BASE_CLASS_NAME = "EnemyBehavior";
 
     ScriptedEnemyBrain::ScriptedEnemyBrain(SquirrelService& squirrel, const std::string& scriptClassName, const Sqrat::Table& classConfig)
@@ -83,6 +85,8 @@ namespace hikari {
                         proxyAttach = Sqrat::Function(instance, FUNCTION_NAME_ATTACH);
                         proxyDetach = Sqrat::Function(instance, FUNCTION_NAME_DETACH);
                         proxyUpdate = Sqrat::Function(instance, FUNCTION_NAME_UPDATE);
+                        proxyOnActivated = Sqrat::Function(instance, FUNCTION_NAME_ONACTIVATED);
+                        proxyOnDeactivated = Sqrat::Function(instance, FUNCTION_NAME_ONDEACTIVATED);
                         proxyApplyConfig = Sqrat::Function(instance, FUNCTION_NAME_APPLYCONFIG);
                         proxyHandleWorldCollision = Sqrat::Function(instance, FUNCTION_NAME_HANDLECOLLISION);
                         proxyHandleObjectTouch = Sqrat::Function(instance, FUNCTION_NAME_HANDLEOBJECTTOUCH);
@@ -125,6 +129,18 @@ namespace hikari {
             if(Sqrat::Error::Instance().Occurred(vm)) {
                 HIKARI_LOG(debug2) << "Error detaching from host object: " << Sqrat::Error::Instance().Message(vm);
             }
+        }
+    }
+
+    void ScriptedEnemyBrain::onActivated() {
+        if(!proxyOnActivated.IsNull()) {
+            proxyOnActivated.Execute();
+        }
+    }
+
+    void ScriptedEnemyBrain::onDeactivated() {
+        if(!proxyOnDeactivated.IsNull()) {
+            proxyOnDeactivated.Execute();
         }
     }
 

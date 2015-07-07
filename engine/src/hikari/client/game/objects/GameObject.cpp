@@ -1,6 +1,5 @@
 #include "hikari/client/game/objects/GameObject.hpp"
 #include "hikari/core/util/Log.hpp"
-// #include <oolua.h>
 
 namespace hikari {
 
@@ -53,6 +52,10 @@ namespace hikari {
 
     void GameObject::update(float dt) {
 
+    }
+
+    void GameObject::reset() {
+        
     }
 
 } // hikari

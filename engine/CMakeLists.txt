@@ -188,6 +188,7 @@ source_group(hikari\\client\\game FILES ${HIKARI_CLIENT_GAME_SOURCE_FILES})
 
 set( HIKARI_CLIENT_GAME_EVENTS_SOURCE_FILES
     src/hikari/client/game/events/BaseEventData.cpp
+    src/hikari/client/game/events/AudioEventData.cpp
     src/hikari/client/game/events/DoorEventData.cpp
     src/hikari/client/game/events/EntityDamageEventData.cpp
     src/hikari/client/game/events/EntityDeathEventData.cpp
@@ -240,6 +241,9 @@ set( HIKARI_CLIENT_GAME_OBJECTS_SOURCE_FILES
     src/hikari/client/game/objects/EnemySpawner.cpp
     src/hikari/client/game/objects/EnemyFactory.cpp
     src/hikari/client/game/objects/Spawner.cpp
+    src/hikari/client/game/objects/BlockSequence.cpp
+    src/hikari/client/game/objects/BlockSequenceDescriptor.cpp
+    src/hikari/client/game/objects/BlockTiming.cpp
 )
 
 source_group(hikari\\client\\game\\objects FILES ${HIKARI_CLIENT_GAME_OBJECTS_SOURCE_FILES})

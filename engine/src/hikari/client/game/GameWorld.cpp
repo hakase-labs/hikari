@@ -19,7 +19,7 @@
 
 namespace hikari {
 
-    GameWorld::GameWorld() 
+    GameWorld::GameWorld()
         : eventBus()
         , player(nullptr)
         , currentRoom(nullptr)
@@ -41,7 +41,7 @@ namespace hikari {
         , activeParticles()
         , objectRegistry()
         , gravityEnabled(true)
-        
+
     {
 
     }
@@ -81,7 +81,7 @@ namespace hikari {
     void GameWorld::setProjectileFactory(const std::weak_ptr<ProjectileFactory> & projectileFactory) {
         this->projectileFactory = projectileFactory;
     }
-        
+
     void GameWorld::render(sf::RenderTarget &target) {
 
     }
@@ -135,7 +135,7 @@ namespace hikari {
         if(obj) {
             auto finder = std::find(
                 std::begin(queuedRemovals),
-                std::end(queuedRemovals), 
+                std::end(queuedRemovals),
                 obj);
 
             // Avoid double-enqueueing
@@ -151,7 +151,7 @@ namespace hikari {
         if(obj) {
             auto finder = std::find(
                 std::begin(queuedItemRemovals),
-                std::end(queuedItemRemovals), 
+                std::end(queuedItemRemovals),
                 obj);
 
             // Avoid double-enqueueing
@@ -167,7 +167,7 @@ namespace hikari {
         if(obj) {
             auto finder = std::find(
                 std::begin(queuedEnemyRemovals),
-                std::end(queuedEnemyRemovals), 
+                std::end(queuedEnemyRemovals),
                 obj);
 
             // Avoid double-enqueueing
@@ -183,7 +183,7 @@ namespace hikari {
         if(obj) {
             auto finder = std::find(
                 std::begin(queuedParticleRemovals),
-                std::end(queuedParticleRemovals), 
+                std::end(queuedParticleRemovals),
                 obj);
 
             // Avoid double-enqueueing
@@ -199,7 +199,7 @@ namespace hikari {
         if(obj) {
             auto finder = std::find(
                 std::begin(queuedProjectileRemovals),
-                std::end(queuedProjectileRemovals), 
+                std::end(queuedProjectileRemovals),
                 obj);
 
             // Avoid double-enqueueing
@@ -277,12 +277,14 @@ namespace hikari {
 
         while(!queuedRemovals.empty()) {
             auto objectToBeRemoved = queuedRemovals.front();
-            
+
             activeObjects.erase(
-                std::remove(std::begin(activeObjects), std::end(activeObjects), objectToBeRemoved));
+                std::remove(std::begin(activeObjects), std::end(activeObjects), objectToBeRemoved),
+                std::end(activeObjects)
+            );
 
             objectRegistry.erase(objectToBeRemoved->getId());
-            
+
             queuedRemovals.pop_front();
 
             //objectToBeRemoved->setEventBus(std::weak_ptr<EventBus>());
@@ -294,12 +296,14 @@ namespace hikari {
 
         while(!queuedItemRemovals.empty()) {
             auto objectToBeRemoved = queuedItemRemovals.front();
-            
+
             activeItems.erase(
-                std::remove(std::begin(activeItems), std::end(activeItems), objectToBeRemoved));
+                std::remove(std::begin(activeItems), std::end(activeItems), objectToBeRemoved),
+                std::end(activeItems)
+            );
 
             objectRegistry.erase(objectToBeRemoved->getId());
-            
+
             queuedItemRemovals.pop_front();
 
             objectToBeRemoved->setEventBus(std::weak_ptr<EventBus>());
@@ -311,12 +315,14 @@ namespace hikari {
 
         while(!queuedEnemyRemovals.empty()) {
             auto objectToBeRemoved = queuedEnemyRemovals.front();
-            
+
             activeEnemies.erase(
-                std::remove(std::begin(activeEnemies), std::end(activeEnemies), objectToBeRemoved));
+                std::remove(std::begin(activeEnemies), std::end(activeEnemies), objectToBeRemoved),
+                std::end(activeEnemies)
+            );
 
             objectRegistry.erase(objectToBeRemoved->getId());
-            
+
             queuedEnemyRemovals.pop_front();
 
             objectToBeRemoved->setEventBus(std::weak_ptr<EventBus>());
@@ -330,10 +336,12 @@ namespace hikari {
             auto objectToBeRemoved = queuedParticleRemovals.front();
 
             activeParticles.erase(
-                std::remove(std::begin(activeParticles), std::end(activeParticles), objectToBeRemoved));
+                std::remove(std::begin(activeParticles), std::end(activeParticles), objectToBeRemoved),
+                std::end(activeParticles)
+            );
 
             objectRegistry.erase(objectToBeRemoved->getId());
-            
+
             queuedParticleRemovals.pop_front();
 
             if(eventBusPtr) {
@@ -345,10 +353,12 @@ namespace hikari {
             auto objectToBeRemoved = queuedProjectileRemovals.front();
 
             activeProjectiles.erase(
-                std::remove(std::begin(activeProjectiles), std::end(activeProjectiles), objectToBeRemoved));
+                std::remove(std::begin(activeProjectiles), std::end(activeProjectiles), objectToBeRemoved),
+                std::end(activeProjectiles)
+            );
 
             objectRegistry.erase(objectToBeRemoved->getId());
-            
+
             queuedProjectileRemovals.pop_front();
 
             objectToBeRemoved->setEventBus(std::weak_ptr<EventBus>());

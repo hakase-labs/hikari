@@ -78,6 +78,20 @@ class EnemyBehavior {
     }
 
     /**
+     * Called when the host changes state from inactive to active.
+     */
+    function onActivated() {
+        
+    }
+
+    /**
+     * Called when the host changes state from active to inactive.
+     */
+    function onDeactivated() {
+
+    }
+
+    /**
      * Performs any handling of world collisions. By default does nothing, but
      * can be overridden to perform logic when colliding with different tiles in
      * the world. Any time there is a tile collision this method will be called,

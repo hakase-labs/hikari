@@ -50,7 +50,7 @@ class DadaEnemyBehavior extends EnemyBehavior {
 
     function moveInFacedDirection() {
         local dir = host.direction;
-        
+
         if(Directions.Left == dir) {
             host.velocityX = -MOVEMENT_VELOCITY_X;
         } else {
@@ -71,7 +71,7 @@ class DadaEnemyBehavior extends EnemyBehavior {
             facePlayer();
 
             jumpCounter++;
-            
+
             if(jumpCounter >= LARGE_JUMP_LIMIT) {
                 highJump();
                 jumpCounter = 0;
