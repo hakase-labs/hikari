@@ -84,6 +84,18 @@ namespace hikari {
     void BlockSequence::onDeactivated() {
         HIKARI_LOG(debug2) << "BlockSequence::onDeactivated()";
         reset();
+
+        for(auto it = std::begin(blockEntities), end = std::end(blockEntities); it != end; it++) {
+            auto & entity = *it;
+
+            HIKARI_LOG(debug2) << "BlockSequence::onDeactivated :: removing";
+
+            if(entity) {
+                HIKARI_LOG(debug2) << "BlockSequence::onDeactivated :: removing entity " << entity->getId();
+                entity->setActive(false);
+                world.queueObjectRemoval(entity);
+            }
+        }
     }
 
     void BlockSequence::update(float dt) {
@@ -152,17 +164,17 @@ namespace hikari {
         step = 0;
         timer = 0.0f;
 
-        for(auto it = std::begin(blockRects), end = std::end(blockRects); it != end; it++) {
-            it->setFillColor({ 255, 32, 32, 128 });
-        }
+        // for(auto it = std::begin(blockRects), end = std::end(blockRects); it != end; it++) {
+        //     it->setFillColor({ 255, 32, 32, 128 });
+        // }
     }
 
     void BlockSequence::render(sf::RenderTarget &target) {
-        target.draw(outlineShape);
+        // target.draw(outlineShape);
 
-        for(auto it = std::begin(blockRects), end = std::end(blockRects); it != end; it++) {
-            target.draw(*it);
-        }
+        // for(auto it = std::begin(blockRects), end = std::end(blockRects); it != end; it++) {
+        //     target.draw(*it);
+        // }
     }
 
     void BlockSequence::setZIndex(int index) {

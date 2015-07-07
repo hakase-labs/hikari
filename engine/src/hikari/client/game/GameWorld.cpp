@@ -279,7 +279,9 @@ namespace hikari {
             auto objectToBeRemoved = queuedRemovals.front();
 
             activeObjects.erase(
-                std::remove(std::begin(activeObjects), std::end(activeObjects), objectToBeRemoved));
+                std::remove(std::begin(activeObjects), std::end(activeObjects), objectToBeRemoved),
+                std::end(activeObjects)
+            );
 
             objectRegistry.erase(objectToBeRemoved->getId());
 
@@ -296,7 +298,9 @@ namespace hikari {
             auto objectToBeRemoved = queuedItemRemovals.front();
 
             activeItems.erase(
-                std::remove(std::begin(activeItems), std::end(activeItems), objectToBeRemoved));
+                std::remove(std::begin(activeItems), std::end(activeItems), objectToBeRemoved),
+                std::end(activeItems)
+            );
 
             objectRegistry.erase(objectToBeRemoved->getId());
 
@@ -313,7 +317,9 @@ namespace hikari {
             auto objectToBeRemoved = queuedEnemyRemovals.front();
 
             activeEnemies.erase(
-                std::remove(std::begin(activeEnemies), std::end(activeEnemies), objectToBeRemoved));
+                std::remove(std::begin(activeEnemies), std::end(activeEnemies), objectToBeRemoved),
+                std::end(activeEnemies)
+            );
 
             objectRegistry.erase(objectToBeRemoved->getId());
 
@@ -330,7 +336,9 @@ namespace hikari {
             auto objectToBeRemoved = queuedParticleRemovals.front();
 
             activeParticles.erase(
-                std::remove(std::begin(activeParticles), std::end(activeParticles), objectToBeRemoved));
+                std::remove(std::begin(activeParticles), std::end(activeParticles), objectToBeRemoved),
+                std::end(activeParticles)
+            );
 
             objectRegistry.erase(objectToBeRemoved->getId());
 
@@ -345,7 +353,9 @@ namespace hikari {
             auto objectToBeRemoved = queuedProjectileRemovals.front();
 
             activeProjectiles.erase(
-                std::remove(std::begin(activeProjectiles), std::end(activeProjectiles), objectToBeRemoved));
+                std::remove(std::begin(activeProjectiles), std::end(activeProjectiles), objectToBeRemoved),
+                std::end(activeProjectiles)
+            );
 
             objectRegistry.erase(objectToBeRemoved->getId());
 
