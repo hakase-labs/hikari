@@ -23,8 +23,6 @@ namespace hikari {
         , outlineShape()
         , blockRects()
     {
-        HIKARI_LOG(debug) << "BlockSequence()";
-
         const auto & bounds = getBounds();
 
         outlineShape.setSize({
@@ -72,26 +70,20 @@ namespace hikari {
     }
 
     BlockSequence::~BlockSequence() {
-        HIKARI_LOG(debug) << "~BlockSequence()";
         blockEntities.clear();
     }
 
     void BlockSequence::onActivated() {
-        HIKARI_LOG(debug2) << "BlockSequence::onActivated()";
         reset();
     }
 
     void BlockSequence::onDeactivated() {
-        HIKARI_LOG(debug2) << "BlockSequence::onDeactivated()";
         reset();
 
         for(auto it = std::begin(blockEntities), end = std::end(blockEntities); it != end; it++) {
             auto & entity = *it;
 
-            HIKARI_LOG(debug2) << "BlockSequence::onDeactivated :: removing";
-
             if(entity) {
-                HIKARI_LOG(debug2) << "BlockSequence::onDeactivated :: removing entity " << entity->getId();
                 entity->setActive(false);
                 world.queueObjectRemoval(entity);
             }
