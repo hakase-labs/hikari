@@ -59,7 +59,7 @@ namespace hikari {
 
                 blockRects.push_back(shape);
 
-                std::unique_ptr<Enemy> entityUnique = world.spawnEnemy("Appearing Block (Red)");
+                std::unique_ptr<Enemy> entityUnique = world.spawnEnemy(descriptor.getEntityName());
                 std::shared_ptr<Enemy> entityShared(std::move(entityUnique));
                 entityShared->setPosition(topLeft.getX(), topLeft.getY());
 
@@ -124,13 +124,13 @@ namespace hikari {
                     }
                 }
 
-                if(timingStep.getActivations().size() > 0 || timingStep.getDeactivations().size() > 0) {
+                if(timingStep.getActivations().size()) {
                     if(auto events = eventBus.lock()) {
                         events->triggerEvent(
                             EventDataPtr(
                                 new AudioEventData(
                                     AudioEventData::ACTION_PLAY_SAMPLE,
-                                    "Disappearing Block"
+                                    descriptor.getSoundName()
                                 )
                             )
                         );

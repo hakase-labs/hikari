@@ -12,13 +12,23 @@ namespace hikari {
         Rectangle2D<int> bounds;
         std::vector<Point2D<int>> blockPositions;
         std::vector<BlockTiming> timing;
+        std::string entityName;
+        std::string soundName;
 
     public:
-        BlockSequenceDescriptor(const Rectangle2D<int> & bounds, const std::vector<Point2D<int>> & blockPositions, const std::vector<BlockTiming> & timing);
+        BlockSequenceDescriptor(
+            const Rectangle2D<int> & bounds,
+            const std::vector<Point2D<int>> & blockPositions,
+            const std::vector<BlockTiming> & timing,
+            const std::string & entityName,
+            const std::string & soundName
+        );
 
         const Rectangle2D<int> & getBounds() const;
         const std::vector<Point2D<int>> & getBlockPositions() const;
         const std::vector<BlockTiming> & getTiming() const;
+        const std::string & getEntityName() const;
+        const std::string & getSoundName() const;
     };
 } // hikari
 

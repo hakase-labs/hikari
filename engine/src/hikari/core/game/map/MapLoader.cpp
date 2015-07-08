@@ -544,7 +544,13 @@ namespace hikari {
             }
         }
 
-        return BlockSequenceDescriptor(Rectangle2D<int>(x, y, width, height), blockPositions, timing);
+        return BlockSequenceDescriptor(
+            Rectangle2D<int>(x, y, width, height),
+            blockPositions,
+            timing,
+            "Appearing Block (Red)",
+            "Disappearing Block"
+        );
     }
 
     Rectangle2D<int> MapLoader::constructCameraBounds(const Json::Value &json,
