@@ -548,6 +548,8 @@ namespace hikari {
             Rectangle2D<int>(x, y, width, height),
             blockPositions,
             timing,
+            BlockSequenceDescriptor::DEFAULT_SPAWN_INTERVAL,
+            BlockSequenceDescriptor::DEFAULT_MAXIMUM_BLOCK_AGE,
             "Appearing Block (Red)",
             "Disappearing Block"
         );

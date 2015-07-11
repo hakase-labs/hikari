@@ -1,16 +1,23 @@
 #include "hikari/client/game/objects/BlockSequenceDescriptor.hpp"
 
 namespace hikari {
+    const float BlockSequenceDescriptor::DEFAULT_SPAWN_INTERVAL = 1.0f;
+    const float BlockSequenceDescriptor::DEFAULT_MAXIMUM_BLOCK_AGE = (106.0f / 60.0f);
+
     BlockSequenceDescriptor::BlockSequenceDescriptor(
         const Rectangle2D<int> & bounds,
         const std::vector<Point2D<int>> & blockPositions,
         const std::vector<BlockTiming> & timing,
+        float spawnInterval,
+        float maximumBlockAge,
         const std::string & entityName,
         const std::string & soundName
     )
         : bounds(bounds)
         , blockPositions(blockPositions)
         , timing(timing)
+        , spawnInterval(spawnInterval)
+        , maximumBlockAge(maximumBlockAge)
         , entityName(entityName)
         , soundName(soundName)
     {
@@ -27,6 +34,14 @@ namespace hikari {
 
     const std::vector<BlockTiming> & BlockSequenceDescriptor::getTiming() const {
         return timing;
+    }
+
+    float BlockSequenceDescriptor::getSpawnInterval() const {
+        return spawnInterval;
+    }
+
+    float BlockSequenceDescriptor::getMaximumBlockAge() const {
+        return maximumBlockAge;
     }
 
     const std::string & BlockSequenceDescriptor::getEntityName() const {

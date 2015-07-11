@@ -84,6 +84,7 @@ namespace hikari {
             auto & entity = *it;
 
             if(entity) {
+                entity->reset();
                 entity->setActive(false);
                 world.queueObjectRemoval(entity);
             }
@@ -95,11 +96,25 @@ namespace hikari {
             timer += dt;
 
             const auto & timing = descriptor.getTiming();
-            const BlockTiming & timingStep = timing.at(step);
 
-            // Check if we want to advance along in the sequence...
-            if(timer >= timingStep.getAtTime()) {
-                // Process activiations
+            // First we need to hide any entities that are older than they should be.
+            for(auto it = std::begin(blockEntities), end = std::end(blockEntities); it != end; it++) {
+                auto & entity = *it;
+
+                if(entity && entity->isActive()) {
+                    if(entity->getAge() >= (106.0f * (1.0f/60.0f))) {
+                        entity->reset();
+                        entity->setActive(false);
+                        world.queueObjectRemoval(entity);
+                    }
+                }
+            }
+
+            if(timer >= 1.0f) {
+                timer = 0.0f;
+
+                const BlockTiming & timingStep = timing.at(step);
+
                 for(auto it = std::begin(timingStep.getActivations()), end = std::end(timingStep.getActivations()); it != end; it++) {
                     int id = *it;
                     auto & entity = blockEntities[id];
@@ -108,19 +123,8 @@ namespace hikari {
 
                     if(entity) {
                         entity->setActive(true);
+                        entity->setAgeless(false);
                         world.queueObjectAddition(blockEntities[id]);
-                    }
-                }
-
-                for(auto it = std::begin(timingStep.getDeactivations()), end = std::end(timingStep.getDeactivations()); it != end; it++) {
-                    int id = *it;
-                    auto & entity = blockEntities[id];
-
-                    blockRects[id].setFillColor({ 255, 32, 32, 128 });
-
-                    if(entity) {
-                        entity->setActive(false);
-                        world.queueObjectRemoval(entity);
                     }
                 }
 
@@ -137,18 +141,64 @@ namespace hikari {
                     }
                 }
 
-                // Advance the step counter
                 step++;
             }
 
-            for(auto it = std::begin(blockEntities), end = std::end(blockEntities); it != end; it++) {
-                (*it)->update(dt);
-            }
-
-            // We got to the end so reset.
             if(step >= timing.size()) {
                 reset();
             }
+
+
+
+            // // Check if we want to advance along in the sequence...
+            // if(timer >= timingStep.getAtTime()) {
+            //     // Process activiations
+            //     for(auto it = std::begin(timingStep.getActivations()), end = std::end(timingStep.getActivations()); it != end; it++) {
+            //         int id = *it;
+            //         auto & entity = blockEntities[id];
+
+            //         blockRects[id].setFillColor({ 32, 255, 32, 196 });
+
+            //         if(entity) {
+            //             entity->setActive(true);
+            //             world.queueObjectAddition(blockEntities[id]);
+            //         }
+            //     }
+
+            //     for(auto it = std::begin(timingStep.getDeactivations()), end = std::end(timingStep.getDeactivations()); it != end; it++) {
+            //         int id = *it;
+            //         auto & entity = blockEntities[id];
+
+            //         blockRects[id].setFillColor({ 255, 32, 32, 128 });
+
+            //         if(entity) {
+            //             entity->reset();
+            //             entity->setActive(false);
+            //             world.queueObjectRemoval(entity);
+            //         }
+            //     }
+
+            //     if(timingStep.getActivations().size()) {
+            //         if(auto events = eventBus.lock()) {
+            //             events->triggerEvent(
+            //                 EventDataPtr(
+            //                     new AudioEventData(
+            //                         AudioEventData::ACTION_PLAY_SAMPLE,
+            //                         descriptor.getSoundName()
+            //                     )
+            //                 )
+            //             );
+            //         }
+            //     }
+
+            //     // Advance the step counter
+            //     step++;
+            // }
+
+            // // We got to the end so reset.
+            // if(step >= timing.size()) {
+            //     reset();
+            // }
         }
     }
 
