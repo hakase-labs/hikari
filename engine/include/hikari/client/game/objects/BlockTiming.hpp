@@ -6,16 +6,11 @@
 namespace hikari {
     class BlockTiming {
     private:
-        float at;
-        std::vector<int> activations;
-        std::vector<int> deactivations;
+        std::vector<int> blockIndicies;
 
     public:
-        BlockTiming(float at, const std::vector<int> & on, const std::vector<int> & off);
-
-        float getAtTime() const;
-        const std::vector<int> & getActivations() const;
-        const std::vector<int> & getDeactivations() const;
+        explicit BlockTiming(const std::vector<int> & blockIndicies);
+        const std::vector<int> & getBlockIndicies() const;
     };
 } // hikari
 
