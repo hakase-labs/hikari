@@ -80,10 +80,11 @@ namespace hikari {
         static const char* PROP_ROOM_BLOCKSEQUENCES_WIDTH;
         static const char* PROP_ROOM_BLOCKSEQUENCES_HEIGHT;
         static const char* PROP_ROOM_BLOCKSEQUENCES_BLOCKS;
-        static const char* PROP_ROOM_BLOCKSEQUENCES_TIMING;
-        static const char* PROP_ROOM_BLOCKSEQUENCES_AT;
-        static const char* PROP_ROOM_BLOCKSEQUENCES_ON;
-        static const char* PROP_ROOM_BLOCKSEQUENCES_OFF;
+        static const char* PROP_ROOM_BLOCKSEQUENCES_SEQUENCE;
+        static const char* PROP_ROOM_BLOCKSEQUENCES_INTERVAL;
+        static const char* PROP_ROOM_BLOCKSEQUENCES_MAXIMUM_BLOCK_AGE;
+        static const char* PROP_ROOM_BLOCKSEQUENCES_ENTITY;
+        static const char* PROP_ROOM_BLOCKSEQUENCES_SPAWN_SOUND;
 
         static const int DEFAULT_HERO_SPAWN_X;
         static const int DEFAULT_HERO_SPAWN_Y;

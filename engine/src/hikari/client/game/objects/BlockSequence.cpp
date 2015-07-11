@@ -102,7 +102,7 @@ namespace hikari {
                 auto & entity = *it;
 
                 if(entity && entity->isActive()) {
-                    if(entity->getAge() >= (106.0f * (1.0f/60.0f))) {
+                    if(entity->getAge() >= descriptor.getMaximumBlockAge()) {
                         entity->reset();
                         entity->setActive(false);
                         world.queueObjectRemoval(entity);
@@ -110,12 +110,12 @@ namespace hikari {
                 }
             }
 
-            if(timer >= 1.0f) {
+            if(timer >= descriptor.getSpawnInterval()) {
                 timer = 0.0f;
 
                 const BlockTiming & timingStep = timing.at(step);
 
-                for(auto it = std::begin(timingStep.getActivations()), end = std::end(timingStep.getActivations()); it != end; it++) {
+                for(auto it = std::begin(timingStep.getBlockIndicies()), end = std::end(timingStep.getBlockIndicies()); it != end; it++) {
                     int id = *it;
                     auto & entity = blockEntities[id];
 
@@ -128,7 +128,7 @@ namespace hikari {
                     }
                 }
 
-                if(timingStep.getActivations().size()) {
+                if(timingStep.getBlockIndicies().size()) {
                     if(auto events = eventBus.lock()) {
                         events->triggerEvent(
                             EventDataPtr(

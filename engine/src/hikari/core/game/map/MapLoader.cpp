@@ -76,10 +76,11 @@ namespace hikari {
     const char* MapLoader::PROP_ROOM_BLOCKSEQUENCES_WIDTH = "width";
     const char* MapLoader::PROP_ROOM_BLOCKSEQUENCES_HEIGHT = "height";
     const char* MapLoader::PROP_ROOM_BLOCKSEQUENCES_BLOCKS = "blocks";
-    const char* MapLoader::PROP_ROOM_BLOCKSEQUENCES_TIMING = "timing";
-    const char* MapLoader::PROP_ROOM_BLOCKSEQUENCES_AT = "at";
-    const char* MapLoader::PROP_ROOM_BLOCKSEQUENCES_ON = "on";
-    const char* MapLoader::PROP_ROOM_BLOCKSEQUENCES_OFF = "off";
+    const char* MapLoader::PROP_ROOM_BLOCKSEQUENCES_SEQUENCE = "sequence";
+    const char* MapLoader::PROP_ROOM_BLOCKSEQUENCES_INTERVAL = "interval";
+    const char* MapLoader::PROP_ROOM_BLOCKSEQUENCES_MAXIMUM_BLOCK_AGE = "maximumBlockAge";
+    const char* MapLoader::PROP_ROOM_BLOCKSEQUENCES_ENTITY = "entity";
+    const char* MapLoader::PROP_ROOM_BLOCKSEQUENCES_SPAWN_SOUND = "spawnSound";
 
     const int MapLoader::DEFAULT_HERO_SPAWN_X = 0;
     const int MapLoader::DEFAULT_HERO_SPAWN_Y = 0;
@@ -492,10 +493,28 @@ namespace hikari {
 
     BlockSequenceDescriptor MapLoader::constructBlockSequence(const Json::Value &json,
         int roomX, int roomY, int gridSize) const {
-        int x = roomX + json[PROP_ROOM_BLOCKSEQUENCES_X].asInt() * gridSize;
-        int y = roomY + json[PROP_ROOM_BLOCKSEQUENCES_Y].asInt() * gridSize;
-        int width = json[PROP_ROOM_BLOCKSEQUENCES_WIDTH].asInt() * gridSize;
-        int height = json[PROP_ROOM_BLOCKSEQUENCES_HEIGHT].asInt() * gridSize;
+        const int x = roomX + json[PROP_ROOM_BLOCKSEQUENCES_X].asInt() * gridSize;
+        const int y = roomY + json[PROP_ROOM_BLOCKSEQUENCES_Y].asInt() * gridSize;
+        const int width = json[PROP_ROOM_BLOCKSEQUENCES_WIDTH].asInt() * gridSize;
+        const int height = json[PROP_ROOM_BLOCKSEQUENCES_HEIGHT].asInt() * gridSize;
+
+        const float spawnInterval = json.get(
+            PROP_ROOM_BLOCKSEQUENCES_INTERVAL,
+            BlockSequenceDescriptor::DEFAULT_SPAWN_INTERVAL
+        ).asFloat();
+        const float maximumBlockAge = json.get(
+            PROP_ROOM_BLOCKSEQUENCES_MAXIMUM_BLOCK_AGE,
+            BlockSequenceDescriptor::DEFAULT_MAXIMUM_BLOCK_AGE
+        ).asFloat();
+
+        const std::string entityName = json.get(
+            PROP_ROOM_BLOCKSEQUENCES_ENTITY,
+            BlockSequenceDescriptor::DEFAULT_BLOCK_ENTITY
+        ).asString();
+        const std::string spawnSound = json.get(
+            PROP_ROOM_BLOCKSEQUENCES_SPAWN_SOUND,
+            BlockSequenceDescriptor::DEFAULT_SPAWN_SOUND
+        ).asString();
 
         std::vector<Point2D<int>> blockPositions;
         std::vector<BlockTiming> timing;
@@ -514,33 +533,22 @@ namespace hikari {
             }
         }
 
-        const auto & timingJson = json[PROP_ROOM_BLOCKSEQUENCES_TIMING];
+        const auto & sequenceJson = json[PROP_ROOM_BLOCKSEQUENCES_SEQUENCE];
 
-        if(timingJson.isArray()) {
-            const std::size_t length = timingJson.size();
+        if(sequenceJson.isArray()) {
+            const std::size_t length = sequenceJson.size();
 
             for(std::size_t i = 0; i < length; ++i) {
-                const auto & timingObject = timingJson[i];
-                float at = timingObject[PROP_ROOM_BLOCKSEQUENCES_AT].asFloat();
+                const auto & blockIndiciesJson = sequenceJson[i];
 
-                std::vector<int> activiations;
-                std::vector<int> deactivations;
+                std::vector<int> indicies;
 
-                const auto & activiationsJson = timingObject[PROP_ROOM_BLOCKSEQUENCES_ON];
-
-                for(std::size_t index = 0; index < activiationsJson.size(); ++index) {
-                    const auto & id = activiationsJson[index].asInt();
-                    activiations.push_back(id);
+                for(std::size_t index = 0; index < blockIndiciesJson.size(); ++index) {
+                    const auto & id = blockIndiciesJson[index].asInt();
+                    indicies.push_back(id);
                 }
 
-                const auto & deactiviationsJson = timingObject[PROP_ROOM_BLOCKSEQUENCES_OFF];
-
-                for(std::size_t index = 0; index < deactiviationsJson.size(); ++index) {
-                    const auto & id = deactiviationsJson[index].asInt();
-                    deactivations.push_back(id);
-                }
-
-                timing.push_back(BlockTiming(at, activiations, deactivations));
+                timing.push_back(BlockTiming(indicies));
             }
         }
 
@@ -548,10 +556,10 @@ namespace hikari {
             Rectangle2D<int>(x, y, width, height),
             blockPositions,
             timing,
-            BlockSequenceDescriptor::DEFAULT_SPAWN_INTERVAL,
-            BlockSequenceDescriptor::DEFAULT_MAXIMUM_BLOCK_AGE,
-            "Appearing Block (Red)",
-            "Disappearing Block"
+            spawnInterval,
+            maximumBlockAge,
+            entityName,
+            spawnSound
         );
     }
 

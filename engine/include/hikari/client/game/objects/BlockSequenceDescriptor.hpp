@@ -4,6 +4,7 @@
 #include "hikari/core/geom/Point2D.hpp"
 #include "hikari/core/geom/Rectangle2D.hpp"
 #include "hikari/client/game/objects/BlockTiming.hpp"
+#include <string>
 #include <vector>
 
 namespace hikari {
@@ -20,6 +21,8 @@ namespace hikari {
     public:
         static const float DEFAULT_SPAWN_INTERVAL;
         static const float DEFAULT_MAXIMUM_BLOCK_AGE;
+        static const char * DEFAULT_BLOCK_ENTITY;
+        static const char * DEFAULT_SPAWN_SOUND;
 
         BlockSequenceDescriptor(
             const Rectangle2D<int> & bounds,

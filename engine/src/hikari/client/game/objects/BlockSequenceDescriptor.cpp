@@ -2,7 +2,9 @@
 
 namespace hikari {
     const float BlockSequenceDescriptor::DEFAULT_SPAWN_INTERVAL = 1.0f;
-    const float BlockSequenceDescriptor::DEFAULT_MAXIMUM_BLOCK_AGE = (106.0f / 60.0f);
+    const float BlockSequenceDescriptor::DEFAULT_MAXIMUM_BLOCK_AGE = 106.0f / 60.0f;
+    const char * BlockSequenceDescriptor::DEFAULT_BLOCK_ENTITY = "Appearing Block (Red)";
+    const char * BlockSequenceDescriptor::DEFAULT_SPAWN_SOUND = "Disappearing Block";
 
     BlockSequenceDescriptor::BlockSequenceDescriptor(
         const Rectangle2D<int> & bounds,
