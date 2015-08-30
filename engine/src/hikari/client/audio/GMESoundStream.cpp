@@ -9,10 +9,10 @@
 
 namespace hikari {
 
-    GMESoundStream::GMESoundStream(std::size_t bufferSize) : 
+    GMESoundStream::GMESoundStream(std::size_t bufferSize) :
     sf::SoundStream(),
-    myBufferSize(bufferSize), 
-    myBuffer    (new short[myBufferSize]) 
+    myBufferSize(bufferSize),
+    myBuffer    (new short[myBufferSize])
     {
         this->stop();
     }
@@ -27,7 +27,7 @@ namespace hikari {
         int length = 0;
         auto fs = FileSystem::openFileRead(fileName);
 
-            
+
         fs->seekg (0, std::ios::end);
         length = static_cast<int>(fs->tellg());
         fs->seekg (0, std::ios::beg);
@@ -50,21 +50,21 @@ namespace hikari {
             if(!emu.get()) {
                 return false;
             }
-            
+
             handleError(emu->set_sample_rate(SAMPLE_RATE));
             handleError(gme_load_data(emu.get(), buffer.get(), length));
         } catch(std::runtime_error& ex) {
             HIKARI_LOG(debug) << ex.what();
             return false;
         }
-        
+
         initialize(2, SAMPLE_RATE);
         setCurrentTrack(0);
 
         // int count = emu->track_count();
         // for(int i = 0; i < count; i++) {
         //     track_info_t info;
-            
+
         //     emu->track_info(&info, i);
 
         //     std::string song(info.song);
@@ -79,22 +79,29 @@ namespace hikari {
 
     void GMESoundStream::onSeek(sf::Time timeOffset) {
         sf::Lock lock(mutex);
-        handleError(emu->seek(static_cast<long>(timeOffset.asMilliseconds())));
+
+        if(emu) {
+            handleError(emu->seek(static_cast<long>(timeOffset.asMilliseconds())));
+        }
     }
 
     bool GMESoundStream::onGetData(sf::SoundStream::Chunk& Data) {
         sf::Lock lock(mutex);
 
-        handleError(emu->play(myBufferSize, myBuffer.get()));
+        if(emu) {
+            handleError(emu->play(myBufferSize, myBuffer.get()));
 
-        Data.samples     = &myBuffer[0]; 
-        Data.sampleCount = myBufferSize;
+            Data.samples     = &myBuffer[0];
+            Data.sampleCount = myBufferSize;
 
-        if(!emu->track_ended()) { 
-            return true;
-        } else {
-            return false;
+            if(!emu->track_ended()) {
+                return true;
+            } else {
+                return false;
+            }
         }
+
+        return false;
     }
 
     void GMESoundStream::handleError(const char* str) const {
@@ -104,37 +111,65 @@ namespace hikari {
     }
 
     long GMESoundStream::getSampleRate() const {
-        return emu->sample_rate();
+        if(emu) {
+            return emu->sample_rate();
+        }
+
+        return SAMPLE_RATE;
     }
 
     int GMESoundStream::getCurrentTrack() const {
-        return emu->current_track();
+        if(emu) {
+            return emu->current_track();
+        }
+
+        return 0;
     }
 
     void GMESoundStream::setCurrentTrack(int track) {
         sf::Lock lock(mutex);
+
         if(track >= 0 && track < getTrackCount()) {
-            emu->start_track(track);
+            if(emu) {
+                emu->start_track(track);
+            }
         }
     }
 
     int GMESoundStream::getTrackCount() const {
-        return emu->track_count();
+        if(emu) {
+            return emu->track_count();
+        }
+
+        return 0;
     }
 
     const std::string GMESoundStream::getTrackName() {
         sf::Lock lock(mutex);
-        handleError(emu->track_info(trackInfo.get()));
-        return std::string(trackInfo->song); 
+
+        if(emu) {
+            handleError(emu->track_info(trackInfo.get()));
+            return std::string(trackInfo->song);
+        }
+
+        return std::string("");
     }
 
     int GMESoundStream::getVoiceCount() const {
-        return emu->voice_count();
+        if(emu) {
+            return emu->voice_count();
+        }
+
+        return 0;
     }
 
     std::vector<std::string> GMESoundStream::getVoiceNames() const {
-        return std::vector<std::string>(
-            emu->voice_names(), emu->voice_names() + getVoiceCount());
+        if(emu) {
+            return std::vector<std::string>(
+                emu->voice_names(), emu->voice_names() + getVoiceCount());
+        }
+
+        return std::vector<std::string>();
     }
 
     std::unique_ptr<sf::SoundBuffer> GMESoundStream::renderTrackToBuffer(int track) {
@@ -142,25 +177,27 @@ namespace hikari {
         std::unique_ptr<sf::SoundBuffer> buffer(new sf::SoundBuffer);
         std::vector<short> samples;
 
-        emu->start_track(track);
+        if(emu) {
+            emu->start_track(track);
 
-        std::size_t bufferSize = 512;
-        std::size_t maximumSize = 4 * SAMPLE_RATE; // Cap samples at 4 seconds
+            std::size_t bufferSize = 512;
+            std::size_t maximumSize = 4 * SAMPLE_RATE; // Cap samples at 4 seconds
 
-        while(!emu->track_ended() && samples.size() < maximumSize) {
-            handleError(emu->play(bufferSize, myBuffer.get()));
+            while(!emu->track_ended() && samples.size() < maximumSize) {
+                handleError(emu->play(bufferSize, myBuffer.get()));
 
-            for(std::size_t i = 0; i < bufferSize; ++i) {
-                samples.push_back(myBuffer[i]);
+                for(std::size_t i = 0; i < bufferSize; ++i) {
+                    samples.push_back(myBuffer[i]);
+                }
             }
-        }
 
-        buffer->loadFromSamples(
-            &samples[0],    // Spec gaurantees that std::vector's memory is contiguous
-            samples.size(),
-            2,
-            SAMPLE_RATE
-        );
+            buffer->loadFromSamples(
+                &samples[0],    // Spec gaurantees that std::vector's memory is contiguous
+                samples.size(),
+                2,
+                SAMPLE_RATE
+            );
+        }
 
         return buffer;
     }
