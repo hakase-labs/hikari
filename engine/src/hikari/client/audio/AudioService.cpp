@@ -56,10 +56,6 @@ namespace hikari {
     void AudioService::playMusic(const std::string & name) {
         if(library->isEnabled()) {
             const auto stream = library->playMusic(name, getMusicVolume());
-
-            if(stream) {
-                stream->play();
-            }
         }
     }
 
@@ -82,10 +78,6 @@ namespace hikari {
     void AudioService::playSample(const std::string & name) {
         if(library->isEnabled()) {
             const auto stream = library->playSample(name, getSampleVolume());
-
-            if(stream) {
-                stream->play();
-            }
         }
     }
 
