@@ -17,11 +17,11 @@ namespace hikari {
 
     }
 
-    void SpriteAnimator::setInvertXOffset(const bool& flip) {
+    void SpriteAnimator::setInvertXOffset(const bool flip) {
         this->invertXOffset = flip;
     }
 
-    void SpriteAnimator::setInvertYOffset(const bool& flip) {
+    void SpriteAnimator::setInvertYOffset(const bool flip) {
         this->invertYOffset = flip;
     }
 

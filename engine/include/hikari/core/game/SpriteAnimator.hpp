@@ -21,8 +21,8 @@ namespace hikari {
     public:
         SpriteAnimator(sf::Sprite &sprite); 
         virtual ~SpriteAnimator();
-        void setInvertXOffset(const bool& flip);
-        void setInvertYOffset(const bool& flip);
+        void setInvertXOffset(const bool flip);
+        void setInvertYOffset(const bool flip);
         virtual void update(float delta);
     };
 
