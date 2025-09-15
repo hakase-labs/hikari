@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.15)
 
 project(hikari)
 
@@ -57,5 +57,6 @@ if( APPLE )
   set( CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -stdlib=libc++" )
 endif( APPLE )
 
+add_subdirectory( extlibs )
 add_subdirectory( engine )
 add_subdirectory( tests )

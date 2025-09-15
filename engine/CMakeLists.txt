@@ -28,6 +28,62 @@ set( JSONCPP_SOURCE_FILES
     ${JSONCPP_DIR}/src/json_writer.cpp
 )
 
+# PhysicsFS configuration
+
+set(PHYSFS_SOURCE_DIR ${PROJECT_SOURCE_DIR}/extlibs/physfs/src)
+
+if(APPLE)
+  set(
+    PHYSFS_OTHER_LDFLAGS
+    ${PHYSFS_OTHER_LDFLAGS}
+    "-framework IOKit -framework Foundation"
+  )
+  set(
+    PHYSFS_M_SRCS
+    ${PHYSFS_SOURCE_DIR}/physfs_platform_apple.m
+  )
+endif()
+
+set(
+  PHYSFS_SOURCE_FILES
+  ${PHYSFS_SOURCE_DIR}/physfs_archiver_7z.c
+  ${PHYSFS_SOURCE_DIR}/physfs_archiver_dir.c
+  ${PHYSFS_SOURCE_DIR}/physfs_archiver_grp.c
+  ${PHYSFS_SOURCE_DIR}/physfs_archiver_hog.c
+  ${PHYSFS_SOURCE_DIR}/physfs_archiver_iso9660.c
+  ${PHYSFS_SOURCE_DIR}/physfs_archiver_mvl.c
+  ${PHYSFS_SOURCE_DIR}/physfs_archiver_qpak.c
+  ${PHYSFS_SOURCE_DIR}/physfs_archiver_slb.c
+  ${PHYSFS_SOURCE_DIR}/physfs_archiver_unpacked.c
+  ${PHYSFS_SOURCE_DIR}/physfs_archiver_vdf.c
+  ${PHYSFS_SOURCE_DIR}/physfs_archiver_wad.c
+  ${PHYSFS_SOURCE_DIR}/physfs_archiver_zip.c
+  ${PHYSFS_SOURCE_DIR}/physfs_byteorder.c
+  ${PHYSFS_SOURCE_DIR}/physfs.c
+  ${PHYSFS_SOURCE_DIR}/physfs_casefolding.h
+  ${PHYSFS_SOURCE_DIR}/physfs.h
+  ${PHYSFS_SOURCE_DIR}/physfs_internal.h
+  ${PHYSFS_SOURCE_DIR}/physfs_lzmasdk.h
+  ${PHYSFS_SOURCE_DIR}/physfs_miniz.h
+  # ${PHYSFS_SOURCE_DIR}/physfs_platform_haiku.cpp # Unsupported platform
+  # ${PHYSFS_SOURCE_DIR}/physfs_platform_os2.c # Unsupported platform
+  ${PHYSFS_SOURCE_DIR}/physfs_platform_posix.c
+  # ${PHYSFS_SOURCE_DIR}/physfs_platform_qnx.c # Unsupported platform
+  ${PHYSFS_SOURCE_DIR}/physfs_platforms.h
+  ${PHYSFS_SOURCE_DIR}/physfs_platform_unix.c
+  ${PHYSFS_SOURCE_DIR}/physfs_platform_windows.c
+  # ${PHYSFS_SOURCE_DIR}/physfs_platform_winrt.cpp # Unsupported platform
+  ${PHYSFS_SOURCE_DIR}/physfs_unicode.c
+  ${PHYSFS_M_SRCS}
+)
+
+set(
+  PHYSFS_INCLUDE_FILES
+  ${PHYSFS_SOURCE_DIR}
+)
+
+# End PhysicsFs configuration
+
 set( PHYSFS_STREAM_DIR "${PROJECT_SOURCE_DIR}/extlibs/physfs-stream" )
 set( PHYSFS_STREAM_SOURCE_FILES
     ${PHYSFS_STREAM_DIR}/physfs/ifile_stream.cpp
@@ -368,6 +424,7 @@ set( ENGINE_SOURCE_FILES
 set( HIKARI_SOURCE_FILES
     ${GME_SOURCE_FILES}
     ${JSONCPP_SOURCE_FILES}
+    ${PHYSFS_SOURCE_FILES}
     ${PHYSFS_STREAM_SOURCE_FILES}
     ${SQUIRREL_FILES}
     ${GUICHAN_SOURCE_FILES}
@@ -382,6 +439,7 @@ set( INCLUDE_DIRS
     ${JSONCPP_DIR}/include
     ${JSONCPP_DIR}/src
     ${PHYSFS_STREAM_DIR}
+    # ${SFML_INCLUDE_DIR}
     ${SQUIRREL_DIR}/include
     ${SQUIRREL_DIR}/squirrel
     ${SQUIRREL_DIR}/sqstdlib
@@ -390,11 +448,12 @@ set( INCLUDE_DIRS
     ${GUICHAN_DIR}/include/guichan
     ${GUICHAN_SFML_DIR}/include
     ${GUICHAN_HAKASE_DIR}/include
+    ${PHYSFS_INCLUDE_FILES}
 )
 
 include_directories( ${INCLUDE_DIRS} )
 
-add_executable( hikari ${HIKARI_SOURCE_FILES} ${INCLUDE_DIRS} )
+add_executable( hikari ${INCLUDE_DIRS} ${HIKARI_SOURCE_FILES}  )
 
 #
 # Copy content files to output directory
@@ -410,38 +469,29 @@ add_custom_target(
 # We want to link statically on Windows
 #
 if(MSVC)
-    set(SFML_STATIC_LIBRARIES TRUE)
+  set(SFML_STATIC_LIBRARIES TRUE)
 endif(MSVC)
 
-find_package(SFML 2 COMPONENTS graphics window audio system REQUIRED)
+if(APPLE)
+  set(OTHER_SFML_LDFLAGS ${OTHER_SFML_LDFLAGS} "-stdlib=libc++")
+endif(APPLE)
 
-if(SFML_FOUND)
-    if(APPLE)
-        set(OTHER_SFML_LDFLAGS ${OTHER_SFML_LDFLAGS} "-stdlib=libc++")
-    endif(APPLE)
-    include_directories( ${SFML_INCLUDE_DIR} )
-    target_link_libraries( hikari ${SFML_LIBRARIES} ${OTHER_SFML_LDFLAGS} )
+target_link_libraries( hikari PRIVATE sfml-graphics sfml-window sfml-audio sfml-system ${OTHER_SFML_LDFLAGS})
 
-    #
-    # Copy the correct .dll files from SFML's directory to the ouput directory.
-    #
-    if(MSVC)
-        #add_custom_target(
-        #  windows-dependency-dlls
-        #  ALL
-        #  COMMAND ${CMAKE_COMMAND} -E echo "Copying .dll files used by SFML to output directory."
-        #  COMMAND ${CMAKE_COMMAND} -E copy "${SFML_INCLUDE_DIR}/../bin/libsndfile-1.dll" $<TARGET_FILE_DIR:hikari>/libsndfile-1.dll
-        #)
-    endif(MSVC)
-endif(SFML_FOUND)
+#
+# Copy the correct .dll files from SFML's directory to the ouput directory.
+#
 
-find_package(PhysFS REQUIRED)
+if(MSVC)
+  add_custom_target(
+    windows-dependency-dlls
+    ALL
+    COMMAND ${CMAKE_COMMAND} -E echo "Copying .dll files used by SFML to output directory."
+    COMMAND ${CMAKE_COMMAND} -E copy "${SFML_INCLUDE_DIR}/../bin/libsndfile-1.dll" $<TARGET_FILE_DIR:hikari>/libsndfile-1.dll
+  )
+endif(MSVC)
 
-if(PHYSFS_FOUND)
-    #ADD_DEFINITIONS(-fno-common)
-    if(APPLE)
-        set(OTHER_LDFLAGS ${OTHER_LDFLAGS} "-framework Carbon -framework IOKit")
-    endif(APPLE)
-    include_directories( ${PHYSFS_INCLUDE_DIR} )
-    target_link_libraries( hikari ${PHYSFS_LIBRARY} ${OTHER_LDFLAGS} )
-endif(PHYSFS_FOUND)
+if(APPLE)
+  set(OTHER_LDFLAGS ${OTHER_LDFLAGS} "-framework Carbon -framework IOKit")
+endif(APPLE)
+#target_link_libraries( hikari PRIVATE physfs-static ${OTHER_LDFLAGS} )
